@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>trade</groupId>
+    <artifactId>starTraderMaven</artifactId>
+    <version>19.38</version>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+   <reporting>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>3.0.0</version>
+            <reportSets>
+                <reportSet>
+                    <reports>
+                        <report>index</report>
+                        <report>licenses</report>
+                        <report>dependency-info</report>
+                    </reports>
+                </reportSet>
+            </reportSets>
+        </plugin>
+    </plugins>
+</reporting>
+
+<build>
+    <plugins>
+        <!-- Part of Maven - specified version explicitly for compatibility
+             with the maven-project-info-reports-plugin 3.0.0-->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>3.7.1</version>
+        </plugin>
+         <plugin> 
+
+                <!-- Building an executable jar -->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                  <archive>
+                    <manifest>
+                    <!-- give full qualified name of your main class-->
+                      <mainClass>trade.StarTrader</mainClass>
+                    </manifest>
+                  </archive>
+                </configuration>
+    </plugin>
+    </plugins>
+</build>
+    <pluginRepositories>
+      <pluginRepository> 
+        <id>maven2</id> 
+          <url>https://repo.maven.apache.org/maven2/</url> 
+      </pluginRepository> 
+    </pluginRepositories>
+    <name>StarTraderMaven</name>
+    <description>startrader in maven</description>
+   
+</project>
