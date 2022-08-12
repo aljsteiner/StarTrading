@@ -3751,13 +3751,13 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
   void defRes() {
 
     doRes(SCORE, "Score", "Winner has the highest score the result of combining the different priorities set by several value entries which increase the score", 3, 4, 3, LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | SUM, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 |  THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | CUMUNITS | BOTH | SKIPUNSET, 0);
-     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARUNITS, ROWS2 |LIST0 |LIST20 | THISYEAR | SKIPUNSET,0,0);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | SUM,  LIST0 | LIST7 | LIST8 | LIST9 |  THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | CUMUNITS | BOTH | SKIPUNSET, 0);
+     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | BOTH , 0,0,0);
      doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg");
      doRes(INCRRCSG, "%incr rcsg", "percent incr rcsg Value  year end rcsg/inital rcsg" );
-doRes(HIGHRCSG, "high rcsg", "high rcsg count ");
+doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH , 0,0,0);
 doRes(LOWRCSG, "low rcsg", "low rcsg count");
-doRes(MAXRCSG, "max rcsg", "max rcsg Value", 2, 2, 0, LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARUNITS, ROWS2 |LIST20 | THISYEAR | SKIPUNSET,0,0);
+doRes(MAXRCSG, "max rcsg", "max rcsg Value");
 doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | THISYEAR |BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent of Final/Initial Worth Value including working, reserve: resource, staff, knowledge");
