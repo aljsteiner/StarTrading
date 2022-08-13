@@ -75,7 +75,6 @@
             <properties>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.workingdir2>J:\My Drive\netbeans\starTraderMaven\src\main\java\trade</exec.workingdir2>
                 <exec.vmArgs>-ea</exec.vmArgs>
                 <exec.appArgs></exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
