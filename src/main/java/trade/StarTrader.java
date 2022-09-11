@@ -1,5 +1,5 @@
-/*//GEN-FIRST:event_gameCtlButtonRun1Year1MouseClicked
-//GEN-LAST:event_gameCtlButtonRun1Year1MouseClicked
+/*
+
  Copyright (C) 2012 Albert Steiner
 
  This program is free software: you can redistribute it and/or modify
@@ -70,7 +70,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import trade.WasFatalError;
 import static trade.EM.addlErr;
 import static trade.EM.prevLine;
 import static trade.EM.wasHere;
@@ -80,18 +79,31 @@ import static trade.EM.wasHere3;
 /**
  * see if these imports stay here // import
  * java.desktop/javax.swing.plaf.synth.SynthGraphicsUtils.paintText; import
- * import java.awt.*; import java.io.File; import java.io.FileNotFoundException;
- * import java.io.IOException; import java.io.PrintStream; import
- * java.lang.reflect.InvocationTargetException; import java.text.NumberFormat;
- * import java.util.ArrayList; import java.util.Date; import java.util.Locale;
- * import java.util.Random; import javax.swing.DefaultListModel; import
- * javax.swing.JLabel; import javax.swing.JPanel; import javax.swing.JSlider;
- * import javax.swing.JSpinner; import javax.swing.JTabbedPane; import
- * javax.swing.JTextField; import javax.swing.ListSelectionModel; import
- * javax.swing.SpinnerModel; import javax.swing.SpinnerNumberModel; import
- * javax.swing.SwingUtilities; import javax.swing.SwingWorker; import
- * javax.swing.event.ListSelectionEvent; import
- * javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
+import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
  */
 /**
  *
@@ -172,16 +184,13 @@ public class StarTrader extends javax.swing.JFrame {
   static int theYear[] = new int[yearsL];
   static int yearSecs[] = new int[yearsL];
   static int yearEcons[] = new int[yearsL];
-  static int yearPlanets[] = new int[yearsL];
-  static int yearShips[] = new int[yearsL];
-  static double yearTW[] = new double[yearsL]; // total worth max for a year
-  static double gameTW[] = new double[yearsL]; // total worth max for the game
-  static int gamePlanets[] = new int[yearsL];
-  static int gameShips[] = new int[yearsL];
-  static int gameEcons[] = new int[yearsL];
-  static int rcsgEcons[] = new int[yearsL];
-  static int rcsgPlanets[] = new int[yearsL];
-  static int rcsgShips[] = new int[yearsL];
+  static int yearPlanets[]  = new int[yearsL];
+  static int yearShips[]  = new int[yearsL];
+   static double  yearTW[]  = new double[yearsL]; // total worth max for a year
+   static double gameTW[] = new double[yearsL]; // total worth max for the game
+  static int gamePlanets[]  = new int[yearsL];
+  static int gameShips[]  = new int[yearsL];
+  static int gameEcons[]  = new int[yearsL];
   int yearSecPerEcon[] = new int[yearsL];
 
   static public int namesListRow = 0;
@@ -189,7 +198,7 @@ public class StarTrader extends javax.swing.JFrame {
    * StarTrader E EM contain the used set of stats descriptors
    *
    */
- static final public String statsButton0Tip = "0: Cum Game Worths,";
+  static final public String statsButton0Tip = "0: Cum Game Worths,";
   static final public String statsButton1Tip = "1: cum Favors and trade effects";
   static final public String statsButton2Tip = "2: catastrophes, deaths, randoms, forwardfund";
   static final public String statsButton3Tip = "3: deaths. trades acc";
@@ -209,7 +218,7 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String statsButton17Tip = "17: list by ages helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
-  static final public String statsButton20Tip = "20: rcsg";
+  static final public String statsButton20Tip = "20: TB assigned";
     static final public String statsButton21Tip = "21: TB assigned";
   static final public String statsButton22Tip = "22: TB assigned";
   static final public String statsButton23Tip = "23: display table";
@@ -219,49 +228,42 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.40";
-  static final public String storyText
-          = "         Save the Planets       Version 19.40\n" +
+  static final public String versionText = "19.36";
+  static final public String storyText = 
+          "         Save the Planets       Version 19.36\n" +
 "\n" +
-"“Save the Planets”; “Trade, trade, trade”;  “Cooperating together with trades”: is a strategic economics game emphasizing cooperation over competition.  Each economy has assets of resources, staff and knowledge in 7 financial sectors.  Each year each financial sector uses some resources and some staff die, decreasing in percentage as the sector’s efficiency increases as its knowledge increases.  Each year the financial sectors, with some surplus assets after expenses can grow resources and staff, find new knowledge and researchers can convert manuals into knowledge.  Each economy has 2 weak financial sectors and 2 strong financial sectors.  If there are insufficient resources or staff in any financial sector to survive to the next year, that planet or ship dies.\n" +
+"“Save the Planets”; “Trade, trade, trade”;  “Cooperating together with trades”: is a strategic economics game emphasizing cooperation over competition.  This is a strategy game for one to four or five players. The game-master selects the nature of the game as well as how the winner is picked.  The game’s spaceships could just as well be traders with wagons going from settlement to settlement.  The nature of the traders and the settlements/planets is very flexible.  Shipping and trading is critical for every town, county, country and world.  \n" +
 "\n" +
-"Trading allows a pair of ships and planets to trade surplus assets from strong sectors for needed assets.  In trade some manuals are traded allowing knowledge to be moved between economies, particularly older economies trade more manuals to new economies.  Each economy calculates a strategic value for each financial sector, deciding how much surplus to trade for a need.  The trade process consists of each economy generating an offer that is evaluated by the other economy.  Rejected offers are refined until one is accepted or the barters run out and the trade fails.  Ships try to predict how well a trade with a given planet will help it when they choose the next planet for a trade.\n" +
+"There are instructions about downloading and running this at the end of this readme.\n" +
 "\n" +
-"This is a strategy game for one to four or five players. The game-master sets the nature of the game as well as how the winner is picked.  The clan-masters set the very flexible economic policies of the ships and the planets.  Clan-masters set the favor their clan has for another clan. The higher the favor the more discount will be given that clan in trade, the more likely the trade will succeed.\n" +
+"In this game, planets and ships face significant challenges which may result in the death of the planet or ship if it does not have enough of each financial sector to survive the whole year.  Trading permits economies to trade their surpluses to get needed resources or staff to survive the year.  If for example there is not enough food, or enough water then the economy will die even though it has lots of other resources.  Trading is critical to survival.  Stats, statistics, are reports on the progress of each clan.  There are 21 different pages of statistics.  The earlier pages are probably the most interesting and useful.\n" +
 "\n" +
-"See the instructions about downloading and running this game at the end of this README.\n" +
+"Clan-masters manage the robots that run the 5 clans of planets and ships.  The clans are named the colors: red, orange, yellow, green, blue.  The clan colors are used in various ways.  Eventually one clan is declared the winner and the stats(statistics) background is set to the color of the winning clan.  \n" +
 "\n" +
-"Stats, statistics, are reports on the life of each clan.  There are 21 different pages of statistics.  The first 3 pages are the most interesting and useful. \n" +
+"After enough years have past, and when one clan has a sufficiently higher score, it will be declared the winner.  Clan-masters can look in the stats tab clicking on the numbers for different pages to try to see how to raise their score.  Their score is based on the sum of all their clan’s ships and planets.  Clicking on the title of a row in a page will give a more detailed description of the meaning of the numbers in this row.  In a “sum” row the values for ships and planets are summed together, otherwise there are different sums for ships than for planets.\n" +
 "\n" +
-"There are 5 clans each including both planets and ships.  Clan-masters manage the robots that run the 5 clans by changing settings for their clan.  Clan-masters change the base settings before they are changed by the game's random multipliers.  Each year each economy experiences different random changes to their effective settings. The clans are  named the colors: red, orange, yellow, green, blue.  Eventually one clan with  the highest score is declared the winner and the stats(statistics) background is set to the color of the winning clan.  You may continue to play after a winner is selected.  More years of play may change the winner, especially if some settings are changed by clan-masters.  Also the game-master may change the settings changing which scores do most to select the winner.  The scores are added together to create the final score.  \n" +
+"The game-master changes scoring at the beginning of the game by clicking the settings tab and changing rules for winning.  The game master then communicates the changes to the clan-masters so they can try to make better choices.\n" +
 "\n" +
-"A winner is declared only after enough years have passed and one  clan has a score sufficiently higher than the other clans.  Clan-masters can look in the stats tab clicking on the page numbers for different pages to try to see how to raise their score.  Their score is based on the sum of multiple scores for their clan’s ships and planets.  Clicking on the title of a row in a page gives a more detailed description of the meaning of the numbers in this row.  In a “sum” row the values for ships and planets are summed together in the ship columns, otherwise there are different sums for planets and for ships.\n" +
+"Clan-masters can go to the settings tab and click on the link of the color of their clan, then they click on up or down or one of the ten settings being displayed for their clan.  They can go to settings to change their clan’s settings to try to raise their score during the next round of years.  The game-master selects the next round of years: 1, 5, 10 or 20 years.\n" +
 "\n" +
-"The game-master has seven score settings that influence the scoring, and may change the winner.  You can change your settings and continue the game even if it has picked a winner.  After 5 or 10 more years there could be a different winner. The game master should then communicate the changes of settings to the clan-masters so they can change their clan settings to try to improve their score based on the new master settings.\n" +
+" \n" +
+" This game is being developed on a Windows 10 laptop with a screen about 1920 pixels wide and 1080 pixels deep.  It will run on smaller screens, but may move parts of the scenes in funny ways.  Since it is written in Java, it can be run on other systems with large enough screens and a java JRE (Java Runtime Environment) which connects the file ending with .jar with the host operating system.  \n" +
 "\n" +
-"Clan-masters can go to the settings tab and click on the link of the color of their clan, then they click on up or down or one of the ten settings being displayed for their clan.  They change their clan’s settings to try to raise their score during the next round of years, and/or try to increase the number of their planets and ships that survive.  After all clan-masters are finished, the game-master starts another round of 1, 5, 10, or 20 years.  The robots run the game for those years without any possible changes by the game-manager or the clan-manager.\n" +
+"The more complex instructions are placed later in the settings.  The explanations of their capability are much later in this README.  Because this is a strategy game, it is important to understand the guts of the game so that clan-masters can make intelligent changes to the strategy of their clan to try to win under the priorities set by the game-master.  The “keep” function, described in more detail later, enables you to keep changes, comments and sample results for later games, so that clan-masters can develop plans and strategies for exploring finances and have them preset into their next games.  One person can run several clans trying different strategies for the different clans.\n" +
 "\n" +
-"This game is being developed on a Windows laptop with a screen about 1920 pixels wide and 1080 pixels deep.  It will run on smaller screens, but may move parts of the scenes in funny ways.  Since it is written in Java, it can be run on other systems with large enough screens and a java JRE (Java Runtime Environment) which connects the file ending with .jar with the host operating system.  \n" +
+"When you run the game over 10 years, you will notice planets and ships are dying faster than they are being created.  You might decide to fix that only to discover that’s not what makes a bad score.  On the first page of settings for the game-master the first setting is the difficulty, you could decrease that, but that probably won’t better your next score, you have six or seven move settings that influence the score.  You can continue the game even if it has picked a winner.  After 5 or 10 more years there could be a different winner.  \n" +
 "\n" +
-"The most important settings instructions are placed early in the settings.  Additional explanations of settings are later in this README.  Because this is a strategy game, it is useful to understand the guts of the game so that clan-masters can understand the possible changes to the strategy of their clan to try to win under the priorities set by the game-master.  \n" +
+"The following explanation of how the game works, and the tables of numbers, stats, can help you understand what is happening to each clan.  You can change the clan settings to try to better your score, but as in any economics, sometimes the changes help, sometimes they don’t, and it is even harder to be sure if you change multiple settings at the same time.  Changed settings remain for the rest of the game, you need to use “keep” to keep settings for following games.  Have fun!!\n" +
 "\n" +
-"The “keep” function, described in more detail later, enables you to keep changes, comments and sample results for later games, so that clan-masters can develop plans and strategies for exploring finances and have them preset into their next games.  One person can run several or all clans, trying different strategies for the different clans.\n" +
+"Each year some planets or ships die because they have insufficient infrastructure (short on food, or short on buildings to survive the “winter”, etc.).  If they have good health the planets will also grow with added resources and added staff.   Traders move “goods” from planets with a surplus of certain goods to planets with insufficient amounts of those goods, enabling those planets to survive.  Ships do not mine or grow resources and staff; to survive they must get  all staff and resources from  planets when they trade.  And each year they need to add size to keep up with the growing size of the planets.  Ships and planets may survive one or two years without a successful trade, and there are some statistics about how planets and ships without trades grow and survive.\n" +
 "\n" +
-"You can notice that planets and ships are dying and if too many die the game will create more economies.  These deaths may affect your clan’s scoring.  On the first page of settings, the game-master can change the difficulty to increase or decrease the number of deaths each year.  If there are more economies the years take longer.  If there are too few economies, it may harm different clans as they have too few economies.  \n" +
+"The planets and ships are both sets of economies with mostly similar rules and some very different priority settings. Each economy has 2 stressed financial sectors, 2 very successful financial sectors, 3 other ok financial sectors. Of course each unit represents a large amount of the item.  The stressed sectors encourage trading.  Each economy has Assets resources: working SubAsset.Resource and reserved SubAsset Cargo, staff: working SubAsset.Staff and reserved SubAsset Guests, in addition there is knowledge: commonKnowledges (everyone may have it), newKnowledge (found by staff in the researchEquivalent), manuals (about parts of common knowledge).\n" +
 "\n" +
-"The following explanation of how the game works, and the tables of numbers, stats, can help you understand what is happening to each clan.  You can change the clan settings to try to better your score, but as in any economics, sometimes the changes help, sometimes they don’t, and it is even harder to be sure which change helped if you change multiple settings at the same time.  Changed settings remain changed for the rest of the game, you need to use “keep” to keep settings for following games.  Have fun!!\n" +
+"At the end of each year, planets calculate all of the costs.  Costs for each sector is the sum of this sector used by all of the sectors.  Costs are redacted by more knowledge because work is now more efficient.  Costs are increased by poor health, that is if there is a limited amount of assets available after all of the infrastructure costs are met, however, only yearly costs are removed from available assets. and any surplus assets are used to increase assets by mining, growing, and/or making.  New staff are added at the lowest grade while many of the staff move up one or more grades, and new knowledge is discovered by the research equivalent staff.  Staff perform the work that is needed to increase resources.  Staff also become the engineers.  Faculty equivalent staff are needed for staff to advance grades. \n" +
 "\n" +
-"Each year some planets or ships die because they have insufficient infrastructure (short on food, or short on buildings to survive the “winter”, etc.).  If they have good health the planets will also grow with added resources and added staff.   Ships trade “goods” from planets with a surplus of certain goods to keep for the next year to trade with another planet with insufficient amounts of those goods, enabling that planet to survive; unfortunately, the ship may decide incorrectly about whether the next planet picked by the ship needs those traded goods.  Ships do not mine or grow resources and staff; to survive they must get all staff and resources from planets by trading.  And each year they need to add size to keep up with the growing size of the planets.  Ships and planets may sometimes survive one or two years without a successful trade. There are some statistics which show how planets and ships without trades grow and survive.\n" +
+"After a set of years are finished, the display switches to the “stats” tab.  Each row has 11 columns, a longer column with a short title of the line, than either 5 or 10 values.  If you click on the title, a longer description of the column will appear in the row above the column.  If only the right 5 columns are numbers, each number represents the sum of the ship and planet values for that clan.  If the numbers are too large to fit in the column, it is divided by some number of tens, and the title will say how many zeros to add before the decimal point.  If the title ends in “thisYr”, the values are for the current year.  If the title ends in “cur/1” the values are for the current year, “cur/2” is for the previous year.  If the title ends in “cum”, this is a cumulative value, the sum of all the years.  If the year value has a “U” appended, then the numbers are the number of times the value was saved in the year or since starting the game with “cum”.  If the title year value has “ave” appended then values are the average, the values divided by the number of times added.  If % is appended to the title with “ave” or just the title, it means the numbers are a percent.  If neither “ave” or “U” is appended, the number is the sum of saved values for the year.  If you put a reason in the right of the remember button, then click the remember button, that row, the description and the reason will be added to the “keep” file.\n" +
 "\n" +
-"The planets and ships are both economies with mostly similar rules and some very different priority settings. Each economy has 2 stressed financial sectors, 2 very successful financial sectors, and 3 other ok financial sectors. Of course each unit represents a large amount of the item.  The stressed sectors encourage planets to trade.  Each economy has Assets resources: working SubAsset.Resource and reserved SubAsset Cargo, staff: working SubAsset.Staff and reserved SubAsset Guests, in addition there is knowledge: commonKnowledges (everyone may have it), newKnowledge (found by staff in the researchEquivalent), manuals (about parts of common knowledge).\n" +
-"\n" +
-"At the end of each year all of the costs are calculated.  Costs from each financial sector are subtracted from the balance of each sector.    Costs are increased by poor health .  Health is poor if there is a limited amount of assets available at one or more financial sector after all of the infrastructure costs are met and the yearly costs are met.  Remaining assets are used for sector growth.  \n" +
-"\n" +
-"New staff are added at the lowest grade while many of the staff move up one or more grades, and new knowledge is discovered by the research equivalent staff.  Engineer equivalent staff perform the work that is needed to increase resources.  Faculty equivalent staff are needed for staff to advance grades.  Researcher staff discover new knowledge which makes years more efficient, decreasing the costs of maintenance, travel and growth.\n" +
-"\n" +
-"After a set of years are finished, the display switches to the “stats” tab.  Each row has 11 columns, a longer column with a short title of the line, than either 5 or 10 values.  If you click on the title, a longer description of the column will appear in the row above the column.  If only the right 5 columns are numbers, each number represents the sum of the ship and planet values for that clan.  If the numbers are too large to fit in the column, it is reduced by some number of tens, and the title will say how many zeros to add before the decimal point.  If the title ends in “thisYr”, the values are for the current year.  If the title ends in “cur/1” the values are for the current year, “cur/2” is for the previous year.  If the title ends in “cum”, this is a cumulative value, the sum of all the years.  If the year value has a “U” appended, then the numbers are the number of times the value was saved in the year or since starting the game with “cum”.  If the title year value has “ave” appended then values are the average, the values divided by the number of times added.  If % is appended to the title with “ave” or just the title, it means the numbers are a percent.  If neither “ave” or “U” is appended, the number is the sum of saved values for the year.  If you put a reason in box to the right of the remember button, then click the remember button, that row, the description and the reason will be added to the “keep” file.\n" +
-"\n" +
-"There are 21 buttons with numbers. If you hover over a number a popup will list the description of the results for the number.  Click the number to fill the result table with results for that description.  Some of the pages have results grouped for different ages so you can see if values change as planets and ships age.\n" +
+"There are 21 buttons with numbers. If you hover over a number a popup will list the description of the results for the number.  Click the number to fill the result table with results for that description.  Number 10 are results only for Econ’s of age 0,1,2,3. Number 11 thru 14 are each for a longer set of ages.  The pages after that are mainly for developers displaying values for deeper internals of the game. \n" +
 "\n" +
 "There are instructions at the end of this document to describe how to get the files you need to run this game and even how you can use a program called “apache-netbeans” to edit source files and change the guts of the game yourself and build new versions of the game to run.\n" +
 "\n" +
@@ -269,29 +271,27 @@ public class StarTrader extends javax.swing.JFrame {
 "\n" +
 "You need to download the StarTrader19.34d.jar file to a folder such as myGame where you can run it following the instructions near the end of this README. The 19.34d is distributable, it eliminates many of the sanity tests so it will run somewhat faster.  Your virus protection will possibly say that this is a bad file, or a potentially bad file, or some similar warning.  You need to keep assuring it several times that you trust the file and wish to download and run the file.  The first tab labeled “story” is a copy of this README, click the next tab “Settings” to manage the settings.\n" +
 "\n" +
-"The instructions about the functioning of the game are long and complicated because all of the action that is done by robots.  To instruct the robots, you need to understand their activity and the kind of decisions they are making.  Clan-masters change the values about how robots make choices, but neither the game-master or the clan-masters change rules, they only change the values about how decisions are made by the robots.\n" +
+"The instructions about the functioning of the game are long and complicated because all of the action is done by robots.  To instruct the robots, you need to understand their activity and the kind of decisions they are making.  Clan-masters change the values about how robots make choices, but neither the game-master or the clan-masters change rules, they only change the values about how decisions are made by the robots.\n" +
 "\n" +
-"Directly under the “story” tab is a button called “master”, this is the tab for the game-master, and the settings shown under it are the settings for the game as a whole.  After each setting name there are one or two sliders for “planets” then “ships.”   If there is only one slider, it applies for both planets and ships.  As you run your mouse pointer over each name, the description in the green window below the sliders describes that setting.  The down button takes you to the next group of settings.\n" +
+"Directly under the “story” tab is a button called “master”, this is the tab for the game-master, and the settings shown under it are the settings for the game as a whole.  After each setting name there are one or two sliders for “planets” then “ships”, if there is only one slider, it applies for both planets and ships.  As you run your mouse pointer over each name, the description in the green window below the sliders describes that setting.  The down button takes you to the next group of settings.\n" +
 "\n" +
 "Beside the gray master button are 5 colored tabs named “red”, “orange”, “yellow”, “green”, “blue” for the five clans.  Click one of those tabs, such as “orange”.  The area around the settings turns orange, the settings change to those for the “orange” clan, any changes apply only to the orange clan.\n" +
 "\n" +
-"If settings for one or more of the clans are unchanged, the game will run with the existing settings.  After finishing changes for the game and all clans, the game master can click either the “1 yr” or “5 yr” button to run the game for 1 or 5 years.  Sometimes you need to click again in the middle of the button to get it to take effect.\n" +
+"If settings for one or more of the clans are unchanged, the game will run with the existing settings.  After finishing changes for the game and all clans, the game master can click either the “1 yr” or “5 yr” button to run the game for 1 or 5 years.  Sometime you need to click again in the middle of the button to get it to run.\n" +
 "\n" +
-"While running the game will change to the “display” tab and show some lines that change as the game runs year by year.  The color of the screen becomes the color of that clan of the current ship or planet unless the “haveColors” setting is set to less than 50.  Elapsed time is shown in milliseconds since the start of the game, start of the year, or the start of using an econ.  Each econ name starts with a “P” if a planet or with “S” if a ship,  the letters are followed by 4 digits.  The digits are the number of the created econ.  The word or words at the top left are the name of the year’s state.  A series of lines display the counts of interesting facts about the game for as the game progresses through the years.  Facts such as the number or creations, the number of trades, the number of deaths, the number of current ships and current planets.  The screen is updated around 60 times a second, a single planet or ship econ may be current for up to several seconds.\n" +
+"The game will change to the “display” tab and show some lines that change as the game runs year by year.  The color of the screen becomes the color of that clan of the current ship or planet.  Elapsed time is shown in milliseconds since the start of the game, start of the year, or the start of using an econ.  Each econ name starts with a “P” if a planet or with “S” if a ship,  the letters are followed by 4 digits.  The digits are the number of the created econ.  The word or words at the top left are the name of the year’s state.  A series of lines display the counts of interesting facts about the game for as the game progresses through the years.  Facts such as the number or creations, the number of trades, the number of deaths, the number of current ships and current planets.  The screen is updated around 60 times a second, a single planet or ship econ may be current for up to several seconds.\n" +
 "\n" +
 "The first state is the “future fund create”, planets or ships (economies) are created from funds put in the future fund each year by each clan economy.  Only planets are created until there are enough planets by a game rule and two clan rules, then a clan ship can be created.  By default, clan planets can only trade with as many ships as they allow clan ships.  Putting resources into ships limits the growth in worth of the clan, but it provides the infrastructure to protect planets. \n" +
 "\n" +
-"The next state is “game create”: each year the game creates enough economies to bring the number of planets and ships up to the minimum for the year.  The default number of economies grows for the first six years, then it drops to a low number, new planets or ships will be created by the game in any year where the number of economies falls below the default number..\n" +
+"The next state is “game create”: each year the game creates enough economies to bring the number of planets and ships up to the minimum for the year.  The default number of economies grows for the first six years, then it drops to a low number, expecting planets and ships to be created by future funds to replace deaths.\n" +
 "\n" +
-"The next very quick state is “year start”, ships and planets are readied  for another year.  The state will not usually appear in the display.  This is when catastrophes occur.  They destroy much of the staff of a sector and resources of a sector, but this is also where econs find new resources to replace resources that have been mined.  Every year’s mined resources depreciates the amount of resources that can be mined the next year until no more resources can be mined.  Catastrophes help planets find additional resources, and help ships to develop new knowledge.\n" +
+"The next very quick state is “year start”, ships and planets are readied  for another year.  The state will not usually appear in the display.  This is when catastrophes occur.  They destroy much of the staff of a sector and resources of a sector, but this is also where econs find new resources to replace resources that have been mined.  Every year’s mined resources decrease the amount of resources that can be mined the next year until no more resources can be mined.  Catastrophes help planets find additional resources, and help ships to develop new knowledge.\n" +
 "\n" +
-"Since ships carry relatively large units of resources compared to planets, assume the ships are of a size like the moon, and perhaps they travel faster than light by jumping between high stress points below the surface of stars.  Ships require large staff to operate, expand and repair the ships because of the stress of the way they travel.\n" +
+"Since ships carry relatively large units of resources compared to planets, assume the ships are of a size like the moon, and perhaps they travel faster than light by jumping between high stress points below the surface of stars.  Ships require large staff to operate, expand and repair the ships because of the stress of their travel.\n" +
 "\n" +
-"The next state is “search”.  A limited number of planets that are close enough to the ship are chosen.  Planets that have already traded are eliminated unless there is a surplus of ships for planets of this clan.  Each planet and ship keeps a trade history; these histories are updated at each trade so that the planets can be selected by their search history.  The assumption is that ships cannot have real time access to the current trade possibilities of any of the trading candidates.\n" +
+"The next state is “search”.  Up to 7 planets that are close enough to the ship are chosen.  Planets that have already traded are eliminated unless there is a surplus of ships for this clan.  Each planet and ship keeps a trade history; these histories are updated at each trade so that the 7 planets can be tested by their search history.  The assumption is that ships cannot have real time access to the current trade possibilities of any of the trading candidates.\n" +
 "\n" +
-"The next state is a trade.  These are “potlatch” trades since the ship and planet do not have a common currency.  They need to evaluate each of their financial sectors of resources and staff to determine what they need the most, or what sectors have the highest strategic value, and which have the lowest strategic value.  Each partner tries to trade low strategic value goods for high strategic value goods.   Of course the trading partner may need some of your high value goods, not some of your low value goods, so at each turn the offers are changed to satisfy your own needs with goods you hope the partner will accept.  Each partner gets up to nine turns; a partner may reject a trade if the offers are too unsatisfactory by changing the turn number to -1.  A trade is accepted if both partners can accept an offer without trying to change the offer, the turn number is set to zero, the goods (cargo and guests) in the offer are actually moved between economies, then the trade is recorded as accepted.  Trades can also be “rejected” by one partner, and is then “lost” by the other partner.  If there are more ships than planets, multiple ships can attempt to trade with a given planet.  Multiple ships on a planet can also attempt to trade with each other.  \n" +
-"\n" +
-"Planets and ships start trading with a profit goal.  The profit goals for a clan's ships and planets can be changed by the clan-master.  These goals are later changed by the “favor” of the trading partner, and the history of trades, rejects and lost trades experienced by the clan.\n" +
+"The next state is a trade.  These are “potlatch” trades since the ship and planet do not have a common currency.  They need to evaluate each of their financial sectors of resources and staff to determine what they need the most, or what sectors have the highest strategic value, and which have the lowest strategic value.  Each partner tries to trade low strategic value goods for high strategic value goods.   Of course the trading partner may need some of your high value goods, not some of your low value goods, so at each turn the offers are changed to satisfy your own needs with goods you hope the partner will accept.  Each partner gets up to nine turns; a partner may reject a trade if the offers are too unsatisfactory by changing the turn number to -1.  A trade is accepted if both partners can accept an offer without trying to change the offer, the turn number is set to zero, the goods (cargo and guests) in the offer are actually moved between economies, then the trade is recorded as accepted.  Trades can also be “rejected” by either partner, and is then “lost” by thee other partner.  If there are more ships than planets, multiple ships can attempt to trade with a given planet.  Multiple ships on a planet can also attempt to trade with each other.\n" +
 "\n" +
 "After all the ships had an opportunity to trade, the next state is “endYear”.  Since endYear’s do not involve any other economy, multiple endYears can run at once.  Initially multiple cpus can run multiple threads to do endYears.  The number of threads can be changed in the settings. \n" +
 "\n" +
@@ -332,26 +332,29 @@ public class StarTrader extends javax.swing.JFrame {
 "\n" +
 "Each planet and ship have seven financial sectors.  Each sector has resources, cargo(resource but in reserve not working), staff, guests(staff but in reserve not working), and knowledge of 3 kinds (common knowledge, new knowledge, and manuals(researchers work to get new knowledge or common knowledge from manuals), but trades can only trade manuals from ships).\n" +
 "\n" +
-"The game is available in a folder at: \n" +
-"https://drive.google.com/drive/folders/1P-hw8Wk9BcwEdHSS8CdAbDDjtjyEQTF_?usp=sharing.  The folder contains a pdf of this README and the file StarTrader.jar.  \n" +
+"The game is available in a folder at: https://drive.google.com/drive/folders/1P-hw8Wk9BcwEdHSS8CdAbDDjtjyEQTF_?usp=sharing.  The folder contains a pdf of this README and the file StarTrader.jar.  \n" +
 "\n" +
-"You need to download the StarTraderMaven-19.38.jar file to a place where you can run it following the instructions near the end of this README. First make a new folder in the downloads folder, with the name myGame.  Download the StarTraderMaven-19.38.jar to the folder downloads\\myGame.  You must download to a folder that is not part of a streaming memory such as GoogleDrive, the jar file gets stuck trying to run on a streaming memory.  Double click on the StarTraderMaven-19.38.jar file in myGame to run the game.  Check for new subversions of the game at least once a month.  Each copy of  the newly downloaded file has a version.subversion added to the name.  Delete unwanted files by right clicking the file and choosing the delete option. The .jar file will only run if you have a java jre 1.8 installed.  Use https://www.java.com/download/ie_manual.jsp to download the latest java jre (java runtime environment).  This decodes the java.jar file into instructions that run within windows. s You will need to accept a license saying that you are not a commercial company.\n" +
+"You need to download the StarTrader19.34.jar file to a place where you can run it following the instructions near the end of this README. First make a new folder in the downloads folder, with the name myGame.  Download StarTrader19.34.jar to the folder downloads\\myGame.  Double click on the StarTrader19.34.jar file in myGame to run the game.  Check for new subversions of the game at least once a month.  Each copy of  the newly downloaded file will have a version.subversion added to the name.  Delete unwanted files by right clicking the file and choosing the delete option. The .jar file will only run if you have java jre 1.8 installed.  Search for “download java jre 1.8”, pick the download option from oracle.  You will need to accept a license saying that you are not a commercial company.\n" +
 "StarTrader is set up to run on a Windows 10 machine with at least an 11 or 12 inch screen.  It will probably run on other desktop or laptops, if they will also have a current Java.  Instructions for running the game are given much earlier in the README.\n" +
 "\n" +
 "Ignore the following instructions unless you want to try to change the guts of the game.\n" +
-"The source of the game is in the folder you downloaded, go to src.java.trade. (all the source files)\n" +
-"I use Apache Netbeans, the latest version, and the latest java 1.8 version of java.  The java being automatically distributed to Windows 11 machines by Oracle is the latest version of java.1.8 jre.  You can download a corresponding JDK from Oracle after signing their license. \n" +
-"Here are many of the settings you will need  in Apache NetBeans currently version 12.4.  You must be logged in as a windows administrator to have the windows permissions to install NetBeans.  \n" +
+"The source the game is at http://github.com/aljsteiner/StarTrader \n" +
+"I use Apache Netbeans, the latest version, and the latest open source version of java openjdk-16.0.2_windows-x64_bin as well as the latest java 1.8 version of java.  The java being automatically distributed to Windows 10 machines by Oracle is the latest version of java.1.8 jre.  You can download a corresponding JDK from Oracle after signing their license. \n" +
+"Here are many of the settings you will need  in Apache NetBeans currently version 12.4.  You must be logged in as an administrator to have the windows permissions to install NetBeans.  \n" +
 "\n" +
 "Once you have installed NetBeans and downloaded the source files:\n" +
-"1.Left Click the NetBeans Tools menu and select Java Platforms, click \"Add Platform...\" browse to C:\\Program Files\\Java and choose the latest installed jdk1.8.0_xxx \n" +
-"2.Open NetBeans IDE and create a new ant project with the existing source\n" +
-"3.Create a source folder such as C:\\Users\\Public\\netbeans\\Trader19.xx\n" +
-"4.Right click the project name, at versioning create a git repository in Trader19.xx\n" +
+"1.Left Click the NetBeans Tools menu and select Java Platforms, click \"Add Platform...\" browse to C:\\Program Files\\Java and choose the latest installed jdk1.8.0_301 \n" +
+"2.Open NetBeans IDE and create a new ant project with existing source at C:\\Users\\Public\\netbeans\\Trader19.2p\n" +
+"3.Create a source folder such as C:\\Users\\Public\\netbeans\\Trader19.2s\n" +
+"4.Right click the project name, at versioning create a git repository in Trader19.2p\n" +
 "5.Right click the project name, at git select pull and fill out the form as requested\n" +
 "6.Right click the project name, select properties, select formatting, select project specific options, choose all languages, choose Tabs And Indents, Enable Indentation, Expand Tabs to Spaces, Number of Spaces per indent=2, tab Size = 2, Right Margin=80,Line Wrap After words\n" +
 "7.Download the latest Java 8 JDK after signing the license, install it into the Java folder under C:\\Program Files\n" +
-"8.Right click the project name, select properties, and under “Source Packages” select the package “trade” to get a list of the Java Classes.  The StarTrader.java source contains the ‘main’ method with the user interface logic.  Classes E.java and EM.java contain lots of data tables needed for the user interface, E.java contains most of the fixed data, EM.java contains data that can change from the user settings changes and the statistics of the current run of the game, EM.java also contains methods for processing settings and statistics. " ;
+"8.Right click the project name, select properties, and under “Source Packages” select the package “trade” to get a list of the created Java Classes.  The StarTrader.java contains the main method with the user interface logic.  Classes E.java and EM.java contain lots of data tables needed for the user interface, E.java contains most of the fixed data, EM.java contains data that can change from the user settings changes and the statistics of the current run of the game, EM also contains methods for processing settings and statistics.\n" +
+"\n" +
+""
+        +      
+           "";
 
   static int iii = 0;
   // The following is a list of states
@@ -377,10 +380,10 @@ public class StarTrader extends javax.swing.JFrame {
   static final String sn9 = "ecEndYear";
   static final int ENDYR = 10;
   static final String sn10 = "EndYear";
-  static final int SWAPS =  11;
-  static final String sn11 = "Swaping";
-  static final int STATS = 12;
-  static final String sn12 = "Stats";
+  static final int STATS = 11;
+  static final String sn11 = "Stats";
+  static final int SWAPS = 12;
+  static final String sn12 = "Swaping";
   static final int WAITING = 13;
   static final String sn13 = "Waiting for action";
   static final int STOPPED = 14;
@@ -389,11 +392,12 @@ public class StarTrader extends javax.swing.JFrame {
   static final String sn15 = "Runs Done";
   static final int FATALERR = 16;
   static final String sn16 = "Fatal Error";
+  
 
-  static final String[] stateStringNames = {sn0, sn1, sn2, sn3, sn4, sn5, sn6, sn7, sn8, sn9, sn10, sn11, sn12, sn13, sn14, sn15, sn16};
+  static final String[] stateStringNames = {sn0, sn1, sn2, sn3, sn4, sn5, sn6, sn7, sn8, sn9, sn10, sn11, sn12, sn13, sn14, sn15,sn16};
   static int stateConst = CONSTRUCTING;  // constant set to stated
   static int prevState = CONSTRUCTING;
-  Econ curEc = EM.curEcon;
+  static Econ curEc = EM.curEcon;
   static String curStateName = stateStringNames[0];
   static String prevEconName = "nnnnn";
   static String curEconName = "mmmmmm";
@@ -401,7 +405,7 @@ public class StarTrader extends javax.swing.JFrame {
   static boolean fatalError = false;
   static int stateCnt = 0;
   static int yearsToRun = 0;
-  // static int econCnt = -5;
+ // static int econCnt = -5;
   static int sameEconState = 0;
   static int blip = 1000 / 60;  // shortest animation interval 60/ second
   static int blip2 = blip * 2;  //  30/second
@@ -419,6 +423,7 @@ public class StarTrader extends javax.swing.JFrame {
   static public String cfNi2 = "cfNi2"; // within CashFlow method
 
   // public Star(int group,int contextV,String xname, int xpos, int ypos, int wealth, int colonists, double difficulty,
+
   // static protected Econ env  = new Econ("able",0,0,5,5,5,1000,1000,100,50.,
   //   "struct",30.,"energy",25.,"life",5.,"defense",10.,"colonist",25.);
   /**
@@ -427,7 +432,7 @@ public class StarTrader extends javax.swing.JFrame {
    * regenerated by the Form Editor.
    */
   @SuppressWarnings("unchecked")
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
     java.awt.GridBagConstraints gridBagConstraints;
 
@@ -607,18 +612,18 @@ public class StarTrader extends javax.swing.JFrame {
     logDlen1 = new javax.swing.JLabel();
     logDLevel1Slider = new javax.swing.JSlider();
     SpinnerModel startModel1 = new SpinnerNumberModel(10,
-            0, //min
-            2000000, //max
-            10);
+      0, //min
+      2000000, //max
+      10);
     logM1Spinner = new javax.swing.JSpinner(startModel1);
     LogDLen2Slider = new javax.swing.JSlider();
     logDLevel2Slider = new javax.swing.JSlider();
     logDlen2 = new javax.swing.JLabel();
     logDlevel1 = new javax.swing.JLabel();
     SpinnerModel startModel2 = new SpinnerNumberModel(10,
-            0, //min
-            2000000, //max
-            10);
+      0, //min
+      2000000, //max
+      10);
     logM2Spinner = new javax.swing.JSpinner(startModel2);
     logNamesScrollPanel = new javax.swing.JScrollPane();
     namesList = new DefaultListModel();
@@ -658,7 +663,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
         formCaretPositionChanged(evt);
       }
-
       public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
         formInputMethodTextChanged(evt);
       }
@@ -722,12 +726,12 @@ public class StarTrader extends javax.swing.JFrame {
     javax.swing.GroupLayout storyLayout = new javax.swing.GroupLayout(story);
     story.setLayout(storyLayout);
     storyLayout.setHorizontalGroup(
-            storyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(storyTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      storyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(storyTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     );
     storyLayout.setVerticalGroup(
-            storyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(storyTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      storyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(storyTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
     );
 
     controlPanels.addTab("story", story);
@@ -768,7 +772,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameMasterMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameMasterMouseExited(evt);
       }
@@ -798,7 +801,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         clanRedMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         clanRedMouseExited(evt);
       }
@@ -829,7 +831,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         clanOrangeMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         clanOrangeMouseExited(evt);
       }
@@ -858,7 +859,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         clanYellowMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         clanYellowMouseExited(evt);
       }
@@ -887,7 +887,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         clanGreenMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         clanGreenMouseExited(evt);
       }
@@ -916,7 +915,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         clanBlueMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         clanBlueMouseExited(evt);
       }
@@ -934,12 +932,12 @@ public class StarTrader extends javax.swing.JFrame {
     javax.swing.GroupLayout gameXtraPanel1Layout = new javax.swing.GroupLayout(gameXtraPanel1);
     gameXtraPanel1.setLayout(gameXtraPanel1Layout);
     gameXtraPanel1Layout.setHorizontalGroup(
-            gameXtraPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGap(0, 0, Short.MAX_VALUE)
+      gameXtraPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 0, Short.MAX_VALUE)
     );
     gameXtraPanel1Layout.setVerticalGroup(
-            gameXtraPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGap(0, 21, Short.MAX_VALUE)
+      gameXtraPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 21, Short.MAX_VALUE)
     );
 
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -965,11 +963,9 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
         gameCtlButtonRun1Year1MouseClicked(evt);
       }
-
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameCtlButtonRun1Year1MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameCtlButtonRun1Year1MouseExited(evt);
       }
@@ -999,11 +995,9 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
         gameCtlButtonRun5Years1MouseClicked(evt);
       }
-
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameCtlButtonRun5Years1MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameCtlButtonRun5Years1MouseExited(evt);
       }
@@ -1024,11 +1018,9 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
         settingsKeepMouseClicked(evt);
       }
-
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         settingsKeepMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         settingsKeepMouseExited(evt);
       }
@@ -1050,11 +1042,9 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
         settingsStopMouseClicked(evt);
       }
-
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         settingsStopMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         settingsStopMouseExited(evt);
       }
@@ -1108,7 +1098,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gamePanel0MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gamePanel0MouseExited(evt);
       }
@@ -1125,7 +1114,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField0MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField0MouseExited(evt);
       }
@@ -1147,7 +1135,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP0MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP0MouseExited(evt);
       }
@@ -1175,7 +1162,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS0MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS0MouseExited(evt);
       }
@@ -1216,7 +1202,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gamePanel1MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gamePanel1MouseExited(evt);
       }
@@ -1234,7 +1219,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField1MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField1MouseExited(evt);
       }
@@ -1261,7 +1245,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP1MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP1MouseExited(evt);
       }
@@ -1287,7 +1270,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS1MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS1MouseExited(evt);
       }
@@ -1309,7 +1291,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gamePanel2MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gamePanel2MouseExited(evt);
       }
@@ -1325,7 +1306,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField2MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField2MouseExited(evt);
       }
@@ -1347,7 +1327,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP2MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP2MouseExited(evt);
       }
@@ -1373,7 +1352,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS2MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS2MouseExited(evt);
       }
@@ -1402,7 +1380,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField3MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField3MouseExited(evt);
       }
@@ -1424,7 +1401,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP3MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP3MouseExited(evt);
       }
@@ -1450,7 +1426,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS3MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS3MouseExited(evt);
       }
@@ -1472,7 +1447,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gamePanel4MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gamePanel4MouseExited(evt);
       }
@@ -1488,7 +1462,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField4MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField4MouseExited(evt);
       }
@@ -1510,7 +1483,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP4MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP4MouseExited(evt);
       }
@@ -1536,7 +1508,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS4MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS4MouseExited(evt);
       }
@@ -1558,7 +1529,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gamePanel5MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gamePanel5MouseExited(evt);
       }
@@ -1574,7 +1544,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField5MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField5MouseExited(evt);
       }
@@ -1596,7 +1565,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP5MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP5MouseExited(evt);
       }
@@ -1622,7 +1590,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS5MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS5MouseExited(evt);
       }
@@ -1643,7 +1610,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gamePanel6MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gamePanel6MouseExited(evt);
       }
@@ -1659,7 +1625,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField6MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField6MouseExited(evt);
       }
@@ -1681,7 +1646,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP6MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP6MouseExited(evt);
       }
@@ -1707,7 +1671,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS6MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS6MouseExited(evt);
       }
@@ -1735,7 +1698,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField7MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField7MouseExited(evt);
       }
@@ -1757,7 +1719,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP7MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP7MouseExited(evt);
       }
@@ -1771,7 +1732,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         jSeparator14MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         jSeparator14MouseExited(evt);
       }
@@ -1792,7 +1752,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS7MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS7MouseExited(evt);
       }
@@ -1820,7 +1779,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField8MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField8MouseExited(evt);
       }
@@ -1842,7 +1800,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP8MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP8MouseExited(evt);
       }
@@ -1856,7 +1813,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         jSeparator15MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         jSeparator15MouseExited(evt);
       }
@@ -1877,7 +1833,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS8MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS8MouseExited(evt);
       }
@@ -1905,7 +1860,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameTextField9MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameTextField9MouseExited(evt);
       }
@@ -1927,7 +1881,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderP9MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderP9MouseExited(evt);
       }
@@ -1953,7 +1906,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameSliderS9MouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameSliderS9MouseExited(evt);
       }
@@ -2000,21 +1952,21 @@ public class StarTrader extends javax.swing.JFrame {
     javax.swing.GroupLayout gamePanelBottomPanelLayout = new javax.swing.GroupLayout(gamePanelBottomPanel);
     gamePanelBottomPanel.setLayout(gamePanelBottomPanelLayout);
     gamePanelBottomPanelLayout.setHorizontalGroup(
-            gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gamePanelBottomPanelLayout.createSequentialGroup()
-                            .addGap(19, 19, 19)
-                            .addComponent(gameTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(85, Short.MAX_VALUE))
+      gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(gamePanelBottomPanelLayout.createSequentialGroup()
+        .addGap(19, 19, 19)
+        .addComponent(gameTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(85, Short.MAX_VALUE))
     );
     gamePanelBottomPanelLayout.setVerticalGroup(
-            gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gamePanelBottomPanelLayout.createSequentialGroup()
-                            .addGroup(gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(gameTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(197, Short.MAX_VALUE))
+      gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(gamePanelBottomPanelLayout.createSequentialGroup()
+        .addGroup(gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(gameTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(197, Short.MAX_VALUE))
     );
 
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2034,11 +1986,9 @@ public class StarTrader extends javax.swing.JFrame {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
         gameButtonDownMouseClicked(evt);
       }
-
       public void mouseEntered(java.awt.event.MouseEvent evt) {
         gameButtonDownMouseEntered(evt);
       }
-
       public void mouseExited(java.awt.event.MouseEvent evt) {
         gameButtonDownMouseExited(evt);
       }
@@ -2387,33 +2337,33 @@ public class StarTrader extends javax.swing.JFrame {
     jScrollPane1.setPreferredSize(new java.awt.Dimension(1200, 600));
 
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][]{
-              {null, null, null, null, null, null},
-              {null, null, null, null, null, null},
-              {null, null, null, null, null, null},
-              {null, null, null, null, null, null},
-              {null, null, null, null, null, null},
-              {null, null, null, null, null, null},
-              {null, null, null, null, null, null},
-              {null, null, null, null, null, null}
-            },
-            new String[]{
-              "Titles", "Red", "Orange", "Yellow", "Green", "Blue"
-            }
+      new Object [][] {
+        {null, null, null, null, null, null},
+        {null, null, null, null, null, null},
+        {null, null, null, null, null, null},
+        {null, null, null, null, null, null},
+        {null, null, null, null, null, null},
+        {null, null, null, null, null, null},
+        {null, null, null, null, null, null},
+        {null, null, null, null, null, null}
+      },
+      new String [] {
+        "Titles", "Red", "Orange", "Yellow", "Green", "Blue"
+      }
     ) {
-      Class[] types = new Class[]{
+      Class[] types = new Class [] {
         java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
       };
-      boolean[] canEdit = new boolean[]{
+      boolean[] canEdit = new boolean [] {
         false, false, false, false, false, false
       };
 
       public Class getColumnClass(int columnIndex) {
-        return types[columnIndex];
+        return types [columnIndex];
       }
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit[columnIndex];
+        return canEdit [columnIndex];
       }
     });
     jTable1.setColumnSelectionAllowed(true);
@@ -2439,22 +2389,22 @@ public class StarTrader extends javax.swing.JFrame {
     javax.swing.GroupLayout displayPanel1Layout = new javax.swing.GroupLayout(displayPanel1);
     displayPanel1.setLayout(displayPanel1Layout);
     displayPanel1Layout.setHorizontalGroup(
-            displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGap(0, 1194, Short.MAX_VALUE)
-                    .addGroup(displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(displayPanel1Layout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE)))
+      displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 1194, Short.MAX_VALUE)
+      .addGroup(displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(displayPanel1Layout.createSequentialGroup()
+          .addGap(0, 0, Short.MAX_VALUE)
+          .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addGap(0, 0, Short.MAX_VALUE)))
     );
     displayPanel1Layout.setVerticalGroup(
-            displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGap(0, 600, Short.MAX_VALUE)
-                    .addGroup(displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(displayPanel1Layout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE)))
+      displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 600, Short.MAX_VALUE)
+      .addGroup(displayPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(displayPanel1Layout.createSequentialGroup()
+          .addGap(0, 0, Short.MAX_VALUE)
+          .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addGap(0, 0, Short.MAX_VALUE)))
     );
 
     display.add(displayPanel1);
@@ -2822,16 +2772,16 @@ public class StarTrader extends javax.swing.JFrame {
     javax.swing.GroupLayout rbuttons12Layout = new javax.swing.GroupLayout(rbuttons12);
     rbuttons12.setLayout(rbuttons12Layout);
     rbuttons12Layout.setHorizontalGroup(
-            rbuttons12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rbuttons1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbuttons2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+      rbuttons12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(rbuttons1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addComponent(rbuttons2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
     );
     rbuttons12Layout.setVerticalGroup(
-            rbuttons12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rbuttons12Layout.createSequentialGroup()
-                            .addComponent(rbuttons1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, 0)
-                            .addComponent(rbuttons2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+      rbuttons12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(rbuttons12Layout.createSequentialGroup()
+        .addComponent(rbuttons1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(0, 0, 0)
+        .addComponent(rbuttons2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
     ybuttons.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 204, 204), 2));
@@ -2985,23 +2935,23 @@ public class StarTrader extends javax.swing.JFrame {
     javax.swing.GroupLayout topPaneLayout = new javax.swing.GroupLayout(topPane);
     topPane.setLayout(topPaneLayout);
     topPaneLayout.setHorizontalGroup(
-            topPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(topPaneLayout.createSequentialGroup()
-                            .addComponent(ybuttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(rbuttons12, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(bigPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 777, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap())
+      topPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(topPaneLayout.createSequentialGroup()
+        .addComponent(ybuttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(rbuttons12, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(bigPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 777, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     topPaneLayout.setVerticalGroup(
-            topPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rbuttons12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(topPaneLayout.createSequentialGroup()
-                            .addGap(2, 2, 2)
-                            .addGroup(topPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ybuttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(bigPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+      topPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(rbuttons12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addGroup(topPaneLayout.createSequentialGroup()
+        .addGap(2, 2, 2)
+        .addGroup(topPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(ybuttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(bigPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
     );
 
     stats.add(topPane);
@@ -3029,7 +2979,7 @@ public class StarTrader extends javax.swing.JFrame {
     statsScrollPane2.setAlignmentX(0.0F);
     statsScrollPane2.setAlignmentY(5.0F);
     statsScrollPane2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-    statsScrollPane2.setMaximumSize(new java.awt.Dimension(1800, 1200));
+    statsScrollPane2.setMaximumSize(new java.awt.Dimension(1200, 1000));
     statsScrollPane2.setMinimumSize(new java.awt.Dimension(700, 400));
     statsScrollPane2.setName("StatsScroll"); // NOI18N
     statsScrollPane2.setPreferredSize(new java.awt.Dimension(1200, 900));
@@ -3039,125 +2989,125 @@ public class StarTrader extends javax.swing.JFrame {
     statsTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 255, 255), 2));
     statsTable1.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
     statsTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][]{
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null}
-            },
-            new String[]{
-              "title", "P-red", "P-orange", "P-yellow", "P-green", "P-blue", "S-red", "S-orange", "S-yellow", "S-green", "S-blue"
-            }
+      new Object [][] {
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null}
+      },
+      new String [] {
+        "title", "P-red", "P-orange", "P-yellow", "P-green", "P-blue", "S-red", "S-orange", "S-yellow", "S-green", "S-blue"
+      }
     ) {
-      Class[] types = new Class[]{
+      Class[] types = new Class [] {
         java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
       };
-      boolean[] canEdit = new boolean[]{
+      boolean[] canEdit = new boolean [] {
         false, false, false, false, false, false, false, false, false, false, false
       };
 
       public Class getColumnClass(int columnIndex) {
-        return types[columnIndex];
+        return types [columnIndex];
       }
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit[columnIndex];
+        return canEdit [columnIndex];
       }
     });
     statsTable1.setAlignmentX(0.0F);
@@ -3206,7 +3156,6 @@ public class StarTrader extends javax.swing.JFrame {
       public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
         logTableScrollPanelCaretPositionChanged(evt);
       }
-
       public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
         logTableScrollPanelInputMethodTextChanged(evt);
       }
@@ -3215,124 +3164,124 @@ public class StarTrader extends javax.swing.JFrame {
     logDisplayTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     logDisplayTable.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
     logDisplayTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][]{
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null},
-              {null, null, null, null, null, null, null, null, null, null, null}
-            },
-            new String[]{
-              "Title", "col0", "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"
-            }
+      new Object [][] {
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null}
+      },
+      new String [] {
+        "Title", "col0", "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"
+      }
     ) {
-      Class[] types = new Class[]{
+      Class[] types = new Class [] {
         java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
       };
-      boolean[] canEdit = new boolean[]{
+      boolean[] canEdit = new boolean [] {
         false, false, false, false, false, false, false, false, false, false, false
       };
 
       public Class getColumnClass(int columnIndex) {
-        return types[columnIndex];
+        return types [columnIndex];
       }
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit[columnIndex];
+        return canEdit [columnIndex];
       }
     });
     logDisplayTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -3695,9 +3644,9 @@ public class StarTrader extends javax.swing.JFrame {
 
     getContentPane().add(controlPanels);
     controlPanels.getAccessibleContext().setAccessibleName("traderPanel");
-  }// </editor-fold>                        
+  }// </editor-fold>//GEN-END:initComponents
 
-  private void formInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+  private void formInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_formInputMethodTextChanged
     /*
      try {
      NumberFormat whole = NumberFormat.getNumberInstance();
@@ -3740,14 +3689,14 @@ public class StarTrader extends javax.swing.JFrame {
       setFatalError();
     }
      */
-  }
+  }//GEN-LAST:event_formInputMethodTextChanged
 
-  private void formCaretPositionChanged(java.awt.event.InputMethodEvent evt) {
+  private void formCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_formCaretPositionChanged
     String sss = evt.toString();
     System.out.println(since() + " formCaretPositionChanged=" + sss);
-  }
+  }//GEN-LAST:event_formCaretPositionChanged
 
-  private void LogsInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+  private void LogsInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_LogsInputMethodTextChanged
     try {
       String source = evt.getSource().toString();
       NumberFormat whole = NumberFormat.getNumberInstance();
@@ -3770,24 +3719,16 @@ public class StarTrader extends javax.swing.JFrame {
         M = format.parse(evt.getText().toString()).intValue();
         System.out.println(since() + "LogsInputMethodTextChanged unknown=" + source + ", value=" + M);
       }
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("LogsInputMethodTextChanged Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName()  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("LogsInputMethodTextChanged Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
-  }
+  }//GEN-LAST:event_LogsInputMethodTextChanged
 
-  private void logM2SpinnerStateChanged(javax.swing.event.ChangeEvent evt) {
+  private void logM2SpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_logM2SpinnerStateChanged
     try {
       String sss = evt.toString();
       JSpinner source = (JSpinner) evt.getSource();
@@ -3799,24 +3740,16 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       setLogM(1, m);
       displayLog();
       System.out.println(since() + " logM2SpinnerStateChanged=" + eM.logEnvirn[1].logM[1] + " lev=" + eM.logEnvirn[1].logLev[1] + " first bunch=" + eM.logEnvirn[1].logLen[1]);
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
-  }
+  }//GEN-LAST:event_logM2SpinnerStateChanged
 
-  private void logDLevel2SliderStateChanged(javax.swing.event.ChangeEvent evt) {
+  private void logDLevel2SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_logDLevel2SliderStateChanged
     try {
       JSlider source = (JSlider) evt.getSource();
       if (!source.getValueIsAdjusting()) {
@@ -3825,24 +3758,16 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
         displayLog();
         System.out.println(since() + " levelSlider2StateChanged=" + eM.logEnvirn[1].logLev[1]);
       }
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
-  }
+  }//GEN-LAST:event_logDLevel2SliderStateChanged
 
-  private void LogDLen2SliderStateChanged(javax.swing.event.ChangeEvent evt) {
+  private void LogDLen2SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_LogDLen2SliderStateChanged
     try {
       JSlider source = (JSlider) evt.getSource();
       if (!source.getValueIsAdjusting()) {
@@ -3852,24 +3777,16 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
         displayLog();
       }
 
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
-  }
+  }//GEN-LAST:event_LogDLen2SliderStateChanged
 
-  private void logDisplay1StartStateChanged(javax.swing.event.ChangeEvent evt) {
+  private void logDisplay1StartStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_logDisplay1StartStateChanged
     try {
       String sss = evt.toString();
       JSpinner source = (JSpinner) evt.getSource();
@@ -3881,25 +3798,17 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       int start2 = format.parse(logM1Spinner.getValue().toString()).intValue();
       System.out.println(since() + " logDisplay1StartStateChanged=" + eM.logEnvirn[0].logM[0] + " lev=" + eM.logEnvirn[0].logLev[0] + " start2=" + start2);
 
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
 
-  }
+  }//GEN-LAST:event_logDisplay1StartStateChanged
 
-  private void logDLevel1SliderStateChanged(javax.swing.event.ChangeEvent evt) {
+  private void logDLevel1SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_logDLevel1SliderStateChanged
     JSlider source = (JSlider) evt.getSource();
     if (!source.getValueIsAdjusting()) {
       int m = (int) source.getValue();
@@ -3908,9 +3817,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       System.out.println(since() + " levelSlider1StateChanged=" + E.logLev[0]);
 
     }
-  }
+  }//GEN-LAST:event_logDLevel1SliderStateChanged
 
-  private void LogDlen1SliderStateChanged(javax.swing.event.ChangeEvent evt) {
+  private void LogDlen1SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_LogDlen1SliderStateChanged
     try {
       JSlider source = (JSlider) evt.getSource();
       if (!source.getValueIsAdjusting()) {
@@ -3919,50 +3828,42 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
         displayLog();
         System.out.println(since() + " DLen1StateChanged=" + m);
       }
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
-  }
+  }//GEN-LAST:event_LogDlen1SliderStateChanged
 
-  private void logTableScrollPanelCaretPositionChanged(java.awt.event.InputMethodEvent evt) {
+  private void logTableScrollPanelCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_logTableScrollPanelCaretPositionChanged
     String source = evt.toString();
     System.out.println(since() + " jScrollPane1CaretPositionChanged" + source);
-  }
+  }//GEN-LAST:event_logTableScrollPanelCaretPositionChanged
 
-  private void logTableScrollPanelInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+  private void logTableScrollPanelInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_logTableScrollPanelInputMethodTextChanged
     String sss = evt.toString();
     System.out.println(since() + " jScrollPane1InputMethodTextChanged=" + sss);
-  }
+  }//GEN-LAST:event_logTableScrollPanelInputMethodTextChanged
 
-  private void logEnvirnNamesListMouseClicked(java.awt.event.MouseEvent evt) {
+  private void logEnvirnNamesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logEnvirnNamesListMouseClicked
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_logEnvirnNamesListMouseClicked
 
-  private void LogsMouseClicked(java.awt.event.MouseEvent evt) {
+  private void LogsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LogsMouseClicked
     displayLog();
-  }
+  }//GEN-LAST:event_LogsMouseClicked
 
-  private void logDisplay1StartMouseReleased(java.awt.event.MouseEvent evt) {
+  private void logDisplay1StartMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logDisplay1StartMouseReleased
     displayLog();
-  }
+  }//GEN-LAST:event_logDisplay1StartMouseReleased
 
-  private void logM2SpinnerMouseReleased(java.awt.event.MouseEvent evt) {
+  private void logM2SpinnerMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logM2SpinnerMouseReleased
     displayLog();
-  }
+  }//GEN-LAST:event_logM2SpinnerMouseReleased
 
-  private void logRadioButtonStart1ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void logRadioButtonStart1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_logRadioButtonStart1ItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -3971,9 +3872,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       E.dN = 0;
     }
     System.out.println("logButton1ItemStateChanged state=" + st + ", ID=" + eID + ", bid=" + bid + ", dn=" + E.dN);
-  }
+  }//GEN-LAST:event_logRadioButtonStart1ItemStateChanged
 
-  private void logRadioButtonStart2ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void logRadioButtonStart2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_logRadioButtonStart2ItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -3982,37 +3883,37 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       E.dN = 1;
     }
     System.out.println("logButton2ItemStateChanged state=" + st + ", ID=" + eID + ", bid=" + bid + ", dn=" + E.dN);
-  }
+  }//GEN-LAST:event_logRadioButtonStart2ItemStateChanged
 
-  private void logActionAddActionPerformed(java.awt.event.ActionEvent evt) {
+  private void logActionAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logActionAddActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_logActionAddActionPerformed
 
-  private void logActionDelActionPerformed(java.awt.event.ActionEvent evt) {
+  private void logActionDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logActionDelActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_logActionDelActionPerformed
 
-  private void logActionJumpItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void logActionJumpItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_logActionJumpItemStateChanged
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_logActionJumpItemStateChanged
 
-  private void gameTopRightFillActionPerformed(java.awt.event.ActionEvent evt) {
+  private void gameTopRightFillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gameTopRightFillActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_gameTopRightFillActionPerformed
 
-  private void gameTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
-    // TODO add your handling code here:
-  }
+    private void gameTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gameTextField1ActionPerformed
+      // TODO add your handling code here:
+    }//GEN-LAST:event_gameTextField1ActionPerformed
 
-  private void clanRedMouseEntered(java.awt.event.MouseEvent evt) {
+  private void clanRedMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanRedMouseEntered
     setgameTextField("Display entry options for the clan Red");
-  }
+  }//GEN-LAST:event_clanRedMouseEntered
 
-  private void clanRedMouseExited(java.awt.event.MouseEvent evt) {
+  private void clanRedMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanRedMouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_clanRedMouseExited
 
-  private void controlPanelsPropertyChange(java.beans.PropertyChangeEvent evt) {
+  private void controlPanelsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_controlPanelsPropertyChange
     Object source = evt.getSource();
     JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
     int ix = sourceTabbedPane.getSelectedIndex();
@@ -4026,9 +3927,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
 
     }
 
-  }
+  }//GEN-LAST:event_controlPanelsPropertyChange
 
-  private void clanRedItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void clanRedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_clanRedItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -4037,65 +3938,65 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       gamePanelChange(0, -2, gamePanels, gameTextFields, gameSlidersP, gameSlidersS, fullVals, curVals);
     }
     System.out.println("clanRed=" + st + ", ID=" + eID + ", bid=" + bid + ", gameClanStatus=" + eM.gameClanStatus);
-  }
+  }//GEN-LAST:event_clanRedItemStateChanged
 
-  private void gameMasterMouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameMasterMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameMasterMouseEntered
     setgameTextField("Display entry options for the game Master");
-  }
+  }//GEN-LAST:event_gameMasterMouseEntered
 
-  private void gameMasterMouseExited(java.awt.event.MouseEvent evt) {
+  private void gameMasterMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameMasterMouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_gameMasterMouseExited
 
-  private void clanOrangeMouseEntered(java.awt.event.MouseEvent evt) {
+  private void clanOrangeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanOrangeMouseEntered
     setgameTextField("Display entry options for clan Orange");
-  }
+  }//GEN-LAST:event_clanOrangeMouseEntered
 
-  private void clanOrangeMouseExited(java.awt.event.MouseEvent evt) {
+  private void clanOrangeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanOrangeMouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_clanOrangeMouseExited
 
-  private void clanYellowMouseExited(java.awt.event.MouseEvent evt) {
+  private void clanYellowMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanYellowMouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_clanYellowMouseExited
 
-  private void clanYellowMouseEntered(java.awt.event.MouseEvent evt) {
+  private void clanYellowMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanYellowMouseEntered
     setgameTextField("Display entry options for clan Yellow");
-  }
+  }//GEN-LAST:event_clanYellowMouseEntered
 
-  private void clanGreenMouseEntered(java.awt.event.MouseEvent evt) {
+  private void clanGreenMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanGreenMouseEntered
     setgameTextField("Display entry options for clan Green");
-  }
+  }//GEN-LAST:event_clanGreenMouseEntered
 
-  private void clanGreenMouseExited(java.awt.event.MouseEvent evt) {
+  private void clanGreenMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanGreenMouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_clanGreenMouseExited
 
-  private void clanBlueMouseEntered(java.awt.event.MouseEvent evt) {
+  private void clanBlueMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanBlueMouseEntered
     setgameTextField("Display entry options for clan Blue");
-  }
+  }//GEN-LAST:event_clanBlueMouseEntered
 
-  private void clanBlueMouseExited(java.awt.event.MouseEvent evt) {
+  private void clanBlueMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clanBlueMouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_clanBlueMouseExited
 
-  private void gameCtlButtonRun5Years1MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameCtlButtonRun5Years1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCtlButtonRun5Years1MouseEntered
     setgameTextField("Run all economies for 5 years");
-  }
+  }//GEN-LAST:event_gameCtlButtonRun5Years1MouseEntered
 
-  private void gameCtlButtonRun5Years1MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameCtlButtonRun5Years1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCtlButtonRun5Years1MouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_gameCtlButtonRun5Years1MouseExited
 
-  private void gameCtlButtonRun1Year1MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameCtlButtonRun1Year1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCtlButtonRun1Year1MouseEntered
     setgameTextField("Run all economies for 1 year");
-  }
+  }//GEN-LAST:event_gameCtlButtonRun1Year1MouseEntered
 
-  private void gameCtlButtonRun1Year1MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameCtlButtonRun1Year1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCtlButtonRun1Year1MouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_gameCtlButtonRun1Year1MouseExited
 
-  private void gameMasterItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void gameMasterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_gameMasterItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -4108,9 +4009,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       System.out.println("gameMaster=" + st + ", ID=" + eID + ", bid=" + bid + ", gameClanStatus=" + eM.gameClanStatus + " number=" + eM.gameDisplayNumber[eM.gameClanStatus]);
     }
 
-  }
+  }//GEN-LAST:event_gameMasterItemStateChanged
 
-  private void clanOrangeItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void clanOrangeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_clanOrangeItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -4123,9 +4024,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       setGameButtonColors();
     }
 
-  }
+  }//GEN-LAST:event_clanOrangeItemStateChanged
 
-  private void clanYellowItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void clanYellowItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_clanYellowItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -4137,9 +4038,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       setGameButtonColors();
     }
     System.out.println("clanYellow=" + st + ", ID=" + eID + ", bid=" + bid + ", gameClanStatus=" + eM.gameClanStatus);
-  }
+  }//GEN-LAST:event_clanYellowItemStateChanged
 
-  private void clanGreenItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void clanGreenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_clanGreenItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -4150,9 +4051,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       setGameButtonColors();
     }
     System.out.println("clanGreene=" + st + ", ID=" + eID + ", bid=" + bid + ", gameClanStatus=" + eM.gameClanStatus);
-  }
+  }//GEN-LAST:event_clanGreenItemStateChanged
 
-  private void clanBlueItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void clanBlueItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_clanBlueItemStateChanged
     int st = evt.getStateChange();
     int eID = evt.getID();
 
@@ -4164,9 +4065,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     }
     setGameButtonColors();
     System.out.println("clanBlue =" + st + ", ID=" + eID + ", bid=" + bid + ", gameClanStatus=" + eM.gameClanStatus);
-  }
+  }//GEN-LAST:event_clanBlueItemStateChanged
 
-  private void gameComponentShown(java.awt.event.ComponentEvent evt) {
+  private void gameComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_gameComponentShown
     boolean bid = evt.getSource().equals(game);
     if (bid) {
 
@@ -4176,93 +4077,93 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     setGameButtonColors();
     System.out.println("game componentShown bid=" + bid + ", gameClanStatus=" + eM.gameClanStatus);
     printMem3();
-  }
+  }//GEN-LAST:event_gameComponentShown
 
-  private void gameCtlButtonRun1Year1MouseClicked(java.awt.event.MouseEvent evt) {
+  private void gameCtlButtonRun1Year1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCtlButtonRun1Year1MouseClicked
     System.out.println("in Run1Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
     } else {
       runYears(1);
     }
-  }
+  }//GEN-LAST:event_gameCtlButtonRun1Year1MouseClicked
 
-  private void gameCtlButtonRun5Years1MouseClicked(java.awt.event.MouseEvent evt) {
+  private void gameCtlButtonRun5Years1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCtlButtonRun5Years1MouseClicked
 
     if (eM.fatalError) {
       setFatalError();
     } else {
       runYears(5);
     }
-  }
+  }//GEN-LAST:event_gameCtlButtonRun5Years1MouseClicked
 
-  private void gamePanel0MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gamePanel0MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel0MouseEntered
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       setgameTextField(eM.getDetail(curVals[0]));
       gamePanel0.setToolTipText(eM.getDetail(curVals[0]));
 
     };
-  }
+  }//GEN-LAST:event_gamePanel0MouseEntered
 
-  private void gamePanel0MouseExited(java.awt.event.MouseEvent evt) {
+  private void gamePanel0MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel0MouseExited
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gamePanel0MouseExited
 
-  private void gamePanel1MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gamePanel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel1MouseEntered
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       setgameTextField(eM.getDetail(curVals[1]));
       gamePanel1.setToolTipText(eM.getDetail(curVals[1]));
     };
-  }
+  }//GEN-LAST:event_gamePanel1MouseEntered
 
-  private void gamePanel1MouseExited(java.awt.event.MouseEvent evt) {
+  private void gamePanel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel1MouseExited
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       revertgameTextField();
     }
-  }
+  }//GEN-LAST:event_gamePanel1MouseExited
 
-  private void gamePanel2MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gamePanel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel2MouseEntered
     if (gamePanel2.isEnabled() && curVals[2] > -1) {
       setgameTextField(eM.getDetail(curVals[2]));
       gamePanel2.setToolTipText(eM.getDetail(curVals[2]));
     };
-  }
+  }//GEN-LAST:event_gamePanel2MouseEntered
 
-  private void gamePanel2MouseExited(java.awt.event.MouseEvent evt) {
+  private void gamePanel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel2MouseExited
     if (gamePanel2.isEnabled() && curVals[2] < -1) {
       revertgameTextField();
     }
-  }
+  }//GEN-LAST:event_gamePanel2MouseExited
 
-  private void gameTextField1MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField1MouseEntered
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       setgameTextField(eM.getDetail(curVals[1]));
       gamePanel1.setToolTipText(eM.getDetail(curVals[1]));
     };
-  }
+  }//GEN-LAST:event_gameTextField1MouseEntered
 
-  private void gameTextField1MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField1MouseExited
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       revertgameTextField();
     }
-  }
+  }//GEN-LAST:event_gameTextField1MouseExited
 
-  private void gameTextField0MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField0MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField0MouseEntered
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       setgameTextField(eM.getDetail(curVals[0]));
       gamePanel0.setToolTipText(eM.getDetail(curVals[0]));
     };
-  }
+  }//GEN-LAST:event_gameTextField0MouseEntered
 
-  private void gameTextField0MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField0MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField0MouseExited
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField0MouseExited
 
-  private void statsButton2ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton2ItemStateChanged
     boolean bid = statsButton2.isSelected();
     if (bid) {
       statsButton2.setToolTipText(statsButton2Tip);
@@ -4270,595 +4171,595 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       listRes(2, resLoops, fullRes);
     }
 
-  }
+  }//GEN-LAST:event_statsButton2ItemStateChanged
 
-  private void statsButton1ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton1ItemStateChanged
     boolean bid = statsButton1.isSelected();
     if (bid) {
       statsButton1.setToolTipText(statsButton1Tip);
       statsField.setText(statsButton1Tip);
       listRes(1, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton1ItemStateChanged
 
-  private void statsButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsButton3ActionPerformed
     boolean bid = statsButton3.isSelected();
     if (bid) {
       statsButton1.setToolTipText(statsButton3Tip);
       statsField.setText(statsButton3Tip);
       listRes(3, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton3ActionPerformed
 
-  private void statsButton4ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton4ItemStateChanged
     boolean bid = statsButton4.isSelected();
     if (bid) {
       statsButton1.setToolTipText(statsButton4Tip);
       statsField.setText(statsButton4Tip);
       listRes(4, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton4ItemStateChanged
 
-  private void gameSliderS0MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS0MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS0MouseEntered
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       statsButton0.setToolTipText(eM.getDetail(curVals[0]));
       setgameTextField(eM.getDetail(curVals[0]));
     };
-  }
+  }//GEN-LAST:event_gameSliderS0MouseEntered
 
-  private void gameSliderS0MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS0MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS0MouseExited
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS0MouseExited
 
-  private void gameSliderP0MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP0MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP0MouseEntered
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       setgameTextField(eM.getDetail(curVals[0]));
     };
-  }
+  }//GEN-LAST:event_gameSliderP0MouseEntered
 
-  private void gameSliderP0MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP0MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP0MouseExited
     if (gamePanel0.isEnabled() && curVals[0] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP0MouseExited
 
-  private void gameSliderP1MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP1MouseEntered
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       setgameTextField(eM.getDetail(curVals[1]));
     };
-  }
+  }//GEN-LAST:event_gameSliderP1MouseEntered
 
-  private void gameSliderP1MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP1MouseExited
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP1MouseExited
 
-  private void gameSliderS1MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS1MouseEntered
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       setgameTextField(eM.getDetail(curVals[1]));
     };
-  }
+  }//GEN-LAST:event_gameSliderS1MouseEntered
 
-  private void gameSliderS1MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS1MouseExited
     if (gamePanel1.isEnabled() && curVals[1] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS1MouseExited
 
-  private void gameTextField2MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField2MouseEntered
     if (gamePanel2.isEnabled() && curVals[2] > -1) {
       setgameTextField(eM.getDetail(curVals[2]));
     };
-  }
+  }//GEN-LAST:event_gameTextField2MouseEntered
 
-  private void gameTextField2MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField2MouseExited
     if (gamePanel2.isEnabled() && curVals[2] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField2MouseExited
 
-  private void gameSliderP2MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP2MouseEntered
     if (gamePanel2.isEnabled() && curVals[2] > -1) {
       setgameTextField(eM.getDetail(curVals[2]));
     };
-  }
+  }//GEN-LAST:event_gameSliderP2MouseEntered
 
-  private void gameSliderP2MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP2MouseExited
     if (gamePanel2.isEnabled() && curVals[2] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP2MouseExited
 
-  private void gameSliderS2MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS2MouseEntered
     if (gamePanel2.isEnabled() && curVals[2] > -1) {
       setgameTextField(eM.getDetail(curVals[2]));
     };
-  }
+  }//GEN-LAST:event_gameSliderS2MouseEntered
 
-  private void gameSliderS2MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS2MouseExited
     if (gamePanel3.isEnabled() && curVals[3] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS2MouseExited
 
-  private void gameTextField3MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField3MouseEntered
     if (gamePanel3.isEnabled() && curVals[3] > -1) {
       setgameTextField(eM.getDetail(curVals[3]));
     };
-  }
+  }//GEN-LAST:event_gameTextField3MouseEntered
 
-  private void gameTextField3MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField3MouseExited
     if (gamePanel3.isEnabled() && curVals[3] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField3MouseExited
 
-  private void gameSliderP3MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP3MouseEntered
     if (gamePanel2.isEnabled() && curVals[3] > -1) {
       setgameTextField(eM.getDetail(curVals[3]));
     };
-  }
+  }//GEN-LAST:event_gameSliderP3MouseEntered
 
-  private void gameSliderP3MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP3MouseExited
     if (gamePanel3.isEnabled() && curVals[3] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP3MouseExited
 
-  private void gameSliderS3MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS3MouseEntered
     if (gamePanel2.isEnabled() && curVals[3] > -1) {
       setgameTextField(eM.getDetail(curVals[3]));
     };
-  }
+  }//GEN-LAST:event_gameSliderS3MouseEntered
 
-  private void gameSliderS3MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS3MouseExited
     if (gamePanel3.isEnabled() && curVals[3] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS3MouseExited
 
-  private void gamePanel4MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gamePanel4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel4MouseEntered
     if (gamePanel4.isEnabled() && curVals[4] > -1) {
       setgameTextField(eM.getDetail(curVals[4]));
     };
-  }
+  }//GEN-LAST:event_gamePanel4MouseEntered
 
-  private void gamePanel4MouseExited(java.awt.event.MouseEvent evt) {
+  private void gamePanel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel4MouseExited
     if (gamePanel4.isEnabled() && curVals[4] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gamePanel4MouseExited
 
-  private void gameTextField4MouseEntered(java.awt.event.MouseEvent evt) {
-    if (gamePanel4.isEnabled() && curVals[4] > -1) {
-      setgameTextField(eM.getDetail(curVals[4]));
-    };
-  }
-
-  private void gameTextField4MouseExited(java.awt.event.MouseEvent evt) {
-    if (gamePanel4.isEnabled() && curVals[4] > -1) {
-      revertgameTextField();
-    };
-  }
-
-  private void gameSliderP4MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField4MouseEntered
     if (gamePanel4.isEnabled() && curVals[4] > -1) {
       setgameTextField(eM.getDetail(curVals[4]));
     };
-  }
+  }//GEN-LAST:event_gameTextField4MouseEntered
 
-  private void gameSliderP4MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField4MouseExited
     if (gamePanel4.isEnabled() && curVals[4] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField4MouseExited
 
-  private void gameSliderS4MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP4MouseEntered
     if (gamePanel4.isEnabled() && curVals[4] > -1) {
       setgameTextField(eM.getDetail(curVals[4]));
     };
-  }
+  }//GEN-LAST:event_gameSliderP4MouseEntered
 
-  private void gameSliderS4MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP4MouseExited
     if (gamePanel4.isEnabled() && curVals[4] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP4MouseExited
 
-  private void gamePanel5MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS4MouseEntered
+    if (gamePanel4.isEnabled() && curVals[4] > -1) {
+      setgameTextField(eM.getDetail(curVals[4]));
+    };
+  }//GEN-LAST:event_gameSliderS4MouseEntered
+
+  private void gameSliderS4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS4MouseExited
+    if (gamePanel4.isEnabled() && curVals[4] > -1) {
+      revertgameTextField();
+    };
+  }//GEN-LAST:event_gameSliderS4MouseExited
+
+  private void gamePanel5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel5MouseEntered
     if (gamePanel5.isEnabled() && curVals[5] > -1) {
       setgameTextField(eM.getDetail(curVals[5]));
     };
-  }
+  }//GEN-LAST:event_gamePanel5MouseEntered
 
-  private void gamePanel5MouseExited(java.awt.event.MouseEvent evt) {
+  private void gamePanel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel5MouseExited
     if (gamePanel5.isEnabled() && curVals[5] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gamePanel5MouseExited
 
-  private void gameTextField5MouseEntered(java.awt.event.MouseEvent evt) {
-    if (gamePanel5.isEnabled() && curVals[5] > -1) {
-      setgameTextField(eM.getDetail(curVals[5]));
-    }
-  }
-
-  private void gameTextField5MouseExited(java.awt.event.MouseEvent evt) {
-    if (gamePanel5.isEnabled() && curVals[5] > -1) {
-      revertgameTextField();
-    };
-  }
-
-  private void gameSliderP5MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField5MouseEntered
     if (gamePanel5.isEnabled() && curVals[5] > -1) {
       setgameTextField(eM.getDetail(curVals[5]));
     }
-  }
+  }//GEN-LAST:event_gameTextField5MouseEntered
 
-  private void gameSliderP5MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField5MouseExited
     if (gamePanel5.isEnabled() && curVals[5] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField5MouseExited
 
-  private void gameSliderS5MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP5MouseEntered
     if (gamePanel5.isEnabled() && curVals[5] > -1) {
       setgameTextField(eM.getDetail(curVals[5]));
     }
-  }
+  }//GEN-LAST:event_gameSliderP5MouseEntered
 
-  private void gameSliderS5MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP5MouseExited
     if (gamePanel5.isEnabled() && curVals[5] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP5MouseExited
 
-  private void gamePanel6MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS5MouseEntered
+    if (gamePanel5.isEnabled() && curVals[5] > -1) {
+      setgameTextField(eM.getDetail(curVals[5]));
+    }
+  }//GEN-LAST:event_gameSliderS5MouseEntered
+
+  private void gameSliderS5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS5MouseExited
+    if (gamePanel5.isEnabled() && curVals[5] > -1) {
+      revertgameTextField();
+    };
+  }//GEN-LAST:event_gameSliderS5MouseExited
+
+  private void gamePanel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel6MouseEntered
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       setgameTextField(eM.getDetail(curVals[6]));
     }
-  }
+  }//GEN-LAST:event_gamePanel6MouseEntered
 
-  private void gamePanel6MouseExited(java.awt.event.MouseEvent evt) {
+  private void gamePanel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanel6MouseExited
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gamePanel6MouseExited
 
-  private void gameTextField6MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField6MouseEntered
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       setgameTextField(eM.getDetail(curVals[6]));
     }
-  }
+  }//GEN-LAST:event_gameTextField6MouseEntered
 
-  private void gameTextField6MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField6MouseExited
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField6MouseExited
 
-  private void gameSliderP6MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP6MouseEntered
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       setgameTextField(eM.getDetail(curVals[6]));
     }
-  }
+  }//GEN-LAST:event_gameSliderP6MouseEntered
 
-  private void gameSliderP6MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP6MouseExited
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP6MouseExited
 
-  private void gameSliderS6MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS6MouseEntered
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       setgameTextField(eM.getDetail(curVals[6]));
     }
-  }
+  }//GEN-LAST:event_gameSliderS6MouseEntered
 
-  private void gameSliderS6MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS6MouseExited
     if (gamePanel6.isEnabled() && curVals[6] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS6MouseExited
 
-  private void statsButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsButton1ActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_statsButton1ActionPerformed
 
-  private void statsButton0ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton0ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton0ItemStateChanged
     boolean bid = statsButton0.isSelected();
     if (bid) {
       statsField.setText(statsButton0Tip);
       listRes(0, resLoops, fullRes);
       statsButton0.setToolTipText(statsButton0Tip);
     }
-  }
+  }//GEN-LAST:event_statsButton0ItemStateChanged
 
-  private void statsButton3ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton3ItemStateChanged
     boolean bid = statsButton3.isSelected();
     if (bid) {
       statsField.setText(statsButton3Tip);
       listRes(3, resLoops, fullRes);
       statsButton3.setToolTipText(statsButton3Tip);
     }
-  }
+  }//GEN-LAST:event_statsButton3ItemStateChanged
 
-  private void statsButton5ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton5ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton5ItemStateChanged
     boolean bid = statsButton5.isSelected();
     if (bid) {
       statsField.setText(statsButton5Tip);
       listRes(5, resLoops, fullRes);
       statsButton5.setToolTipText(statsButton5Tip);
     }
-  }
+  }//GEN-LAST:event_statsButton5ItemStateChanged
 
-  private void gameTextField7MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField7MouseEntered
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       setgameTextField(eM.getDetail(curVals[7]));
     }
-  }
+  }//GEN-LAST:event_gameTextField7MouseEntered
 
-  private void gameTextField7MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField7MouseExited
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField7MouseExited
 
-  private void gameSliderP7MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP7MouseEntered
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       setgameTextField(eM.getDetail(curVals[7]));
     }
-  }
+  }//GEN-LAST:event_gameSliderP7MouseEntered
 
-  private void gameSliderP7MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP7MouseExited
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP7MouseExited
 
-  private void gameSliderS7MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS7MouseEntered
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       setgameTextField(eM.getDetail(curVals[7]));
     }
-  }
+  }//GEN-LAST:event_gameSliderS7MouseEntered
 
-  private void gameSliderS7MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS7MouseExited
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS7MouseExited
 
-  private void jSeparator14MouseEntered(java.awt.event.MouseEvent evt) {
+  private void jSeparator14MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSeparator14MouseEntered
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       setgameTextField(eM.getDetail(curVals[7]));
     }
-  }
+  }//GEN-LAST:event_jSeparator14MouseEntered
 
-  private void jSeparator14MouseExited(java.awt.event.MouseEvent evt) {
+  private void jSeparator14MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSeparator14MouseExited
     if (gamePanel7.isEnabled() && curVals[7] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_jSeparator14MouseExited
 
-  private void gameTextField8MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField8MouseEntered
     if (gamePanel8.isEnabled() && curVals[7] > -1) {
       setgameTextField(eM.getDetail(curVals[8]));
     }
-  }
+  }//GEN-LAST:event_gameTextField8MouseEntered
 
-  private void gameTextField8MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField8MouseExited
     if (gamePanel8.isEnabled() && curVals[8] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField8MouseExited
 
-  private void gameSliderP8MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP8MouseEntered
     if (gamePanel8.isEnabled() && curVals[8] > -1) {
       setgameTextField(eM.getDetail(curVals[8]));
     }
-  }
+  }//GEN-LAST:event_gameSliderP8MouseEntered
 
-  private void gameSliderP8MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP8MouseExited
     if (gamePanel8.isEnabled() && curVals[8] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP8MouseExited
 
-  private void jSeparator15MouseEntered(java.awt.event.MouseEvent evt) {
+  private void jSeparator15MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSeparator15MouseEntered
     if (gamePanel8.isEnabled() && curVals[8] > -1) {
       setgameTextField(eM.getDetail(curVals[8]));
     }
-  }
+  }//GEN-LAST:event_jSeparator15MouseEntered
 
-  private void jSeparator15MouseExited(java.awt.event.MouseEvent evt) {
+  private void jSeparator15MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSeparator15MouseExited
     if (gamePanel8.isEnabled() && curVals[8] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_jSeparator15MouseExited
 
-  private void gameSliderS8MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS8MouseEntered
     if (gamePanel8.isEnabled() && curVals[8] > -1) {
       setgameTextField(eM.getDetail(curVals[8]));
     }
-  }
+  }//GEN-LAST:event_gameSliderS8MouseEntered
 
-  private void gameSliderS8MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS8MouseExited
     if (gamePanel8.isEnabled() && curVals[8] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS8MouseExited
 
-  private void gameButtonDownMouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameButtonDownMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameButtonDownMouseEntered
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_gameButtonDownMouseEntered
 
-  private void gameButtonDownMouseExited(java.awt.event.MouseEvent evt) {
+  private void gameButtonDownMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameButtonDownMouseExited
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_gameButtonDownMouseExited
 
-  private void gameTextField9MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameTextField9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField9MouseEntered
     if (gamePanel9.isEnabled() && curVals[9] > -1) {
       setgameTextField(eM.getDetail(curVals[9]));
     }
-  }
+  }//GEN-LAST:event_gameTextField9MouseEntered
 
-  private void gameTextField9MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameTextField9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameTextField9MouseExited
     if (gamePanel9.isEnabled() && curVals[9] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameTextField9MouseExited
 
-  private void gameSliderP9MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderP9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP9MouseEntered
     if (gamePanel9.isEnabled() && curVals[9] > -1) {
       setgameTextField(eM.getDetail(curVals[9]));
     }
-  }
+  }//GEN-LAST:event_gameSliderP9MouseEntered
 
-  private void gameSliderP9MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderP9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderP9MouseExited
     if (gamePanel9.isEnabled() && curVals[9] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderP9MouseExited
 
-  private void gameSliderS9MouseEntered(java.awt.event.MouseEvent evt) {
+  private void gameSliderS9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS9MouseEntered
     if (gamePanel9.isEnabled() && curVals[9] > -1) {
       setgameTextField(eM.getDetail(curVals[9]));
     }
-  }
+  }//GEN-LAST:event_gameSliderS9MouseEntered
 
-  private void gameSliderS9MouseExited(java.awt.event.MouseEvent evt) {
+  private void gameSliderS9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameSliderS9MouseExited
     if (gamePanel9.isEnabled() && curVals[9] > -1) {
       revertgameTextField();
     };
-  }
+  }//GEN-LAST:event_gameSliderS9MouseExited
 
-  private void gameButtonUp1MouseClicked(java.awt.event.MouseEvent evt) {
+  private void gameButtonUp1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameButtonUp1MouseClicked
     setgameTextField("This is to be filled with descriptions of the field over which the mouse hovers");
 
     gamePanelChange(eM.gameClanStatus, -1, gamePanels, gameTextFields, gameSlidersP, gameSlidersS, fullVals, curVals);
-  }
+  }//GEN-LAST:event_gameButtonUp1MouseClicked
 
-  private void gameButtonDownMouseClicked(java.awt.event.MouseEvent evt) {
+  private void gameButtonDownMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameButtonDownMouseClicked
     setgameTextField("This is to be filled with descriptions of the field over which the mouse hovers");
     gamePanelChange(eM.gameClanStatus, +1, gamePanels, gameTextFields, gameSlidersP, gameSlidersS, fullVals, curVals);
     printMem3();
-  }
+  }//GEN-LAST:event_gameButtonDownMouseClicked
 
-  private void statsButton10ActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsButton10ActionPerformed
     boolean bid = statsButton10.isSelected();
     if (bid) {
       statsField.setText(statsButton10Tip);
       listRes(10, resLoops, fullRes);
       statsButton10.setToolTipText(statsButton10Tip);
     }
-  }
+  }//GEN-LAST:event_statsButton10ActionPerformed
 
-  private void statsButton5MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton5MouseEntered
     statsField.setText(statsTips(5));
-  }
+  }//GEN-LAST:event_statsButton5MouseEntered
 
-  private void statsButton0MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton0MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton0MouseEntered
     statsButton0.setToolTipText(statsTips(0));
-  }
+  }//GEN-LAST:event_statsButton0MouseEntered
 
-  private void statsButton1MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton1MouseEntered
     statsButton1.setToolTipText(statsTips(1));
-  }
+  }//GEN-LAST:event_statsButton1MouseEntered
 
-  private void statsButton2MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton2MouseEntered
     statsButton2.setToolTipText(statsTips(2));
-  }
+  }//GEN-LAST:event_statsButton2MouseEntered
 
-  private void statsButton3MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton3MouseEntered
     statsButton3.setToolTipText(statsButton3Tip);
-  }
+  }//GEN-LAST:event_statsButton3MouseEntered
 
-  private void statsButton4MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton4MouseEntered
     statsButton4.setToolTipText(statsTips(4));
-  }
+  }//GEN-LAST:event_statsButton4MouseEntered
 
-  private void statsButton6MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton6MouseEntered
     statsButton6.setToolTipText(statsTips(6));
-  }
+  }//GEN-LAST:event_statsButton6MouseEntered
 
-  private void statsButton6ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton6ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton6ItemStateChanged
     boolean bid = statsButton6.isSelected();
     if (bid) {
       statsField.setText(statsButton6Tip);
       listRes(6, resLoops, fullRes);
       statsButton6.setToolTipText(statsButton6Tip);
     }
-  }
+  }//GEN-LAST:event_statsButton6ItemStateChanged
 
-  private void statsButton7ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton7ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton7ItemStateChanged
     boolean bid = statsButton7.isSelected();
     if (bid) {
       listRes(7, resLoops, fullRes);
       statsButton7.setToolTipText(statsTips(7));
       statsField.setText(statsTips(7));
     }
-  }
+  }//GEN-LAST:event_statsButton7ItemStateChanged
 
-  private void statsButton7MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton7MouseEntered
     statsButton7.setToolTipText(statsTips(7));
-  }
+  }//GEN-LAST:event_statsButton7MouseEntered
 
-  private void statsButton8ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton8ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton8ItemStateChanged
     boolean bid = statsButton8.isSelected();
     if (bid) {
       statsField.setText(statsTips(8));
       statsButton8.setToolTipText(statsTips(8));
       listRes(8, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton8ItemStateChanged
 
-  private void statsButton8MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton8MouseEntered
     statsButton8.setToolTipText(statsTips(8));
-  }
+  }//GEN-LAST:event_statsButton8MouseEntered
 
-  private void statsButton9ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton9ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton9ItemStateChanged
     boolean bid = statsButton9.isSelected();
     if (bid) {
       statsField.setText(statsTips(9));
       statsButton9.setToolTipText(statsTips(9));
       listRes(9, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton9ItemStateChanged
 
-  private void statsButton9MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton9MouseEntered
     statsButton9.setToolTipText(statsTips(9));
-  }
+  }//GEN-LAST:event_statsButton9MouseEntered
 
-  private void statsButton10ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton10ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton10ItemStateChanged
     boolean bid = statsButton10.isSelected();
     if (bid) {
       statsField.setText(statsTips(10));
       statsButton10.setToolTipText(statsTips(10));
       listRes(10, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton10ItemStateChanged
 
-  private void statsButton10MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton10MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton10MouseEntered
     statsButton10.setToolTipText(statsTips(10));
-  }
+  }//GEN-LAST:event_statsButton10MouseEntered
 
-  private void statsButton11ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton11ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton11ItemStateChanged
     boolean bid = statsButton11.isSelected();
     if (bid) {
       statsField.setText(statsButton11Tip);
       statsButton11.setToolTipText(statsButton11Tip);
       listRes(11, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton11ItemStateChanged
 
-  private void statsButton11MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton11MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton11MouseEntered
     statsButton11.setToolTipText(statsButton11Tip);
-  }
+  }//GEN-LAST:event_statsButton11MouseEntered
 
-  private void controlPanelsStateChanged(javax.swing.event.ChangeEvent evt) {
+  private void controlPanelsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_controlPanelsStateChanged
     JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
     int ix = sourceTabbedPane.getSelectedIndex();
     if (ix == 2) {
@@ -4885,231 +4786,231 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       statsButton19.setToolTipText(statsTips(19));
       statsButton20.setToolTipText(statsTips(20));
     }
-  }
+  }//GEN-LAST:event_controlPanelsStateChanged
 
-  private void statsCtlButtonRun1YrMouseClicked(java.awt.event.MouseEvent evt) {
+  private void statsCtlButtonRun1YrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsCtlButtonRun1YrMouseClicked
     System.out.println("in stats Run 1Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
     } else {
       runYears(1);
     }
-  }
+  }//GEN-LAST:event_statsCtlButtonRun1YrMouseClicked
 
-  private void statsCtlButtonRun1YrActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsCtlButtonRun1YrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsCtlButtonRun1YrActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_statsCtlButtonRun1YrActionPerformed
 
-  private void statsCtlButtonRun5YrMouseClicked(java.awt.event.MouseEvent evt) {
+  private void statsCtlButtonRun5YrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsCtlButtonRun5YrMouseClicked
     System.out.println("in stats Run 5Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
     } else {
       runYears(5);
     }
-  }
+  }//GEN-LAST:event_statsCtlButtonRun5YrMouseClicked
 
-  private void gameCtlButtonRun1Year1ActionPerformed(java.awt.event.ActionEvent evt) {
+  private void gameCtlButtonRun1Year1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gameCtlButtonRun1Year1ActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_gameCtlButtonRun1Year1ActionPerformed
 
-  private void statsButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsButton5ActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_statsButton5ActionPerformed
 
-  private void statsButton12ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton12ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton12ItemStateChanged
     boolean bid = statsButton12.isSelected();
     if (bid) {
       statsField.setText(statsButton11Tip);
       statsButton12.setToolTipText(statsButton12Tip);
       listRes(12, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton12ItemStateChanged
 
-  private void statsButton12MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton12MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton12MouseEntered
     statsButton12.setToolTipText(statsButton12Tip);
-  }
+  }//GEN-LAST:event_statsButton12MouseEntered
 
-  private void statsButton13ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton13ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton13ItemStateChanged
     boolean bid = statsButton13.isSelected();
     if (bid) {
       statsField.setText(statsButton13Tip);
       statsButton13.setToolTipText(statsButton13Tip);
       listRes(13, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton13ItemStateChanged
 
-  private void statsButton13MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton13MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton13MouseEntered
     statsButton13.setToolTipText(statsButton13Tip);
-  }
+  }//GEN-LAST:event_statsButton13MouseEntered
 
-  private void statsButton14ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton14ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton14ItemStateChanged
     boolean bid = statsButton14.isSelected();
     if (bid) {
       statsField.setText(statsButton14Tip);
       statsButton14.setToolTipText(statsButton14Tip);
       listRes(14, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton14ItemStateChanged
 
-  private void statsButton14MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton14MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton14MouseEntered
     statsButton14.setToolTipText(statsButton14Tip);
-  }
+  }//GEN-LAST:event_statsButton14MouseEntered
 
-  private void statsButton15ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton15ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton15ItemStateChanged
     boolean bid = statsButton15.isSelected();
     if (bid) {
       statsField.setText(statsButton15Tip);
       statsButton15.setToolTipText(statsButton15Tip);
       listRes(15, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton15ItemStateChanged
 
-  private void statsButton15MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton15MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton15MouseEntered
     statsButton15.setToolTipText(statsButton15Tip);
-  }
+  }//GEN-LAST:event_statsButton15MouseEntered
 
-  private void statsButton16ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton16ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton16ItemStateChanged
     boolean bid = statsButton16.isSelected();
     if (bid) {
       statsField.setText(statsButton16Tip);
       statsButton16.setToolTipText(statsButton16Tip);
       listRes(16, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton16ItemStateChanged
 
-  private void statsButton16MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton16MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton16MouseEntered
     statsButton16.setToolTipText(statsButton16Tip);
-  }
+  }//GEN-LAST:event_statsButton16MouseEntered
 
-  private void statsButton17ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton17ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton17ItemStateChanged
     boolean bid = statsButton17.isSelected();
     if (bid) {
       statsField.setText(statsButton17Tip);
       statsButton17.setToolTipText(statsButton17Tip);
       listRes(17, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton17ItemStateChanged
 
-  private void statsButton17MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton17MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton17MouseEntered
     statsButton17.setToolTipText(statsButton17Tip);
-  }
+  }//GEN-LAST:event_statsButton17MouseEntered
 
-  private void statsButton18ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton18ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton18ItemStateChanged
     boolean bid = statsButton18.isSelected();
     if (bid) {
       statsField.setText(statsButton18Tip);
       statsButton18.setToolTipText(statsButton18Tip);
       listRes(18, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton18ItemStateChanged
 
-  private void statsButton18MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton18MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton18MouseEntered
     statsButton18.setToolTipText(statsButton18Tip);
-  }
+  }//GEN-LAST:event_statsButton18MouseEntered
 
-  private void statsButton19ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton19ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton19ItemStateChanged
     boolean bid = statsButton19.isSelected();
     if (bid) {
       statsField.setText(statsButton19Tip);
       statsButton19.setToolTipText(statsButton19Tip);
       listRes(19, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton19ItemStateChanged
 
-  private void statsButton19MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton19MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton19MouseEntered
     statsButton19.setToolTipText(statsButton19Tip);
-  }
+  }//GEN-LAST:event_statsButton19MouseEntered
 
-  private void statsButton20ItemStateChanged(java.awt.event.ItemEvent evt) {
+  private void statsButton20ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_statsButton20ItemStateChanged
     boolean bid = statsButton20.isSelected();
     if (bid) {
       statsField.setText(statsButton20Tip);
       statsButton20.setToolTipText(statsButton20Tip);
       listRes(20, resLoops, fullRes);
     }
-  }
+  }//GEN-LAST:event_statsButton20ItemStateChanged
 
-  private void statsButton20MouseEntered(java.awt.event.MouseEvent evt) {
+  private void statsButton20MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsButton20MouseEntered
     statsButton20.setToolTipText(statsButton20Tip);
 
-  }
+  }//GEN-LAST:event_statsButton20MouseEntered
 
-  private void statsField2ActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsField2ActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_statsField2ActionPerformed
 
-  private void formWindowClosed(java.awt.event.WindowEvent evt) {
+  private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
     System.exit(1);
-  }
+  }//GEN-LAST:event_formWindowClosed
 
-  private void statsCtlButtonRun10YrMouseClicked(java.awt.event.MouseEvent evt) {
+  private void statsCtlButtonRun10YrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsCtlButtonRun10YrMouseClicked
     System.out.println("in stats Run 10Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
     } else {
       runYears(10);
     }
-  }
+  }//GEN-LAST:event_statsCtlButtonRun10YrMouseClicked
 
-  private void statsCtlButtonRun20YrMouseClicked(java.awt.event.MouseEvent evt) {
+  private void statsCtlButtonRun20YrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsCtlButtonRun20YrMouseClicked
     System.out.println("in stats Run 20Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
     } else {
       runYears(20);
     }
-  }
+  }//GEN-LAST:event_statsCtlButtonRun20YrMouseClicked
 
-  private void statsFieldActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsFieldActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_statsFieldActionPerformed
 
-  private void statsButton0ActionPerformed(java.awt.event.ActionEvent evt) {
+  private void statsButton0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsButton0ActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_statsButton0ActionPerformed
 
-  private void settingsKeepMouseClicked(java.awt.event.MouseEvent evt) {
+  private void settingsKeepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsKeepMouseClicked
     EM.keepFromPage = true;
     setgameTextField(EM.keepInstruct);   // keepInstruct
-  }
+  }//GEN-LAST:event_settingsKeepMouseClicked
 
-  private void rememberMouseClicked(java.awt.event.MouseEvent evt) {
+  private void rememberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rememberMouseClicked
     EM.rememberFromPage = true;
-  }
+  }//GEN-LAST:event_rememberMouseClicked
 
-  private void statsStopMouseClicked(java.awt.event.MouseEvent evt) {
+  private void statsStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsStopMouseClicked
     setStopExe();
-  }
+  }//GEN-LAST:event_statsStopMouseClicked
 
-  private void settingsStopMouseClicked(java.awt.event.MouseEvent evt) {
+  private void settingsStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsStopMouseClicked
     setStopExe();
-  }
+  }//GEN-LAST:event_settingsStopMouseClicked
 
-  private void settingsKeepMouseEntered(java.awt.event.MouseEvent evt) {
+  private void settingsKeepMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsKeepMouseEntered
     setgameTextField(EM.keepInstruct);   // keepInstruct
-  }
+  }//GEN-LAST:event_settingsKeepMouseEntered
 
-  private void settingsKeepMouseExited(java.awt.event.MouseEvent evt) {
+  private void settingsKeepMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsKeepMouseExited
 
     revertgameTextField();
-  }
+  }//GEN-LAST:event_settingsKeepMouseExited
 
-  private void settingsStopMouseEntered(java.awt.event.MouseEvent evt) {
+  private void settingsStopMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsStopMouseEntered
     setgameTextField("click to do an orderly stop of StarTrader");
-  }
+  }//GEN-LAST:event_settingsStopMouseEntered
 
-  private void settingsStopMouseExited(java.awt.event.MouseEvent evt) {
+  private void settingsStopMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsStopMouseExited
     revertgameTextField();
-  }
+  }//GEN-LAST:event_settingsStopMouseExited
 
-  private void rememberActionPerformed(java.awt.event.ActionEvent evt) {
+  private void rememberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rememberActionPerformed
     // TODO add your handling code here:
-  }
+  }//GEN-LAST:event_rememberActionPerformed
 
   public void second() throws IOException {
     System.err.println("starting out in Second");
-    if (!eM.dfe()) { // whoo, stop now
+    if (!fatalError) { // whoo, stop now
       java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
           new StarTrader().setVisible(true);
@@ -5118,7 +5019,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     }
   }
 
-  // Variables declaration - do not modify                     
+
+  // Variables declaration - do not modify//GEN-BEGIN:variables
   protected javax.swing.JSlider LogDLen2Slider;
   protected javax.swing.JSlider LogDlen1Slider;
   protected javax.swing.JLabel Start1Name;
@@ -5309,7 +5211,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
   protected javax.swing.JScrollPane storyTextPane;
   protected javax.swing.JPanel topPane;
   protected javax.swing.JPanel ybuttons;
-  // End of variables declaration                   
+  // End of variables declaration//GEN-END:variables
 
   private void logM1SpinnerStateChanged(javax.swing.event.ChangeEvent evt) {
     try {
@@ -5323,40 +5225,24 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       saveLogM(0, m);
       displayLog();
 
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
 
   }
 
   public void logM1MouseClicked(java.awt.event.MouseEvent evt) {
     try {
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
   }
 
@@ -5393,11 +5279,15 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
    * @param rrr color to set in log table and other tab views
    */
   void setFatalError(Color rrr) {
-    boolean hadFatalError= false;
     getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
     EM.flushes();
-    if (eM.fatalError ) {
-      hadFatalError = true;
+    if (eM.fatalError) {
+      eM.stopExe = true;
+      eM.fatalError = true;
+      doStop = true;
+      fatalError = true;
+      System.err.println("set Fatal error request rejected, due to a previous fatal error");
+      throw new WasFatalError();
     }
     eM.stopExe = true;
     eM.fatalError = true;
@@ -5405,11 +5295,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     // change the background color of log to red for fatal error
     Color redish = new Color(255, 204, 204);
     Color r4 = new Color(255, 204, 154);
-   if(eM.curEcon != null){
-    setLogEnvirn(0, eM.curEcon);
-    setLogEnvirn(1, eM.curEcon);
+    setLogEnvirn(0,eM.curEcon);
+    setLogEnvirn(1,eM.curEcon);
     //eM.logEnvirn[0] = eM.curEcon;
-    // eM.logEnvirn[1] = eM.curEcon;
+   // eM.logEnvirn[1] = eM.curEcon;
     eM.hists[0] = eM.logEnvirn[0].hists[0];
     eM.hists[1] = eM.logEnvirn[1].hists[0];
     eM.logEnvirn[0].logLen[0] = 90;
@@ -5431,7 +5320,6 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       logDLevel1Slider.setValue(20);
       displayLog();
     }
-} //curEcon == null
     logDisplayTable.setBackground(rrr);
     logTableScrollPanel.setBackground(rrr);
     game.setBackground(redish);
@@ -5455,10 +5343,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
 
     EM.flushes();
     System.err.println("request rejected, due to a  fatal error");
-    if(hadFatalError) System.exit(-19);
-    System.exit(-18);
-    EM.flushes();
-    throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n"+ EM.secondStack);
+    throw new WasFatalError();
     //  controlPanels.setSelectedComponent(log);
   }
 
@@ -5516,27 +5401,20 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       stateConst = RUNNING;
       yearsToRun = nYears;
       EM.runYearsTime = (new Date()).getTime();
-      System.err.println("$$$$$$$$$$$$$ runYears AY" + EM.year + ":" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (javax.swing.SwingUtilities.isEventDispatchThread() ? " is eventDispatchThread" : " is not EventDispatchThread"));
+      System.err.println("$$$$$$$$$$$$$ runYears;" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (javax.swing.SwingUtilities.isEventDispatchThread() ? " is eventDispatchThread" : " is not EventDispatchThread"));
 
       //   E.myTest(!javax.swing.SwingUtilities.isEventDispatchThread(), "not eventDispatchThread");
       RunYrs1 rYrs1 = new RunYrs1();
       rYrs1.setPriority(3);
       rYrs1.start();  // start runYears2 the annimation thread
       //    stateConst = STATS;
-      // runBackgroundYears4(nYears);
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("runYears1 WasFatalError=" + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
+     // runBackgroundYears4(nYears);
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("runYears1 Exception=" + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
+      eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
   }
 
@@ -5550,19 +5428,17 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
   void setEconState(int stateConstA) {
     ec = curEc = EM.curEcon;
     curEconName = (EM.curEcon == null ? "noneYet" : EM.curEcon.name);
-    String wh = eM.wasHere == null ? "wasn't here" : eM.wasHere;
-    prevEconName = prevEconName == null ? "aint named" : prevEconName;
-    prevWasHere = prevWasHere == null ? "wasn't here" : prevWasHere;
+    String wh = eM.wasHere == null? "wasn't here":eM.wasHere;
+    prevEconName = prevEconName == null ? "aint named":prevEconName;
+    prevWasHere = prevWasHere == null? "wasn't here":prevWasHere;
     int ps = prevState;
     int sc = stateConst;
-    boolean atest = stateConst != STATS; // test stateConst
-    boolean btest = stateConstA == prevState;
 
     if (stateConstA == prevState && curEconName.equals(prevEconName) && wh == prevWasHere && stateConst != STATS && stateConst != WAITING && stateConst != STOPPED && stateConst != FATALERR) {
       sameEconState++;
-      if (eM.dfe() || (curEconName.equals(prevEconName) && sameEconState > 400)) {
+      if (curEconName.equals(prevEconName) && sameEconState > 400) {
         long myNow = new Date().getTime() - eM.doYearTime;
-       eM.doMyErr("setEconState year=" + eM.year + myNow + " STUCK at:" + stateStringNames[stateConstA] + " " + curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
+        eM.doMyErr("doYear" + eM.year + myNow + " STUCK at:" + stateStringNames[stateConstA] + " " + curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
     } else {
       prevEconName = curEconName;
@@ -5583,20 +5459,20 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     try {
       ec = curEc = eM.curEcon;;
       if (E.debugThreads) {
-        System.out.println("$$$$$$$$$$$$$ runYears2 Y" + EM.year + ":" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
+        System.out.println("$$$$$$$$$$$$$ runYears2;" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
       }
-    //  E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "runYears2 is eventDispatchThread not a separate animation thread");
+      E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "runYears2 is eventDispatchThread not a separate animation thread");
       paintCurDisplay(ec);
-      System.out.println("###################runYears2 " + stateStringNames[stateConst] + "th=" + Thread.currentThread().getName() + since() + " stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
+      System.out.println("###################runYears2;" + since() + " stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
       RunYrs3 rYrs3 = new RunYrs3(); // the thread for background running runYear()->doYear
       rYrs3.setPriority(3);
       rYrs3.start();  // start the background job
       stateConst = STARTING;
-      //   paintCurDisplay(ec = curEc = eM.curEcon);
+      paintCurDisplay(ec = curEc = eM.curEcon);
       // now continue EDS thread with updating display
       Boolean done = false, did = false;
       // start the annimation loop until done, waiting to call paintCurDisplay again
-      for (stateCnt = 0;  !eM.stopExe && !done && !EM.dfe(); stateCnt++) {
+      for (stateCnt = 0; !eM.fatalError && !eM.stopExe && !done && !fatalError; stateCnt++) {
         ec = curEc = eM.curEcon;
         if (curEc != null) {
           curEconName = curEc.nowName;
@@ -5605,7 +5481,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
         setEconState(stateConst); // check for stuck
 
         if (E.debugThreads) {
-          System.out.println("$$$$$$$$$$$$$^^runYears2 Y" + EM.year + ":" + sinceEcon() + " thread=" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + " " + sameEconState + "::" + EM.wasHere + ":: " + EM.wasHere2 + " :: " + EM.wasHere3);
+          System.out.println("$$$$$$$$$$$$$^^runYears2 " + sinceEcon() + " " + stateStringNames[stateConst] + " " + sameEconState + "::" + EM.wasHere + ":: "  + EM.wasHere2 + " :: " + EM.wasHere3);
         }
         paintCurDisplay(ec = curEc = eM.curEcon);
         // now do waits until the next check of stateConst and paintCurDisplay
@@ -5658,19 +5534,19 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
             }
             // listRes(fullRes); done in runBackgroundYears4
             break;
-
-          case RUNSDONE: case FATALERR:
+            
+          case RUNSDONE:  
             // no wait
             if (E.debugThreads) {
-              System.out.println("$$$$$$$$$$$$$$$>>runYears2 Y" + EM.year + ":" + since() + "  RUNSDONE to STATS " + " stateCnt =" + stateCnt + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("$$$$$$$$$$$$$$$>>runYears2;" + since() + "  RUNSDONE to STATS " + " stateCnt =" + stateCnt + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             done = true;
-            stateConst = STATS;
-            paintCurDisplay(ec = curEc = eM.curEcon); // force final display as stats not display
+             stateConst = STATS;
+             paintCurDisplay(ec = curEc = eM.curEcon); // force final display as stats not display
             break;
           default:
             if (E.debugThreads) {
-              System.out.println("$$$$$$$$$$$$$$$>>runYears2 Y" + EM.year + ":" + since() + " STATS stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("$$$$$$$$$$$$$$$>>runYears2;" + since() + " STATS stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             if (did) {
               done = true;
@@ -5678,25 +5554,17 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
               Thread.sleep(blip30);
             }
             if (E.debugThreads) {
-              System.out.println("$$$$$$$$$$$$$$$>runYears2 Y" + EM.year + ":" + since() + " DEFAULT; stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
+              System.out.println("$$$$$$$$$$$$$$$>runYears2;" + since() + " DEFAULT; stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
             }
 
         }
       }
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("WasFatalError   Exception=" + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-EM.newError = true;
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
+      eM.flushes();
       setFatalError();
-      
-     throw new WasFatalError(EM.tError);
     }
   }
 
@@ -5705,21 +5573,21 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     eM.setMoreValues();
     stateConst = STARTING;
     long myStart = new Date().getTime();
-    System.err.println("starting in tests1 thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
-    System.err.println("~~~~~~~~~~~~~~ in runBackGroundYears4 nYears=" + nYears + " thread=" + Thread.currentThread().getName() + " msecs" + (new Date().getTime() - startTime) + " ~~~~~~~~~~~~~~~~~~~~~~~");
+    System.err.println("starting in tests1 thread=" + Thread.currentThread().getName()+ "msecs" + (new Date().getTime() - startTime));
+    System.err.println("~~~~~~~~~~~~~~ in runBackGroundYears4 nYears=" + nYears + " thread=" + Thread.currentThread().getName()+ "msecs" + (new Date().getTime() - startTime) + " ~~~~~~~~~~~~~~~~~~~~~~~");
     // E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "is eventDispatchThread");
-    for (int nn = 0; nn < nYears && !eM.dfe() && !eM.stopExe && !doStop && !fatalError; nn++) {
+    for (int nn = 0; nn < nYears && !eM.fatalError && !eM.stopExe && !doStop && !fatalError; nn++) {
       System.err.println("\n\n>>>>>>>>>>>>>>>>> runBackroundYearsr" + since() + "run year="
-              + (eM.year + 1) + " background years=" + nn + " btime="
-              + (new Date().getTime() - myStart)
+              + (eM.year + 1) + " background years="  + nn +  " btime=" 
+              + (new Date().getTime() - myStart)      
               + "<<<<<<<<<<<<<<<<<<<\n\n");
       runYear();
     }
     stateConst = RUNSDONE;
-
-    //   listRes(fullRes);
+    
+ //   listRes(fullRes);
     printMem3(); // goes to doYears
-
+    
     // background thread can now end
   }
 
@@ -5729,75 +5597,11 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
   /**
    * return a new Econ enter with preset counts
    *
-   * @param worth The worth of the new Econ to be created
-   * @param pors The p or s of the new Econ
-   * @param clan The clan of the new Econ
-   * @return a new Econ reference
-   */
-  Econ newEcon(double worth, int pors, int clan) {
-    // EM.porsCnt[0] = EM.planets.size();
-    // EM.porsCnt[1] = EM.ships.size();
-    double xpos = -9999.;
-    ec = curEc = eM.curEcon = null;
-    // now try to find a dead economy to use instead of recreating one
-    if (pors == E.P) {
-      for (Econ n : eM.econs) {
-       EM.wasHere2 = "n=" + n +" " + n.getDie() == null ? " null getDie()":" found getDie()";
-        if (n.getDie() && n.getPors() == E.P && n.getDAge() > 2) {
-          eM.setCurEcon(ec = curEc = eM.curEcon = n);   // take a dead one
-          EM.econCnt++;
-          System.out.println("found dead Planet cnt=" + n + " name=" + n.name + " dage=" + n.getDAge());
-          break;
-        }
-      }// for
-    }// E.P
-    else if ((eM.curEcon == null) && pors == E.S) {
-      for (Econ n : eM.econs) {
-        if (n.getDie() && n.pors == E.S && n.getDAge() > 2) {
-          eM.setCurEcon(ec = curEc = eM.curEcon = n);
-          EM.econCnt++;
-          System.out.println("found dead Ship cnt=" + n + " name=" + n.name + " dage=" + n.getDAge());
-          break;
-        }
-      }// for
-    }//E.S
-    if (eM.curEcon == null) {  // no dead one found
-      eM.setCurEcon(ec = curEc = eM.curEcon = new Econ());
-      eM.econs.add(eM.curEcon); // add to the main list
-      EM.econCnt++;
-    }
-    NumberFormat nameF = NumberFormat.getNumberInstance();
-    nameF.setMinimumIntegerDigits(4);
-    nameF.setGroupingUsed(false);
-    String name = (pors == 0 ? "P" : "S") + nameF.format(eM.nameCnt++);
-    // reduce the size of ships cash by shipsPerPlanet
-    // double mCash = eM.initialWorth[pors] * (pors == E.S ? 1.0 / shipsPerPlanet : 1.0);
-    eM.curEcon.init(this, eM, name, clan, EM.econCnt, pors, xpos, eM.difficultyPercent[0], worth);
-    startEconState = (new Date()).getTime();
-    // now update counts planets and ships
-    Econ t = eM.curEcon;
-    if (!t.getDie()) {
-      eM.porsClanCnt[t.pors][t.clan]++;
-      eM.clanCnt[t.clan]++;
-      eM.porsCnt[t.pors]++;
-
-      if (t.pors == P) {
-        eM.planets.add(t);
-      } else {
-        eM.ships.add(t);
-      }
-    }
-    return eM.curEcon;
-  }
-
-  /**
-   * obsolete return a new Econ enter with preset counts
-   *
    * @param cash The worth of the new Econ to be created
    * @param clan The clan of the new Econ
    * @return a new Econ reference
    */
-  Econ oldNewEcon(double[] cash, int clan) {
+  Econ newEcon(double[] cash, int clan) {
     // EM.porsCnt[0] = EM.planets.size();
     // EM.porsCnt[1] = EM.ships.size();
     int lEcons = EM.econCnt;// = EM.econs.size();
@@ -5937,7 +5741,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
    *
    * @return seconds nnn.mmm
    */
-  public static String since() {
+  public String since() {
     return since("since game start", startTime);
   }
 
@@ -5947,16 +5751,16 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
    * @return Since P????? secs=nnn.mmm
    */
   public String sinceEcon() {
-    return since("since " + EM.curEconClan + " " + EM.curEconName, startEconState) + ", ";
+    return since("since " + ec.nowName, startEconState) + ", ";
   }
-
-  /** return the clan and names of trading Econs along with time
+   /** return the clan and names of trading Econs along with time
    * 
    * @return since trade clan and names of trading Econs followed by time since startEconState
    */
   public String tradingEcon(){
     return since("since trade " + EM.curEconClan + " " +  EM.curEconName + " :: " + EM.otherEconClan + " " +  EM.otherEconName, startEconState) + ", ";
   }
+
   /**
    * return the seconds since the start of RunYear
    *
@@ -5973,7 +5777,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
    * @param startTime the original start time to be reported
    * @return a string of the now - startTime with miliseconds as a fraction
    */
-  public static String since(String prefix, long startTime) {
+  public String since(String prefix, long startTime) {
     long now = (new Date()).getTime();
     double nu = (now - startTime);
     // String sAge = (eM.curEcon == null ? " " : " " + eM.curEcon.name); // + " age=" + eM.curEcon.age);
@@ -6246,50 +6050,21 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
 
   Dimension screenSize;
   int screenHeight = -2, screenWidth = -2, myHeight = -2, myWidth = -2, myH2 = -2, myW2 = -2;
-  int panelW = -2, panelH = -2, tableW = -2, tableH = -2, table2W = -2, table2H = -2;
+  int panelW=-2, panelH=-2,tableW=-2,tableH=-2, table2W=-2,table2H=-2;
   int myW3 = -2;
 //  String[][] statsData;
-  static PrintStream jout, jerr;
 
   public StarTrader() {
     try {
-      jout = new PrintStream(new File("Aout.txt"));
-      jerr = new PrintStream(new File("Aerr.txt)"));
-      jout.println("jout line0");
-      System.out.println("System.out line 0");
-      jerr.println("jerr line0");
-
-      if (E.resetOut) {
-        System.setOut(jout);
-        System.out.println("output to System.out after setOut");
-        System.setErr(jerr);
-        System.err.println("output to System.err after setErr");
-        System.out.flush();
-        System.err.flush();
-      }
-      System.out.println("output to out after if E.resetOut statment");
-      System.err.println("output to err after if E.resetOut statment");
-      System.out.flush();
-      System.err.flush();
-
       starTrader2();
       Thread.sleep(2000);
-      //   runYears(1);
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("StarTrader Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
+   //   runYears(1);
     } catch (Exception ex) {
-EM.newError = true;
-EM.firstStack = EM.secondStack+"";
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       eM.flushes();
-      System.err.println(EM.tError=("StarTrader Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " + Econ.nowName + " " + Econ.nowThread + " Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
+      eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
   }
 
@@ -6309,14 +6084,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         yearSecPerEcon[y] = 0;
         yearPlanets[y] = 0;
         yearShips[y] = 0;
-        gamePlanets[y] = 0;
-        gameShips[y] = 0;
-        gameEcons[y] = 0;
+        //gamePlanets[y] = 0; 
+        // gameShips[y] = 0; 
         yearTW[y] = 0.;
-        gameTW[y] = 0.;
-        rcsgEcons[y] = 0;
-        rcsgPlanets[y] = 0;
-        rcsgShips[y] = 0;
+        //gameTW[y] = 0.;
       }
 
       //  fullRes = EM.gameRes.values();
@@ -6370,8 +6141,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       int storyTextField1W = storyTextField1.getWidth();
       int storyTextPaneW = storyTextPane.getWidth();
       int storyW = story.getWidth();
-      //  int logW = log.getWidth();
-      System.out.println("----------- stf1w=" + storyTextField1W + ", stp=" + storyTextPaneW + ", story=" + storyW);
+    //  int logW = log.getWidth();
+      System.out.println("----------- stf1w=" + storyTextField1W+ ", stp=" + storyTextPaneW + ", story=" + storyW );
       E.sysmsg("after pack statsTable1.width=" + statsTW);
       //   statsTable = new javax.swing.JTable();
       JSlider[] gameSlidersP1 = {gameSliderP0, gameSliderP1, gameSliderP2, gameSliderP3, gameSliderP4, gameSliderP5, gameSliderP6, gameSliderP7, gameSliderP8, gameSliderP9};
@@ -6457,19 +6228,12 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       System.err.println(gchgdone);
       printMem3();
       stateConst = CONSTRUCTED;
-}catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("ST2 Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-      // go to finally
     } catch (Exception ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
-      System.err.println(EM.tError=("ST2 Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
+      System.err.println(Econ.nowName + since() + " " +  Econ.nowThread + " Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
+      eM.flushes();
       setFatalError();
-     throw new WasFatalError(EM.tError);
     }
   } //StarTrader2
 
@@ -6533,11 +6297,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     double lse1 = 0., lse2 = 0.;
     boolean lla = true, llb = true;
     // find planets new to old
-    for (majorLoops = 0; majorLoops < 4 && rtns < lTradablePlanets - 1 && !eM.dfe() ;  majorLoops++) {
+    for (majorLoops = 0; majorLoops < 4 && rtns < lTradablePlanets - 1; majorLoops++) {
       boolean okClanSovrP[] = {};
       //newest planets to oldest planets
-      for (int planetsLoop = lPlanets - 1; planetsLoop >= 0 && rtns < lTradablePlanets - 1 && !fatalError;
-              planetsLoop--) {
+      for (int planetsLoop = lPlanets - 1; planetsLoop >= 0 && rtns < lTradablePlanets - 1; planetsLoop--) {
         planet = eM.planets.get(planetsLoop); // pick a planet
         if (!planet.getDie()) {
           // if shipsDone/EconsDone  <= eM.gameShipFrac[E.P] + eM.addGoal[majorLoops]
@@ -6623,7 +6386,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
   }
 
   void runYearsInBackgroundNot(int years) {
-    for (int yy = 0; yy < years && !eM.dfe();  yy++) {
+    for (int yy = 0; yy < years; yy++) {
       runYear();
     }
     //stateConst = STATS;
@@ -6634,8 +6397,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
    * trade, then run a year than a startShipTrade is done to the ship from
    * runBackgroundYears4 years
    */
-   synchronized void runYear() {
-    if (eM.dfe()) {
+  void runYear() {
+    if (eM.fatalError) {
       setFatalError();
       return;
     }
@@ -6651,7 +6414,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
     E.msgcnt = 0;
     System.out.println("in runYear, year=" + (eM.year + 1) + " now doYear");
     // all restarts after user input go to doYear keeping yearly variables
-    if (!doStop && !eM.stopExe && !eM.dfe()) {
+    if (!doStop && !eM.stopExe && !fatalError) {
       doYear();
       //stateConst = STATS;
 
@@ -6664,21 +6427,18 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
         gamePlanets[y] = gamePlanets[y - 1];
         gameShips[y] = gameShips[y - 1];
         gameEcons[y] = gameEcons[y - 1];
-        rcsgPlanets[y] = rcsgPlanets[y - 1];
-        rcsgShips[y] = rcsgShips[y - 1];
-        rcsgEcons[y] = rcsgEcons[y - 1];
-        yearTW[y] = yearTW[y - 1];
-        gameTW[y] = gameTW[y - 1];
+        yearTW[y] = yearTW[y-1];
+        gameTW[y] = gameTW[y-1];
         yearSecPerEcon[y] = yearSecPerEcon[y - 1];
       }
       theYear[0] = eM.year;
       yearSecs[0] = (int) (new Date().getTime() - startYear);
-
-      //gamePlanets[0] = EM.porsCnt[E.P] > gamePlanets[0] ?  EM.porsCnt[E.P]  : gamePlanets[0];
+     
+     //gamePlanets[0] = EM.porsCnt[E.P] > gamePlanets[0] ?  EM.porsCnt[E.P]  : gamePlanets[0];
       //gameShips[0] = EM.porsCnt[E.S] >  gameShips[0]  ?  EM.porsCnt[E.S]  :  gameShips[0] ;
-      // gameTW[0] = yearTW[0] > gameTW[0] ? yearTW[0] : gameTW[0];
+     // gameTW[0] = yearTW[0] > gameTW[0] ? yearTW[0] : gameTW[0];
       //gameEcons[0] = yearEcons[0] > gameEcons[0] ? yearEcons[0] : gameEcons[0];
-      yearSecPerEcon[0] = (int) (yearEcons[0] < 1 ? 0 : yearSecs[0] / yearEcons[0]);
+      yearSecPerEcon[0] = (int) (yearEcons[0] < 1? 0 :yearSecs[0] / yearEcons[0]);
       System.err.println("&&&&&&&&&&&&&&theYr=" + theYear[0] + "yearSecs " + EM.mf(yearSecs[0]) + " yearEcons " + EM.mf(yearEcons[0]) + " year S per E " + EM.mf(yearSecPerEcon[0]));
       System.err.println("&&&&&&&&&theYr=" + theYear[1] + "yearSecs " + EM.mf(yearSecs[1]) + " yearEcons " + EM.mf(yearEcons[1]) + " year S per E " + EM.mf(yearSecPerEcon[1]));
       System.err.println("&&&theYr=" + theYear[2] + "yearSecs " + EM.mf(yearSecs[2]) + " yearEcons " + EM.mf(yearEcons[2]) + " year S per E " + EM.mf(yearSecPerEcon[2]));
@@ -6686,7 +6446,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
   }
 
   Date dnow = new Date();
-  int lEcons = 0;
+  int lEcons=0;
   //int clanShipsDone[] = {0,0,0,0,0}; // new every doYear
 
   /**
@@ -6703,7 +6463,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
    * statistics are prepared for display, then end of year for all mouse clicks
    * are enabled and statistics can be read and priorities changed.
    */
-  public synchronized void doYear() {
+  public void doYear() {
 
     try {
       NumberFormat df = NumberFormat.getNumberInstance();
@@ -6724,12 +6484,11 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.sec
       System.out.println("in doYear year=" + eM.year + " econs=" + eM.econs.size() + " envs.length=" + eM.envsPerYear.length);
       System.out.println(" new:" + eM.envsPerYear[(int) ((eM.year + 1) > (eM.envsPerYear.length - 1) ? (eM.envsPerYear.length - 1) : (eM.year + 1))]);
       //     resetRes(fullRes);  // move years up cur, leave 0 ready for new statRes
-      paintWaiting();
-      if (!doStop && !eM.dfe()) {
+       paintWaiting();
+      if (!doStop && !fatalError) {
         eM.doStartYear();  //move stats up for the next year
       } else {
         stateConst = STOPPED;
-return;
       }
       //    eE.newRpt();  // zero the report lines for a new sum from each economy
       // add more planets or ships for each new year to the limit of defined Envirns
@@ -6768,7 +6527,7 @@ return;
 
       // now set the counts and planets and ships
       for (Econ t : eM.econs) {
-        if (t != null && t.as !=null && !t.getDie()) {
+        if (!t.getDie()) {
           EM.porsClanCnt[t.pors][t.clan]++;
           EM.clanCnt[t.clan]++;
           EM.porsCnt[t.pors]++;
@@ -6783,20 +6542,17 @@ return;
           EM.deadCnt++;
         }
       }
-      if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
-          if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-            EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-          }
-        }
-      }
-      if (doStop || eM.dfe()) {
+ if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
+            }
+          }}
+      if (doStop || fatalError) {
         stateConst = STOPPED;
         paintStopped();
       } else {
         // set up the preexisting names on the namelist
         int tyear;
-        eM.envsPerYear[eM.envsPerYear.length - 1] = (int)eM.minEcons[0][0];
         // yEcons the number of Econs we can have this year.
         int yEcons = (int) (eM.minEconsMult[0][0] * (eM.envsPerYear[tyear = (eM.year < eM.envsPerYear.length ? eM.year : eM.envsPerYear.length - 1)]));
         //dnow = new Date();
@@ -6812,40 +6568,31 @@ return;
         E.msgcnt = 0;
         //start game create
         clanBias = new Random().nextInt(5);
-        if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
-            if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
+         if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
-        }
-        for (envsLoop = lEcons; envsLoop < yEcons && !eM.dfe();  envsLoop++) {
+          }}
+        for (envsLoop = lEcons; envsLoop < yEcons; envsLoop++) {
           startEconState = (new Date()).getTime();
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+           if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           // dnow = new Date();
           // econCnt = envsLoop;
           econClan = (envsLoop + clanBias) % 5;
           if (E.debugDoYearOut) {
             System.out.println("------" + since() + " gCreate envsLoop=" + envsLoop + " maxE=" + yEcons + " eCnt=" + eM.econCnt + " clanBias=" + clanBias + " clan=" + econClan);
           }
-          int econPorS = EM.getNewPorS(econClan);
-          double newWorth = EM.getInitialEconWorth(econPorS, econClan);
-          ec = curEc = EM.curEcon = newEcon(newWorth, econPorS, econClan);  // include new of Econ
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+          ec = curEc = EM.curEcon = newEcon(eM.initialWorth, econClan);  // include new of Econ
+           if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           curWorth = eM.curEcon.getWorth();
-          curWorth = newWorth;
           Thread.yield();
           EM.curEcon.as.setStat(EM.YEARCREATE, EM.curEcon.pors, EM.curEcon.clan, curWorth, 1);
           EM.curEcon.as.setStat(EM.BOTHCREATE, EM.curEcon.pors, EM.curEcon.clan, curWorth, 1);
@@ -6855,7 +6602,7 @@ return;
         }// end for envsLoop
       } // end dostop else 
 
-      if (doStop || eM.dfe()) {
+      if (doStop || fatalError) {
         stateConst = STOPPED;
       } else {
         stateConst = FUTUREFUNDCREATE;
@@ -6863,43 +6610,36 @@ return;
         paintFutureFundEconCreate();
         E.msgcnt = 0;
         int nClans = E.clan.values().length - 3;
-        int finishedClans = 0, clansLoop = clanBias; // end when all 5 clans can create no more econs
-        if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
-            if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
+        int finishedClans = 0; // end when all 5 clans can create no more econs
+         if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
-        }
-        for (finishedClans = 0; clansLoop < 50 && finishedClans < 5 && !eM.dfe();  clansLoop++) {
-          econClan = (int) (clansLoop) % 5;
+          }}
+        for (int clansLoop = 0; clansLoop < nClans && finishedClans < 5; clansLoop++, finishedClans++) {
+          econClan = (int) (clansLoop + clanBias) % 5;
           startEconState = (new Date()).getTime();
           double limits3 = eM.econCnt - eM.econLimits3[0];
           double mDif = limits3 > E.PZERO ? limits3 / 5 : 1.;
           //clanWorth over econLimits1 is at least initialWorth*4, otherwise just initial worth
-          //double clanWorth = eM.econCnt > eM.econLimits1[0] ? Math.max(eM.initialWorth[0] * 4., eM.clanFutureFunds[econClan] / ((eM.econLimits3[0] - eM.econCnt) / 5.)) : eM.initialWorth[0];
-          int econPorS = EM.getNewPorS(econClan);
-          double clanWorth = EM.getInitialEconWorth(econPorS, econClan);
+          double clanWorth = eM.econCnt > eM.econLimits1[0] ? Math.max(eM.initialWorth[0] * 4., eM.clanFutureFunds[econClan] / ((eM.econLimits3[0] - eM.econCnt) / 5.)) : eM.initialWorth[0];
           // now make a econ if FFunds > clanWorth
-          finishedClans++; // stop is non of the next five
           if (eM.clanFutureFunds[econClan] > clanWorth) {
             System.out.println("year" + eM.year + " " + "  clan=" + econClan + " initial clan worth=" + clanWorth + " econCnt=" + eM.econCnt);
-            finishedClans = 0; // start over finished future create clans
-            ec = curEc = eM.curEcon = newEcon(clanWorth, econPorS, econClan);  // include new of Econ
-            if (E.debugEconCnt) {
-              synchronized (EM.econCnt) {
-                if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                  EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-                }
-              }
+            // since the pors in not yet know, use initialWorth of planets
+            finishedClans = 0;
+            ec = curEc = eM.curEcon = newEcon(eM.initialWorth, econClan);  // include new of Econ
+             if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
+          }}
             curWorth = eM.curEcon.getWorth();
-            curWorth = clanWorth; // what we put in
             EM.curEcon.as.setStat(EM.FUTURECREATE, EM.curEcon.pors, eM.curEcon.clan, curWorth, 1);
             EM.curEcon.as.setStat(EM.BOTHCREATE, EM.curEcon.pors, eM.curEcon.clan, curWorth, 1);
             //eM.clanFutureFunds[econClan] -= eM.initialWorth[eM.curEcon.pors];
-            eM.clanFutureFunds[econClan] -= curWorth;
-            System.out.println("++++++++year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " FFCreated " + E.clanLetter[eM.curEcon.clan] + " " + Econ.nowName + E.clanLetter[eM.curEcon.clan] + " worth " + EM.mf(curWorth) + ":" + EM.mf(EM.curEcon.getWorth()) + " econssize=" + eM.econs.size());
+            eM.clanFutureFunds[econClan] -= curWorth = EM.curEcon.getWorth();
+            System.out.println("++++++++year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " FFCreated " + E.clanLetter[eM.curEcon.clan] + " " + Econ.nowName + E.clanLetter[eM.curEcon.clan] + " worth " + EM.mf(EM.curEcon.getWorth()) + " econssize=" + eM.econs.size());
           } // opasd  [\P]      
         } // end clansLoop
 
@@ -6920,8 +6660,8 @@ return;
           //  System.out.println(msgLine1);
           //    System.out.println(dnow.toString() + " doYear=" + eM.year + " logE0=" + eM.logEnvirn[0].getName() + "," + eM.logEnvirn[1].getName());
         }
-      } // end doStop future fund
-      if (doStop || eM.dfe()) {
+      } // end doStop
+      if (doStop || fatalError) {
         stateConst = STOPPED;
       } else {
         stateConst = STARTYR;
@@ -6929,7 +6669,7 @@ return;
         curStateName = "startYear";
         E.msgcnt = 0;
         // ignored planetsStart 0:planets.size(). start the years
-        for (planetsLoop = 0; planetsLoop < eM.planets.size() && !eM.dfe(); planetsLoop++) {
+        for (planetsLoop = 0; planetsLoop < eM.planets.size(); planetsLoop++) {
           ec = curEc = eM.curEcon = eM.planets.get(planetsLoop);
           String msgLine0 = since() + "Planet yearStart " + eM.year + " " + eM.curEcon.name + "=planet" + (eM.curEcon.getDie() ? " is dead" : " live");
           //  System.out.println(msgLine0);
@@ -6948,30 +6688,28 @@ return;
       //shipsSizeN1 = ships.size()-1
       // do costs and trades here, ships initiate trades
       Econ[] wildCurs = new Econ[(int) eM.wildCursCnt[0][0]];
-      if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
-          if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-            EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-          }
-        }
-      }
+       if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
+            }
+          }}
       // the oldest ships get first choice, and make the first trades
       stateConst = TRADING;
       paintTrade(curEc, curEc);
       curStateName = "trading";
       E.msgcnt = 0;
-      if (doStop || eM.dfe()) {
+      if (doStop || fatalError) {
         paintStopped();
         stateConst = STOPPED;
       } else {
 
         printMem3();
-        for (int n = 0; n < E.LCLANS && !eM.dfe(); n++) {
+        for (int n = 0; n < E.LCLANS; n++) {
           clanShipsDone[n] = 0;
         }
         // go latest to earliest, smallest to largest trades
-        for (shipsLoop = eM.ships.size() - 1; shipsLoop >= 0 && !eM.dfe(); shipsLoop--) {
-          eM.setCurEcon(ec = curEc = eM.ships.get(shipsLoop));
+        for (shipsLoop = eM.ships.size() - 1; shipsLoop >= 0; shipsLoop--) {
+          ec = curEc = eM.curEcon = eM.ships.get(shipsLoop);
           startEconState = (new Date()).getTime();
           //paintCurDisplay(eM.curEcon);
           E.msgs = E.dmsgs;;  // reset sysMsg counter before each trade
@@ -6990,13 +6728,11 @@ return;
             foundTradablePlanets = getWildCurs(shipCnt, cur1, nTradablePlanets, tradablePlanets);
             if (foundTradablePlanets > 0) {
               Econ cur2 = eM.curEcon.selectPlanet(tradablePlanets, foundTradablePlanets);
-              if (E.debugEconCnt) {
-                synchronized (EM.econCnt) {
-                  if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                    EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-                  }
-                }
-              }
+               if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
+            }
+          }}
               if (cur2 != null) {
                 //  System.out.println(" @@@@@@Ship=" + eM.curEcon.getName() + ", loop select planet=" + cur2.getName() + " distance=" + eM.curEcon.mf(calcLY(eM.curEcon,cur2)));
                 distance = calcLY(eM.curEcon, cur2);
@@ -7005,8 +6741,7 @@ return;
                 eM.hists[1] = eM.logEnvirn[1].hist;
               }
               clearHist(eM.logEnvirn[0]);
-              eM.setCurEcon(ec = curEc = eM.curEcon = cur1);
-              startEconState = (new Date()).getTime();
+              ec = curEc = eM.curEcon = cur1;
               setLogEnvirn(0, eM.curEcon);  // set start1
               eM.hists[0] = eM.logEnvirn[0].hist;
               //  distance = distance < .01 ? eM.nominalDistance[0] : distance; // add arbitrary distance if none
@@ -7015,15 +6750,13 @@ return;
               paintEconYearStart(eM.curEcon);
               curStateName = "econYrStrt";
               eM.curEcon.yearStart(distance);
-              if (E.debugEconCnt) {
-                synchronized (EM.econCnt) {
-                  if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                    EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-                  }
-                }
-              }
+ if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
+            }
+          }}
               //    E.msgcnt = 0;
-              eM.setCurEcon(ec = curEc = eM.curEcon = cur1);
+              ec = curEc = eM.curEcon = cur1;
               paintTrade(eM.curEcon, cur2);
               startEconState = (new Date()).getTime();
               //     eM.curEcon.sStartTrade(eM.curEcon, cur2);
@@ -7057,104 +6790,84 @@ return;
       stateConst = ENDYR;
       E.msgcnt = 0;
       int maxEcons = eM.econs.size();
-      if (doStop || eM.dfe()) {
+      if (doStop || fatalError) {
         stateConst = STOPPED;
       } else {
         curStateName = "ecYrEnds";
-        if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
-            if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
+         if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
-        }
-        for (envsLoop2 = 0; envsLoop2 < maxEcons && !eM.dfe() ; ++envsLoop2) {
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1] + " envsLoop2=" + envsLoop2);
-              }
+          }}
+        for (envsLoop2 = 0; envsLoop2 < maxEcons; ++envsLoop2) {
+                   if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1] + " envsLoop2=" + envsLoop2);
             }
-          }
+          }}
           ec = curEc = eM.curEcon = eM.econs.get(envsLoop2);
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+                   if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           startEconState = (new Date()).getTime();
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+                   if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           //    System.out.printf(new Date().toString() + " in doYear at envsLoop2 econ.yearEnd() name=" + eM.curEcon.name);
           // now reset the log environ to this current econ
           if (0 == envsLoop2 % 25) {
             printMem3();
           }
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+                   if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           clearHist(eM.logEnvirn[0]);
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+                   if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           setLogEnvirn(0, eM.curEcon);  // set start1
           eM.hists[0] = eM.logEnvirn[0].hist;
           E.msgcnt = 0;
-
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+         
+          if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           eM.curEcon.doYearEnd();
           EM.wasHere = "after eM.curEcon.doYearEnd()";
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+          if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           //   paintEconEndYear(eM.curEcon);
 
           //   System.out.print(new Date().toString() + " after year end" + eM.curEcon.name + "=ship " + (eM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[eM.curEcon.clan] + " " + eM.curEcon.name + " h=" + eM.curEcon.df(eM.curEcon.getHealth()) + ", age=" + eM.curEcon.getAge() + ", w=" + eM.curEcon.df(eM.curEcon.getWorth()));
           printMem();
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+                   if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
           String disp1 = (eM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[eM.curEcon.clan] + " " + eM.curEcon.name + " h="
                   + eM.curEcon.df(eM.curEcon.getHealth()) + ", age=" + eM.curEcon.age
                   + ", w=" + eM.curEcon.df(eM.curEcon.getWorth());
-          System.out.println(new Date().toString() + disp1);
+            System.out.println(new Date().toString() + disp1);
           namesList.add(envsLoop2, disp1);
-          if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
-              if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-                EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-              }
+         if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
+              EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
+          }}
         } // finish curEcon.yearEnd
 
         //wait for threadCnt to zero, finish all yearEnd
@@ -7162,68 +6875,64 @@ return;
           System.out.println("``````````````Waiting Ending year=" + eM.andET());
         }
         stateConst = WAITING;
-        if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
-            if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
+        if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
-        }
+          }}
         eM.curEcon.imWaiting(Econ.threadCnt, 0, 4, "doYear ended yearEnds");
-        if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
-            if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
+        if(E.debugEconCnt){
+           synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
-          }
-        }
+          }}
         stateConst = ENDYR;
         if (E.debugThreads) {
           System.out.println("``````````````Ending year=" + eM.andET());
         }
         // preset counts to zero, they will be counted next
-
-        eM.econCnt = 0;
-        eM.planets.clear();
-        eM.ships.clear();
-        for (int m = 0; m < 2; m++) {
-          EM.porsCnt[m] = 0;
-          for (int n = 0; n < 5; n++) {
-            EM.clanCnt[n] = 0; // doing twice
-            EM.porsClanCnt[m][n] = 0;
-          }// n
-        }// m
-
-        // now set the counts and planets and ships
-        for (Econ t : eM.econs) {
-          if (!t.getDie()) {
-            EM.porsClanCnt[t.pors][t.clan]++;
-            EM.clanCnt[t.clan]++;
-            EM.porsCnt[t.pors]++;
-            EM.econCnt++;
-            //        eM.names2ec.put(t.name, t);
-            if (t.pors == P) {
-              eM.planets.add(t);
-            } else {
-              eM.ships.add(t);
-            }
+ 
+      eM.econCnt = 0;
+      eM.planets.clear();
+      eM.ships.clear();
+      for (int m = 0; m < 2; m++) {
+        EM.porsCnt[m] = 0;
+        for (int n = 0; n < 5; n++) {
+          EM.clanCnt[n] = 0; // doing twice
+          EM.porsClanCnt[m][n] = 0;
+        }// n
+      }// m
+      
+      // now set the counts and planets and ships
+      for (Econ t : eM.econs) {
+        if (!t.getDie()) {
+          EM.porsClanCnt[t.pors][t.clan]++;
+          EM.clanCnt[t.clan]++;
+          EM.porsCnt[t.pors]++;
+          EM.econCnt++;
+  //        eM.names2ec.put(t.name, t);
+          if (t.pors == P) {
+            eM.planets.add(t);
+          } else {
+            eM.ships.add(t);
           }
         }
-        namesList.clear();
-        stateConst = ENDYR;
-        maxEcons = eM.econs.size();
-        for (envsLoop2 = 0; envsLoop2 < maxEcons && !eM.dfe();++envsLoop2) {
-          eM.setCurEcon(ec = curEc = EM.econs.get(envsLoop2));
+      }
+      namesList.clear();
+      stateConst = ENDYR;
+      maxEcons = eM.econs.size();
+      for (envsLoop2 = 0; envsLoop2 < maxEcons; ++envsLoop2) {
+          ec = curEc = EM.curEcon = EM.econs.get(envsLoop2);
           //    System.out.printf(new Date().toString() + " in doYear at envsLoop2 econ.yearEnd() name=" + eM.curEcon.name);
-
-          String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[eM.curEcon.clan]
-                  + " " + EM.curEcon.name + " h=" + EM.curEcon.df(EM.curEcon.getHealth())
-                  + ", age=" + EM.curEcon.age
-                  + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
-          System.out.println(new Date().toString() + disp1);
-          namesList.add(envsLoop2, disp1);
+   
+          String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[eM.curEcon.clan] 
+              + " " + EM.curEcon.name + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) 
+              + ", age=" + EM.curEcon.age
+              + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
+            System.out.println(new Date().toString() + disp1);
+            namesList.add(envsLoop2, disp1);
         } // finish curEcon.name list
-
+      
         long[][][] resii1 = eM.resI[0];
         long[][] resi2 = resii1[1];
         long[] resi23 = resi2[2];
@@ -7238,6 +6947,103 @@ return;
         // System.out.print(EM.curEcon.name + since() + " after gamePanelChange");
         printMem3();
       }
+      EM.wasHere = "at end of doY&ear try";
+
+    } // try
+    catch (WasFatalError ex) {
+
+        eM.flushes();
+
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + " WasFatalError found" + EM.andMore());
+      ex.printStackTrace(System.err);
+      // go to finally
+    } catch (WasStopped ex) {
+   
+        eM.flushes();
+ 
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + " WasStopped found" + EM.andMore());
+      ex.printStackTrace(System.err);
+      // go to finally
+    } catch (MyTestException ex) {
+
+        eM.flushes();
+
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "MyTestException found" + EM.andMore());
+      ex.printStackTrace(System.err);
+
+        System.err.flush();
+      setFatalError();
+    } catch (MyErrException ex) {
+
+        eM.flushes();
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + " MyErrException=" + ex.getMessage() + EM.andMore());
+      ex.printStackTrace(System.err);
+
+        eM.flushes();
+      setFatalError();
+    } catch (MyErr ex) {
+        eM.flushes();
+
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + " MyErr=" + ex.getMessage() + EM.andMore());
+      ex.printStackTrace(System.err);
+      if (!resetOut) {
+        eM.flushes();
+      }
+      setFatalError();
+    } catch (MyMsgException ex) {
+      if (!resetOut) {
+        eM.flushes();;
+      }
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + " MyMsgException found=" + ex.getMessage() + EM.andMore());
+      ex.printStackTrace(System.err);
+      if (!resetOut) {
+        eM.flushes();
+      }
+      setFatalError();
+      } catch (java.lang.Error ex) {
+      if (!resetOut) {
+        eM.flushes();
+      }
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Caught Err cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + EM.andMore());
+      ex.printStackTrace(System.err);
+      if (!resetOut) {
+        eM.flushes();
+      }
+      setFatalError();
+    } catch (java.lang.ArrayIndexOutOfBoundsException ex) {
+      if (!resetOut) {
+        eM.flushes();
+      }
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Caught java.lang.ArrayIndexOutOfBoundsException cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + EM.andMore());
+      ex.printStackTrace(System.err);
+      if (!resetOut) {
+        eM.flushes();
+      }
+      setFatalError();
+    } catch (RuntimeException ex) {
+      if (!resetOut) {
+        eM.flushes();
+      }
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + since() + " Caught RuntimeException cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + EM.andMore());
+      ex.printStackTrace(System.err);
+      if (!resetOut) {
+        eM.flushes();
+      }
+      setFatalError();
+    } catch (Exception ex) {
+      eM.flushes();
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      ex.printStackTrace(System.err);
+      eM.flushes();
+      setFatalError();
+    } finally {
+      if (!resetOut) {
+        eM.flushes();
+      }
+      /**
+       * now initialize values for display
+       */
+//    E.incrFracStaffForRes[1][4]++;
       String eMCurEcon = (eM.curEcon != null && eM.curEcon.name != null ? eM.curEcon.name : "**none**");
       eM.wasHere = "In doYear finally econ=" + eMCurEcon;
       String xxx = since() + " In doYear finally econs=" + eM.econs.size();
@@ -7281,50 +7087,9 @@ return;
           }
         }
       });
-      EM.wasHere = "at end of doY&ear try";
-
-    } // try
-    catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("do Year aWasFatalError=" + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-     eM.flushes();
-     System.exit(-21);
-      //ex.printStackTrace(System.err);
-      // go to finally
-    } catch (Exception ex) {
-EM.firstStack = EM.secondStack+"";
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println(EM.tError=("doYear bException=" + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
-      eM.flushes();
-      System.exit(-25);
-      setFatalError();
-     throw new WasFatalError(EM.tError);
-
-     } catch (java.lang.AssertionError ex) {
-EM.firstStack = EM.secondStack+"";
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println(EM.tError=("doYear bAssertionError=" + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
-      eM.flushes();
-      System.exit(-22);
-      setFatalError();
-     throw new WasFatalError(EM.tError);
-    } finally {
-        eM.flushes();
-if(eM.dfe() )return;
-      /**
-       * now initialize values for display
-       */
-//    E.incrFracStaffForRes[1][4]++;
-
-      eM.wasHere = "econ=" + Econ.nowName + " doYear finally at end";
+      eM.wasHere = "econ=" + eMCurEcon + " doYear finally at end";
     }// end finally
     eM.wasHere = " doYear at end after finally";
- return;
   } // end doYear
 
   void paintEconCreate() {
@@ -7368,6 +7133,7 @@ if(eM.dfe() )return;
     setEconState(WAITING);
   }
 
+  
   int curDisplayPrints = 0;
   int gameE = 0, gameP = 0, gameS = 0, rcgsE = 0, rcsgP = 0, rcsgS = 0;
   double gameMaxW = 0., gameMinW = 0.;
@@ -7851,13 +7617,11 @@ if(eM.dfe() )return;
    * @param gameSSliders}
    */
   public void getGameValues(int[] currentVals1, JPanel[] panelAr, JTextField[] textFieldsAr, JSlider[] gamePSliders, JSlider[] gameSSliders) {
-    if(eM.dfe()) return;
     try {
       int val = 0, v = -1, oldval = 0, gc = -1;
       for (int p = 0; p < 10; p++) { // go through elements in this panel
-        v = currentVals1[p];
         if (E.debugSettingsTab) {
-          System.out.print("getGameValues #" + p + " vv=" + (v) + ", clan =" + eM.gameClanStatus);
+          System.out.print("getGameValues #" + p + " vv=" + (v = currentVals1[p]) + ", clan =" + eM.gameClanStatus);
         }
         if (v > -1 && panelAr[p].isEnabled()) {
           gc = eM.valI[v][eM.modeC][0][0];
@@ -7891,11 +7655,11 @@ if(eM.dfe() )return;
           //  gamePSliders[p].setEnabled(false);
         }
         //  panelAr[p].setEnabled(false);
-        EM.flushes();
+       EM.flushes();
       }
     } catch (Exception ex) {
       eM.flushes();
-      System.err.println("getGamesValues exception " +EM.curEconName + since() + " " + Thread.currentThread().getName()  + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
@@ -7922,9 +7686,7 @@ if(eM.dfe() )return;
      */
     try {
       getGameValues(currentVals1, panelAr, textFieldsAr, gamePSliders, gameSSliders);
-      if (E.debugSettingsTabOut) {
-        System.out.println("Enter gamePanelChange clan=" + clan + " gameClanStatus=" + eM.gameClanStatus + " action=" + action + " vvend=" + eM.vvend + " ");
-      }
+      System.out.println("Enter gamePanelChange clan=" + clan + " gameClanStatus=" + eM.gameClanStatus + " action=" + action + " vvend=" + eM.vvend + " ");
       // now set the new clan
       int v = -1; // sliderc value 0 to 99
       int klan = -1;
@@ -8016,7 +7778,7 @@ if(eM.dfe() )return;
         klan = 0;
         eM.vv = eM.gStart[eM.gPntr];
         if (E.debugSettingsTab) {
-          System.out.println("gamePanelChange Start the next game-master panel at vv =" + eM.vv + " = " + eM.valS[eM.vv][0]);
+          System.out.println("Start the next game-master panel at vv =" + eM.vv + " = " + eM.valS[eM.vv][0]);
         }
       } else {
         klan = clan;
@@ -8027,7 +7789,7 @@ if(eM.dfe() )return;
           ix = iy;
         }
         if (E.debugSettingsTab) {
-          System.out.println("gamePanelChange Start the next clan-master panel at cPntr=" + eM.cPntr + " " + iy + ":" + ix + "=" + eM.valS[ix][0]);
+          System.out.println("Start the next clan-master panel at cPntr=" + eM.cPntr + " " + iy + ":" + ix + "=" + eM.valS[ix][0]);
         }
       }
       nn = 0;
@@ -8038,7 +7800,7 @@ if(eM.dfe() )return;
         int vfive = eM.vfive;
         int vten = eM.vten;
         if (E.debugSettingsTab) {
-          System.out.println("gamePanelChange line nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0] + " clan=" + eM.gameClanStatus + " ??displaying?? ww=" + eM.vv + " = " + eM.valS[eM.vv][0]);
+          System.out.println("line nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0] + " clan=" + eM.gameClanStatus + " ??displaying?? ww=" + eM.vv + " = " + eM.valS[eM.vv][0]);
           // System.out.print(nn);
           // System.out.print("nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0]);
           // System.out.print(eM.gameClanStatus);
@@ -8050,7 +7812,7 @@ if(eM.dfe() )return;
         currentVals1[nn] = eM.vv;  // the object to display
         if (eM.matchGameClanStatus(eM.vv)) {
           if (E.debugSettingsTab) {
-            System.out.println(" <<<<<DISPLAY gamePanelChange clan planet " + ", desc=" + eM.valS[currentVals1[nn]][0] + ", klan=" + klan + ", line=" + nn + ", sliderV=" + eM.valI[currentVals1[nn]][eM.sliderC][eM.gamePorS][klan] + ", ww=" + currentVals1[nn] + ", clan=" + eM.gameClanStatus);
+            System.out.println(" <<<<<DISPLAY clan planet " + ", desc=" + eM.valS[currentVals1[nn]][0] + ", klan=" + klan + ", line=" + nn + ", sliderV=" + eM.valI[currentVals1[nn]][eM.sliderC][eM.gamePorS][klan] + ", ww=" + currentVals1[nn] + ", clan=" + eM.gameClanStatus);
           }
           // E.sysmsg(" <<<<<DISPLAY clan=" + eM.gameClanStatus);
 
@@ -8074,7 +7836,7 @@ if(eM.dfe() )return;
           textFieldsAr[nn].setText(eM.valS[currentVals1[nn]][0]);
           eM.gamePorS = E.P;
           gamePSliders[nn].setEnabled(true);
-          // gamePanelChange gamePSliders[nn].setForeground(Color.blue);
+          // gamePSliders[nn].setForeground(Color.blue);
           gamePSliders[nn].setMajorTickSpacing(10);
           gamePSliders[nn].setMinorTickSpacing(2);
           gamePSliders[nn].setPaintLabels(true);
@@ -8096,15 +7858,15 @@ if(eM.dfe() )return;
             v = eM.valI[currentVals1[nn]][sliderC][E.S][klan];
           } else if (gc == eM.vtwo) {
             v = eM.valI[currentVals1[nn]][sliderC][0][E.S];
-          } //
-          //    gamePanelChange  v = (vl = eM.valI[currentVals1[nn]][sliderC].length) > 1 ? (vv = eM.valI[currentVals1[nn]][sliderC][E.S][klan]) : eM.valI[currentVals1[nn]][sliderC][0].length > 1? (vv = eM.valI[currentVals1[nn]][eM.sliderC][0][E.S]: -1);
+          }
+          //    v = (vl = eM.valI[currentVals1[nn]][sliderC].length) > 1 ? (vv = eM.valI[currentVals1[nn]][sliderC][E.S][klan]) : eM.valI[currentVals1[nn]][sliderC][0].length > 1? (vv = eM.valI[currentVals1[nn]][eM.sliderC][0][E.S]: -1);
           //  int w = (int)Math.floor((wl=eM.valD[currentVals1[nn]][0].length) > 1 ?(ww= eM.valD[currentVals1[nn]][0][1][0] ): (ww = eM.valD[currentVals1[nn]][0][0][1]));
           // enable staff slider if value > -1 the staff values exist as positive slider vals
           if (v > -1) {
             if (E.debugSettingsTab) {
               System.out.println(" <<<<<DISPLAY ship sliderV=" + v + ", clan=" + eM.gameClanStatus + ", klan=" + klan + ", line=" + nn + ", desc=" + eM.valS[currentVals1[nn]][0]);
             }
-            // gamePanelChange gamePSliders[nn].setForeground(Color.blue);
+            // gamePSliders[nn].setForeground(Color.blue);
             gameSSliders[nn].setSnapToTicks(false);
             gameSSliders[nn].setForeground(Color.blue);
             gameSSliders[nn].setMajorTickSpacing(10);
@@ -8123,13 +7885,13 @@ if(eM.dfe() )return;
             gameSSliders[nn].setEnabled(false);
             gameSSliders[nn].setVisible(false);
             if (E.debugSettingsTab) {
-              System.out.println(" <<<<< gamePanelChange NO DISPLAY ship sliderv=" + v + ", clan=" + eM.gameClanStatus + ", gc=" + gc + ", klan=" + klan + ", desc=" + eM.valS[currentVals1[nn]][0]);
+              System.out.println(" <<<<< NO DISPLAY ship sliderv=" + v + ", clan=" + eM.gameClanStatus + ", gc=" + gc + ", klan=" + klan + ", desc=" + eM.valS[currentVals1[nn]][0]);
             }
           }
           nn++;
         } else {
           if (E.debugSettingsTab) {
-            System.out.println(" >>>>gamePanelChange SKIP line=" + nn + ", gc=" + gc + ", klan=" + klan + ", clan=" + eM.gameClanStatus + ", desc=" + eM.valS[currentVals1[nn]][0]);
+            System.out.println(" >>>>SKIP line=" + nn + ", gc=" + gc + ", klan=" + klan + ", clan=" + eM.gameClanStatus + ", desc=" + eM.valS[currentVals1[nn]][0]);
           }
         }
 
@@ -8138,19 +7900,19 @@ if(eM.dfe() )return;
       if (eM.vv >= eM.vvend) {
         int vv2 = eM.gameClanStatus == 5 ? eM.gStart[0] : eM.cStart[0];
         if (E.debugOutput) {
-          System.out.println("gamePanelChange start over from" + eM.vv + " panel clan=" + eM.gameClanStatus + " action=" + action + " start=" + (eM.vv = vv2) + " length=" + eM.vvend + " ");
+          System.out.println("start over from" + eM.vv + " panel clan=" + eM.gameClanStatus + " action=" + action + " start=" + (eM.vv = vv2) + " length=" + eM.vvend + " ");
         }
         System.out.println(new Date().toString());
         eM.gameDisplayNumber[eM.gameClanStatus] = eM.prevGameDisplayNumber[eM.gameClanStatus] = 0; // start over
 
       }
-      // gamePanelChange now disable the unused panels
+      // now disable the unused panels
       if (nn < 10) {
         while (nn < 10) {
           textFieldsAr[nn].setText("unused");
           panelAr[nn].setEnabled(false);
-          panelAr[nn].setVisible(false);
-          System.out.print("disable panel nn=" + nn++ + " clan=" + eM.gameClanStatus);
+          panelAr[nn++].setVisible(false);
+          System.out.print("disable panel nn=" + nn + " clan=" + eM.gameClanStatus);
           System.out.println(" " + new Date().toString());
         }
       }
@@ -8163,7 +7925,7 @@ if(eM.dfe() )return;
       }
     } catch (Exception ex) {
       eM.flushes();
-      System.err.println(" gamePanelChange " + Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
       eM.flushes();
       setFatalError();
@@ -8232,10 +7994,10 @@ if(eM.dfe() )return;
    * of 4 rounds (no ROWS,ROWS1,ROWS2,ROWS3)
    */
   long[] rowsm = {0L,
-    EM.THISYEAR | EM.THISYEARAVE | EM.THISYEARUNITS | EM.SUM | EM.BOTH | EM.CUMAVE | EM.CUM | EM.CUR | EM.CURAVE | EM.CURUNITS | EM.CUMUNITS,
+    EM.THISYEAR | EM.THISYEARAVE | EM.THISYEARUNITS | EM.SUM | EM.BOTH | EM.CUMAVE | EM.CUM | EM.CUR | EM.CURAVE | EM.CURUNITS |EM.CUMUNITS,
     EM.ROWS1 | EM.BOTH | EM.THISYEAR | EM.THISYEARAVE | EM.THISYEARUNITS | EM.CUM | EM.CUMAVE | EM.CURUNITS | EM.CUR | EM.CURAVE | EM.CUMUNITS,
     EM.ROWS2 | EM.BOTH | EM.CUR | EM.CURAVE | EM.CURUNITS | EM.THISYEAR | EM.THISYEARAVE | EM.THISYEARUNITS | EM.CUM | EM.CUMAVE | EM.CUMUNITS,
-    EM.ROWS3 | EM.BOTH | EM.THISYEARUNITS | EM.CUR | EM.CURUNITS | EM.CURUNITS | EM.CUM | EM.CUMAVE | EM.CUMUNITS
+    EM.ROWS3 | EM.BOTH | EM.THISYEARUNITS | EM.CUR |EM.CURUNITS |EM.CURUNITS |EM.CUM | EM.CUMAVE | EM.CUMUNITS
   };
   long resLoops[][] = {
     {EM.LIST0 | EM.SKIPUNSET, 0L, 0L, 0L, 0L},
@@ -8262,10 +8024,7 @@ if(eM.dfe() )return;
     {EM.LIST21 | EM.SKIPUNSET, 0L, 0L, 0L, 0L},
     {EM.LIST22 | EM.SKIPUNSET, 0L, 0L, 0L, 0L},
     {EM.LIST23 | EM.SKIPUNSET, 0L, 0L, 0L, 0L},
-    {EM.LIST24 | EM.SKIPUNSET, 0L, 0L, 0L, 0L},
-    {EM.LIST25  | EM.SKIPUNSET, 0L, 0L, 0L, 0L},
-    {EM.LIST26 | EM.SKIPUNSET, 0L, 0L, 0L, 0L},
-    {EM.LIST27 | EM.SKIPUNSET, 0L, 0L, 0L, 0L},};
+  };
   int m = 0, arow = 0;
 
   /**
@@ -8295,10 +8054,10 @@ if(eM.dfe() )return;
     for (int rowsIx = 1; rowsIx < 5 && rowsIx < resLoops[list].length; rowsIx++) {
       i = myLIST | rowsm[rowsIx] | resLoops[list][rowsIx];
 
-      if (E.debugPutRowsOut6) {
-        if ((listResNoteCount++ < 10)) {
-          System.out.printf("in StarTrader.listRes resLoops[%d][%d], key=%o, row%d\n", list, rowsIx, i, arow);
-        }
+      if(E.debugPutRowsOut6){
+      if ((listResNoteCount++ < 10)) {
+        System.out.printf("in StarTrader.listRes resLoops[%d][%d], key=%o, row%d\n", list, rowsIx, i, arow);
+      }
       }
       arow = eM.putRows(statsTable1, resExt, arow, i);
     }
@@ -8362,7 +8121,7 @@ if(eM.dfe() )return;
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
       ex.printStackTrace(System.err);
       EM.flushes();
-      eM.dfe() = true;
+      fatalError = true;
     }
   }
   }; // tests1
@@ -8387,13 +8146,12 @@ if(eM.dfe() )return;
    */
 
   static boolean testing = false; // change to false in production
-  //public static StarTrader st = new StarTrader();
-  public static StarTrader st = (new StarTrader());
-// StarTrader st = this;
-
+ // public static StarTrader st = new StarTrader();
+  public static StarTrader st  = (new StarTrader());
   /**
    * @param args the command line arguments
    */
+
 
   public static void main(String args[]) throws IOException {
     /* Set the Nimbus look and feel --change to animation*/
@@ -8408,11 +8166,11 @@ if(eM.dfe() )return;
       mainStart();
       st.setVisible(true);
       stateConst = CONSTRUCTED;
-
-      if (testing || (args.length > 0 && args[0].contains("test"))) {
-        main3();
-      } else {
-        System.err.println("continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
+   
+      if (testing || (args.length > 0 && args[0].contains("test"))) { 
+        main3(); 
+              } else {
+         System.err.println("continuing main thread=" + Thread.currentThread().getName()+ "msecs" + (new Date().getTime() - startTime));
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
           // java.awt.EventQueue.invokeAndWait(new Runnable() {
@@ -8422,7 +8180,7 @@ if(eM.dfe() )return;
           }
         });// invokeLater
       } // end if test
-      /* } catch (InterruptedException ex) {
+   /* } catch (InterruptedException ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
@@ -8438,13 +8196,13 @@ if(eM.dfe() )return;
       EM.flushes();
       fatalError = true;;
        */
-    } catch (Exception ex) {
+    } catch (FileNotFoundException ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
-      System.err.println(EM.curEconName + " " + Thread.currentThread().getName() + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
       ex.printStackTrace(System.err);
       EM.flushes();
-      EM.newError = true;;
+      fatalError = true;;
     } finally {
       System.err.println("doyear finally do flushes next then close bKeep");
       EM.flushes();
@@ -8454,10 +8212,9 @@ if(eM.dfe() )return;
     }
   }
 
-  /**
-   * the starting part of main
-   *
-   * @throws IOException
+  /** the starting part of main
+   * 
+   * @throws IOException 
    */
   public static void mainStart() throws IOException {
     try {
@@ -8467,7 +8224,25 @@ if(eM.dfe() )return;
       //  String rOut = "New Game " + dateString + "\n";
       // E.bRemember.write(rOut,0,rOut.length());
       // E.bKeep.write(rOut,0,rOut.length());
-      //PrintStream jout, jerr, jout1, jerr1;
+      PrintStream jout, jerr, jout1, jerr1;
+      if (E.debugOutput) {
+        jout = new PrintStream(new File("StarTraderOutput.txt"));
+      //  jout1 = new PrintStream(new File("StarTraderOut1.txt"));
+      //  jout1.println("jout1 line");
+        jout.println("jout line0");
+        System.out.println("System.out line 0");
+        jerr = new PrintStream(new File("StarTraderErrors.txt"));
+   //     jerr1 = new PrintStream(new File("StarTraderErr1.txt"));
+        if (E.resetOut) {
+          System.setOut(jout);
+          System.out.println("output to System.out after setOut");
+          System.setErr(jerr);
+          System.err.println("output to System.err after setErr");
+
+        }
+        System.out.println("output after if statment");
+        System.err.println("output to err after if statment");
+      }
 
       for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 
@@ -8476,39 +8251,61 @@ if(eM.dfe() )return;
           break;
         }
       }
-    } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("MainStart Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
-      //ex.printStackTrace(System.err);
-    System.exit(-15);
-      // go to finally
-    } catch (Exception ex) {
-      EM.newError = true;
-EM.firstStack = EM.secondStack+"";
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println(EM.tError=("MainStart Error " + ex.toString() + " " + since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
-      eM.flushes();
-       System.exit(-11);
-      //setFatalError();
-     throw new WasFatalError(EM.tError);
+    } catch (ClassNotFoundException ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;;
+    } catch (InstantiationException ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;;
+    } catch (IllegalAccessException ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;;
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;;
+    } catch (FileNotFoundException ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;;
     }
   }// mainStart
+  
+  
+  
+static int cntr1 = 0;
+static int cntr2 = 0;
+static int cntr3 = 0;
+static int cntr3a = 0;
+static int cntr4 = 0;
+static int cntr5 = 0;
+static int cntr6 = 0;
+static int cntr7 = 0;
+static int cntr8 = 0;
+static int cntr9 = 0;
+static int cntr10 = 0;
 
-  static int cntr1 = 0;
-  static int cntr2 = 0;
-  static int cntr3 = 0;
-  static int cntr3a = 0;
-  static int cntr4 = 0;
-  static int cntr5 = 0;
-  static int cntr6 = 0;
-  static int cntr7 = 0;
-  static int cntr8 = 0;
-  static int cntr9 = 0;
-  static int cntr10 = 0;
 
+
+  
   /**
    * the testing part of the main routine
    *
@@ -8529,6 +8326,7 @@ if(!eM.dfe() ){
             System.err.println(">>>>>>Countinue main3 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt=" + cntr++);
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.out.println("tests1 round1 waiting out testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt=" + cntr++);
+              assert cntr <11: "stuck at cntr > 10";
               if (cntr > 10) {
                 eM.doMyErr("stuck at cntr > 10");
               }
@@ -8545,7 +8343,8 @@ if(!eM.dfe() ){
             int cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.out.println("#######main3 test1 round3 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt1=" + cntr1++);
-             if (cntr > 40) {
+             assert cntr1 < 41:" stuck at wait round3 cntr1 > 40";
+             if (cntr1 > 40) {
                 eM.doMyErr("stuck at cntr > 40");
               }
               Thread.sleep(1000);
@@ -8565,7 +8364,8 @@ if(!eM.dfe() ){
             cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.err.println("#######main3 round5 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt1=" + cntr1++);
-             if (cntr > 40) {
+             assert cntr1 < 41:" stuck waiting in round5 cntr1 > 40";
+             if (cntr1 > 40) {
                 eM.doMyErr("stuck at cntr > 40");
               }
               Thread.sleep(1000);  //1 sec
@@ -8581,7 +8381,8 @@ if(!eM.dfe() && !st.fatalError){
             cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.err.println("#######main3 round7 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt1=" + cntr1++);
-             if (cntr > 40) {
+              assert cntr1 < 41:"stuck at round7 cntr1 > 40";
+             if (cntr1 > 40) {
                 eM.doMyErr("stuck at cntr > 40");
               }
               Thread.sleep(1000);
@@ -8594,12 +8395,13 @@ if(!eM.dfe()){
             stateConst = RUNNING;
 
             //st.runYears(20); // higher random
-            st.runYears(4); // higher random
+            st.runYears(2); // higher random
             // wait for runYears to finish
             cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.err.println("#######main3 round9 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt1=" + cntr1++);
-             if (cntr > 100) {
+              assert cntr1 < 101:"stuck at round9 cntr1 > 100";
+             if (cntr1 > 100) {
                 eM.doMyErr("stuck at cntr > 100");
               }
               Thread.sleep(1000);
@@ -8741,4 +8543,4 @@ java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.log
 
   }// main3
 
-}// StarTrader
+}
