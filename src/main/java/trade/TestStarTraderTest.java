@@ -63,7 +63,7 @@ public class TestStarTraderTest {
       } catch (WasFatalError ex) {
 ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
       eM.flushes();
-      System.err.println("Error " + ex.toString() + " " +st.since()  + " " + EM.curEconName  + " " + Econ.nowThread  + EM.andMore());
+      System.err.println("Error " + ex.toString() + " " +st.since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName()  + EM.andMore());
       //ex.printStackTrace(System.err);
     System.exit(-15);
       // go to finally

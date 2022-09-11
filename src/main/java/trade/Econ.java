@@ -1247,7 +1247,11 @@ public class Econ {
   
   /** add some Econ class variables */
   final static String[] threadFor = {"yearEnd"};
-  static volatile int[] threadCnt = {0}; // synchronized count of started threads
+  // count started endYears and name threads
+  static int maxEndYears = 20;
+  static volatile int[] threadCnt = {0}; // synchronized count of endYear threads
+  static volatile String[] threadNames = new String[maxEndYears];
+  static volatile String[] econNames = new String[maxEndYears];
   static String nowName = "soonName";
   static Econ nowEc;
   static String nowThread = "soonThread";
@@ -1256,6 +1260,7 @@ public class Econ {
   static String imWaitingList[] = new String[lImWaitingList];
   static int ixImWaitingList;
   int prev2ImwIx=0,prevImwIx=0;
+  volatile boolean okEconCnt=false;
   
   /**
    * wait until a synchronized what drops to a limit or until an interrupt or
@@ -1275,7 +1280,9 @@ public class Econ {
     int atCnt=0;
     int prevCnt = what[0];
     long imMore = imStart - EM.doYearTime;
-    if(E.debugEconCnt){
+    synchronized(EM.econCnt){ okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));}
+        assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
+        if(E.debugEconCnt && E.noAsserts){
            synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -1300,7 +1307,9 @@ public class Econ {
      // what is always threadCnt, so use threadCnt[0]
     boolean dowait= threadCnt[0] > limit;
     for (int timeLoop = 0; timeLoop < secs && dowait; timeLoop++) {
-      if(E.debugEconCnt){
+      synchronized(EM.econCnt){ okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));}
+        assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
+        if(E.debugEconCnt && E.noAsserts){
            synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -1318,7 +1327,9 @@ public class Econ {
     //  synchronized (what) {tCnts = what[0];}
       if (threadCnt[0] <= limit) {
         dowait= false; // no more waiting
-        if(E.debugEconCnt){
+        synchronized(EM.econCnt){ okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));}
+        assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
+        if(E.debugEconCnt && E.noAsserts){
            synchronized(EM.econCnt){ if(EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])){
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -1400,7 +1411,7 @@ String iWaited = " imWaited ";
  * 
  */
  void incrThreadCnt(){
-   synchronized (threadCnt) {threadCnt[0]++;};
+   synchronized (threadCnt) {threadCnt[0]++; };
  }
  /** a siynchronized decrement of the threadCnt
  * 
