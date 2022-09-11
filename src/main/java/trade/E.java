@@ -79,7 +79,8 @@ static StarTrader st;
    * enclosed by an if on this flag will never be compiled. In any case
    * execution speeds up if the debugging code is not reached
    */
-  static final boolean noAsserts = true; // false expect -ea was done, true expect not -ea done
+  //static final boolean noAsserts = true; // true expect not -ea in program call
+  static final boolean noAsserts = false; // false expect -ea in call 
   static boolean ifassert = false; // preset for later test
   
   static final boolean distributable = false;  //set true before making a jar fine available to public
