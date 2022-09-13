@@ -8279,7 +8279,7 @@ if(!eM.dfe() ){
            cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.out.println("#######main3 test1 round3 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt1=" + cntr1++);
-             assert cntr1 < 41:" stuck at wait round3 cntr1 > 40";
+             assert cntr1 < 41:" stuck at wait round3 cntr1=" + cntr1;
              if (E.noAsserts && cntr1 > 40) {
                 eM.doMyErr("stuck at cntr > 40");
               }
@@ -8300,7 +8300,7 @@ if(!eM.dfe() ){
             cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.err.println("#######main3 round5 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
-             assert cntr1 < 41:" stuck waiting in round5 cntr1 > 40";
+             assert cntr1 < 41:" stuck waiting in round5 cntr1=" + cntr1;
              if (E.noAsserts && cntr1 > 40) {
                 eM.doMyErr("stuck at cntrq > 40");
               }
@@ -8317,7 +8317,7 @@ if(!eM.dfe() && !st.fatalError){
             cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.err.println("#######main3 round7 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
-              assert cntr1 < 41:"stuck at round7 cntr1 > 40";
+              assert cntr1 < 41:"stuck at round7 cntr1=" + cntr1;
              if (E.noAsserts && cntr1 > 40) {
                 eM.doMyErr("stuck at cntr > 40");
               }
@@ -8336,7 +8336,7 @@ if(!eM.dfe()){
             cntr1 = 0;
             while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
               System.err.println("#######main3 round9 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
-              assert cntr1 < 41:"stuck at round9 cntr1 > 30";
+              assert cntr1 < 41:"stuck at round9 cntr1=" + cntr1;
              if (E.noAsserts && cntr1 > 40) {
                 eM.doMyErr("stuck at cntr > 40");
               }
@@ -8385,7 +8385,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
         System.err.println("tests1 waiting out invokeAndWait thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
         Thread.sleep(1000);
-        assert cntr1 < 41:" stuck waiting after invokeAndWait cntr1 > 40";
+        assert cntr1 < 41:" stuck waiting after invokeAndWait cntr1=" + cntr1;
              if (E.noAsserts && cntr1 > 40) {
                 eM.doMyErr("stuck at cntrq > 40");
               }
@@ -8398,7 +8398,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
         System.err.println("tests1 waiting out round11 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
         Thread.sleep(1000);
-        assert cntr1 < 41:" stuck waiting after round11 cntr1 > 40";
+        assert cntr1 < 41:" stuck waiting after round11 cntr1=" + cntr1;
              if (E.noAsserts && cntr1 > 40) {
                 eM.doMyErr("stuck at cntrq > 40");
               }
@@ -8410,7 +8410,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
         System.err.println("tests1 waiting out round13 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
         Thread.sleep(1000);
-         assert cntr1 < 41:" stuck waiting after round13 cntr1 > 40";
+         assert cntr1 < 41:" stuck waiting after round13 cntr1=" + cntr1;
       }
       eM.clanShipFrac[0][0] = .66; // 2/1 from .501
       eM.clanAllShipFrac[0][0] = .66;
@@ -8436,7 +8436,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
         System.err.println("tests1 waiting out testing round17 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt8=" + cntr8++);
         Thread.sleep(1000);
-        assert cntr1 < 41:" stuck waiting after round117 cntr1 > 40";
+        assert cntr1 < 41:" stuck waiting after round117 cntr1=" + cntr1;
       }
 
       eM.resourceGrowth[0] = 2.;
@@ -8449,7 +8449,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
         System.err.println("tests1 waiting out testing round19 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
         Thread.sleep(1000);
-        assert cntr1 < 41:" stuck waiting after round119 cntr1 > 40";
+        assert cntr1 < 41:" stuck waiting after round119 cntr1=" + cntr1;
       }
 
       eM.randFrac[0][0] = .9;
@@ -8457,12 +8457,12 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       eM.staffGrowth[0] = 2.;
       eM.staffGrowth[1] = .5;
       st.runYears(2);
-      cntr1 = 0;
+      cntr1 = 0; //reset cntr1 again
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
         System.err.println("tests1 waiting out testing round21 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
         Thread.sleep(1000);
-        assert cntr1 < 41:" stuck waiting after round21 cntr1 > 40";
+        assert cntr1 < 41:" stuck waiting after round21 cntr1=" + cntr1;
       }
       System.err.println("tests1 after testing round21 exit ok thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
       System.exit(0);
