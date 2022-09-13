@@ -657,15 +657,24 @@ class EM {
 
   static long runYearsTime;
 
+   /**
+   * get seconds since oldTime
+   *
+   * @return seconds ssss.mmm
+   */
+  protected static String since(long oldTime) {
+    long now = (new Date()).getTime();
+    double nu = now - oldTime;
+    return mf(nu * .001);
+  }
+  
   /**
    * get seconds since runYears
    *
    * @return seconds ssss.mmm
    */
   protected static String sinceRunYear() {
-    long now = (new Date()).getTime();
-    double nu = now - runYearsTime;
-    return mf(nu * .001);
+    return since(runYearsTime);
   }
 
   static long doYearTime;
@@ -676,9 +685,7 @@ class EM {
    * @return seconds ssss.mmm
    */
   protected static String sinceDoYear() {
-    long now = (new Date()).getTime();
-    double nu = now - doYearTime;
-    return mf(nu * .001);
+    return since(doYearTime);
   }
 
   EM newCopy(String name, String title, EM oldEM, E aE, StarTrader ast) {
