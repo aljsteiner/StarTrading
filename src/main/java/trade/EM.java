@@ -5111,7 +5111,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
       lstk = Thread.currentThread().getStackTrace().length - 1;
       for ( ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
         prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
-        if (!prevCalls[ste].getMethodName().contentEquals("setStat")) {
+        if (prevCalls[ste]!= null && prevCalls[ste].getMethodName() != null && prevCalls[ste].getFileName() != null && prevCalls[ste].getLineNumber() != 0 && !prevCalls[ste].getMethodName().contentEquals("setStat")) {
           if (atCnt == 0) {
             statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
           }
