@@ -5096,7 +5096,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
   int cntStatsPrints = 0;
   static volatile int ste=0,lstk=0,a = -5, b = -5, curm = 0;
 
-  double setStat(int rn, int pors, int clan, double v, int cnt, int age
+  synchronized double setStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     int le = lStatsWaitList;
     int prevIx = ixStatsWaitList;
@@ -5115,7 +5115,11 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
           if (atCnt == 0) {
             statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
           }
-          statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+          String pcs = prevCalls[ste].getFileName();
+          int pci = prevCalls[ste].getLineNumber();
+          statsWaitList[prevIx] += " at " 
+                  + prevCalls[ste].getFileName() 
+                  + "." + prevCalls[ste].getLineNumber();
         }
         atCnt++;
       }//for
@@ -5161,7 +5165,8 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
     //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
     //only one thread at a time gets resLock  and can enter this code
     //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
-    synchronized (resLock) {
+    //synchronized (resLock) 
+    {
       resVCum[clan] += v;
       resICum[clan] += ycnt;
       resVCur[clan] += v;
@@ -5222,7 +5227,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
    * @return v
    */
   // int cntStatsPrints = 0;
-  double setMaxStat(int rn, int pors, int clan, double v, int cnt, int age
+   synchronized double setMaxStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     int le = 10;
     int prevIx = ixStatsWaitList;
@@ -5283,7 +5288,8 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
     long[] resICurm = resI[rn][curm][pors];
     long[] resICurmCC = resI[rn][curm][CCONTROLD];
     //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
-    synchronized (resLock) {
+    //synchronized (resLock) 
+    {
       if (resICumCC[ISSET] < 1) {
         for (int m = 0; m < 2; m++) {
           double aresVC[] = resV[rn][ICUM][m];
@@ -5368,7 +5374,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
    * @return v
    */
   // int cntStatsPrints = 0;
-  double setMinStat(int rn, int pors, int clan, double v, int cnt, int age
+   synchronized  double setMinStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     int le = 10;
     int prevIx = ixStatsWaitList;
@@ -5429,7 +5435,8 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
     long[] resICurm = resI[rn][curm][pors];
     long[] resICurmCC = resI[rn][curm][CCONTROLD];
     //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
-    synchronized (resLock) {
+    //synchronized (resLock) 
+    {
       if (resICumCC[ISSET] < 1) {
         for (int m = 0; m < 2; m++) {
           double aresVC[] = resV[rn][ICUM][m];
