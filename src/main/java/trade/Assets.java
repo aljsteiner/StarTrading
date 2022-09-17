@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2022 Albert Steiner
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ Copyright (C) 2012 Albert Steiner
+ Copyright (C) 2022 Albert Steiner
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  Assets holds the assets for each economy.  The economies are divided into 7
  sectors, E.lsecs,  The log displays only hold 7 sectors width.  Assets hold the values that continue from one year to the next, it also hold temporary values between the multiple times that CashFlow is instantiated for bartering with different ecconomies, and finally to swap or repurposing values from one financial sector to another and determining the possible survival and possible growth of an economy.  Year temporary values are deleted at the end of year in method Assets.yearEnd, preparing Assets for starting the next year.
