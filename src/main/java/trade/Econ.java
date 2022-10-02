@@ -204,44 +204,120 @@ public class Econ {
     dFrac.setMaximumFractionDigits(2);
     whole.setMaximumFractionDigits(0);
 
+    trand = newRand(trand);
     int[] apris = {0, 1, 2, 3, 4, 5, 6};
     Set<Integer> pris = new HashSet<Integer>(8);
     /**
-     * populate pris with 0-6,for ensuring all 7 sectors hae priority
+     * populate pris with 0-6,for ensuring all 7 sectors have a priority
      */
-    for (int m = 0; m < E.lsecs; m++) {
+    for (int m = 0; m < E.LSECS; m++) {
       pris.add(m);
       resourcePri[m] = 0.;
     }
     int sec = -1;
+    int a22a = 0;
     double remainingPri = 100;
     double paddition[] = new double[7];
     int secs[] = {9, 9, 9, 9, 9, 9, 9};
     // set priority values
-    for (int m = 0; m < E.lsecs - 1; m++) {
-      Integer[] prar = pris.toArray(new Integer[0]);
-      secs[m] = sec = (int) (prar[(int) (Math.random() * 500 % (pris.size()))]);
-      paddition[m] = Math.random() * eM.userPriorityRanMult[m][pors][clan];
-      if (m < 4) {
-        resourcePri[sec] = eM.nomPriAdjustment[m][pors] + paddition[m];
-      } else {
-        resourcePri[sec] = remainingPri * .3 + paddition[m];
+ 
+    String a11a= "<<<a<<<Econ.init.sec  new Integer[0].length=" + (new Integer[0]).length + "::";
+    String a11b= "<<<b<<<Econ.init.pris=";
+    String a11c= "<<<c<<<Econ.init.resourcePri=";
+    String a11d= ">>>>>>Econ.init.sectorPriority=";
+    //{23, 21, 2, 3, 5, 6, 7}
+    //see EM.prorityMultMult and EM.midPrioritySetMult and EM.mPrioritySetMult
+    // priorities are divided y priorityMid , settings multMult are divided by EM.midPrioritySetMult
+    double priorityMid = 100./7.; //the fixed average per financial resource
+    // indexes pors lower mid,more than higher mid,more
+    double[][] priorityLims = {{2.0,1.5, 22.,26.},{2.5,3.0,18.,21.}};//min 1.5*.5=.75, max 21*1.5=31.5
+    double difPriLims[][] = {{priorityMid - priorityLims[0][0],priorityLims[0][0] - priorityLims[0][1],priorityLims[0][3]-  priorityMid ,priorityLims[0][3] - priorityLims[0][2]},{priorityMid -  priorityLims[1][0],priorityLims[1][3] - priorityLims[1][2],priorityLims[1][3]-  priorityMid ,priorityLims[1][3] - priorityLims[1][2]}}  ;//pors, low-hi
+
+    double difSetVals = (EM.mPrioritySetMult[pors][0] - EM.mPrioritySetMult[pors][1]);
+    double fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals;
+    double difPriority  = priorityMid;
+    double midAdd = cRand(22+0,.7) * priorityMid;
+    
+    for (int m = 0; m < E.LSECS; m++) { //0 - 5
+      Integer[] prar = pris.toArray(new Integer[0]);// an array of 8
+      secs[m] = sec = (int) (prar[(a22a = (int)( (Math.random() * 500) % (pris.size())))]); //pick iX
+      
+      if(E.errEconInit){ //print??
+      a11a += " m" + m + ", a22a" + a22a + ", sec" + sec + ", ";
+      a11b += " m" + m + " pris.size()" + pris.size()+ ", ";
       }
+
+     // paddition[m] = Math.random() * eM.userPriorityRanMult[m][pors][clan];// 7,6,2,2,2,3,3.5
+     // paddition[m] = cRand(22,1.) * priorityMult[pors][m];
+     /*
+    double[][] priorityLims = {{2.0,1.5, 22.,26.},{2.5,3.0,18.,21.}};//min 1.5*.5=.75, max 21*1.5=31.5
+    double difPriLims[][] = {{priorityMid - priorityLims[0][0],priorityLims[0][0] - priorityLims[0][1],priorityLims[0][3]-  priorityMid ,priorityLims[0][3] - priorityLims[0][2]},{priorityMid -  priorityLims[1][0],priorityLims[1][3] - priorityLims[1][2],priorityLims[1][3]-  priorityMid ,priorityLims[1][3] - priorityLims[1][2]}}  ;//pors, low-hi
+
+    double difSetVals = (EM.mPrioritySetMult[pors][0] - EM.mPrioritySetMult[pors][1]);
+    double fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals;
+    double difPriority  = priorityMid; 
+     */
+      
+       if(m < 2 && EM.prioritySetMult[pors][0] <= EM.midPrioritySetMult[pors]){ // low pmm<midpmm 14 - 
+         difSetVals = (EM.midPrioritySetMult[pors] -  EM.mPrioritySetMult[pors][0]);// low sets dif
+         fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals; // low sets <Mult <frac
+         //slide:value:fracMult:pa:*rand 
+        // settingss at 0.0:1.0:0.:14 :should be 14. or priorityMid * rand
+        //at 75:2.5:1.0:2.0  result should be priorityLims[pors][1] * rand
+        //at 85:2.7:.4:1.8 should be  (priorityLims[pors][1] - difPriLims[pors][1] + .4) * rand
+        //at 95:2.9:.8:1.6 should be  priorityLims[pors][1] - difPriLims[pors][1] * rand + .8*
+        resourcePri[sec] = (paddition[m] = priorityMid - difPriLims[pors][0]* fracMult) * cRand(22+m,.7); //larger set, smaller pri
+       // resourcePri[sec] = resourcePri[sec] > 0.7? resourcePri[sec] : 0.7;
+       } else if(m < 2){  // high zone low priority
+         difSetVals = (EM.mPrioritySetMult[pors][1] - EM.midPrioritySetMult[pors] );// high zone mid < high
+         fracMult = (EM.prioritySetMult[pors][0]- EM.midPrioritySetMult[pors])/difSetVals; // // high sets <Mult <frac
+         // calc change from 100/7 prioityMid
+         resourcePri[sec] = (paddition[m] = priorityLims[pors][0] - difPriLims[pors][1]* fracMult) * cRand(22+m,.7) ;
+         //resourcePri[sec] = (lowPriority * paddition[m]);
+     } else if(m < 4 ){ // max midPriority to supermax
+        difSetVals = (EM.mPrioritySetMult[pors][0] - EM.midPrioritySetMult[pors]);// low dif
+         fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals; // addition
+        // at 1.0 rP should be 14. or priorityMid * rand
+        //at 2.5 result should be dpriorityLims[pors][2] * rand
+        //at 2.7 should be more * 1.2
+        //at 2.9 should be moe less * 1.4
+        resourcePri[sec] = (paddition[m] = priorityMid - difPriLims[pors][0]* fracMult) * cRand(22+m,.7) ;
+      } else if(m < E.LSECS - 1){ // 4,5
+        fracMult = 0.;
+        resourcePri[sec] = (paddition[m] = remainingPri /(E.LSECS - m)) * cRand(22+m,.7) ;
+      } else { // 6  the rest
+        resourcePri[sec] = (paddition[m] = remainingPri);
+        fracMult = 0.;
+      }
+       resourcePri[sec] = resourcePri[sec] > 0.3 ? resourcePri[sec] : 0.3;
+      
+      if(E.errEconInit){
+      a11c += " m" + m + ", sec" + sec + " pa" + EM.mf(paddition[m])+ ", fm" + EM.mf(fracMult) + ", rp" + EM.mf(resourcePri[sec]) + " :::::\n";
+      }
+      assert resourcePri[sec] > 0.3: "!!!!!!!!Econ.init.setPiorities Error psm=" +EM.mf(EM.prioritySetMult[pors][0]) + a11a + "<<<a<<\n" + a11b + "<<<b<<\n" + a11c + "<<<c<<\n" + a11d + "<<<d<<";
       remainingPri -= resourcePri[sec]; // reduce available pri by this pri
       pris.remove(sec);
-    }
-    trand = newRand(trand);
+    }// for sec
+  
     hiLoMult = cRand(38,EM.hiLoMult[pors][clan]);
     // set the last sec to what is left from 100.
-    resourcePri[(int) pris.toArray()[0]] = remainingPri;
+   // resourcePri[(int) pris.toArray()[0]] = remainingPri;
     as = new Assets(); //instantiacte new Assets even if we reused econ
     //  and before instantiating any ARow or A6Rowa
     sectorPri = new ARow(this);
+        
     for (int i = 0; i < resourcePri.length; i++) {
       sectorPri.set(i, resourcePri[i]);
+      if(E.errEconInit){
+      a11d += EM.mf(sectorPri.get(i)) + " :";
+      }
+    }
+    if(E.errEconInit){
+        System.err.print(a11a + "<<<a<<\n" + a11b + "<<<b<<\n" + a11c + "<<<c<<\n" + a11d + "<<<d<<");
+    }
       // sumInitPri += resourcePri[i];
       // sumUserPri += E.userPriorityAdjustment[planetOrShip][clan][i];
-    }
+
     // sectorPri.divby(100. / sectorPri.sum());
     //System.out.println(new Date().toString() + "Econ.init 211 before new Assets");
     // throw away any previous Assets, the new one will be alive not dead.

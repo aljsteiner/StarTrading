@@ -228,70 +228,89 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.36";
+  static final public String versionText = "19.40";
   static final public String storyText = 
-          "         Save the Planets       Version 19.36\n" +
+          "StarTrader       Version 19.42\n" +
 "\n" +
-"“Save the Planets”; “Trade, trade, trade”;  “Cooperating together with trades”: is a strategic economics game emphasizing cooperation over competition.  This is a strategy game for one to four or five players. The game-master selects the nature of the game as well as how the winner is picked.  The game’s spaceships could just as well be traders with wagons going from settlement to settlement.  The nature of the traders and the settlements/planets is very flexible.  Shipping and trading is critical for every town, county, country and world.  \n" +
+"“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Cooperating together with trades”: is a mini strategic economics game emphasizing cooperation over competition.  Each economy has assets of resources, staff and knowledge in 7 financial sectors.  Each year each financial sector has costs using up some resources and some staff.  \n" +
 "\n" +
-"There are instructions about downloading and running this at the end of this readme.\n" +
+"Costs decrease in percentage as a sector’s efficiency increases because its knowledge has increased.  Each year after annual costs, the financial sectors with some surplus assets can grow resources and staff, find new knowledge and researchers can convert manuals into knowledge.  \n" +
 "\n" +
-"In this game, planets and ships face significant challenges which may result in the death of the planet or ship if it does not have enough of each financial sector to survive the whole year.  Trading permits economies to trade their surpluses to get needed resources or staff to survive the year.  If for example there is not enough food, or enough water then the economy will die even though it has lots of other resources.  Trading is critical to survival.  Stats, statistics, are reports on the progress of each clan.  There are 21 different pages of statistics.  The earlier pages are probably the most interesting and useful.\n" +
+"Each economy has 2 weak financial sectors and 2 strong financial sectors.  After possible trades, an economy may swap resources and staff to ensure that each financial sector has  enough resources and staff for the year.  Economies without enough resources or staff in any financial sector cannot survive to the next year, that planet or ship dies.\n" +
 "\n" +
-"Clan-masters manage the robots that run the 5 clans of planets and ships.  The clans are named the colors: red, orange, yellow, green, blue.  The clan colors are used in various ways.  Eventually one clan is declared the winner and the stats(statistics) background is set to the color of the winning clan.  \n" +
+"Trading allows a pair of ships and planets to trade goods from strong sectors for needed assets in weak financial sectors.  In each trade some manuals are traded, allowing knowledge to be moved between economies.  Generally older economies can trade more manuals to new economies than newer economies can trade.  The trade process consists of each economy generating an offer that is evaluated by the other economy.  Each economy calculates a strategic value for each financial sector, deciding how much surplus to trade for a need.  Rejected offers are refined until one is accepted or there are too many barters and the trade fails.  Ships try to predict how well a trade with a given planet will help it when they choose the next planet for a trade.\n" +
 "\n" +
-"After enough years have past, and when one clan has a sufficiently higher score, it will be declared the winner.  Clan-masters can look in the stats tab clicking on the numbers for different pages to try to see how to raise their score.  Their score is based on the sum of all their clan’s ships and planets.  Clicking on the title of a row in a page will give a more detailed description of the meaning of the numbers in this row.  In a “sum” row the values for ships and planets are summed together, otherwise there are different sums for ships than for planets.\n" +
+"This is a strategy game for one to five players. The game-master sets the nature of the game as well as how the winner is picked.  The clan-masters set the very flexible economic policies for the ships and the planets in their clan.  \n" +
 "\n" +
-"The game-master changes scoring at the beginning of the game by clicking the settings tab and changing rules for winning.  The game master then communicates the changes to the clan-masters so they can try to make better choices.\n" +
+"Clan-masters set the favor their clan has for another clan. The higher the favor the more discount will be given that clan in trade, the more likely the trade will succeed.\n" +
 "\n" +
-"Clan-masters can go to the settings tab and click on the link of the color of their clan, then they click on up or down or one of the ten settings being displayed for their clan.  They can go to settings to change their clan’s settings to try to raise their score during the next round of years.  The game-master selects the next round of years: 1, 5, 10 or 20 years.\n" +
+"See the instructions about downloading and running this game at the end of this README.\n" +
 "\n" +
-" \n" +
-" This game is being developed on a Windows 10 laptop with a screen about 1920 pixels wide and 1080 pixels deep.  It will run on smaller screens, but may move parts of the scenes in funny ways.  Since it is written in Java, it can be run on other systems with large enough screens and a java JRE (Java Runtime Environment) which connects the file ending with .jar with the host operating system.  \n" +
+"Stats or statistics, are reports on the life of each clan.  There are 21 different pages of statistics.  The first 3 pages are the most interesting and useful. \n" +
 "\n" +
-"The more complex instructions are placed later in the settings.  The explanations of their capability are much later in this README.  Because this is a strategy game, it is important to understand the guts of the game so that clan-masters can make intelligent changes to the strategy of their clan to try to win under the priorities set by the game-master.  The “keep” function, described in more detail later, enables you to keep changes, comments and sample results for later games, so that clan-masters can develop plans and strategies for exploring finances and have them preset into their next games.  One person can run several clans trying different strategies for the different clans.\n" +
+"There are 5 clans each including both planets and ships.  Clan-masters manage the robots that run the 5 clans by changing settings for their clan.  Clan-masters change the base settings before they are changed by the game's random multipliers.  Each year each economy experiences different random changes to their effective settings. The clans are  named the colors: red, orange, yellow, green, blue.  Eventually one clan with  the highest score is declared the winner and the stats(statistics) background is set to the color of the winning clan.  You may continue to play after a winner is selected and the winner may change after the next round of years.  Also the game-master may change the settings changing which stats do the most to select the winner. \n" +
 "\n" +
-"When you run the game over 10 years, you will notice planets and ships are dying faster than they are being created.  You might decide to fix that only to discover that’s not what makes a bad score.  On the first page of settings for the game-master the first setting is the difficulty, you could decrease that, but that probably won’t better your next score, you have six or seven move settings that influence the score.  You can continue the game even if it has picked a winner.  After 5 or 10 more years there could be a different winner.  \n" +
+"A winner is declared only after enough years have passed and one  clan has a score sufficiently higher than all the other clans.  Clan-masters can look in the stats tab clicking on the page numbers for different pages to try to see how to raise their score.  Their score is based on the sum of multiple scores for their clan’s ships and planets.  Clicking on the title of a row in a page gives a more detailed description of the meaning of the numbers in this row.  In a “sum” row the values for ships and planets are summed together in the ship columns, otherwise there are different sums for planets and for ships.\n" +
 "\n" +
-"The following explanation of how the game works, and the tables of numbers, stats, can help you understand what is happening to each clan.  You can change the clan settings to try to better your score, but as in any economics, sometimes the changes help, sometimes they don’t, and it is even harder to be sure if you change multiple settings at the same time.  Changed settings remain for the rest of the game, you need to use “keep” to keep settings for following games.  Have fun!!\n" +
+"The game-master has seven score settings that influence the scoring, and may change the winner.  You can change your settings and continue the game even if it has picked a winner.  After more years there could be a different winner. The game master should then communicate the changes of settings to the clan-masters so they can change their clan settings to try to improve their score based on the changed master settings.\n" +
 "\n" +
-"Each year some planets or ships die because they have insufficient infrastructure (short on food, or short on buildings to survive the “winter”, etc.).  If they have good health the planets will also grow with added resources and added staff.   Traders move “goods” from planets with a surplus of certain goods to planets with insufficient amounts of those goods, enabling those planets to survive.  Ships do not mine or grow resources and staff; to survive they must get  all staff and resources from  planets when they trade.  And each year they need to add size to keep up with the growing size of the planets.  Ships and planets may survive one or two years without a successful trade, and there are some statistics about how planets and ships without trades grow and survive.\n" +
+"Clan-masters can go to the settings tab and click on the link of the color of their clan, then they click on up or down or one of the ten settings being displayed for their clan.  They change their clan’s settings to try to raise their score during the next round of years, and/or try to increase the number of their planets and ships that survive.  After all clan-masters are finished, the game-master starts another round of 1, 5, 10, or 20 years.  \n" +
 "\n" +
-"The planets and ships are both sets of economies with mostly similar rules and some very different priority settings. Each economy has 2 stressed financial sectors, 2 very successful financial sectors, 3 other ok financial sectors. Of course each unit represents a large amount of the item.  The stressed sectors encourage trading.  Each economy has Assets resources: working SubAsset.Resource and reserved SubAsset Cargo, staff: working SubAsset.Staff and reserved SubAsset Guests, in addition there is knowledge: commonKnowledges (everyone may have it), newKnowledge (found by staff in the researchEquivalent), manuals (about parts of common knowledge).\n" +
+"The default settings selects the clan that gave the most help in trading the last year of the round.  Of course the clan-master must balance growth and help for each year.  The robots run the game for those years without any possible changes by the game-manager or the clan-manager.\n" +
 "\n" +
-"At the end of each year, planets calculate all of the costs.  Costs for each sector is the sum of this sector used by all of the sectors.  Costs are redacted by more knowledge because work is now more efficient.  Costs are increased by poor health, that is if there is a limited amount of assets available after all of the infrastructure costs are met, however, only yearly costs are removed from available assets. and any surplus assets are used to increase assets by mining, growing, and/or making.  New staff are added at the lowest grade while many of the staff move up one or more grades, and new knowledge is discovered by the research equivalent staff.  Staff perform the work that is needed to increase resources.  Staff also become the engineers.  Faculty equivalent staff are needed for staff to advance grades. \n" +
+"This game is being developed on a Windows laptop with a screen about 1920 pixels wide and 1080 pixels deep.  It will run on smaller screens, but that may move parts of the scenes in funny ways.  Since it is written in Java, it can be run on systems other than windows with large enough screens and a java JRE (Java Runtime Environment) which allows the file ending with .jar to run on this host operating system.  \n" +
 "\n" +
-"After a set of years are finished, the display switches to the “stats” tab.  Each row has 11 columns, a longer column with a short title of the line, than either 5 or 10 values.  If you click on the title, a longer description of the column will appear in the row above the column.  If only the right 5 columns are numbers, each number represents the sum of the ship and planet values for that clan.  If the numbers are too large to fit in the column, it is divided by some number of tens, and the title will say how many zeros to add before the decimal point.  If the title ends in “thisYr”, the values are for the current year.  If the title ends in “cur/1” the values are for the current year, “cur/2” is for the previous year.  If the title ends in “cum”, this is a cumulative value, the sum of all the years.  If the year value has a “U” appended, then the numbers are the number of times the value was saved in the year or since starting the game with “cum”.  If the title year value has “ave” appended then values are the average, the values divided by the number of times added.  If % is appended to the title with “ave” or just the title, it means the numbers are a percent.  If neither “ave” or “U” is appended, the number is the sum of saved values for the year.  If you put a reason in the right of the remember button, then click the remember button, that row, the description and the reason will be added to the “keep” file.\n" +
+"The most important settings instructions are placed early in the settings.  Additional explanations of settings are later in this README.  Because this is a strategy game, it is useful to understand the guts of the game so that clan-masters can understand the possible changes to the strategy of their clan to try to win under the priorities set by the game-master.  Of course there are always some unintended results for any change to settings.\n" +
 "\n" +
-"There are 21 buttons with numbers. If you hover over a number a popup will list the description of the results for the number.  Click the number to fill the result table with results for that description.  Number 10 are results only for Econ’s of age 0,1,2,3. Number 11 thru 14 are each for a longer set of ages.  The pages after that are mainly for developers displaying values for deeper internals of the game. \n" +
+"The “keep” function, described in more detail later, enables you to keep changes, comments and sample results for later games, so that clan-masters can develop plans and strategies for exploring finances and have them preset into their next games.  One person can run several or all clans, trying different strategies for the different clans.\n" +
+"\n" +
+"You can notice that planets and ships are dying and if too many die the game will create more economies.  These deaths affect your clan’s scoring.  On the first page of settings, the game-master can change the difficulty which increases or decreases the number of economy deaths each year.  If there are more economies the years take longer.  \n" +
+"\n" +
+"The following explanation of how the game works, and the tables of numbers, stats, can help you understand what is happening to each clan.  You can change the clan settings to try to better your score, but as in any economics, sometimes the changes help, sometimes they don’t, and it is even harder to be sure which change helped if you change multiple settings at the same time.  Changed settings remain changed for the rest of the game, and you can use “keep” to keep settings for following games.  Have fun!!\n" +
+"\n" +
+"Each year some planets or ships die because they have insufficient infrastructure (short on food, or short on buildings to survive the “winter”, etc.).  If they have good health the planets will also grow with added resources and added staff.   Ships trade “goods” from planets with a surplus of certain goods to keep for the next year to trade with another planet with insufficient amounts of those goods, enabling that planet to survive; unfortunately, the ship may decide incorrectly about whether the next planet picked by the ship needs those traded goods.  Ships do not mine or grow resources and staff; to survive they must get all staff and resources from planets by trading.  And each year they need to add size to keep up with the growing size of the planet trading partners.  Ships and planets may sometimes survive one or two years without a successful trade. There are some statistics which show how planets and ships without trades grow and survive.\n" +
+"\n" +
+"The planets and ships are economies with mostly similar rules and some very different priority settings. Each economy has 2 stressed financial sectors, 2 very successful financial sectors, and 3 other ok financial sectors. Of course each unit represents a large amount of the item.  \n" +
+"\n" +
+"Each economy has assets resources: working SubAsset Resource and reserved SubAsset Cargo, assets staff: working SubAsset.Staff and reserved SubAsset Guests, in addition each financial sector has knowledge: commonKnowledges (everyone may have it), newKnowledge (found by staff in the researchEquivalent), manuals (about parts of common knowledge).\n" +
+"\n" +
+"Each year ships select a relatively close planet to trade excess resources and staff for needed resources and staff.  At the end of each year all of the costs are calculated.  Costs from each financial sector are subtracted from the balance of each sector.    Costs are increased by poor health .  Health is poor if there is a limited amount of assets available at one or more financial sectors. Each year there are required infrastructure growth and maintenance costs necessary to survive the year but do not decrease the resources and staff. Then the yearly costs for maintenance and travel are calculated and subtracted.  Any remaining assets can be used for sector growth.  \n" +
+"\n" +
+"New staff are added during growth to the lowest staff grade while many of the staff move up one or more grades, and new knowledge is discovered by the research equivalent staff.  Engineer equivalent staff perform the work that is needed to increase resources.  Faculty equivalent staff are needed for staff to advance grades.  Researcher equivalent staff discover new knowledge which makes years more efficient, decreasing the percentage costs of maintenance, travel and growth.\n" +
+"\n" +
+"After a set of years are finished, the display switches to the “stats” tab.  Each row has 11 columns, a longer column with a short title of the line, than either 5 or 10 values.  If you click on the title, a longer description of the column will appear in the opening above the table columns.  If only the right 5 columns are numbers, each number represents the sum of the ship and planet values for that clan.  If the numbers are too large to fit in the column, they are reduced by some number of tens, and the title will say how many zeros to add before the decimal point.  If the title ends in “thisYr”, the values are for the current year.  If the title ends in “cur/1” the values are for the current year, “cur/2” is for the previous year.  If the title ends in “cum”, this is a cumulative value, the sum of all the years.  If the year value has a “U” appended, then the numbers are the number of times the value was saved in this year or since starting the game with “cum”.  If the title year value has “ave” appended then values are the average, the values divided by the number of times added.  If % is appended to the title with “ave” or just the title, it means the numbers are a percent.  If neither “ave” or “U” is appended, the number is the sum of saved values for the year.  If you put a reason in box to the right of the remember button, then click the remember button, that row, the description and the reason will be added to the “keep” file.\n" +
+"\n" +
+"There are 21 buttons with numbers. If you hover over a number a popup will list the description of the results for the number.  Click the number to fill the result table with results for that description.  Some of the pages have results grouped for different ages so you can see if values change as planets and ships age.\n" +
 "\n" +
 "There are instructions at the end of this document to describe how to get the files you need to run this game and even how you can use a program called “apache-netbeans” to edit source files and change the guts of the game yourself and build new versions of the game to run.\n" +
 "\n" +
 "The game-master changes overall game settings, setting rules for all ships and planets, thus the game-master can set up many different games of economic strategy.   The game-master sets the difficulty of the game, and the amount of random increases or decreases to the priorities,  costs, growth, etc. There are five clans each with a clan-master.  One or more players can divide up the roles of game-master and clan-masters.  Clans without a clan-master run with the preset settings for that clan.  The clan-masters can alter any of the settings and leave unchanged the rest of the clan settings for the robots which calculate the moves for each clan planet and ship.\n" +
 "\n" +
-"You need to download the StarTrader19.34d.jar file to a folder such as myGame where you can run it following the instructions near the end of this README. The 19.34d is distributable, it eliminates many of the sanity tests so it will run somewhat faster.  Your virus protection will possibly say that this is a bad file, or a potentially bad file, or some similar warning.  You need to keep assuring it several times that you trust the file and wish to download and run the file.  The first tab labeled “story” is a copy of this README, click the next tab “Settings” to manage the settings.\n" +
+"You need to download the StarTrader19.40.jar file to a folder such as myGame where you can run it following the instructions near the end of this README.  Your virus protection will possibly say that this is a bad file, or a potentially bad file, or some similar warning.  You need to keep assuring it several times that you trust the file and wish to download and run the file.  The first tab labeled “story” is a copy of this README, click the next tab “Settings” to manage the settings.\n" +
 "\n" +
 "The instructions about the functioning of the game are long and complicated because all of the action is done by robots.  To instruct the robots, you need to understand their activity and the kind of decisions they are making.  Clan-masters change the values about how robots make choices, but neither the game-master or the clan-masters change rules, they only change the values about how decisions are made by the robots.\n" +
 "\n" +
-"Directly under the “story” tab is a button called “master”, this is the tab for the game-master, and the settings shown under it are the settings for the game as a whole.  After each setting name there are one or two sliders for “planets” then “ships”, if there is only one slider, it applies for both planets and ships.  As you run your mouse pointer over each name, the description in the green window below the sliders describes that setting.  The down button takes you to the next group of settings.\n" +
+"Directly under the “story” tab is a button called “master”, this is the tab for the game-master, and the settings shown under it are the settings for the game as a whole.  After each setting name there are one or two sliders for “planets” then “ships.”   If there is only one slider, this setting applies for both planets and ships.  As you run your mouse pointer over each name, the description in the green window below the sliders describes that setting.  The down button takes you to the next group of settings.\n" +
 "\n" +
 "Beside the gray master button are 5 colored tabs named “red”, “orange”, “yellow”, “green”, “blue” for the five clans.  Click one of those tabs, such as “orange”.  The area around the settings turns orange, the settings change to those for the “orange” clan, any changes apply only to the orange clan.\n" +
 "\n" +
-"If settings for one or more of the clans are unchanged, the game will run with the existing settings.  After finishing changes for the game and all clans, the game master can click either the “1 yr” or “5 yr” button to run the game for 1 or 5 years.  Sometime you need to click again in the middle of the button to get it to run.\n" +
+"If settings for one or more of the clans are unchanged, the game will run with the existing settings.  After finishing changes for the game and all clans, the game master can click either the “1 yr” or “5 yr” button to run the game for 1 or 5 years.  Sometimes you need to click again in the middle of the button to get it to take effect.\n" +
 "\n" +
-"The game will change to the “display” tab and show some lines that change as the game runs year by year.  The color of the screen becomes the color of that clan of the current ship or planet.  Elapsed time is shown in milliseconds since the start of the game, start of the year, or the start of using an econ.  Each econ name starts with a “P” if a planet or with “S” if a ship,  the letters are followed by 4 digits.  The digits are the number of the created econ.  The word or words at the top left are the name of the year’s state.  A series of lines display the counts of interesting facts about the game for as the game progresses through the years.  Facts such as the number or creations, the number of trades, the number of deaths, the number of current ships and current planets.  The screen is updated around 60 times a second, a single planet or ship econ may be current for up to several seconds.\n" +
+"While running the game will change to the “display” tab and show some lines that change as the game runs year by year.  The color of the screen becomes the color of that clan of the current ship or planet unless the “haveColors” setting is set to less than 50.  Elapsed time is shown in milliseconds since the start of the game, start of the year, or the start of using an econ.  Each econ name starts with a “P” if a planet or with “S” if a ship,  the letters are followed by 4 digits.  The digits are the number of the created econ.  The word or words at the top left are the name of the year’s state.  A series of lines display the counts of interesting facts about the game for as the game progresses through the years.  Facts such as the number or creations, the number of trades, the number of deaths, the number of current ships and current planets.  The screen is updated around 60 times a second, a single planet or ship econ may be current for up to several seconds.\n" +
 "\n" +
 "The first state is the “future fund create”, planets or ships (economies) are created from funds put in the future fund each year by each clan economy.  Only planets are created until there are enough planets by a game rule and two clan rules, then a clan ship can be created.  By default, clan planets can only trade with as many ships as they allow clan ships.  Putting resources into ships limits the growth in worth of the clan, but it provides the infrastructure to protect planets. \n" +
 "\n" +
-"The next state is “game create”: each year the game creates enough economies to bring the number of planets and ships up to the minimum for the year.  The default number of economies grows for the first six years, then it drops to a low number, expecting planets and ships to be created by future funds to replace deaths.\n" +
+"The next state is “game create”: each year the game creates enough economies to bring the number of planets and ships up to the minimum for the year.  The default number of economies grows for the first six years, then it drops to a low number, new planets or ships will be created by the game in any year where the number of economies falls below the default number..\n" +
 "\n" +
-"The next very quick state is “year start”, ships and planets are readied  for another year.  The state will not usually appear in the display.  This is when catastrophes occur.  They destroy much of the staff of a sector and resources of a sector, but this is also where econs find new resources to replace resources that have been mined.  Every year’s mined resources decrease the amount of resources that can be mined the next year until no more resources can be mined.  Catastrophes help planets find additional resources, and help ships to develop new knowledge.\n" +
+"The next very quick state is “year start”, ships and planets are readied  for another year.  The state will not usually appear in the display.  This is when catastrophes occur.  They destroy much of the staff of a sector and resources of a sector, but this is also where econs find new resources to replace resources that have been mined.  Every year’s mined resources depreciates the amount of resources that can be mined the next year until no more resources can be mined.  Catastrophes help planets find additional resources, and help ships to develop new knowledge.\n" +
 "\n" +
-"Since ships carry relatively large units of resources compared to planets, assume the ships are of a size like the moon, and perhaps they travel faster than light by jumping between high stress points below the surface of stars.  Ships require large staff to operate, expand and repair the ships because of the stress of their travel.\n" +
+"Since ships carry relatively large units of resources compared to planets, assume the ships are of a size like the moon, and perhaps they travel faster than light by jumping between high stress points below the surface of stars.  Ships require large staff to operate, expand and repair the ships because of the stress of the way they travel.\n" +
 "\n" +
-"The next state is “search”.  Up to 7 planets that are close enough to the ship are chosen.  Planets that have already traded are eliminated unless there is a surplus of ships for this clan.  Each planet and ship keeps a trade history; these histories are updated at each trade so that the 7 planets can be tested by their search history.  The assumption is that ships cannot have real time access to the current trade possibilities of any of the trading candidates.\n" +
+"The next state is “search”.  A limited number of planets that are close enough to the ship are chosen.  Planets that have already traded are eliminated unless there is a surplus of ships for planets of this clan.  Each planet and ship keeps a trade history; these histories are updated at each trade so that the planets can be selected by their search history.  The assumption is that ships cannot have real time access to the current trade possibilities of any of the trading candidates.\n" +
 "\n" +
-"The next state is a trade.  These are “potlatch” trades since the ship and planet do not have a common currency.  They need to evaluate each of their financial sectors of resources and staff to determine what they need the most, or what sectors have the highest strategic value, and which have the lowest strategic value.  Each partner tries to trade low strategic value goods for high strategic value goods.   Of course the trading partner may need some of your high value goods, not some of your low value goods, so at each turn the offers are changed to satisfy your own needs with goods you hope the partner will accept.  Each partner gets up to nine turns; a partner may reject a trade if the offers are too unsatisfactory by changing the turn number to -1.  A trade is accepted if both partners can accept an offer without trying to change the offer, the turn number is set to zero, the goods (cargo and guests) in the offer are actually moved between economies, then the trade is recorded as accepted.  Trades can also be “rejected” by either partner, and is then “lost” by thee other partner.  If there are more ships than planets, multiple ships can attempt to trade with a given planet.  Multiple ships on a planet can also attempt to trade with each other.\n" +
+"The next state is a trade.  These are “potlatch” trades since the ship and planet do not have a common currency.  They need to evaluate each of their financial sectors of resources and staff to determine what they need the most, or what sectors have the highest strategic value, and which have the lowest strategic value.  Each partner tries to trade low strategic value goods for high strategic value goods.   Of course the trading partner may need some of your high value goods, not some of your low value goods, so at each turn the offers are changed to satisfy your own needs with goods you hope the partner will accept.  Each partner gets up to nine turns; a partner may reject a trade if the offers are too unsatisfactory by changing the turn number to -1.  A trade is accepted if both partners can accept an offer without trying to change the offer, the turn number is set to zero, the goods (cargo and guests) in the offer are actually moved between economies, then the trade is recorded as accepted.  Trades can also be “rejected” by one partner, and is then “lost” by the other partner.  If there are more ships than planets, multiple ships can attempt to trade with a given planet.  Multiple ships on a planet can also attempt to trade with each other.  \n" +
+"\n" +
+"Planets and ships start trading with a profit goal.  The profit goals for a clan's ships and planets can be changed by the clan-master.  These goals are later changed by the “favor” of the trading partner, and the history of trades, rejects and lost trades experienced by the clan.\n" +
 "\n" +
 "After all the ships had an opportunity to trade, the next state is “endYear”.  Since endYear’s do not involve any other economy, multiple endYears can run at once.  Initially multiple cpus can run multiple threads to do endYears.  The number of threads can be changed in the settings. \n" +
 "\n" +
@@ -332,27 +351,26 @@ public class StarTrader extends javax.swing.JFrame {
 "\n" +
 "Each planet and ship have seven financial sectors.  Each sector has resources, cargo(resource but in reserve not working), staff, guests(staff but in reserve not working), and knowledge of 3 kinds (common knowledge, new knowledge, and manuals(researchers work to get new knowledge or common knowledge from manuals), but trades can only trade manuals from ships).\n" +
 "\n" +
-"The game is available in a folder at: https://drive.google.com/drive/folders/1P-hw8Wk9BcwEdHSS8CdAbDDjtjyEQTF_?usp=sharing.  The folder contains a pdf of this README and the file StarTrader.jar.  \n" +
+"The game is available in a folder at: \n" +
+"https://drive.google.com/drive/folders/1P-hw8Wk9BcwEdHSS8CdAbDDjtjyEQTF_?usp=sharing.  The folder contains a pdf of this README and the file StarTrader.jar.  \n" +
 "\n" +
-"You need to download the StarTrader19.34.jar file to a place where you can run it following the instructions near the end of this README. First make a new folder in the downloads folder, with the name myGame.  Download StarTrader19.34.jar to the folder downloads\\myGame.  Double click on the StarTrader19.34.jar file in myGame to run the game.  Check for new subversions of the game at least once a month.  Each copy of  the newly downloaded file will have a version.subversion added to the name.  Delete unwanted files by right clicking the file and choosing the delete option. The .jar file will only run if you have java jre 1.8 installed.  Search for “download java jre 1.8”, pick the download option from oracle.  You will need to accept a license saying that you are not a commercial company.\n" +
+"You need to download the StarTraderMaven-19.40.jar file to a place where you can run it following the instructions near the end of this README. First make a new folder in the downloads folder, with the name myGame.  Download the StarTraderMaven-19.40.jar to the folder downloads\\myGame.  You must download to a folder that is not part of a streaming memory such as GoogleDrive, the jar file gets stuck trying to run on a streaming memory.  Double click on the StarTraderMaven-19.40.jar file in myGame to run the game.  Check for new subversions of the game at least once a month.  Each copy of  the newly downloaded file has a version.subversion added to the name.  Delete unwanted files by right clicking the file and choosing the delete option. The .jar file will only run if you have a java jre 1.8 installed.  Use https://www.java.com/download/ie_manual.jsp to download the latest java jre (java runtime environment).  This decodes the java.jar file into instructions that run within windows. s You will need to accept a license saying that you are not a commercial company.\n" +
 "StarTrader is set up to run on a Windows 10 machine with at least an 11 or 12 inch screen.  It will probably run on other desktop or laptops, if they will also have a current Java.  Instructions for running the game are given much earlier in the README.\n" +
 "\n" +
 "Ignore the following instructions unless you want to try to change the guts of the game.\n" +
-"The source the game is at http://github.com/aljsteiner/StarTrader \n" +
-"I use Apache Netbeans, the latest version, and the latest open source version of java openjdk-16.0.2_windows-x64_bin as well as the latest java 1.8 version of java.  The java being automatically distributed to Windows 10 machines by Oracle is the latest version of java.1.8 jre.  You can download a corresponding JDK from Oracle after signing their license. \n" +
-"Here are many of the settings you will need  in Apache NetBeans currently version 12.4.  You must be logged in as an administrator to have the windows permissions to install NetBeans.  \n" +
+"The source of the game is in the folder you downloaded, go to src.java.trade. (all the source files)\n" +
+"I use Apache Netbeans, the latest version, and the latest java 1.8 version of java.  The java being automatically distributed to Windows 11 machines by Oracle is the latest version of java.1.8 jre.  You can download a corresponding JDK from Oracle after signing their license. \n" +
+"Here are many of the settings you will need  in Apache NetBeans currently version 12.4.  You must be logged in as a windows administrator to have the windows permissions to install NetBeans.  \n" +
 "\n" +
 "Once you have installed NetBeans and downloaded the source files:\n" +
-"1.Left Click the NetBeans Tools menu and select Java Platforms, click \"Add Platform...\" browse to C:\\Program Files\\Java and choose the latest installed jdk1.8.0_301 \n" +
-"2.Open NetBeans IDE and create a new ant project with existing source at C:\\Users\\Public\\netbeans\\Trader19.2p\n" +
-"3.Create a source folder such as C:\\Users\\Public\\netbeans\\Trader19.2s\n" +
-"4.Right click the project name, at versioning create a git repository in Trader19.2p\n" +
+"1.Left Click the NetBeans Tools menu and select Java Platforms, click \"Add Platform...\" browse to C:\\Program Files\\Java and choose the latest installed jdk1.8.0_xxx \n" +
+"2.Open NetBeans IDE and create a new ant project with the existing source\n" +
+"3.Create a source folder such as C:\\Users\\Public\\netbeans\\Trader19.xx\n" +
+"4.Right click the project name, at versioning create a git repository in Trader19.xx\n" +
 "5.Right click the project name, at git select pull and fill out the form as requested\n" +
 "6.Right click the project name, select properties, select formatting, select project specific options, choose all languages, choose Tabs And Indents, Enable Indentation, Expand Tabs to Spaces, Number of Spaces per indent=2, tab Size = 2, Right Margin=80,Line Wrap After words\n" +
 "7.Download the latest Java 8 JDK after signing the license, install it into the Java folder under C:\\Program Files\n" +
-"8.Right click the project name, select properties, and under “Source Packages” select the package “trade” to get a list of the created Java Classes.  The StarTrader.java contains the main method with the user interface logic.  Classes E.java and EM.java contain lots of data tables needed for the user interface, E.java contains most of the fixed data, EM.java contains data that can change from the user settings changes and the statistics of the current run of the game, EM also contains methods for processing settings and statistics.\n" +
-"\n" +
-""
+"8.Right click the project name, select properties, and under “Source Packages” select the package “trade” to get a list of the Java Classes.  The StarTrader.java source contains the ‘main’ method with the user interface logic.  Classes E.java and EM.java contain lots of data tables needed for the user interface, E.java contains most of the fixed data, EM.java contains data that can change from the user settings changes and the statistics of the current run of the game, EM.java also contains methods for processing settings and statistics." 
         +      
            "";
 
@@ -8273,6 +8291,7 @@ if(!eM.dfe() ){
             } // while
             eM.randFrac[0][0] = .7; // increase game random
             eM.randFrac[1][0] = .7;
+            EM.difficultyPercent[0] = 30;
             stateConst = STARTING;
             System.out.println(">>>>>>Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime));
             stateConst = RUNNING;
@@ -8375,7 +8394,26 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           }
         } //tests1.run
       }; // end tests1
-      //int cntr3 = 0;
+  eM.difficultyPercent[0] = 30.;
+  EM.prioritySetMult[0][0]= 1.0;
+    EM.prioritySetMult[1][0]= 1.0;
+    EM.clanStartFutureFundDues[0][0] = 1000.;
+    EM.clanStartFutureFundDues[0][1] = 1000.;
+    EM.clanStartFutureFundDues[1][0] = 1000.;
+    EM.clanStartFutureFundDues[2][0] = 1000.;
+    EM.clanStartFutureFundDues[1][1] = 1000.;
+      st.runYears(2); // higher difficult
+     // SwingUtilities.invokeLater(tests1);
+      cntr1 = 0;
+            ttime = (new Date().getTime());
+      // wait for runYears to finish
+      while ((stateConst >= CONSTRUCTING && stateConst <= SWAPS  && !EM.dfe())) {
+        System.err.println("tests1 waiting out round10 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + EM.since(ttime) + ", cntr1=" + cntr1++);
+        Thread.sleep(1000);
+        assert cntr1 < 171:" stuck waiting after round10 cntr1=" + cntr1;
+           
+      }
+      eM.maxThreads[0][0] = 10;
       cntr1 = 0;
       ttime = (new Date().getTime());      
       System.err.println("main3 before tests1 invoke testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs=" + EM.since(ttime) + ", cnt3=" + cntr1++);
@@ -8390,7 +8428,14 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         assert cntr1 < 171:" stuck waiting after invokeAndWait cntr1=" + cntr1;
             
       }
+      EM.prioritySetMult[0][0]= 2.3;
+    EM.prioritySetMult[1][0]= 2.3;
       eM.difficultyPercent[0] = 60.;
+    EM.clanStartFutureFundDues[0][0] = 700.;
+    EM.clanStartFutureFundDues[0][1] = 700.;
+    EM.clanStartFutureFundDues[1][0] = 700.;
+    EM.clanStartFutureFundDues[2][0] = 700.;
+    EM.clanStartFutureFundDues[1][1] = 700.;
       st.runYears(2); // higher difficult
      // SwingUtilities.invokeLater(tests1);
       cntr1 = 0;
@@ -8403,6 +8448,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
            
       }
       eM.maxThreads[0][0] = 10;
+     EM.prioritySetMult[0][0]= 2.8;
+    EM.prioritySetMult[1][0]= 2.8;
+    EM.vdifMult=0.085;
       st.runYears(2);
      cntr1 = 0;
       ttime = (new Date().getTime());
@@ -8416,6 +8464,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       eM.clanAllShipFrac[0][0] = .66;
       eM.clanShipFrac[0][3] = .66; // 2/1 from .501
       eM.clanAllShipFrac[0][3] = .66;
+      EM.vdifMult=0.09;
       st.runYears(2);
       cntr1 = 0;
       ttime = (new Date().getTime());
@@ -8457,6 +8506,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       eM.randFrac[1][0] = .5;
       eM.staffGrowth[0] = 2.;
       eM.staffGrowth[1] = .5;
+      EM.vdifMult=0.065;
       st.runYears(2);
       cntr1 = 0; //reset cntr1 again
       // wait for runYears to finish

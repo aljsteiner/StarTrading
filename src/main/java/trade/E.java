@@ -141,6 +141,7 @@ static StarTrader st;
   static final int ssMax = 10; // max setStats printed;
   static final boolean debugThreadsOut = debugMaster; // threads output
   static final boolean debugThreadsOut1 = debugMaster; // threads output1
+  static final boolean errEconInit = true;
   
     /**
    * constructor for E the major repository of tables and values set by the game

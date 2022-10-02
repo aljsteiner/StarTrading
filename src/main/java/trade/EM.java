@@ -998,7 +998,13 @@ class EM {
   static double[][] uColonistsPriAdj = {{.01, .01, .01, .01, .01}, {.01, .01, .01, .01, .01}};
   static double[][][] userPriorityAdjustment = {uLifePriAdj, uStrucPriAdj, uEnergyPriAdj, uPropelPriAdj, uDefensePriAdj, uGovPriAdj, uColonistsPriAdj};
   static double[][] mUserPriorityAdjustment = {{.01, .15}, {.01, .15}};
-  static double[] nominalPriorities = {23, 21, 2, 3, 5, 6, 7};
+  static final double[] oldNominalPriorities = {23, 21, 2, 3, 5, 6, 7};
+  static double[][] priorityLims = {{1.5,21.},{2.5,21}};//min 1.5*.5=.75, max 21*1.5=31.5
+  static double[][] prioritySetMult = {{2.5},{2.5}}; //picked by gameMaster
+  static final double[][] mPrioritySetMult = {{1.,3.},{1.,3.}};
+  // midPrioritySetMult = 2.5
+  // pors values
+  static final double[] midPrioritySetMult = {(mPrioritySetMult[0][0]+3.*mPrioritySetMult[0][1])/4.,(mPrioritySetMult[1][0]+3.*mPrioritySetMult[1][1])/4.}; //1+3*3 /4 = 2.5 ratio = .75
   static double[] uLifeNomPri = {23, 23};
   static double[] uStrucNomPri = {21, 21};
   static double[] uEnergyNomPri = {2, 2};
@@ -1016,9 +1022,8 @@ class EM {
   static double[][] uDefensePriRanMult = {{2., 2., 2., 2., 2.}, {2., 2., 2., 2., 2.}};
   static double[][] uGovPriRanMult = {{3., 3., 3., 3., 3.}, {3., 3., 3., 3., 3.}};
   static double[][] uColonistsPriRanMult = {{3.5, 3.5, 3.5, 3.5, 3.5}, {3.5, 3.5, 3.5, 3.5, 3.5}};
-  static double[][][] userPriorityRanMult = {uLifePriRanMult, uStrucPriRanMult, uEnergyPriRanMult, uPropelPriRanMult, uDefensePriRanMult, uGovPriRanMult, uColonistsPriRanMult};
+  static double[][][] userPriorityRanMult = {uLifePriRanMult, uStrucPriRanMult, uEnergyPriRanMult, uPropelPriRanMult, uDefensePriRanMult, uGovPriRanMult, uColonistsPriRanMult}; // 7,2,5
   static double[][] mUserPriorityRanMult = {{.01, .15}, {.01, .15}};
-
   static double[] uPrioritiesRandomMult = {7., 6., 2., 2., 2., 3., 3.5};
   // users adjust priority random additions
   static double[][] priorityRandAdditions = {{1., 1., 1., 1., 1.}, {1., 1., 1., 1., 1.}};
@@ -1199,6 +1204,8 @@ class EM {
   static double[][] mmac2 = {{.1, 2.6}, {.1, 2.6}};
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
+  // multiplier of difPercent in makClanRS
+  static double vdifMult = 0.085; // was 0.025,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   /** OBSOLETE
@@ -1542,7 +1549,10 @@ class EM {
                     //(vdif = difficultyPercent[0]) * .4 * hiLoMult
                     //(vdif = difficultyPercent[0]) * .2 * hiLoMult
                     //(vdif = difficultyPercent[0] * 0.0125)
-                     (vdif = difficultyPercent[0] * 0.0990)
+                    // (vdif = difficultyPercent[0] * 0.0990)
+                    // (vdif = difficultyPercent[0] * 0.025)
+                   //  (vdif = difficultyPercent[0] * 0.05)
+                     (vdif = difficultyPercent[0] * vdifMult)
                     // reduce costs so that final rcsg = 2*init rcsg
                     * (vrcsg = rcsgGrowFrac[pors])
                     * (vrs4 = rs4[aa][ab][pors][ac2])
@@ -1655,11 +1665,12 @@ class EM {
   static double[] manualsMin = {25,};
   static final double[][] mknowledgeForPriority = {{.2, .50}}; //init assign commonknowledge
   static final double[][] mknowledgeByDefault = {{.3, .9}};  //init assign commonknowledge
-  static final double[][] mcommonKnowledgeTradeManualFrac = {{.05, .25}};
+  static final double[][] mCommonKnowledgeTradeManualFrac = {{.05, .25}};
   static final double[][] mnewKnowledgeTradeManualFrac = {{.5, 1.}};
   static final double[][] mmanualTradeManualFrac = {{.03, .1}};
   static final double[][] mcommonKnowledgeDifTradeManualFrac = {{.3, .8}};
-  double KLearnManuals = 1.;  // manuals convertable because of created knowledge
+  static double[][] kLearnManuals = {{1.},{1.}};  // manuals convertable because of created knowledge
+  static final double[][] mKLearnManuals = {{.5,1.5},{.5,1.5}};
   static double [][] manualsMaxPercent = {{.4,.4,.4,.4,.4},{.1,.1,.1,.1,.1}};
   static final double [][] mManualsMaxPercent = {{.1,1.},{.01,.3}};
 
@@ -3030,22 +3041,22 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
    * also run settings adjustments at the end
    */
   void runVals() throws IOException {
-    doVal("difficulty", difficultyPercent, mDifficultyPercent, "For ships as well as  Planets , set the difficulty of the game, more difficulty increases costs of  resources and staff each year, increases the possibility of economy death.  More difficulty requires more clan-master expertise.");
-    doVal("randomActions", randFrac, mRandFrac, "increased random, increases possibility of gain, and of loss, including possibility of deaths");
-    doVal("clanRiskMult",gameClanRiskMult,mGameUserCatastrophyMult,"incr slider: increase effect of clan risk settings");
-    doVal("clanRisks",clanRisk,mClanRisk,"incr slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
+    doVal("difficulty", difficultyPercent, mDifficultyPercent, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the difficulty for ships as well as  Planets ,more difficulty increases costs of  resources and staff each year, increases the probability of ship and planet deaths.  More difficulty probably requires more clan-master expertise.");
+    doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
+    doVal("clanRiskMult",gameClanRiskMult,mGameUserCatastrophyMult,"increase slider: increase effect of clan risk settings");
+    doVal("clanRisks",clanRisk,mClanRisk,"increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
     
-    doVal("wGiven", wGiven, mNegPluScoreMult, "increase slider, increase the value of  the percent given in trade by the clan.");
-    doVal("wGiven2", wGiven2, mNegPluScoreMult, "increase slider, increase the value of  the percent given in trade by the clan.");
-    doVal("wGenerous", wGenerous, mNegPluScoreMult, "iincrease slider, increase the value of  the percent given in trade by the clan.");
-    doVal("iGiven", iGiven, mNegPluScoreMult, "increase slider, increase the score for number of economies traded.");
-    doVal("wLiveWorthScore", wLiveWorthScore, mNegPluScoreMult, "increase slider, increase the winning score for the clan final worth.");
+    doVal("wGiven", wGiven, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the sub-score for the percent given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
+    doVal("wGiven2", wGiven2, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for the percent given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
+    doVal("wGenerous", wGenerous, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the value of  the percent given in trade by the clan.");
+    doVal("iGiven", iGiven, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for number of economies traded. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
+    doVal("wLiveWorthScore", wLiveWorthScore, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for the clan final worth.");
     doVal("iLiveWorthScore", iLiveWorthScore, mNegPluScoreMult, "increase slider, increase the winning score for the clan final count of planets and ships");
-    doVal("iBothCreateScore", iBothCreateScore, mNegPluScoreMult, "increase slider, increase the winning score for the number of this clan in ever created");
-    doVal("wYearTradeV", wYearTradeV, mNegPluScoreMult, "increase slider, increase the winning score for the increase in the year trade increase");
-    doVal("wYearTradeI", wYearTradeI, mNegPluScoreMult, "increase slider, increase the winning score for thee increase in the number of economies with at least one trade that year");
-    doVal("years To Win", winDif, mwinDif, "increase slider, increase the years before a winner is declared");
-    doVal("iNumberDiedI", iNumberDied, mNegPluScoreMult, "increase slider, decrease the winning score for the number of dead economies for this clan this year");
+    doVal("iBothCreateScore", iBothCreateScore, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for the number of this clan in ever created");
+    doVal("wYearTradeV", wYearTradeV, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for the increase in the year trade increase");
+    doVal("wYearTradeI", wYearTradeI, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for thee increase in the number of economies with at least one trade that year");
+    doVal("iNumberDiedI", iNumberDied, mNegPluScoreMult, "Decrease the winning score for the number of dead economies for this clan this year");
+    doVal("years To Win", winDif, mwinDif, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the years before a winner is declared");
     doVal("resourceCosts", mab1, mmab1, "raise the cost of resources planet and ship, makes game harder");
     doVal("staffCosts", mac1, mmac1, "raise the costs of staff for planets and ships, makes planets and ships die more often");
     doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
@@ -3056,6 +3067,7 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
     doVal("tradeAddlSVFrac", offerAddlFrac, mOfferAddlFrac, "increase the process excessOffers in a barter");
     doVal("tradeFraction", tradeFrac, mTradeFrac, "Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
     //   doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
+  // doVal("HiLoFactorDif",);
     doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
     doVal("healthGoal", goalHealth, mRegGoals, "set normal, non-emergency health goal, may increase health and reduce costs");
     doVal("emergHealthGoal", emergHealth, mAllGoals, "set emergency health goals for when economies are weak more might help or might may make them worse");
@@ -3076,7 +3088,10 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
     doVal("Add LY  ", addLY, mAddLY, "adjust addition per round to the max Light Years distance of planets for traded");
     doVal("SearchPlanetsCnt", wildCursCnt, mWildCursCnt, "adjust the number of planets listed to be judged for the next trade");
     doVal("SearchYearlyBias  ", searchYearBias, mSearchYearBias, "increase,decrease value of prospective trade for earlier years");
-  
+    doVal("priorityMult",prioritySetMult,mPrioritySetMult,"increase the differende in value between the high priority financial sectors and the low priority financial sectors. In general this diference is needed to force planets to trade high priority financial sector surplus goods for the low priority financial sectors that need trades to have enough goods to survive the next year. ");
+    doVal("commonKTradeF",commonKnowledgeTradeManualFrac,mCommonKnowledgeTradeManualFrac,"increase the manuals in trade for each financial sector. Increasing the manuals in trades, increases the valuw of the trade, and over coming years helps increase the knowledge for individual financial sectors.");
+    doVal("increaseLearnM",kLearnManuals,mKLearnManuals,"increase the manuals to knowledge for each financial sector. Increasing the manuals growth, increases the valuw of the trade, and over coming years helps increase the knowledge for individual financial sectors.");
+
 
     // doVal("econLimits1  ", econLimits1, mEconLimits1, "Increase the max number of econs (planets+ships) in this game");
     //  doVal("econLimits2  ", econLimits2, mEconLimits2, "Increase the max number of econs (planets+ships) in this game");

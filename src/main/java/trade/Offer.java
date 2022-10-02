@@ -335,7 +335,7 @@ public class Offer {
       ret.set(m, (tmpm=newKnowledge[mIx].get(m) * eM.newKnowledgeTradeManualFrac[0]
               + manuals[mIx].get(m) * eM.manualTradeManualFrac[0]
               + commonKnowledge[mIx].get(m) * eM.commonKnowledgeTradeManualFrac[0]
-              + commonDif > 0. ? commonDif * eM.commonKnowledgeDifTradeManualFrac[0] : 0.) + manuals[mIx].get(m) < EM.manualsMin[0] ? EM.manualsMin[0] - manuals[mIx].get(m) : tmpm);
+              + commonDif > 0. ? commonDif: 0) * eM.commonKnowledgeDifTradeManualFrac[0]  + manuals[mIx].get(m) < EM.manualsMin[0] ? EM.manualsMin[0] - manuals[mIx].get(m) : tmpm);
     }
     return moreManuals[ix].set(ret);
   }

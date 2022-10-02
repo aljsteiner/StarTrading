@@ -295,9 +295,9 @@ public class ARow {
   /**
    * set value ix to val ignore cmt
    *
-   * @param ix
-   * @param val
-   * @param cmt
+   * @param ix index
+   * @param val value to be saved
+   * @param cmt comment for this save, but comment is only for info
    * @return this with values[ix] = val
    */
   public double set(int ix, double val, String cmt) {
