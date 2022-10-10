@@ -999,6 +999,10 @@ class EM {
   static double[][][] userPriorityAdjustment = {uLifePriAdj, uStrucPriAdj, uEnergyPriAdj, uPropelPriAdj, uDefensePriAdj, uGovPriAdj, uColonistsPriAdj};
   static double[][] mUserPriorityAdjustment = {{.01, .15}, {.01, .15}};
   static final double[] oldNominalPriorities = {23, 21, 2, 3, 5, 6, 7};
+  // slider 0-24(<2.0):random, 25-49(<3.0): current goods of searched: 
+// slider 50-100 (3.->5.)select by trade history
+  static double[][] tradeEconSearchType = {{2.1,2.1,2.1,2.1,2.1},{1.6,2,6,2.6,3.6,3.6}};
+  static final double[][] mTradeEconSearchType = {{1.,5.},{1.,5.}};
   static double[][] priorityLims = {{1.5,21.},{2.5,21}};//min 1.5*.5=.75, max 21*1.5=31.5
   static double[][] prioritySetMult = {{2.5},{2.5}}; //picked by gameMaster
   static final double[][] mPrioritySetMult = {{1.,3.},{1.,3.}};
@@ -3045,7 +3049,18 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
     doVal("clanRiskMult",gameClanRiskMult,mGameUserCatastrophyMult,"increase slider: increase effect of clan risk settings");
     doVal("clanRisks",clanRisk,mClanRisk,"increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
-    
+    /*
+    winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
+    winner = scoreVals(TRADELASTGAVE, wGiven, ICUM, isV);
+    winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
+    winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
+    winner = scoreVals(LIVEWORTH, wLiveWorthScore, ICUM, isV);
+    winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
+    winner = scoreVals(WTRADEDINCRMULT, wYearTradeV, ICUR0, isV);
+    // winner = scoreVals(WTRADEDINCRMULT, wYearTradeI, ICUR0, isI);
+    winner = scoreVals(DIED, iNumberDied, ICUM, isI);
+    winner = scoreVals(BOTHCREATE, iBothCreateScore, ICUM, isI);
+    */
     doVal("wGiven", wGiven, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the sub-score for the percent given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
     doVal("wGiven2", wGiven2, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for the percent given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
     doVal("wGenerous", wGenerous, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the value of  the percent given in trade by the clan.");
@@ -3131,7 +3146,10 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
     */
     doVal("swapDif", swapDif, mSwapDif, "decrease the difference when a resource sum, staff sum difference will permit only swap transmuts/repurposing to keep this ship or planet alive");
     doVal("staffSizeRestrictions", gameStartSizeRestrictions, mGameStartSizeRestrictions, "raise the value at which staff increases are restricted");
-
+    /*
+    tradeEconSearchType
+    */
+    doVal("Trade Search Type",tradeEconSearchType,mTradeEconSearchType, "slider at 15:ship selects a random planet within range with unknown available goods to match ships needs, slider at 40:ship selects a planet with a current available goods best currently matching ships needs, slider at 65: ship eaxmines the planet trade histories to project which planet's available goods probably best match the ship needs");
     doVal("Maint Min Efficiency", effBias, mEffBias, "adjust the size of the efficiency fraction");
     doVal("Trade Reserve Inc Frac", tradeReserveIncFrac, mTradeReserveIncFrac, "adjust the increase of trade offerings");
     doVal("sectorDifficultyFromDifficulty", difficultyByPriorityMin, mDifficultyByPriorityMin, "Adjust the difficulty factor in sector priority");

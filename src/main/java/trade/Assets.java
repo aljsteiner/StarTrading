@@ -742,9 +742,12 @@ public class Assets {
   }
 
   /**
-   * get tradingGoods Assets
+   * Assets get tradingGoods from CashFlow'
+   * if CashFlow (cur) is null get CashFlow
+   * get the value then null cashFlow
+   * otherwise leave CashFlow but get goods
    *
-   * @return bids for Trading
+   * @return  goods bid for Trading
    */
   A2Row getTradingGoods() {
     if(E.tradeInitOut)System.out.println("Assets.getTradingGoods " + name + "Y" + EM.year);
@@ -752,9 +755,11 @@ public class Assets {
       yphase = yrphase.PRESEARCH;
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
-    }
+      A2Row ret = cur.getTradingGoods();
+      cur = null;
+    } else {
     A2Row ret = cur.getTradingGoods();
-    cur = null;
+    }
     return bids;
   }
 
@@ -8222,7 +8227,7 @@ public class Assets {
           startYrSumWorth = initialSumWorth = sumTotWorth = iyW.getTotWorth();
           startYrSumKnowledge = initialSumKnowledge = iyW.sumKnowledgeBal;
           startYrSumKnowledgeWorth = initialSumKnowledgeWorth = iyW.sumKnowledgeWorth;
-          //  setStat("bothCreate", pors, clan, initialSumWorth, 1);
+          //setStat(EM.BOTHCREATE, pors, clan, initialSumWorth, 1); //done in StarTrader
         }
         syW = new DoTotalWorths();
         // syWTotWorth = getTotWorth();

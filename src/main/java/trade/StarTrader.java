@@ -230,7 +230,7 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
   static final public String versionText = "19.40";
   static final public String storyText = 
-          "StarTrader       Version 19.42\n" +
+          "StarTrader       Version 19.43\n" +
 "\n" +
 "“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Cooperating together with trades”: is a mini strategic economics game emphasizing cooperation over competition.  Each economy has assets of resources, staff and knowledge in 7 financial sectors.  Each year each financial sector has costs using up some resources and some staff.  \n" +
 "\n" +
@@ -8400,7 +8400,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     EM.clanStartFutureFundDues[0][0] = 1000.;
     EM.clanStartFutureFundDues[0][1] = 1000.;
     EM.clanStartFutureFundDues[1][0] = 1000.;
-    EM.clanStartFutureFundDues[2][0] = 1000.;
+    EM.clanStartFutureFundDues[1][2] = 1000.;
     EM.clanStartFutureFundDues[1][1] = 1000.;
       st.runYears(2); // higher difficult
      // SwingUtilities.invokeLater(tests1);
@@ -8434,7 +8434,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     EM.clanStartFutureFundDues[0][0] = 700.;
     EM.clanStartFutureFundDues[0][1] = 700.;
     EM.clanStartFutureFundDues[1][0] = 700.;
-    EM.clanStartFutureFundDues[2][0] = 700.;
+    EM.clanStartFutureFundDues[1][2] = 700.;
     EM.clanStartFutureFundDues[1][1] = 700.;
       st.runYears(2); // higher difficult
      // SwingUtilities.invokeLater(tests1);

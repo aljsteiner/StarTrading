@@ -257,8 +257,9 @@ public class Econ {
     double fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals;
     double difPriority  = priorityMid; 
      */
-      
-       if(m < 2 && EM.prioritySetMult[pors][0] <= EM.midPrioritySetMult[pors]){ // low pmm<midpmm 14 - 
+     // poorer mean 3 poor financial sectors not just 2
+       int poorer = EM.prioritySetMult[pors][0] > EM.midPrioritySetMult[pors]? 1 : 0;
+       if(m < (2+poorer) && EM.prioritySetMult[pors][0] <= EM.midPrioritySetMult[pors]){ // low pmm<midpmm 14 - 
          difSetVals = (EM.midPrioritySetMult[pors] -  EM.mPrioritySetMult[pors][0]);// low sets dif
          fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals; // low sets <Mult <frac
          //slide:value:fracMult:pa:*rand 
@@ -268,13 +269,13 @@ public class Econ {
         //at 95:2.9:.8:1.6 should be  priorityLims[pors][1] - difPriLims[pors][1] * rand + .8*
         resourcePri[sec] = (paddition[m] = priorityMid - difPriLims[pors][0]* fracMult) * cRand(22+m,.7); //larger set, smaller pri
        // resourcePri[sec] = resourcePri[sec] > 0.7? resourcePri[sec] : 0.7;
-       } else if(m < 2){  // high zone low priority
+       } else if(m < (2+poorer)){  // high zone low priority
          difSetVals = (EM.mPrioritySetMult[pors][1] - EM.midPrioritySetMult[pors] );// high zone mid < high
          fracMult = (EM.prioritySetMult[pors][0]- EM.midPrioritySetMult[pors])/difSetVals; // // high sets <Mult <frac
          // calc change from 100/7 prioityMid
          resourcePri[sec] = (paddition[m] = priorityLims[pors][0] - difPriLims[pors][1]* fracMult) * cRand(22+m,.7) ;
          //resourcePri[sec] = (lowPriority * paddition[m]);
-     } else if(m < 4 ){ // max midPriority to supermax
+     } else if(m < (4+poorer)){ // max midPriority to supermax
         difSetVals = (EM.mPrioritySetMult[pors][0] - EM.midPrioritySetMult[pors]);// low dif
          fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals; // addition
         // at 1.0 rP should be 14. or priorityMid * rand
@@ -378,6 +379,14 @@ public class Econ {
    */
   A2Row getTradingGoods() {
     return as.getTradingGoods();
+  }
+  
+  /** get 1 year of travelMaint cost for trading
+   * 
+   * @return 1 year of the costs
+   */
+  double getSumTrade1YearTravelMaintCosts(){
+    return as.getSumTrade1YearTravelMaintCosts();
   }
 
   /**
@@ -991,6 +1000,7 @@ public class Econ {
     A2Row tradeStrategicVars = as.getTradeStrategicVars();
     double sumTrade1YearTravelMaintCosts = as.getSumTrade1YearTravelMaintCosts();
     A2Row tradeGoodsNeeds = as.getTradeGoodsNeeds();
+    
     int[] topStratSectors = {tradeStrategicVars.curMaxIx(0), tradeStrategicVars.curMaxIx(0), tradeStrategicVars.curMaxIx(0)};
     double lYears = 0.;
     String wildS = "___________in selectPlanet for:" + name + " ";
@@ -1004,7 +1014,7 @@ public class Econ {
       wildS += " " + ww.name + "@" + (lYears = calcLY(this, ww));
     }
     if (n > 0) {
-      if ((pSize = planetList.size()) > 0) { // if some TradeRecord s
+      if (EM.tradeEconSearchType[1][clan] >= 3.0 && ((pSize = planetList.size()) > 0)) { // if some TradeRecord list
         // scan the planetList of TradeRecord
         for (int pl = 0; pl < pSize; pl++) {
           TradeRecord tr = planetList.get(pl);
@@ -1019,13 +1029,27 @@ public class Econ {
             } // some TradeRecords are ignored
           }// nn
         }// pl to next TradeRecord
-        double tPri = -999., aPri = 0.;; // top priority found
+        double tPri = -999., aPri = 0.; // top priority found
         int nPri = -10; // count of top priority
         if (E.debugDisplayTrade) {
           System.out.print("~~~~~~~~~selecting highest pri planet=");
         }
-        for (int nn = 0; nn < wLen; nn++) {
-          aPri = tPriority[nn].getPriority();
+        for (int nn = 0; nn < wLen; nn++) { // use current good reequests
+          if(EM.tradeEconSearchType[1][clan] >= 2.0 && EM.tradeEconSearchType[pors][0] < 3.){
+            A2Row otherGoods = wilda[n].getTradingGoods();
+           // A2Row myGoods = getTradingGoods();
+            int sIx=0;
+            aPri = 0.;
+            for(int gIx = 0; gIx < 3; gIx++){
+              sIx = tradeGoodsNeeds.curMaxIx(gIx);
+              // count how much they offer of what we need highest 3 needs only 
+              aPri += Math.max(0.0,Math.min(tradeGoodsNeeds.get(sIx),- otherGoods.get(sIx)));
+            }
+            // remove travel costs from the potential gain from trade 
+            aPri = Math.max(0.0, aPri - sumTrade1YearTravelMaintCosts * calcLY(this, wilda[n]));
+          } else {  // >= 3. <= 5. previous historical info
+            aPri = tPriority[nn].getPriority();
+          }
           if (E.debugDisplayTrade) {
             System.out.print(" " + wilda[nn].name + "=" + EM.mf(aPri));
           }
@@ -1043,13 +1067,15 @@ public class Econ {
           }
         }
         r = nPri;
-
-      } else { // some wlen but no TradeRecords
-        Random random = new Random();
+      } else if(EM.tradeEconSearchType[pors][0] < 2.0){
+         Random random = new Random();
         r = random.nextInt(wLen);
+        n = wLen; // exit n for loop
+      } else { // some wlen but no TradeRecords
+       
 
       }
-    }
+    } // n>0
     if (r >= 0) {
       wildS += " selected:" + r + " :" + wilda[r].name;
       E.sysmsg(wildS);
