@@ -1020,13 +1020,14 @@ public class A6Rowa {
   /**
    * get value of internal ARow n, sector m
    *
-   * @param m
-   * @param n
+   * @param m row in the object
+   * @param n sector in the balances
    * @return A[n].get(m)
    */
   public double get(int m, int n) {
-    int an = A.length;
-    m = m%an;
+    int al = A.length;
+    assert m <= al:"error m" + m + " is more than size" + al;
+  //  m = m%al; //
     resum(m);
     if(E.debugDouble){
     return doubleTrouble(A[m].get(n));
@@ -1041,11 +1042,12 @@ public class A6Rowa {
    * @return 
    */
   public double get(int nn) {
-    return get(nn/E.lsecs,nn%E.lsecs);
+    return get(nn/E.LSECS,nn%E.LSECS);
   }
 
   /**
-   * get the value of rows 0,1 by set m = m%2
+   * get the value of rows 0,1 by sector m = m%2
+   * resum m%2 
    *
    * @param m m%2 index of row 0 or 1
    * @param n index of value in selected row
@@ -1056,6 +1058,14 @@ public class A6Rowa {
     return get(m % 2, n);
   }
 
+    /**
+   * get the value of balances working row by sector 
+   * resum m%2 
+   *
+   * @param m index of working row 
+   * @param n index of value in selected row
+   * @return the value of value n in the selected row
+   */
   public double gett1(int m, int n) {
     if (balances) {
       resum((m % 2 * 2) + 2);
@@ -1067,6 +1077,14 @@ public class A6Rowa {
     }
   }
 
+   /**
+   * get the value of balances reserve row by sector 
+   * resum m%2 
+   *
+   * @param m index of reserve row 
+   * @param n index of value in selected row
+   * @return the value of value n in the selected row
+   */
   public double gett2(int m, int n) {
     if (balances) {
       resum((m % 2 * 2) + 3);
@@ -1150,10 +1168,13 @@ public class A6Rowa {
    * set internal ARow m to ARow B testing for a Double error
    *
    * @param m    number of row to be set
-   * @param b    row to be set into that row
+   * @param b    ARow to be set into that row of object
    * @return ARow B
    */
   public ARow set2(int m, ARow b) {
+    if(m < 6){
+      assert m > 1:"tried to set"+m + " sum balance not working or reserve";
+    }
     return A[m].set2(b,this.titl,m);
   }
 
@@ -1171,15 +1192,23 @@ public class A6Rowa {
 
   /**
    * set internal ARow m, sector n to val
-   *
+   * if balances && m <%lt; 6 then assert m %gt; 1 and do resum
    * @param m      selector of row number
    * @param n      selector of entry in row
    * @param val    value to be tested as a Double then stored
    * @return val
    */
   public double set(int m, int n, Double val) {
-    E.myTestDouble(val, "in A6Rowa title=\"" + this.titl, "\" A[%1d][%1d] =\"%s\"", m, n,String.valueOf(val));
-    return A[m].set(n, val);
+    E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+    double ret = A[m].set(n,val);
+    int mm = (int)((m-2)/2);
+    if(balances && m < 6){
+      assert m>1: "error must set only working or reserve values";
+      //resum((int)((m -2)/2)); // 0=2,3,1=4,5
+      // local resum
+      A[mm].set(n,get(mm*2+2,n) + get(3 + mm*2,n));
+    }
+    return ret;
   }
 
   /**
@@ -1196,15 +1225,25 @@ public class A6Rowa {
 
   /**
    * add to row m, sector n value val
-   *
-   * @param m
-   * @param n
+   * test for Double problems and if balances set row 0 or 1
+   * @param m  row to object to be set
+   * @param n  sector of row to be added to
    * @param val
-   * @return return the result in A[m].get(n)
+   * @return return the result in A[m].get(n) value after add
    */
   double add(int m, int n, double val) {
     E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
-    return A[m].add(n, val);
+     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+    double ret = A[m].add(n,val);
+    if(balances && m < 6){
+      assert m>1: "error must set only working or reserve values";
+      //resum((int)((m -2)/2)); // 0=2,3,1=4,5
+      // local resum
+      int mm = (int)((m-2)/2);  // get row 0 or 1 rc  or sg
+      A[mm].set(n,get(mm*2+2,n) + get(3 + mm*2));
+    }
+    return ret;
+    
   }
 
   /**
@@ -1226,6 +1265,13 @@ public class A6Rowa {
            set(m, n, this.get(m, n)
                 - (V
                 * B.get(m, n)));
+           if(balances && m < 6){
+             int mm = (int)((m-2)/2);  // get row 0 or 1 rc  or sg
+      assert m>1: "error must set only working or reserve values";
+      //resum((int)((m -2)/2)); // 0=2,3,1=4,5
+      // local resum
+      A[mm].set(n,get(mm*2+2,n) + get(3 + mm*2));
+    }
         }
       }
     }
@@ -1235,25 +1281,26 @@ public class A6Rowa {
   /**
    * set to Min of each by each B,C
    *
-   * @param B
-   * @param C
+   * @param B  the first A6Rowa
+   * @param C  the second A6Rowa
    * @return min each by each B,C, 0 = min(2,4),1=min(3,5)
    */
   public A6Rowa setMin(A6Rowa B, A6Rowa C) {
     double b = 1., c = 1.;
-    for (int m : E.d2) {
-      for (int n : ASECS) {
+    int al = A.length;
+    for (int m =0;m < al; m++ ) {
+      for (int n=0;n<E.LSECS;n++) {
         // do the rr,rs,sr,ss sets first
-        b = doubleTrouble(B.get(m + 2, n));
-        c = doubleTrouble(C.get(m + 2, n));
-        set(m + 2, n, b < c ? b : c);
-        b = doubleTrouble(B.get(m + 4, n));
-        c = doubleTrouble(C.get(m + 4, n));
-        set(m + 4, n, b < c ? b : c);
-        // finally do the joint
-        b = doubleTrouble(get(2 + m, n));
-        c = doubleTrouble(get(4 + m, n));
-        set(m, n, b < c ? b : c);
+        b = doubleTrouble(B.get(m, n));
+        c = doubleTrouble(C.get(m, n));
+        A[m].set(n, b < c ? b : c);
+        if(balances && m < 6){
+          if(m == 5){ //the last balance row
+            int mm = (int)((m-2)/2);
+            A[0].set(n,get(2,n) + get(3,n));
+            A[1].set(n,get(4,n) + get(5,n));
+          }
+        }
       }
     }
     return this;
@@ -1262,8 +1309,8 @@ public class A6Rowa {
   /**
    * set to Max of each by each B,C
    *
-   * @param B
-   * @param C
+   * @param B  first A6Rowa
+   * @param C second A6Rowa
    * @return min each by each B,C, 0 = min(2,4),1=min(3,5)
    */
   public A6Rowa setMax(A6Rowa B, A6Rowa C) {
@@ -1273,7 +1320,14 @@ public class A6Rowa {
         // do the rr,rs,sr,ss sets first
         b = doubleTrouble(B.get(m, n));
         c = doubleTrouble(C.get(m, n));
-        set(m, n, b > c ? b : c);
+        A[m].set(n, b > c ? b : c);
+        if(balances && m < 6){
+          if(m == 5){ //the last balance row
+            int mm = (int)((m-2)/2);
+            A[0].set(n,get(2,n) + get(3,n));
+            A[1].set(n,get(4,n) + get(5,n));
+          }
+        }
       }
     }
     return this;
@@ -1288,13 +1342,21 @@ public class A6Rowa {
    * @return max each by each a,B,C,
    */
   public A6Rowa setMax(A6Rowa a, A6Rowa b, A6Rowa c) {
-    double ab = 1, abc = 1;
-    for (int m = 2; m < lA; m++) {
-      for (int n : ASECS) {
+    double ab = 1, abc = 1,al=A.length;
+    for (int m = 0; m < al; m++) {
+      for (int n =0;n<E.LSECS;n++) {
         // do the rr,rs,sr,ss etc
         ab = doubleTrouble(a.get(m, n)) > doubleTrouble(b.get(m, n)) ? doubleTrouble(a.get(m, n)) : doubleTrouble(b.get(m, n));
         abc = ab > doubleTrouble(c.get(m, n)) ? ab : doubleTrouble(c.get(m, n));
-        set(m, n, abc);
+        //set(m, n, abc);
+         A[m].set(n,abc);
+        if(balances && m < 6){
+          if(m == 5){ //the last balance row
+            int mm = (int)((m-2)/2);
+            A[0].set(n,get(2,n) + get(3,n));
+            A[1].set(n,get(4,n) + get(5,n));
+          }
+        }
       }
     }
     return this;

@@ -214,7 +214,7 @@ class EM {
   static String setOtherEcon(Econ x){ otherEcon = x; otherEconClan= x.getColor(); return otherEconName = x.getName();}
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {60.};
+  static double[] difficultyPercent = {30.};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
   static double[][] hiLoMult = {{1.3,1.3,1.3,.3,.3},{1.3,1.3,1.3,.3,.3}};
   static final double[][] mHiLoMult = {{.2,2.},{.2,2.}};
@@ -355,17 +355,17 @@ class EM {
   // dues start the first year if this is less than initial worth
   //static double[][] clanStartFutureFundDues = {{8000., 8000., 8000., 8000, 8000.}, {8000, 8000., 8000., 8000., 8000.}};  //place to start future fund dues
  // static double[][] clanStartFutureFundDues = {{4000., 4000., 4000., 4000, 4000.}, {8000, 8000., 8000., 8000., 8000.}};  //place to start future fund dues
-  static double[][] clanStartFutureFundDues = {{1700., 1700., 1700., 1700, 1700.}, {1700, 1700., 1700., 1700., 1700.}};  //place to start future fund dues
+  static double[][] clanStartFutureFundDues = {{700., 700., 700., 700, 700.}, {1000, 1000., 1000., 1000., 1000.}};  //place to start future fund dues
   static final double[][] mClanStartFutureFundDues = {{500., 5000.}, {500., 5000.}};
-  static volatile double[][] clanStartFutureFundFrac = {{.07, .07, .07, .07, .07}, {.02, .02, .02, .02, .02}};  //frac of bals.curSum();
+  static volatile double[][] clanStartFutureFundFrac = {{.7, .7, .7, .7, .7}, {.02, .02, .02, .02, .02}};  //frac of bals.curSum()
   static final double[][] mClanStartFutureFundFrac = {{.03, 1.6}, {.01, 1.6}};
 
   static double[][] emergFundFrac = {{5.0, 5.0, 5.0, 5.0, 5.0}, {5.0, 5.0, 5.0, 5.0, 5.0}}; //frac of bals.curSum();
   static final double[][] mEmergFundFrac = {{10., .01}, {10., .01}};
-  static volatile double[][] futureFundFrac = {{.5, .5, .5, .5, .5}, {.53, .53, .53, .53, .53}}; //frac of bals.curSum();
-  static final double[][] mFutureFundFrac = {{.001, .9}, {.001, .9}};
-  static volatile double[][] futureFundTransferFrac = {{.9, .9, .9, .9, .9}, {.9, .9, .9, .9, .9}};
-  static final double[][] mFutureFundTransferFrac = {{.3, 1.4}, {.3, 1.4}};
+  static volatile double[][] futureFundFrac = {{.9, .9, .9, .9, .9}, {.8, .8, .8, .8, .8}}; //frac of bals.curSum();
+  static final double[][] mFutureFundFrac = {{.001, 1.9}, {.001, 1.9}};
+  static volatile double[][] futureFundTransferFrac = {{1.9, 1.9, 1.9, 1.9, 1.9}, {1.9, 1.9, 1.9, 1.9, 1.9}};
+  static final double[][] mFutureFundTransferFrac = {{.3, 5.4}, {.3, 5.4}};
   static double[] gameStartSizeRestrictions = {800., 600.};
   static final double[][] mGameStartSizeRestrictions = {{300., 5000.}, {300., 5000.}};
   // double[] effMax = {2., 2.}; // 170309
@@ -1001,7 +1001,7 @@ class EM {
   static final double[] oldNominalPriorities = {23, 21, 2, 3, 5, 6, 7};
   // slider 0-24(<2.0):random, 25-49(<3.0): current goods of searched: 
 // slider 50-100 (3.->5.)select by trade history
-  static double[][] tradeEconSearchType = {{2.1,2.1,2.1,2.1,2.1},{1.6,2,6,2.6,3.6,3.6}};
+  static double[][] tradeEconSearchType = {{2.1,2.1,2.1,2.1,2.1},{1.6,2.6,2.6,3.6,3.6}};
   static final double[][] mTradeEconSearchType = {{1.,5.},{1.,5.}};
   static double[][] priorityLims = {{1.5,21.},{2.5,21}};//min 1.5*.5=.75, max 21*1.5=31.5
   static double[][] prioritySetMult = {{2.5},{2.5}}; //picked by gameMaster
@@ -1034,10 +1034,10 @@ class EM {
   static double[][] mPriorityRandAdditions = {{.3, 2.}, {.3, 2.}};
   static double[][] manualEfficiencyMult = {{.02}, {.02}}; // .01 - .08
   static double[][] mManualEfficiencyMult = {{.01, .09}, {.01, 2.}}; // .01 - .08
-  static double[][] gRGrowthMult1 = {{.15}, {.15}}; // higher growth .03 - .1
-  static double[][] mGRGrowthMult1 = {{.03, .4}, {.01, .4}}; // higher growth .03 - .1
-  static double[][] gRGrowthMult2 = {{.3}, {.3}}; // lower growth .01 - .06;
-  static double[][] mGRGrowthMult2 = {{.01, .6}, {.01, .6}};
+  static double[][] gRGrowthMult1 = {{.55}, {.55}}; // higher growth .03 - .1
+  static double[][] mGRGrowthMult1 = {{.03, 1.4}, {.01, 1.4}}; // higher growth .03 - .1
+  static double[][] gRGrowthMult2 = {{.8}, {.8}}; // lower growth .01 - .06;
+  static double[][] mGRGrowthMult2 = {{.01, 1.6}, {.01, 1.6}};
   // freq .2 means chance for today is .2 or 1 in 5years, .333 = 1 in 3 years
   // goal freq from 1 in 2yrs to 1 in 10 yrs  per econ
   static double[][] userCatastrophyFreq = {{.6, .5, .4, .3, .2}, {.4, .4, .6, .3, .6}};
@@ -1209,7 +1209,7 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = 0.085; // was 0.025,0.05,0.075
+  static double vdifMult = 0.055; // was 0.025,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   /** OBSOLETE
@@ -1700,7 +1700,7 @@ class EM {
   static double[][] mFracBiasInGrowth = {{.02, .9}, {.02, .9}};
   static double[] fracPriorityInGrowth = {.6, .5};  //mult priority in growth calc and percent to frac
   static final double[][] mFracPriorityInGrowth = {{.1, .9}, {.1, .9}};
-  static double[] resourceGrowth = {2.7, .002}; // growth per work
+  static double[] resourceGrowth = {3.7, .002}; // growth per work
   static final double[][] mResourceGrowth = {{.01, 6.}, {0.002, .9}};
   // decay mining cumulative related to each years growth
   static double[] resourceGrowthDecay = {.0006, .0006}; //per unit
@@ -1709,7 +1709,7 @@ class EM {
   static double[] cargoGrowth = {0.000001, .00000001};
   static final double[][] mCargoGrowth = {{0.0000001, 0.00009}, {0.000000001, 0.000009}};
   // cargo decay use resourceGrowthDecay
-  static double[] staffGrowth = {2.7, .002}; // growth per work
+  static double[] staffGrowth = {3.7, .002}; // growth per work
   static final double[][] mStaffGrowth = {{.01, 6.}, {0.002, .9}};
   static double[] staffGrowthDecay = {.0006, .0006}; //per unit
   static final double[][] mStaffGrowthDecay = {{.00003, .009}, {.00003, .009}};
@@ -1868,7 +1868,7 @@ class EM {
   // ships get much more to survive and grow with planets
   // the fracs get reduced as the trades continue
   static final double mTradeFrac[][] = {{.001, .4}, {.1, 1.4}};
-  static double[][] tradeFrac = {{.03, .03, .03, .03, .03}, {.7, .9, .8, .9, .6}, ssFrac[0]};
+  static double[][] tradeFrac = {{.03, .03, .03, .03, .03}, {.5, .6, .5, .6 , .6}, ssFrac[0]};
   // termFrac = (goalTermBias )/(goalTermBias + barterStart - term)
   //    gtb=18 t=18  18/18 = 1;  t=9  18/(18 + 18-9=27) = .6666; t=`0 18/36 = .5
   // related to decrement per term
@@ -3580,7 +3580,14 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
   static final int CDDEPRECIATIONP = ++e4;  // sll svvrpyrf
   static final int SDDEPRECIATIONP = ++e4;
   static final int GDDEPRECIATIONP = ++e4;
-
+  static final int DeadNegN = ++e4;
+  static final int DeadLt5 = ++e4;
+  static final int DeadLt10= ++e4;
+  static final int DeadLt20 = ++e4;
+  static final int DeadNegProsp = ++e4;
+  static final int DeadRatioS= ++e4;
+  static final int DeadRatioR = ++e4;
+  
   static final int DIEDCATASTROPHY = ++e4;
   static final int DEADRATIO = ++e4;
   static final int DEADHEALTH = ++e4;
@@ -3791,7 +3798,7 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
   void defRes() {
 
     doRes(SCORE, "Score", "Winner has the highest score the result of combining the different priorities set by several value entries which increase the score", 3, 4, 3, LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | SUM,  LIST0 | LIST7 | LIST8 | LIST9 |  THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | CUMUNITS | BOTH | SKIPUNSET, 0);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | SUM,  LIST0 | LIST6 | LIST7 | LIST8 | LIST9 |  THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE| BOTH | SKIPUNSET, 0);
      doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | BOTH , 0,0,0);
      doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg");
      doRes(INCRRCSG, "%incr rcsg", "percent incr rcsg Value  year end rcsg/inital rcsg" );
@@ -3832,8 +3839,8 @@ doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(YEARCREATE, "yearCreations", "Econs ceated this year by the game funds");
     doRes(FUTURECREATE, "FutureFund Create", "Econs created from clan Future Funds");
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
-    doRes(DIED, "DIED", "planets or ships died trade accepted", 2, 2, 3,  LIST0 | LIST3 | LIST4 | THISYEARUNITS | BOTH , ROWS2 |  LIST3 | LIST4 | LIST5 | LIST10 | LIST11 | CUMUNITS | BOTH | SKIPUNSET,0,0);
-        doRes(DIEDPERCENT, "DIED %", "Percent planets or ships died trade accepted", 2, 2, 3,  LIST0 | LIST2 | LIST3 | LIST4 | THISYEARAVE | BOTH , ROWS2 |  LIST3 | LIST4 | LIST5 | LIST10 | LIST11 | CUMAVE | BOTH | SKIPUNSET,0,0);
+    doRes(DIED, "DIED", "planets or ships died", 2, 2, 3,  LIST0 | LIST3 | LIST4 | LIST6 | LIST14| THISYEARUNITS | BOTH ,   LIST3 | LIST4 | LIST5 | LIST10 | LIST11 | CUMUNITS | BOTH | SKIPUNSET,0,0);
+    doRes(DIEDPERCENT, "DIED %", "Percent planets or ships died", 2, 2, 3,  LIST0 | LIST2 | LIST3 | LIST4 | LIST6 | THISYEARAVE | BOTH , ROWS2 |  LIST3 | LIST4 | LIST5 | LIST10 | LIST11 | CUMAVE | BOTH | SKIPUNSET,0,0);
     doRes(HIGHDIEDPERCENT, "HIDIED %", "HI worths Percent planets or ships died trade accepted", 2, 2, 3, ROWS1 | LIST2 | LIST3 | LIST4 | THISYEARAVE | BOTH , ROWS2 |  LIST3 | LIST4 | LIST5 | LIST10 | LIST11 | CUMAVE | BOTH | SKIPUNSET,0,0);
     doRes(LOWDIEDPERCENT, "LODIED %", "LO worths Percent planets or ships died trade accepted", 2, 2, 3, ROWS1 | LIST2 | LIST3 | LIST4 | THISYEARAVE | BOTH , ROWS2 |  LIST3 | LIST4 | LIST5 | LIST10 | LIST11 | CUMAVE | BOTH | SKIPUNSET,0,0);
      doRes(MISCDIED, "NT DIED", "planets or ships died no trade accepted", 2, 2, 3, LIST0 | LIST2 | LIST3 | LIST4 | LIST10 | THISYEARUNITS | BOTH , ROWS2 |  LIST3 | LIST4 | CUMUNITS | BOTH | SKIPUNSET,0,0);
@@ -3953,14 +3960,14 @@ doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(DIEDSM1X3RN1, "DIEDSM1X3RN1", "died s max1 > 3 * r max, r min1 is neg try reduce difficulty or staff or resource costs.");
     doRes(DIEDSM1X2RN1, "DIEDSM1X2RN1", "died s max1 > 2 * r max, r min1 is neg try reduce difficulty or staff or resource costs.");
     doRes(DIEDSN1RM1X1, "DIEDSN1RM1X1", "died s max1 > 1 * r max, r min1 is neg try reduce difficulty or staff or resource costs.");
-    doRes("DeadNegN", "DeadNegSwapN", "Dead Swaps never entered");
-    doRes("DeadLt5", "DeadLt5", "no more than 15 swaps");
-    doRes("DeadLt10", "DeadLt10", "no more than 10 swaps");
-    doRes("DeadLt20", "DeadLt20", "no more than 20 swaps");
-    doRes("DeadNegProsp", "DeadNegProsp", "Died either R or S had a negative");
-    doRes("DeadRatioS", "DeadRatioS", "Resource  S values simply too small");
-    doRes("DeadRatioR", "DeadRatioR", "R values simply too small");
-    doRes(DEADRATIO, "diedRatio", "died,average mult year last/initial worth death");
+    doRes(DeadNegN, "DeadNegSwapN", "Dead Swaps never entered");
+    doRes(DeadLt5, "DeadLt5", "dead no more than 5 swaps");
+    doRes(DeadLt10, "DeadLt10", "dead no more than 10 swaps");
+    doRes(DeadLt20, "DeadLt20", "dead no more than 20 swaps");
+    doRes(DeadNegProsp, "DeadNegProsp", "Died either R or S had a negative");
+    doRes(DeadRatioS, "DeadRatioS", "S values simply too small");
+    doRes(DeadRatioR, "DeadRatioR", "R values simply too small");
+    doRes(DEADRATIO, "diedRatio", "died R or S values too small");
     doRes(DEADHEALTH, "died health", "died,average negative minimum health at death");
     doRes(DEADFERTILITY, "died fertility", "died,average negative minimum fertility at death");
     doRes(DEADSWAPSMOVED, "diedSwapMoves", "died,average Swap Moves at death");
@@ -4148,8 +4155,8 @@ doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(SWAPRXFERCOST, "Swap RXfer Cost", "Fraction of R XFER swap cost/sum of R units", 2, 2, 1);
     doRes(SWAPSXFERCOST, "Swap SXfer Cost", "Fraction of S XFER swap cost/sum of R units", 2, 2, 1);
      doRes("Redo FutureFund", "Redo FutureFund", "At emergency1 level of resource/staff back out of a saved future fund",3, 2, 1, ROWS2 | LIST6 | CUM | CUMUNITS | BOTH | SKIPUNSET, 0,0,0);
-    doRes("EmergFF", "EmergFF", "emergency resource/staff sums tranfer resource to FutureFund",2, 2, 1, ROWS2 | LIST6 | CUR | BOTH | SKIPUNSET, 0,0,ROWS1 |  LIST14 | CURAVE | SKIPUNSET);
-    doRes("SizeFF", "SizeFF", "Size resource/staff sums tranfer resource to FutureFund",2, 2, 1, ROWS1 | LIST6 | CUR |  BOTH | SKIPUNSET, ROWS1 |  LIST14 | CURAVE | SKIPUNSET,0,0);
+    doRes("EmergFF", "EmergFF", "emergency resource/staff sums tranfer resource to FutureFund",2, 2, 1, ROWS2 | LIST6 | CUR | CURAVE | CUM | BOTH | SKIPUNSET, 0,0,ROWS1 |  LIST14 | CURAVE | SKIPUNSET);
+    doRes("SizeFF", "SizeFF", "Size resource/staff sums tranfer resource to FutureFund",2, 2, 1, ROWS1 | LIST6 | CUR | CURAVE | BOTH | SKIPUNSET, ROWS1 |  LIST14 | CURAVE | SKIPUNSET,0,0);
     doRes("FutureFundSaved", "FutureFundsSaved", "Total resource/staff sums tranfered to FutureFund");
    
     doRes("EmergFF1", "Emerg FutureFund1", "At emergency1 level of resource/staff neg prospects val to FutureFund",1, 2, 1, ROWS1 | LIST6 | CUR  | BOTH | SKIPUNSET, 0,0,0);

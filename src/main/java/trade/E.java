@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
+//import java.util.TreeSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -134,6 +135,7 @@ static StarTrader st;
   static final boolean DEBUGWAITTRACE = debugMaster;
  static final boolean debugLogsOut = debugMaster; // StarTrader logs output
  static final boolean debugRsOut = true; // EM rs output
+ static final boolean debugFFOut = true; // EM Assets.CashFlow.calcForwardFund output
   static final boolean debugStatsOut1 = outputLess; // stats output1
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
@@ -491,6 +493,8 @@ static StarTrader st;
   public static Set swpIncrs = new HashSet(Arrays.asList(swpIncrv));
   public static Set swpDecrs = new HashSet(Arrays.asList(swpDecrv));
   public static ArrayList<History> hist;
+  public static final int[] forwardFundSwapNs = {0,1,2,3,4,5,11,12,15,16,20,25,30,31,35,36,37};
+  static final Set ffSwapNs = new HashSet(Arrays.asList(forwardFundSwapNs));
 
   /**
    * list of reportable values r7

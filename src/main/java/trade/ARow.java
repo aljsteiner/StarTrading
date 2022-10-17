@@ -434,13 +434,14 @@ public class ARow {
   /**
    * set ARow to A, copying  A testing a set in A6Rowa
    *
-   * @param A an ARow
-   * @param titl  title of the A6Rowa 
-   * @param m     row in A6Rowa
+   * @param A ARow to doubleTrouble copy into the calling object row
+   * @param titl  ignore title of the A6Rowa 
+   * @param m     ignore m row in A6Rowa used for this set 
    * @return this
    */
   ARow set2(ARow A,String titl,int m) {
-    E.myTest(A == null, "input to set is null");
+    assert A != null : "row to set is null";
+   // E.myTest(A == null, "input to set is null");
     double d;
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
@@ -449,7 +450,7 @@ public class ARow {
       } else {
         d = A.get(i);
       }
-      set2(i, d,titl,m);
+      set(i, d,titl);
     }
     return this;
   }
