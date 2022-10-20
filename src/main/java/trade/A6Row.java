@@ -454,11 +454,11 @@ public class A6Row extends A6Rowa {
   }
 
   /**
-   * resum the rows 0,1 depending on flag balances
+   * use A6Rowa resum, notreSum the rows 0,1 depending on flag balances
    *
    * @return balances?0=2+3,1=4+5:0=2+4,1=3+5;
    */
-  public A6Row reSum() {
+  public A6Row notreSum() {
     for (int m : d01) {
       for (int n : ASECS) {
         set(m, n, balances ? get(2 + m * 2, n) + get(3 + m * 2, n) : get(2 + m, n) + get(4 + m, n));
@@ -792,8 +792,8 @@ public class A6Row extends A6Rowa {
       A[1] = new ARow(ec);
     }
     for (int n : E.alsecs) {
-      set(0, n, get(2, n) + get(3, n));
-      set(1, n, get(4, n) + get(5, n));
+      sett(0, n, gett(2, n) + get(3, n));
+      sett(1, n, gett(4, n) + get(5, n));
     }
     return this;
   }
@@ -847,13 +847,14 @@ public class A6Row extends A6Rowa {
 
   /**
    * set internal ARow m, sector n to val
+   * force use of A6Rowa set
    *
    * @param m
    * @param n
    * @param val
    * @return val
    */
-  public double set(int m, int n, double val) {
+  public double notSet(int m, int n, double val) {
     return A[m].set(n, val);
   }
 
@@ -865,19 +866,20 @@ public class A6Row extends A6Rowa {
    * @param val
    * @return val
    */
-  public double sett(int m, int n, double val) {
+  public double notsett(int m, int n, double val) {
     return set(m % 2, n, val);
   }
 
   /**
    * add to row m, sector n value val
+   * force use of A6Rowa Set
    *
    * @param m
    * @param n
    * @param val
    * @return return the result in A[m].get(n)
    */
-  double add(int m, int n, double val) {
+  double notAdd(int m, int n, double val) {
     return A[m].add(n, val);
   }
 

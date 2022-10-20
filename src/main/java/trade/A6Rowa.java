@@ -189,6 +189,21 @@ public class A6Rowa {
 
     //  System.out.println("A6Rowa1 before A.length =" + A.length + ", lA=" + lA + ", lev=" + lev + ", title=" + titl);
   }
+  
+  /** make a balances subClone with the balances part of ABalRow
+   * The rows reference the same ARow instances as in bals
+   * 
+   * @return 
+   */
+  A6Row makeA6(){
+    A6Row ret = new A6Row(ec);
+    for(int i=0;i<6;i++){ret.A[i] = A[i];} // copy row references
+    ret.aResum = aResum;
+    ret.balances = true;
+    ret.gradesA = gradesA;
+    ret.titl = "Bal6s";
+    return ret;
+  }
 
   /**
    * set sendHist hist listing type balances, costs or neither
@@ -357,6 +372,7 @@ public class A6Rowa {
     }
     return this;
   }
+
 
   /**
    * copy A6Rowa object, copy each by each of calling A6Row use as A6Row b =
@@ -717,6 +733,13 @@ public class A6Rowa {
     }
   }
 
+  /** again sum rc or sg if m %eq; one of them
+   * aResum contains the sum of setCnts for the 2 ARows sumed to this sum Row
+   * aResum is set to the sum of setCnts when a resum is dome
+   * 
+   * @param m The number of the index in A for ARow for to be a sum, if m is not a sum row ignore
+   * 
+   */
   void resum(int m) {
 //    System.out.println("into resum title=" + titl + " la=" + lA + ", length A=" + A.length + ", m=" + m);
     if (A[m] == null) {
@@ -737,7 +760,7 @@ public class A6Rowa {
           //    System.out.printf("do resum %s ARow %2d add", titl, mm);
           for (int rr : mResum[mm]) { // set by sub class
             //       System.out.printf(" ARow %2d", rr);
-            for (int q : ASECS) {
+            for (int q : E.ASECS) {// add to rc or sg
               if(E.debugDouble){
               A[mm].add(q, doubleTrouble(A[rr].get(q)));  // add in appropriate values
               }else {
@@ -1026,9 +1049,15 @@ public class A6Rowa {
    */
   public double get(int m, int n) {
     int al = A.length;
-    assert m <= al:"error m" + m + " is more than size" + al;
+    assert m < A.length:"error m" + m + " indexes more than length" + al;
   //  m = m%al; //
-    resum(m);
+    int mm = m < 2? m: (m-2)/2; // find proper rc or sg
+    resum(mm);
+    if(E.debugResum){
+    double bal1 = get(mm,n);
+    double both = get(4,n) + get(5,n);
+    assert balances && (A.length == 6 || A.length == ABalRows.BALSLENGTH) && m < 6 && bal1 == both : "resum error sector" + n + " row" + mm + "=" + EM.mf(bal1) + " noteq both" + EM.mf(both) + " working" + EM.mf(get(4,n)) + " reserve" + EM.mf(get(5,n));
+             }
     if(E.debugDouble){
     return doubleTrouble(A[m].get(n));
     } else {
@@ -1054,8 +1083,12 @@ public class A6Rowa {
    * @return the value of value n in the selected row
    */
   public double gett(int m, int n) {
-    resum(m % 2);
-    return get(m % 2, n);
+    resum((int)(m<2? m : (m-2)/2));
+     if(E.debugDouble){
+    return doubleTrouble(A[m].get(n));
+    } else {
+     return A[m].get(n); 
+    }
   }
 
     /**
@@ -1200,16 +1233,29 @@ public class A6Rowa {
    */
   public double set(int m, int n, Double val) {
     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+    int mm = m < 2? m: (m-2)/2; // find proper rc or sg
+    double bal1 = get(mm,n);
+    double both = A[2 + mm*2].values[n] + A[3 + mm*2].values[n];
+    if(E.debugResumP ){
+    assert balances && (A.length == 6 || A.length == ABalRows.BALSLENGTH) && m < 6 && m > 1 && bal1 == both : "resum error sector" + n + " row" + mm + "=" + EM.mf(bal1) + " noteq both" + EM.mf(both) + " working" + EM.mf(A[2 + mm*2].values[n]) + " reserve" + EM.mf(A[3 + mm*2].values[n]);
+             }
     double ret = A[m].set(n,val);
-    int mm = (int)((m-2)/2);
-    if(balances && m < 6){
-      assert m>1: "error must set only working or reserve values";
-      //resum((int)((m -2)/2)); // 0=2,3,1=4,5
+    if(balances && (A.length == 6 || A.length == ABalRows.BALSLENGTH) && m < 6 && m > 1 ){
       // local resum
-      A[mm].set(n,get(mm*2+2,n) + get(3 + mm*2,n));
+      A[mm].set(n,A[2 + mm*2].values[n] + A[3 + mm*2].values[n]);
     }
     return ret;
   }
+   /**
+   * set internal ARow m, sector n to val
+   * if balances && m <%lt; 6 then assert m %gt; 1 and do resum
+   * @param m      selector of row number
+   * @param n      selector of entry in row
+   * @param val    value to be tested as a Double then stored
+   * @param desc   description of set
+   * @return val
+   */
+  public double set(int m,int n, Double val,String desc){return set(m,n,val);}
 
   /**
    * set internal ARow m, sector n to val, evaluate m as 0 or 1
@@ -1220,7 +1266,12 @@ public class A6Rowa {
    * @return val
    */
   public double sett(int m, int n, double val) {
-    return set(m % 2, n, val);
+    E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+    int mm = m < 2? m: (m-2)/2; // find proper rc or sg
+    double ret = A[m].set(n,val);
+      // do a local resum
+    A[mm].set(n,get(2 + mm*2,n) + get(3+mm*2,n));
+    return ret;
   }
 
   /**
@@ -1232,15 +1283,19 @@ public class A6Rowa {
    * @return return the result in A[m].get(n) value after add
    */
   double add(int m, int n, double val) {
-    E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
+  //  E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
      E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+     int mm = m < 2? m: (m-2)/2; // find proper rc or sg 
+     if(E.debugResumP){ 
+    double valmm = gett(mm,n);
+    double both = gett(2+mm*2,n) + gett(3+mm*2,n);
+    assert balances && m < 6 && valmm == both : "resum error sector" + n + " row" + mm + "=" + EM.mf(valmm) + " noteq both" + EM.mf(both) + " working" + EM.mf(get(2+2*m,n)) + " reserve" + EM.mf(get(3+2*m,n));
+             }
     double ret = A[m].add(n,val);
-    if(balances && m < 6){
-      assert m>1: "error must set only working or reserve values";
+    if(balances && m>1 && m < 6){
       //resum((int)((m -2)/2)); // 0=2,3,1=4,5
       // local resum
-      int mm = (int)((m-2)/2);  // get row 0 or 1 rc  or sg
-      A[mm].set(n,get(mm*2+2,n) + get(3 + mm*2));
+      A[mm].set(n,gett(mm*2+2,n) + gett(3 + mm*2,n));
     }
     return ret;
     

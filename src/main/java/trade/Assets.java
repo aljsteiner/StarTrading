@@ -2983,8 +2983,6 @@ public class Assets {
           for (int m = 0; m < E.lsecs; m++) {
             balance.set(m, resources * ypriorityYr.get(m) / ypriorityYr.sum(), "initial balance for each sector");
           }
-        } else {
-          balance = balances.getRow(BALANCESIX + RIX);
         }
         worth.setAmultV(balance, eM.nominalWealthPerResource[pors]);
         hist.add(new History("&&", 5, "Init Res Bal", resource.balance));
@@ -3000,9 +2998,7 @@ public class Assets {
           for (int m = 0; m < E.lsecs; m++) {
             balance.set(m, resources * ypriorityYr.get(m) / ypriorityYr.sum(), "initial balance for each sector");
           }
-        } else {
-          balance = balances.getRow(BALANCESIX + CIX);
-        }
+        } 
         worth.setAmultV(balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
 
         hist.add(new History("&&", 6, "Init Cargo Bal", cargo.balance));
@@ -3027,7 +3023,7 @@ public class Assets {
             sumAssignments += E.initStaffAssignmentPerEcon[pors][j];
           }
           for (int i = 0; i < E.lsecs; i++) {
-            balance.set(i, (initCol * ypriorityYr.get(i) / ypriorityYr.sum()), "total value for staff per sector");
+            bals.set(4,i, (initCol * ypriorityYr.get(i) / ypriorityYr.sum()), "total value for staff per sector");
 
             for (int j = 0; j < E.lgrades; j++) {
               staff.grades[i][j] = balance.get(i) * E.initStaffAssignmentPerEcon[pors][j] / sumAssignments;
@@ -3061,7 +3057,7 @@ public class Assets {
               sumAssignments += E.initStaffAssignmentPerEcon[pors][j];
             }
             for (int i = 0; i < E.lsecs; i++) {
-              balance.set(i, (acolonists * ypriorityYr.get(i) / ypriorityYr.sum()), "total value for staff per sector");
+              bals.set(5,i, (acolonists * ypriorityYr.get(i) / ypriorityYr.sum()), "total value for staff per sector");
 
               for (int j = 0; j < E.LGRADES; j++) {
                 guests.grades[i][j] = balance.get(i) * E.initStaffAssignmentPerEcon[pors][j] / sumAssignments;
@@ -3550,16 +3546,17 @@ public class Assets {
         double preGSums[] = {0., 0., 0., 0., 0., 0., 0., 0., 0.};
         double resGSums[] = {0., 0., 0., 0., 0., 0., 0., 0., 0.};
         debugSumGrades2 = E.debugSumGrades;
+        int ma = sIx,mm=1;
         int sourceMax = sourceIx > -1 ? sourceIx : LSECS; // debug 7 financialSectors
         if (debugSumGrades2) { // check grades against units
-          for (int mm = 0; mm < E.LSECS; mm++) {
+          for (int n = 0; n < E.LSECS; n++) {
             for (int nn = 0; nn < E.LGRADES; nn++) {
-              sGSums[mm] += doubleTrouble(grades[mm][nn], "mm=" + mm + "nn=" + nn + ",");
+              sGSums[n] += doubleTrouble(grades[n][nn], "n=" + n + "nn=" + nn + ",");
             }
-            sGSums[8] += sGSums[mm];
-            double balss;
-            assert bals.get(1,mm) == (balss = bals.get(2,mm) + bals.get(3,mm)) : 
-                    "resum error, sector" + mm + " bal1=" + EM.mf(bals.get(1,mm))+ " balss" + EM.mf(balss) + " balsS" + EM.mf(bals.get(2,mm)) + " balsG" +  EM.mf(bals.get(3,mm));
+            sGSums[8] += sGSums[n];
+            double balss = bals.gett(4,n) + bals.gett(5,n); 
+            assert bals.gett(1,n) == balss : 
+                    "resum error, sector" + mm + " bal1=" + EM.mf(bals.gett(1,n)) + " balsSum" + EM.mf(balss) + " balsS" + EM.mf(bals.gett(4,n)) + " balsG" +  EM.mf(bals.gett(5,n));
                     
           }
           double sumDif = 0., dif = 0, sumg = 0., sumu = 0., difFracSum = .00001, difFrac = .001;
@@ -4249,7 +4246,7 @@ public class Assets {
         if (cost > E.PPZERO) {
           int gradeIx = 0;
           //  double mvd = 0;
-          if (balance.get(sourceIx) - cost < NZERO && E.debugCosts) {
+          if (bals.get(2+sIx,sourceIx) - cost < NZERO && E.debugCosts) {
             throw new MyErr(String.format(" " + aschar + sourceIx + " cost=" + EM.mf(cost) + " exceeds balance=" + EM.mf(balance.get(sourceIx)) + " remainder=" + EM.mf(cost - balance.get(sourceIx)) + ", i" + i + ", j" + j + ", m" + m + ", n" + n));
           }
 
@@ -4258,12 +4255,12 @@ public class Assets {
               double v = doubleTrouble(
                       doubleTrouble(balance.get(sourceIx))
                       - doubleTrouble(cost));
-              balance.set(sourceIx, v);
+              bals.set(2+sIx,sourceIx, v);
             } else {
-              balance.add(sourceIx, -cost);// for all SubAssets
+              bals.add(2+sIx,sourceIx, -cost);// for all SubAssets
             }
             remMov -= cost;
-            hist.add(new History("$P", 5, n + "cost1 ", "cost" + aschar + sourceIx + "=", EM.mf(cost2), "prevbal=", EM.mf(prevbal), "->" + EM.mf(balance.get(sourceIx)), "rem=", EM.mf(remMov)));
+            hist.add(new History("$P", 5, n + "cost1 ", "cost" + aschar + sourceIx + "=", EM.mf(cost2), "prevbal=", EM.mf(prevbal), "->" + EM.mf(bals.get(2+sIx,sourceIx)), "rem=", EM.mf(remMov)));
           } else { // staff process
             // cost/(balance *(E.LGRADES-2) = costFrac per grade
             // lpgrades2 versus lpgrades2-5 increases the frac
@@ -4345,9 +4342,9 @@ public class Assets {
               double v = doubleTrouble(
                       doubleTrouble(balance.get(sourceIx))
                       - doubleTrouble(cost));
-              balance.set(sourceIx, v);
+              bals.set(2+sIx,sourceIx, v);
             } else {
-              balance.add(sourceIx, -cost);// for all SubAssets
+              bals.add(2+sIx,sourceIx, -cost);// for all SubAssets
             }
             checkSumGrades();
           }//sstaff
@@ -7101,8 +7098,9 @@ public class Assets {
       EM.wasHere = "aStartCashFlow... before HSwaps eeea=" + ++eeea;
       prevns = new HSwaps[lPrevns];
       // set balances sub ARows to reference in bals// they should get calculated
-      balances.A[BALANCESIX + RCIX] = bals.A[BALANCESIX + RCIX];
-      balances.A[BALANCESIX + SGIX] = bals.A[BALANCESIX + SGIX];
+      balances = bals.makeA6();
+   //   balances.A[BALANCESIX + RCIX] = bals.A[BALANCESIX + RCIX];
+     // balances.A[BALANCESIX + SGIX] = bals.A[BALANCESIX + SGIX];
       //    System.out.println(name + " " + new Date().toString() + "start initCashFlow");
       calcPriority(percentDifficulty);// get yprorityYr
       // now initialize knowledge subs from bals references
@@ -7147,7 +7145,7 @@ public class Assets {
       E.myTest(!(r.balance == bals.getRow(BALANCESIX + RIX)), "r.balance.get(0)=%6.2f not equal bals.getRow(BALANCESIX+RIX).get(0)=%6.2f\n", r.balance.get(0), bals.getRow(BALANCESIX + RIX).get(0));
       //     E.myTest(!(r.growth == bals.getRow(GROWTHSIX + RIX)), "r.growth.get(0)=%6.2f not equal bals.getRow(GROWTHSIX+RIX).get(0)=%6.2f\n", r.growth.get(0), bals.getRow(GROWTHSIX + RIX).get(0));
 
-      balances.setUseBalances(History.informationMinor9, "balances", r.balance, c.balance, s.balance, g.balance);
+      //balances.setUseBalances(History.informationMinor9, "balances", r.balance, c.balance, s.balance, g.balance);
 
       // reset x.growth and growths to the entering bals.
       for (i = 0; i < 4; i++) {
@@ -9507,11 +9505,11 @@ public class Assets {
       double rFrac = 1. - eM.startSwapsCFrac[pors][clan];
       double sFrac = 1. - eM.startSwapsGFrac[pors][clan];
       // move some reserve to working before swapping for growth
-      balances.reSum();
+      bals.resum(0); bals.resum(1);
       double climit = bals.getRow(BALANCESIX + RCIX).ave() * eM.tradeReservFrac[pors];
       double glimit = bals.getRow(BALANCESIX + SGIX).ave() * eM.tradeReservFrac[pors];
       double rcb = 0., rbal, sbal, cbal, gbal;
-      double sgb = 0.;
+      double sgb = 0.; 
 
       // move reserves from trades back to working, leave only tradReservfrac
       for (n = 0; n < E.lsecs - 1; n++) {
