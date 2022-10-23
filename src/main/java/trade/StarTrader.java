@@ -416,8 +416,8 @@ public class StarTrader extends javax.swing.JFrame {
   static int prevState = CONSTRUCTING;
   static Econ curEc = EM.curEcon;
   static String curStateName = stateStringNames[0];
-  static String prevEconName = "nnnnn";
-  static String curEconName = "mmmmmm";
+  static String prevEconName = "no name";
+  static String curEconName = "no econ";
   static boolean doStop = false; // set by game or stats stop execution
   static boolean fatalError = false;
   static int stateCnt = 0;
@@ -5419,7 +5419,7 @@ public class StarTrader extends javax.swing.JFrame {
       stateConst = RUNNING;
       yearsToRun = nYears;
       EM.runYearsTime = (new Date()).getTime();
-      System.err.println("$$$$$$$$$$$$$ runYears;" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (javax.swing.SwingUtilities.isEventDispatchThread() ? " is eventDispatchThread" : " is not EventDispatchThread"));
+      System.err.println("$$$$$$$ A $$$$$$ runYears;" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (javax.swing.SwingUtilities.isEventDispatchThread() ? " is eventDispatchThread" : " is not EventDispatchThread"));
 
       //   E.myTest(!javax.swing.SwingUtilities.isEventDispatchThread(), "not eventDispatchThread");
       RunYrs1 rYrs1 = new RunYrs1();
@@ -5446,24 +5446,24 @@ public class StarTrader extends javax.swing.JFrame {
   void setEconState(int stateConstA) {
     ec = curEc = EM.curEcon;
     curEconName = (EM.curEcon == null ? "noneYet" : EM.curEcon.name);
-    String wh = eM.wasHere == null? "wasn't here":eM.wasHere;
+    String wh = EM.wasHere == null? "wasn't here":EM.wasHere;
     prevEconName = prevEconName == null ? "aint named":prevEconName;
     prevWasHere = prevWasHere == null? "wasn't here":prevWasHere;
     int ps = prevState;
     int sc = stateConst;
 
-    if (stateConstA == prevState && curEconName.equals(prevEconName) && wh == prevWasHere && stateConst != STATS && stateConst != WAITING && stateConst != STOPPED && stateConst != FATALERR) {
+    if (stateConstA == prevState && curEconName.equals(prevEconName) && wh.equals(prevWasHere) && stateConstA != STATS && stateConstA != WAITING && stateConstA != STOPPED && stateConstA != FATALERR) {
       sameEconState++;
-      if (curEconName.equals(prevEconName) && sameEconState > 400) {
+      if ( sameEconState > 50) {
         long myNow = new Date().getTime() - eM.doYearTime;
-        eM.doMyErr("doYear" + eM.year + myNow + " STUCK at:" + stateStringNames[stateConstA] + " " + curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
+        eM.doMyErr("STUCK at:doYear" + eM.year + myNow + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
     } else {
-      prevEconName = curEconName;
-      prevWasHere = wh; // move the reference
+      prevEconName = EM.curEconName;
+      prevWasHere = EM.wasHere == null? "no Was Here": EM.wasHere; // move the reference
       stateCnt = 0;
       prevState = stateConst = stateConstA;
-      sameEconState = 0;
+      sameEconState = 0;  //zero no dif counter
       startEconState = (new Date()).getTime();
     }
   }
@@ -5477,7 +5477,7 @@ public class StarTrader extends javax.swing.JFrame {
     try {
       ec = curEc = eM.curEcon;;
       if (E.debugThreads) {
-        System.out.println("$$$$$$$$$$$$$ runYears2;" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
+        System.out.println("$$$$$$ B $$$$$$$ runYears2;" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
       }
       E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "runYears2 is eventDispatchThread not a separate animation thread");
       paintCurDisplay(ec);
@@ -5492,14 +5492,12 @@ public class StarTrader extends javax.swing.JFrame {
       // start the annimation loop until done, waiting to call paintCurDisplay again
       for (stateCnt = 0; !eM.fatalError && !eM.stopExe && !done && !fatalError; stateCnt++) {
         ec = curEc = eM.curEcon;
-        if (curEc != null) {
-          curEconName = curEc.nowName;
-        }
+        
         // System.out.println("***************runYears2;" + since() + " " + stateStringNames[stateConst]+ stateCnt + " year=" + eM.year + ", econ=" + prevEconName);
         setEconState(stateConst); // check for stuck
 
         if (E.debugThreads) {
-          System.out.println("$$$$$$$$$$$$$^^runYears2 " + sinceEcon() + " " + stateStringNames[stateConst] + " " + sameEconState + "::" + EM.wasHere + ":: "  + EM.wasHere2 + " :: " + EM.wasHere3);
+          System.out.println("$$$$$$$ C $$$$$$^^runYears2 " + sinceEcon() + " " + stateStringNames[stateConst] + " " + sameEconState + "::" + EM.wasHere + ":: "  + EM.wasHere2 + " :: " + EM.wasHere3);
         }
         paintCurDisplay(ec = curEc = eM.curEcon);
         // now do waits until the next check of stateConst and paintCurDisplay
@@ -5548,7 +5546,7 @@ public class StarTrader extends javax.swing.JFrame {
             done = true;  //stop looping
             paintCurDisplay(ec = curEc = eM.curEcon); // force final display as stats not display
             if (E.debugThreads) {
-              System.out.println("$$$$$$$$$$$$$$$>>runYears2;" + since() + " STATS " + stateConst + " stateCnt =" + stateCnt + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("$$$$$$$$ D $$$$$$$>>runYears2;" + since() + " STATS " + stateConst + " stateCnt =" + stateCnt + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             // listRes(fullRes); done in runBackgroundYears4
             break;
@@ -5556,7 +5554,7 @@ public class StarTrader extends javax.swing.JFrame {
           case RUNSDONE:  
             // no wait
             if (E.debugThreads) {
-              System.out.println("$$$$$$$$$$$$$$$>>runYears2;" + since() + "  RUNSDONE to STATS " + " stateCnt =" + stateCnt + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("$$$$$$$$ E $$$$$$$>>runYears2;" + since() + "  RUNSDONE to STATS " + " stateCnt =" + stateCnt + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             done = true;
              stateConst = STATS;
@@ -5564,7 +5562,7 @@ public class StarTrader extends javax.swing.JFrame {
             break;
           default:
             if (E.debugThreads) {
-              System.out.println("$$$$$$$$$$$$$$$>>runYears2;" + since() + " STATS stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("$$$$$$$ F $$$$$$$$>>runYears2;" + since() + " STATS stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             if (did) {
               done = true;
@@ -5572,7 +5570,7 @@ public class StarTrader extends javax.swing.JFrame {
               Thread.sleep(blip30);
             }
             if (E.debugThreads) {
-              System.out.println("$$$$$$$$$$$$$$$>runYears2;" + since() + " DEFAULT; stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
+              System.out.println("$$$$$$$ G $$$$$$$$>runYears2;" + since() + " DEFAULT; stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year);
             }
 
         }
@@ -5710,7 +5708,7 @@ public class StarTrader extends javax.swing.JFrame {
    * @return Since P????? secs=nnn.mmm
    */
   public String sinceEcon() {
-    return since("since " + ec.nowName, startEconState) + ", ";
+    return since("since " + EM.curEconName, startEconState) + ", ";
   }
    /** return the clan and names of trading Econs along with time
    * 
@@ -7365,7 +7363,7 @@ if(eM.dfe() )return;
         if (curDisplayPrints < E.ssMax * 5) {
           curDisplayPrints++;
           long nTime = new Date().getTime();
-          String aLine = "????????????? " + "displayCur " + (nTime - startTime) + " " + stateStringNames[stateConst] + "state=" + stateConst + " eCnt=" + EM.econCnt + ":" + numEcons + ":"
+          String aLine = "????????????? displayCur " + (nTime - startTime) + " " + stateStringNames[stateConst] + " state=" + stateConst + " eCnt=" + EM.econCnt + ":" + numEcons + ":"
                   + Econ.nowName + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4 + " :: "
                   + (addlErr.isEmpty() && wasHere.isEmpty() && wasHere2.isEmpty() && wasHere3.isEmpty() && prevLine.isEmpty() ? "" : "\n")
                   + (prevLine.isEmpty() ? "" : " :" + prevLine + "\n")

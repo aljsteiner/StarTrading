@@ -234,6 +234,9 @@ static StarTrader st;
   public static final int[] d4 = {0, 1, 2, 3}, A03 = d4;
   public static final int[] d6 = {0, 1, 2, 3, 4, 5}, A05 = d6;
   public static final int[] d8 = {0, 1, 2, 3, 4, 5, 6, 7}, A07 = d8;
+  static final int lsums = 2;// rc sg
+  static final int BALANCESIX = lsums;
+  static final int lsubs = 4; // r c s g
 
   public enum sectors {
     LIFE, STRUCT, ENERGY, PROPEL, DEFENSE, GOV, COLONIST

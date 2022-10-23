@@ -63,13 +63,17 @@ public class A6Rowa {
   static final int[] A05 = d05;
   static final double NZERO = -.0000001;
   static final double PZERO = .0000001;
-  boolean balances = false;  // true if tbal
-  boolean costs = true; // true if tcost
+  boolean balances = false;  // true if tbal 0 = 2+3 and 1= 4+5
+  boolean costs = false; // true if tcost
+  boolean costs10 = false; // only for A10Row 0=2,3,4,5 and 1= 6+7+8+9
+  boolean noChecking = false;
   //int lA = ABalRows.balsLength;
-  volatile int lA = 6;
+  volatile int lA = 6; // A10Row sets to 10
   volatile int dA[] = {0, 1, 2, 3, 4, 5};
   static int d29[] = {2, 3, 4, 5, 6, 7, 8, 9};
   static final int[] I29 = d29;
+  static final int lsums = 2;
+  int lsubs = 2;
   volatile ARow[] A = new ARow[lA];
   // reqCosts for r,c,s,g   or rHealth sHealth rFertility sFertility
   volatile double sum[] = {0., 0., 0., 0., 0.}, plusSum[] = {0., 0., 0., 0., 0.}, negSum[] = {0., 0., 0., 0., 0.};
@@ -94,7 +98,7 @@ public class A6Rowa {
   static final int RIX = ABalRows.RIX, CIX = ABalRows.CIX, SIX = ABalRows.SIX, GIX = ABalRows.GIX;
   static final int RCIX = ABalRows.RCIX;
   static final int SGIX = ABalRows.SGIX;
-  static final int BALANCESIX = ABalRows.BALANCESIX;
+  
   String aPre;
   int blev;
   int lev;
@@ -516,6 +520,7 @@ public class A6Rowa {
     mResum[0] = aa.mResum1;
     mResum[1] = aa.mResum2;
 
+    noChecking = true;
     // now move values
     for (int i = 0; i < iix.length; i++) {
       sum[i] = doubleTrouble(aa.sum[i]);
@@ -533,6 +538,7 @@ public class A6Rowa {
         }
       }
     }
+    noChecking = false;
     return this;
   }
     
@@ -644,9 +650,9 @@ public class A6Rowa {
     for (int m=0;m<4;m++) {
       for (int n=0;n<E.LSECS;n++) {
         if(E.debugDouble){
-        rtn.A[m / 2].add(n, rtn.A[2 + m].set(n, doubleTrouble(A[startIx + m].get(n))));
+        rtn.A[m / 2].add(n, rtn.A[lsums + m].set(n, doubleTrouble(A[startIx + m].get(n))));
         }else {
-          rtn.A[m / 2].add(n, rtn.A[2 + m].set(n, A[startIx + m].get(n)));
+          rtn.A[m / 2].add(n, rtn.A[lsums + m].set(n, A[startIx + m].get(n)));
         }
       }
     }
@@ -1050,14 +1056,23 @@ public class A6Rowa {
   public double get(int m, int n) {
     int al = A.length;
     assert m < A.length:"error m" + m + " indexes more than length" + al;
-  //  m = m%al; //
-    int mm = m < 2? m: (m-2)/2; // find proper rc or sg
-    resum(mm);
-    if(E.debugResum){
-    double bal1 = get(mm,n);
-    double both = get(4,n) + get(5,n);
-    assert balances && (A.length == 6 || A.length == ABalRows.BALSLENGTH) && m < 6 && bal1 == both : "resum error sector" + n + " row" + mm + "=" + EM.mf(bal1) + " noteq both" + EM.mf(both) + " working" + EM.mf(get(4,n)) + " reserve" + EM.mf(get(5,n));
-             }
+    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
+     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances && costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
+    double bal1 = 0.;
+    double both = 0.;
+    if(E.debugResumP && ! ignoreIf && !noChecking){
+        bal1 = gett(mm,n);
+        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
+    // add in the 10row if needed
+        both += ignoreIf? 0.0:costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;
+    // ignore test if ignoreIf is true
+   
+    double dif = bal1 - both;
+    boolean badDif = E.PZERO < dif || E.NZERO > - dif; // trouble if true
+    // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
+    assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
+    }
+    if(noChecking){noChecking=true;}
     if(E.debugDouble){
     return doubleTrouble(A[m].get(n));
     } else {
@@ -1083,7 +1098,7 @@ public class A6Rowa {
    * @return the value of value n in the selected row
    */
   public double gett(int m, int n) {
-    resum((int)(m<2? m : (m-2)/2));
+   // resum((int)(m<2? m : (m-2)/2));
      if(E.debugDouble){
     return doubleTrouble(A[m].get(n));
     } else {
@@ -1220,7 +1235,11 @@ public class A6Rowa {
    * @return return each B + C
    */
   public ARow set(int m, ARow B, ARow C) {
-    return A[m].set(B, C);
+    noChecking = true;
+
+    ARow ret = A[m].set(B, C);
+    noChecking = false;resum(0);resum(1);
+
   }
 
   /**
@@ -1233,16 +1252,33 @@ public class A6Rowa {
    */
   public double set(int m, int n, Double val) {
     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
-    int mm = m < 2? m: (m-2)/2; // find proper rc or sg
-    double bal1 = get(mm,n);
-    double both = A[2 + mm*2].values[n] + A[3 + mm*2].values[n];
-    if(E.debugResumP ){
-    assert balances && (A.length == 6 || A.length == ABalRows.BALSLENGTH) && m < 6 && m > 1 && bal1 == both : "resum error sector" + n + " row" + mm + "=" + EM.mf(bal1) + " noteq both" + EM.mf(both) + " working" + EM.mf(A[2 + mm*2].values[n]) + " reserve" + EM.mf(A[3 + mm*2].values[n]);
-             }
+    int al = A.length;
+    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
+     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances && costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
+    double bal1 = 0.;
+    double both = 0.;
+    if(E.debugResumP && !ignoreIf && !noChecking){
+        bal1 = gett(mm,n);
+        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
+    // add in the 10row if needed
+        both += ignoreIf? 0.0:costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;
+    // ignore test if ignoreIf is true
+   
+    double dif = bal1 - both;
+    boolean badDif = E.PZERO < dif || E.NZERO > - dif; // trouble if true
+    // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
+    assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
+    }
+     // change the actual value, set updates that row setCnt
     double ret = A[m].set(n,val);
-    if(balances && (A.length == 6 || A.length == ABalRows.BALSLENGTH) && m < 6 && m > 1 ){
-      // local resum
-      A[mm].set(n,A[2 + mm*2].values[n] + A[3 + mm*2].values[n]);
+
+    if(noChecking){noChecking = true;} else
+    //if a legal class also set the row 0 or 1 row
+    if(!ignoreIf ){
+        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
+    // add in the 10row if needed
+        both += costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;   
+       A[mm].set(n,both);
     }
     return ret;
   }
@@ -1270,7 +1306,7 @@ public class A6Rowa {
     int mm = m < 2? m: (m-2)/2; // find proper rc or sg
     double ret = A[m].set(n,val);
       // do a local resum
-    A[mm].set(n,get(2 + mm*2,n) + get(3+mm*2,n));
+    //A[mm].set(n,get(lsums + mm*2,n) + get(3+mm*2,n));
     return ret;
   }
 
@@ -1285,17 +1321,31 @@ public class A6Rowa {
   double add(int m, int n, double val) {
   //  E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
      E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
-     int mm = m < 2? m: (m-2)/2; // find proper rc or sg 
-     if(E.debugResumP){ 
-    double valmm = gett(mm,n);
-    double both = gett(2+mm*2,n) + gett(3+mm*2,n);
-    assert balances && m < 6 && valmm == both : "resum error sector" + n + " row" + mm + "=" + EM.mf(valmm) + " noteq both" + EM.mf(both) + " working" + EM.mf(get(2+2*m,n)) + " reserve" + EM.mf(get(3+2*m,n));
+    int al = A.length;
+    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
+     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances && costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
+    double bal1 = 0.;
+    double both = 0.;
+    if(E.debugResumP && !ignoreIf && !noChecking){
+        bal1 = gett(mm,n);
+        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
+    // add in the 10row if needed
+        both += ignoreIf? 0.0:costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;
+    // ignore test if ignoreIf is true
+   
+    double dif = bal1 - both;
+    boolean badDif = E.PZERO < dif || E.NZERO > - dif; // trouble if true
+    // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
+    assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
              }
     double ret = A[m].add(n,val);
-    if(balances && m>1 && m < 6){
-      //resum((int)((m -2)/2)); // 0=2,3,1=4,5
-      // local resum
-      A[mm].set(n,gett(mm*2+2,n) + gett(3 + mm*2,n));
+    if(noChecking){ noChecking=true;} else
+     //if a legal class also set the row 0 or 1 row
+    if(!ignoreIf ){
+        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
+    // add in the 10row if needed
+        both += costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;   
+       A[mm].set(n,both);
     }
     return ret;
     
@@ -1309,6 +1359,7 @@ public class A6Rowa {
    * @return each this - each B * V
    */
   public A6Rowa setSubBmultV(A6Rowa B, double V) {
+    noChecking = true;
     for (int m : E.d6) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
@@ -1330,6 +1381,8 @@ public class A6Rowa {
         }
       }
     }
+    noChecking = true;
+    resum(0);resum(1);
     return this;
   }
 
@@ -1341,6 +1394,7 @@ public class A6Rowa {
    * @return min each by each B,C, 0 = min(2,4),1=min(3,5)
    */
   public A6Rowa setMin(A6Rowa B, A6Rowa C) {
+    noChecking = true;
     double b = 1., c = 1.;
     int al = A.length;
     for (int m =0;m < al; m++ ) {
@@ -1358,6 +1412,7 @@ public class A6Rowa {
         }
       }
     }
+    noChecking=false; resum(0);resum(1);
     return this;
   }
 
@@ -1369,6 +1424,7 @@ public class A6Rowa {
    * @return min each by each B,C, 0 = min(2,4),1=min(3,5)
    */
   public A6Rowa setMax(A6Rowa B, A6Rowa C) {
+    noChecking = true;
     double b = 1., c = 1.;
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
@@ -1385,6 +1441,7 @@ public class A6Rowa {
         }
       }
     }
+    noChecking=false; resum(0);resum(1);
     return this;
   }
 
@@ -1397,6 +1454,7 @@ public class A6Rowa {
    * @return max each by each a,B,C,
    */
   public A6Rowa setMax(A6Rowa a, A6Rowa b, A6Rowa c) {
+    noChecking = true;
     double ab = 1, abc = 1,al=A.length;
     for (int m = 0; m < al; m++) {
       for (int n =0;n<E.LSECS;n++) {
@@ -1414,6 +1472,7 @@ public class A6Rowa {
         }
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -1427,6 +1486,7 @@ public class A6Rowa {
    * @return max of each sector of a,b,c,d,
    */
   public A6Rowa setMax(A6Rowa a, A6Rowa b, A6Rowa c, A6Rowa d) {
+    noChecking = true;
     double ab = 1, abc = 1, abcd = 1;
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
@@ -1437,6 +1497,7 @@ public class A6Rowa {
         set(m, n, abcd);
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -1449,6 +1510,7 @@ public class A6Rowa {
    * @return Min of each by each B,C,D
    */
   public A6Rowa setMin(A6Rowa B, A6Rowa C, A6Rowa D) {
+    noChecking = true;
     double b = 1., c = 1., d = 1.;
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
@@ -1459,6 +1521,7 @@ public class A6Rowa {
         set(m, n, b < c ? b : c < d ? c : d);
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -1470,6 +1533,7 @@ public class A6Rowa {
    * @return each by each A * B
    */
   public A6Rowa setAmultB(A6Rowa A, A6Rowa B) {
+    noChecking = true;
     // mult each member set of 2 rows each A by corresponding B
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
@@ -1479,26 +1543,30 @@ public class A6Rowa {
                 * doubleTrouble(B.get(m, n)));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
   /**
    * set object to each A mult by V
    *
-   * @param A
-   * @param V
-   * @return
+   * @param a the ARowA object being multiplied
+   * @param V  value of multiplier
+   * @return  
    */
-  public A6Rowa setAmultV(A6Rowa A, double V) {
+  public A6Rowa setAmultV(A6Rowa a, double V) {
+    noChecking=true;
     // mult each member set of 2 rows each A by corresponding B
-    for (int m = 2; m < lA; m++) {
+    int al = a.A.length;
+    for (int m = 2; m < al; m++) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         set(m, n,
-                doubleTrouble(A.get(m, n))
+                doubleTrouble(a.get(m, n))
                 * doubleTrouble(V));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -1511,6 +1579,7 @@ public class A6Rowa {
    * @return this = each by each A + B + C
    */
   public A6Rowa setAdd(A6Rowa A, A6Rowa B, A6Rowa C) {
+    noChecking = true;
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
@@ -1520,6 +1589,7 @@ public class A6Rowa {
                 + doubleTrouble(C.get(m, n)));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -1531,11 +1601,13 @@ public class A6Rowa {
    * @return this = each by each A + B + C
    */
   public A6Rowa setAdd(A6Rowa A, A6Rowa B) {
+    noChecking = true;
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
         this.set(m, n,doubleTrouble( A.get(m, n)) + doubleTrouble(B.get(m, n)));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 

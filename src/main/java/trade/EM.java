@@ -194,8 +194,8 @@ class EM {
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
   static String tError="";
   static volatile Econ curEcon;  //eM only changes at the end a a year run, EM.curEcon
-  static String curEconName = "no name";
-  static String curEconClan = "A";
+  static volatile String curEconName = "no Econ name";
+  static volatile String curEconClan = "A";
   static volatile Econ otherEcon;
   static volatile String otherEconName = "no other name";
   static volatile String otherEconClan = "A";
@@ -525,6 +525,8 @@ class EM {
     rtn += andET();
     return rtn;
   }
+  
+  
 
   /**
    * possibly add some extra information lines to an error report

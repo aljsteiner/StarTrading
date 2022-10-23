@@ -62,6 +62,9 @@ public class A10Row extends A6Rowa {
     iix = iix1;
     lA = 10;
     dA = dA1;
+    balances = false;
+    costs = true;
+    costs10 = true;
     dResums = dResumsa;
     mResum = mResuma;
   }
@@ -79,6 +82,8 @@ public class A10Row extends A6Rowa {
     dA = dA1;
     balances = false;
     costs = true;
+    costs10 = true;
+    lsubs = 4;
     dResums = dResumsa;
     mResum = mResuma;
   }
@@ -161,8 +166,8 @@ public class A10Row extends A6Rowa {
     Double t;
     for (int m:I09) {
       for (int n : ASECS) {
-         t= get(m, n);
-        rtn.set(m, n, t);
+         t= gett(m, n);
+        rtn.sett(m, n, t);
       }
     }
     return rtn;
@@ -179,8 +184,8 @@ public class A10Row extends A6Rowa {
    * @param val
    * @return return the result in A[m].get(n)
    */
-  @Override
-  double add(int m, int n, double val) {
+//  @Override
+  double notadd(int m, int n, double val) {
     return A[m].add(n, val);
   }
 
@@ -242,7 +247,7 @@ public class A10Row extends A6Rowa {
    * @param n The value in the requested row
    * @return m % 2,n
    */
-  public double gett(int m, int n) {
+  public double nogett(int m, int n) {
     resum(m % 2);
     return get(m % 2, n);
   }
@@ -553,7 +558,7 @@ public class A10Row extends A6Rowa {
     Double d;
     for (int m : d29) {
       for (int n : ASECS) {
-       d= a.get(m, n);
+       d= a.gett(m, n);
        E.myTestDouble(d,"a.get(m,n)","in setAmultV m=%d,n=%d,d=%s",m,n,String.valueOf(d));
         // separate each operation to localize null object errors
         set(m, n,
@@ -608,7 +613,7 @@ public class A10Row extends A6Rowa {
    * @param m
    * @return
    */
-  public ARow getRow(int n) {
+  public ARow notgetRow(int n) {
     return A[n];
   }
 

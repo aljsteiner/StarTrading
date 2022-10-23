@@ -2070,6 +2070,7 @@ public class Assets {
     A10Row consumerReqGrowthCosts10, consumerReqMaintCosts10, consumerTravelCosts10, consumerFertilityMTGCosts10;
     A10Row consumerHealthEMTGCosts10, consumerFertilityEMTGCosts10;
     A10Row consumerRawGrowthCosts10;
+    A10Row nTrav1Yr;
     A6Row consumerMTC6, consumerEMTC6, consumerEMTGC6;
     A10Row pmNegs = new A10Row(ec, History.valuesMajor6, "pmNegs");
     A10Row ptNegs = new A10Row(ec, History.valuesMajor6, "ptNegs");
@@ -3550,14 +3551,13 @@ public class Assets {
         int sourceMax = sourceIx > -1 ? sourceIx : LSECS; // debug 7 financialSectors
         if (debugSumGrades2) { // check grades against units
           for (int n = 0; n < E.LSECS; n++) {
+             double bals1 = bals.gett(1,n);
+            double balss = bals.gett(4,n) + bals.gett(5,n); 
+            assert Math.abs(bals1 - balss) < E.PPZERO : "resum error, sector" + n + " bal1=" + EM.mf(bals1) + " balsSum" + EM.mf(balss) + " balsS" + EM.mf(bals.gett(4,n)) + " balsG" +  EM.mf(bals.gett(5,n));  
             for (int nn = 0; nn < E.LGRADES; nn++) {
               sGSums[n] += doubleTrouble(grades[n][nn], "n=" + n + "nn=" + nn + ",");
             }
-            sGSums[8] += sGSums[n];
-            double balss = bals.gett(4,n) + bals.gett(5,n); 
-            assert bals.gett(1,n) == balss : 
-                    "resum error, sector" + mm + " bal1=" + EM.mf(bals.gett(1,n)) + " balsSum" + EM.mf(balss) + " balsS" + EM.mf(bals.gett(4,n)) + " balsG" +  EM.mf(bals.gett(5,n));
-                    
+            sGSums[8] += sGSums[n];     
           }
           double sumDif = 0., dif = 0, sumg = 0., sumu = 0., difFracSum = .00001, difFrac = .001;
           //Prevalidate the existing grades and balance if debugSumGrades2
@@ -7681,7 +7681,7 @@ public class Assets {
           bals.sendHist(5, "$c");
           assert rsval >= 0. : "Error neg val" + EM.mf(val) + " type=" + resTypeName + " source" + sourceIx; //String.format("Error neg val=%9.4f, resTypeName=%s, ixWRSrc=%d, srcIx=%d", val, resTypeName, ixWRSrc, srcIx));
           double sourcSum = bals.get(2 + 2 * ixWRSrc, srcIx) + bals.get(3 + 2 * ixWRSrc, srcIx);
-          assert bals.get(sourceIx) == sourcSum : "err rs sum" + EM.mf(bals.get(sourceIx)) + " != sourcSum" + EM.mf(sourcSum);
+          assert E.PZERO > Math.abs(bals.get(sourceIx) - sourcSum) : "err rs sum" + EM.mf(bals.get(sourceIx)) + " != sourcSum" + EM.mf(sourcSum);
           assert bals.get(sourceIx) * eM.nominalRSWealth[ixWRSrc][pors]  >= rsval  : ("-----DD---rsval too big for working + reserve" + EM.mf(rawProsp) + " sum" + EM.mf(sourcSum) + " source" + EM.mf(bals.get(sourceIx))
            + " m" + m + " mMax" + mMax + " n" + n + " remainingFF" + EM.mf(remainingFF) + " val" + EM.mf(val) +" rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + ", FFTransFrac=" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + ", maxF0=" + EM.mf(maxF0) + ", maxF1=" + EM.mf(maxF1) + ", maxF2=" + EM.mf(maxF2) + " maxF3" + EM.mf(maxF3));
           if (E.debugFutureFund) {
@@ -9635,7 +9635,7 @@ public class Assets {
         //   hist.add(new History("#a", History.valuesMajor6, maintTits[ix]+"C", nMaint.A[2+4+ix]));
         //hist.add(new History("#a", History.valuesMajor6, "consumerMaintCosts10 ix=" + ix, consumerMaintCosts10.A[6]));
       }
-
+      bals.resum(1);bals.resum(0);
       double rm = .6; // random multiplier
       // i loops across the consumers, get rawGrowths and rawG here
       for (i = 0; i < E.lsecs; i++) {
@@ -9869,6 +9869,8 @@ public class Assets {
       consumerFertilityMTGCosts10 = makeZero(consumerFertilityMTGCosts10, "consFMTGCosts");
       consumerHealthEMTGCosts10 = makeZero(consumerHealthEMTGCosts10, "consEHMTGCosts");
       consumerFertilityEMTGCosts10 = makeZero(consumerFertilityEMTGCosts10, "consEFMTGCosts");
+      nTrav1Yr = makeZero(nTrav1Yr, "nTrav1Yr");
+      consumerTrav1YrCosts10 = makeZero(consumerTrav1YrCosts10, "constrv1YrCosts");
 
 // gather the input for the SubAsset calcRawCosts
       growths.sendHist(hist, "C@");
@@ -9876,6 +9878,7 @@ public class Assets {
       //   if (r.growth != growths.A[2]) {        
       //  E.myTest(true, "r.growth not the same as growths.A[2]");
       //    }
+      bals.resum(1);
       staff.checkSumGrades();
       guests.checkSumGrades();
       hist.add(new History("#s", History.valuesMajor6, "sbal", staff.balance));
@@ -9886,7 +9889,7 @@ public class Assets {
       travelCosts.zero();
 
       // instantiate other objects we may want to list
-      A10Row nTrav1Yr = new A10Row(ec, 7, "nTrav1Yr");
+  //    A10Row nTrav1Yr = new A10Row(ec,History.valuesMinor7, "nTrav1Yr");
       int defeat789 = 1; // 1 to not defeat
       //   growths.sendHist(hist, "C@");
       //   hist.add(new History("C@", History.valuesMajor6, "r.growth", r.growth));
