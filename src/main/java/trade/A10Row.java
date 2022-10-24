@@ -247,10 +247,62 @@ public class A10Row extends A6Rowa {
    * @param n The value in the requested row
    * @return m % 2,n
    */
-  public double nogett(int m, int n) {
-    resum(m % 2);
-    return get(m % 2, n);
+  public double get(int m, int n) {
+       if(m>1){
+         if(E.debugDouble){
+            return doubleTrouble(A[m].values[n]);
+         } else {
+       return A[m].values[n];
+         }
+     } else if(m == 0){
+       if(E.debugDouble){
+         return doubleTrouble(A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]);
+    } else {
+     return  A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]; 
+    }
+     } else if(m == 1){
+       if(E.debugDouble){
+         return doubleTrouble(A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]);
+    } else {
+     return  A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]; 
+       }
+    } else {
+    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
+    double ret;
+    if(E.debugDouble){
+    ret = doubleTrouble(A[m].get(n));
+    } else {
+     ret = A[m].get(n); 
+    }
+    resum(0);resum(1);
+    return ret;
+            }
   }
+  
+  @Override
+  /**
+   * get the value of rows 0,1 by set m = m%2
+   *
+   * @param m The row %2 to be gotten
+   * @param n The value in the requested row
+   * @return m % 2,n
+   */
+   public double gett(int m,int n) { 
+     if(m>1){
+       return A[m].values[n];
+     } else if(m == 0){
+       if(E.debugDouble){
+         return doubleTrouble(A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]);
+    } else {
+     return  A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]; 
+    }
+     } else if(m == 1){
+       if(E.debugDouble){
+         return doubleTrouble(A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]);
+    } else {
+     return  A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]; 
+    }
+}
 
   /**
    * get working from working rows m % 2
@@ -318,8 +370,9 @@ public class A10Row extends A6Rowa {
    * 3=(RS+CS)*sBal/sWork, 4+SR,GR, 5=(SS+GS)*sBal/sWork copy of costs
    */
   public A10Row setCopyCosts(int alev, String aTitl, ARow RR, ARow RS, ARow CR, ARow CS, ARow SR, ARow SS, ARow GR, ARow GS, ARow sBal, ARow sWork, double phe, double years) {
+    
     balances = false;
-    costs = true;
+    noChecking=costs10=costs = true;
     lev = alev;
     titl = aTitl;
     phe = phe < PZERO ? 1. : phe;
@@ -337,6 +390,7 @@ public class A10Row extends A6Rowa {
       set(9, n, GS.get(n) / sw * phe * years);
 
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -409,6 +463,7 @@ public class A10Row extends A6Rowa {
    * @return each this - each B * V
    */
   public A10Row setSubBmultV(A10Row B, double V) {
+    noChecking=true;
     for (int m : dA1) {
       for (int n : E.alsecs) {
         // separate each operation to localize null object errors
@@ -417,6 +472,7 @@ public class A10Row extends A6Rowa {
                 * B.get(m, n)));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -428,6 +484,7 @@ public class A10Row extends A6Rowa {
    * @return min each by each B,C, 0 = min(2,4),1=min(3,5)
    */
   public A10Row setMin(A10Row B, A10Row C) {
+    noChecking=true;
     double b = 1., c = 1.;
     for (int m : dA1) {
       for (int n : E.alsecs) {
@@ -444,6 +501,7 @@ public class A10Row extends A6Rowa {
         set(m, n, b < c ? b : c);
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -457,6 +515,7 @@ public class A10Row extends A6Rowa {
    * @return
    */
   public A10Row setMax(A10Row A, A10Row B) {
+    noChecking=true;
     double b = 1., c = 1., a = 1.;
     for (int m : d29) {
       for (int n : ASECS) {
@@ -467,6 +526,7 @@ public class A10Row extends A6Rowa {
         set(m, n, a > b ? a : b);
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -479,6 +539,7 @@ public class A10Row extends A6Rowa {
    * @return Min of each by each B,C,D
    */
   public A10Row setMin(A10Row B, A10Row C, A10Row D) {
+    noChecking=true;
     double b = 1., c = 1., d = 1.;
     for (int m : dA2) {
       for (int n : E.alsecs) {
@@ -489,6 +550,7 @@ public class A10Row extends A6Rowa {
         set(m, n, b < c ? b : c < d ? c : d);
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -500,6 +562,7 @@ public class A10Row extends A6Rowa {
    * @return each by each A * B
    */
   public A10Row setAmultB(A10Row A, A10Row B) {
+    noChecking=true;
     // mult each member set of 2 rows each A by corresponding B
     for (int m : d29) {
       for (int n : ASECS) {
@@ -509,6 +572,7 @@ public class A10Row extends A6Rowa {
                 * B.get(m, n));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -519,6 +583,7 @@ public class A10Row extends A6Rowa {
    * @return this
    */
   public A10Row setAmultF(A10Row a,A2Row f){
+    noChecking=true;
     for(int n:ASECS){
       for(int m:A01){
         for(int mm:A03){
@@ -526,6 +591,7 @@ public class A10Row extends A6Rowa {
         }
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -536,6 +602,7 @@ public class A10Row extends A6Rowa {
    * @return
    */
   public A10Row setBsubC(A10Row B,A10Row C) {
+    noChecking =true;
     // mult each member set of 2 rows each A by corresponding B
     for (int m : d29) {
       for (int n : ASECS) {
@@ -543,6 +610,7 @@ public class A10Row extends A6Rowa {
         set(m, n, B.get(m, n) - C.get(m, n));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -554,6 +622,7 @@ public class A10Row extends A6Rowa {
    * @return  each a sector mult by v
    */
   public A10Row setAmultV(A10Row a, double v) {
+    noChecking=true;
     // mult each member set of 2 rows each A by corresponding B
     Double d;
     for (int m : d29) {
@@ -566,6 +635,7 @@ public class A10Row extends A6Rowa {
                 * v);
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -577,6 +647,7 @@ public class A10Row extends A6Rowa {
    * @return each A each element divided by corresponding B
    */
   public A10Row setAdivByB(A10Row A, A10Row B) {
+    noChecking=true;
     // mult each member set of 2 rows each A by corresponding B
     for (int m : d29) {
       for (int n : ASECS) {
@@ -586,6 +657,7 @@ public class A10Row extends A6Rowa {
                 / B.get(m, n));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 
@@ -599,11 +671,13 @@ public class A10Row extends A6Rowa {
    * @return this = each by each A + B + C
    */
   public A10Row setAdd(A10Row a, A10Row b) {
+    noChecking = true;
     for (int m : IA) {
       for (int n : ASECS ) {
         this.set(m, n, a.get(m, n) + b.get(m, n));
       }
     }
+    noChecking = false;resum(0);resum(1);
     return this;
   }
 

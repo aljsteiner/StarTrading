@@ -75,12 +75,6 @@ public class A6Row extends A6Rowa {
   public A6Row(Econ ec, int t) {
     super(ec, 6, tbal, History.informationMajor8, "unset");
     titl = "unset";
-    A[0] = new ARow(ec).zero();
-    A[1] = new ARow(ec).zero();
-    A[2] = new ARow(ec).zero();
-    A[3] = new ARow(ec).zero();
-    A[4] = new ARow(ec).zero();
-    A[5] = new ARow(ec).zero();
   }
 
   /**
@@ -93,12 +87,6 @@ public class A6Row extends A6Rowa {
     super(ec, 6, tbal, alev, atitl);
     lev = alev;
     balances = true;
-    A[0] = new ARow(ec).zero();
-    A[1] = new ARow(ec).zero();
-    A[2] = new ARow(ec).zero();
-    A[3] = new ARow(ec).zero();
-    A[4] = new ARow(ec).zero();
-    A[5] = new ARow(ec).zero();
   }
 
   /**
@@ -1065,6 +1053,7 @@ public class A6Row extends A6Rowa {
    * @return return the A6Row with r,c,s,g multiplied, a resum needed
    */
   public A6Row setAmultF(A6Row a, A2Row f) {
+    noChecking=true;
     for (int n : ASECS) {
       for (int m : A01) {
         for (int mm : A01) {
@@ -1072,6 +1061,7 @@ public class A6Row extends A6Rowa {
         }
       }
     }
+    noChecking=false;resum(0);resum(1);
     return this;
   }
 

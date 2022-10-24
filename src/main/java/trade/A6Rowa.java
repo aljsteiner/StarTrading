@@ -66,7 +66,8 @@ public class A6Rowa {
   boolean balances = false;  // true if tbal 0 = 2+3 and 1= 4+5
   boolean costs = false; // true if tcost
   boolean costs10 = false; // only for A10Row 0=2,3,4,5 and 1= 6+7+8+9
-  boolean noChecking = false;
+  static boolean noChecking = false;
+  static boolean didResum = false;
   //int lA = ABalRows.balsLength;
   volatile int lA = 6; // A10Row sets to 10
   volatile int dA[] = {0, 1, 2, 3, 4, 5};
@@ -751,14 +752,15 @@ public class A6Rowa {
     if (A[m] == null) {
       A[m] = new ARow(ec);
     }
+    int ma = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
     for (int mm : dResums) { // iterate over arrays of iX values and ARows
-      if (mm == m) {
+      if (mm == ma) {
         // check for a change since the last calculation of mResum[mm]
         int sumr = 0;
         for (int nn : mResum[mm]) {  // check the full iX array for changes
           sumr += A[nn].getSetCnt();
         }
-
+        didResum=false;
         if (sumr != aResum[mm]) {  // check for changes since last resum
           // resum A[mm], by adding in all mResum rows
           ARow bb = new ARow(ec).set(A[mm]); // save prev value
@@ -780,6 +782,7 @@ public class A6Rowa {
           for (int nn : mResum[mm]) {
             aResum[mm] += A[nn].getSetCnt();
           }
+          didResum=true;
         }
       }
     }
@@ -1054,9 +1057,29 @@ public class A6Rowa {
    * @return A[n].get(m)
    */
   public double get(int m, int n) {
+    if(m>1){
+         if(E.debugDouble){
+            return doubleTrouble(A[m].values[n]);
+         } else {
+       return A[m].values[n];
+         }
+     } else if(m == 0){
+       if(E.debugDouble){
+         return doubleTrouble(A[m+2].values[n] + A[m+3].values[n]);
+    } else {
+     return  A[m+2].values[n] + A[m+3].values[n]; 
+    }
+     } else if(m == 1){
+       if(E.debugDouble){
+         return doubleTrouble( A[m+4].values[n] + A[m+5].values[n]);
+    } else {
+     return   A[m+4].values[n] + A[m+5].values[n]; 
+       }
+    } else {
     int al = A.length;
     assert m < A.length:"error m" + m + " indexes more than length" + al;
     int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
+    resum(m);
      boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances && costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
     double bal1 = 0.;
     double both = 0.;
@@ -1070,7 +1093,7 @@ public class A6Rowa {
     double dif = bal1 - both;
     boolean badDif = E.PZERO < dif || E.NZERO > - dif; // trouble if true
     // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
-    assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
+    assert !badDif : "resum error sector" + n + " length" + al + " lsubs" + lsubs + (noChecking?" noChecking":" !noChecking") + (didResum?" didResum": " !didResum") + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
     }
     if(noChecking){noChecking=true;}
     if(E.debugDouble){
@@ -1078,6 +1101,7 @@ public class A6Rowa {
     } else {
      return A[m].get(n); 
     }
+     }
   }
   
   /** get the nn'th element in the values of the object
@@ -1239,7 +1263,7 @@ public class A6Rowa {
 
     ARow ret = A[m].set(B, C);
     noChecking = false;resum(0);resum(1);
-
+    return ret;
   }
 
   /**
@@ -1349,6 +1373,27 @@ public class A6Rowa {
     }
     return ret;
     
+  }
+  
+   /**
+   * multiply raw growth by a fertility
+   *
+   * @param a raw growth
+   * @param f a 2 row r s fertility
+   * @return return the A6Row with r,c,s,g multiplied, a resum needed
+   */
+  public A6Rowa setAmultF(A6Row a, A2Row f) {
+    noChecking=true;
+    noChecking=true;
+    for (int n : ASECS) {
+      for (int m : A01) {
+        for (int mm : A01) {
+          sett(2 + 2 * m + mm, n, a.get(2 + 2 * m + mm, n) * f.get(m, n));
+        }
+      }
+    }
+    noChecking=false;resum(0);resum(1);
+    return this;
   }
 
   /**
