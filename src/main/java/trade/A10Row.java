@@ -256,15 +256,15 @@ public class A10Row extends A6Rowa {
          }
      } else if(m == 0){
        if(E.debugDouble){
-         return doubleTrouble(A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]);
+         return doubleTrouble(A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]);
     } else {
-     return  A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]; 
+     return  A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]; 
     }
      } else if(m == 1){
        if(E.debugDouble){
-         return doubleTrouble(A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]);
+         return doubleTrouble(A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]);
     } else {
-     return  A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]; 
+     return  A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]; 
        }
     } else {
     int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
@@ -292,17 +292,18 @@ public class A10Row extends A6Rowa {
        return A[m].values[n];
      } else if(m == 0){
        if(E.debugDouble){
-         return doubleTrouble(A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]);
+         return doubleTrouble(A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]);
     } else {
-     return  A[m+2].values[n] + A[m+3].values[n] + A[m+4].values[n] + A[m+5].values[n]; 
+     return  A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]; 
     }
      } else if(m == 1){
        if(E.debugDouble){
-         return doubleTrouble(A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]);
+         return doubleTrouble(A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]);
     } else {
-     return  A[m+6].values[n] + A[m+7].values[n] + A[m+8].values[n] + A[m+9].values[n]; 
+     return  A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]; 
     }
-}
+} return 0;
+   }
 
   /**
    * get working from working rows m % 2
@@ -311,7 +312,7 @@ public class A10Row extends A6Rowa {
    * @param n sector
    * @return return row(m%2 *4 +2), sector n
    */
-  public double gett1(int m, int n) {
+  public double nogett1(int m, int n) {
     return get((m % 2) * 4 + 2, n); // the r rows
   }
 

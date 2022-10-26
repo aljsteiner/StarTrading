@@ -102,8 +102,8 @@ static StarTrader st;
   static final boolean debutNoLastGoods = debugMaster; //error open TradeRecord
   static final boolean debugOfferCargos = debugMaster; //cargos in offer == cargo.balance
   static final boolean debugSumGrades = debugMaster; //sum of grades = sum of staff/guests
-  static final boolean debugResum = debugMaster; //rc == r + c  sg == s + g
-  static final boolean debugResumP = debugMaster; //rc == r + c  sg == s + g add || set
+  static final boolean debugResum = false; //rc == r + c  sg == s + g
+  static final boolean debugResumP = false; //rc == r + c  sg == s + g add || set
   static final boolean debugCosts = debugMaster;  // check that cost processing ok
   static final boolean debugDouble = debugMaster; //doubleTrouble and infinity or NaN
   static final boolean debugTradeRecord = debugMaster; // or false

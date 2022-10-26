@@ -748,6 +748,7 @@ public class A6Rowa {
    * 
    */
   void resum(int m) {
+    if(m<100) return; // disable resum
 //    System.out.println("into resum title=" + titl + " la=" + lA + ", length A=" + A.length + ", m=" + m);
     if (A[m] == null) {
       A[m] = new ARow(ec);
@@ -795,10 +796,10 @@ public class A6Rowa {
    * @param x
    */
   void checkIx(int x) {
-    resum(x * 2);   // do resum if necessary
-    resum(1 + x * 2);
-    if (aCnt[x * 2] != A[x * 2].getSetCnt() || aCnt[1 + x * 2] != A[1 + x * 2].getSetCnt()) {
-      makeOrderIx(iix[x], x, sum, x * 2, 1 + x * 2);
+    resum(0);   // do resum if necessary
+    resum(1);
+    if (aCnt[x] != A[x].getSetCnt() || aCnt[1 + x] != A[1 + x].getSetCnt()) {
+      makeOrderIx(iix[x], x, sum, x, 1 + x);
     }
   }
 
@@ -1057,7 +1058,7 @@ public class A6Rowa {
    * @return A[n].get(m)
    */
   public double get(int m, int n) {
-    if(m>1){
+   if(m>1){
          if(E.debugDouble){
             return doubleTrouble(A[m].values[n]);
          } else {
@@ -1065,17 +1066,17 @@ public class A6Rowa {
          }
      } else if(m == 0){
        if(E.debugDouble){
-         return doubleTrouble(A[m+2].values[n] + A[m+3].values[n]);
+         return doubleTrouble(A[2].values[n] + A[3].values[n]);
     } else {
-     return  A[m+2].values[n] + A[m+3].values[n]; 
+     return  A[2].values[n] + A[3].values[n]; 
     }
      } else if(m == 1){
        if(E.debugDouble){
-         return doubleTrouble( A[m+4].values[n] + A[m+5].values[n]);
+         return doubleTrouble( A[4].values[n] + A[5].values[n]);
     } else {
-     return   A[m+4].values[n] + A[m+5].values[n]; 
+     return   A[4].values[n] + A[5].values[n]; 
        }
-    } else {
+    }  else {
     int al = A.length;
     assert m < A.length:"error m" + m + " indexes more than length" + al;
     int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
@@ -1117,17 +1118,31 @@ public class A6Rowa {
    * get the value of rows 0,1 by sector m = m%2
    * resum m%2 
    *
-   * @param m m%2 index of row 0 or 1
+   * @param m index of row to use
    * @param n index of value in selected row
    * @return the value of value n in the selected row
    */
   public double gett(int m, int n) {
-   // resum((int)(m<2? m : (m-2)/2));
-     if(E.debugDouble){
-    return doubleTrouble(A[m].get(n));
+  if(m>1){
+         if(E.debugDouble){
+            return doubleTrouble(A[m].values[n]);
+         } else {
+       return A[m].values[n];
+         }
+     } else if(m == 0){
+       if(E.debugDouble){
+         return doubleTrouble(A[2].values[n] + A[3].values[n]);
     } else {
-     return A[m].get(n); 
+     return  A[2].values[n] + A[3].values[n]; 
     }
+     } else if(m == 1){
+       if(E.debugDouble){
+         return doubleTrouble( A[4].values[n] + A[5].values[n]);
+    } else {
+     return   A[4].values[n] + A[5].values[n]; 
+       }
+    } 
+  return 0;
   }
 
     /**
