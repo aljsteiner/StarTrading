@@ -197,7 +197,7 @@ public class A10Row extends A6Rowa {
    * @return add(row,sector,val)
    */
   double add(int mm, double val) {
-    return this.add(Math.floorDiv(mm, E.lsecs), mm % E.lsecs, val);
+    return this.add(mm/E.LSECS, mm % E.LSECS, val);
   }
 
   /**
@@ -256,15 +256,15 @@ public class A10Row extends A6Rowa {
          }
      } else if(m == 0){
        if(E.debugDouble){
-         return doubleTrouble(A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]);
+         return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]);
     } else {
-     return  A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]; 
+     return  A[0].values[n] = A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]; 
     }
      } else if(m == 1){
        if(E.debugDouble){
-         return doubleTrouble(A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]);
+         return doubleTrouble(A[1].values[n] = A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]);
     } else {
-     return  A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]; 
+     return  A[1].values[n] = A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]; 
        }
     } else {
     int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
@@ -292,15 +292,15 @@ public class A10Row extends A6Rowa {
        return A[m].values[n];
      } else if(m == 0){
        if(E.debugDouble){
-         return doubleTrouble(A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]);
+         return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]);
     } else {
-     return  A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]; 
+     return  A[0].values[n] = A[2].values[n] + A[3].values[n] + A[4].values[n] + A[5].values[n]; 
     }
      } else if(m == 1){
        if(E.debugDouble){
-         return doubleTrouble(A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]);
+         return doubleTrouble(A[1].values[n] = A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]);
     } else {
-     return  A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]; 
+     return  A[1].values[n] = A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]; 
     }
 } return 0;
    }
@@ -622,7 +622,8 @@ public class A10Row extends A6Rowa {
    * @param v multiplier for each sector
    * @return  each a sector mult by v
    */
-  public A10Row setAmultV(A10Row a, double v) {
+  public A10Row setAmultV(A10Row a, Double v) { return (A10Row) setAmultV1(a,v);}
+  public A10Row notsetAmultV(A10Row a, double v) {
     noChecking=true;
     // mult each member set of 2 rows each A by corresponding B
     Double d;

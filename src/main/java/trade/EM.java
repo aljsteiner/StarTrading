@@ -717,6 +717,28 @@ class EM {
  static public String mf(int v){ 
    return v + ""; // force v into a string
  }
+ 
+ /** format the value to a 9 char String
+  * 
+  * @param desc description of format
+  * @param v value to format
+  * @return desc + mf(v)
+  */
+ static public String mf(String desc,Double v){
+   return " " + desc + mf(v);
+ }
+ 
+  /** format the value to a 7 char String
+  * 
+  * 
+  * @param desc description of format
+  * @param v value to format
+  * @return desc + mf(v)
+  */
+ static public String mf2(String desc,Double v){
+   return " " + desc + mf2(v);
+ }
+ 
   /**
    * format the value to a 9 char string
    *
@@ -761,13 +783,15 @@ class EM {
     }
   }
 
+  
+  
   /**
    * format the value to a 7 character string
    *
    * @param v input value
    * @return value as a string
    */
-  public String mf2(Double v) {
+   static public String mf2(Double v) {
     if(v.isNaN()){ return "# " + v;}
    // infinite returns inf sign
     if (!E.outputLess) {  // ignore the need for less than 9 char out

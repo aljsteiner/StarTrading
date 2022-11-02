@@ -3737,6 +3737,9 @@ public class StarTrader extends javax.swing.JFrame {
         System.out.println(since() + "LogsInputMethodTextChanged unknown=" + source + ", value=" + M);
       }
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -3758,6 +3761,9 @@ public class StarTrader extends javax.swing.JFrame {
       displayLog();
       System.out.println(since() + " logM2SpinnerStateChanged=" + eM.logEnvirn[1].logM[1] + " lev=" + eM.logEnvirn[1].logLev[1] + " first bunch=" + eM.logEnvirn[1].logLen[1]);
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -3776,6 +3782,9 @@ public class StarTrader extends javax.swing.JFrame {
         System.out.println(since() + " levelSlider2StateChanged=" + eM.logEnvirn[1].logLev[1]);
       }
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -3795,6 +3804,9 @@ public class StarTrader extends javax.swing.JFrame {
       }
 
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -3816,6 +3828,9 @@ public class StarTrader extends javax.swing.JFrame {
       System.out.println(since() + " logDisplay1StartStateChanged=" + eM.logEnvirn[0].logM[0] + " lev=" + eM.logEnvirn[0].logLev[0] + " start2=" + start2);
 
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -3846,9 +3861,12 @@ public class StarTrader extends javax.swing.JFrame {
         System.out.println(since() + " DLen1StateChanged=" + m);
       }
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       eM.flushes();
-      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      System.err.println("===================" + Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
+      eM.flushes();
       eM.flushes();
       setFatalError();
     }
@@ -5243,6 +5261,9 @@ public class StarTrader extends javax.swing.JFrame {
       displayLog();
 
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -5255,6 +5276,9 @@ public class StarTrader extends javax.swing.JFrame {
   public void logM1MouseClicked(java.awt.event.MouseEvent evt) {
     try {
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -5346,6 +5370,18 @@ public class StarTrader extends javax.swing.JFrame {
     controlPanels.setBackground(rrr);
     display.setBackground(rrr);
     displayPanel1.setBackground(rrr);
+    StackTraceElement[] aa = Thread.currentThread().getStackTrace();
+    String histTrace=" ";
+    for(int i=1; i < 6 && i < aa.length-1;i++){
+     histTrace += aa[i].getMethodName() + "." + aa[i].getFileName() + "." + aa[i].getLineNumber() + "\n" ;
+             }
+      System.err.println("================= setFatalError at" + histTrace + EM.andMore());
+       controlPanels.getComponent(3);
+      controlPanels.setSelectedIndex(3);
+      displayPanel0Text.setRows(18);
+      displayPanel0Text.setText("setFatalError at" + histTrace + EM.andMore());
+      EM.flushes();EM.flushes();EM.flushes();
+  //    E.sysmsg("CF construct " + E.ROYGB.charAt(clan) + " " + name + " at " + a4.getMethodName() + ", " + a3.getMethodName() + ", " + a2.getMethodName() + " wealth=" + EM.mf(wealth));
     //  displayPanel2.setBackground(rrr);
     // displayPanel1EconName.setBackground(rrr);
     // displayPanel1Operation.setBackground(rrr);
@@ -5356,8 +5392,12 @@ public class StarTrader extends javax.swing.JFrame {
     controlPanels.repaint();
     stateConst = FATALERR;
 
+    
+    System.err.println("##################request rejected, due to a  fatal error at \n" + histTrace + EM.andMore());
+    EM.flushes();EM.flushes();
     EM.flushes();
-    System.err.println("request rejected, due to a  fatal error");
+      EM.flushes();
+      EM.flushes();
     if(hadFatalError) System.exit(-19);
     System.exit(-18);
     EM.flushes();
@@ -5428,6 +5468,9 @@ public class StarTrader extends javax.swing.JFrame {
       //    stateConst = STATS;
      // runBackgroundYears4(nYears);
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -5454,7 +5497,7 @@ public class StarTrader extends javax.swing.JFrame {
 
     if (stateConstA == prevState && curEconName.equals(prevEconName) && wh.equals(prevWasHere) && stateConstA != STATS && stateConstA != WAITING && stateConstA != STOPPED && stateConstA != FATALERR) {
       sameEconState++;
-      if ( sameEconState > 50) {
+      if (E.debugStuck && sameEconState > 50) {
         long myNow = new Date().getTime() - eM.doYearTime;
         eM.doMyErr("STUCK at:doYear" + eM.year + myNow + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
@@ -5576,6 +5619,9 @@ public class StarTrader extends javax.swing.JFrame {
         }
       }
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -6017,6 +6063,9 @@ public class StarTrader extends javax.swing.JFrame {
       Thread.sleep(2000);
    //   runYears(1);
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowName + " " + Econ.nowThread + " Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -6186,6 +6235,9 @@ public class StarTrader extends javax.swing.JFrame {
       printMem3();
       stateConst = CONSTRUCTED;
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " +  Econ.nowThread + " Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -7612,6 +7664,9 @@ if(eM.dfe() )return;
        EM.flushes();
       }
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -7878,6 +7933,9 @@ if(eM.dfe() )return;
                 " " + new Date().toString());
       }
     } catch (Exception ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
@@ -8151,6 +8209,9 @@ if(eM.dfe() )return;
       fatalError = true;;
        */
     } catch (FileNotFoundException ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
@@ -8206,6 +8267,9 @@ if(eM.dfe() )return;
         }
       }
     } catch (ClassNotFoundException ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
@@ -8213,6 +8277,9 @@ if(eM.dfe() )return;
       EM.flushes();
       fatalError = true;;
     } catch (InstantiationException ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
@@ -8220,6 +8287,9 @@ if(eM.dfe() )return;
       EM.flushes();
       fatalError = true;;
     } catch (IllegalAccessException ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
@@ -8227,6 +8297,9 @@ if(eM.dfe() )return;
       EM.flushes();
       fatalError = true;;
     } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
@@ -8234,6 +8307,9 @@ if(eM.dfe() )return;
       EM.flushes();
       fatalError = true;;
     } catch (FileNotFoundException ex) {
+      EM.firstStack = EM.secondStack+"";
+ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
+      eM.flushes();
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);

@@ -796,10 +796,10 @@ public class A6Rowa {
    * @param x
    */
   void checkIx(int x) {
-    resum(0);   // do resum if necessary
-    resum(1);
-    if (aCnt[x] != A[x].getSetCnt() || aCnt[1 + x] != A[1 + x].getSetCnt()) {
-      makeOrderIx(iix[x], x, sum, x, 1 + x);
+    resum(x * 2);   // do resum if necessary
+    resum(1 + x * 2);
+    if (aCnt[x * 2] != A[x * 2].getSetCnt() || aCnt[1 + x * 2] != A[1 + x * 2].getSetCnt()) {
+      makeOrderIx(iix[x], x, sum, x * 2, 1 + x * 2);
     }
   }
 
@@ -1066,15 +1066,15 @@ public class A6Rowa {
          }
      } else if(m == 0){
        if(E.debugDouble){
-         return doubleTrouble(A[2].values[n] + A[3].values[n]);
+         return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n]);
     } else {
-     return  A[2].values[n] + A[3].values[n]; 
+     return  A[0].values[n] = A[2].values[n] + A[3].values[n]; 
     }
      } else if(m == 1){
        if(E.debugDouble){
-         return doubleTrouble( A[4].values[n] + A[5].values[n]);
+         return doubleTrouble( A[1].values[n] = A[4].values[n] + A[5].values[n]);
     } else {
-     return   A[4].values[n] + A[5].values[n]; 
+     return   A[1].values[n] = A[4].values[n] + A[5].values[n]; 
        }
     }  else {
     int al = A.length;
@@ -1131,15 +1131,15 @@ public class A6Rowa {
          }
      } else if(m == 0){
        if(E.debugDouble){
-         return doubleTrouble(A[2].values[n] + A[3].values[n]);
+         return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n]);
     } else {
-     return  A[2].values[n] + A[3].values[n]; 
+     return  A[0].values[n] = A[2].values[n] + A[3].values[n]; 
     }
      } else if(m == 1){
        if(E.debugDouble){
-         return doubleTrouble( A[4].values[n] + A[5].values[n]);
+         return doubleTrouble( A[1].values[n] = A[4].values[n] + A[5].values[n]);
     } else {
-     return   A[4].values[n] + A[5].values[n]; 
+     return   A[1].values[n] = A[4].values[n] + A[5].values[n]; 
        }
     } 
   return 0;
@@ -1362,7 +1362,7 @@ public class A6Rowa {
      E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
     int al = A.length;
     int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
-     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances && costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
+     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances || costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
     double bal1 = 0.;
     double both = 0.;
     if(E.debugResumP && !ignoreIf && !noChecking){
@@ -1380,10 +1380,10 @@ public class A6Rowa {
     double ret = A[m].add(n,val);
     if(noChecking){ noChecking=true;} else
      //if a legal class also set the row 0 or 1 row
-    if(!ignoreIf ){
+    if(!ignoreIf & false ){
         both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
     // add in the 10row if needed
-        both += costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;   
+          both += costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;   
        A[mm].set(n,both);
     }
     return ret;
@@ -1611,10 +1611,10 @@ public class A6Rowa {
    * set object to each A mult by V
    *
    * @param a the ARowA object being multiplied
-   * @param V  value of multiplier
-   * @return  
+   * @param v  value of multiplier
+   * @return  each entry in each row multiplied by v
    */
-  public A6Rowa setAmultV(A6Rowa a, double V) {
+  public A6Rowa setAmultV1(A6Rowa a, double v) {
     noChecking=true;
     // mult each member set of 2 rows each A by corresponding B
     int al = a.A.length;
@@ -1623,12 +1623,29 @@ public class A6Rowa {
         // separate each operation to localize null object errors
         set(m, n,
                 doubleTrouble(a.get(m, n))
-                * doubleTrouble(V));
+                * doubleTrouble(v));
       }
     }
-    noChecking = false;resum(0);resum(1);
+    noChecking = true;resum(0);resum(1);
     return this;
   }
+  
+  /**
+   * set object to each A mult by V
+   *
+   * @param a the ARowA object being multiplied
+   * @param v  value of multiplier
+   * @return  each entry in each row multiplied by v
+   */
+  public A10Row notsetAmultV(A10Row a, Double v) {return (A10Row)setAmultV1((A6Rowa)a,v);}
+   /**
+   * set object to each A mult by V
+   *
+   * @param a the ARowA object being multiplied
+   * @param v  value of multiplier
+   * @return  each entry in each row multiplied by v
+   */
+  public A6Rowa setAmultV(A6Rowa a, Double v) {return (A10Row)setAmultV1((A6Rowa)a,v);}
 
   /**
    * set instance to the each by each sum of A +B + C

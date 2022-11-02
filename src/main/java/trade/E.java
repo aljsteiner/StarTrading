@@ -142,6 +142,7 @@ static StarTrader st;
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
   static final boolean debugPutRowsOutUnset = false; //put out warnings of unset stats
+  static final boolean debugStuck = false; //error if stuck
   static final int ssMax = 10; // max setStats printed;
   static final boolean debugThreadsOut = debugMaster; // threads output
   static final boolean debugThreadsOut1 = debugMaster; // threads output1
@@ -235,8 +236,10 @@ static StarTrader st;
   public static final int[] d6 = {0, 1, 2, 3, 4, 5}, A05 = d6;
   public static final int[] d8 = {0, 1, 2, 3, 4, 5, 6, 7}, A07 = d8;
   static final int lsums = 2;// rc sg
+  static final int LSUMS = lsums;
   static final int BALANCESIX = lsums;
   static final int lsubs = 4; // r c s g
+  static final int LSUBS = lsubs;
 
   public enum sectors {
     LIFE, STRUCT, ENERGY, PROPEL, DEFENSE, GOV, COLONIST

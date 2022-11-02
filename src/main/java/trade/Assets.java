@@ -4078,23 +4078,23 @@ public class Assets {
        *
        * @return
        */
-      double cost3(double cost, int sourceIx, double availFrac) {
+      synchronized double cost3(double cost, int sourceIx, double availFrac) {
         // Assets.CashFlow.SubAsset.cost3
         if (sstaff) {
           checkGrades();
         }
         double costRem = cost, myRem = 0.;
         SubAsset sp = this;  // source partner
-        SubAsset op = this.partner; // the other partner
+        SubAsset op = this.partner; // the partner partner
         SubAsset wp = (reserve) ? op : sp; // select working partner
 
         int sixsp = sp.sIx; // index of the source partner
         int sixop = op.sIx;
         int sixwp = wp.sIx;
 
-        double balSp = bals.get(sixsp + BALANCESIX, sourceIx);
-        double balOp = bals.get(sixop + BALANCESIX, sourceIx);
-        double balWp = bals.get(sixwp + BALANCESIX, sourceIx);
+        double balSp = bals.get(sixsp + E.LSUMS, sourceIx);
+        double balOp = bals.get(sixop + E.LSUMS, sourceIx);
+        double balWp = bals.get(sixwp + E.LSUMS, sourceIx);
         double balSO = balSp + balOp;  // sum of source and partner
 
         int availType = 0;
@@ -4104,7 +4104,7 @@ public class Assets {
           resvs = resvo = resv = 0.0;
         } else if (availFrac < 1. - PZERO) {
           availType = 2;
-          resvs = balSp * availFrac;  // the reserve is source bal* availFrac
+          resvs = (balSp) * availFrac;  // the reserve is source bal* availFrac
           resvo = balOp * availFrac;
         } else if (availFrac < 1. + PZERO) {
           availType = 1; // around 1
@@ -4119,7 +4119,7 @@ public class Assets {
         double availSp, availOp=0., availSO, avail;
         if (E.debugDouble) {
           //avail source = source balance - resv if source is working partner
-          availSO = availSp = doubleTrouble(doubleTrouble(balSp)- resvs + doubleTrouble(balOp) - resvo); // remainder available to move
+          availSO = (availSp = doubleTrouble(doubleTrouble(balSp)- doubleTrouble(resvs ))+ (availOp = doubleTrouble(balOp) - resvo)); // remainder available to move
           //availOp = doubleTrouble(doubleTrouble(balOp) - (sp.reserve ? resv : 0.));
           //availSO = doubleTrouble(availSp + availOp);
           // only availSp if incr or decr, for xfer avail == both with W reserved
@@ -4131,10 +4131,17 @@ public class Assets {
          // availSO = availSp + availOp;
           // only availSp if incr or decr, for xfer avail == both with W reserved
           // this allows trade to also use availSP + availOp
-          avail = availSO = doubleTrouble(doubleTrouble(balSp)- resvs + doubleTrouble(balOp) - resvo);
+          avail = availSO = (availSp = balSp - resvs )+ (availOp = balOp - resvo); // remainder available to move
         }
         boolean isShip = pors == E.S;
-        double costSp = 0.;
+        double costSpa = Math.min(cost, availSp);
+        double mASp = mtgAvails6.get(E.LSUMS + sixsp,sourceIx);
+        double costSp = Math.min(costSpa,mASp * .8);
+        double costOp = Math.min((costRem = cost - costSp), availOp);
+        if(E.debugFFOut){
+          System.out.println(EM.wasHere3 = "-----GA---- cost3 sixsp" + sixsp + EM.mf("availSp",availSp)+ EM.mf("balSp",balSp) + EM.mf("mASp",mASp) + EM.mf("costSpa",costSpa) + EM.mf("costSp",costSp) + EM.mf("remSp",availSp-costSp)  + EM.mf("availFrac",availFrac)  + EM.mf("resvs",resvs) + " sixop" + sixop  + EM.mf("availOp",availOp) + " balOp" + EM.mf(balOp) + " resvo" + EM.mf(resvo) + " costRem" + EM.mf(costRem) + " costOp" + EM.mf(costOp));                       }
+        
+        
         aPre = "$c";
         // ensure there is enough balance to cover the cost
 
@@ -4145,15 +4152,17 @@ public class Assets {
             eM.doMyErr("Error cost negative = " + EM.mf(cost));
           }
         }
-        assert avail >= cost: "cost=" + EM.mf(cost) + " exceeds available=" + EM.mf(avail) + ", " + sp.aschar + sourceIx + "=" + EM.mf(avail) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j;
+       // assert avail >= cost: "cost=" + EM.mf(cost) + " exceeds available=" + EM.mf(avail) + ", " + sp.aschar + sourceIx + "=" + EM.mf(avail) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j;
+        assert availSp >= costSp:"costsp=" + EM.mf(costSp) + " exceeds availsp=" + EM.mf(availSp) + ", " + sp.aschar + sourceIx + " balSp=" + EM.mf(balSp) + " remSp" + EM.mf(costSp - availSp) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j;
         if (E.debugCosts) {
           if (E.noAsserts && avail - cost < -0.0) {
             EM.doMyErr("cost=" + EM.mf(cost) + " exceeds available=" + EM.mf(avail) + ", " + sp.aschar + sourceIx + "=" + EM.mf(avail) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j);
           }
         }
 
-        if (avail - cost > +0.0) {
-          costSp = Math.min(cost, availSp);
+        if (availSp < costSp) {
+          if(E.debugFFOut){
+          System.out.println(EM.wasHere2 = "-----G---- cost3 sixsp" + sixsp + EM.mf("availSp",availSp)+ EM.mf("balSp",balSp) + EM.mf("mASp",mASp) + EM.mf("costSp1",costSp1) + EM.mf("costSp",costSp) + EM.mf("remSp",availSp-costSp)  + EM.mf("availFrac",availFrac)  + EM.mf("resvs",resvs) + " sixop" + sixop  + EM.mf("availOp",availOp) + " balOp" + EM.mf(balOp) + " resvo" + EM.mf(resvo) + " costRem" + EM.mf(costRem) + " costOp" + EM.mf(costOp));                       }
           sp.cost1(costSp, sourceIx);
           if (E.debugCosts) {
             if (sp.balance.get(sourceIx) < NZERO) {
@@ -4162,9 +4171,9 @@ public class Assets {
           }
 
         }
-        costRem = cost - costSp;
-        if (costRem > 0.0) {
-          if (availOp - costRem < -0.0) {
+        // now look at second cost
+        if (costOp > 0.0) {
+          if (availOp < costOp) {
             if (E.debugCosts) {
               EM.doMyErr(String.format("costRem=%10.5 exceeds availOp%s%d=%10.5g" + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j, costRem, op.aschar, sourceIx, availOp));
             } else {
@@ -4172,7 +4181,7 @@ public class Assets {
             }
 
           }
-          myRem = op.cost1(costRem, sourceIx);
+          myRem = op.cost1(costOp, sourceIx);
         }
 
         if (op.balance.get(sourceIx) < NZERO) {
@@ -4182,6 +4191,9 @@ public class Assets {
             op.balance.set(sourceIx, 0.0);
           }
         }
+        
+        if(E.debugFFOut){
+          System.out.println(EM.wasHere2 = "-----H---- cost3 sixsp" + sixsp + " availSp" + EM.mf(availSp) + " balSp" + EM.mf(balSp) + " costSp" + EM.mf(costSp) + " remSp" + EM.mf(availSp-costSp) + " availFrac" + EM.mf(availFrac) + " resvs" + EM.mf(resvs) + " sixop" + sixop + " availOp" + EM.mf(availOp) + " balOp" + EM.mf(balOp) + " resvo" + EM.mf(resvo) + " costRem" + EM.mf(costRem) + " costOp" + EM.mf(costOp) + " myRem" + EM.mf(myRem));                       }
         // raise W cost as needed, the test above shows there is enough balance
         // double costsW = costsW1;
         //double costsR = costsR1;
@@ -7488,11 +7500,13 @@ public class Assets {
         boolean emergTrans = rawProspects2.min() < -.00001;  // are we in emergency
         double rawProsp = 0.;
         double emergMult = emergTrans ? EM.emergFundFrac[pors][clan] : 1.0;
+        double reservMult = emergTrans ? E.emergReserve[ixWRSrc][pors][clan] : E.regReserve[ixWRSrc][pors][clan];
         // calculate max transfer to futureFund larget sector .8*bal .9*avail, frac*totWorth
         double maxF0 = bals.get(sourceIx);
-        double maxF1 = mtgAvails6.get(sourceIx) * (0.89 - E.emergReserve[ixWRSrc][pors][clan]); // avails limited
-        double maxF2 = totWorth * EM.futureFundFrac[pors][clan] * emergMult; //totWorth val
-        double maxF3 = Math.min(maxF1, maxF2); // min except for bal
+        double maxFa = mtgAvails6.get(sourceIx);
+        double maxF1 = maxF0 * (0.89 - reservMult); // avails limited
+        double maxF2 = totWorth * EM.futureFundFrac[pors][clan] * (0.89 - reservMult); //totWorth val
+        double maxF3 = Math.min(maxF1, maxF2); // min available units
         double maxF4 = 0.; //at end after test emergency reserve
         double maxFutureTrans = Math.min(bals.get(sourceIx) * .8, maxF3); //
         //  / (eM.worthBias[ixWRSrc * 2][0] * cur.sys[ixWRSrc * 2].unitWorth.get(srcIx))));  // units value
@@ -7515,7 +7529,8 @@ public class Assets {
             }
           }
            if (E.debugFFOut) {
-              System.out.println("----A---" + name + " doing remainingFF m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " remainingFF" + EM.mf(remainingFF) + " val" + EM.mf(val) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " maxF0" + EM.mf(maxF0) + " maxF1" + EM.mf(maxF1) + " maxF2" + EM.mf(maxF2) + " maxF3" + EM.mf(maxF3));
+              System.out.println("----A---" + name + " doing remainingFF m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
             }
         } else // now initial test for dues, 
         // set up emergency and normal future fund payments
@@ -7545,7 +7560,8 @@ public class Assets {
             }
           }
           if (E.debugFFOut) {
-            System.out.println("-----B---" + name + " doing excessForFF=" + EM.mf(excessForFF) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + ", val=" + EM.mf(val) + ", maxF3=" + EM.mf(maxF3) + ", maxFutureTrans=" + EM.mf(maxFutureTrans) + ", maxF0=" + EM.mf(maxF0) + ", maxF1=" + EM.mf(maxF1) + ", maxF2=" + EM.mf(maxF2));
+            System.out.println("-----B---" + name + " doing excessForFF=" + EM.mf(excessForFF) + " sourceIx" + sourceIx 
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
           }
         } // now check for at upto 3 neg prospects, reduce max avail sector
         else if (E.ffSwapNs.contains(n) && (rawProsp = rawProspects2.curMin(2 - (n > 30 ? 0 : n > 20 ? 1 : 2))) < -0.0) {
@@ -7556,7 +7572,7 @@ public class Assets {
           resTypeName = "EmergFF1";
           doing = val > 200 ? true : false;
            if (E.debugFFOut) {
-            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + ", val=" + EM.mf(val) + ", maxF3=" + EM.mf(maxF3) + ", maxFutureTrans=" + EM.mf(maxFutureTrans) + ", FFTransFrac=" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + ", maxF0=" + EM.mf(maxF0) + ", maxF1=" + EM.mf(maxF1) + ", maxF2=" + EM.mf(maxF2));
+            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + ", val=" + EM.mf(val) + ", maxFutureTrans=" + EM.mf(maxFutureTrans) + ", FFTransFrac=" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
            }
         } // now check if resources balances too much bigger than staff, 
         // swaps cannot solve  this problem
@@ -7657,7 +7673,8 @@ public class Assets {
           //   E.sysmsg("in calcFutureFund endb m=%d",m);
           destIx = srcIx;
           if (E.debugFFOut) {
-            System.out.println("-----D---FF unNeeded " + name + " m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " remainingFF" + EM.mf(remainingFF) + " rawProspects2" + EM.mf(rawProsp) + " val" + EM.mf(val) + ", maxFutureTrans=" + EM.mf(maxFutureTrans) + ", FFTransFrac=" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + ", maxF0=" + EM.mf(maxF0) + ", maxF1=" + EM.mf(maxF1) + ", maxF2=" + EM.mf(maxF2) + " maxF3" + EM.mf(maxF3));
+            System.out.println("-----D---FF unNeeded " + name + " m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3) + " maxF4=" + EM.mf(maxF4));
            }
           return m > 0;
         } // did nothing do rest of swap 
@@ -7666,8 +7683,12 @@ public class Assets {
         if (doing || xcess) {
           // find cashValue/startYearWorth to transfer for size 
           //srcIx = bals.getRow(ixWRSrc).maxIx();
-          val = Math.min(val, Math.min(bals.get(sourceIx),(maxF4 = mtgAvails6.get(sourceIx) * (0.97 - E.emergReserve[ixWRSrc][pors][clan]))));
+          val = Math.min(val, Math.min(maxFutureTrans,(maxF4 = mtgAvails6.get(sourceIx) * (0.89 - reservMult))));
           rsval = val * eM.nominalRSWealth[ixWRSrc][pors];
+           if (E.debugFFOut) {
+            System.out.println("-----DA---FF unNeeded " + name + " m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3) + " maxF4=" + EM.mf(maxF4));
+           }
           //    srcIx = bals.getRow(ixWRSrc).maxIx();
           // limit the size of transfer
           //rsval2 = Math.min(rsval1, bals.get(sourceIx) * eM.futureFundTransferFrac[pors][clan]* eM.nominalRSWealth[ixWRSrc][pors]);
@@ -7683,8 +7704,9 @@ public class Assets {
           assert rsval >= 0. : "Error neg val" + EM.mf(val) + " type=" + resTypeName + " source" + sourceIx; //String.format("Error neg val=%9.4f, resTypeName=%s, ixWRSrc=%d, srcIx=%d", val, resTypeName, ixWRSrc, srcIx));
           double sourcSum = bals.get(2 + 2 * ixWRSrc, srcIx) + bals.get(3 + 2 * ixWRSrc, srcIx);
         //  assert E.PZERO > Math.abs(bals.get(sourceIx) - sourcSum) : "err rs sum" + EM.mf(bals.get(sourceIx)) + " != sourcSum" + EM.mf(sourcSum);
-          assert bals.get(sourceIx) * eM.nominalRSWealth[ixWRSrc][pors]  >= rsval / eM.nominalRSWealth[ixWRSrc][pors]  : ("-----DD---rsval too big for working + reserve" + EM.mf(rawProsp) + " rsval" + EM.mf(rsval) + " source" + EM.mf(bals.get(sourceIx)* eM.nominalRSWealth[ixWRSrc][pors])
-           + " m" + m + " mMax" + mMax + " n" + n + " remainingFF" + EM.mf(remainingFF) + " val" + EM.mf(val) +" rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + ", FFTransFrac=" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + ", maxF0=" + EM.mf(maxF0) + ", maxF1=" + EM.mf(maxF1) + ", maxF2=" + EM.mf(maxF2) + " maxF3" + EM.mf(maxF3));
+          assert bals.get(sourceIx) * eM.nominalRSWealth[ixWRSrc][pors]  >= rsval / eM.nominalRSWealth[ixWRSrc][pors]  : ("-----DD---rsval too big for working + reserve" + EM.mf(rawProsp) 
+                  + " rsval" + EM.mf(rsval) + " source" + EM.mf(bals.get(sourceIx)) + " sourceIx" + sourceIx
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3) + " maxF4=" + EM.mf(maxF4));
           if (E.debugFutureFund) {
             if (rsval.isNaN() || rsval.isInfinite()) {
               E.myTestDouble(rsval, "val", "the value to move passed from previous tests, prevval bals %s%d =%7.2f", rcsg[2 * ixWRSrc], srcIx, bals.get(2 * ixWRSrc, srcIx));
@@ -7709,7 +7731,7 @@ public class Assets {
                   "s" + EM.mf(bals.getRow(1).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<<"));
           if (E.debugFFOut) {
             System.out.println("-----E---did rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
-           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + " maxF0" + EM.mf(maxF0) + " maxF1" + EM.mf(maxF1) + " maxF2" + EM.mf(maxF2) + " maxF3" + EM.mf(maxF3) + " maxF4" + EM.mf(maxF4));
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
            }
           // only count first FutureFund of each type of this year
           int thisYr = (resTypeName.contains("merg") ? emergeFutureFund : excessFutureFund) > 0.0 ? 0 : 1;
@@ -7726,11 +7748,11 @@ public class Assets {
           excessFutureFund += resTypeName.contains("merg") ? 0.0 : rsval;
           yearsFutureFundTimes++;
           // cost is units no cashValue;
-          sys[ixWRSrc].cost1(val, srcIx);
+          sys[ixWRSrc*2].cost3(val, srcIx,reservMult);
           //   E.sysmsg("did transfer val=%5.0f, name=%5s, m=%d",val,resTypeName,m);
           if (E.debugFFOut) {
             System.out.println("-----F---doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
-           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + " maxF0" + EM.mf(maxF0) + " maxF1" + EM.mf(maxF1) + " maxF2" + EM.mf(maxF2) + " maxF3" + EM.mf(maxF3) + " maxF4" + EM.mf(maxF4));
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3) + " maxF4=" + EM.mf(maxF4));
            }
 
           yCalcCosts(aPre, lightYearsTraveled, eM.tradeHealth[pors][clan], eM.tradeGrowth[pors][clan]);
@@ -7741,7 +7763,7 @@ public class Assets {
           swapType = 3;
           if (E.debugFFOut) {
             System.out.println("-----G---all done rawProspects2" + EM.mf(rawProsp) + " sourceIx" + sourceIx
-           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + " maxF0" + EM.mf(maxF0) + " maxF1" + EM.mf(maxF1) + " maxF2" + EM.mf(maxF2) + " maxF3" + EM.mf(maxF3) + " maxF4" + EM.mf(maxF4));
+           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan])  + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
            }
           return m > 0;
         }
@@ -9610,7 +9632,7 @@ public class Assets {
      * @param swork unit staff work
      * @param yearsTraveled input years traveled
      */
-    void calcRawCosts(A6Row balances, A6Row rawUnitGrowths, A6Row rawGrowths, A6Row invMEfficiency, A6Row invGEfficiency, int ix, int tIx, A10Row consumerReqMaintCosts10, A10Row nReqMaint, A10Row consumerReqGrowthCosts10, A10Row nReqGrowth, A10Row consumerMaintCosts10, A10Row nMaint, A10Row mTravel1Yr, A10Row nTravel1Yr, A10Row travelYearsCosts, A10Row consumerGrowthCosts10, A10Row nGrowth, ARow swork, double yearsTraveled) {  // Assets.CashFlow.calcRawCosts
+    synchronized void calcRawCosts(A6Row balances, A6Row rawUnitGrowths, A6Row rawGrowths, A6Row invMEfficiency, A6Row invGEfficiency, int ix, int tIx, A10Row consumerReqMaintCosts10, A10Row nReqMaint, A10Row consumerReqGrowthCosts10, A10Row nReqGrowth, A10Row consumerMaintCosts10, A10Row nMaint, A10Row mTravel1Yr, A10Row nTravel1Yr, A10Row travelYearsCosts, A10Row consumerGrowthCosts10, A10Row nGrowth, ARow swork, double yearsTraveled) {  // Assets.CashFlow.calcRawCosts
       double t1, t2, t3, t4 = -999., t5, t6, t7, rawG, swork2 = 01.;
       int rcsg = ix;
       // int ix2 = (int) ix / 2;
@@ -9829,7 +9851,7 @@ public class Assets {
      *
      * @param lightYearsTraveled
      */
-    void yCalcRawCosts(double lightYearsTraveled, String aPre, double curMaintGoal, double curGrowthGoal) {  //CashFlow.yCalcRawCosts
+    synchronized void yCalcRawCosts(double lightYearsTraveled, String aPre, double curMaintGoal, double curGrowthGoal) {  //CashFlow.yCalcRawCosts
       double t1, t2, t3, t4, t5, t6;
       // zero output objects
       reqMaintCosts = makeZero(reqMaintCosts, "reqGCosts");
