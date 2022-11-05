@@ -689,7 +689,7 @@ public class A6Rowa {
    * @param rowIx1 index of first row
    * @param rowIx2 index of second row
    */
-  void makeOrderIx(int[] ix, int x, double[] sum, int rowIx1, int rowIx2) {
+  synchronized void makeOrderIx(int[] ix, int x, double[] sum, int rowIx1, int rowIx2) {
     E.myTest(A[rowIx1] == null, " ARow a=%2d not defined", rowIx1);
     E.myTest(A[rowIx2] == null, " ARow b=%2d not defined", rowIx2);
     E.myTest(x < 0 || x > 4, "x index=%2d is < 0 or > 4", x);
@@ -1313,7 +1313,7 @@ public class A6Rowa {
 
     if(noChecking){noChecking = true;} else
     //if a legal class also set the row 0 or 1 row
-    if(!ignoreIf ){
+    if(!ignoreIf && false ){ // skip for now
         both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
     // add in the 10row if needed
         both += costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;   

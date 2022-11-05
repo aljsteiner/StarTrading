@@ -5488,7 +5488,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    */
   void setEconState(int stateConstA) {
     ec = curEc = EM.curEcon;
-    curEconName = (EM.curEcon == null ? "noneYet" : EM.curEcon.name);
+    curEconName = (ec == null ? "noneYet" : ec.name);
     String wh = EM.wasHere == null? "wasn't here":EM.wasHere;
     prevEconName = prevEconName == null ? "aint named":prevEconName;
     prevWasHere = prevWasHere == null? "wasn't here":prevWasHere;
@@ -5861,7 +5861,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     E.logLen[1] = Math.min(eM.logEnvirn[1].logLen[1], tableRowCount);
     E.logLen[2] = Math.min(E.logLen[0] + 1 + E.logLen[1], tableRowCount);
 
-    // M or m represent the line number in the display table= table
+    // M or m represents the line number in the display table= table
     E.logM[0] = eM.logEnvirn[0].logM[0];
     E.logM[1] = eM.logEnvirn[1].logM[1];
     int lead = 250; // prior numbers we look for titles
@@ -6406,7 +6406,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * trade, then run a year than a startShipTrade is done to the ship from
    * runBackgroundYears4 years
    */
-  void runYear() {
+  public synchronized void runYear() {
     if (eM.fatalError) {
       setFatalError();
       return;
@@ -6474,7 +6474,6 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * are enabled and statistics can be read and priorities changed.
    */
   public synchronized void doYear() {
-
     try {
       NumberFormat df = NumberFormat.getNumberInstance();
       df.setMinimumFractionDigits(2);
@@ -6838,6 +6837,8 @@ return;
             }
           }
         }
+        
+        // loop to end years
         for (envsLoop2 = 0; envsLoop2 < maxEcons && !eM.dfe() ; ++envsLoop2) {
           if (E.debugEconCnt) {
             synchronized (EM.econCnt) {
@@ -6847,6 +6848,7 @@ return;
             }
           }
           ec = curEc = eM.curEcon = eM.econs.get(envsLoop2);
+          EM.setCurEcon(ec);
           if (E.debugEconCnt) {
             synchronized (EM.econCnt) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -7296,7 +7298,7 @@ if(eM.dfe() )return;
         } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS3 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
-        disp1 += "year" + eM.year + " threads=" + Econ.getThreadCnt() + ":" + Thread.activeCount() + " " + since() + " " + sinceRunYear() + "  " + newLine + prGigMem + newLine;
+        disp1 += "year" + eM.year + " =" + Econ.getThreadCnt() + ":" + Thread.activeCount() + " " + since() + " " + sinceRunYear() + "  " + newLine + prGigMem + newLine;
 
         /*
        + "==millisecs econ per year= millisecs per year/econs  ===========" + newLine;
@@ -8365,7 +8367,7 @@ if(!eM.dfe() ){
             } // while
             eM.randFrac[0][0] = .7; // increase game random
             eM.randFrac[1][0] = .7;
-            EM.difficultyPercent[0] = 30;
+            EM.difficultyPercent[0] = 80;
             stateConst = STARTING;
             System.out.println(">>>>>>Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime));
             stateConst = RUNNING;
@@ -8403,7 +8405,7 @@ if(!eM.dfe() ){
               Thread.sleep(1000);  //1 sec
             }
 if(!eM.dfe() && !st.fatalError){
-           eM.difficultyPercent[0] = 15.;
+         //  eM.difficultyPercent[0] = 15.;
             //stateConst = STARTING;
             System.err.println(">>>>>>Countinue main3 round6 test1 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime));
             stateConst = RUNNING;
@@ -8468,7 +8470,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           }
         } //tests1.run
       }; // end tests1
-  eM.difficultyPercent[0] = 30.;
+  eM.difficultyPercent[0] = 80.;
   EM.prioritySetMult[0][0]= 1.0;
     EM.prioritySetMult[1][0]= 1.0;
     EM.clanStartFutureFundDues[0][0] = 1000.;
@@ -8487,7 +8489,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         assert cntr1 < 171:" stuck waiting after round10 cntr1=" + cntr1;
            
       }
-      eM.maxThreads[0][0] = 10;
+      eM.maxThreads[0][0] = 10.;
+      eM.maxThreads[0][0] = 7.;
       cntr1 = 0;
       ttime = (new Date().getTime());      
       System.err.println("main3 before tests1 invoke testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs=" + EM.since(ttime) + ", cnt3=" + cntr1++);
@@ -8504,7 +8507,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       }
       EM.prioritySetMult[0][0]= 2.3;
     EM.prioritySetMult[1][0]= 2.3;
-      eM.difficultyPercent[0] = 60.;
+      eM.difficultyPercent[0] = 80.;
     EM.clanStartFutureFundDues[0][0] = 700.;
     EM.clanStartFutureFundDues[0][1] = 700.;
     EM.clanStartFutureFundDues[1][0] = 700.;

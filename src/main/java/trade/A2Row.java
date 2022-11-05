@@ -148,7 +148,7 @@ public class A2Row {
   /**
    * order the ix from min to max of values then set valid
    */
-  void makeOrderIx() {
+  synchronized void makeOrderIx() {
     E.myTest(A[0] == null, " ARow A[0] not defined");
     E.myTest(A[1] == null, " ARow A[1] not defined");
     double[] min = new double[2 * E.lsecs];
