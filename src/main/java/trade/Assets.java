@@ -1786,6 +1786,18 @@ public class Assets {
     }
     return cur.getN();
   }
+  
+  /** return the saved swap n for the last calls in an array newest to oldest
+   * if not instance of CashFlow exists return array of =8
+   * else return array of ns with -5 as an unset value newest values first
+   * 
+   * @return the array of swap n
+   */
+  int[] getNSavd(){
+    int ret[] = {-6,-6,-6,-6,-6};
+    if(cur != null) {ret = cur.getNSavd();}
+    return ret;
+  }
 
   // end of Assets only methods
   // start subclasses
@@ -1868,6 +1880,7 @@ public class Assets {
     //0-2 inc, 3-5 decr, 6-8 xfer
     double maxMult[] = {1., .8, .5, 1., .8, .5, 1., .8, .6};
     int swapLoopMax = 3;
+    int nSavd[] = {-5,-5,-5,-5,-5}; // saved n values from swaps
     int unDo = 0, nn = 0, reDo = 0;
     A10Row doNot = new A10Row(ec, lev, "doNot");
     int stopped[] = {0, 0, 0, 0, 0}, stopX[] = {5, 5, 0, 0, 0};
@@ -7239,6 +7252,19 @@ public class Assets {
     int getN() {
       return n;
     }
+    
+    /** return the last 5 values of Swap n from each time that getNSavd was called
+     * return array of -5 if n was not set by swaps
+     * 
+     * @return the nSavd array
+     */
+    int[] getNSavd(){
+      for(int ix=nSavd.length-2;ix >0;ix--){
+        nSavd[ix+1] = nSavd[ix];
+      }
+      nSavd[0] = n>-1?n:-5;
+      return nSavd;
+    }
 
     SubAsset copyIf(CashFlow.SubAsset sa) { // only
       if (sa == null) {
@@ -7506,7 +7532,8 @@ public class Assets {
         }
         DoTotalWorths ffw = new DoTotalWorths(); // worths change because of calcYearCosts
         totWorth = ffw.getTotWorth();
-        minFutureTrans = totWorth*(.005 + .003*m);
+        //minFutureTrans = totWorth*(.005 + .003*m);
+        minFutureTrans = totWorth* .0002 *(1.+ .2*m + .03*n);
 
         sourceIx = mtgAvails6.curMaxIx(0);  // pick largest sector to give
         ixWRSrc = sourceIx / E.LSECS; //0,1
@@ -7588,7 +7615,7 @@ public class Assets {
           resTypeName = "EmergFF1";
           doing = val > 200 ? true : false;
            if (E.debugFFOut) {
-            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + + " m" + m + " mMax" + mMax + " n" + n  + EM.mf("remainingFF",remainingFF) + EM.mf("val",val) + " ixWSrc" + ixWSrc + EM.mf("rsval",rsval) + EM.mf("maxFutureTrans",maxFutureTrans) + EM.mf("minFutureTrans",minFutureTrans) + EM.mf("FFTransFrac",eM.futureFundTransferFrac[pors][clan]) + EM.mf("reservMult",reservMult) + EM.mf("maxF0",maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1",maxF1) + EM.mf("maxF2",maxF2) + EM.mf("maxF3",maxF3)+ EM.mf("maxF4",maxF4));
+            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n  + EM.mf("remainingFF",remainingFF) + EM.mf("val",val) + " ixWSrc" + ixWSrc + EM.mf("rsval",rsval) + EM.mf("maxFutureTrans",maxFutureTrans) + EM.mf("minFutureTrans",minFutureTrans) + EM.mf("FFTransFrac",eM.futureFundTransferFrac[pors][clan]) + EM.mf("reservMult",reservMult) + EM.mf("maxF0",maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1",maxF1) + EM.mf("maxF2",maxF2) + EM.mf("maxF3",maxF3)+ EM.mf("maxF4",maxF4));
            }
         } // now check if resources balances too much bigger than staff, 
         // swaps cannot solve  this problem
@@ -7716,7 +7743,13 @@ public class Assets {
           hist.add(new History("$b", History.loopIncrements3, "calcFF " + resTypeName,
                   "v=" + EM.mf(rsval),
                   rcNsq[ixWRSrc] + srcIx + "=" + EM.mf(bals.get(ixWRSrc, srcIx)),
-                  "dif" + EM.mf(dif1), "f" + EM.mf(frac1), "FF=" + EM.mf(eM.clanFutureFunds[clan]), "Yf" + EM.mf(yearsFutureFund + rsval), "rc" + EM.mf(bals.getRow(0).sum()), "nd" + EM.mf(mtgNeeds6.getRow(0).sum()), "sg" + EM.mf(bals.getRow(1).sum()), EM.mf(mtgNeeds6.getRow(1).sum())));
+                  "dif" + EM.mf(dif1), "f" + EM.mf(frac1), 
+                  "FF=" + EM.mf(eM.clanFutureFunds[clan]), 
+                  "Yf" + EM.mf(yearsFutureFund + rsval), 
+                  "rc" + EM.mf(bals.getRow(0).sum()), 
+                  "nd" + EM.mf(mtgNeeds6.getRow(0).sum()), 
+                  "sg" + EM.mf(bals.getRow(1).sum()), 
+                  EM.mf(mtgNeeds6.getRow(1).sum())));
           bals.sendHist(5, "$c");
           assert rsval >= 0. : "Error neg val" + EM.mf(val) + " type=" + resTypeName + " source" + sourceIx; //String.format("Error neg val=%9.4f, resTypeName=%s, ixWRSrc=%d, srcIx=%d", val, resTypeName, ixWRSrc, srcIx));
           double sourcSum = bals.get(2 + 2 * ixWRSrc, srcIx) + bals.get(3 + 2 * ixWRSrc, srcIx);
@@ -7738,7 +7771,7 @@ public class Assets {
             }
           } // end of the 3 tests of value
 
-          //m++;
+          if(val > minFutureTrans*1.9)m++;
           hist.add(new History("$c", History.loopMinorConditionals5, "n" + n + "calcFF" + " m" + m + rcNsq[ixWRSrc] + srcIx + " " + resTypeName,
                   "v" + EM.mf(rsval), "b" + EM.mf(bals.get(ixWRSrc, srcIx)),
                   "df" + EM.mf(dif1), "f" + EM.mf(frac1),

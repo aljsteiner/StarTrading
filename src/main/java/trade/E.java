@@ -142,7 +142,8 @@ static StarTrader st;
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
   static final boolean debugPutRowsOutUnset = false; //put out warnings of unset stats
-  static final boolean debugStuck = false; //error if stuck
+  static final boolean debugStuck = true; //error if stuck
+  static final boolean debugDoStartYear = false; // output lines
   static final int ssMax = 10; // max setStats printed;
   static final boolean debugThreadsOut = debugMaster; // threads output
   static final boolean debugThreadsOut1 = debugMaster; // threads output1

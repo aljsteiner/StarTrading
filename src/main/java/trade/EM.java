@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.JTable;
 
@@ -483,8 +484,8 @@ class EM {
       bKeep.write(rOut, 0, rOut.length());
       keepBuffered = true;
 
-    } catch (Exception ex) {
-      ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
+    } catch (Exception | Error ex) {
+      firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
       flushes();
       System.err.println("Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
       System.exit(-17);
@@ -495,12 +496,38 @@ class EM {
     }
   }
 
+ 
   /** determine of a string does not exist or is empty
    * 
    * @param a string to be tested
    * @return true if string does not exist or is of length 0
    */
   static Boolean isEmpty(String a) {return a == null || a.isEmpty();};
+  protected static String curThread = "";
+  
+  /** list the stack of each active thread
+   * 
+   * @return return string
+   */
+  protected static String threadsStacks(){
+    String ret= "\nThreadStacks";
+    Thread[] tarray = new Thread[10];
+    Thread.enumerate(tarray);
+    for(Thread th:tarray){
+      if(th != null){
+        StackTraceElement[] stk = th.getStackTrace();
+   // Map<Thread,StackTraceElement[]> tMap = Thread.getAllStackTraces();
+   // for(StackTraceElement[] val:tMap.values()){
+       ret += "\n::thread=" + th.getName() + "\n";
+     for(StackTraceElement elem:stk){
+       ret += "at " + elem.getClassName() + "." + elem.getMethodName() + "(" + elem.getFileName() + ":" + elem.getLineNumber() + ")\n";
+      //ret += elem.toString();
+      }
+      ret += "\n";
+      }
+    }
+    return ret;
+  }
   /**
    * possibly add some extra information lines to an error report
    *
@@ -508,18 +535,19 @@ class EM {
    */
   protected static String andMore() {
     String rtn = (isEmpty(addlErr) && isEmpty(wasHere) && isEmpty(wasHere2) && isEmpty(wasHere3) && isEmpty(wasHere4) && isEmpty(prevLine) && isEmpty(firstStack) && isEmpty(secondStack) && isEmpty(thirdStack) && isEmpty(fourthStack) ? "" : "\n")
-            + ", thread=" + Thread.currentThread().getName() + ", Ty=" + ((new Date()).getTime() - st.startYear) 
-            + (isEmpty(errLine) ? "" : " errLine::" )
+            + ", thread=" + (curThread = Thread.currentThread().getName()) + ", Ty=" + ((new Date()).getTime() - StarTrader.startYear) 
+            + threadsStacks()
+            + (isEmpty(errLine) ? "" : " errLine::" + errLine + "\n")
             + (isEmpty(fourthStack) ? "" : " fourthStack:: " +fourthStack + "\n")
             + (isEmpty(thirdStack) ? "" : " thirdStack::" +  thirdStack + "\n")
             + (isEmpty(secondStack) ? "" : " secondStack:: " + secondStack + "\n")
             + (isEmpty(firstStack) ? "" : " firstStack::" + firstStack + "\n")
             + (isEmpty(prevLine) ? "" : " prevLine:" + prevLine + "\n")
             + (isEmpty(addlErr) ? "" : " addlErr:" + addlErr + "\n")
-            + (isEmpty(wasHere) ? "" : " wasHere T" + ((new Date()).getTime() -twh) + ":" + wasHere + "\n")
-            + (isEmpty(wasHere2) ? "" : " wasHere2 T:" + wasHere2 + "\n")
-            + (isEmpty(wasHere3) ? "" : " wasHere3 t:" + wasHere3 + "\n")
-            + (isEmpty(wasHere4) ? "" : " wasHere4 T:" + wasHere4 + "\n");
+            + (isEmpty(wasHere) ? "" : " wasHere" + (twh1 > 0? " T" + (StarTrader.startYear - twh1) + ":" : "") + wasHere + "\n")
+            + (isEmpty(wasHere2) ? "" : " wasHere2" + (twh2 > 0? " T" + (StarTrader.startYear - twh2) + ":" : "") + wasHere2 + "\n")
+            + (isEmpty(wasHere3) ? "" : " wasHere3" + (twh3 > 0? " T" + (StarTrader.startYear - twh3) + ":" : "") + wasHere3 + "\n")
+            + (isEmpty(wasHere4) ? "" : " wasHere4" + (twh4 > 0? " T" + (StarTrader.startYear - twh4) + ":" : "") + wasHere4 + "\n");
     rtn += andStats();
     rtn += andWaiting();
     rtn += andET();
@@ -598,8 +626,8 @@ class EM {
       }
      // Thread.sleep(5000); //wait 5 seconds for printouts
       //   if(rememberBuffered) {bRemember.flush(); rememberBuffered = false; }
-    } catch (Exception ex) { // print and ignore this error
-      ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
+    } catch (Exception | Error ex) { // print and ignore this error
+      firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
       System.err.println("Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
     }
   }
@@ -623,8 +651,8 @@ class EM {
         keepBuffered = false;
       }
       Thread.sleep(5000); //wait 5 seconds for printouts
-    } catch (Exception ex) { // print and ignore this error
-      ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
+    } catch (Exception | Error ex) { // print and ignore this error
+      firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
       System.err.println("waitFlushes Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
     }
   }
@@ -998,7 +1026,7 @@ class EM {
   static volatile boolean stopExe = false;
   /** determine if a fatalError exists
    * 
-   * @return true if  EM.fatalError or StarTrader.fatalError
+   * @return true if  EM.fatalError, EM.newError or StarTrader.fatalError
    */
   static boolean dfe(){return newError || fatalError || StarTrader.fatalError ;}
   
@@ -1066,8 +1094,8 @@ class EM {
   static double[][] mGRGrowthMult2 = {{.01, 1.6}, {.01, 1.6}};
   // freq .2 means chance for today is .2 or 1 in 5years, .333 = 1 in 3 years
   // goal freq from 1 in 2yrs to 1 in 10 yrs  per econ
-  static double[][] userCatastrophyFreq = {{.6, .5, .4, .3, .2}, {.4, .4, .6, .3, .6}};
-  static double[][] mUserCatastrophyFreq = {{.1, .9}, {.1, .9}};
+  static double[][] userCatastrophyFreq = {{1., 1.2, .9, 1.3, 1.2}, {.8, .9, .7, .8, .8}};
+  static double[][] mUserCatastrophyFreq = {{.1, 1.9}, {.1, 1.9}};
   // value 1.5 means  mult user value by 1.5 so .2 * 1.5= .3 about 1 in 3 yrs
   // remember there are also random multipliers
   static double[][] gameUserCatastrophyMult = {{.3}, {.25}};
@@ -1235,7 +1263,7 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = 0.055; // was 0.025,0.05,0.075
+  static double vdifMult = 0.035; // was 0.025,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   /** OBSOLETE
@@ -1475,9 +1503,9 @@ class EM {
 //      ex.printStackTrace(System.err);
         System.exit(-5); 
   }
-     catch (Exception ex) {
-       ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
-      flushes();
+     catch (Exception | Error ex) {
+       firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
+      newError = true;
       System.err.println("makeClanRs" + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + Thread.currentThread().getName() + andMore());
 //      ex.printStackTrace(System.err);
       st.setFatalError(); // throws WasFatalError
@@ -1630,9 +1658,9 @@ class EM {
 //      ex.printStackTrace(System.err);
         System.exit(-5); 
   }
-     catch (Exception ex) {
-       ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
-      flushes();
+     catch (Exception | Error ex) {
+       firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
+      newError = true;
       System.err.println("makeClanRs " + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + Thread.currentThread().getName() + andMore());
 //      ex.printStackTrace(System.err);
       st.setFatalError();
@@ -2703,8 +2731,9 @@ class EM {
               lname = s.nextLine();
               System.out.println("Unknow line cmd=" + cname + " :: line=" + lname);
           } // switch
-        } catch (Exception ex) {
-ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
+        } catch (Exception | Error ex) {
+           firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
+         // newError = true;
           System.out.println("Igmore doReadKeepVals Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
         }
       } // while
@@ -2712,8 +2741,8 @@ ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
         bKeepr.close();
       }
 
-    } catch (Exception ex) {
-      ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
+    } catch (Exception | Error ex) {
+      firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
       System.err.println("doReadKeepVals error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore());
       System.err.flush();
      // ex.printStackTrace(System.err);
@@ -4891,13 +4920,13 @@ doRes(MINRCSG, "min rcsg", "min rcsg Value");
               //  if (E.debugStatsOut && (rN == 96 || rN <= 3) && (yrsIx % 5 ) == 0 && (resI[rN] != null) && (resI[rN][ICUR0] != null)) {
                if (E.debugStatsOut && (rN == 96 || rN <= 3)  && (resI[rN] != null) && (resI[rN][ICUR0] != null)) {
                  // System.out.printf("In doStartYear have at %s rN%d, yrsIx%d, idepth%d, ydepth%d, valid%d, isseta%d, issetb%d\n", resS[rN][0], rN, yrsIx, resI[rN][ICUM][CCONTROLD][IDEPTH], resI[rN][ICUM][CCONTROLD][IYDEPTH], resI[rN][ICUR0][CCONTROLD][IVALID], resI[rN][ICUR0][CCONTROLD][ISSET], resI[rN][ICUR0 + 1] == null ? -2 : resI[rN][ICUR0 + 1][CCONTROLD][ISSET]);
-System.out.println("In doStartYear  after move up" + resS[rN][0] + " rN" + rN + ", statsLim=" + statsLim + ", yrsIx=" + yrsIx + " lResI=" + lResI + ", lResV=" +lResV + ", cur0=" + cur0 + ", curIx=" + curIx + ", icur0=" + icur0 + ", Ty=" + ((new Date().getTime() - st.startYear)) + ", thread=" + Thread.currentThread().getName() + ", dif=" + (statsLim - yrsIx) +
+if(E.debugDoStartYear)System.out.println("In doStartYear  after move up " + resS[rN][0] + " rN" + rN + ", statsLim=" + statsLim + ", yrsIx=" + yrsIx + " lResI=" + lResI + ", lResV=" +lResV + ", cur0=" + cur0 + ", curIx=" + curIx + ", icur0=" + icur0 + ", Ty=" + ((new Date().getTime() - st.startYear)) + ", thread=" + Thread.currentThread().getName() + ", dif=" + (statsLim - yrsIx) +
                   ", idepth" + resI[rN][ICUM][CCONTROLD][IDEPTH] + 
                   ", ydepth" + resI[rN][ICUM][CCONTROLD][IYDEPTH] + 
                   ", valid" + resI[rN][ICUR0][CCONTROLD][IVALID] + 
                   ", isseta" + resI[rN][ICUR0][CCONTROLD][ISSET]);
 System.out.flush();
-System.out.println("In doStartYear  set2  after move up after flush" + resS[rN][0] + " rN" + rN + ", statsLim=" + statsLim + ", yrsIx=" + yrsIx + " lResI=" + lResI + ", lResV=" +lResV + ", cur0=" + cur0 + ", curIx=" + curIx + ", icur0=" + icur0 + ", Ty=" + ((new Date().getTime() - st.startYear)) + ", thread=" + Thread.currentThread().getName() + ", dif=" + (statsLim - yrsIx) +
+if(E.debugDoStartYear)System.out.println("In doStartYear  set2  after move up after flush" + resS[rN][0] + " rN" + rN + ", statsLim=" + statsLim + ", yrsIx=" + yrsIx + " lResI=" + lResI + ", lResV=" +lResV + ", cur0=" + cur0 + ", curIx=" + curIx + ", icur0=" + icur0 + ", Ty=" + ((new Date().getTime() - st.startYear)) + ", thread=" + Thread.currentThread().getName() + ", dif=" + (statsLim - yrsIx) +
                   ", issetb" + ((resI[rN][ICUR0 + 1] == null) ? -2 : 
                    ((resI[rN][ICUR0 + 1][CCONTROLD] == null) ? -4:
                   resI[rN][ICUR0 + 1][CCONTROLD][ISSET])));
@@ -4945,14 +4974,14 @@ System.out.flush();
         boolean doYears = statsLim >= STATSSHORTLIM;
         if (E.debugStatsOut && ((rN == 96 || rN <= 1) && resI[rN] != null && resI[rN][ICUR0] != null)) {
           //System.out.printf("In doStartYear at %s rN%d, idepth%d, ydepth%d, valid%d, isseta%d, issetb%d\n", resS[rN][0], rN, resI[rN][ICUM][CCONTROLD][IDEPTH], resI[rN][ICUM][CCONTROLD][IYDEPTH], resI[rN][ICUR0][CCONTROLD][IVALID], resI[rN][ICUR0][CCONTROLD][ISSET], resI[rN][ICUR0 + 1] == null ? -2 : resI[rN][ICUR0 + 1][CCONTROLD][ISSET]);
-          System.out.println("In doStartYear at new zero=" + resS[rN][0] + " rN" + rN +  sfe() + 
+          if(E.debugDoStartYear)System.out.println("In doStartYear at new zero=" + resS[rN][0] + " rN" + rN +  sfe() + 
                   "Ty" + (new Date().getTime() - st.startYear) + ", th=" + Thread.currentThread().getName() + " yrsIx" + yrsIx +
                   ", idepth" + resI[rN][ICUM][CCONTROLD][IDEPTH] + 
                   ", ydepth" + resI[rN][ICUM][CCONTROLD][IYDEPTH] + 
                   ", valid" + resI[rN][ICUR0][CCONTROLD][IVALID] + 
                   ", isseta" + resI[rN][ICUR0][CCONTROLD][ISSET]);
                   System.out.flush();
-System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + " rN" + rN + 
+if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + " rN" + rN + 
                   "Ty" + (new Date().getTime() - st.startYear) + ", th=" + Thread.currentThread().getName() + " yrsIx" + yrsIx +
                   ", issetb" + ((resI[rN][ICUR0 + 1] == null) ? -2 : 
                    (resI[rN][ICUR0 + 1][CCONTROLD] == null) ? -4:
@@ -4976,7 +5005,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
 //      ex.printStackTrace(System.err);
         System.exit(-5); 
   }
-     catch (Exception ex) {
+     catch (Exception | Error ex) {
        newError = true;
        firstStack = secondStack+"";
        ex.printStackTrace(pw);secondStack=sw.toString();
@@ -5269,7 +5298,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
           if (cntStatsPrints < E.ssMax) {
             cntStatsPrints += 1;
             System.out.println(
-                    "EM.setStat " + Econ.nowName + " " + Econ.threadCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + curEcon.age + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                    "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + curEcon.age + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
             System.out.flush();
           } //ssMax
         }
@@ -5416,7 +5445,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
           if (cntStatsPrints < E.ssMax) {
             cntStatsPrints += 1;
             System.out.println(
-                    "EM.setStat " + Econ.nowName + " " + Econ.threadCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + curEcon.age + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                    "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + curEcon.age + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
             System.out.flush();
           } //ssMax
         }
@@ -5563,7 +5592,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
           if (cntStatsPrints < E.ssMax) {
             cntStatsPrints += 1;
             System.out.println(
-                    "EM.setStat " + Econ.nowName + " " + Econ.threadCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + curEcon.age + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                    "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + curEcon.age + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
             System.out.flush();
           } //ssMax
         }
@@ -6066,7 +6095,8 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
         }
       }
       return row;
-    } catch (Exception ex) {
+    } catch (Exception | Error ex) {
+      firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
       System.out.flush();
       System.err.flush();
       System.err.println(tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + andMore()));
@@ -6392,7 +6422,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
       return -93456789.;  // if a strange option
     } catch (Exception ex) {
       newError = true;
-      ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
+      firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
       System.err.println(tError = ("putRows2 " + curEconName + " " + Econ.nowThread + "Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + andMore()));
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //ex.printStackTrace(System.err);
@@ -6444,7 +6474,7 @@ System.out.println("In doStartYear at new zero after flush()=" + resS[rN][0] + "
 
       }//remember from page
     } catch (Exception ex) {
-      ex.printStackTrace(pw);secondStack=sw.toString();firstStack = secondStack+"";
+      firstStack = secondStack+"";ex.printStackTrace(pw);secondStack=sw.toString();
       flushes();
       System.err.println(tError = ("Remember " + curEconName + " " + Econ.nowThread + "Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore()));
       System.exit(-23);
