@@ -2229,7 +2229,7 @@ public class Assets {
       StackTraceElement a2 = Thread.currentThread().getStackTrace()[2];
       StackTraceElement a3 = Thread.currentThread().getStackTrace()[3];
       StackTraceElement a4 = Thread.currentThread().getStackTrace()[4];
-      E.sysmsg("CF construct " + E.ROYGB.charAt(clan) + " " + name + " at " + a4.getMethodName() + ", " + a3.getMethodName() + ", " + a2.getMethodName() + " wealth=" + EM.mf(wealth));
+      E.sysmsg("-----CFc----CF construct  " + E.ROYGB.charAt(clan) + " " + name + " " + yphase + " at " + a4.getMethodName() + ", " + a3.getMethodName() + ", " + a2.getMethodName() + " wealth=" + EM.mf(wealth));
       //    System.out.println("CashFlow(Assets) " + name + " constructor");
       as = as3 = as2 = aas;
 
@@ -6963,7 +6963,7 @@ public class Assets {
             availOfrs.set(ix, 0.);
             emergOfrs.set(ix, 0.);
             if (E.tradeInitOut) {
-              System.out.println("calcTrade " + name + " request" + j + gnc + "=" + ix + " mtg=" + EM.mf(eneed1) + ", ee" + EM.mf(eneed) + ", E" + EM.mf(eeneed) + ", R" + EM.mf(aneed) + ", B" + EM.mf(bals.curGet(ix)));
+              System.out.println("----CT----calcTrade " + name + " request" + j + gnc + "=" + ix + " mtg=" + EM.mf(eneed1) + ", ee" + EM.mf(eneed) + ", E" + EM.mf(eeneed) + ", R" + EM.mf(aneed) + ", B" + EM.mf(bals.curGet(ix)));
             }
             if (!ec.myClearHist && E.debugLogsOut) {
               hist.add(new History(aPre, History.valuesMinor7, j + gnc + "=" + ix, " fn=" + EM.mf(eeneed), "en=" + EM.mf(eneed), "an=" + EM.mf(aneed), "requestIni", EM.mf(balsSuperAve), "b=" + EM.mf(bals.curGet(ix)), "<<<<<"));
@@ -7224,7 +7224,7 @@ public class Assets {
 
       EM.wasHere = " " + ec.name + " CF at end " + pStarted + pInited + " eeej" + ++eeej;
       if (E.DEBUGASSETSOUT) {
-        System.out.println(EM.wasHere);
+        System.out.println("----ECF----" + EM.wasHere);
       }
     }  //Assets.CashFlow.aStartCashFlow
 
@@ -8659,7 +8659,7 @@ public class Assets {
         setStat("sKnowledge", calcPercent(eM.nominalKnowledgeForBonus[0], knowledge.sum()));
 
         if (E.debugStats) {
-          System.out.println(">>>>>>>>>>>>>print " + ec.name + " rcPercentInc =" + E.mf(rcPercentInc) + "<<<<<");
+          System.out.println("----YEa-----print " + ec.name + " yearEnd rcPercentInc =" + E.mf(rcPercentInc) + "<<<<<");
         }
         if (E.debugMisc && (syW.getSumRCBal() == 0.0)) {
           throw new MyErr("zero syW.getSumRCBal()=" + EM.mf(syW.getSumRCBal()));
@@ -9311,22 +9311,26 @@ public class Assets {
           eM.porsDead[pors]++;
           eM.porsClanDead[pors][clan]++;
           eM.clanDead[clan]++;
-          synchronized (EM.econCnt) {
+
             if (E.debugEconCnt) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
             }
+            
+           synchronized (EM.econCnt) {
             EM.clanCnt[clan]--;
             EM.porsClanCnt[pors][clan]--;
             EM.porsCnt[pors]--;
             EM.econCnt--;
+            EM.econCnt = EM.porsCnt[0] + EM.porsCnt[1];
+            }
             if (E.debugEconCnt) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, clanCnt=" + EM.clanCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
             }
-          }
+          
         }
         died = true;
         EM.wasHere = "CashFlow.yearEnd before many setStat ddddi=" + ++ddddi;

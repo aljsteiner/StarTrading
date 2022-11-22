@@ -1,0 +1,66 @@
+New Game Sat 09/10/2022 07:30:54:415CDT
+New Game Sat 09/10/2022 07:39:16:260CDT
+New Game Sat 09/10/2022 07:56:34:269CDT
+New Game Sat 09/10/2022 08:08:05:957CDT
+New Game Sat 09/10/2022 08:22:40:510CDT
+New Game Sat 09/10/2022 16:52:14:445CDT
+New Game Sun 09/11/2022 04:52:05:212CDT
+New Game Sun 09/11/2022 04:52:42:964CDT
+New Game Sun 09/11/2022 04:55:05:272CDT
+New Game Sun 09/11/2022 15:45:55:200CDT
+New Game Sun 09/11/2022 16:25:18:122CDT
+New Game Tue 09/13/2022 04:13:48:056CDT
+New Game Tue 09/13/2022 04:52:30:581CDT
+New Game Tue 09/13/2022 04:58:53:543CDT
+New Game Tue 09/13/2022 05:10:56:864CDT
+New Game Tue 09/13/2022 18:52:11:429CDT
+New Game Tue 09/13/2022 19:09:46:232CDT
+New Game Tue 09/13/2022 20:20:11:887CDT
+New Game Wed 09/14/2022 04:31:53:120CDT
+New Game Wed 09/14/2022 04:41:51:770CDT
+New Game Wed 09/14/2022 08:15:30:050CDT
+New Game Wed 09/14/2022 21:27:17:746CDT
+New Game Wed 09/14/2022 21:41:39:803CDT
+New Game Thu 09/15/2022 03:19:32:500CDT
+New Game Thu 09/15/2022 03:27:36:595CDT
+New Game Thu 09/15/2022 03:33:13:856CDT
+New Game Sun 09/18/2022 09:11:48:562CDT
+New Game Sun 09/18/2022 14:19:57:309CDT
+New Game Sun 09/18/2022 16:20:53:860CDT
+New Game Sun 09/18/2022 16:28:53:776CDT
+New Game Tue 09/27/2022 09:39:58:310CDT
+New Game Tue 09/27/2022 09:43:55:763CDT
+New Game Tue 09/27/2022 09:49:12:548CDT
+New Game Tue 09/27/2022 13:46:12:723CDT
+New Game Wed 09/28/2022 21:15:04:380CDT
+New Game Fri 09/30/2022 17:03:35:688CDT
+year24 version 19.40 Fri 09/30/2022 17:17:30:579CDT more manuals?
+title increase the max value of manuals in calculating requests and offers, less forces more goods as part of the trade
+keep ManualsMax%# 0 0 0.892 <= 0.4 sliders 88 <= 33 <= 33
+year24 version 19.40 Fri 09/30/2022 17:19:06:412CDT up the future fund I think
+title increase the amount transfered to futureFund per year at emergencies and dues. This increases building new economies, decreases growth which may increase deaths.
+keep futureFundTransferFrac# 0 0 1.081 <= 0.9 sliders 71 <= 54 <= 54
+title also increase the amount transfered to futureFund  at emergencies and dues. increases building new economies, decreases growth may increase deaths, inrease growth, decrease new economies
+keep FutureFundFrac# 0 0 0.675 <= 0.5 sliders 75 <= 55 <= 55
+title adjust first level emergency trigger when staff  or resources are out of bound,divert max staff/resource sectors balances to the futureFund, larger than FutureFEmerg2 to have 2 triggers, decreasing this value increases helps prevent more ship or planet deaths, but also increases unneeded emergency transfers decreasing ship or planet growth
+keep FutureFEmerg1# 0 0 0.199 <= 0.25 sliders 65 <= 82 <= 82
+title adjust second level trigger when staff and resources are out of bound causing ship or planet death , see FutureEmerge1
+keep clanFutureFEmerg2# 0 0 0.12 <= 0.15 sliders 38 <= 48 <= 48
+title increase the number of staff&resource sectors available for trade
+keep tradeStrtAvail# 0 0 8.92 <= 8 sliders 82 <= 66 <= 66
+year24 version 19.40 Fri 09/30/2022 17:23:34:500CDT try to increase planets and staff
+title raise the cost of resources planet and ship, makes game harder
+keep resourceCosts# 0 0 0.408 <= 0.6 sliders 20 <= 29 <= 29
+title raise the costs of staff for planets and ships, makes planets and ships die more often
+keep staffCosts# 0 0 0.369 <= 0.6 sliders 12 <= 19 <= 19
+New Game Fri 09/30/2022 19:58:59:005CDT
+New Game Fri 09/30/2022 19:58:59:006CDT
+New Game Sat 10/01/2022 10:24:39:980CDT
+New Game Sat 10/01/2022 11:04:50:396CDT
+New Game Sat 10/01/2022 11:25:48:237CDT
+New Game Sat 10/01/2022 20:43:46:073CDT
+New Game Sat 10/01/2022 20:51:06:558CDT
+New Game Sat 10/01/2022 21:19:22:420CDT
+New Game Sun 10/02/2022 16:48:47:491CDT
+New Game Sun 10/02/2022 16:50:16:100CDT
+New Game Sun 10/02/2022 16:54:12:803CDT

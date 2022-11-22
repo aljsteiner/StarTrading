@@ -1,0 +1,418 @@
+output to System.err after setErr to StarStraderErrors.txt
+StarTrader.mainStart output to err after setErr
+continuing main, thread=mainmsecs7384
+main  finally do flushes next then close bKeep
+$$$$$$$$$$$$$ runYears2 AY-1:since game start 13,574 at start stateConst=2 stateCnt =0 stateName=Running year=-1 is eventDispatchThread
+starting in tests1 thread=Thread-3msecs13605
+~~~~~~~~~~~~~~ in runBackGroundYears4 nYears=5 thread=Thread-3msecs13606 ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 13,606run year=0 background years=0 btime=1<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=0yearSecs 16160 yearEcons 30 year S per E 538
+&&&&&&&&&theYr=-2yearSecs 0 yearEcons 30 year S per E 0
+&&&theYr=-2yearSecs 0 yearEcons 0 year S per E 0
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 29,770run year=1 background years=1 btime=16165<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=1yearSecs 13302 yearEcons 49 year S per E 271
+&&&&&&&&&theYr=0yearSecs 16160 yearEcons 49 year S per E 538
+&&&theYr=-2yearSecs 0 yearEcons 30 year S per E 0
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 43,074run year=2 background years=2 btime=29469<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=2yearSecs 15298 yearEcons 64 year S per E 239
+&&&&&&&&&theYr=1yearSecs 13302 yearEcons 64 year S per E 271
+&&&theYr=0yearSecs 16160 yearEcons 49 year S per E 538
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 58,375run year=3 background years=3 btime=44770<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=3yearSecs 22933 yearEcons 94 year S per E 243
+&&&&&&&&&theYr=2yearSecs 15298 yearEcons 94 year S per E 239
+&&&theYr=1yearSecs 13302 yearEcons 64 year S per E 271
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 81,311run year=4 background years=4 btime=67706<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=4yearSecs 30839 yearEcons 124 year S per E 248
+&&&&&&&&&theYr=3yearSecs 22933 yearEcons 124 year S per E 243
+&&&theYr=2yearSecs 15298 yearEcons 94 year S per E 239
+$$$$$$$$$$$$$ runYears2 AY4:since game start 126,274 at start stateConst=2 stateCnt =2 stateName=Running year=4 is eventDispatchThread
+starting in tests1 thread=Thread-5msecs126294
+~~~~~~~~~~~~~~ in runBackGroundYears4 nYears=20 thread=Thread-5msecs126294 ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 126,294run year=5 background years=0 btime=0<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=5yearSecs 29865 yearEcons 128 year S per E 233
+&&&&&&&&&theYr=4yearSecs 30839 yearEcons 128 year S per E 248
+&&&theYr=3yearSecs 22933 yearEcons 124 year S per E 243
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 156,162run year=6 background years=1 btime=29868<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=6yearSecs 30896 yearEcons 132 year S per E 234
+&&&&&&&&&theYr=5yearSecs 29865 yearEcons 132 year S per E 233
+&&&theYr=4yearSecs 30839 yearEcons 128 year S per E 248
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 187,059run year=7 background years=2 btime=60766<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=7yearSecs 31550 yearEcons 135 year S per E 233
+&&&&&&&&&theYr=6yearSecs 30896 yearEcons 135 year S per E 234
+&&&theYr=5yearSecs 29865 yearEcons 132 year S per E 233
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 218,612run year=8 background years=3 btime=92318<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=8yearSecs 32929 yearEcons 139 year S per E 236
+&&&&&&&&&theYr=7yearSecs 31550 yearEcons 139 year S per E 233
+&&&theYr=6yearSecs 30896 yearEcons 135 year S per E 234
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 251,543run year=9 background years=4 btime=125249<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=9yearSecs 35107 yearEcons 143 year S per E 245
+&&&&&&&&&theYr=8yearSecs 32929 yearEcons 143 year S per E 236
+&&&theYr=7yearSecs 31550 yearEcons 139 year S per E 233
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 286,654run year=10 background years=5 btime=160360<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=10yearSecs 34479 yearEcons 146 year S per E 236
+&&&&&&&&&theYr=9yearSecs 35107 yearEcons 146 year S per E 245
+&&&theYr=8yearSecs 32929 yearEcons 143 year S per E 236
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 321,135run year=11 background years=6 btime=194841<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=11yearSecs 36994 yearEcons 141 year S per E 262
+&&&&&&&&&theYr=10yearSecs 34479 yearEcons 141 year S per E 236
+&&&theYr=9yearSecs 35107 yearEcons 146 year S per E 245
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 358,131run year=12 background years=7 btime=231837<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=12yearSecs 40081 yearEcons 133 year S per E 301
+&&&&&&&&&theYr=11yearSecs 36994 yearEcons 133 year S per E 262
+&&&theYr=10yearSecs 34479 yearEcons 141 year S per E 236
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 398,215run year=13 background years=8 btime=271921<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=13yearSecs 38170 yearEcons 122 year S per E 312
+&&&&&&&&&theYr=12yearSecs 40081 yearEcons 122 year S per E 301
+&&&theYr=11yearSecs 36994 yearEcons 133 year S per E 262
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 436,387run year=14 background years=9 btime=310093<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=14yearSecs 36112 yearEcons 107 year S per E 337
+&&&&&&&&&theYr=13yearSecs 38170 yearEcons 107 year S per E 312
+&&&theYr=12yearSecs 40081 yearEcons 122 year S per E 301
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 472,502run year=15 background years=10 btime=346208<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=15yearSecs 33672 yearEcons 97 year S per E 347
+&&&&&&&&&theYr=14yearSecs 36112 yearEcons 97 year S per E 337
+&&&theYr=13yearSecs 38170 yearEcons 107 year S per E 312
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 506,177run year=16 background years=11 btime=379883<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=16yearSecs 31825 yearEcons 80 year S per E 397
+&&&&&&&&&theYr=15yearSecs 33672 yearEcons 80 year S per E 347
+&&&theYr=14yearSecs 36112 yearEcons 97 year S per E 337
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 538,005run year=17 background years=12 btime=411711<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=17yearSecs 28780 yearEcons 75 year S per E 383
+&&&&&&&&&theYr=16yearSecs 31825 yearEcons 75 year S per E 397
+&&&theYr=15yearSecs 33672 yearEcons 80 year S per E 347
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 566,788run year=18 background years=13 btime=440494<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=18yearSecs 28141 yearEcons 66 year S per E 426
+&&&&&&&&&theYr=17yearSecs 28780 yearEcons 66 year S per E 383
+&&&theYr=16yearSecs 31825 yearEcons 75 year S per E 397
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 594,932run year=19 background years=14 btime=468638<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=19yearSecs 26619 yearEcons 58 year S per E 458
+&&&&&&&&&theYr=18yearSecs 28141 yearEcons 58 year S per E 426
+&&&theYr=17yearSecs 28780 yearEcons 66 year S per E 383
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 621,553run year=20 background years=15 btime=495259<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=20yearSecs 25098 yearEcons 57 year S per E 440
+&&&&&&&&&theYr=19yearSecs 26619 yearEcons 57 year S per E 458
+&&&theYr=18yearSecs 28141 yearEcons 58 year S per E 426
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 646,653run year=21 background years=16 btime=520359<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=21yearSecs 23752 yearEcons 56 year S per E 424
+&&&&&&&&&theYr=20yearSecs 25098 yearEcons 56 year S per E 440
+&&&theYr=19yearSecs 26619 yearEcons 57 year S per E 458
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 670,408run year=22 background years=17 btime=544114<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=22yearSecs 23688 yearEcons 60 year S per E 394
+&&&&&&&&&theYr=21yearSecs 23752 yearEcons 60 year S per E 424
+&&&theYr=20yearSecs 25098 yearEcons 56 year S per E 440
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 694,098run year=23 background years=18 btime=567804<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=23yearSecs 23827 yearEcons 61 year S per E 390
+&&&&&&&&&theYr=22yearSecs 23688 yearEcons 61 year S per E 394
+&&&theYr=21yearSecs 23752 yearEcons 60 year S per E 424
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 717,928run year=24 background years=19 btime=591634<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=24yearSecs 22648 yearEcons 59 year S per E 383
+&&&&&&&&&theYr=23yearSecs 23827 yearEcons 59 year S per E 390
+&&&theYr=22yearSecs 23688 yearEcons 61 year S per E 394
+$$$$$$$$$$$$$ runYears2 AY24:since game start 745,481 at start stateConst=2 stateCnt =3 stateName=Running year=24 is eventDispatchThread
+starting in tests1 thread=Thread-7msecs745495
+~~~~~~~~~~~~~~ in runBackGroundYears4 nYears=20 thread=Thread-7msecs745495 ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 745,495run year=25 background years=0 btime=0<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=25yearSecs 23382 yearEcons 61 year S per E 383
+&&&&&&&&&theYr=24yearSecs 22648 yearEcons 61 year S per E 383
+&&&theYr=23yearSecs 23827 yearEcons 59 year S per E 390
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 768,881run year=26 background years=1 btime=23386<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=26yearSecs 21339 yearEcons 62 year S per E 344
+&&&&&&&&&theYr=25yearSecs 23382 yearEcons 62 year S per E 383
+&&&theYr=24yearSecs 22648 yearEcons 61 year S per E 383
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 790,222run year=27 background years=2 btime=44727<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=27yearSecs 22066 yearEcons 64 year S per E 344
+&&&&&&&&&theYr=26yearSecs 21339 yearEcons 64 year S per E 344
+&&&theYr=25yearSecs 23382 yearEcons 62 year S per E 383
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 812,289run year=28 background years=3 btime=66794<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=28yearSecs 22776 yearEcons 61 year S per E 373
+&&&&&&&&&theYr=27yearSecs 22066 yearEcons 61 year S per E 344
+&&&theYr=26yearSecs 21339 yearEcons 64 year S per E 344
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 835,068run year=29 background years=4 btime=89573<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=29yearSecs 21226 yearEcons 63 year S per E 336
+&&&&&&&&&theYr=28yearSecs 22776 yearEcons 63 year S per E 373
+&&&theYr=27yearSecs 22066 yearEcons 61 year S per E 344
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 856,296run year=30 background years=5 btime=110801<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=30yearSecs 23947 yearEcons 62 year S per E 386
+&&&&&&&&&theYr=29yearSecs 21226 yearEcons 62 year S per E 336
+&&&theYr=28yearSecs 22776 yearEcons 63 year S per E 373
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 880,245run year=31 background years=6 btime=134750<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=31yearSecs 21608 yearEcons 62 year S per E 348
+&&&&&&&&&theYr=30yearSecs 23947 yearEcons 62 year S per E 386
+&&&theYr=29yearSecs 21226 yearEcons 62 year S per E 336
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 901,854run year=32 background years=7 btime=156359<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=32yearSecs 20906 yearEcons 57 year S per E 366
+&&&&&&&&&theYr=31yearSecs 21608 yearEcons 57 year S per E 348
+&&&theYr=30yearSecs 23947 yearEcons 62 year S per E 386
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 922,764run year=33 background years=8 btime=177269<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=33yearSecs 19970 yearEcons 57 year S per E 350
+&&&&&&&&&theYr=32yearSecs 20906 yearEcons 57 year S per E 366
+&&&theYr=31yearSecs 21608 yearEcons 57 year S per E 348
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 942,737run year=34 background years=9 btime=197242<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=34yearSecs 20418 yearEcons 60 year S per E 340
+&&&&&&&&&theYr=33yearSecs 19970 yearEcons 60 year S per E 350
+&&&theYr=32yearSecs 20906 yearEcons 57 year S per E 366
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 963,157run year=35 background years=10 btime=217662<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=35yearSecs 19580 yearEcons 59 year S per E 331
+&&&&&&&&&theYr=34yearSecs 20418 yearEcons 59 year S per E 340
+&&&theYr=33yearSecs 19970 yearEcons 60 year S per E 350
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 982,740run year=36 background years=11 btime=237245<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=36yearSecs 19690 yearEcons 60 year S per E 328
+&&&&&&&&&theYr=35yearSecs 19580 yearEcons 60 year S per E 331
+&&&theYr=34yearSecs 20418 yearEcons 59 year S per E 340
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,002,434run year=37 background years=12 btime=256939<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=37yearSecs 19147 yearEcons 61 year S per E 313
+&&&&&&&&&theYr=36yearSecs 19690 yearEcons 61 year S per E 328
+&&&theYr=35yearSecs 19580 yearEcons 60 year S per E 331
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,021,583run year=38 background years=13 btime=276088<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=38yearSecs 19757 yearEcons 61 year S per E 323
+&&&&&&&&&theYr=37yearSecs 19147 yearEcons 61 year S per E 313
+&&&theYr=36yearSecs 19690 yearEcons 61 year S per E 328
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,041,342run year=39 background years=14 btime=295847<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=39yearSecs 19592 yearEcons 60 year S per E 326
+&&&&&&&&&theYr=38yearSecs 19757 yearEcons 60 year S per E 323
+&&&theYr=37yearSecs 19147 yearEcons 61 year S per E 313
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,060,937run year=40 background years=15 btime=315442<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=40yearSecs 19175 yearEcons 57 year S per E 336
+&&&&&&&&&theYr=39yearSecs 19592 yearEcons 57 year S per E 326
+&&&theYr=38yearSecs 19757 yearEcons 60 year S per E 323
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,080,113run year=41 background years=16 btime=334618<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=41yearSecs 19309 yearEcons 60 year S per E 321
+&&&&&&&&&theYr=40yearSecs 19175 yearEcons 60 year S per E 336
+&&&theYr=39yearSecs 19592 yearEcons 57 year S per E 326
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,099,425run year=42 background years=17 btime=353930<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=42yearSecs 18562 yearEcons 60 year S per E 309
+&&&&&&&&&theYr=41yearSecs 19309 yearEcons 60 year S per E 321
+&&&theYr=40yearSecs 19175 yearEcons 60 year S per E 336
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,117,989run year=43 background years=18 btime=372494<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=43yearSecs 19007 yearEcons 61 year S per E 311
+&&&&&&&&&theYr=42yearSecs 18562 yearEcons 61 year S per E 309
+&&&theYr=41yearSecs 19309 yearEcons 60 year S per E 321
+
+
+>>>>>>>>>>>>>>>>> runBackroundYearsrsince game start 1,136,998run year=44 background years=19 btime=391503<<<<<<<<<<<<<<<<<<<
+
+
+output to System.err after setErr
+&&&&&&&&&&&&&&theYr=44yearSecs 18906 yearEcons 61 year S per E 309
+&&&&&&&&&theYr=43yearSecs 19007 yearEcons 61 year S per E 311
+&&&theYr=42yearSecs 18562 yearEcons 61 year S per E 309

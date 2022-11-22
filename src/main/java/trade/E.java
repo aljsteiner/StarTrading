@@ -95,6 +95,7 @@ static StarTrader st;
   static final boolean debugDoYearOut = debugMaster; //output messages in doyear and subs
   static final boolean debugCheckBalances = false; //check balances in loops
   static final boolean debugEconCnt = false; // econCnt = porsCnt0 + porsCnt1
+  static final boolean debugChangeEconCnt = true; // protect changes of econCnt
   static final boolean debugNegGrowth = debugMaster; // neg Growth made negCosts
   static final boolean debugNegCosts = debugMaster; // checking for neg Costs
   static final boolean debugFutureFund = debugMaster; // checking for errors with future funds
@@ -124,7 +125,7 @@ static StarTrader st;
   static final boolean PAINTDISPLAYOUT = debugMaster; //outputs from StarTrader displays
   static final boolean tradeInitOut = debugMaster;
   static final boolean DEBUGASSETSOUT = debugMaster;
-   static final boolean debugPutValue = debugMaster; //test putValue processing
+  static final boolean debugPutValue = debugMaster; //test putValue processing
   static final boolean debugPutValue1 = outputLess; //test putValue processing
   static final boolean debugPutValue2 = outputLess; //test putValue processing
   static final boolean debugPutValue3 = false; //choose alternative for too big
@@ -138,7 +139,8 @@ static StarTrader st;
  static final boolean debugLogsOut = debugMaster; // StarTrader logs output
  static final boolean debugRsOut = true; // EM rs output
  static final boolean debugFFOut = false; // EM Assets.CashFlow.calcForwardFund output
-  static final boolean debugStatsOut1 = outputLess; // stats output1
+ static final boolean debugStatsOut1 = debugMaster; // stats output1
+ static final boolean debugStatsOut2 = debugMaster; // stats output1
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
   static final boolean debugPutRowsOutUnset = false; //put out warnings of unset stats

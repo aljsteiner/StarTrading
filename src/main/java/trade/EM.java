@@ -107,9 +107,9 @@ class EM {
   static volatile int ixStatsWaitList = 0;
   static String description = "";
 //  Econ ec;
-  ArrayList<Econ> ships = new ArrayList<Econ>();
-  ArrayList<Econ> deadPlanets = new ArrayList<Econ>();
-  ArrayList<Econ> deadShips = new ArrayList<Econ>();
+  static volatile  ArrayList<Econ> ships = new ArrayList<Econ>();
+  static volatile  ArrayList<Econ> deadPlanets = new ArrayList<Econ>();
+  static volatile  ArrayList<Econ> deadShips = new ArrayList<Econ>();
   static volatile ArrayList<Econ> planets = new ArrayList<Econ>();
   static volatile ArrayList<Econ> econs = new ArrayList<Econ>();
  // static volatile ArrayList<EM> ems = new ArrayList<EM>();
@@ -197,15 +197,18 @@ class EM {
   static volatile Econ curEcon;  //eM only changes at the end a a year run, EM.curEcon
   static volatile String curEconName = "no Econ name";
   static volatile String curEconClan = "A";
+  static volatile long curEconTime = 0; // time of this econ
   static volatile Econ otherEcon;
   static volatile String otherEconName = "no other name";
   static volatile String otherEconClan = "A";
-  /** set curEcon, curEconName curEconClan;
+  /** set curEcon, curEconName curEconClan;curEconTime
    * 
    * @param x econ to be set in curEcon
    * @return curEconName
    */
-  static String setCurEcon(Econ x){ curEcon = x; curEconClan = x.getColor(); return curEconName = x.getName();}
+  static String setCurEcon(Econ x){ 
+    if(x != curEcon) curEconTime = (new Date()).getTime();
+    curEcon = x; curEconClan = x.getColor(); return curEconName = x.getName();}
 
   /** set values for other Econ, otherEconClan otherEconName
    * 
@@ -225,6 +228,7 @@ class EM {
   static final double[][] mMinEcons = {{10.,100.}};
   static volatile double[][] maxThreads = {{1.0}};
   static final double[][] mmaxThreads = {{1.0, 12.0}};
+  static volatile int[] iMaxThreads = {1};
   static volatile double[][] haveColors = {{.3}};
   static final double[][] mHaveColors = {{0.2, 2.2}};
   static  volatile double[][] haveCash = {{2.0}};
@@ -428,15 +432,36 @@ class EM {
   static volatile int yearErrMax = 0; // was 20
   static volatile int yearErrCnt = 0;
   static volatile String errLine = "";
-  static  volatile String prevLine = "";
+  static volatile String prevLine = "";
   static volatile String addlErr = "";
   static volatile String wasHere = "";
   static volatile String wasHere2 = "";
   static volatile String wasHere3 = "";
   static volatile String wasHere4 = "";
-  static volatile long twh=0,twh1=0,twh2=0,twh3=0,twh4=0;
+  static volatile String wasHere5 = "";
+  static volatile String wasHere6 = "";
+  static volatile String wasHere7 = "";
+  static volatile String wasHere8 = "";
+  static volatile long twh=0,twh1=0,twh2=0,twh3=0,twh4=0,twh5=0,twh6=0,twh7=0,twh8=0;
   static volatile int year = -1;  // year of StarTrader, updated in StarTrader runYear;
   static  volatile int keepHistsByYear[] = {99, 4, 2};
+  
+  /** clear all of the wasHere and other extra saved lines
+   * 
+   */
+  static void clearWH(){
+   errLine = "";
+   prevLine = "";
+     addlErr = "";
+     wasHere = "";
+     wasHere2 = "";
+     wasHere3 = "";
+     wasHere4 = "";
+     wasHere5 = "";
+     wasHere6 = "";
+     wasHere7 = "";
+     wasHere8 = "";
+  }
 
   /**
    * instantiate another EM, set static eE and static eM = new EM
@@ -515,39 +540,71 @@ class EM {
     Thread.enumerate(tarray);
     for(Thread th:tarray){
       if(th != null){
+     //   th.dumpStack();
         StackTraceElement[] stk = th.getStackTrace();
    // Map<Thread,StackTraceElement[]> tMap = Thread.getAllStackTraces();
    // for(StackTraceElement[] val:tMap.values()){
-       ret += "\n::thread=" + th.getName() + "\n";
+       ret += ("\nthreadStacks thread=" + th.getName() +"\n");
      for(StackTraceElement elem:stk){
-       ret += "at " + elem.getClassName() + "." + elem.getMethodName() + "(" + elem.getFileName() + ":" + elem.getLineNumber() + ")\n";
+       ret += ("at " + elem.getClassName() + "." + elem.getMethodName() + "(" + elem.getFileName() + ":" + elem.getLineNumber() + ")" +"\n");
       //ret += elem.toString();
       }
-      ret += "\n";
+     // ret += "\n";
+    // System.err.println(ret);
       }
     }
     return ret;
   }
+  
+  /** list possible string of memory strings
+   * 
+   * @return the string 
+   */
+  public static String listMore(){
+    String ret = 
+              (isEmpty(prevLine) ? "" : " PL::" + prevLine + "\n")
+            + (isEmpty(errLine) ? "" : " EL::" + errLine + "\n")
+            + (isEmpty(addlErr) ? "" : " AE::" + addlErr + "\n")
+            + (isEmpty(wasHere) ? "" : " WH1::" + (twh1 > 0? " T" + (StarTrader.startYear - twh1) + ":" : "") + wasHere + "\n")
+            + (isEmpty(wasHere2) ? "" : " WH2::" + (twh2 > 0? " T" + (StarTrader.startYear - twh2) + ":" : "") + wasHere2 + "\n")
+            + (isEmpty(wasHere3) ? "" : " WH3::" + (twh3 > 0? " T" + (StarTrader.startYear - twh3) + ":" : "") + wasHere3 + "\n")
+            + (isEmpty(wasHere4) ? "" : " WH4::" + (twh4 > 0? " T" + (StarTrader.startYear - twh4) + ":" : "") + wasHere4 + "\n")
+            + (isEmpty(wasHere5) ? "" : " WH5::" + (twh5 > 0? " T" + (StarTrader.startYear - twh5) + ":" : "") + wasHere5 + "\n")
+            + (isEmpty(wasHere6) ? "" : " WH6::" + (twh6 > 0? " T" + (StarTrader.startYear - twh6) + ":" : "") + wasHere6 + "\n")
+            + (isEmpty(wasHere7) ? "" : " WH7::" + (twh7 > 0? " T" + (StarTrader.startYear - twh7) + ":" : "") + wasHere3 + "\n")
+            + (isEmpty(wasHere8) ? "" : " WH8::" + (twh8 > 0? " T" + (StarTrader.startYear - twh8) + ":" : "") + wasHere8 + "\n");
+            return ret;
+            }
   /**
    * possibly add some extra information lines to an error report
    *
    * @return the possible lines
    */
   protected static String andMore() {
-    String rtn = (isEmpty(addlErr) && isEmpty(wasHere) && isEmpty(wasHere2) && isEmpty(wasHere3) && isEmpty(wasHere4) && isEmpty(prevLine) && isEmpty(firstStack) && isEmpty(secondStack) && isEmpty(thirdStack) && isEmpty(fourthStack) ? "" : "\n")
-            + ", thread=" + (curThread = Thread.currentThread().getName()) + ", Ty=" + ((new Date()).getTime() - StarTrader.startYear) 
-            + threadsStacks()
-            + (isEmpty(errLine) ? "" : " errLine::" + errLine + "\n")
-            + (isEmpty(fourthStack) ? "" : " fourthStack:: " +fourthStack + "\n")
-            + (isEmpty(thirdStack) ? "" : " thirdStack::" +  thirdStack + "\n")
-            + (isEmpty(secondStack) ? "" : " secondStack:: " + secondStack + "\n")
-            + (isEmpty(firstStack) ? "" : " firstStack::" + firstStack + "\n")
-            + (isEmpty(prevLine) ? "" : " prevLine:" + prevLine + "\n")
-            + (isEmpty(addlErr) ? "" : " addlErr:" + addlErr + "\n")
-            + (isEmpty(wasHere) ? "" : " wasHere" + (twh1 > 0? " T" + (StarTrader.startYear - twh1) + ":" : "") + wasHere + "\n")
-            + (isEmpty(wasHere2) ? "" : " wasHere2" + (twh2 > 0? " T" + (StarTrader.startYear - twh2) + ":" : "") + wasHere2 + "\n")
-            + (isEmpty(wasHere3) ? "" : " wasHere3" + (twh3 > 0? " T" + (StarTrader.startYear - twh3) + ":" : "") + wasHere3 + "\n")
-            + (isEmpty(wasHere4) ? "" : " wasHere4" + (twh4 > 0? " T" + (StarTrader.startYear - twh4) + ":" : "") + wasHere4 + "\n");
+    //System.err.println();
+    //threadsStacks();
+    String rrr="";
+    String rtn = (isEmpty(addlErr) && isEmpty(wasHere) && isEmpty(wasHere2) && isEmpty(wasHere3) && isEmpty(wasHere4)&& isEmpty(wasHere5) && isEmpty(wasHere6) && isEmpty(wasHere7) && isEmpty(wasHere8)  && isEmpty(prevLine) && isEmpty(firstStack) && isEmpty(secondStack) && isEmpty(thirdStack) && isEmpty(fourthStack) ? "" : "\n")
+            + ", thread=" + (curThread = Thread.currentThread().getName()) + ", Ty=" + ((new Date()).getTime() - StarTrader.startYear)            
+            + (isEmpty(firstStack) ? "" : " STK1::" + firstStack + "\n")
+            + (isEmpty(secondStack) ? "" : " STK2:: " + secondStack + "\n")            
+            + (isEmpty(thirdStack) ? "" : " STK3::" +  thirdStack + "\n")            
+            + (isEmpty(fourthStack) ? "" : " STK4::" +fourthStack + "\n")  
+            + listMore();
+            if(false){
+           rrr =  (isEmpty(prevLine) ? "" : " PL::" + prevLine + "\n")
+            + (isEmpty(errLine) ? "" : " EL::" + errLine + "\n")
+            + (isEmpty(addlErr) ? "" : " AE::" + addlErr + "\n")
+            + (isEmpty(wasHere) ? "" : " WH1::" + (twh1 > 0? " T" + (StarTrader.startYear - twh1) + ":" : "") + wasHere + "\n")
+            + (isEmpty(wasHere2) ? "" : " WH2::" + (twh2 > 0? " T" + (StarTrader.startYear - twh2) + ":" : "") + wasHere2 + "\n")
+            + (isEmpty(wasHere3) ? "" : " WH3::" + (twh3 > 0? " T" + (StarTrader.startYear - twh3) + ":" : "") + wasHere3 + "\n")
+            + (isEmpty(wasHere4) ? "" : " WH4::" + (twh4 > 0? " T" + (StarTrader.startYear - twh4) + ":" : "") + wasHere4 + "\n")
+            + (isEmpty(wasHere5) ? "" : " WH5::" + (twh5 > 0? " T" + (StarTrader.startYear - twh5) + ":" : "") + wasHere5 + "\n")
+            + (isEmpty(wasHere6) ? "" : " WH6::" + (twh6 > 0? " T" + (StarTrader.startYear - twh6) + ":" : "") + wasHere6 + "\n")
+            + (isEmpty(wasHere7) ? "" : " WH7::" + (twh7 > 0? " T" + (StarTrader.startYear - twh7) + ":" : "") + wasHere3 + "\n")
+            + (isEmpty(wasHere8) ? "" : " WH8::" + (twh8 > 0? " T" + (StarTrader.startYear - twh8) + ":" : "") + wasHere8 + "\n");
+                    }
+         rtn   += threadsStacks();
     rtn += andStats();
     rtn += andWaiting();
     rtn += andET();
@@ -665,8 +722,9 @@ class EM {
     //  System.err.println(aLine + andMore()); //later
     new Throwable().printStackTrace(pw); // later
     secondStack = sw.toString();
+    newError = true;
     System.err.println("doMyError thread=" + Thread.currentThread().getName() + " " + aLine + addMore());
-    st.setFatalError(st.redish);
+    st.setFatalError(st.redish); // should do exit
     flushes();
     System.exit(-11);
     //throw new MyErr(Econ.nowName + " " + Econ.nowThread + " " + aLine);
@@ -983,7 +1041,7 @@ class EM {
    * {{{1.,2.,3.,4.,5.},{1.2,2.2,3.2,4.2,5.6}}},{{1.,2.,3.,4.,5.},{1.2,2.2,3.2,4.2,5.6}}},{{1.,2.,3.,4.,5.},{1.2,2.2,3.2,4.2,5.6}}},{{1.,2.,3.,4.,5.},{1.2,2.2,3.2,4.2,5.6}}},{{1.,2.,3.,4.,5.},{1.2,2.2,3.2,4.2,5.6}}},{{1.,2.,3.,4.,5.},{1.2,2.2,3.2,4.2,5.6}}},{{1.,2.,3.,4.,5.},{1.2,2.2,3.2,4.2,5.6}}}};
    */
   static int lvals = 200;
-  int valI[][][][] = new int[lvals][][][];
+  static volatile int valI[][][][] = new int[lvals][][][];
   static int modeC = 0; // gc in valI
   static int sevenC = 1;  //unused index into a 7 sector array
   // static int divByC = 2;  // unused number of entry7 to divide by
@@ -1006,21 +1064,21 @@ class EM {
   static int vDesc = 0;  // part of valS
   static int vDetail = 1; // valS
   static int vMore = 2; // valS
-  String valS[][] = new String[lvals][]; // second column [desc,detail]
+  static volatile String valS[][] = new String[lvals][]; // second column [desc,detail]
   /**
    * [vv][column][pors][clan]
    */
-  double valD[][][][] = new double[lvals][][][];
+  static volatile double valD[][][][] = new double[lvals][][][];
   // eventually column = modeC,p
 
   /**
    * references of Environments being logged
    */
-  Econ[] logEnvirn = new Econ[2];
+  static volatile Econ[] logEnvirn = new Econ[2];
   /**
    * references the history ArrayList in each Econ
    */
-  ArrayList<History>[] hists = new ArrayList[2];
+  static volatile ArrayList<History>[] hists = new ArrayList[2];
   static volatile boolean fatalError = false;
   static volatile boolean newError = false;
   static volatile boolean stopExe = false;
@@ -1441,16 +1499,16 @@ class EM {
             vlive = getCurCumPorsClanAve(LIVERCSG, ICUM, 1, ac, ac + 1, ae,ae+1);
             vfrac =  vinit > 0.?vlive/(vinit*3.0) : 1.0;
             vFracSum += vfrac;
-             wasHere = " before rsae aa=" + aa + " ab=" + ab + " ac=" + ac + " ad=" + ad + " ae=" + ae ;
+            prevLine = " before rsae aa=" + aa + " ab=" + ab + " ac=" + ac + " ad=" + ad + " ae=" + ae ;
             
             double rsaa [][][][] = rs[aa]; // test for null pointer??
             double rsab [][][] = rsaa[ab];
            // int irsab = rsab[ac].length;
-            wasHere += " rsab[ac].length=" + rsab[ac].length;
+            prevLine += " rsab[ac].length=" + rsab[ac].length;
             double rsac [][] = rsab[ac];
             double rsad [] = rsac[ad];
             double rsae = rsad[ae];
-            wasHere +=  "rsad[ae]=" + mf(rsad[ae]);
+            prevLine +=  "rsad[ae]=" + mf(rsad[ae]);
             vrs = rs[aa][ab][ac][ad][ae]
                     = // add difficultyPercent as a cost factor 50% = 1. mult
                     //(vdif = difficultyPercent[ac]) * .1  *
@@ -1531,7 +1589,7 @@ class EM {
  */
    double[][][] makeClanRS(double[][][][] rs4, double[][] mult5Ctbl, Econ ec) {
      double[][][] rs = new double[5][][];;// make [5 reqM reqG m t g][2 r s][4 rcsg]
-     wasHere="";wasHere2="";wasHere3="";wasHere4="";
+     prevLine ="";wasHere2="";wasHere3="";wasHere4="";
      int pors = ec.getPors();
      int clan = ec.getClan();
      double hiLoMult = ec.getHiLoMult();
@@ -1589,7 +1647,7 @@ class EM {
             double x2 = mabc[ab][pors];
              */
           
-             wasHere = " before rsac year=" + EM.year + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName() ;
+             prevLine = " before rsac year=" + EM.year + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName() ;
             if(eM.curEcon != null) wasHere += ", name="  + eM.curEcon.getName() + ", age=" + eM.curEcon.getAge();
             double rsaa [][] = rs[aa]; // test for null pointer??
             double rsab []= rsaa[ab];
@@ -1597,7 +1655,7 @@ class EM {
            // wasHere += " rsab[ac].length=" + rsab[ac].length;
             double rsac  = rsab[ac];
            // vrs = rs[aa][ab][ac];
-            wasHere2 =  " rsac=" + mf(rsac)  + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName() ;
+            prevLine =  " rsac=" + mf(rsac)  + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName() ;
             //vrs4a = rs4[aa][ab][pors][ac2];
             vrs = 0;
             vrs =
@@ -1619,7 +1677,7 @@ class EM {
                     (vmabc = mabc[ab][pors])
                     * //[pors][clan]
                     ( vfrac);
-            wasHere3 =  " vrs=" + mf(vrs)  + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName() + ", vdif=" + mf(vdif) + ", vrcsg=" + mf(vrcsg) + ", vrs4=" + mf(vrs4) + ", vm5t=" + mf(vm5t) + ", vmabc=" + mf(vmabc) + ", vfrac=" + mf(vfrac) ;
+            prevLine =  " vrs=" + mf(vrs)  + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName() + ", vdif=" + mf(vdif) + ", vrcsg=" + mf(vrcsg) + ", vrs4=" + mf(vrs4) + ", vm5t=" + mf(vm5t) + ", vmabc=" + mf(vmabc) + ", vfrac=" + mf(vfrac) ;
             assert vrs > E.PZERO : "vrs zero=" + mf(vrs) + "\n" + wasHere3;
             rs[aa][ab][ac] = vrs;
             if (E.debugLogsOut) {
@@ -3411,7 +3469,7 @@ class EM {
   static final double[] MAX_PRINT = {0., 10000000.,100000000., 1000000000., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
   static final double[] MULT_PRINT = {0., 10, 100, 1000, 10000, 100000, 1000000,10000000.,100000000., 1000000000., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
   static int abc;
-  String[][] resS;  // [RN][rDesc,rDetail] result string values
+  static String[][] resS;  // [RN][rDesc,rDetail] result string values
   static int rDesc = 0;
   static int rDetail = 1; // detail or tip text
   static final int MAXDEPTH = 7;
@@ -3506,14 +3564,14 @@ class EM {
   int inputPorS = 0; // in inputs 0=P
 
   static volatile long[][][][] resI;
-  int winner = -1;
+  static int winner = -1;
 
   // double gameV[][]; //[gameCnt][pval[],sval[],more[sngl,pmin,pmax,smin,smax]]
   // String[][] gameS; //[gameCnt][desc,detail]
   private boolean unset = true;  // value in this rn nerver been set
   private boolean myUnset = false;
   private boolean myCumUnset = false;
-  private long valid = 0; // number of cur in this rn valid 2 = 0,1 etc.
+  private static long valid = 0; // number of cur in this rn valid 2 = 0,1 etc.
   private long myAop = 0;
   private int myRn = 0;
   private String myDetail = "";
@@ -4833,18 +4891,15 @@ doRes(MINRCSG, "min rcsg", "min rcsg Value");
    *
    * @return number of undefined entries
    */
-  int doStartYear() {
+  static int doStartYear() {
     // loop through all of the entries
 
     int maxCopy = MAXDEPTH-1; //don't copy curIx=6 to above => a curIx=0
     yearErrCnt = 0;
 
    try {
-     addlErr = "";
-     wasHere = "";
-     wasHere2 = "";
-     wasHere3 = "";
-     wasHere4 = "";
+     clearWH();
+     iMaxThreads[0] = (int)maxThreads[0][0];
     for (rN = 0; rN < rende4 && !dfe() ; rN++) {
       rn = rN;
       // skip undefined entries without error
@@ -5021,7 +5076,7 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
     return rende4 - cnt;
   }// end doStartYear
 
-  static int didEndYear = 0;
+  static volatile int didEndYear = 0; //a count of active endYears
 
   /**
    * do end of year processing, determine if values need to be divided by power
@@ -5030,7 +5085,7 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
    *
    * @return
    */
-  int doEndYear() {
+  static int doEndYear() {
     doResSpecial();
     getWinner();
     int cnt = 0, curIx = -7, newIx = -7, ccntl = -8;
@@ -5104,7 +5159,7 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
             if (maxCumP > 0) {
               didPower = true;
               if (E.debugStatsOut) {
-                System.out.printf("doEndYear %s, m=%d,MAX_PRINT[%1d]=%e, maxCum=%e\n", resS[rN][0], m, maxCumP, MAX_PRINT[maxCumP], maxCum);
+                System.out.printf("-----EY-----EM.doEndYear %s, m=%d,MAX_PRINT[%1d]=%e, maxCum=%e\n", resS[rN][0], m, maxCumP, MAX_PRINT[maxCumP], maxCum);
               }
             }
           }
@@ -5120,7 +5175,7 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
             valid = resI[rN][yrsIx + yrsIxj - 1] != null && (isset1 = resI[rN][yrsIx + yrsIxj - 1][CCONTROLD][ISSET]) > 0 ? yrsIxj : valid;
             if (maxd > 1 && rN < 0) {
               if (E.debugStatsOut) {
-                System.out.printf("EM.doEndYear %s rN%d, valid%d,isseta%d,issetb%d, issetc%d depth%d, maxd%d, yrsIxj%d,yrsIx%d\n", resS[rN][0], rN, valid, isset1, (yrsIx + yrsIxj < resI[rN].length ? resI[rN][yrsIx + yrsIxj] != null ? resI[rN][yrsIx + yrsIxj][CCONTROLD][ISSET] : -1 : -2), (yrsIx + MAXDEPTH + yrsIxj < resI[rN].length ? resI[rN][yrsIx + MAXDEPTH + yrsIxj] != null ? resI[rN][yrsIx + MAXDEPTH + yrsIxj][CCONTROLD][ISSET] : -1 : -2), depth, maxd, yrsIxj, yrsIx);
+                System.out.printf("----EYb----EM.doEndYear %s rN%d, valid%d,isseta%d,issetb%d, issetc%d depth%d, maxd%d, yrsIxj%d,yrsIx%d\n", resS[rN][0], rN, valid, isset1, (yrsIx + yrsIxj < resI[rN].length ? resI[rN][yrsIx + yrsIxj] != null ? resI[rN][yrsIx + yrsIxj][CCONTROLD][ISSET] : -1 : -2), (yrsIx + MAXDEPTH + yrsIxj < resI[rN].length ? resI[rN][yrsIx + MAXDEPTH + yrsIxj] != null ? resI[rN][yrsIx + MAXDEPTH + yrsIxj][CCONTROLD][ISSET] : -1 : -2), depth, maxd, yrsIxj, yrsIx);
               }
             }
 
@@ -5139,7 +5194,7 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
         int rn = rN;
         if ((rN == 96 || rN < 1) && resI[rN] != null && resI[rN][ICUR0] != null) {
           if (E.debugStatsOut) {
-            System.out.printf("In doEndYear at %s rN%d, idepth%d, ydepth%d, valid%d, isseta%d, issetb%d\n", resS[rN][0], rN, resI[rN][ICUM][CCONTROLD][IDEPTH], resI[rN][ICUM][CCONTROLD][IYDEPTH], resI[rN][ICUR0][CCONTROLD][IVALID], resI[rN][ICUR0][CCONTROLD][ISSET], resI[rN][ICUR0 + 1] == null ? -2 : resI[rN][ICUR0 + 1][CCONTROLD][ISSET]);
+            System.out.printf("----EYc------In EM.doEndYear at res %s rN%d, idepth%d, ydepth%d, valid%d, isseta%d, issetb%d\n", resS[rN][0], rN, resI[rN][ICUM][CCONTROLD][IDEPTH], resI[rN][ICUM][CCONTROLD][IYDEPTH], resI[rN][ICUR0][CCONTROLD][IVALID], resI[rN][ICUR0][CCONTROLD][ISSET], resI[rN][ICUR0 + 1] == null ? -2 : resI[rN][ICUR0 + 1][CCONTROLD][ISSET]);
           }
         }// end print if
       }
@@ -6751,7 +6806,7 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
    * pending
    *
    */
-  void doResSpecial() {
+  static void doResSpecial() {
 
   }
 
@@ -6907,20 +6962,20 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
     }
   }
 
-  boolean isWinner = false;
-  double myScore[] = {400., 400., 400., 400., 400.};
-  double myScoreSum = 0.0;
-  int isV = 0;
-  int isI = 1;
-  int isScoreAve = 2;
-  int sValsCnt = -1;
-  double difPercent = 0.0;
-  double difMult = 0.0;
-  double winDif[][] = {{6.000}};
+  static  boolean isWinner = false;
+  static  double myScore[] = {400., 400., 400., 400., 400.};
+   static double myScoreSum = 0.0;
+  static  int isV = 0;
+  static  int isI = 1;
+  static  int isScoreAve = 2;
+   static int sValsCnt = -1;
+  static  double difPercent = 0.0;
+  static  double difMult = 0.0;
+  static  double winDif[][] = {{6.000}};
   static double mwinDif[][] = {{2.2, 40.0}, {2.2, 40.0}};
-  double curDif = 0.0;
+   static double curDif = 0.0;
 
-  int getWinner() {
+  static int getWinner() {
     // initialize curDif,difMult if year < 2
     curDif = year < 2 ? winDif[0][0] : curDif;
     difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;
@@ -6978,7 +7033,7 @@ if(E.debugDoStartYear)System.out.println("In doStartYear at new zero after flush
    * @param isN isV =0,isI=1,isScoreAve = 2
    * @return 0-4 number of winner
    */
-  int scoreVals(int dRn, double[][] mult, int cumCur, int isN) {
+  static int scoreVals(int dRn, double[][] mult, int cumCur, int isN) {
     double inScore[] = {0., 0., 0., 0., 0.};
     int winner = -1;
     double mm = mult[0][0];  // bottom value of limits
