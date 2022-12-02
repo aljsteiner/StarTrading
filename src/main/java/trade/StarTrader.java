@@ -5547,17 +5547,17 @@ public class StarTrader extends javax.swing.JFrame {
     try {
       ec = curEc = eM.curEcon;;
 
-      if (E.debugThreads) {
+      if(E.debugStatsOut1) {
         System.out.println(EM.wasHere3 = "-------MA--------runYears2;" + since() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "runYears2 is eventDispatchThread not a separate animation thread");
       paintCurDisplay(ec);
-      System.out.println(EM.wasHere3 = "------MB------- runYears2;" + since() + stateStringNames[stateConst] + "Y" + EM.year);
+      if(E.debugStatsOut1)System.out.println(EM.wasHere3 = "------MB------- runYears2;" + since() + stateStringNames[stateConst] + "Y" + EM.year);
       long aTime = (new Date()).getTime();
       RunYrs3 rYrs3 = new RunYrs3(); // the thread for background running runYear()->doYear
       rYrs3.setPriority(2);
       rYrs3.start();  // start the background job
-      if (E.debugThreads) {
+      if(E.debugStatsOut1){
         System.out.println(EM.wasHere3 = "-------MC--------runYears2;" + "since" + ((new Date()).getTime() - aTime) + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       //  stateConst = STARTING;
@@ -5568,21 +5568,13 @@ public class StarTrader extends javax.swing.JFrame {
       for (stateCnt = 0; !EM.dfe() && !eM.stopExe && !done; stateCnt++) {
         ec = curEc = eM.curEcon;
         EM.wasHere3 = "---------AA--------runYears2 aTime" + ((new Date()).getTime() - aTime) + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + ", econ=" + EM.curEconName;
-        if (E.debugStatsOut1) {
-          System.out.println(EM.wasHere3);
-        }
+        if (E.debugStatsOut1)System.out.println(EM.wasHere3);
         setEconState(stateConst); // check for stuck
-        if (E.debugStatsOut1) {
-          System.out.println("------NC------^^runYears2 aTime" + ((new Date()).getTime() - aTime) + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
-        }
-        if (E.debugStatsOut1) {
-          System.out.println("----------RYa-------runYears2;" + "since" + ((new Date()).getTime() - aTime) + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
-        }
+        if (E.debugStatsOut1)System.out.println("------NC------^^runYears2 aTime" + ((new Date()).getTime() - aTime) + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
+        if (E.debugStatsOut1)System.out.println("----------RYa-------runYears2 aTime" + ((new Date()).getTime() - aTime) + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
         paintCurDisplay(ec);
         // now do waits until the next check of stateConst and paintCurDisplay
-        if (E.debugStatsOut1) {
-          System.out.println("----------RYb-------runYears2;" + "since" + ((new Date()).getTime() - aTime) + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
-        }
+        if (E.debugStatsOut1)System.out.println("----------RYb-------runYears2 aTime" + ((new Date()).getTime() - aTime) + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
         switch (stateConst) {
           case CONSTRUCTING:
           case CONSTRUCTED:
