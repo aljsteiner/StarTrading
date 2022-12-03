@@ -16,6 +16,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ******* sometimes new lines went to the end, recently they went to start.  no always done
+221203 trying to fix getting stuck both run and text.  It seems that the animation 
+thread does not run while the backgroind4 is running doyear runYear
+Still trying to make sense out of when setEconState is called what value
 5/8/2022 continue to look for cause of errors after changing to st.runYears(2)
 5/4/22 [it om statments to reduce costs if asset units decrease, saw little effect.
 remove *ps[][] from Assets.CashFlow.calcRawCosts
