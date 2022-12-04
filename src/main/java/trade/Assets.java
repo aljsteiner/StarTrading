@@ -2225,11 +2225,12 @@ public class Assets {
       System.out.flush();
       System.out.flush();
       System.err.flush();
-      StackTraceElement a1 = Thread.currentThread().getStackTrace()[1];
-      StackTraceElement a2 = Thread.currentThread().getStackTrace()[2];
-      StackTraceElement a3 = Thread.currentThread().getStackTrace()[3];
-      StackTraceElement a4 = Thread.currentThread().getStackTrace()[4];
-      E.sysmsg("-----CFc----CF construct  " + E.ROYGB.charAt(clan) + " " + name + " " + yphase + " at " + a4.getMethodName() + ", " + a3.getMethodName() + ", " + a2.getMethodName() + " wealth=" + EM.mf(wealth));
+      StackTraceElement [] stk = Thread.currentThread().getStackTrace();
+      StackTraceElement a1 = stk[1];
+      StackTraceElement a2 = stk[2];
+      StackTraceElement a3 = stk[3];
+      StackTraceElement a4 = stk[4];
+      if(E.DEBUGASSETSOUT)System.out.println("-----CFc----CF construct  " + E.ROYGB.charAt(clan) + " " + name + " " + yphase + " at " + stk[4].getMethodName() + ", " + stk[3].getMethodName() + ", " + stk[2].getMethodName() + " wealth=" + EM.mf(wealth));
       //    System.out.println("CashFlow(Assets) " + name + " constructor");
       as = as3 = as2 = aas;
 

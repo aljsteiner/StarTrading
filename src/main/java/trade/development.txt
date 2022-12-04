@@ -16,8 +16,23 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ******* sometimes new lines went to the end, recently they went to start.  no always done
-221203 trying to fix getting stuck both run and text.  It seems that the animation 
-thread does not run while the backgroind4 is running doyear runYear
+
+12/03/2022 separating checkEconState(animation) and setEconState(background) both are synchronized meant 
+that animation no longer waited on background.  I still don't know why animation does not run 
+while doyear is running --MJ--millisecs=15648 next --AA--atime 0.492
+------MB------- runYears2; aTime 15.646RunningY-1 (animation around startY3
+-------MC--------runYears2; aTime 15.648 at start cnt-11RunningY-1
+--AA-- aTime 0 aaTime 15.648 ry2Time 0.008 ry3Time 0 StartingY-1 cnt0, econ=no Econ name
+--CES-- ry2Time 0.008 ry3Time 0 TH3
+then --SES--ry2Time 0.049 ry3Time 0.041since no Econ name 0.039, TH2
+--MMb--aTime 0.107 stateCnt0 Creating4Y0 name=P0003
+-MMb--------Init new Econ3 aTime 0.137 stateCnt0 Creating4Y0 name=P0004
+-MMb--------Init new Econ7 aTime 0.187 stateCnt0 Creating4Y0 name=S0008
+--MMb--------Init new Econ10 aTime 0.235 stateCnt0 Creating4Y0 name=S0011 (no--CES
+------DA-----paintCurDisplay 15903 StartYearY0 eCnt=11:11:null::S0011 controlPanelIx=3:3:9:6 (finally)
+SES Thread-3 StartYear=> Trading null, sameEconStatecnt=0 millisecs= ry2Time 0.278 ry3Time 0.27
+12/03/2022 trying to fix getting stuck both run and text.  It seems that the animation 
+thread does not run while the background4 is running doyear runYear
 Still trying to make sense out of when setEconState is called what value
 5/8/2022 continue to look for cause of errors after changing to st.runYears(2)
 5/4/22 [it om statments to reduce costs if asset units decrease, saw little effect.

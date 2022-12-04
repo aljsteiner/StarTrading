@@ -434,7 +434,10 @@ public class StarTrader extends javax.swing.JFrame {
   static volatile public long startTime = (new Date()).getTime();
   static volatile public long startYear = startTime;
   static volatile public long startRY2 = startTime;
+  static volatile public long startRY3 = startTime;
   static volatile public long startEconState = startTime;
+  static volatile public long aTime = startTime; // runYears2 before for stateCnt
+  static volatile public long aaTime = startTime; // runBackGroundYears4 at start runYear
   static volatile public long totMem, freeMem, usedMem;
   static public String stNi = "stNi";
   static public String ecNi = "ecNi";
@@ -5459,6 +5462,7 @@ public class StarTrader extends javax.swing.JFrame {
   public class RunYrs3 extends Thread {
 
     public void run() {
+      startRY3 = new Date().getTime();
       runBackgroundYears4(yearsToRun);
 
     }
@@ -5507,9 +5511,43 @@ public class StarTrader extends javax.swing.JFrame {
   int pprevState = 0;
 
   /**
-   * set the Econ state, and check for stuck if no change in stateConst,EM.curEconName,EM.wasHere and stateConstA not STATS,  STOPPED, FATALERR, RUNSDONE
+   * in the annimation thread (runYears2) check the Econ state for stuck if no change in stateConst,EM.curEconName,EM.wasHere;
+   * and prevState not STATS,  STOPPED, FATALERR, RUNSDONE
    *
    * @param stateConst value to be set
+   */
+  synchronized void checkEconState() {
+    ec = curEc = EM.curEcon;
+    curEconName = (ec == null ? "noneYet" : ec.name);
+    String wh = EM.wasHere == null ? "wasn't here" : EM.wasHere;
+    prevEconName = prevEconName == null ? "aint named" : prevEconName;
+    prevWasHere = prevWasHere == null ? "wasn't here" : prevWasHere;
+    int sc = stateConst;
+    long myNow = new Date().getTime() - eM.curEconTime;
+    if (stateConst == prevState && curEconName.equals(prevEconName) && wh.equals(prevWasHere) && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
+      sameEconState++;
+      assert E.debugStuck && sameEconState < 51 : "STUCK at runYears2.setEconState Year" + eM.year + " myNow=" + myNow + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      if (false && E.debugStuck && sameEconState > 50) {
+        EM.doMyErr("STUCK at:doYear" + EM.year + myNow + " " + stateStringNames[stateConst] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
+      }
+    } else {
+      EM.wasHere5 = "----CES----in runYears2.setEconState Year" + EM.year +" " + Thread.currentThread().getName() + " econTime" + myNow + " " + stateStringNames[stateConst]+ "=> " + stateStringNames[stateConst] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + sinceRY2() + sinceRY3() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      prevEconName = EM.curEconName;
+      prevWasHere = EM.wasHere == null ? "no Was Here" : EM.wasHere; // move the reference
+      stateCnt = 0;
+      if(E.debugThreadsOut && prevState != stateConst && (true || stateConst == CREATING || stateConst == STATS || stateConst == TRADING || prevState == RUNSDONE || prevState == STATS)) System.out.println(EM.wasHere5 + EM.threadsStacks());
+      pprevState = prevState;
+      prevState = stateConst ;
+      sameEconState = 0;  //zero no dif counter
+      startEconState = (new Date()).getTime();
+
+    }
+  }
+
+   /**
+   * set the Econ state in the runBackgroundYears4, and check for stuck if no change in stateConst,EM.curEconName,EM.wasHere and stateConstA not STATS,  STOPPED, FATALERR, RUNSDONE  See also checkEconState for getting stuck
+   *
+   * @param stateConstA value to be set
    */
   synchronized void setEconState(int stateConstA) {
     ec = curEc = EM.curEcon;
@@ -5517,30 +5555,27 @@ public class StarTrader extends javax.swing.JFrame {
     String wh = EM.wasHere == null ? "wasn't here" : EM.wasHere;
     prevEconName = prevEconName == null ? "aint named" : prevEconName;
     prevWasHere = prevWasHere == null ? "wasn't here" : prevWasHere;
-    pprevState = prevState;
     int sc = stateConst;
     long myNow = new Date().getTime() - eM.curEconTime;
     if (stateConstA == prevState && curEconName.equals(prevEconName) && wh.equals(prevWasHere) && stateConstA != STATS && stateConstA != RUNSDONE && stateConstA != STOPPED && stateConstA != FATALERR) {
       sameEconState++;
-      assert E.debugStuck && sameEconState < 51 : "STUCK at runYears2.setEconState Year" + eM.year + " myNow=" + myNow + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      assert E.debugStuck && sameEconState < 51 : "STUCK at runYears2.setEconState Year" + EM.year  + sinceRY2() + sinceRY3() + sinceEcon() + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState  + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 50) {
         eM.doMyErr("STUCK at:doYear" + eM.year + myNow + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
     } else {
-      EM.wasHere5 = "----SES----in runYears2.setEconState Year" + eM.year + " econTime" + myNow + " " + stateStringNames[stateConst]+ "=> " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState)+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      EM.wasHere5 = "----SES----in runYears2.setEconState Year" + EM.year +" " + Thread.currentThread().getName() + " " + stateStringNames[stateConst]+ "=> " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + sinceRY2() + sinceRY3() + sinceEcon() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
       prevEconName = EM.curEconName;
       prevWasHere = EM.wasHere == null ? "no Was Here" : EM.wasHere; // move the reference
       stateCnt = 0;
-      if(E.debugThreadsOut && stateConstA != stateConst && (stateConstA == CREATING || stateConstA == STATS || stateConstA == TRADING || prevState == RUNSDONE || prevState == STATS)) System.out.println(EM.wasHere5 + EM.threadsStacks());
+      if(E.debugThreadsOut && (stateConstA != stateConst || prevState != stateConst ) && (stateConstA == CREATING || stateConstA == STATS || stateConstA == TRADING || prevState == RUNSDONE || stateConst == STATS || stateConst == RUNSDONE || prevState == STATS)) System.out.println(EM.wasHere5 + EM.threadsStacks());
+      pprevState = prevState;
       prevState = stateConst = stateConstA;
       sameEconState = 0;  //zero no dif counter
       startEconState = (new Date()).getTime();
-
     }
   }
 
-  long aTime = (new Date()).getTime(); // runYears2 before for stateCnt
-  long aaTime = (new Date()).getTime(); // runBackGroundYears4 at start runYear
   /**
    * start of the animation thread waiting between calls of paintCurDisplay
    * thread RunYrs1 Then it watches stateConst and updates the display tab
@@ -5549,19 +5584,19 @@ public class StarTrader extends javax.swing.JFrame {
   void runYears2() {
     try {
       ec = curEc = eM.curEcon;;
-      aTime = (new Date()).getTime();  //started runYears2
+      startRY2 = (new Date()).getTime();  //started runYears2
       if(E.debugStatsOut1) {
         System.out.println(EM.wasHere3 = "-------MA--------runYears2;" + sinceA() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "runYears2 is eventDispatchThread not a separate animation thread");
       paintCurDisplay(ec);
-      if(E.debugStatsOut1)System.out.println(EM.wasHere3 = "------MB------- runYears2;" + sinceA() + stateStringNames[stateConst] + "Y" + EM.year);
+      if(E.debugStatsOut1)System.out.println(EM.wasHere3 = "------MB------- runYears2;" + sinceA() + sinceRY2() + stateStringNames[stateConst] + "Y" + EM.year);
       
       RunYrs3 rYrs3 = new RunYrs3(); // the thread for background running runYear()->doYear
       rYrs3.setPriority(2);
       rYrs3.start();  // start the background job
       if(E.debugStatsOut1){
-        System.out.println(EM.wasHere3 = "-------MC--------runYears2;" + sinceA()  + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
+        System.out.println(EM.wasHere3 = "-------MC--------runYears2;" + sinceA()+ sinceRY2() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       //  stateConst = STARTING;
       paintCurDisplay(ec = curEc = eM.curEcon);
@@ -5570,15 +5605,15 @@ public class StarTrader extends javax.swing.JFrame {
       // start the annimation loop until done, waiting to call paintCurDisplay again
       aTime = (new Date()).getTime();
       for (stateCnt = 0; !EM.dfe() && !eM.stopExe && !done; stateCnt++) {
-        ec = curEc = eM.curEcon;
-        EM.wasHere3 = "---------AA--------runYears2 before seEconState " + sinceA() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + ", econ=" + EM.curEconName;
+        ec = curEc = EM.curEcon;
+        EM.wasHere3 = "---------AA--------runYears2 before seEconState " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + ", econ=" + EM.curEconName;
         if (E.debugStatsOut1)System.out.println(EM.wasHere3);
-        setEconState(stateConst); // check for stuck
+        checkEconState(); // check for stuck
         if (E.debugStatsOut1)System.out.println("------NC------^^runYears2 " + sinceA() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
-        if (E.debugStatsOut1)System.out.println("----------RYa-------runYears2 " + sinceA()+ sinceAA() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+        if (E.debugStatsOut1)System.out.println("----------RYa-------runYears2 " + sinceA()+ sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
         paintCurDisplay(ec);
         // now do waits until the next check of stateConst and paintCurDisplay
-        if (E.debugStatsOut1)System.out.println("----------RYb-------runYears2 " + sinceA()+ sinceAA() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+        if (E.debugStatsOut1)System.out.println("----------RYb-------runYears2 " + sinceA()+ sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
         switch (stateConst) {
           case CONSTRUCTING:
           case CONSTRUCTED:
@@ -5677,12 +5712,12 @@ public class StarTrader extends javax.swing.JFrame {
     // E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "is eventDispatchThread");
     EM.clearWH();
 
-    for (int nn = 0; nn < nYears && !EM.dfe() && !eM.stopExe && !doStop && !fatalError; nn++) {
-      EM.errLine = "-------MJ---------runBackroundYears4" + since() + "run year="
-              + (eM.year + 1) + " background years=" + nn + " btime="
-              + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
+    for (int nn = 0; nn < nYears && !EM.dfe() && !EM.stopExe && !doStop && !fatalError; nn++) {
+      EM.errLine = "-------MJ---------in runBackroundYears4" + since() + "run year="
+              + (EM.year) + " background years=" + nn + " btime="
+              + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + EM.year;
       if(E.debugStatsOut1) {
-        System.err.println(EM.errLine + "<<<<<<<<<<<<<<<<<<<");
+        System.err.println(EM.errLine);
       }
       aaTime = (new Date()).getTime();
       runYear();
@@ -5868,6 +5903,19 @@ public class StarTrader extends javax.swing.JFrame {
    * @return fraction seconds since aTime in runYears2
    */
   public String sinceA(){return since(" aTime", aTime);}
+  
+  /** Seconds since  start of runYears2
+   * 
+   * @return fraction seconds since start runYears2
+   */
+  public String sinceRY2(){return since(" ry2Time", startRY2);}
+  
+   /** Seconds since start of runYears2
+   * 
+   * @return fraction seconds since start runYears2
+   */
+  
+  public String sinceRY3(){return since(" ry3Time", startRY3);}
 
   /**
    * format the seconds since a given recorded time
@@ -6828,9 +6876,9 @@ public class StarTrader extends javax.swing.JFrame {
       // start trading the newest planets/ships get first choice, and make the first trades
       // assume newest planets are by newest ships, 
       EM.wasHere6 = "-----BT---- before trading starts, " + stateStringNames[stateConst] + " year=" + eM.year;
-      System.out.println(EM.wasHere6);
+      if(E.debugStatsOut1)System.out.println(EM.wasHere6);
       paintTrade(curEc, curEc);
-      curStateName = "trading";
+    //  curStateName = "trading";
       E.msgcnt = 0;
       if (doStop || eM.dfe()) {
         paintStopped();
@@ -6844,7 +6892,7 @@ public class StarTrader extends javax.swing.JFrame {
         // go latest to earliest, smallest to largest trades
         for (shipsLoop = eM.ships.size() - 1; shipsLoop >= 0 && !eM.dfe(); shipsLoop--) {
           eM.setCurEcon(ec = curEc = eM.ships.get(shipsLoop));
-          startEconState = (new Date()).getTime();
+          //startEconState = (new Date()).getTime();
           //paintCurDisplay(eM.curEcon);
           E.msgs = E.dmsgs;;  // reset sysMsg counter before each trade
 
@@ -6878,14 +6926,14 @@ public class StarTrader extends javax.swing.JFrame {
               }
               clearHist(eM.logEnvirn[0]);
               eM.setCurEcon(ec = curEc = eM.curEcon = cur1);
-              startEconState = (new Date()).getTime();
+              //startEconState = (new Date()).getTime();
               setLogEnvirn(0, eM.curEcon);  // set start1
               eM.hists[0] = eM.logEnvirn[0].hist;
               //  distance = distance < .01 ? eM.nominalDistance[0] : distance; // add arbitrary distance if none
               //  eM.curEcon = cur1;  // was a repeat
               E.msgcnt = 0;
-              paintEconYearStart(eM.curEcon);
-              curStateName = "econYrStrt";
+             // paintEconYearStart(eM.curEcon);
+             //curStateName = "econYrStrt";
               eM.curEcon.yearStart(distance);
               if (E.debugEconCnt) {
                 synchronized (EM.econCnt) {
@@ -6897,7 +6945,7 @@ public class StarTrader extends javax.swing.JFrame {
               //    E.msgcnt = 0;
               eM.setCurEcon(ec = curEc = eM.curEcon = cur1);
               paintTrade(eM.curEcon, cur2);
-              startEconState = (new Date()).getTime();
+             // startEconState = (new Date()).getTime();
               //     eM.curEcon.sStartTrade(eM.curEcon, cur2);
               // paintTrade(eM.curEcon,cur2);
             } else {
@@ -6909,7 +6957,7 @@ public class StarTrader extends javax.swing.JFrame {
           System.out.println("================" + since() + " after ship barter year =" + eM.year + ", ship=" + eM.curEcon.name + (eM.curEcon.getDie() ? " is dead" : " is live"));
 
           printMem();
-        }
+        }//shipsLoop
         // after all trades, end year for all economies.
         // now initialize the first 2 Econ if one is null, the first time through
         if (eM.logEnvirn[0] == null || eM.hists[0] == null) {
@@ -6926,13 +6974,13 @@ public class StarTrader extends javax.swing.JFrame {
       } // else doStop
       // end each year and build the final namelist
       namesList.clear();
-      stateConst = DOYEAREND;
+      setEconState(DOYEAREND);
       E.msgcnt = 0;
       int maxEcons = eM.econs.size();
       if (doStop || eM.dfe()) {
         stateConst = STOPPED;
       } else {
-        curStateName = "ecYrEnds";
+       // curStateName = "ecYrEnds";
         if (E.debugEconCnt) {
           /*synchronized (EM.econCnt) */
           {
@@ -6952,7 +7000,7 @@ public class StarTrader extends javax.swing.JFrame {
               }
             }
           }
-          ec = curEc = EM.curEcon = EM.econs.get(envsLoop2);
+          ec = curEc = EM.econs.get(envsLoop2);
           EM.setCurEcon(ec);
           if (E.debugEconCnt) {
             /* synchronized (EM.econCnt) */
@@ -6962,7 +7010,7 @@ public class StarTrader extends javax.swing.JFrame {
               }
             }
           }
-          startEconState = (new Date()).getTime();
+         // startEconState = (new Date()).getTime();
           EM.wasHere = "after startEconState ";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {
@@ -7060,7 +7108,7 @@ public class StarTrader extends javax.swing.JFrame {
         if (E.debugThreads) {
           System.out.println("-------EYw-----Waiting Ending year=" + EM.andET());
         }
-        stateConst = WAITING;
+        setEconState(WAITING);
         if (E.debugEconCnt) {
           synchronized (EM.econCnt) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -7076,7 +7124,7 @@ public class StarTrader extends javax.swing.JFrame {
             }
           }
         }
-        stateConst = ENDYR;
+        setEconState(ENDYR);
         if (E.debugThreads) {
           System.out.println("------EYg-----Ending year=" + EM.andET());
         }
@@ -7110,7 +7158,7 @@ public class StarTrader extends javax.swing.JFrame {
           }
         }
         namesList.clear();
-        stateConst = ENDYR;
+       // stateConst = ENDYR; already done
         maxEcons = EM.econs.size();
         for (envsLoop2 = 0; envsLoop2 < maxEcons && !EM.dfe(); ++envsLoop2) {
           EM.setCurEcon(ec = curEc = EM.econs.get(envsLoop2));
