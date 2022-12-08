@@ -17,6 +17,11 @@
 
 ******* sometimes new lines went to the end, recently they went to start.  no always done
 
+ 12/6/2022 Runtime runtime           = Runtime.getRuntime();
+long presumableFreeMemory = runtime.maxMemory() - allocatedMemory;
+long allocatedMemory      = runtime.totalMemory() - runtime.freeMemory();
+figure out limits to start increasing difficulty to limit the number of active econs as presumableFreeMemory starts to decrease
+
 12/03/2022 separating checkEconState(animation) and setEconState(background) both are synchronized meant 
 that animation no longer waited on background.  I still don't know why animation does not run 
 while doyear is running --MJ--millisecs=15648 next --AA--atime 0.492

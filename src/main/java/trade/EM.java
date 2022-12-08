@@ -46,6 +46,7 @@ import java.util.Scanner;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.JTable;
+import static trade.StarTrader.startTime;
 
 /**
  * this is an output interface, it specifies where to put values using values
@@ -431,6 +432,7 @@ class EM {
   static volatile int gameErrCnt = 0;
   static volatile int yearErrMax = 0; // was 20
   static volatile int yearErrCnt = 0;
+  static volatile boolean didMore=false;
   static volatile String errLine = "";
   static volatile String prevLine = "";
   static volatile String addlErr = "";
@@ -584,8 +586,12 @@ class EM {
     //System.err.println();
     //threadsStacks();
     String rrr="";
-    String rtn = (isEmpty(addlErr) && isEmpty(wasHere) && isEmpty(wasHere2) && isEmpty(wasHere3) && isEmpty(wasHere4)&& isEmpty(wasHere5) && isEmpty(wasHere6) && isEmpty(wasHere7) && isEmpty(wasHere8)  && isEmpty(prevLine) && isEmpty(firstStack) && isEmpty(secondStack) && isEmpty(thirdStack) && isEmpty(fourthStack) ? "" : "\n")
-            + ", thread=" + (curThread = Thread.currentThread().getName()) + ", Ty=" + ((new Date()).getTime() - StarTrader.startYear)            
+    String rtn = (isEmpty(addlErr) && isEmpty(wasHere) && isEmpty(wasHere2) && isEmpty(wasHere3) && isEmpty(wasHere4)&& isEmpty(wasHere5) && isEmpty(wasHere6) && isEmpty(wasHere7) && isEmpty(wasHere8)  && isEmpty(prevLine) && isEmpty(firstStack) && isEmpty(secondStack) && isEmpty(thirdStack) && isEmpty(fourthStack) ? "" : "\n");
+            if(didMore) {
+              return rtn += "======didMore=====";  
+            } else {
+              didMore = true;
+            rtn += ", thread=" + (curThread = Thread.currentThread().getName()) + ", Ty=" + ((new Date()).getTime() - StarTrader.startYear)            
             + (isEmpty(firstStack) ? "" : " STK1::" + firstStack + "\n")
             + (isEmpty(secondStack) ? "" : " STK2:: " + secondStack + "\n")            
             + (isEmpty(thirdStack) ? "" : " STK3::" +  thirdStack + "\n")            
@@ -604,10 +610,11 @@ class EM {
             + (isEmpty(wasHere7) ? "" : " WH7::" + (twh7 > 0? " T" + (StarTrader.startYear - twh7) + ":" : "") + wasHere3 + "\n")
             + (isEmpty(wasHere8) ? "" : " WH8::" + (twh8 > 0? " T" + (StarTrader.startYear - twh8) + ":" : "") + wasHere8 + "\n");
                     }
-         rtn   += threadsStacks();
+    rtn   += threadsStacks();
     rtn += andStats();
     rtn += andWaiting();
     rtn += andET();
+            }
     return rtn;
   }
   
@@ -756,6 +763,15 @@ class EM {
     return mf(nu * .001);
   }
   
+    /**
+   * return the seconds since start of StarTrader
+   *
+   * @return seconds nnn.mmm
+   */
+  public static String since() {
+    return "since game start" + since(StarTrader.startTime);
+  }
+  
   /**
    * get seconds since runYears
    *
@@ -775,7 +791,66 @@ class EM {
   protected static String sinceDoYear() {
     return since(doYearTime);
   }
+    
+  static long gigMem = 1000000000L,totMem=0,freeMem=0,usedMem=0,maxMem=0;
+  static String prGigMem = "";
+  static Runtime runtime = Runtime.getRuntime();
+  
+  /** find out approximately how much more memory is available for this job
+   * 
+   * @return bytes available
+   */
+  public static long getAvailMemory(){
+    long ret=0;
+    long maxMem = runtime.maxMemory();
+    long allocated = maxMem - runtime.freeMemory();
+    return ret = maxMem - allocated;
+  }
+  
+  /** get the percent of used/max memory
+   * 
+   * @return percent used memory
+   */
+  public static double getPercentUsedMemory(){
+    long ret = 0;
+    double used = (runtime.maxMemory() - runtime.freeMemory())/runtime.maxMemory();
+    return used * 100.;
+  }
+  
+  /** get string of avail and percent used memory
+   * 
+   * @return avail megabytes + percent used
+   */
+  public static String mem(){
+    String ret = " avail" + mf(getAvailMemory()* .001) + " percent used" + mf(getPercentUsedMemory()) + "\n";
+    return ret;
+  }
+  
+/** print memory facts for this program
+ * 
+ */
+  public static void printMem3() {
+    // runtime.gc(); // garbage collect
+    totMem = runtime.totalMemory();
+    freeMem = runtime.freeMemory();
+    maxMem = runtime.maxMemory();
+    usedMem = totMem - freeMem;
+    double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
+    double mmem = (double) maxMem/ gigMem;
+    //System.out.println("");
+    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + eM.year + "Gigs total=" + EM.mf(tmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " max=" +mf(mmem) + " used%max" + getPercentUsedMemory();
+    System.out.printf("----PM----" + since() + prGigMem + "<<<<<<" + "\n");
+  }
 
+  /** make a new copy of EM mot finished or used
+   * 
+   * @param name
+   * @param title
+   * @param oldEM
+   * @param aE
+   * @param ast
+   * @return 
+   */
   EM newCopy(String name, String title, EM oldEM, E aE, StarTrader ast) {
     EM rtn = new EM(eE, st);
     Econ tmpEcon;
@@ -804,7 +879,7 @@ class EM {
    return v + ""; // force v into a string
  }
  
- /** format the value to a 9 char String
+ /** format the Double value to a 9 char String
   * 
   * @param desc description of format
   * @param v value to format
@@ -814,7 +889,7 @@ class EM {
    return " " + desc + mf(v);
  }
  
-  /** format the value to a 7 char String
+  /** format the Double value to a 7 char String
   * 
   * 
   * @param desc description of format
@@ -826,7 +901,7 @@ class EM {
  }
  
   /**
-   * format the value to a 9 char string
+   * format the Double value to a 9 char string
    *
    * @param v the input value
    * @return value as a string

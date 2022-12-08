@@ -5516,7 +5516,7 @@ public class StarTrader extends javax.swing.JFrame {
    *
    * @param stateConst value to be set
    */
-  synchronized void checkEconState() {
+  void checkEconState() {
     ec = curEc = EM.curEcon;
     curEconName = (ec == null ? "noneYet" : ec.name);
     String wh = EM.wasHere == null ? "wasn't here" : EM.wasHere;
@@ -5524,7 +5524,10 @@ public class StarTrader extends javax.swing.JFrame {
     prevWasHere = prevWasHere == null ? "wasn't here" : prevWasHere;
     int sc = stateConst;
     long myNow = new Date().getTime() - eM.curEconTime;
-    if (stateConst == prevState && curEconName.equals(prevEconName) && wh.equals(prevWasHere) && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
+    if (stateConst == prevState 
+            && curEconName.equals(prevEconName) 
+            && wh.equals(prevWasHere) 
+            && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
       sameEconState++;
       assert E.debugStuck && sameEconState < 51 : "STUCK at runYears2.setEconState Year" + eM.year + " myNow=" + myNow + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 50) {
@@ -5549,7 +5552,7 @@ public class StarTrader extends javax.swing.JFrame {
    *
    * @param stateConstA value to be set
    */
-  synchronized void setEconState(int stateConstA) {
+  void setEconState(int stateConstA) {
     ec = curEc = EM.curEcon;
     curEconName = (ec == null ? "noneYet" : ec.name);
     String wh = EM.wasHere == null ? "wasn't here" : EM.wasHere;
@@ -5621,7 +5624,7 @@ public class StarTrader extends javax.swing.JFrame {
           case STARTING:
             paintCurDisplay(eM.curEcon);
              {
-              Thread.sleep(blip30);
+              Thread.sleep(blip);
             }
             break;
           case CREATING:
@@ -5661,7 +5664,7 @@ public class StarTrader extends javax.swing.JFrame {
             done = true;  //stop looping
             // paintCurDisplay(ec = curEc = eM.curEcon); // force final display as stats not display
             if (E.debugStatsOut1) {
-              System.out.println("----------MD-------runYears2;" + since()+ sinceAA() + " " + stateStringNames[stateConst] + stateConst + " year=" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("----------MD-------runYears2;" + since()+ sinceAA() + " " + stateStringNames[stateConst] + "Y" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             // listRes(fullRes); done in runBackgroundYears4
             break;
@@ -5681,11 +5684,12 @@ public class StarTrader extends javax.swing.JFrame {
             }
             if (did) {
               done = true;
+              setEconState(STATS);
             } else {
-              Thread.sleep(blip30);
+              Thread.sleep(blip);
             }
             if (E.debugStatsOut1) {
-              System.out.println("---------MG----------runYears2;" + since() + " DEFAULT;" + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+              System.out.println("---------MG----------runYears2;" + since() + sinceRY2() + " DEFAULT;" + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
             }
         } // switch stateConst
       }// stateCnt end
@@ -6395,8 +6399,11 @@ public class StarTrader extends javax.swing.JFrame {
 
   long gigMem = 1000000000L;
   String prGigMem = "";
-
-  public void printMem3() {
+  /** print memory facts at this time 
+   * 
+   */
+  public static void printMem3() { EM.printMem3();}
+  void oldprintMem3(){
     // runtime.gc(); // garbage collect
     totMem = runtime.totalMemory();
     freeMem = runtime.freeMemory();
@@ -7210,7 +7217,8 @@ public class StarTrader extends javax.swing.JFrame {
           whole.setMaximumFractionDigits(0);
           if (e.getValueIsAdjusting()) {
             EM.wasHere = "econ=" + eMCurEcon + " doYear finally Names: adjusting";
-            System.out.println(since() + " Names: adjusting");
+            System.out.println(since() + " " + eMCurEcon + " doYear finally Names: adjusting");
+            setEconState(RUNSDONE);
             return;
           }
           ListSelectionModel lsm = (ListSelectionModel) e.getSource();
@@ -7254,6 +7262,7 @@ public class StarTrader extends javax.swing.JFrame {
       setFatalError();
       throw new WasFatalError(EM.tError);
     } finally {
+      setEconState(RUNSDONE);
       EM.flushes();
       if (EM.dfe()) {
         return;
@@ -8504,7 +8513,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
   public static void main3() {
     try {
-      System.err.println("enter main3 thread=" + Thread.currentThread().getName() + ", msecs=" + (new Date().getTime() - startTime));
+      System.err.println("------TA0-----enter main3 thread=" + Thread.currentThread().getName() + ", " + (new Date().getTime() - startTime) + EM.mem());
       testing = true; // flag in testing mode
       st.setVisible(true);
       int myYrs = 2;
@@ -8513,11 +8522,15 @@ public class StarTrader extends javax.swing.JFrame {
           try {
             st.setVisible(true);
             cntr1 = 0;
-            stateConst = WAITING;
+            stateConst = STARTING;
+            st.runYears(myYrs); // higher random
             if (!eM.dfe()) {
-              System.err.println("----TA------run main3 start testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1);
+              System.err.println("----TA------run main3 start testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1 + EM.mem());
               while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                System.out.println("tests1 round1 waiting out testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt=" + cntr1++);
+                System.out.println("----TT----tests1 round1 waiting out testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", " + (new Date().getTime() - startTime)  + EM.mem() + ", cnt=" + cntr1++);
+                
+                if(cntr1 == 9)System.out.println("----TTm--- stuck?" + EM.andMore()); 
+                EM.didMore = false;
                 assert cntr1 < 11 : "stuck at cntr1=" + cntr1;
                 if (E.noAsserts && cntr1 > 10) {
                   eM.doMyErr("stuck at cntr1 > 10");
@@ -8528,14 +8541,14 @@ public class StarTrader extends javax.swing.JFrame {
               eM.randFrac[1][0] = .7;
               EM.difficultyPercent[0] = 80;
               stateConst = STARTING;
-              System.out.println("-----TA2-----Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime));
+              System.out.println("-----TA2-----Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime) + EM.mem());
               stateConst = RUNNING;
 
               st.runYears(2); // higher random
               // wait for runYears to finish
               cntr1 = 0;
               while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                System.out.println("----TA3----main3 test1 round3 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt1=" + cntr1++);
+                System.out.println("----TA3----main3 test1 round3 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", since" + (new Date().getTime() - startTime)  + EM.mem() + ", cnt1=" + cntr1++);
                 assert cntr1 < 81 : " stuck at wait round3 cntr1=" + cntr1;
                 if (E.noAsserts && cntr1 > 40) {
                   eM.doMyErr("stuck at cntr > 40");
@@ -8549,14 +8562,14 @@ public class StarTrader extends javax.swing.JFrame {
                 double[] rrr = {5., .7};
                 eM.resourceGrowth = eM.staffGrowth = rrr;
                 //stateConst = STARTING;
-                System.err.println("----R4----Countinue main3 round4 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime));
+                System.err.println("----R4----Countinue main3 round4 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + "msecs" + (new Date().getTime() - startTime));
                 stateConst = RUNNING;
 
                 st.runYears(2); // higher random
                 // wait for runYears to finish
                 cntr1 = 0;
                 while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                  System.err.println("#######main3 round5 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
+                  System.err.println("#######main3 round5 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime)  + EM.mem() + ", cntr1=" + cntr1++);
                   assert cntr1 < 81 : " stuck waiting in round5 cntr1=" + cntr1;
                   if (E.noAsserts && cntr1 > 80) {
                     eM.doMyErr(" stuck waiting in round5 cntr1=" + cntr1);
@@ -8566,24 +8579,24 @@ public class StarTrader extends javax.swing.JFrame {
                 if (!eM.dfe() && !st.fatalError) {
                   //  eM.difficultyPercent[0] = 15.;
                   //stateConst = STARTING;
-                  System.err.println("----R6----Countinue main3 round6 test1 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime));
+                  System.err.println("----R6----Countinue main3 round6 test1 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + "msecs" + (new Date().getTime() - startTime));
                   stateConst = RUNNING;
 
                   st.runYears(2); // much lower difficulty
                   // wait for runYears to finish
                   cntr1 = 0;
-                  System.err.println("#######main3 round7 before testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1);
+                  System.err.println("#######main3 round7 before testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1);
                   while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                    System.err.println("#######main3 round7 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
+                    System.err.println("#######main3 round7 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
                     assert cntr1 < 151 : "stuck at round7 cntr1=" + cntr1;
                     Thread.sleep(1000);
                   }
-                  System.err.println("#######main3 round7 after testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1);
+                  System.err.println("#######main3 round7 after testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1);
                   if (!eM.dfe()) {
                     eM.randFrac[0][0] = .7;
                     eM.randFrac[1][0] = .7;
                     //stateConst = STARTING;
-                    System.err.println("----R8----Countinue main3 round8 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + "msecs" + (new Date().getTime() - startTime));
+                    System.err.println("----R8----Countinue main3 round8 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + "msecs" + (new Date().getTime() - startTime));
                     stateConst = RUNNING;
 
                     //st.runYears(20); // higher random
@@ -8592,7 +8605,7 @@ public class StarTrader extends javax.swing.JFrame {
                     cntr1 = 0;
 
                     while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                      System.err.println("#######main3 round9 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
+                      System.err.println("#######main3 round9 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1++);
                       assert cntr1 < 161 : "stuck at round9 cntr1=" + cntr1;
 
                       Thread.sleep(1000);
@@ -8642,13 +8655,13 @@ public class StarTrader extends javax.swing.JFrame {
       EM.clanStartFutureFundDues[1][0] = 1000.;
       EM.clanStartFutureFundDues[1][2] = 1000.;
       EM.clanStartFutureFundDues[1][1] = 1000.;
-      st.runYears(2); // higher difficult
-      // SwingUtilities.invokeLater(tests1);
+      //st.runYears(2); // higher difficult
+      SwingUtilities.invokeLater(tests1);
       cntr1 = 0;
       ttime = (new Date().getTime());
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out round1 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + EM.since(ttime) + ", cntr1=" + cntr1++);
+        System.err.println("tests1 waiting out round1 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr1=" + cntr1++);
         Thread.sleep(1000);
         assert cntr1 < 171 : " stuck waiting after round1 cntr1=" + cntr1;
 
@@ -8657,16 +8670,16 @@ public class StarTrader extends javax.swing.JFrame {
       eM.maxThreads[0][0] = 7.;
       cntr2 = 0;
       ttime = (new Date().getTime());
-      System.err.println("main3 before tests1 invoke testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs=" + EM.since(ttime) + ", cntr2=" + cntr2++);
+      System.err.println("main3 before tests1 invoke testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs=" + EM.since(ttime) + ", cntr2=" + cntr2++);
       stateConst = RUNNING;
       SwingUtilities.invokeAndWait(tests1);
-      System.err.println("after invokeAndWait tests1  thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cnt3a=" + cntr3a++);
+      System.err.println("------MDz----after invokeAndWait tests1  thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cnt3a=" + cntr3a++);
       cntr3 = 0;
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out invokeAndWait thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr3=" + cntr3++);
+        System.err.println("tests1 waiting out invokeAndWait thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr3=" + cntr3++);
         Thread.sleep(1000);
-        assert cntr3 < 171 : " stuck waiting after invokeAndWait cntr1=" + cntr1;
+        assert cntr3 < 171 : " stuck waiting after invokeAndWait cntr1=" + cntr1  + EM.mem();
 
       }
       EM.prioritySetMult[0][0] = 2.3;
@@ -8683,9 +8696,9 @@ public class StarTrader extends javax.swing.JFrame {
       ttime = (new Date().getTime());
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out round11a thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + EM.since(ttime) + ", cntr4=" + cntr4++);
+        System.err.println("tests1 waiting out round11a thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr4=" + cntr4++);
         Thread.sleep(1000);
-        assert cntr4 < 171 : " stuck waiting after round11a cntr4=" + cntr4;
+        assert cntr4 < 171 : " stuck waiting after round11a cntr4=" + cntr4 + EM.mem();
 
       }
       eM.maxThreads[0][0] = 10;
@@ -8697,7 +8710,7 @@ public class StarTrader extends javax.swing.JFrame {
       ttime = (new Date().getTime());
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out round13 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + EM.since(ttime) + ", cntr5=" + cntr5++);
+        System.err.println("tests1 waiting out round13 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr5=" + cntr5++);
         Thread.sleep(1000);
         assert cntr5 < 181 : " stuck waiting after round13 cntr5=" + cntr5;
       }
@@ -8711,9 +8724,9 @@ public class StarTrader extends javax.swing.JFrame {
       ttime = (new Date().getTime());
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out round15 testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + EM.since(ttime) + ", cntr6=" + cntr6++);
+        System.err.println("tests1 waiting out round15 testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr6=" + cntr6++);
         Thread.sleep(1000);
-        assert cntr6 < 201 : " stuck waiting after round15 cntr6 > 201" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5;
+        assert cntr6 < 201 : " stuck waiting after round15 cntr6 > 201" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + EM.mem();
       }
       //  double mab1[] = {.60, .60}; // resource costs planet,ship
       // double mac1[] = {.60, .60}; // staff costs planet ship 
@@ -8725,9 +8738,9 @@ public class StarTrader extends javax.swing.JFrame {
       cntr7 = 0;
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out testing round17 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + cntr7++);
+        System.err.println("tests1 waiting out testing round17 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + cntr7++);
         Thread.sleep(1000);
-        assert cntr7 < 41 : " stuck waiting after round117 cntr7=" + cntr7 + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6;
+        assert cntr7 < 41 : " stuck waiting after round117 cntr7=" + cntr7  + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6;
       }
 
       eM.resourceGrowth[0] = 2.;
@@ -8738,9 +8751,9 @@ public class StarTrader extends javax.swing.JFrame {
       cntr8 = 0;
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out testing round18 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr8=" + cntr8++ + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7);
+        System.err.println("tests1 waiting out testing round18 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr8=" + cntr8++ + EM.mem()  + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7);
         Thread.sleep(1000);
-        assert cntr8 < 211 : " stuck waiting after round119 cntr8=" + cntr8 + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7;
+        assert cntr8 < 211 : " stuck waiting after round119 cntr8=" + cntr8 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7;
       }
 
       eM.randFrac[0][0] = .9;
@@ -8752,18 +8765,18 @@ public class StarTrader extends javax.swing.JFrame {
       cntr1 = 9; //reset cntr1 again
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out testing round8 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr9=" + cntr9++);
+        System.err.println("tests1 waiting out testing round8 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr9=" + cntr9++);
         Thread.sleep(1000);
-        assert cntr9 < 221 : " stuck waiting after round21 cntr9=" + cntr9 + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8;
+        assert cntr9 < 221 : " stuck waiting after round21 cntr9=" + cntr9  + EM.mem()+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8;
       }
-      System.err.println("tests1 after testing round21 exit ok thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr9=" + cntr9 + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8);
+      System.err.println("tests1 after testing round21 exit ok thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr9=" + cntr9 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8);
       System.exit(0);  // success
 
     } catch (WasFatalError ex) {
       ex.printStackTrace(EM.pw);
       EM.thirdStack = EM.sw.toString();
       eM.flushes();
-      System.err.println("Main3 test2 Error " + ex.toString() + " " + EM.curEconName + " " + Thread.currentThread().getName() + EM.andMore());
+      System.err.println("Main3 test2 Error " + ex.toString() + " " + EM.curEconName + EM.mem() + " " + Thread.currentThread().getName() + EM.andMore());
       //ex.printStackTrace(System.err);
       System.exit(-17);
       // go to finally
@@ -8774,7 +8787,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.newError = true;
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       eM.flushes();
-      System.err.println(EM.tError = ("Main3 test2 Error " + ex.toString() + " " + EM.curEconName + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
+      System.err.println(EM.tError = ("Main3 test2 Error " + ex.toString() + " " + EM.curEconName + EM.mem() + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
       // ex.printStackTrace(System.err);
       eM.flushes();
       st.setFatalError();
