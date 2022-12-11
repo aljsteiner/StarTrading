@@ -47,9 +47,9 @@ public class TestStarTraderTest {
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
     try {
-      System.err.println("starting out in test main " + Thread.currentThread().getName());
+      System.err.println("-----MAA----starting out in aaa test main " + Thread.currentThread().getName());
       
-    mainStart();
+    StarTrader.mainStart();
     StarTrader.main3();// tests are now in main3
     
 
@@ -68,7 +68,7 @@ ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
       //ex.printStackTrace(System.err);
     System.exit(-15);
       // go to finally
-    } catch (Exception ex) {
+    } catch (Exception | Error ex) {
 ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
       eM.flushes();
       System.err.println(EM.tError=("Error " + ex.toString() + " " + st.since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));

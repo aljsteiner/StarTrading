@@ -558,6 +558,11 @@ class EM {
     return ret;
   }
   
+  /** print addMore() then set didMore=false;
+   * 
+   */
+  static void printAddMore(){ System.out.println("----PAM---" + addMore()); didMore=false;}
+  
   /** list possible string of memory strings
    * 
    * @return the string 
@@ -822,7 +827,7 @@ class EM {
    * @return avail megabytes + percent used
    */
   public static String mem(){
-    String ret = " avail" + mf(getAvailMemory()* .001) + " percent used" + mf(getPercentUsedMemory()) + "\n";
+    String ret = " avail" + mf(getAvailMemory()* .001) + " percent used" + mf(getPercentUsedMemory()) ;
     return ret;
   }
   
@@ -838,8 +843,8 @@ class EM {
     double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
     double mmem = (double) maxMem/ gigMem;
     //System.out.println("");
-    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + eM.year + "Gigs total=" + EM.mf(tmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " max=" +mf(mmem) + " used%max" + getPercentUsedMemory();
-    System.out.printf("----PM----" + since() + prGigMem + "<<<<<<" + "\n");
+    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + eM.year + "Gigs total=" + EM.mf(tmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " max=" + mf(mmem) + " used%max" + getPercentUsedMemory();
+    System.out.println("----PM----" + since() + prGigMem + "<<<<<<\n");
   }
 
   /** make a new copy of EM mot finished or used
