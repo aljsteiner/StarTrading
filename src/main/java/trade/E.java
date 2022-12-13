@@ -137,7 +137,7 @@ static StarTrader st;
   static final boolean debugPutRows2 = false; 
   static final boolean DEBUGWAITTRACE = debugMaster;
  static final boolean debugLogsOut = debugMaster; // StarTrader logs output
- static final boolean debugRsOut = true; // EM rs output
+ static final boolean debugRsOut = false; // EM rs output
  static final boolean debugFFOut = false; // EM Assets.CashFlow.calcForwardFund output
  static final boolean debugStatsOut1 = debugMaster; // stats output1
  static final boolean debugStatsOut2 = debugMaster; // stats output1

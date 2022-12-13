@@ -760,12 +760,25 @@ class EM {
    /**
    * get seconds since oldTime
    *
+   * @param oldTime original time milli seconds
    * @return seconds ssss.mmm
    */
   protected static String since(long oldTime) {
     long now = (new Date()).getTime();
     double nu = now - oldTime;
     return mf(nu * .001);
+  }
+    /**
+   * get seconds since oldTime
+   *
+   * @param desc description of the time 
+   * @param oldTime original time milli seconds
+   * @return seconds ssss.mmm
+   */
+  protected static String since(String desc,long oldTime) {
+    long now = (new Date()).getTime();
+    double nu = now - oldTime;
+    return " " + desc + "=" + mf(nu * .001);
   }
   
     /**
@@ -1669,7 +1682,7 @@ class EM {
  */
    double[][][] makeClanRS(double[][][][] rs4, double[][] mult5Ctbl, Econ ec) {
      double[][][] rs = new double[5][][];;// make [5 reqM reqG m t g][2 r s][4 rcsg]
-     prevLine ="";wasHere2="";wasHere3="";wasHere4="";
+     clearWH();
      int pors = ec.getPors();
      int clan = ec.getClan();
      double hiLoMult = ec.getHiLoMult();
