@@ -1714,7 +1714,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
 
-      if ((doImw = eM.maxThreads[0][0] >= 2.0 && doEndYearCnt[0] > eM.maxThreads[0][0])) {  // wait only if over cnt
+      if ((doImw = eM.maxThreads[0][0] >= 22.0 && doEndYearCnt[0] > eM.maxThreads[0][0])) {  // wait only if over cnt
         imWaiting(doEndYearCnt, (int) eM.maxThreads[0][0], 6, "doYearEnd " + name);
       }
       iWaited = (doImw ? " notImWaited + " : "  + ");
@@ -1749,7 +1749,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           }
       }
       }
-      if (EM.iMaxThreads[0] >= 2) {
+      if (EM.maxThreads[0][0] >= 22.) {
         // now in the main thread, up the assigned thread count
         incrEndYearCnt();
         long afterT = etTimes[2] = (new Date()).getTime();

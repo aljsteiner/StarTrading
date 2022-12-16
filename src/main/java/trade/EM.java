@@ -103,6 +103,12 @@ class EM {
   static final public String statsButton22Tip = "22: TB assigned";
   static final public String statsButton23Tip = "23: display table";
 
+  volatile long[][][][] resI;
+  volatile double[][][][] resV;
+  volatile String[][] resS;
+  final Integer syncRes=25; // sync res setting and surround during yearEnds
+  final Integer syncE = 30; // possible mult doYear associateds econ counts
+  final Integer syncY = 35; // mult doYear locks
   static final int lStatsWaitList = 10;
   static String[] statsWaitList = new String[lStatsWaitList];
   static volatile int ixStatsWaitList = 0;
@@ -3368,7 +3374,7 @@ onceAgain:
     doVal("years To Win", winDif, mwinDif, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the years before a winner is declared");
     doVal("resourceCosts", mab1, mmab1, "raise the cost of resources planet and ship, makes game harder");
     doVal("staffCosts", mac1, mmac1, "raise the costs of staff for planets and ships, makes planets and ships die more often");
-    doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
+ //   doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
     doVal("haveColors", haveColors, mHaveColors, "Above slider 50 the tab display will show the color of the current economy. The changing of colors helps understand how fast the game is going.  Some persons have trouble with blinking colors, so setting this slider below 50 will stop the color changes.");
     doVal("haveCash", haveCash, mHaveCash, "Above slider 50 the tab display Economies will start with some cash, cash is just another resource that can be traded, think of it as bars of gold, not as paper money");
     doVal("minEconomies ", minEcons, mMinEcons, "iincrease the minimum number of economies after the startup numbers, the game creates new economies, new economies start to be added at a random clan, rotating to other clans next");
@@ -3647,7 +3653,7 @@ onceAgain:
   static final double[] MAX_PRINT = {0., 10000000., 100000000., 1000000000., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
   static final double[] MULT_PRINT = {0., 10, 100, 1000, 10000, 100000, 1000000, 10000000., 100000000., 1000000000., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
   static int abc;
-  static String[][] resS;  // [RN][rDesc,rDetail] result string values
+  //static String[][] resS;  // [RN][rDesc,rDetail] result string values
   static int rDesc = 0;
   static int rDetail = 1; // detail or tip text
   static final int MAXDEPTH = 7;
@@ -3694,7 +3700,7 @@ onceAgain:
   static final int minYDepth = 1; // min number of output in year groups
   static final int maxYDepth = 2;
   // vector 4 is LCLANS
-  static volatile double[][][][] resV;
+  //static volatile double[][][][] resV;
   /**
    * resI [resNum][ICUM,ICUR0,...ICUR6(7*6rounds+2] [PCNTS[LCLANS],SCNTS[LCLANS]
    * ,CCONTROLD[ISSET,IVALID,IPOWER, (ICUM only),LOCKS0...3,IFRACS,IDEPTH]]
@@ -3740,7 +3746,7 @@ onceAgain:
   int inputClan = 5; // set in game inputs, 5=game
   int inputPorS = 0; // in inputs 0=P
 
-  volatile long[][][][] resI;
+
   static int winner = -1;
 
   // double gameV[][]; //[gameCnt][pval[],sval[],more[sngl,pmin,pmax,smin,smax]]
@@ -5207,11 +5213,11 @@ onceAgain:
               wasHere4 = "rN=" + rN + ", statsLim=" + statsLim + ", yrsIx=" + yrsIx + " lResI=" + lResI + ", lResV=" + lResV + ", cur0=" + cur0 + ", curIx=" + curIx + ", icur0=" + icur0 + ", Ty=" + (twh4 = (new Date().getTime() - st.startYear)) + ", thread" + Thread.currentThread().getName() + ", dif=" + (statsLim - yrsIx);
 
               wasHere4 += " " + (resI[rN][yrsIx] == null ? " not null" + yrsIx : " is null" + yrsIx);
-              long resLock[][] = resI[rN][yrsIx];
-              if (resLock != null) synchronized (resLock) {
+            //  long resLock[][] = resI[rN][yrsIx];
+            //  if (resLock != null) synchronized (resLock) {
                 resV[rN][yrsIx] = dd;
                 resI[rN][yrsIx] = ii;
-              }
+              //}
             } // end loop on yrsIx
 
             boolean doYears = statsLim >= STATSSHORTLIM;
@@ -5443,8 +5449,8 @@ onceAgain:
   double setStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
-      long resLock[][][] = resI[rn];
-      synchronized (resLock) {
+      //long resLock[][][] = resI[rn];
+      synchronized (syncRes) {
         int le = lStatsWaitList;
         int prevIx = ixStatsWaitList;
         ixStatsWaitList = (++ixStatsWaitList) % lStatsWaitList;
@@ -5491,6 +5497,10 @@ onceAgain:
         long[] resICurCC = resI[rn][ICUR0][CCONTROLD];
         long[] resICumCC = resI[rn][ICUM][CCONTROLD];
         /* now set the values in the appropriate age group */
+        EM.wasHere4 = "setStat rn=" + rn + " curm=" + curm + " pors=" + pors + " clan=" + clan;
+        EM.wasHere4 += " resI len=" + resI[rn].length; // prev value is saved
+        EM.wasHere4 += " resI[rn][curm]L=" + resI[rn][curm].length;
+        EM.wasHere4 += " +porsL=" + resI[rn][curm][pors].length;       
         double[] resVCurm = resV[rn][curm][pors];//cur addresses
         long[] resICurm = resI[rn][curm][pors];
         long[] resICurmCC = resI[rn][curm][CCONTROLD];
@@ -5548,6 +5558,10 @@ onceAgain:
             long resICumClan = resI[rn][ICUM][pors][clan];
             long resIcur0Clan = resI[rn][ICUR0][pors][clan];
             double resVcur0Clan = resV[rn][ICUR0][pors][clan];
+            EM.wasHere4 = "setStat rn=" + rn + " curm=" + curm + " pors=" + pors + " clan=" + clan;
+            EM.wasHere4 += " resI len=" + resI[rn].length; // prev value is saved
+            EM.wasHere4 += " resI[rn][curm]L=" + resI[rn][curm].length;
+            EM.wasHere4 += " +porsL=" + resI[rn][curm][pors].length;       
             long resICurmClan = resI[rn][curm][pors][clan];
             double resVCurmClan = resV[rn][curm][pors][clan];
             long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
@@ -5599,8 +5613,7 @@ onceAgain:
   double setMaxStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
-      long resLock[][][] = resI[rn];
-      synchronized (resLock) {
+      synchronized (syncRes) {
         int le = 10;
         int prevIx = ixStatsWaitList;
         ixStatsWaitList = (++ixStatsWaitList) % lStatsWaitList;
@@ -5759,8 +5772,7 @@ onceAgain:
   double setMinStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
-      long resLock[][][] = resI[rn];
-      synchronized (resLock) {
+      synchronized (syncRes) {
         int le = 10;
         int prevIx = ixStatsWaitList;
         ixStatsWaitList = (++ixStatsWaitList) % lStatsWaitList;
@@ -7519,6 +7531,7 @@ onceAgain:
    * @return the sum of units as filtered by the selectors
    */
   int getCurCumPorsClanUnitSum(int rn, int curCum, int porsStart, int porsEnd, int clanStart, int clanEnd) {
+    synchronized (syncRes){
     String anErr = "";
     if (E.PAINTDISPLAYOUT) {
       anErr = (curCum < ICUM ? "curCum=" + curCum + " is less than ICUM"
@@ -7538,17 +7551,16 @@ onceAgain:
       }
     }
     int mPors = 0, nClan = 0, iSum = 0;
-    long resLock[][] = resI[rn][curCum];
-    synchronized (resLock) {
+    
       for (mPors = porsStart; mPors < porsEnd; mPors++) {
         for (nClan = clanStart; nClan < clanEnd; nClan++) {
           iSum += (int) (long) resI[rn][curCum][mPors][nClan];
         }
       }
-    }
+    
     return iSum;
-  }
-
+  } // syncRes
+  } //getCurCumPorsClanUnitSum
   /**
    * get a val sum from the stats database, it could be for the current year or
    * for the cunulative sum of all the years
@@ -7564,6 +7576,7 @@ onceAgain:
    * @return the sum of values as filtered by the selectors
    */
   double getCurCumPorsClanValSum(int rn, int curCum, int porsStart, int porsEnd, int clanStart, int clanEnd) {
+    synchronized(syncRes){
     String anErr = "";
     if (E.PAINTDISPLAYOUT) {
       anErr = (curCum < ICUM ? "curCum=" + curCum + " is less than ICUM"
@@ -7584,15 +7597,13 @@ onceAgain:
     } // if DEBUG
     double vSum = 0.;
     int mPors = 0, nClan = 0, iSum = 0;
-    long resLock[][] = resI[rn][curCum];
-    synchronized (resLock) {
       for (mPors = porsStart; mPors < porsEnd; mPors++) {
         for (nClan = clanStart; nClan < clanEnd; nClan++) {
           vSum += resV[rn][curCum][mPors][nClan];
         }
       }
-    }
     return vSum;
+  }// syncRes
   }
 
   /**
@@ -7611,6 +7622,7 @@ onceAgain:
    * @return the average of values/units as filtered by the selectors
    */
   double getCurCumPorsClanAve(int rn, int curCum, int nYears, int porsStart, int porsEnd, int clanStart, int clanEnd) {
+    synchronized(syncRes){
     String anErr = "";
     if (E.PAINTDISPLAYOUT) {
       anErr = (curCum < ICUM ? "curCum=" + curCum + " is less than ICUM"
@@ -7635,8 +7647,6 @@ onceAgain:
     double ave = 0., sum = 0., val = 0.;
     int units = 0, sumUnits = 0;
     int mPors = 0, nClan = 0, iSum = 0;
-    long resLock[][] = resI[rn][curCum];
-    synchronized (resLock) {
       for (mPors = porsStart; mPors < porsEnd; mPors++) {
         for (nClan = clanStart; nClan < clanEnd; nClan++) {
           for (int yIx = 0; yIx < nYears; yIx++) {
@@ -7654,10 +7664,10 @@ onceAgain:
           }
         }
       } // mPors
-    }
+
     return units > 0 ? sum / units : 0.;
   }
-
+    }
   /**
    * get a val min from the stats database, it could be for the current year or
    * for the cunulative mins of all the years
@@ -7673,6 +7683,7 @@ onceAgain:
    * @return the min of values as filtered by the selectors
    */
   double getCurCumPorsClanValMin(int rn, int curCum, int porsStart, int porsEnd, int clanStart, int clanEnd) {
+    synchronized(syncRes){
     String anErr = "";
     if (E.PAINTDISPLAYOUT) {
       anErr = (curCum < ICUM ? "curCum=" + curCum + " is less than ICUM"
@@ -7699,5 +7710,6 @@ onceAgain:
       }
     }
     return vMin;
+  }
   }
 } // Class EM

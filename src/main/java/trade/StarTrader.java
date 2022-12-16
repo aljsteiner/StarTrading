@@ -8691,7 +8691,7 @@ public class StarTrader extends javax.swing.JFrame {
 EM.wasHere8 = "--rnd1 lcnt=" + (100-cntr1) + " rtime" + EM.since(rtime) + EM.mem();
 Thread.sleep(4000);
       }
-      eM.maxThreads[0][0] = 7.;
+    //  eM.maxThreads[0][0] = 7.;
       cntr2 = 0;
       rtime = (new Date().getTime());
  //     System.err.println("main3 before tests1 invoke testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs=" + EM.since(ttime) + ", cntr2=" + cntr2++);
@@ -8726,7 +8726,7 @@ Thread.sleep(4000);
         assert cntr4 < 101 : " stuck waiting after round4 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime",rtime) + ":" + EM.since() + " cntr4=" + cntr3;
          Thread.sleep(4000);
       }
-      eM.maxThreads[0][0] = 7.;
+     // eM.maxThreads[0][0] = 7.;
       EM.prioritySetMult[0][0] = 2.8;
       EM.prioritySetMult[1][0] = 2.8;
       EM.vdifMult = 0.085;
