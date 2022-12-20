@@ -49,7 +49,7 @@ public class TestStarTraderTest {
     try {
       System.err.println("-----MAA----starting out in aaa test main " + Thread.currentThread().getName());
       
-    StarTrader.mainStart();
+    StarTrader.mainStart(args);
     StarTrader.main3();// tests are now in main3
     
 

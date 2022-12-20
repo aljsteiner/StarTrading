@@ -49,7 +49,7 @@ public class TestStarTraderTest {
     try {
       System.err.println("starting out in test main " + Thread.currentThread().getName());
       
-    mainStart();
+    mainStart(args);
     StarTrader.main3();
     
 

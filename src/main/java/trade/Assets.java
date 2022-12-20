@@ -7522,7 +7522,9 @@ public class Assets {
 
       // finish processes before leaving this loop
       int mMax = 4,m=0; // max loops internal vars
-      for (m = 0; m < mMax && (doing || xcess); m++) {
+      // do we need more future fund or is it full
+      double ffFull = EM.getInitialEconWorth(pors, clan)* 5.0;
+      for (m = 0; m < mMax && (doing || xcess) && ffFull > eM.clanFutureFunds[clan]+ yearsFutureFund; m++) {
         xcess = doing = false; // false unless section does doing
         // only continue sizeFF the yearly dues process
         if (resTypeName.contains("izeFF")) {

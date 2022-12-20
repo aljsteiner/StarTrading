@@ -111,6 +111,7 @@ static StarTrader st;
   static final boolean debugTradeBarter = debugMaster; // in barter process
   static final boolean debugTradeSetup = debugMaster; // distance, location etc
   static final boolean debugSwaps = debugMaster; // doloops other swap tests
+  static final boolean debugDidEconYearEnd = debugMaster; // StarTrader.doYear() doYearEdn
   static final boolean debugStats = debugMaster; // why stats aren't showing
   static final boolean debugStatsOut = debugMaster; // stats output
   static final boolean debugScannerOut = debugMaster; // scanner output
@@ -140,7 +141,7 @@ static StarTrader st;
  static final boolean debugRsOut = false; // EM rs output
  static final boolean debugFFOut = false; // EM Assets.CashFlow.calcForwardFund output
  static final boolean debugStatsOut1 = debugMaster; // stats output1
- static final boolean debugStatsOut2 = debugMaster; // stats output1
+ static final boolean debugStatsOut2 = false; // stats output1
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
   static final boolean debugPutRowsOutUnset = false; //put out warnings of unset stats

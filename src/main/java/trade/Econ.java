@@ -314,7 +314,7 @@ public class Econ {
       if (E.errEconInit) {
         a11c += " m" + m + ", sec" + sec + " pa" + EM.mf(paddition[m]) + ", fm" + EM.mf(fracMult) + ", rp" + EM.mf(resourcePri[sec]) + " :::::\n";
       }
-      assert resourcePri[sec] > 0.3 : "!!!!!!!!Econ.init.setPiorities Error psm=" + EM.mf(EM.prioritySetMult[pors][0]) + a11a + "<<<a<<\n" + a11b + "<<<b<<\n" + a11c + "<<<c<<\n" + a11d + "<<<d<<";
+      assert resourcePri[sec] >= 0.3 : "!!!!!!!!Econ.init.setPiorities Error psm=" + EM.mf(EM.prioritySetMult[pors][0]) + a11a + "<<<a<<\n" + a11b + "<<<b<<\n" + a11c + "<<<c<<\n" + a11d + "<<<d<<";
       remainingPri -= resourcePri[sec]; // reduce available pri by this pri
       pris.remove(sec);
     }// for sec

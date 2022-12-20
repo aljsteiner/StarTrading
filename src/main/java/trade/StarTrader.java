@@ -233,7 +233,7 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
   static final public String versionText = "19.40";
   static final public String storyText
-          = "StarTrader       Version 19.43\n"
+          = "StarTrader       Version 19.44\n"
           + "\n"
           + "“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Cooperating together with trades”: is a mini strategic economics game emphasizing cooperation over competition.  Each economy has assets of resources, staff and knowledge in 7 financial sectors.  Each year each financial sector has costs using up some resources and some staff.  \n"
           + "\n"
@@ -5612,14 +5612,14 @@ public class StarTrader extends javax.swing.JFrame {
       aTime = (new Date()).getTime();
       for (stateCnt = 0; !EM.dfe() && !eM.stopExe && !done; stateCnt++) {
         ec = curEc = EM.curEcon;
-        EM.wasHere3 = "---------AA--------runYears2 before seEconState " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + ", econ=" + EM.curEconName;
+        EM.wasHere3 = "---------AA--------runYears2 before seEconState " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + "Y" + EM.year + " cnt" + stateCnt;
         if (E.debugStatsOut1)System.out.println(EM.wasHere3);
         checkEconState(); // check for stuck
-        if (E.debugStatsOut1)System.out.println("------NC------^^runYears2 " + sinceA() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
+        if (E.debugStatsOut2)System.out.println("------NC------^^runYears2 " + sinceA() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
         if (E.debugStatsOut1)System.out.println("----------RYa-------runYears2 " + sinceA()+ sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
         paintCurDisplay(ec);
         // now do waits until the next check of stateConst and paintCurDisplay
-        if (E.debugStatsOut1)System.out.println("----------RYb-------runYears2 " + sinceA()+ sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+        if (E.debugStatsOut2)System.out.println("----------RYb-------runYears2 " + sinceA()+ sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
         switch (stateConst) {
           case CONSTRUCTING:
           case CONSTRUCTED:
@@ -6418,7 +6418,7 @@ public class StarTrader extends javax.swing.JFrame {
   }
 
   void printMem() {
-    System.out.println();
+   // System.out.println();
   }
 
   int[] clanShipsDone = {0, 0, 0, 0, 0};
@@ -6786,8 +6786,6 @@ public class StarTrader extends javax.swing.JFrame {
       if (doStop || eM.dfe()) {
         stateConst = STOPPED;
       } else {
-        stateConst = FUTUREFUNDCREATE;
-        curStateName = "FFCreate";;
         paintFutureFundEconCreate();
         E.msgcnt = 0;
         int nClans = E.clan.values().length - 3;
@@ -6799,7 +6797,7 @@ public class StarTrader extends javax.swing.JFrame {
             }
           }
         }
-        for (finishedClans = 0; clansLoop < 50 && finishedClans < 5 && !eM.dfe(); clansLoop++) {
+        for (finishedClans = 0; clansLoop < 50 && finishedClans < 5 && eM.econCnt <= eM.econLimits3[0] && !eM.dfe(); clansLoop++) {
           econClan = (int) (clansLoop) % 5;
           startEconState = (new Date()).getTime();
           double limits3 = eM.econCnt - eM.econLimits3[0];
@@ -6809,11 +6807,11 @@ public class StarTrader extends javax.swing.JFrame {
           int econPorS = EM.getNewPorS(econClan);
           double clanWorth = EM.getInitialEconWorth(econPorS, econClan);
           // now make a econ if FFunds > clanWorth
-          finishedClans++; // stop is non of the next five
+          finishedClans++; // stop is if none of the next five
           if (eM.clanFutureFunds[econClan] > clanWorth) {
             System.out.println("year" + eM.year + " " + "  clan=" + econClan + " initial clan worth=" + clanWorth + " econCnt=" + eM.econCnt);
             finishedClans = 0; // start over finished future create clans
-            ec = curEc = eM.curEcon = newEcon(clanWorth, econPorS, econClan);  // include new of Econ
+            EM.setCurEcon(ec = curEc = newEcon(clanWorth, econPorS, econClan));  // include new of Econ
             if (E.debugEconCnt) {
               synchronized (EM.econCnt) {
                 if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -6852,9 +6850,9 @@ public class StarTrader extends javax.swing.JFrame {
       if (doStop || eM.dfe()) {
         stateConst = STOPPED;
       } else {
-        stateConst = STARTYR;
+        //stateConst = STARTYR;
         paintStartYear();
-        curStateName = "startYear";
+        //curStateName = "startYear";
         E.msgcnt = 0;
         // ignored planetsStart 0:planets.size(). start the years
         for (planetsLoop = 0; planetsLoop < eM.planets.size() && !eM.dfe(); planetsLoop++) {
@@ -7078,7 +7076,7 @@ public class StarTrader extends javax.swing.JFrame {
           }
           EM.wasHere = "after setLogEnvirn econCnt)";
           EM.twh1 = new Date().getTime();
-          EM.curEcon.doYearEnd();
+          EM.curEcon.doYearEnd(); // finally Assets.CashFlow.yearEnd()
           EM.wasHere = "after EM.curEcon.doYearEnd()";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {
@@ -7091,8 +7089,7 @@ public class StarTrader extends javax.swing.JFrame {
           }
           //   paintEconEndYear(EM.curEcon);
 
-          //   System.out.print(new Date().toString() + " after year end" + EM.curEcon.name + "=ship " + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " " + EM.curEcon.name + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
-          printMem();
+          if(E.debugDidEconYearEnd)System.out.println("-----DYE------" + " after year end cnt=" + envsLoop2 + " of" + maxEcons + " "  + EM.sinceRunYear() + " " + EM.curEconName + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
           if (E.debugEconCnt) {
             synchronized (EM.econCnt) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -7100,7 +7097,7 @@ public class StarTrader extends javax.swing.JFrame {
               }
             }
           }
-          String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[EM.curEcon.clan] + " " + EM.curEcon.name + " h="
+          String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[EM.curEcon.clan] + " " + EM.curEconName + " h="
                   + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.age
                   + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
           System.out.println(new Date().toString() + disp1);
@@ -7128,7 +7125,7 @@ public class StarTrader extends javax.swing.JFrame {
         }
         EM.curEcon.imWaiting(Econ.doEndYearCnt, 0, 4, "doYear ended yearEnds");
         if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
+          synchronized (eM.syncE) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -7196,12 +7193,12 @@ public class StarTrader extends javax.swing.JFrame {
         // System.out.print(EM.curEcon.name + since() + " after gamePanelChange");
         printMem3();
       }
-      String eMCurEcon = (EM.curEcon != null && EM.curEcon.name != null ? EM.curEcon.name : "**none**");
+      String eMCurEcon = EM.curEconName;
       EM.wasHere = "In doYear finally econ=" + eMCurEcon;
       String xxx = since() + " In doYear finally econs=" + EM.econs.size();
       ec = curEc = EM.curEcon; // just to be safe
       if (EM.curEcon != null && EM.curEcon.name != null) {
-        xxx += " name=" + EM.curEcon.getName();
+        xxx += " name=" + EM.curEconName;
       }
       xxx += " econsCnt=" + EM.econCnt;
 
@@ -7638,6 +7635,7 @@ public class StarTrader extends javax.swing.JFrame {
   void paintStartYear() {
     //   controlPanels.setVisible(true);
     ec = curEc = EM.curEcon;
+    setEconState(STARTYR);
     controlPanels.getComponent(3);
     display.setVisible(false);
     displayPanel1.setVisible(false);
@@ -8389,7 +8387,7 @@ public class StarTrader extends javax.swing.JFrame {
     try {
       //   E.bRemember = Files.newBufferedWriter(E.REMEMBER, E.CHARSET);
       System.err.println("starting out in oldmain thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
-      mainStart();
+      mainStart(args);
       st.setVisible(true);
       stateConst = CONSTRUCTED;
 
@@ -8447,7 +8445,7 @@ public class StarTrader extends javax.swing.JFrame {
    *
    * @throws IOException
    */
-  public static void mainStart() throws IOException {
+  public static void mainStart(String args[]) throws IOException {
     try {
       //   E.bRemember = Files.newBufferedWriter(E.REMEMBER, E.CHARSET);
       System.err.println("----MSa-----starting out in mainStart thread=" + Thread.currentThread().getName());
@@ -8456,7 +8454,9 @@ public class StarTrader extends javax.swing.JFrame {
       // E.bRemember.write(rOut,0,rOut.length());
       // E.bKeep.write(rOut,0,rOut.length());
       PrintStream jout, jerr, jout1, jerr1;
-      if (E.debugOutput) {
+      
+      if (E.debugOutput || (args.length > 0 && args[0].contains("see"))) {
+      //if (E.debugOutput) {
         jout = new PrintStream(new File("StarTraderOutput.txt"));
         //  jout1 = new PrintStream(new File("StarTraderOut1.txt"));
         //  jout1.println("jout1 line");
@@ -8464,7 +8464,8 @@ public class StarTrader extends javax.swing.JFrame {
         System.out.println("----MSO0----System.out line 0");
         jerr = new PrintStream(new File("StarTraderErrors.txt"));
         //     jerr1 = new PrintStream(new File("StarTraderErr1.txt"));
-        if (E.resetOut) {
+        if (E.resetOut || (args.length > 0 && args[0].contains("see"))) {
+      //  if (E.resetOut) {
           System.setOut(jout);
           System.out.println("-----MSOO----output to System.out after setOut");
           System.setErr(jerr);
@@ -8692,12 +8693,22 @@ EM.wasHere8 = "--rnd1 lcnt=" + (100-cntr1) + " rtime" + EM.since(rtime) + EM.mem
 Thread.sleep(4000);
       }
     //  eM.maxThreads[0][0] = 7.;
+      eM.difficultyPercent[0] = 60.;
+      EM.prioritySetMult[0][0] = 2.9;
+      EM.prioritySetMult[1][0] = 2.9;
       cntr2 = 0;
       rtime = (new Date().getTime());
- //     System.err.println("main3 before tests1 invoke testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs=" + EM.since(ttime) + ", cntr2=" + cntr2++);
-  //    stateConst = RUNNING;
-   //   SwingUtilities.invokeAndWait(tests1);
- //     System.err.println("------MDz----after invokeAndWait tests1  thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cnt3a=" + cntr3a++);
+      st.runYears(2);
+      
+       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
+        System.err.println("tests1 waiting out round2 thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + EM.since("rtime",rtime) + ", cntr2=" + ++cntr2);
+       EM.wasHere8 = "--rnd3 lcnt=" + (100-cntr2) + " rtime" + EM.since(rtime) + EM.mem(); 
+       assert cntr2 < 101 : " stuck waiting after round3 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime",rtime) + ":" + EM.since("startTime",startTime) + " cntr2=" + cntr2;
+       Thread.sleep(4000);
+      }
+      eM.difficultyPercent[0] = 55.;
+      EM.prioritySetMult[0][0] = 2.5;
+      EM.prioritySetMult[1][0] = 2.5;
       cntr3 = 0;
       st.runYears(2);
       // wait for runYears to finish
@@ -8709,7 +8720,7 @@ Thread.sleep(4000);
       }
       EM.prioritySetMult[0][0] = 2.3;
       EM.prioritySetMult[1][0] = 2.3;
-      eM.difficultyPercent[0] = 80.;
+      eM.difficultyPercent[0] = 60.;
       EM.clanStartFutureFundDues[0][0] = 700.;
       EM.clanStartFutureFundDues[0][1] = 700.;
       EM.clanStartFutureFundDues[1][0] = 700.;
@@ -8736,8 +8747,8 @@ Thread.sleep(4000);
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M5---waiting out round5 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr5=" + ++cntr5);
-        EM.wasHere8 = "--rnd5 lcnt=" + (100-cntr5) + " rtime" + EM.since(rtime) + EM.mem(); 
-        assert cntr5 < 101 : " stuck waiting after round5 cntr5=" + cntr5;
+        EM.wasHere8 = "--rnd5 lcnt=" + (150-cntr5) + " rtime" + EM.since(rtime) + EM.mem(); 
+        assert cntr5 < 151 : " stuck waiting after round5 cntr5=" + cntr5;
         Thread.sleep(4000);
       }
       eM.clanShipFrac[0][0] = .66; // 2/1 from .501
@@ -8751,8 +8762,8 @@ Thread.sleep(4000);
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M6----waiting out round6 testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr6=" + ++cntr6);
-        EM.wasHere8 = "--rnd6 lcnt=" + (100-cntr6) + " rtime" + EM.since(rtime) + EM.mem();
-        assert cntr6 < 101 : " stuck waiting after round6 cntr6 > 201" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5+ " cntr6=" + cntr6 + EM.mem();
+        EM.wasHere8 = "--rnd6 lcnt=" + (200-cntr6) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr6 < 201 : " stuck waiting after round6 cntr6 > 201" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5+ " cntr6=" + cntr6 + EM.mem();
         Thread.sleep(4000);
       }
       //  double mab1[] = {.60, .60}; // resource costs planet,ship
@@ -8766,8 +8777,8 @@ Thread.sleep(4000);
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M7----waiting out testing round7 =" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + ++cntr7);
-        EM.wasHere8 = "--rnd7 lcnt=" + (100-cntr7) + " rtime" + EM.since(rtime) + EM.mem();
-        assert cntr7 < 171 : " stuck waiting after round7 cntr7=" + cntr7  + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + cntr7;
+        EM.wasHere8 = "--rnd7 lcnt=" + (200-cntr7) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr7 < 201 : " stuck waiting after round7 cntr7=" + cntr7  + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + cntr7;
                 Thread.sleep(4000);
       }
 
@@ -8795,13 +8806,17 @@ Thread.sleep(4000);
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M9----waiting out testing round9 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr9=" + ++cntr9);
-        EM.wasHere8 = "--rnd7 lcnt=" + (220-cntr9) + " rtime" + EM.since(rtime) + EM.mem();
-        assert cntr9 < 221 : " stuck waiting after round9 cntr9=" + cntr9 + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + EM.since(startTime); //(new Date().getTime() - startTime);
+        EM.wasHere8 = "--rnd9 lcnt=" + (250-cntr9) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr9 < 251 : " stuck waiting after round9 cntr9=" + cntr9 + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + EM.since(startTime); //(new Date().getTime() - startTime);
         Thread.sleep(4000);
       }
-      System.err.println("tests1 after testing round9 exit ok thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.since() + EM.since("rtime",rtime) + ", cntr9=" + cntr9 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8);
+      System.err.println("tests1 after testing round9 exit ok thread=" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.since() + EM.since("rtime",rtime) 
+              + ", cntr9=" + cntr9 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 
+              + " cntr3=" + cntr3+ " cntr4=" + cntr4
++ " cntr5=" + cntr5 + " cntr6="
+              + " cntr7=" + cntr7 + " cntr8=" + cntr8);
       System.exit(0);  // success
-
+  
     } catch (WasFatalError ex) {
       ex.printStackTrace(EM.pw);
       EM.thirdStack = EM.sw.toString();

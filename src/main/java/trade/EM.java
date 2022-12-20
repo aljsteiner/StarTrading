@@ -192,12 +192,12 @@ class EM {
   static final double[][] mClanShipFrac = {{.25, .81}, {.20, 1.20}};
   static volatile double[][] clanAllShipFrac = {{.501, .501, .501, .501, .501}}; // clan (ships/econs)
   static final double[][] mClanAllShipFrac = {{.25, 1.20}, {.2, 1.20}};
-  static volatile double econLimits1[] = {300.}; // start limiting econs
-  static final double mEconLimits1[][] = {{200., 500.}, {200., 500.}};
-  static volatile double econLimits2[] = {350.}; // more limiting of econs
-  static final double mEconLimits2[][] = {{275., 550.}};
-  static volatile double econLimits3[] = {400.}; // max of econs
-  static volatile double mEconLimits3[][] = {{300., 600.}};
+  static volatile double econLimits1[] = {150.}; // start limiting econs
+  static final double mEconLimits1[][] = {{100., 500.}, {200., 500.}};
+  static volatile double econLimits2[] = {150.}; // more limiting of econs
+  static final double mEconLimits2[][] = {{75., 550.}};
+  static volatile double econLimits3[] = {200.}; // max of econs
+  static volatile double mEconLimits3[][] = {{100., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
   static String tError = "";
@@ -882,7 +882,13 @@ class EM {
    * @return avail megabytes + percent used
    */
   public static String mem() {
-    String ret = " avail" + mf(getAvailMemory() * .001) + " percent used" + mf(getPercentUsedMemory());
+    totMem = runtime.totalMemory();
+    freeMem = runtime.freeMemory();
+    maxMem = runtime.maxMemory();
+    usedMem = totMem - freeMem;
+   double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
+    double mmem = (double) maxMem / gigMem;
+    String ret = " Gmem tot" + mf(tmem) + " used" + mf(umem) + " free" + mf(fmem) + " max" + mf(mmem);
     return ret;
   }
 
