@@ -196,7 +196,7 @@ class EM {
   static final double mEconLimits1[][] = {{100., 500.}, {200., 500.}};
   static volatile double econLimits2[] = {150.}; // more limiting of econs
   static final double mEconLimits2[][] = {{75., 550.}};
-  static volatile double econLimits3[] = {200.}; // max of econs
+  static volatile double econLimits3[] = {110.}; // max of econs
   static volatile double mEconLimits3[][] = {{100., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
@@ -877,7 +877,7 @@ class EM {
   }
 
   /**
-   * get string of avail and percent used memory
+   * get string of tot, used, free, max memory
    *
    * @return avail megabytes + percent used
    */
@@ -888,7 +888,7 @@ class EM {
     usedMem = totMem - freeMem;
    double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
     double mmem = (double) maxMem / gigMem;
-    String ret = " Gmem tot" + mf(tmem) + " used" + mf(umem) + " free" + mf(fmem) + " max" + mf(mmem);
+    String ret = " Gmem "  + " max" + mf(mmem) + " tot" + mf(tmem) + " used" + mf(umem) + " free" + mf(fmem) ;
     return ret;
   }
 

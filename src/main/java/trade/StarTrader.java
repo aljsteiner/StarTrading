@@ -7481,7 +7481,8 @@ public class StarTrader extends javax.swing.JFrame {
         } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS3 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
-        disp1 += "year" + eM.year + " Threads=" + Econ.getThreadCnt() + ":" + Thread.activeCount() + " " + EM.wasHere8 + " " + since() + " " + sinceRunYear() + "  " + newLine + prGigMem + newLine;
+        disp1 += "year" + eM.year + " Threads=" + Econ.getThreadCnt() + ":" + Thread.activeCount() + " " + EM.wasHere8 + " " + since() + " " + sinceRunYear() + "  " + newLine;
+        disp1 += "more " + EM.wasHere8  + EM.mem()+ newLine;
 
         /*
        + "==millisecs econ per year= millisecs per year/econs  ===========" + newLine;
