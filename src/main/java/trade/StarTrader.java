@@ -5669,7 +5669,7 @@ public class StarTrader extends javax.swing.JFrame {
             if (E.debugStatsOut1) {
               System.out.println("----------MD-------runYears2;" + since()+ sinceAA() + " " + stateStringNames[stateConst] + "Y" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
-            // listRes(fullRes); done in runBackgroundYears4
+            listRes(fullRes); //done in runBackgroundYears4
             break;
 
           case RUNSDONE:
@@ -5737,13 +5737,13 @@ public class StarTrader extends javax.swing.JFrame {
       System.err.println(EM.errLine + "<<<<<<<<<<<<<<<<<<<");
     }
     if (false) {
-      display.setVisible(false);
+      display.setVisible(true);
 
       controlPanels.setSelectedIndex(4);
       cpIx2 = controlPanels.getSelectedIndex();
-
+      stats.setVisible(true);
       listRes(0, resLoops, fullRes);
-      controlPanels.setSelectedIndex(4);
+      //controlPanels.setSelectedIndex(4);
       cpIx3 = controlPanels.getSelectedIndex();
       stats.setVisible(true);
       stats.revalidate();
@@ -7589,13 +7589,15 @@ public class StarTrader extends javax.swing.JFrame {
         controlPanels.setSelectedIndex(4);
         cpIx2 = controlPanels.getSelectedIndex();
 
-        listRes(0, resLoops, fullRes);
+       listRes(0, resLoops, fullRes);
         controlPanels.setSelectedIndex(4);
         cpIx3 = controlPanels.getSelectedIndex();
         stats.setVisible(true);
         stats.revalidate();
         stats.repaint();
-        display.setVisible(true);
+        controlPanels.revalidate();
+        controlPanels.repaint();
+        controlPanels.setVisible(true);
         cpIx4 = controlPanels.getSelectedIndex();
       } else {  // not STATS
         controlPanels.setSelectedIndex(3);
@@ -8263,7 +8265,7 @@ public class StarTrader extends javax.swing.JFrame {
 
   static int listResNoteCount = 0;
 
-  void listRes(int list, long resLoops[][], double[] fullRes) {
+  synchronized void listRes(int list, long resLoops[][], double[] fullRes) {
     arow = 0;
     eM.getWinner(); // recalc winner, my be after settings changed
     eM.rememberFromPage = false; // forget remember at a new page

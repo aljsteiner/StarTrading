@@ -48,12 +48,12 @@ public class ABalRows extends A6Rowa {
   static final int BONUSUNITSIX = BONUSYEARSIX + lsubs;//24 L4
   static int CUMULATIVEUNITBONUSIX = BONUSUNITSIX+lsubs;//26 L4
   static final int CUMULATIVEUNITDECAYIX = CUMULATIVEUNITBONUSIX + lsubs; //32 L4
-  static final int RAWUNITGROWTHIX = CUMULATIVEUNITDECAYIX + lsubs; //36
-  static final int BONUSYEARLYUNITGROWTHIX = RAWUNITGROWTHIX + lsubs; //40
-  static final int RAWGROWTHIX = BONUSYEARLYUNITGROWTHIX + lsubs; //44 
-  static final int TRADEDGROWTHIX = RAWGROWTHIX + lsubs; //48
-  static final int SWAPPEDGROWTHIX = TRADEDGROWTHIX + lsubs; //52
-  static final int COMMONKNOWLEDGEIX = SWAPPEDGROWTHIX + lsubs; //56
+  static final int RAWUNITGROWTHSIX = CUMULATIVEUNITDECAYIX + lsubs; //36
+  static final int BONUSYEARLYUNITGROWTHSIX = RAWUNITGROWTHSIX + lsubs; //40
+  static final int RAWGROWTHSIX = BONUSYEARLYUNITGROWTHSIX + lsubs; //44 
+  static final int TRADEDGROWTHSIX = RAWGROWTHSIX + lsubs; //48
+  static final int SWAPPEDGROWTHSIX = TRADEDGROWTHSIX + lsubs; //52
+  static final int COMMONKNOWLEDGEIX = SWAPPEDGROWTHSIX + lsubs; //56
   static final int NEWKNOWLEDGEIX = COMMONKNOWLEDGEIX + 1; //60
   static final int MANUALSIX = NEWKNOWLEDGEIX + 1; //61
   static final int BALSLENGTH = MANUALSIX + 2; //63
@@ -239,6 +239,7 @@ public class ABalRows extends A6Rowa {
   ABalRows setTRows(A10Row tcosts10){
       A[TCOSTSIX] = tcosts10.A[0];
       A[TCOSTSIX + 1] = tcosts10.A[1];
+      
       return this;
   }
 
@@ -357,6 +358,38 @@ public class ABalRows extends A6Rowa {
    */
   void listGrowths(int blev, String apre, int alev) {
     sendHist(GROWTHSIX, GROWTHSIX + 3, blev, apre, alev);
+  }
+  
+  /**
+   * get the rawUnitGrowths references of bals
+   *
+   * @param lev level of the new A6Row
+   * @param titl titl of the new A6Row
+   * @return a mew A6Row using the growths section of bals
+   */
+  A6Row getRawUnitGrowths(int lev, String titl) {
+    return use4(RAWUNITGROWTHSIX, lev, titl);
+  }
+
+  /**
+   * get reference to a single ARow corresponding to RAWUNITGROWTHSIX
+   *
+   * @param m index of the growths ARow s
+   * @return growth ARow for index m
+   */
+  ARow getRawUnitGrowthsRow(int m) {
+    return A[RAWUNITGROWTHSIX + m];
+  }
+
+  /**
+   * list the rawUnitGrowths rows in bals
+   *
+   * @param blev highest level that will be listed
+   * @param apre prefix of listed rows
+   * @param alev level of listed rows
+   */
+  void listRawUnitGrowths(int blev, String apre, int alev) {
+    sendHist(RAWUNITGROWTHSIX, RAWUNITGROWTHSIX + 3, blev, apre, alev);
   }
 
   /**

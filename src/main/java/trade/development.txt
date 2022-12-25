@@ -17,12 +17,15 @@
 
 ******* sometimes new lines went to the end, recently they went to start.  no always done
 
+12/24/22 Still have liveLock with threads, the Assets.CashFlow.yearEnd() has too
+many calls to setStats in the same sequence requiring synchronization, this 
+eliminates any parallel processing by threads.  So I disabled threads as an
+option.  After running out of memory, I assign memory -Xmxs3072m
 12/14/22 found that static declarations are all part of class declaration lock t
 his causes static EM.setStat locking problems.  Multiple threads can occur 
 during Assets.CashFlow.calcFutureFund() which runs several time in swaps and
 does a lot of the same sequence of EM.setStats.  I hope eliminating static setStats
 will avoid what appears to be liveLock
-
  12/6/2022 Runtime runtime           = Runtime.getRuntime();
 long presumableFreeMemory = runtime.maxMemory() - allocatedMemory;
 long allocatedMemory      = runtime.totalMemory() - runtime.freeMemory();

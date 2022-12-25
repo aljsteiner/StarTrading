@@ -416,8 +416,8 @@ class EM {
   static final double[][] mClanRisk = {{.0, .7}, {.0, .7}};
   static volatile double[][] gameClanRiskMult = {{1.}, {1.}};  // range .0 - .6
   static final double[][] mGameClanRiskMult = {{.0, 1.6}, {.0, 1.6}};  // range .0 - .6
-  static volatile double[][] catastrophyUnitReduction = {{1.}, {1.}};
-  static final double[][] mCatastrophyUnitReduction = {{.1, 1.9}, {.1, 1.9}};
+  static volatile double[][] catastrophyUnitReduction = {{5.}, {5.}}; // frac of balance reduction
+  static final double[][] mCatastrophyUnitReduction = {{.0, 1.0}, {.0, 1.0}};
   static volatile double[][] catastrophyBonusYears = {{8.}, {12.}};  // 2 - 25
   static final double[][] mCatastrophyBonusYears = {{02., 25.0}, {1., 25.}};  // 
   static volatile double[][] catastrophyBonusYearsBias = {{1.6}, {1.9}}; // adds to the divisor year into bonus units
@@ -564,7 +564,7 @@ class EM {
    * @return return string
    */
   protected static String threadsStacks() {
-    String ret = "\nThreadStacks";
+    String ret = "\n Start ThreadStacks by " + Thread.currentThread().getName() + since() + sinceDoYear();
     Thread[] tarray = new Thread[10];
     Thread.enumerate(tarray);
     for (Thread th : tarray) {
@@ -1334,12 +1334,12 @@ class EM {
   static double[][] mGRGrowthMult2 = {{.01, 1.6}, {.01, 1.6}};
   // freq .2 means chance for today is .2 or 1 in 5years, .333 = 1 in 3 years
   // goal freq from 1 in 2yrs to 1 in 10 yrs  per econ
-  static double[][] userCatastrophyFreq = {{1., 1.2, .9, 1.3, 1.2}, {.8, .9, .7, .8, .8}};
-  static double[][] mUserCatastrophyFreq = {{.1, 1.9}, {.1, 1.9}};
+  static double[][] userCatastrophyFreq = {{0.2, .3, .2, .55, .25}, {0.2, .3, .2, .55, .25}};
+  static double[][] mUserCatastrophyFreq = {{.0, .65}, {.0, .65}};
   // value 1.5 means  mult user value by 1.5 so .2 * 1.5= .3 about 1 in 3 yrs
   // remember there are also random multipliers
   static double[][] gameUserCatastrophyMult = {{.3}, {.25}};
-  static double[][] mGameUserCatastrophyMult = {{.1, 2.}, {.1, 2.}};
+  static double[][] mGameUserCatastrophyMult = {{.0,.65}, {.0,.65}};
 
   static final double[][] mGuestWorthBias = {{.2, 1.5}, {.2, 1.5}};
   static final double[][] mScoreMult = {{0., 1.}, {0., 1.}};
@@ -3353,7 +3353,7 @@ onceAgain:
   void runVals() throws IOException {
     doVal("difficulty", difficultyPercent, mDifficultyPercent, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the difficulty for ships as well as  Planets ,more difficulty increases costs of  resources and staff each year, increases the probability of ship and planet deaths.  More difficulty probably requires more clan-master expertise.");
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
-    doVal("clanRiskMult", gameClanRiskMult, mGameUserCatastrophyMult, "increase slider: increase effect of clan risk settings");
+    doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
     doVal("clanRisks", clanRisk, mClanRisk, "increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
     /*
     winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
@@ -4088,8 +4088,13 @@ onceAgain:
   static final int CRISISSTAFFGROWTHYEARSINCR = ++e4;
   static final int CRISISRESGROWTHPERCENTINCR = ++e4;
   static final int CRISISRESGROWTHYEARSINCR = ++e4;
-
   static final int CRISISMANUALSPERCENTINCR = ++e4;
+  static final int sumCatEffRBen = ++e4;
+  static final int sumCatEffSBen = ++e4;
+  static final int sumCatEffManualsBen = ++e4;
+  static final int sumCatEffKnowBen = ++e4;
+  static final int sumCatEffRDecayBen = ++e4;
+  static final int sumCatEffSDecayBen = ++e4;
   // static final int TESTWORTH4 = ++e4;
   /// static final int TESTWORTH5 = ++e4;
 //  static final int TESTWORTH6 = ++e4;
@@ -4100,12 +4105,12 @@ onceAgain:
   void defRes() {
 
     doRes(SCORE, "Score", "Winner has the highest score the result of combining the different priorities set by several value entries which increase the score", 3, 4, 3, LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | SUM, LIST0 | LIST6 | LIST7 | LIST8 | LIST9 | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, 0);
-    doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg");
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
+    doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(INCRRCSG, "%incr rcsg", "percent incr rcsg Value  year end rcsg/inital rcsg");
     doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
-    doRes(LOWRCSG, "low rcsg", "low rcsg count");
+    doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | THISYEAR | BOTH | SKIPUNSET, 0L, 0L);
@@ -4412,7 +4417,12 @@ onceAgain:
     doRes(DTRADESOSR2, "DTradeSOS2R%IncW", "% worth inc/decrease when Dead after Reject with SOS2");
     doRes(DTRADESOSR1, "DTradeSOS1R%IncW", "% worth inc/decrease when Dead after Reject with SOS1");
     doRes(DTRADESOSR0, "DTradeSOS0R%IncW", "% worth inc/decrease when Dead after Reject with SOS0");
-
+    doRes(sumCatEffRBen, "EffCatRBen", "Catastrophy Effective resource growth benefits", 2, 2, 2, LIST9 | LIST14 | CURAVE | CUM | SKIPUNSET, 0, 0, 0);
+    doRes(sumCatEffSBen, "EffCatSBen", "Catastrophy Effective staff growth benefits");
+    doRes(sumCatEffManualsBen, "EffCatManBen", "Catastrophy Effective manuals benefits");
+    doRes(sumCatEffKnowBen, "EffCatKnoBen", "Catastrophy effective knowledge benefits");
+    doRes(sumCatEffRDecayBen, "EffRDecayBen", "Catastrophy effective resource decay decrements");
+    doRes(sumCatEffSDecayBen, "EffSDecayBen", "Catastrp[ju effoctove staff decau decrements");
     // repeatlists at "W..." at a later point rn 
     doRes("WTRADEDINCRF5", "Fav5Trd%IncW", "% Years worth increase at Favor5/start year worth", 2, 3, 2, both | SKIPUNSET, ROWS1 | LIST41 | CURAVE | BOTH | SKIPUNSET, ROWS2 | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | THISYEARAVE | BOTH | SKIPUNSET);
     doRes("WTRADEDINCRF4", "Fav4Trd%IncW", "% Years worth increase at Favor4/start year worth", 2, 3, 2, DUP, 0, 0, 0);

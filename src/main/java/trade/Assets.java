@@ -1864,7 +1864,15 @@ public class Assets {
     SubAsset c = cargo, g = guests;
     SubAsset[] workers = {resource, staff};
 
-    double sumNewKnowledgeWorth, sumCommonKnowledgeWorth, sumManualsWorth;
+    double sumBonusUnitGrowth = 0.;
+    double sumCumDecay = 0.;
+    double sumCumulativeUnitBonus = 0.;
+    double catEffRGBen=0.;
+    double catEffSGBen=0.;
+    double catEffManualsBen=0.;
+    double catEffKnowBen=0;
+    double catEffRDecayBen=0.;
+    double catEffSDecayBen=0.;
     ARow ypriorityYr = new ARow(ec);
 
     // start CashFlow Swap loop variables
@@ -3115,11 +3123,11 @@ public class Assets {
         cumulativeUnitBonus = bals.getRow(ABalRows.CUMULATIVEUNITBONUSIX + asIx);
         bonusUnitGrowth = bals.getRow(ABalRows.BONUSUNITSIX + asIx);
         bonusYears = bals.getRow(ABalRows.BONUSYEARSIX + asIx);
-        rawUnitGrowth = bals.getRow(ABalRows.RAWUNITGROWTHIX + asIx);
-        bonusYearlyUnitGrowth = bals.getRow(ABalRows.BONUSYEARLYUNITGROWTHIX + asIx);
-        rawGrowth = bals.getRow(ABalRows.RAWGROWTHIX + asIx);
-        tradedGrowth = bals.getRow(ABalRows.TRADEDGROWTHIX + asIx);
-        swappedGrowth = bals.getRow(ABalRows.SWAPPEDGROWTHIX + asIx);
+        rawUnitGrowth = bals.getRow(ABalRows.RAWUNITGROWTHSIX + asIx);
+        bonusYearlyUnitGrowth = bals.getRow(ABalRows.BONUSYEARLYUNITGROWTHSIX + asIx);
+        rawGrowth = bals.getRow(ABalRows.RAWGROWTHSIX + asIx);
+        tradedGrowth = bals.getRow(ABalRows.TRADEDGROWTHSIX + asIx);
+        swappedGrowth = bals.getRow(ABalRows.SWAPPEDGROWTHSIX + asIx);
         newKnowledge = bals.getRow(ABalRows.NEWKNOWLEDGEIX); // before SubAssets
         commonKnowledge = bals.getRow(ABalRows.COMMONKNOWLEDGEIX);
         manuals = bals.getRow(ABalRows.MANUALSIX);
@@ -3392,7 +3400,8 @@ public class Assets {
         prevMaxLeft = make(maxLeft);
         bonusYears = bals.getBonusYearsRow(sIx);
         bonusUnitGrowth = bals.getBonusUnitsRow(sIx);
-        rawUnitGrowth = make(rawUnitGrowth);
+  //      rawUnitGrowth = make(rawUnitGrowth);
+        rawUnitGrowth = bals.getRawUnitGrowthsRow(sIx);
         ARow rawBiasedUnitGrowth = new ARow(ec);
         ARow rawPriorityUnitGrowth = new ARow(ec);
         ARow rawUnitGrowth1 = new ARow(ec);
@@ -3419,17 +3428,16 @@ public class Assets {
           // yearlyUnitGrowth1 will go negative if decay is larger
           //limit staff growth by eM.maxGrowth[pors]
           growthFrac = fracGrowths.set(n, (eM.maxGrowth[pors] - balance.get(n)) / eM.maxGrowth[pors]);
-          double byug = bonusYearlyUnitGrowth.set(n, cumulativeUnitBonus.get(n) + (bonusLeft = (bonusYears.get(n) > PZERO ? bonusUnitGrowth.get(n) : 0.)));
-          double yug = yearlyUnitGrowth.set(n, eM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) - cumulativeUnitDecay.get(n) + byug);
-          // if cumulativeUnitDecay too big, don't allow negative growth, zero it
-          if (yug < E.PZERO) {
-            yug = yearlyUnitGrowth.set(n, 0.0);
-          }
-
+          double dBonusYUnitGrowth = bonusYearlyUnitGrowth.set(n, cumulativeUnitBonus.get(n) + (bonusLeft = (bonusYears.get(n) > PZERO ? bonusUnitGrowth.get(n) : 0.)));
+          // growth = defined growth *(staff limit) + bonus growth - decay
+          double dYrUnitGrowth = yearlyUnitGrowth.set(n, eM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) + dBonusYUnitGrowth - cumulativeUnitDecay.get(n));
+         // reduce growth by the fracBias 
           rawBiasedUnitGrowth.set(n, (yearlyUnitGrowth.get(n) * eM.fracBiasInGrowth[pors]));
+          // now second factor calc priority and growthEfficiency(from knowledge)
           rawPriorityUnitGrowth.set(n, (yearlyUnitGrowth.get(n) * eM.fracPriorityInGrowth[pors] * ypriorityYr.get(n)) * groEfficiency.get(n) * cRand(3 * sIx + n + 30));
+          // unit growth sum of biased unit growth and priority unit growth limit 0.0
           double rawUnitGrowthd
-                  = rawUnitGrowth1.set(n, rawBiasedUnitGrowth.get(n) + rawPriorityUnitGrowth.get(n));
+                  = Math.max(0.0,rawUnitGrowth1.set(n, rawBiasedUnitGrowth.get(n) + rawPriorityUnitGrowth.get(n)));
           //get unitGrowth1, step one in final unit growth
           // double rawUnitGrowthd = uG1.set(n, rawBiasedUnitGrowth.set(n, (yearlyUnitGrowth.get(n) * eM.fracBiasInGrowth[pors])) 
           //           + rawPriorityUnitGrowth.set(n, (yearlyUnitGrowth.get(n) * eM.fracPriorityInGrowth[pors] * ypriorityYr.get(n)) * groEfficiency.get(n) * cRand(3 * sIx + n + 30)));
@@ -3438,7 +3446,8 @@ public class Assets {
            * for planets dependent on staff work
            */
           rawUValue = rawUnitGrowth.set(n, (rg1.set(n, (sstaff ? rg3.set(n, lightYearsTraveled * eM.travelGrowth[E.S]) : 1.) * rawUnitGrowth1.get(n))));
-          rawValue = rawGrowth.set(n, s.work.get(n) * rawUValue * cRand(n + 4));
+          //raw growth = work * rawUValue * random(0-1) * 1.5
+          rawValue = rawGrowth.set(n, s.work.get(n) * rawUValue * cRand(n + 4)*1.5);
           if (!didDecay) {
             // now count down the bonus units & years
             bonusYears.set(n, bonusYears.get(n) - 1);
@@ -3451,7 +3460,7 @@ public class Assets {
 
           if (rawValue < -0.0) {
             if (E.debugNegGrowth) {
-              throw new MyErr(String.format(">>>>ERROR rawGrowth %14.10f too small,eM.Growth=%14.10f,yearlyUnitGrowth=%14.10f,rawUG1=%14.10f, rawUnitGrowth %14.10f, min %14.10f,n=%d,%s,lightYearsTraveled=%10.7f", rawValue, eM.assetsUnitGrowth[sIx][pors], yug, rawUnitGrowthd, rawUValue, eM.mRCSGGrowth[sIx][pors][0], n, name, lightYearsTraveled));
+              throw new MyErr(String.format(">>>>ERROR rawGrowth %14.10f too small,eM.Growth=%14.10f,yearlyUnitGrowth=%14.10f,rawUG1=%14.10f, rawUnitGrowth %14.10f, min %14.10f,n=%d,%s,lightYearsTraveled=%10.7f", rawValue, eM.assetsUnitGrowth[sIx][pors], dYrUnitGrowth, rawUnitGrowthd, rawUValue, eM.mRCSGGrowth[sIx][pors][0], n, name, lightYearsTraveled));
             } else {
               // only if was < 0.0 set to min growth
               rawGrowth.set(n, eM.mRCSGGrowth[sIx][pors][0]);
@@ -7363,10 +7372,8 @@ public class Assets {
 
       //  if (eM.randFrac[pors][0] > PZERO && ec.age > 2 && ((t1 = cRand(31)) < (t2 =eM.userCatastrophyFreq[pors][clan] * (cc = eM.gameUserCatastrophyMult[pors][0]) * cRand(34))) && t1 > 0.) {
       // cc will be both user and game catastrophy values
-      //
-      if (((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] + (t2 = eM.gameUserCatastrophyMult[pors][0]) * cRand(34)))) {
-
-        // int r1 = (int) (cRand(6) * balances.get(0, 0)) % 7;
+      // random 0.0 to 1.0,%5lt; asum of 0-.65 + 0-.65
+      if ((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] + (t2 = eM.gameUserCatastrophyMult[pors][0]))) {
         int r1 = new Random().nextInt(7);
         int r2 = new Random().nextInt(7);
         int s1 = new Random().nextInt(7);
@@ -7376,31 +7383,32 @@ public class Assets {
         int s3 = new Random().nextInt(7);
         int s4 = new Random().nextInt(7);
         int r5 = new Random().nextInt(7);
-        //get fraction of reduction
-        double rReduce1 = Math.min(.65, (cRand(14) * cc * eM.catastrophyUnitReduction[pors][0] * 1.5));
-        double rReduce2 = Math.min(.65, (cRand(15) * cc * eM.catastrophyUnitReduction[pors][0] * .6));
-        double sReduce1 = Math.min(.65, (cRand(16) * cc * eM.catastrophyUnitReduction[pors][0] * 1.5));
-        double sReduce2 = Math.min(.65, (cRand(17) * cc * eM.catastrophyUnitReduction[pors][0] * .6));
-        int rBonusYrs1 = (int) (cRand(16) * cc * eM.catastrophyBonusYears[pors][0] * 2);
-        int rBonusYrs2 = (int) (cRand(17) * cc * eM.catastrophyBonusYears[pors][0] * .8);
-        int sBonusYrs1 = (int) (cRand(18) * cc * eM.catastrophyBonusYears[pors][0] * 2);
-        int sBonusYrs2 = (int) (cRand(19) * cc * eM.catastrophyBonusYears[pors][0] * .8);
-        double rBonusVal1 = cRand(20) * cc * eM.catastrophyBonusGrowthValue[pors][0] * 1.9;
-        double rBonusVal2 = cRand(21) * cc * eM.catastrophyBonusGrowthValue[pors][0] * .5;
-        double sBonusVal1 = cRand(22) * cc * eM.catastrophyBonusGrowthValue[pors][0] * 1.9;
-        double sBonusVal2 = cRand(23) * cc * eM.catastrophyBonusGrowthValue[pors][0] * .5;
-        double rDecayReduce1 = cRand(24) * cc * eM.growthDecay[0][pors] * 1.1;
-        double rDecayReduce2 = cRand(25) * cc * eM.growthDecay[0][pors] * .7;
-        double sDecayReduce1 = cRand(26) * cc * eM.growthDecay[2][pors] * 2.3;
-        double sDecayReduce2 = cRand(27) * cc * eM.growthDecay[2][pors] * .3;
-        int rBonusX1 = new Random().nextInt(7);
-        int rBonusX2 = new Random().nextInt(7);
-        int sBonusX1 = new Random().nextInt(7);
-        int sBonusX2 = new Random().nextInt(7);
-        double sBonusManuals = cRand(32) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
-        double sBonusNewKnowledge = cRand(45) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
-        double rBonusManuals = cRand(35) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
-        double rBonusNewKnowledge = cRand(44) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
+        int s5 = new Random().nextInt(7);
+        //get fraction of reduction rand(0-1.) cc(0-1.3) cUR(0-1.) = (0-1.3) more small 
+        double reduce1 = Math.min(.65, (cRand(14) * cc * eM.catastrophyUnitReduction[pors][0] * 1.5)); //0-1.95  min.65
+        double reduce2 = Math.min(.65, (cRand(15) * cc * eM.catastrophyUnitReduction[pors][0] * .6));
+        double reduce3 = Math.min(.65, (cRand(16) * cc * eM.catastrophyUnitReduction[pors][0] * 1.5));
+        double reduce4 = Math.min(.65, (cRand(17) * cc * eM.catastrophyUnitReduction[pors][0] * .6));
+        int bonusYrs1 = (int) (cRand(16) * cc * eM.catastrophyBonusYears[pors][0] * 2);
+        int bonusYrs2 = (int) (cRand(17) * cc * eM.catastrophyBonusYears[pors][0] * .8);
+        int bonusYrs3 = (int) (cRand(18) * cc * eM.catastrophyBonusYears[pors][0] * 2);
+        int bonusYrs4 = (int) (cRand(19) * cc * eM.catastrophyBonusYears[pors][0] * .8);
+        double bonusVal1 = cRand(20) * cc * eM.catastrophyBonusGrowthValue[pors][0] * 1.9;
+        double bonusVal2 = cRand(21) * cc * eM.catastrophyBonusGrowthValue[pors][0] * .5;
+        double bonusVal3 = cRand(22) * cc * eM.catastrophyBonusGrowthValue[pors][0] * 1.9;
+        double bonusVal4 = cRand(23) * cc * eM.catastrophyBonusGrowthValue[pors][0] * .5;
+        double decayReduce1 = cRand(26) * cc * eM.growthDecay[2][pors] * 2.3;
+        double decayReduce2 = cRand(24) * cc * eM.growthDecay[0][pors] * 1.1;
+        double decayReduce3 = cRand(25) * cc * eM.growthDecay[0][pors] * .7;
+        double decayReduce4 = cRand(27) * cc * eM.growthDecay[2][pors] * .3;
+        int bonusX1 = new Random().nextInt(7);
+        int bonusX2 = new Random().nextInt(7);
+        int bonusX3 = new Random().nextInt(7);
+        int bonusX4 = new Random().nextInt(7);
+        double bonusManuals1 = cRand(32) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
+        double bonusNewKnowledge1 = cRand(45) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
+        double bonusManuals2 = cRand(35) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
+        double bonusNewKnowledge2 = cRand(44) * cc * eM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
 
         /*
   static final int CRISISRESREDUCEPERCENT = ++e4; // 
@@ -7413,76 +7421,69 @@ public class Assets {
         static final int CRISISRESREDUCESURPLUSPERCENT = ++e4;
         static final int CRISISSTAFFREDUCESURPLUSPERCENT = ++e4;
          */
+        
         double rc1, sc2, rc3, rreduced, sreduced;
         yearCatastrophy = year; // flag entered
-        r.cost3((rc1 = balances.get(2, r1) * rReduce1), r1, 0);  // apply costs to P and S
-        setStat("rCatCosts", pors, clan, rReduce1 * 100., 1);
-        s.cost3((sc2 = balances.get(4, s1) * sReduce1), s1, 0);
-        setStat("sCatCosts", pors, clan, sReduce1 * 100, 1);
-        r.cost3((rc3 = balances.get(2, r2) * rReduce2), r2, 0);
-        setStat("rCatCosts", pors, clan, rReduce2 * 100, 1);
-        rreduced = rc1 + rc3;
-        sreduced = sc2;
-        r.bonusYears.add(rBonusX1, rBonusYrs1);             // both P & S
-        r.bonusYears.add(rBonusX2, rBonusYrs2);
-        setStat("rCatBonusY", pors, clan, rBonusYrs1 + rBonusYrs2, 2);
-        r.bonusUnitGrowth.add(rBonusX1, rBonusVal1);
-        r.bonusUnitGrowth.add(rBonusX2, rBonusVal2);
-        setStat("rCatBonusVal", pors, clan, rBonusVal1 + rBonusVal2, 2);
-        s.bonusYears.add(sBonusX1, sBonusYrs1);
-        setStat("sCatBonusY", pors, clan, sBonusYrs1, 1);
-        s.bonusUnitGrowth.add(sBonusX1, sBonusVal1);
-        setStat("sCatBonusVal", pors, clan, sBonusVal1, 1);
-        double rcd = r.cumulativeUnitDecay.get(r4);
-        double rd1 = rDecayReduce1;
-        double rBal = r.balance.get(r4);
-        if (rd1 > rcd) {
-          double rm = rd1 - rcd;
-          //     setStat(EM.CRISISRESREDUCESURPLUSPERCENT, pors, clan, rm * 100 / rBal, 1);
-          setStat(EM.CRISISRESREDUCESURPLUSPERCENT, pors, clan, rm, 1);
-          rd1 = rcd;
-        }
-        // double rd1 = -rDecayReduce1 > rcd ? rcd : -rDecayReduce1; //rd1 < -0.0
-        double nd1 = r.cumulativeUnitBonus.add(r4, rd1);
-        setStat("rCatNegDecay", pors, clan, rd1, 1);// ?? rd1 < 0???
-        setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
-        setStat(eM.CRISISRESDECAYBONUSPERCENT, pors, clan, nd1, 1);
-        double sBal = s.balance.get(s3);
-        double scd = s.cumulativeUnitDecay.get(s3);
-        double sd1 = sDecayReduce1;
-        if (sd1 > scd) {
-          double rm = -sd1 - scd;
-          setStat(EM.CRISISSTAFFREDUCESURPLUSPERCENT, pors, clan, rm, 1);
-          sd1 = scd;
-        }
-        //double sd1 = -sDecayReduce1 > scd ? scd : -sDecayReduce1; // sd1 < -0.0
-        nd1 = s.cumulativeUnitDecay.add(s3, -sd1);
-        setStat("sCatNegDecay", pors, clan, sd1, 1);
-        setStat(EM.CRISISSTAFFREDUCEPERCENT, pors, clan, nd1, 1);
+        r.cumulativeUnitBonus.add(r1,decayReduce3);
+        r.cumulativeUnitBonus.add(r2,decayReduce2); // help those hit
+        s.cumulativeUnitBonus.add(s1,decayReduce1);
+        // do costs and report
+        r.cost3((rc1 = balances.get(2, r1) * reduce1), r1, 0);  // apply costs to P and S
+        setStat("rCatCosts", pors, clan, rc1, 1);
+        s.cost3((sc2 = balances.get(4, s1) * reduce2), s1, 0);
+        setStat("sCatCosts", pors, clan, sc2, 1);
+        r.cost3((rc3 = balances.get(2, r2) * reduce3), r2, 0);
+        setStat("rCatCosts", pors, clan, rc3, 1);
+        
+        r.bonusYears.add(bonusX1, bonusYrs1);             // both P & S
+        r.bonusYears.add(bonusX2, bonusYrs2);
+        setStat("rCatBonusY", pors, clan, bonusYrs1 + bonusYrs2, 2);
+        r.bonusUnitGrowth.add(bonusX1, bonusVal1);
+        r.bonusUnitGrowth.add(bonusX2, bonusVal2);
+        setStat("rCatBonusVal", pors, clan,bonusVal1 + bonusVal2, 2);
+        s.bonusYears.add(bonusX3, bonusYrs3);
+        setStat("sCatBonusY", pors, clan, bonusYrs3, 1);
+        s.bonusUnitGrowth.add(bonusX3, bonusVal3);
+        setStat("sCatBonusVal", pors, clan, bonusVal3, 1);
+        catEffRGBen += bonusVal1 + bonusVal2;
+        catEffSGBen += bonusVal3;
+        setStat("rCatNegDecay", pors, clan, decayReduce3+decayReduce2, 1);//
+        catEffRDecayBen += decayReduce3+decayReduce2;
+        setStat("sCatNegDecay", pors, clan, decayReduce1, 1);// 
+        catEffSDecayBen += decayReduce1;
+        //setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
+       // setStat(eM.CRISISRESDECAYBONUSPERCENT, pors, clan, nd1, 1);
         if (pors == E.P) {
           double rcd5 = r.cumulativeUnitDecay.get(r5);
-          double rd5 = -rDecayReduce2;
-          rBal = r.balance.get(r5);
-          if (-rDecayReduce2 > rcd5) {
-            double rm = -rDecayReduce2 - rcd5;
-            setStat(EM.CRISISRESREDUCESURPLUSPERCENT, pors, clan, rm, 1);
-            rd5 = rcd5;
-          }
+         // double rd5 = -rDecayReduce2;
+      //    rBal = r.balance.get(r5);
+          //if (-rDecayReduce2 > rcd5) {
+           // double rm = -rDecayReduce2 - rcd5;
+          //  setStat(EM.CRISISRESREDUCESURPLUSPERCENT, pors, clan, rm, 1);
+           // rd5 = rcd5;
+         // }
           // double rd5 = -rDecayReduce2 > rcd5 ? rcd5*.99 : -rDecayReduce2;
-          r.cumulativeUnitDecay.add(r5, rd5);
-          setStat("rCatNegDecay", pors, clan, rd5, 0);
+         // r.cumulativeUnitDecay.add(r5, rd5);
+          //setStat("rCatNegDecay", pors, clan, rd5, 0);
         } else {  // ships
-          manuals.add(sBonusX2, sBonusManuals);  // Adds into value of trades
-          setStat("sCatBonusManuals", pors, clan, sBonusManuals, 1);
-          newKnowledge.add(sBonusX1, sBonusNewKnowledge);
-          setStat("sCatBonusNewKnowledge", pors, clan, sBonusNewKnowledge, 1);
-          manuals.add(rBonusX2, rBonusManuals);  // Adds into value of trades
-          setStat("rCatBonusManuals", pors, clan, rBonusManuals, 1);
-          newKnowledge.add(rBonusX1, rBonusNewKnowledge);
-          setStat("rCatBonusNewKnowledge", pors, clan, rBonusNewKnowledge, 1);
+          manuals.add(bonusX2,bonusManuals1);  // Adds into value of trades
+          setStat("sCatBonusManuals", pors, clan, bonusManuals1, 1);
+          newKnowledge.add(bonusX1, bonusNewKnowledge1);
+          setStat("sCatBonusNewKnowledge", pors, clan, bonusNewKnowledge1, 1);
+          manuals.add(bonusX1, bonusManuals2);  // Adds into value of trades
+          setStat("sCatBonusManuals", pors, clan, bonusManuals2, 1);
+          newKnowledge.add(bonusX3, bonusNewKnowledge2);
+          setStat("sCatBonusNewKnowledge", pors, clan, bonusNewKnowledge2, 1);
+          catEffManualsBen += bonusManuals1 + bonusManuals2;
+          catEffKnowBen +=  bonusNewKnowledge1 +  bonusNewKnowledge2;
         }
-
+        
+        
+         
       }
+      sumCumulativeUnitBonus = r.cumulativeUnitBonus.sum() + s.cumulativeUnitBonus.sum();
+      sumBonusUnitGrowth = r.bonusUnitGrowth.sum() + s.bonusUnitGrowth.sum();
+      sumCumDecay = r.cumulativeUnitDecay.sum()+ s.cumulativeUnitDecay.sum();
     }
 
     /**
@@ -8926,6 +8927,16 @@ public class Assets {
             setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
           }
         }
+        setStat(eM.sumCatEffRBen, pors, clan, catEffRGBen, 1);
+        setStat(eM.sumCatEffSBen, pors, clan, catEffSGBen, 1);
+        setStat(eM.sumCatEffManualsBen, pors, clan, catEffManualsBen, 1);
+        setStat(eM.sumCatEffKnowBen, pors, clan, catEffKnowBen, 1);
+        setStat(eM.sumCatEffRDecayBen, pors, clan, catEffRDecayBen, 1);
+        setStat(eM.sumCatEffSDecayBen, pors, clan, catEffSDecayBen, 1);
+        setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
+        setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
+        setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
+        
         if (E.debugEconCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);

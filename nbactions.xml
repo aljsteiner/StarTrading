@@ -12,7 +12,7 @@
             <properties>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.vmArgs>-ea</exec.vmArgs>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"none"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
             </properties>
@@ -59,7 +59,7 @@
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
                 <exec.workingdir2>J:\My Drive\netbeans\starTraderMaven\src\main\java\trade</exec.workingdir2>
-                <exec.vmArgs>-ea -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+                <exec.vmArgs>-ea -Xmx4g -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
                 <exec.appArgs>"none"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
             </properties>
@@ -76,7 +76,7 @@
             <properties>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.vmArgs>-ea</exec.vmArgs>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"none"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
             </properties>
