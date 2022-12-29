@@ -121,7 +121,6 @@ static StarTrader st;
   static final boolean tradeDebugTerms =  debugMaster;
   static final boolean debugSettingsTab = debugMaster; //errors from settings doValx
   static final boolean debugSettingsTabOut = debugMaster; //errors from settings doValx
-  static final boolean debugThreads = debugMaster;
   static final boolean SWAPTRADESYSTEMOUT = debugMaster;  //Swap outputs
   static final boolean PAINTDISPLAYOUT = debugMaster; //outputs from StarTrader displays
   static final boolean tradeInitOut = debugMaster;
@@ -135,12 +134,16 @@ static StarTrader st;
   static final boolean debugPutRows6abOut = false;
   static final boolean debugPutRows6acOut = false;
   static final boolean debugPutRows6agOut = true;
+  static final boolean debugIsHere1Out = true;
+  static final boolean debugIsHere2Out = true;
+  static final boolean debugIsHere3Out = true;
   static final boolean debugPutRows2 = false; 
-  static final boolean DEBUGWAITTRACE = debugMaster;
+  static final boolean DEBUGWAITTRACE = false;
  static final boolean debugLogsOut = debugMaster; // StarTrader logs output
+ static final boolean debugThreads = false;
  static final boolean debugRsOut = false; // EM rs output
  static final boolean debugFFOut = false; // EM Assets.CashFlow.calcForwardFund output
- static final boolean debugStatsOut1 = debugMaster; // stats output1
+ static final boolean debugStatsOut1 = false; // stats output1
  static final boolean debugStatsOut2 = false; // stats output1
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing

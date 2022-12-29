@@ -4330,26 +4330,32 @@ onceAgain:
     doRes(INCRAVAILFRAC, "%IncrAvail", "Percent increase in avail frac after trade  at any trade");
     doRes(INCRAVAILFRACa, "IncrAvailFracRej", "Percent increase in avail frac trade rejected");
     doRes(INCRAVAILFRACb, "IncrAvailFracb", "Percent increase in avail frac after trade rejected at trade failure");
-    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 2, 3, 2, LIST0 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TradeCriticalBidRequestsFirst, "BidFirstCriticalRequests", "First Critical requested bids");
+   
     doRes(TradeBidRequests, "BidRequests", "requested bids");
     doRes(TradeCriticalBidRequests, "BidCriticalRequests", "Critical requested bids");
-    doRes(TradeAlsoBidRequestsFirst, "BidAlsoFirstRequests", "First requested bids");
-    doRes(TradeAlsoCriticalBidRequestsFirst, "BidAlsoFirstCriticalRequests", "First Critical requested bids");
+   
     doRes(TradeAlsoBidRequests, "BidAlsoRequests", "requested bids");
     doRes(TradeAlsoCriticalBidRequests, "BidAlsoCriticalRequests", "Critical requested bids");
-    doRes(TRADEFIRSTRECEIVE, "First Received", "First received goods%tot balance");
+    
     doRes(TRADELASTRECEIVE, "Last Received", "Final received goods%tot balance");
     doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade");
-    doRes(TRADEFIRSTGAVE, "TradeFirstGiven", "First goods given%totBalance", 2, 2, 2, 0, ROWS1 | LIST4 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+   
     doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given%totBalance", 2, 2, 2, LIST40 | THISYEARAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal not strategic amount given in trade ");
-    doRes(TRADESTRATFIRSTRECEIVE, "StrategicFirstReceived", "First strategic amount received in trade", 2, 2, 2, LIST40 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+   
     doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade");
-    doRes(TRADESTRATFIRSTGAVE, "TradeStrategicFirstGave", "First amount given in trade");
+   
     doRes(TRADESTRATLASTGAVE, "TradeStrategicLastGave", "Percent nominal amount given in trade per sumrcsg may be used for scoreing");
-    doRes(TradeNominalReceivePercentNominalOffer, "NomReceive%NomOffer", "% of Nominal Received Per Nominal  Given", 2, 2, 2, LIST40 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(MaxNominalReceivePercentNominalOffer, "MaxNomReceive%NomOffer", "Max % of Nominal Received Per Nominal  Given", 2, 2, 2, LIST40 | THISYEARAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 2, 2, 2, LIST7 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TradeCriticalBidRequestsFirst, "BidFirstCriticalRequests", "First Critical requested bids");   
+    doRes(TradeAlsoBidRequestsFirst, "BidAlsoFirstRequests", "First requested bids");
+    doRes(TradeAlsoCriticalBidRequestsFirst, "BidAlsoFirstCriticalRequests", "First Critical requested bids");
+    doRes(TRADEFIRSTGAVE, "TradeFirstGiven", "First goods given%totBalance", 2, 2, 2, 0, ROWS1 | LIST4 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TRADEFIRSTRECEIVE, "First Received", "First received goods%tot balance"); 
+    doRes(TRADESTRATFIRSTRECEIVE, "StrategicFirstReceived", "First strategic amount received in trade", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+     doRes(TRADESTRATFIRSTGAVE, "TradeStrategicFirstGave", "First amount given in trade");
+    doRes(TradeNominalReceivePercentNominalOffer, "NomReceive%NomOffer", "% of Nominal Received Per Nominal  Given", 2, 2, 2,  LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(MaxNominalReceivePercentNominalOffer, "MaxNomReceive%NomOffer", "Max % of Nominal Received Per Nominal  Given", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(MinNominalReceivePercentNominalOffer, "MinNomReceive%NomOffer", "Min % of Nominal Received Per Nominal  Given");
     doRes(TradeStrategicReceivePercentStrategicOffer, "StratReceive%StratGiven", "% of Strategic Received Per Strategic  Given");
     doRes(MaxStrategicReceivePercentStrategicOffer, "MaxStratReceive%StratGiven", "Max % of Strategic Received Per Strategic  Given");
@@ -4360,10 +4366,9 @@ onceAgain:
     doRes(YearTradeStrategicReceivePercentStrategicOffer, "YearStratReceive%StratGiven", "Year % of Strategic Received Per Strategic  Given");
     doRes(YearMaxStrategicReceivePercentStrategicOffer, "YearMaxStratReceive%StratGiven", "Year Max % of Strategic Received Per Strategic  Given");
     doRes(YearMinStrategicReceivePercentStrategicOffer, "YearMinStratReceive%StratGiven", "Year Min % of Strategic Received Per Strategic  Given");
-
     doRes(BEFORETRADEWORTH, "BeforeTradeWorth", "Worth before A trade");
     doRes(AFTERTRADEWORTH, "AfterTradeWorth", "Worth after a trade");
-    doRes(TRADEWORTHINCRPERCENT, "TradeWorthIncr%", "% increase in Worth after trade", 2, 3, 2, SKIPDUP | LIST4 | THISYEARAVE, 0, 0, LIST41 | ROWS3 | CUMUNITS);
+    doRes(TRADEWORTHINCRPERCENT, "TradeWorthIncr%", "% increase in Worth after trade", 2, 3, 2,  LIST4 | THISYEARAVE, 0, 0, LIST41 | ROWS3 | CUMUNITS);
     doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST41 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST41 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeRejectValuePerGoal, "RejectValue%Goal", "Rejected percent value per goal");
     doRes(TradeLostValuePerGoal, "LostValue%Goal", "Lost percent value per goal");
@@ -6990,20 +6995,38 @@ onceAgain:
    * @param why the message
    * @return filled out message line
    */
-  static String here(Econ ec, String why) {
-    String isHere = "++" + ec.name + "  " + Thread.currentThread().getName();
-    StackTraceElement aa = Thread.currentThread().getStackTrace()[2];
-    int stLen = Thread.currentThread().getStackTrace().length;
+  static String here(String ww,Econ ec, String why) {
+    String isHere = "---" + ww + "----" + ec.name + "  " + Thread.currentThread().getName();
+    StackTraceElement[] aa = Thread.currentThread().getStackTrace();
+    int stLen = aa.length;
     if (stLen == 2) {
-      isHere += " " + aa.getFileName() + "." + aa.getLineNumber() + "." + aa.getMethodName() + " " + why;
+      isHere += " " + aa[2].getFileName() + "." + aa[2].getLineNumber() + "." + aa[2].getMethodName() + " " + why;
     } else if (stLen >= 3) {
-      StackTraceElement ab = Thread.currentThread().getStackTrace()[3];
+     // StackTraceElement ab = Thread.currentThread().getStackTrace()[3];
       // StackTraceElement ac = Thread.currentThread().getStackTrace()[5];
-      isHere += " " + aa.getFileName() + "." + aa.getLineNumber() + "." + aa.getMethodName() + " from " + ab.getFileName() + "." + ab.getLineNumber() + " " + ab.getMethodName() + " " + why;
+      isHere += " " + aa[2].getFileName() + "." + aa[2].getLineNumber() + "." + aa[2].getMethodName() + " from " + aa[3].getFileName() + "." + aa[3].getLineNumber() + " " + aa[3].getMethodName() + " " + why;
       return isHere;
     }
     return isHere;
   }
+  
+   /**
+   * generate a string with names of Econ, Thread, file.line.method,
+   * file.line.method why Place the string at variable wasHere
+   *
+   * @param is the flag of the caller
+   * @param ec the Econ of the caller
+   * @param why the message
+   * @return filled out message line
+   */
+  static String isHere(String is,Econ ec, String why) {
+    wasHere6 = here(is,ec, why);
+    if(E.debugIsHere1Out){
+      System.out.println(wasHere6);
+    }
+    return wasHere6;
+  }
+
 
   /**
    * generate a string with names of Econ, Thread, file.line.method,
@@ -7014,7 +7037,11 @@ onceAgain:
    * @return filled out message line
    */
   static String isHere1(Econ ec, String why) {
-    return wasHere = here(ec, why);
+    String wasHere = here("IS1",ec, why);
+    if(E.debugIsHere1Out){
+      System.out.println(wasHere);
+    }
+    return wasHere;
   }
 
   /**
@@ -7026,7 +7053,11 @@ onceAgain:
    * @return filled out message line
    */
   static String isHere2(Econ ec, String why) {
-    return wasHere2 = here(ec, why);
+    wasHere2 = here("IS2",ec, why);
+    if(E.debugIsHere2Out){
+      System.out.println(wasHere2);
+    }
+    return wasHere2;
   }
 
   /**
@@ -7038,7 +7069,11 @@ onceAgain:
    * @return filled out message line
    */
   static String isHere3(Econ ec, String why) {
-    return wasHere3 = here(ec, why);
+    wasHere3 = here("IS3",ec, why);
+    if(E.debugIsHere3Out){
+      System.out.println(wasHere3);
+    }
+    return wasHere3;
   }
 
   /**

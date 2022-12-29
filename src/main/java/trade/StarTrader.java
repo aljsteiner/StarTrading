@@ -233,7 +233,7 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
   static final public String versionText = "19.40";
   static final public String storyText
-          = "StarTrader       Version 19.44\n"
+          = "StarTrader       Version 19.45\n"
           + "\n"
           + "“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Cooperating together with trades”: is a mini strategic economics game emphasizing cooperation over competition.  Each economy has assets of resources, staff and knowledge in 7 financial sectors.  Each year each financial sector has costs using up some resources and some staff.  \n"
           + "\n"
@@ -5612,7 +5612,7 @@ public class StarTrader extends javax.swing.JFrame {
       aTime = (new Date()).getTime();
       for (stateCnt = 0; !EM.dfe() && !eM.stopExe && !done; stateCnt++) {
         ec = curEc = EM.curEcon;
-        EM.wasHere3 = "---------AA--------runYears2 before seEconState " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + "Y" + EM.year + " cnt" + stateCnt;
+        EM.wasHere3 = "---------AA--------runYears2 " + EM.curEconName + " before checkEconState " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + "Y" + EM.year + " cnt" + stateCnt;
         if (E.debugStatsOut1)System.out.println(EM.wasHere3);
         checkEconState(); // check for stuck
         if (E.debugStatsOut2)System.out.println("------NC------^^runYears2 " + sinceA() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
@@ -7341,7 +7341,8 @@ public class StarTrader extends javax.swing.JFrame {
       String newLine = "\n";
       String line1 = "", line0 = "", line2 = "", line3 = "", line4 = "", line5 = "";
       //   controlPanels.setVisible(true);
-      int rNWorth = EM.STARTWORTH;
+      // INT rNWorth = EM.STARTWORTH;
+      int rNWorth = EM.LIVEWORTH;
       // static final int INITRCSG = ++e4;
       // static final int LIVERCSG = ++e4;
       int rNinitrcsg = EM.INITRCSG;
@@ -7433,7 +7434,7 @@ public class StarTrader extends javax.swing.JFrame {
         Color myTest = E.clan.values()[curEc.getClan()].getColor(curEc.pors);
         String disp1 = "year" + eM.year + " ";
         disp1 += (stateConst == TRADING ? tradingEcon() : sinceEcon());
-        disp1 += " " + EM.econCnt + ":" + EM.econs.size() + " Planets=" + EM.porsCnt[E.P] + " ships=" + EM.porsCnt[E.S] + " dead=" + EM.deadCnt + newLine
+        disp1 += " " + EM.econCnt + ":" + EM.econs.size() + " Planets=" + EM.porsCnt[E.P] + " ships=" + EM.porsCnt[E.S] + " died=" + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.S + 1, 0, 5) + newLine
                 + " Total Wealth=" + EM.mf(totalWealth) + " minWealth=" + EM.mf(minWealth) + " maxWealth=" + EM.mf(maxWealth) + newLine
                 + "yrAveWorth =" + EM.mf(bworth) + " Planets " + EM.mf(pworth) + " Ships " + EM.mf(sworth) + newLine
                 + "initAveRCSG =" + EM.mf(initBrcsg) + " Planets " + EM.mf(initPrcsg) + " Ships " + EM.mf(initSrcsg) + newLine
@@ -8394,18 +8395,29 @@ public class StarTrader extends javax.swing.JFrame {
       st.setVisible(true);
       stateConst = CONSTRUCTED;
 
-      if (testing || (args.length > 0 && args[0].contains("test"))) {
+      if (testing || (args.length > 0 && (args[0].contains("test") ))) {
         main3();
       } else {
-        System.err.println("continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
+        System.err.println("----MSa----continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
           // java.awt.EventQueue.invokeAndWait(new Runnable() {
           @Override
           public void run() {
             st.setVisible(true);
-          }
-        });// invokeLater
+            if(args.length > 0 && (args[0].contains("run5")) ){
+              st.runYears(5);
+            } else
+             if(args.length > 0 && (args[0].contains("run100")) ){
+              st.runYears(100);      
+            } else
+             if(args.length > 0 && (args[0].contains("run20")) ){
+              st.runYears(20);
+              } else
+             if(args.length > 0 && (args[0].contains("run10")) ){
+              st.runYears(10);
+            }  
+        }});// invokeLater
       } // end if test
       /* } catch (InterruptedException ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -8435,7 +8447,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.flushes();
       fatalError = true;;
     } finally {
-      System.err.println("doyear finally do flushes next then close bKeep");
+      System.err.println("----MEa-----main finally do flushes next then close bKeep");
       EM.flushes();
       if (EM.bKeep != null) {
         EM.bKeep.close();

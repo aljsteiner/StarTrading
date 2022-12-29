@@ -333,7 +333,7 @@ public class Assets {
   static final int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
   static final int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
   static final int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
-  Assets.CashFlow.DoTotalWorths syW, iyW;
+  Assets.CashFlow.DoTotalWorths syW, iyW; //predefine references to 
 
   /**
    * The history versions of CashFlow are always copied to involving a new
@@ -1548,19 +1548,17 @@ public class Assets {
     if (cur == null) {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
+     
       if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
-        }
+        
       }
     }
-    if (E.tradeInitOut) {
-      System.out.println("Assets.yearEnd " + name + "Y" + EM.year);
-    }
     cur.yearEnd();
-    EM.isHere2(ec, "after CashFlow.yearEnd aaadd1 " + aaadd1++);
+    EM.isHere("--CEYE--",ec, "after CashFlow.yearEnd aaadd1 " + aaadd1++);
+
     if (E.debugMisc && syW != null) {
       throw new MyErr("CashFlow.yearEnd did not null syW, probably skipped some code");
     }
@@ -1570,13 +1568,11 @@ public class Assets {
     // cashFlowSubAssetUnitsNeededToSurvive = mtgNeeds6;
     //cashFlowSubAssetUnitsAvailableToSwap = mtgAvails6;
     // in Assets.yearEnd
-    EM.isHere1(ec, "after decrement of decay etc aaadd3=" + aaadd3++);
+    EM.isHere("--CEYf--",ec, "after decrement of decay etc aaadd3=" + aaadd3++);
     if (E.debugEconCnt) {
-      synchronized (EM.econCnt) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
         }
-      }
     }
     // Assets.yearEnd, zero yearly counters before yearStart
     tradedSuccessTrades = 0; // successful trades this year
@@ -1630,11 +1626,10 @@ public class Assets {
     //  now do prep for the next year with cur still valid
     endYearEnd = true;
     if (E.debugEconCnt) {
-      synchronized (EM.econCnt) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
         }
-      }
+      
     }
     getTradeInit(true); // force creation of trade values and rawProspects2
     if (E.debugEconCnt) {
@@ -1647,6 +1642,7 @@ public class Assets {
     endYearEnd = false;
 
     // decrement cumulativeUnitDecay, bonus years and bonus units
+  /* possible dup of decrement in SubAasaet calcGrowth
     EM.wasHere = "after cur aaadd2=" + aaadd2++;
     for (int m : balsIxA) {
       for (int n : ASECS) {
@@ -1658,20 +1654,20 @@ public class Assets {
         bals.getRow(ABalRows.CUMULATIVEUNITDECAYIX + m).add(n, bals.getRow(ABalRows.GROWTHSIX + m).get(n) * eM.growthDecay[m][pors]);
       }
     }
+    */
     if (E.debugEconCnt) {
-      synchronized (EM.econCnt) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
         }
-      }
+  
+      
     }
     cur = null; // release all CashFlow storage
     if (E.debugEconCnt) {
-      synchronized (EM.econCnt) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
         }
-      }
+      
     }
 
     EM.wasHere = "end Assets.yearEnd aaadd4=" + aaadd4++;
@@ -8474,11 +8470,11 @@ public class Assets {
       // initialize prevns to cmd = not
       HSwaps abc = new HSwaps();
       prevns[0] = abc.copyn(cur);
-      EM.wasHere = "CashFlow.yearEnd before setting prevns array cccab=" + cccab;
+      EM.isHere1(ec,"CashFlow.yearEnd before setting prevns array cccab=" + cccab);
       for (m = prevns.length - 1; m > -1; m--) {
         prevns[m] = abc.copyn(cur);
       }
-      EM.wasHere = "CashFlow.yearEnd before swap loops after setting prevns array cccb=" + ++cccb;
+      EM.isHere2(ec,"CashFlow.yearEnd before swap loops after setting prevns array cccb=" + ++cccb);
       if ((pors == E.S) && newTradeYear2) {
         maintCosts10 = tradeTravelMaintCosts10.copy10();
         travelCosts10 = tradeTravelCosts10.copy10();
@@ -8487,7 +8483,7 @@ public class Assets {
       EM.addlErr = ""; // clear addlErr
       yphase = yrphase.DOLOOPS;
       doLoop("G@", yrphase.DOLOOPS, prevns[0]);
-      EM.wasHere = "CashFlow.yearEnd just after swap doLoop cccc=" + ++cccc;
+      EM.isHere("ADL",ec,"CashFlow.yearEnd just after swap doLoop cccc=" + ++cccc);
 
       // sLoops[0] = 0;
       gSwapW = new DoTotalWorths();
@@ -8519,7 +8515,7 @@ public class Assets {
       sos = rawProspects2.min() < eM.rawHealthsSOS3[0][0];
 
       // choose only the living for these results/ deaths stats are later
-      EM.wasHere = " joint live&dead before do live cccac=" + ++cccac;
+      EM.isHere("CEWb",ec," joint live&dead before do live cccac=" + ++cccac);
 
       // count future fund live or dead
       eM.clanFutureFunds[clan] += yearsFutureFund;
@@ -8949,6 +8945,7 @@ public class Assets {
             setStat(potentialGrowthStats[sIx], tt, 1);
           }
         }
+        EM.isHere("--EYEYf--",ec,"end of live stats");
 // ---------------------- end of live stats ---------------------------------
       } else // now dead stats
       { // dead, be sure died is set
@@ -9114,7 +9111,6 @@ public class Assets {
             setStat("DEADUNTRADEDWINCR", pors, clan, worthincr1, 1);
             setStat(EM.TradeDeadMissedStrategicGoal, pors, clan, 1.0, 1);
           }
-          EM.wasHere = "CashFlow.yearEnd before many setStat ddddh=" + ++ddddh;
           /*
    static final int DIEDSN4 = ++e4;
   static final int DIEDRN4 = ++e4;
@@ -9352,8 +9348,8 @@ public class Assets {
         yearsFutureFund = 0.;
         yearsFutureFundTimes = 0;
         hist.add(new History(aPre, 1, "n" + n + ">>>>>> aDEAD=" + EM.mf(health), "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "<<<<<<"));
-        EM.wasHere = "CashFlow.yearEnd in dead just before return cccg=" + ++cccg;
-      }
+       EM.isHere("--EYEYdg--",ec,"end of dead stats");
+      }// end of dead
       if (E.debugEconCnt) {
         synchronized (EM.econCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -9384,7 +9380,7 @@ public class Assets {
       didStart = false; // force start at next initCashFlow
       didDecay = false;
       syW = null; // get rid of hanging DoTotalWorths
-      EM.wasHere = "CashFlow.yearEnd just before final return cccj=" + ++cccj;
+
       //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
       if (E.debugEconCnt) {
         synchronized (EM.econCnt) {
@@ -9393,6 +9389,7 @@ public class Assets {
           }
         }
       }
+      EM.isHere("--EYEYaf--",ec,"end of yearEnd stats");
       if (E.debugMisc && syW != null) {
         throw new MyErr("in CF.yearEnd end, syW != null");
       }
@@ -9633,6 +9630,7 @@ public class Assets {
         }
         hist.add(new History(aPre, 7, "g=>s" + n + "=" + EM.mf(mov), "s=" + EM.mf(sbal), EM.mf(balances.get(BALANCESIX + SIX, n)), "g=" + EM.mf(gbal), EM.mf(balances.get(BALANCESIX + GIX, n))));
       }
+      EM.isHere("AFm",ec,"doLoops after move pre history");
       double nextN = 2.;
       bals.unzero("balances", BALANCESIX, 4);
       /**
@@ -9663,6 +9661,7 @@ public class Assets {
         yphase = yrphase.SWAPING;
         swapped = swaps("S%", lightYearsTraveled); // do possible swaps
         failed = !swapped;
+        if(n%5==0)EM.isHere("SWa",ec,"after swaps" + n + (swapped ? " swapped ":" failed ") + EM.sinceDoYear());
         if (History.dl > 4) {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
           hist.add(new History(aPre, 5, "after swap " + wh(a0.getLineNumber()), "n=" + n, (failed ? "failed" : "!!!failed"), (swapped ? "swapped" : "!!!swapped"), swapLoops + "=swapLoops", "$=" + EM.mf(sumTotWorth), "srcIx" + srcIx, "ixWRSrc" + ixWRSrc, "destIx=" + destIx, "<<<<<<<<<<<<<"));
@@ -11161,6 +11160,7 @@ public class Assets {
                 "mtgC=" + EM.mf(mtgCosts10.curSum()),
                 "bals=" + EM.mf(bals.curSum()), "<<<<<<<"));
         EM.wasHere = " CashFlow.swaps just before return if done aaad=" + ++aaad + " n=" + n;
+        EM.isHere("SDa",ec,EM.wasHere);
         return swapped = false;  // terminate looping success
       } // exit if we have satisfied END health
 
@@ -11199,6 +11199,7 @@ public class Assets {
       if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
         EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
       }
+      if(n>3 && n%5==4)EM.isHere("SDb", ec, "swapping" + n + " betterResult" + bres + " reDo" + reDo);
       // if result not better restore the old balances and recalc
       if (n > 2 && bres < 1 && reDo < maxReDo) { // redo bad swaps up to 4 times, than accept
         // prevns = prevprevns; // restore the prevns 
