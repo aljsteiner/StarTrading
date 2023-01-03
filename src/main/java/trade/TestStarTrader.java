@@ -48,11 +48,8 @@ public class TestStarTrader {
      */
     try {
       System.err.println("starting out in test main " + Thread.currentThread().getName());
-      
     mainStart(args);
     StarTrader.main3();
-    
-
      if(st.fatalError) throw new MyErr("fatal error at new StarTrader");
      System.err.println(" passed first test, StarTrader started");
       /* Create and display the form */

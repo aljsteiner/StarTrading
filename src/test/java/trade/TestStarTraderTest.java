@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2012 Albert Steiner
+  Copyright (C) 2012 Albert Steiner
  Copyright (C) 2022 Albert Steiner
 
  This program is free software: you can redistribute it and/or modify
@@ -46,9 +46,15 @@ public class TestStarTraderTest {
     /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
+    /* Set the Nimbus look and feel --change to animation*/
+
+    // Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+     */
     try {
-      System.err.println("starting out in test main " + Thread.currentThread().getName());
-      
+     System.err.println("starting out in test TestStarTraderTest main " + Thread.currentThread().getName());
+      //     System.exit(-25);
     mainStart(args);
     StarTrader.main3();
     
@@ -89,25 +95,18 @@ public class TestStarTraderTest {
       ex.printStackTrace(System.err);
       EM.flushes();
       fatalError = true;
-    } catch (FileNotFoundException ex) {
-      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-      EM.flushes();
-      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
-      ex.printStackTrace(System.err);
-      EM.flushes();
-      fatalError = true;;
+
     } finally {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
-
-    }
     //</editor-fold>
-
+    }
   } // main
   
   public TestStarTraderTest(){
-    
+     System.err.println("starting out in test test TestStarTraderTest main " + Thread.currentThread().getName());
+ //   System.exit(-24);
   }
   
 }

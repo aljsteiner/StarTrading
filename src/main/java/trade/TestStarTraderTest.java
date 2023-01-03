@@ -46,49 +46,67 @@ public class TestStarTraderTest {
     /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
-    try {
-      System.err.println("-----MAA----starting out in aaa test main " + Thread.currentThread().getName());
-      
-    StarTrader.mainStart(args);
-    StarTrader.main3();// tests are now in main3
+    /* Set the Nimbus look and feel --change to animation*/
+
+    // Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+     */
+    try { 
+     System.err.println("starting out in main TestStarTraderTest main " + Thread.currentThread().getName());
+     //  System.exit(-23);
+    mainStart(args);
+    StarTrader.main3();
     
 
-     if(eM.dfe()) eM.doMyErr("fatal error at new StarTrader");
+     if(st.fatalError) throw new MyErr("fatal error at new StarTrader");
      System.err.println(" passed first test, StarTrader started");
       /* Create and display the form */
-   
-      if(eM.dfe()) eM.doMyErr("fatal error at second run");
+       /* Create and display the form */
+     java.awt.EventQueue.invokeAndWait(() -> {
+        st.setVisible(true);
+      } //java.awt.EventQueue.invokeLater(new Runnable() {
+      );
+      eE = st.getE();
+      eM = st.getEM();
+      if(st.fatalError) throw new MyErr("fatal error before first run");
+      System.err.println(" passed start eventQueue");
+      st.runYears(1);
+      if(st.fatalError) throw new MyErr("fatal error at first run");
+      System.err.println("passed first year run");
+      eM.difficultyPercent[0] = 60.;
+    //  eM.difficultyPercent[1] = 60.;
+      st.runYears(1);
+      if(st.fatalError) throw new MyErr("fatal error at second run");
       System.err.println("passed second year run");
       System.exit(0);
       System.err.println("oops passed exit");
-      } catch (WasFatalError ex) {
-ex.printStackTrace(EM.pw);EM.thirdStack=EM.sw.toString();
-      eM.flushes();
-      System.err.println("Error " + ex.toString() + " " +st.since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName()  + EM.andMore());
-      //ex.printStackTrace(System.err);
-    System.exit(-15);
-      // go to finally
-    } catch (Exception | Error ex) {
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();EM.firstStack = EM.secondStack+"";
-      eM.flushes();
-      System.err.println(EM.tError=("Error " + ex.toString() + " " + st.since()  + " " + EM.curEconName  + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-     // ex.printStackTrace(System.err);
-      eM.flushes();
-      //setFatalError();
-     throw new WasFatalError(EM.tError);
+     } catch (InvocationTargetException ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;
+    } catch (InterruptedException ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;
 
     } finally {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
-
-    }
     //</editor-fold>
-
+    }
   } // main
   
   public TestStarTraderTest(){
-    
+    System.err.println("starting out in main test TestStarTraderTest main " + Thread.currentThread().getName());
+  //  System.exit(-22);
   }
   
 }
