@@ -62,9 +62,11 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-ea -classpath %classpath trade.TestStarTraderTest</exec.args>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.mainClass>trade.TestStarTraderTest</exec.mainClass>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
             </properties>
         </action>
          <action>
@@ -75,7 +77,11 @@
                 <goal>surefire:test</goal>
             </goals>
             <properties>
-              <test>${packageClassName}#trade.TestStarTraderTest</test>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
               <vertx.timeout>9999</vertx.timeout> 
             </properties>
         </action>
@@ -143,13 +149,55 @@
             <properties>
                 <test>DummyToSkipUnitTests</test>
                 <failIfNoTests>false</failIfNoTests>
-                <it.test>${packageClassName}#trade.TestStarTraderTest</it.test>
+                <it.test>${packageClassName}#trade.StarTrader</it.test>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.vmArgs>-ea</exec.vmArgs>
-                <exec.appArgs></exec.appArgs>
-                <exec.mainClass>trade.TestStarTraderTest</exec.mainClass>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
             </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-runtestandsee</actionName>
+            <displayName>runtestandsee</displayName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"runtestandsee"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>runtestandsee</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-run100</actionName>
+            <displayName>run100</displayName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"run100"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>run100</activatedProfile>
+            </activatedProfiles>
         </action>
         <action>
             <actionName>CUSTOM-run5</actionName>

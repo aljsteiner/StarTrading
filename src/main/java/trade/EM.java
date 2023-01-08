@@ -850,6 +850,7 @@ class EM {
   }
 
   static long gigMem = 1000000000L, totMem = 0, freeMem = 0, usedMem = 0, maxMem = 0;
+  static double gmem = .000000001;
   static String prGigMem = "";
   static Runtime runtime = Runtime.getRuntime();
 
@@ -888,7 +889,8 @@ class EM {
     usedMem = totMem - freeMem;
    double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
     double mmem = (double) maxMem / gigMem;
-    String ret = " Gmem "  + " max" + mf(mmem) + " tot" + mf(tmem) + " used" + mf(umem) + " free" + mf(fmem) ;
+    double gmax = (double) maxMem * gmem;
+    String ret = " Gmem "  + " max" + mf(mmem) + " gmax" + mf(gmax) + " tot" + mf(tmem) + " used" + mf(umem) + " free" + mf(fmem) ;
     return ret;
   }
 
@@ -902,10 +904,10 @@ class EM {
     freeMem = runtime.freeMemory();
     maxMem = runtime.maxMemory();
     usedMem = totMem - freeMem;
-    double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
-    double mmem = (double) maxMem / gigMem;
+    double tmem = (double) totMem * gmem, fmem = (double) freeMem * gmem, umem = (double) usedMem * gmem;
+    double mmem = (double) maxMem * gmem;
     //System.out.println("");
-    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + eM.year + "Gigs total=" + EM.mf(tmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " max=" + mf(mmem) + " used%max" + getPercentUsedMemory();
+    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + eM.year + " Gigs total=" + EM.mf(tmem) + " max" + mf(mmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " used%max" + getPercentUsedMemory();
     System.out.println("----PM----" + since() + prGigMem + "<<<<<<\n");
   }
 
