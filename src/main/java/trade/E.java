@@ -81,10 +81,10 @@ static StarTrader st;
    * execution speeds up if the debugging code is not reached
    */
   //static final boolean noAsserts = true; // true expect not -ea in program call
-  static final boolean noAsserts = true; // false expect -ea in call 
+  static final boolean noAsserts = false; // false expect -ea in call 
   static boolean ifassert = false; // preset for later test
   
-  static final boolean distributable = true;  //set true before making a jar fine available to public
+  static final boolean distributable = false;  //set true before making a jar fine available to public
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugfalse = false;
   static final boolean debugOutput = distributable; //distributable;
@@ -146,6 +146,7 @@ static StarTrader st;
  static final boolean debugStatsOut1 = false; // stats output1
  static final boolean debugStatsOut2 = false; // stats output1
   static final boolean debugYcalcCosts = debugMaster;
+  static final boolean debugPriorityOut = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
   static final boolean debugPutRowsOutUnset = false; //put out warnings of unset stats
   static final boolean debugStuck = true; //error if stuck

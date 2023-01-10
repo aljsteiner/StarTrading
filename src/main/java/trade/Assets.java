@@ -7303,7 +7303,7 @@ public class Assets {
         ypriorityYr.set(i, (yPritmp.get(i)) * (yPritmp.sum() < PZERO ? 0. : aSectorPriority.sum() / yPritmp.sum()), "priority recalculated each year");
         a11a += EM.mf(aSectorPriority.get(i)) + ", " + EM.mf(ypriorityYr.get(i)) + ": ";
       }
-      System.err.println(a11a + "<<<2<<<<");
+      if(E.debugPriorityOut)System.out.println(a11a + "<<<2<<<<");
       hist.add(new History("&&", 9, "uAdjPri", uAdjPri));
       hist.add(new History("&&", 9, "yPritmp", yPritmp));
       hist.add(new History("&&", 9, "asectorPriority", aSectorPriority));

@@ -987,7 +987,7 @@ class EM {
     // infinite returns inf sign
     NumberFormat dFrac = NumberFormat.getNumberInstance();
     NumberFormat whole = NumberFormat.getNumberInstance();
-    NumberFormat exp = new DecimalFormat("0.###E0");
+    NumberFormat exp = new DecimalFormat("0.###E00");
     if (v % 1 > E.NZERO && v % 1 < E.PZERO) {  //very close to zero remainder
       return whole.format(v);
     }
