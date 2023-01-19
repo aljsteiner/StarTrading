@@ -189,8 +189,8 @@ public class Assets {
   int yearSwapForwardFundEmergency = -20;
   int yearSOS = -20;
   int yearCreated = -20;
-  int prevBarterYear = -20;  // set near end of endYear
-  int prevNoBarterYear = -20;
+  int prevAcceptedYear = -20;  // set near end of endYear
+  int prevNotAcceptedYear = -20;
   boolean newTradeYear1 = false; // set by Assets.barter
 
   // save ship maint and travel cost of pre barter, for year end costs
@@ -228,7 +228,7 @@ public class Assets {
   double tradedFirstNegProspectsSum = 0.;
   // double[] tradedGoodBal = new double[E.hcnt];
   // double[] tradedGoodWorth = new double[E.hcnt];
-  boolean tradeAccepted = false;
+  boolean tradeAccepted = false;  // in Assets
   boolean tradeRejected = false;
   boolean tradeLost = false;
   boolean tradeMissed = false; // no trade tried
@@ -1736,18 +1736,18 @@ public class Assets {
    */
   Offer barter(Offer inOffer) {  // Assets.barter
 
-    newTradeYear1 = prevBarterYear != eM.year;
+    newTradeYear1 = prevAcceptedYear != eM.year;
     yrphase yphase = yrphase.TRADE;
-    if (prevBarterYear != eM.year) { //a new year barter
+    if (prevAcceptedYear != eM.year) { //a new year barter
       newTradeYear1 = true;
-      prevBarterYear = eM.year;
+     // prevAcceptedYear = eM.year; moved to Assets.CashFlow
       tradingShipName = inOffer.cnName[1]; // the ship name
       visitedShipNames[0][visitedShipOrdinal] = tradingShipName;
       int vl = visitedShipNames[0].length - 1;
       // don't overfill the array of names;
       visitedShipOrdinal = visitedShipOrdinal < vl ? visitedShipOrdinal + 1 : vl;
     }
-    prevBarterYear = eM.year;
+   // prevAcceptedYear = eM.year; moved to Assets.CashFlow
     if (cur == null) {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
@@ -7228,10 +7228,9 @@ public class Assets {
       //    started = traded = growed = endyr = copyy(cur);
       didCashFlowInit = true;
 
-      EM.wasHere = " " + ec.name + " CF at end " + pStarted + pInited + " eeej" + ++eeej;
-      if (E.DEBUGASSETSOUT) {
-        System.out.println("----ECF----" + EM.wasHere);
-      }
+      //EM.wasHere = " " + ec.name + " CF at end " + pStarted + pInited + " eeej" + ++eeej;
+      EM.here("----ECF----", ec, " CF at end " + pStarted + pInited + " eeej" + ++eeej);
+      
     }  //Assets.CashFlow.aStartCashFlow
 
     /**
@@ -8024,7 +8023,7 @@ public class Assets {
           tradedSuccessTrades++;
           tradeAccepted = true;
           tradeMissed = tradeRejected = tradeLost = false;
-          yearTradeAccepted = year;
+          prevAcceptedYear = yearTradeAccepted = year;
           EM.tradedCnt++;
           if (firstVisit) {
             EM.porsTraded[pors]++;
@@ -8070,7 +8069,7 @@ public class Assets {
           tradedSuccessTrades++;
           tradeAccepted = true;
           tradeMissed = tradeRejected = tradeLost = false;
-          yearTradeAccepted = year;
+          prevAcceptedYear = yearTradeAccepted = year;
           EM.tradedCnt++;
           EM.porsTraded[pors]++;
           EM.porsClanTraded[pors][clan]++;
@@ -8112,7 +8111,7 @@ public class Assets {
           eM.porsVisited[pors]++;
           eM.porsClanVisited[pors][clan]++;
           tradeLost = true;
-          yearTradeLost = year;
+          prevNotAcceptedYear = yearTradeLost = year;
           tradeMissed = tradeRejected = tradeAccepted = false;
           EM.tradedCnt++;
           // EM.porsTraded[pors]++;
@@ -8126,7 +8125,7 @@ public class Assets {
         } else if (newTerm == -1) { // trade rejected by barter
           tradeRejected = true;
           tradeMissed = tradeLost = tradeAccepted = false;
-          yearTradeRejected = year;
+          prevNotAcceptedYear = yearTradeRejected = year;
           setStat(EM.TradeRejectValuePerGoal, percentValuePerGoal, 1);
           setStat(EM.TradeRejectedStrategicGoal, pors, clan, strategicGoal, 1);
           setStat(EM.TradeRejectedStrategicValue, pors, clan, strategicValue, 1);
@@ -8143,7 +8142,7 @@ public class Assets {
           tradeLost = true;
           tradeMissed = tradeRejected
                   = tradeAccepted = false;
-          yearTradeLost = year;
+          prevNotAcceptedYear = yearTradeLost = year;
           retOffer.setTerm(-5);
           fav = -3.;
         } //exitif   Assets.CashFlow.barter
@@ -8889,22 +8888,22 @@ public class Assets {
         } else if (tradeLost) {
           setStat("WLOSTTRADEDINCR", pors, clan, worthIncrPercent, 1);
         } else {
-          if (prevBarterYear == eM.year) {
+          if (prevAcceptedYear == eM.year) {
             throw new MyErr("Illegal prev and noPrev barter for the same year=" + eM.year + ", ship=" + tradingShipName);
           }
-          if (prevNoBarterYear != eM.year) {
-            prevNoBarterYear = eM.year;
-          }
+         // if (prevNotAcceptedYear != eM.year) {
+           // prevNotAcceptedYear = eM.year;
+        //  }
           // Trade missed
           setStat("UNTRADEDWINCR", pors, clan, worthIncrPercent, 1);
           setStat(EM.TradeMissedStrategicGoal, pors, clan, 1.0, 1); // no goal
           EM.wasHere = "CashFlow.yearEnd before many setStat ddddg=" + ++ddddg;
 
-          if (eM.year - prevBarterYear == 1) {
+          if (eM.year - prevAcceptedYear == 1) {
             setStat("WORTHAYRNOTRADEINCR", pors, clan, worthIncrPercent, 1);
-          } else if (eM.year - prevBarterYear == 2) {
+          } else if (eM.year - prevAcceptedYear == 2) {
             setStat("WORTH2YRNOTRADEINCR", pors, clan, worthIncrPercent, 1);
-          } else if (eM.year - prevBarterYear >= 3) {
+          } else if (eM.year - prevAcceptedYear >= 3) {
             setStat("WORTH3YRNOTRADEINCR", pors, clan, worthIncrPercent, 1);
           }
         } //--- did year missed stats, years traded stats
@@ -8914,12 +8913,12 @@ public class Assets {
         if (sos && tradeAccepted) {
           setStat(EM.WTRADEDINCRSOS, pors, clan, worthIncrPercent, 1);
         }
-        if (prevNoBarterYear != eM.year) { // had a barter
-          if (eM.year - prevNoBarterYear == 1) {
+        if (prevNotAcceptedYear != eM.year) { // had a barter
+          if (eM.year - prevNotAcceptedYear == 1) {
             setStat("WORTHAYRTRADEINCR", pors, clan, worthIncrPercent, 1);
-          } else if (eM.year - prevNoBarterYear == 2) {
+          } else if (eM.year - prevNotAcceptedYear == 2) {
             setStat("WORTH2YRTRADEINCR", pors, clan, worthIncrPercent, 1);
-          } else if (eM.year - prevNoBarterYear >= 3) {
+          } else if (eM.year - prevNotAcceptedYear >= 3) {
             setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
           }
         }

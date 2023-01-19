@@ -578,7 +578,7 @@ public class Offer {
     if(term > EM.barterStart -2){ // 18, 17
       initialGoods[term%2] = lastGoods[term%2];
     }
-    if(E.debutNoLastGoods){
+    if(E.debugTNoLastGoods){
       if(term%2 == E.P && lastGoods[term%2] == null){
         throw new MyErr("in set2Goods lastGoods was null");
       }
@@ -645,7 +645,7 @@ public class Offer {
       this.strategicFrac[myIx] = strategicFrac;
       this.strategicValue[myIx] = strategicValue;
       set2Goods(goods);
-      if(E.debutNoLastGoods){
+      if(E.debugTNoLastGoods){
         if (term % 2 == E.P && lastGoods[term % 2] == null) {
           throw new MyErr("in set2Values lastGoods was null");
         }

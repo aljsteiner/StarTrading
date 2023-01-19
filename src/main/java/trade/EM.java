@@ -987,8 +987,8 @@ class EM {
     // infinite returns inf sign
     NumberFormat dFrac = NumberFormat.getNumberInstance();
     NumberFormat whole = NumberFormat.getNumberInstance();
-    NumberFormat exp = new DecimalFormat("0.###E00");
-    if (v % 1 > E.NZERO && v % 1 < E.PZERO) {  //very close to zero remainder
+    NumberFormat exp = new DecimalFormat("0.###E0");
+    if (v > -999999. && (v % 1 > E.NZERO) && v < 999999. && (v % 1 < E.PZERO)) {  //very close to zero remainder
       return whole.format(v);
     }
     if (v == .0 || v == -0) {  // actual zero
@@ -1006,7 +1006,7 @@ class EM {
     } else if ((v > -99999999. && v < -.001) || (v > .001 && v < 99999999.)) {
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(1);
-      return dFrac.format(v);
+      return "w" + dFrac.format(v);
     } else if ((v > -999999999. && v < -.001) || (v > .001 && v < 999999999.)) {
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(0);
@@ -1017,7 +1017,7 @@ class EM {
       return dFrac.format(v);
     } else {
       return exp.format(v);
-    }
+    } 
   }
 
   /**
@@ -1261,7 +1261,7 @@ class EM {
    * @return true if EM.fatalError, EM.newError or StarTrader.fatalError
    */
   static boolean dfe() {
-    return newError || fatalError || StarTrader.fatalError;
+    return newError || fatalError || stopExe|| StarTrader.fatalError;
   }
 
   /**
@@ -1271,7 +1271,7 @@ class EM {
    * StarTrader.fatalError
    */
   static String lfe() {
-    return (newError ? " found EM.newError " : " no newError ") + (fatalError ? " found EM.fatalError" : " no EM.fatalError") + (StarTrader.fatalError ? " found StarTrader.fatalError" : " no StarTrader.fatalError");
+    return (newError ? " found EM.newError " : " no newError ") + (fatalError ? " found EM.fatalError" : " no EM.fatalError") + (stopExe ? " found EM.stopExe" : " no EM.stopExe") + (StarTrader.fatalError ? " found StarTrader.fatalError" : " no StarTrader.fatalError");
   }
 
   /**

@@ -5354,6 +5354,11 @@ public class StarTrader extends javax.swing.JFrame {
       setLogEnvirn(1, eM.curEcon);
       //eM.logEnvirn[0] = eM.curEcon;
       // eM.logEnvirn[1] = eM.curEcon;
+      int siz = eM.hists[0].size();
+      int siz1 = siz - 87;
+      siz = siz1 < 0 ? 0 : siz1;
+       Boolean ll = eM.logEnvirn[0].logM[0] > 50;
+      if (ll) {
       eM.hists[0] = eM.logEnvirn[0].hists[0];
       eM.hists[1] = eM.logEnvirn[1].hists[0];
       eM.logEnvirn[0].logLen[0] = 90;
@@ -5362,15 +5367,12 @@ public class StarTrader extends javax.swing.JFrame {
       eM.logEnvirn[0].logLev[0] = 15;
       eM.logEnvirn[0].logLev[1] = 15;
       eM.hists[0].add(new History(3, "final string", "ERROR ==============================="));
-      int siz = eM.hists[0].size();
-      int siz1 = siz - 87;
-      siz = siz1 < 0 ? 0 : siz1;
+    
       eM.logEnvirn[0].logM[0] = siz;
       logM1Spinner.setValue(siz);
       // change to display the log of the erring Econ
       // do not try to display a log that does not exist
-      Boolean ll = eM.logEnvirn[0].logM[0] > 50;
-      if (ll) {
+     
         eM.logEnvirn[0].logLev[0] = 20;
         logDLevel1Slider.setValue(20);
         displayLog();
@@ -5528,7 +5530,7 @@ public class StarTrader extends javax.swing.JFrame {
     if (sameState && sameName && sameWh
             && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
       sameEconState++;
-      assert E.debugStuck && sameEconState < 91 : "STUCK at runYears2.checkEconState Year" + eM.year + " myNow=" + myNow + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      assert E.debugStuck && sameEconState < 91 : "STUCK at runYears2.checkEconState Y" + eM.year + " EconTime" + myNow + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 90) {
         EM.doMyErr("STUCK at:doYear" + EM.year + myNow + " " + stateStringNames[stateConst] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
@@ -5609,7 +5611,7 @@ public class StarTrader extends javax.swing.JFrame {
       Boolean done = false, did = false;
       aTime = (new Date()).getTime();
       // start the annimation loop until done or error, waiting to call paintCurDisplay again
-      for (stateCnt = 0; !EM.dfe() && !eM.stopExe && !done; stateCnt++) {
+      for (stateCnt = 0; !EM.dfe() && !done; stateCnt++) {
         ec = curEc = EM.curEcon;
         EM.wasHere3 = "---------AA--------runYears2 " + EM.curEconName + " before checkEconState " + stateStringNames[stateConst] + " " + Thread.currentThread().getName() + " " + EM.curEconName + "Y" + EM.year + " cnt" + stateCnt + " " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() ;
         assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3: "Thread count too low-" + Thread.activeCount() ;
@@ -5625,7 +5627,7 @@ public class StarTrader extends javax.swing.JFrame {
           case CONSTRUCTED:
           case WAITING:
           case STARTING:
-            paintCurDisplay(eM.curEcon);
+            //paintCurDisplay(eM.curEcon);
              {
               Thread.sleep(blip);
             }
@@ -6294,7 +6296,13 @@ public class StarTrader extends javax.swing.JFrame {
       System.out.println("===============StarTraderresize2 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
       System.out.println("=================StarTrader  sized stats w=" + statsR.width + ", h=" + statsR.height
               + ", statsP w=" + spR.width + ", h=" + spR.height
-              + ", statsTable w=" + stR.width + ", h=" + stR.height);
+              + ", statsTable w=" + stR.width + ", h=" + stR.height
+      + " big=" + EM.mf(123456789012345678901234567890.)
+      + " med1=" + EM.mf(1234567. * 123456.)
+      + " med2=" + EM.mf(12345678. * 123456.)
+      + " med3=" + EM.mf(123456789. * 123456.)
+      + " med4=" + EM.mf(123456789012. * 123456.)
+      + " med5=" + EM.mf(123456789012345. * 123456.));
       int statsTW = statsTable1.getWidth();
       int storyTextField1W = storyTextField1.getWidth();
       int storyTextPaneW = storyTextPane.getWidth();

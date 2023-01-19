@@ -83,13 +83,15 @@ public class TestStarTraderTest {
   
     }
     System.out.println("TestStarTraderTest finished " + (st.fatalError?" fatalError": " no Error"));
+    
+    System.exit(-3);
     System.exit(0);
   } // main
   
   public TestStarTraderTest(){
      System.err.println("starting out in test test TestStarTraderTest main " + Thread.currentThread().getName());
-  //  assertEquals(false,fatalError); I think it goes to main()
- //   System.exit(-24);  
+    assertEquals(false,fatalError); //I think it goes to main()
+    System.exit(-24);  
   }
   
 }

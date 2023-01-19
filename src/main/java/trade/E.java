@@ -93,6 +93,10 @@ static StarTrader st;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   static final boolean resetOut = distributable;  //change out, err to 
   static final boolean debugDoYearOut = debugMaster; //output messages in doyear and subs
+  static final boolean debugAssetsOut = debugMaster; //output messages Assets
+  static final boolean debugEconOut = debugMaster; //output messages in Econ
+  static final boolean debugCashFlowOut = debugMaster; //output messages in CashFlow
+  static final boolean debugTradesOut = debugMaster; //output messages in Trades
   static final boolean debugCheckBalances = false; //check balances in loops
   static final boolean debugEconCnt = false; // econCnt = porsCnt0 + porsCnt1
   static final boolean debugChangeEconCnt = true; // protect changes of econCnt
@@ -100,7 +104,7 @@ static StarTrader st;
   static final boolean debugNegCosts = debugMaster; // checking for neg Costs
   static final boolean debugFutureFund = debugMaster; // checking for errors with future funds
   static final boolean debugNoTerm = debugMaster; // term undefined in assets, find whyu
-  static final boolean debutNoLastGoods = debugMaster; //error open TradeRecord
+  static final boolean debugTNoLastGoods = debugMaster; //error open TradeRecord
   static final boolean debugOfferCargos = debugMaster; //cargos in offer == cargo.balance
   static final boolean debugSumGrades = debugMaster; //sum of grades = sum of staff/guests
   static final boolean debugResum = false; //rc == r + c  sg == s + g
@@ -1835,13 +1839,14 @@ static StarTrader st;
     }
     // StringBuffer m = "Exception";
     //throw MyTestException()
-    int ss = Thread.currentThread().getStackTrace().length;
+    StackTraceElement[] stackTraces = Thread.currentThread().getStackTrace();
+    int ss = stackTraces.length;
     //System.out.println(" length Thread.currentThread().StackTraceLength=" + ss);
-    StackTraceElement aa = Thread.currentThread().getStackTrace()[3];
-    StackTraceElement ab = (ss < 5 ? aa : Thread.currentThread().getStackTrace()[4]);
-    StackTraceElement ac = (ss < 6 ? aa : Thread.currentThread().getStackTrace()[5]);
-    StackTraceElement ad = (ss < 7 ? aa : Thread.currentThread().getStackTrace()[6]);
-    StackTraceElement ae = (ss < 8 ? aa : Thread.currentThread().getStackTrace()[7]);
+    StackTraceElement aa = stackTraces[3];
+    StackTraceElement ab = (ss < 5 ? aa : stackTraces[4]);
+    StackTraceElement ac = (ss < 6 ? aa : stackTraces[5]);
+    StackTraceElement ad = (ss < 7 ? aa : stackTraces[6]);
+    StackTraceElement ae = (ss < 8 ? aa : stackTraces[7]);
 
     String Fname = aa.getFileName();
     String Cname = aa.getClassName();
@@ -1855,10 +1860,14 @@ static StarTrader st;
     String Mname3 = ac.getMethodName();
 
     String aDate = new Date().toString();
+    int year = EM.year;
     //System.out.println(EM.st.since() + ">>>>>>>>>sysmsg" + EM.st.since());
+    // test true debugs to allow 
+    if(debugAssetsOut || debugEconOut || debugDoYearOut || debugCashFlowOut || debugTradesOut || debugFutureFund || debugThreadsOut){
     msgcnt++;
-    System.out.format(">>>>>>>>>sysmsg" + msgcnt + "<" + msgs + EM.st.since() + ";econ=" + (EM.curEcon == null ? " nullEcon" : EM.curEcon.name) + ":" + Fname3 + "." + Fline3 + "." + Mname3 + ";" + Fname2 + "." + Fline2 + "." + Mname2 + ";" + Fname + "." + Fline + "." + Cname + "." + Mname
+    System.out.format(">>>>>>>>>sysmsg" + msgcnt + "<" + msgs + EM.st.since() + "Y" + EM.year + " " + EM.curEconName + ":"  + Fname + "." + Fline + "." + Cname + "." + Mname
             + "<<<<<<<<<<\n>>>>>>>>>> " + form + "%n", v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26], v[27], v[28], v[29], v[30]);
+    }
     if (msgcnt > msgs) {
       new Throwable().printStackTrace();
       sysmsgDone = true;

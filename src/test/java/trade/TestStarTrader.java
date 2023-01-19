@@ -107,7 +107,7 @@ public class TestStarTrader {
   } // main
   
   public TestStarTrader(){
-    
+    System.exit(-10);
   }
   
 }

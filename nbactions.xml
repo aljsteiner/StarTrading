@@ -241,4 +241,25 @@
                 <activatedProfile>run20</activatedProfile>
             </activatedProfiles>
         </action>
+        <action>
+            <actionName>CUSTOM-test (default-test)</actionName>
+            <displayName>test (default-test)</displayName>
+            <preAction>build-with-dependencies</preAction>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>integration-test</goal>
+            </goals>
+            <properties>
+                <test>DummyToSkipUnitTests</test>
+                <failIfNoTests>false</failIfNoTests>
+                <it.test>${packageClassName}#trade.TestStarTraderTest</it.test>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.TestStarTraderTest</exec.mainClass>
+            </properties>
+        </action>
     </actions>

@@ -68,7 +68,7 @@ public class TradeRecord {
     cn = aa.cn[E.P];  // planet
     cnName = aa.cnName[E.P];
     lastGoodsIx = aa.goodIx;
-    if(E.debutNoLastGoods){
+    if(E.debugTNoLastGoods){
       A2Row t2 = aa.goods;
       A2Row t1 = aa.initialGoods[0];
       A2Row tt = aa.lastGoods[0];
