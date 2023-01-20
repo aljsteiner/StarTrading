@@ -205,6 +205,7 @@ class EM {
   static volatile String curEconName = "no Econ name";
   static volatile String curEconClan = "A";
   static volatile long curEconTime = 0; // time of this econ
+  static volatile int curEconAge=0;
   static volatile Econ otherEcon;
   static volatile String otherEconName = "no other name";
   static volatile String otherEconClan = "A";
@@ -221,6 +222,7 @@ class EM {
     }
     curEcon = x;
     curEconClan = x.getColor();
+    curEconAge = x.getAge();
     return curEconName = x.getName();
   }
 
@@ -3762,7 +3764,7 @@ onceAgain:
   private boolean unset = true;  // value in this rn nerver been set
   private boolean myUnset = false;
   private boolean myCumUnset = false;
-  private static long valid = 0; // number of cur in this rn valid 2 = 0,1 etc.
+  long valid = 0; // number of cur in this rn valid 2 = 0,1 etc.
   private long myAop = 0;
   private int myRn = 0;
   private String myDetail = "";
@@ -5434,9 +5436,9 @@ onceAgain:
    * @param v the value to be set
    * @return v
    */
-  double setStat(int rn, int pors, int clan, double v) {
+  double oldsetStat(int rn, int pors, int clan, double v) {
     int age = curEcon.age;
-    return setStat(rn, pors, clan, v, 1, age);
+    return oldsetStat(rn, pors, clan, v, 1, age);
   }
 
   /**
@@ -5449,9 +5451,9 @@ onceAgain:
    * @param cnt cnt of occurances usually 0 or 1
    * @return v
    */
-  double setStat(int rn, int pors, int clan, double v, int cnt) {
+  double oldsetStat(int rn, int pors, int clan, double v, int cnt) {
     int age = curEcon.age;
-    return setStat(rn, pors, clan, v, cnt, age);
+    return oldsetStat(rn, pors, clan, v, cnt, age);
   }
 
   /**
@@ -5469,7 +5471,7 @@ onceAgain:
   static volatile int ste = 0, lstk = 0, a = -5, b = -5, curm = 0;
 
   //synchronized 
-  double setStat(int rn, int pors, int clan, double v, int cnt, int age
+  double oldsetStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
       //long resLock[][][] = resI[rn];
@@ -5633,7 +5635,7 @@ onceAgain:
    * @return v
    */
   // int cntStatsPrints = 0;
-  double setMaxStat(int rn, int pors, int clan, double v, int cnt, int age
+  double oldsetMaxStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
       synchronized (syncRes) {
@@ -5792,7 +5794,7 @@ onceAgain:
    * @return v
    */
   // int cntStatsPrints = 0;
-  double setMinStat(int rn, int pors, int clan, double v, int cnt, int age
+  double oldsetMinStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
       synchronized (syncRes) {
@@ -5946,11 +5948,11 @@ onceAgain:
    * @param cnt greater than 0 if this set is to be counted
    * @return v
    */
-  double setStat(int rn, double v, int cnt) {
+  double oldsetStat(int rn, double v, int cnt) {
     int age = curEcon.age;
     int clan = curEcon.clan;
     int pors = curEcon.pors;
-    return setStat(rn, pors, clan, v, cnt, age);
+    return oldsetStat(rn, pors, clan, v, cnt, age);
   }
 
   static int putRowsPrint1Count = 0;

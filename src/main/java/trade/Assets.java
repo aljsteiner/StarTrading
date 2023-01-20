@@ -296,7 +296,15 @@ public class Assets {
   String resTypeName = "anot";
   double rsval1 = 0., rsval2 = 0.;
   Double rsval = 0.;
+  String[][] resS; //space for desc, comment
+  double[][][][]resV ;
+  long[][][][] resI;
+  int rende3 = 700;  // Assets for setStats
+  int lStatsWaitList = 10;
+  String[] statsWaitList;
+  int ISSET,ICUR0,MAXDEPTH,ICUM,CCONTROLD;
 
+  long doYearTime;
   double resFutureFundRequired = 0.;
   double staffFutureFundRequired = 0.;
   double resRorwardFundAssigned = 0.;
@@ -440,6 +448,17 @@ public class Assets {
     manuals = new ARow(ec);
     moreK = new ARow(ec); // in doGrow incr knowledge
     lessM = new ARow(ec); // in doGrow The manual made commonKnowledge
+      rende3 = eM.rende3;
+      resS = eM.resS; //space for desc, comment
+      resV = eM.resV;
+      resI = eM.resI; 
+      lStatsWaitList = eM.lStatsWaitList;
+    statsWaitList = eM.statsWaitList;
+    ISSET = eM.ISSET;
+    doYearTime = eM.doYearTime;
+    ICUR0 = eM.ICUR0;  MAXDEPTH = eM.MAXDEPTH;
+    ICUM = eM.ICUM;
+    CCONTROLD = eM.CCONTROLD;
     //ydifficulty = new ARow(ec);  set by priority
     double sumWealth = res * eM.nominalWealthPerResource[pors] + colonists * eM.nominalWealthPerStaff[pors] + aknowledge * eM.nominalWealthPerCommonKnowledge[0] + wealth;
     hist.add(new History("aa", History.loopIncrements3, "InitAs " + year + " i$" + EM.mf(iwealth), "r" + EM.mf(res), "r$" + EM.mf(res * eM.nominalWealthPerResource[pors]), "s" + EM.mf(colonists), "s$" + EM.mf(colonists * eM.nominalWealthPerStaff[pors]), "K" + EM.mf(aknowledge), "K$" + EM.mf(aknowledge * eM.nominalWealthPerCommonKnowledge[0]), "$" + EM.mf(wealth), "i$" + EM.mf(iwealth), "difficulty=", EM.mf(percentDifficulty)));
@@ -1096,6 +1115,537 @@ public class Assets {
     } // release cur et all
     eM.wasHere = "Assets.getTradeInit after cur = null";
   }
+  
+   /**
+   * set a statistic value and possibly a count
+   *
+   * @param rn the name of this statistic
+   * @param pors planet=0 ship=1
+   * @param clan clan of the request
+   * @param v the value to be set
+   * @return v
+   */
+  double setStat(int rn, int pors, int clan, double v) {
+    int age = ec.age;
+    return setStat(rn, pors, clan, v, 1, age);
+  }
+
+  /**
+   * set a statistic value and possibly a count
+   *
+   * @param rn the name of this statistic
+   * @param pors planet=0 ship=1
+   * @param clan clan of the request
+   * @param v the value to be set
+   * @param cnt cnt of occurances usually 0 or 1
+   * @return v
+   */
+  double setStat(int rn, int pors, int clan, double v, int cnt) {
+    int age = ec.age;
+    return setStat(rn, pors, clan, v, cnt, age);
+  }
+
+   int cntStatsPrints = 0;
+  volatile int ste = 0, lstk = 0, a = -5, b = -5, curm = 0;
+  /**
+   * set a statistic value and a count
+   *
+   * @param rn the name of this statistic
+   * @param pors planet=0 ship=1
+   * @param clan clan of the request
+   * @param v the value to be set
+   * @param cnt greater than 0 if this set is to be counted
+   * @param age years since creation of the Econ for this stat
+   * @return v
+   */
+ 
+
+
+  double setStat(int rn, int pors, int clan, double v, int cnt, int age
+  ) {
+    try {
+      //long resLock[][][] = resI[rn];
+        int le = eM.lStatsWaitList;
+        int prevIx = eM.ixStatsWaitList;
+        eM.ixStatsWaitList = (++eM.ixStatsWaitList) % eM.lStatsWaitList;
+        prevIx = prevIx >= eM.lStatsWaitList ? 0 : prevIx;// I don't know why there was out of bounds sometimes
+        int atCnt = 0;
+        long nTime = (new Date()).getTime();
+        long moreT = nTime - eM.doYearTime;
+
+        //  int sClan = curEcon.clan;
+        // int pors = curEcon.pors;
+        eM.addlErr = "inSetStat a rn=" + rn + " pors=" + pors + " clan=" + clan + " ";
+        String desc = eM.resS[rn][0];
+        eM.wasHere = "inSetStat b rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
+        eM.addlErr = "";
+        a = -5;
+        b = -5;
+        curm = 0;
+        int lResI = eM.resI[rn].length;
+        if (lResI > eM.STATSSHORTLEN) {
+          for (a = 1; a < 6 && b < 0; a++) {
+            //AGESTARTS   0,   4,   8,    16,    32,   999999}; 
+            //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
+            //   MAXDEPTH = 7
+            if (age < eM.AGESTARTS[a]) { //0, 4, 8, 16, 32, 999999,9999999}; 
+              b = a; //ageIx: b1 = 0-3,B2 4-7,B3 8-15,B4 16-31 B5 32-999999
+            }
+          }
+          if (b > 0) {
+            curm = eM.ICUR0 + eM.MAXDEPTH * b;//age < 4 makes ageIx=1 curm>0 0 of age group
+          }
+        } // end if
+        // select an object only big enough to work for the code for all sub objects that could be changed
+
+        double resL[][][] = eM.resV[rn];
+        int ycnt = cnt > -2 ? cnt : 0;// allow -1
+ int ICUM = eM.ICUM;
+ int ICUR0 = eM.ICUR0;
+ int CCONTROLD = eM.CCONTROLD;
+        // calculate the needed changes for ICUM  ICUR0  and possible ICURx
+        double[] resVCum = eM.resV[rn][ICUM][pors]; //array object 
+        double resVCumC = resVCum[clan]; // value in 
+        resVCumC += v; // doesn't change resVCum[clan]
+        long[] resICum = resI[rn][ICUM][pors];
+        double[] resVCur = resV[rn][ICUR0][pors];
+        long[] resICur = resI[rn][ICUR0][pors];
+        long[] resICurCC = resI[rn][ICUR0][CCONTROLD];
+        long[] resICumCC = resI[rn][ICUM][CCONTROLD];
+        /* now set the values in the appropriate age group */
+        EM.wasHere4 = "setStat rn=" + rn + " curm=" + curm + " pors=" + pors + " clan=" + clan;
+        EM.wasHere4 += " resI len=" + resI[rn].length; // prev value is saved
+        EM.wasHere4 += " resI[rn][curm]L=" + resI[rn][curm].length;
+        EM.wasHere4 += " +porsL=" + resI[rn][curm][pors].length;       
+        double[] resVCurm = resV[rn][curm][pors];//cur addresses
+        long[] resICurm = resI[rn][curm][pors];
+        long[] resICurmCC = resI[rn][curm][CCONTROLD];
+        //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
+        //only one thread at a time gets resLock  and can enter this code
+        //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
+       synchronized (resL){
+        if (E.debugStatsOut) {
+          statsWaitList[prevIx] = "setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          StackTraceElement[] prevCalls = new StackTraceElement[le];
+          StackTraceElement[] stks = Thread.currentThread().getStackTrace();
+          lstk = stks.length - 1;
+          for (ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
+            if (stks[ste + 1] != null) {
+              prevCalls[ste] = stks[ste + 1];
+              if (prevCalls[ste].getMethodName() != null
+                      && prevCalls[ste].getFileName() != null
+                      && prevCalls[ste].getLineNumber() != 0
+                      && !prevCalls[ste].getMethodName().contentEquals("setStat")) {
+                if (atCnt == 0) {
+                  statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+                }
+                String pcs = prevCalls[ste].getFileName();
+                int pci = prevCalls[ste].getLineNumber();
+                statsWaitList[prevIx] += " "
+                        + " at "
+                        + pcs
+                        + "." + pci;
+              } // parts !null
+            } // !null
+            atCnt++;
+          }//for
+        }//if debugStatsOut
+        resVCum[clan] += v;
+        resICum[clan] += ycnt;
+        resVCur[clan] += v;
+        resICur[clan] += ycnt;
+        resICurCC[ISSET] += 1;
+        resICumCC[ISSET] += 1;
+        if (curm > 0) {
+          /* now set the values in the appropriate age group */
+          resVCurm[clan] += v;
+          resICurm[clan] += ycnt;
+          resICurmCC[ISSET] += 1;
+        }
+
+        statsWaitList[prevIx] = "";
+        if (E.debugStatsOut) {
+          if (rn > 0) {
+            long endSt = (new Date()).getTime();
+            long moreTT = endSt - doYearTime;
+            int rN = rn;
+            int yrsIx = 1;
+            int yrsIxj = 1;
+            long resICumClan = resI[rn][ICUM][pors][clan];
+            long resIcur0Clan = resI[rn][ICUR0][pors][clan];
+            double resVcur0Clan = resV[rn][ICUR0][pors][clan];
+            EM.wasHere4 = "setStat rn=" + rn + " curm=" + curm + " pors=" + pors + " clan=" + clan;
+            EM.wasHere4 += " resI len=" + resI[rn].length; // prev value is saved
+            EM.wasHere4 += " resI[rn][curm]L=" + resI[rn][curm].length;
+            EM.wasHere4 += " +porsL=" + resI[rn][curm][pors].length;       
+            long resICurmClan = resI[rn][curm][pors][clan];
+            double resVCurmClan = resV[rn][curm][pors][clan];
+            long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
+            long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
+
+            long isset1 = (yrsIx - 1 + yrsIxj < resI[rN].length ? resI[rN][yrsIx - 1 + yrsIxj] != null ? resI[rN][yrsIx - 1 + yrsIxj][CCONTROLD][ISSET] : -1 : -2);
+
+            // if (E.debugStatsOut1) {
+            if (cntStatsPrints < E.ssMax) {
+              cntStatsPrints += 1;
+              System.out.println(
+                      "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+              System.out.flush();
+            } //ssMax
+            //  }
+
+          };
+        }
+      } // end of lock on res..[rn]
+      long[][][] resii = resI[rn];  //for values if using debug
+      double[][][] resvv = resV[rn];
+      return v;
+    } catch (Exception | Error ex) {
+      eM.firstStack = eM.secondStack + "";
+      ex.printStackTrace(eM.pw);
+      eM.secondStack = eM.sw.toString();
+      System.out.flush();
+      System.err.flush();
+      System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
+      //     ex.printStackTrace(System.err);
+      st.setFatalError();
+      throw new WasFatalError(eM.tError);
+    }
+  }
+
+  /**
+   * set a maxStatistic value and a count
+   *
+   * @param rn the name of this statistic
+   * @param pors planet=0 ship=1
+   * @param clan clan of the request
+   * @param v the value to be set
+   * @param cnt greater than 0 if this set is to be counted
+   * @param age years since creation of the Econ for this stat
+   * @return v
+   */
+  // int cntStatsPrints = 0;
+  double setMaxStat(int rn, int pors, int clan, double v, int cnt, int age
+  ) {
+    try {
+      
+        int le = 10;
+        int prevIx = eM.ixStatsWaitList;
+        eM.ixStatsWaitList = (++eM.ixStatsWaitList) % lStatsWaitList;
+        int atCnt = 0;
+        long nTime = (new Date()).getTime();
+        long moreT = nTime - doYearTime;
+        if (E.debugStatsOut) {
+          statsWaitList[prevIx] = "setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          StackTraceElement[] prevCalls = new StackTraceElement[le];
+          int lstk = Thread.currentThread().getStackTrace().length - 1;
+          for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
+            prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
+            if (!prevCalls[ste].getMethodName().contentEquals("setMaxStat")) {
+              if (atCnt == 0) {
+                statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+              }
+              statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+            }
+            atCnt++;
+          }//for
+        }//if out
+
+        //  int sClan = curEcon.clan;
+        // int pors = curEcon.pors;
+        eM.addlErr = "inSetMaxStat a rn=" + rn + " pors=" + pors + " clan=" + clan + " ";
+        String desc = resS[rn][0];
+       eM.rememberDetail= eM.wasHere = "inSetMaxStat b rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
+        eM.addlErr = "";
+        int a = -5, b = -5, curm = 0;
+        // check if we do agelist
+        if (resI[rn].length > eM.STATSSHORTLEN) {
+          for (a = 1; a < 6 && b < 0; a++) {
+            //AGESTARTS   0,   4,   8,    16,    32,   999999}; 
+            //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
+            //   LIST0-LIST9 LIST10 LIST11 LIST12 LIST13 LIST14 LIST15-LIST20
+            //   MAXDEPTH = 7
+            if (age < eM.AGESTARTS[a]) {
+              b = a;
+            }
+          }
+          curm = ICUR0 + MAXDEPTH * b;
+        } // end if
+        double resL[][][] = resV[rn];
+        int ycnt = cnt > 0 ? cnt : 0;
+
+        double[] resVCum = resV[rn][ICUM][pors]; //array object 
+        double resVCumC = resVCum[clan]; // value in 
+        resVCumC += v; // won't work
+        long[] resICum = resI[rn][ICUM][pors];
+        double[] resVCur = resV[rn][ICUR0][pors];
+        long[] resICur = resI[rn][ICUR0][pors];
+        long[] resICurCC = resI[rn][ICUR0][CCONTROLD];
+        long[] resICumCC = resI[rn][ICUM][CCONTROLD];
+        /* now set the values in the appropriate age group */
+        double[] resVCurm = resV[rn][curm][pors];
+        long[] resICurm = resI[rn][curm][pors];
+        long[] resICurmCC = resI[rn][curm][CCONTROLD];
+        //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
+       synchronized (resL) {
+        if (resICumCC[ISSET] < 1) {
+          for (int m = 0; m < 2; m++) {
+            double aresVC[] = resV[rn][ICUM][m];
+            for (int n = 0; n < E.LCLANS; n++) {
+              aresVC[n] = -999999999999.;
+            }
+          }
+        }
+        resVCum[clan] = v > resVCum[clan] ? v : resVCum[clan];
+        resICum[clan] += ycnt;
+        if (resICurCC[ISSET] < 1) {
+          for (int m = 0; m < 2; m++) {
+            double aresVC[] = resV[rn][ICUR0][m];
+            for (int n = 0; n < E.LCLANS; n++) {
+              aresVC[n] = -999999999999.;
+            }
+          }
+        }
+        resVCur[clan] = v > resVCur[clan] ? v : resVCur[clan];
+        resICur[clan] += ycnt;
+        resICurCC[ISSET] = 1;
+        resICumCC[ISSET] = 1;
+        if (curm > 0) {
+          if (resICurmCC[ISSET] < 1) {
+            for (int m = 0; m < 2; m++) {
+              double aresVC[] = resV[rn][curm][m];
+              for (int n = 0; n < E.LCLANS; n++) {
+                aresVC[n] = -999999999999.;
+              }
+            }
+          }
+          /* now set the values in the appropriate age group */
+          resVCurm[clan] = v > resVCurm[clan] ? v : resVCurm[clan];
+          resICurm[clan] += ycnt;
+          resICurmCC[ISSET] = 1;
+        }
+
+        statsWaitList[prevIx] = "";
+        if (E.debugStatsOut) {
+          if (rn > 0) {
+            long endSt = (new Date()).getTime();
+            long moreTT = endSt - doYearTime;
+            int rN = rn;
+            int jj = 1;
+            int jjj = 1;
+            long resICumClan = resI[rn][ICUM][pors][clan];
+            long resIcur0Clan = resI[rn][ICUR0][pors][clan];
+            double resVcur0Clan = resV[rn][ICUR0][pors][clan];
+            long resICurmClan = resI[rn][curm][pors][clan];
+            double resVCurmClan = resV[rn][curm][pors][clan];
+            long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
+            long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
+
+            long isset1 = (jj - 1 + jjj < resI[rN].length ? resI[rN][jj - 1 + jjj] != null ? resI[rN][jj - 1 + jjj][CCONTROLD][ISSET] : -1 : -2);
+
+            if (E.debugStatsOut1) {
+              if (cntStatsPrints < E.ssMax) {
+                cntStatsPrints += 1;
+                System.out.println(
+                        "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                System.out.flush();
+              } //ssMax
+            }
+
+          };
+        }
+      } // end of lock on res..[rn]
+      long[][][] resii = resI[rn];  //for values if using debug
+      double[][][] resvv = resV[rn];
+      return v;
+    } catch (Exception | Error ex) {
+      eM.firstStack = eM.secondStack + "";
+      ex.printStackTrace(eM.pw);
+      eM.secondStack = eM.sw.toString();
+      System.out.flush();
+      System.err.flush();
+      System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
+      //     ex.printStackTrace(System.err);
+      st.setFatalError();
+      throw new WasFatalError(eM.tError);
+    }
+  }
+
+  /**
+   * set a min Statistic value and a count
+   *
+   * @param rn the name of this statistic
+   * @param pors planet=0 ship=1
+   * @param clan clan of the request
+   * @param v the value to be set
+   * @param cnt greater than 0 if this set is to be counted
+   * @param age years since creation of the Econ for this stat
+   * @return v
+   */
+  // int cntStatsPrints = 0;
+  double setMinStat(int rn, int pors, int clan, double v, int cnt, int age
+  ) {
+    try {
+      //synchronized (syncRes) {
+        int le = 10;
+        int prevIx = eM.ixStatsWaitList;
+        eM.ixStatsWaitList = (++eM.ixStatsWaitList) % lStatsWaitList;
+        int atCnt = 0;
+        long nTime = (new Date()).getTime();
+        long moreT = nTime - doYearTime;
+        if (E.debugStatsOut) {
+          statsWaitList[prevIx] = "setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          StackTraceElement[] prevCalls = new StackTraceElement[le];
+          int lstk = Thread.currentThread().getStackTrace().length - 1;
+          for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
+            prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
+            if (!prevCalls[ste].getMethodName().contentEquals("setMinStat")) {
+              if (atCnt == 0) {
+                statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+              }
+              statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+            }
+            atCnt++;
+          }//for
+        }//if out
+
+        //  int sClan = curEcon.clan;
+        // int pors = curEcon.pors;
+        eM.addlErr = "inSetMinStat a rn=" + rn + " pors=" + pors + " clan=" + clan + " ";
+        String desc = resS[rn][0];
+        eM.wasHere = "inSetMinStat b rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
+        eM.addlErr = "";
+        int a = -5, b = -5, curm = 0;
+        // check if we do agelist
+        if (resI[rn].length > eM.STATSSHORTLEN) {
+          for (a = 1; a < 6 && b < 0; a++) {
+            //AGESTARTS   0,   4,   8,    16,    32,   999999}; 
+            //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
+            //   LIST0-LIST9 LIST10 LIST11 LIST12 LIST13 LIST14 LIST15-LIST20
+            //   MAXDEPTH = 7
+            if (age < eM.AGESTARTS[a]) {
+              b = a;
+            }
+          }
+          curm = ICUR0 + MAXDEPTH * b;
+        } // end if
+        double resL[][][] = resV[rn];
+        int ycnt = cnt > 0 ? cnt : 0;
+
+        double[] resVCum = resV[rn][ICUM][pors]; //array object 
+        double resVCumC = resVCum[clan]; // value in 
+        resVCumC += v; // won't work
+        long[] resICum = resI[rn][ICUM][pors];
+        double[] resVCur = resV[rn][ICUR0][pors];
+        long[] resICur = resI[rn][ICUR0][pors];
+        long[] resICurCC = resI[rn][ICUR0][CCONTROLD];
+        long[] resICumCC = resI[rn][ICUM][CCONTROLD];
+        /* now set the values in the appropriate age group */
+        double[] resVCurm = resV[rn][curm][pors];
+        long[] resICurm = resI[rn][curm][pors];
+        long[] resICurmCC = resI[rn][curm][CCONTROLD];
+        //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
+        synchronized(resL){
+        if (resICumCC[ISSET] < 1) {
+          for (int m = 0; m < 2; m++) {
+            double aresVC[] = resV[rn][ICUM][m];
+            for (int n = 0; n < E.LCLANS; n++) {
+              aresVC[n] = 999999999999999999999999.;
+            }
+          }
+        }
+        resVCum[clan] = v < resVCum[clan] ? v : resVCum[clan];
+        resICum[clan] += ycnt;
+        if (resICurCC[ISSET] < 1) {
+          for (int m = 0; m < 2; m++) {
+            double aresVC[] = resV[rn][ICUR0][m];
+            for (int n = 0; n < E.LCLANS; n++) {
+              aresVC[n] = 999999999999999999999999.;
+            }
+          }
+        }
+        resVCur[clan] = v < resVCur[clan] ? v : resVCur[clan];
+        resICur[clan] += ycnt;
+        resICurCC[ISSET] = 1;
+        resICumCC[ISSET] = 1;
+        if (curm > 0) {
+          /* now set the values in the appropriate age group */
+          if (resICurmCC[ISSET] < 1) {
+            for (int m = 0; m < 2; m++) {
+              double aresVC[] = resV[rn][curm][m];
+              for (int n = 0; n < E.LCLANS; n++) {
+                aresVC[n] = 999999999999999999999999.;
+              }
+            }
+          }
+          resVCurm[clan] = v < resVCurm[clan] || resICurmCC[ISSET] < 1 ? v : resVCurm[clan];
+          resICurm[clan] += ycnt;
+          resICurmCC[ISSET] = 1;
+        }
+
+        statsWaitList[prevIx] = "";
+        if (E.debugStatsOut) {
+          if (rn > 0) {
+            long endSt = (new Date()).getTime();
+            long moreTT = endSt - doYearTime;
+            int rN = rn;
+            int jj = 1;
+            int jjj = 1;
+            long resICumClan = resI[rn][ICUM][pors][clan];
+            long resIcur0Clan = resI[rn][ICUR0][pors][clan];
+            double resVcur0Clan = resV[rn][ICUR0][pors][clan];
+            long resICurmClan = resI[rn][curm][pors][clan];
+            double resVCurmClan = resV[rn][curm][pors][clan];
+            long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
+            long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
+
+            long isset1 = (jj - 1 + jjj < resI[rN].length ? resI[rN][jj - 1 + jjj] != null ? resI[rN][jj - 1 + jjj][CCONTROLD][ISSET] : -1 : -2);
+
+            if (E.debugStatsOut1) {
+              if (cntStatsPrints < E.ssMax) {
+                cntStatsPrints += 1;
+                System.out.println(
+                        "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                System.out.flush();
+              } //ssMax
+            }
+
+          };
+        }
+      } // end of lock on res..[rn]
+      long[][][] resii = resI[rn];  //for values if using debug
+      double[][][] resvv = resV[rn];
+      return v;
+    } catch (Exception | Error ex) {
+      eM.firstStack = eM.secondStack + "";
+      ex.printStackTrace(eM.pw);
+      eM.secondStack = eM.sw.toString();
+      System.out.flush();
+      System.err.flush();
+      System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
+      //     ex.printStackTrace(System.err);
+      st.setFatalError();
+      throw new WasFatalError(eM.tError);
+    }
+  }
+
+  /**
+   * set a statistic value and possibly a count
+   *
+   * @param rn the name of this statistic
+   * @param v the value to be set
+   * @param cnt greater than 0 if this set is to be counted
+   * @return v
+   */
+  double setStat(int rn, double v, int cnt) {
+    int age = ec.age;
+    int clan = ec.clan;
+    int pors = ec.pors;
+    return setStat(rn, pors, clan, v, cnt, age);
+  }
 
   /**
    * set a statistical value for later viewing assume a count of 1
@@ -1112,7 +1662,7 @@ public class Assets {
       System.out.printf("setStat a cannot find \"%s\" \n", dname);
       o1 = eM.resMap.get("missing name");
     }
-    eM.setStat((int) o1, pors, clan, val, 1, ec.age);
+    setStat((int) o1, pors, clan, val, 1, ec.age);
     EM.addlErr = "";
   }
 
@@ -1128,7 +1678,7 @@ public class Assets {
   void setStat(String dname, int pors, int clan, double val, int cnt) {
     EM.addlErr = "setStat dname=" + dname;
     int o1 = eM.resMap.get(dname);
-    eM.setStat(o1, pors, clan, val, cnt, ec.age);
+    setStat(o1, pors, clan, val, cnt, ec.age);
     EM.addlErr = "";
   }
 
@@ -1142,7 +1692,7 @@ public class Assets {
   void setStat(String dname, double val, int cnt) {
     EM.addlErr = "setStat dname=" + dname;
     int o1 = eM.resMap.get(dname);
-    eM.setStat(o1, pors, clan, val, cnt, ec.age);
+    setStat(o1, pors, clan, val, cnt, ec.age);
     EM.addlErr = "";
   }
 
@@ -1155,7 +1705,7 @@ public class Assets {
   void setStat(String dname, double val) {
     EM.addlErr = "setStat dname=" + dname;
     int o1 = eM.resMap.get(dname);
-    eM.setStat(o1, pors, clan, val, 1, ec.age);
+    setStat(o1, pors, clan, val, 1, ec.age);
     EM.addlErr = "";
   }
 
@@ -1197,12 +1747,12 @@ public class Assets {
    * @param cnt count 1 or 0 if another setStat will set cnt
    * @param age age of the economy Econ
    */
-  void setStat(int rN, int pors, int clan, double val, int cnt, int age) {
+  void oldsetStat(int rN, int pors, int clan, double val, int cnt, int age) {
     if (rN < NZERO) {
       eM.bErr("unknown result Name");
       return;
     }
-    eM.setStat(rN, pors, clan, val, cnt, age);
+    setStat(rN, pors, clan, val, cnt, age);
   }
 
   /**
@@ -1215,12 +1765,12 @@ public class Assets {
    * @param cnt count 1 or 0 if another setStat will set cnt ec.age age of this
    * economy
    */
-  void setStat(int rN, int pors, int clan, double val, int cnt) {
+  void oldsetStat(int rN, int pors, int clan, double val, int cnt) {
     if (rN < NZERO) {
       eM.bErr("unknown result Name");
       return;
     }
-    eM.setStat(rN, pors, clan, val, cnt, ec.age);
+    setStat(rN, pors, clan, val, cnt, ec.age);
   }
 
   /**
@@ -1238,7 +1788,7 @@ public class Assets {
       eM.bErr("unknown result Name");
       return;
     }
-    eM.setMinStat(rN, pors, clan, val, cnt, ec.age);
+    setMinStat(rN, pors, clan, val, cnt, ec.age);
   }
 
   /**
@@ -1256,7 +1806,7 @@ public class Assets {
       eM.bErr("unknown result Name");
       return;
     }
-    eM.setMaxStat(rN, pors, clan, val, cnt, ec.age);
+    setMaxStat(rN, pors, clan, val, cnt, ec.age);
   }
 
   /**
@@ -1267,12 +1817,12 @@ public class Assets {
    * @param cnt count 1 or 0 if another setStat will set cnt
    * @param age age of the economy Econ
    */
-  void setStat(int rN, double val, int cnt) {
+  void oldsetStat(int rN, double val, int cnt) {
     if (rN < NZERO) {
       eM.bErr("unknown result Name");
       return;
     }
-    eM.setStat(rN, pors, clan, val, cnt, ec.age);
+    setStat(rN, pors, clan, val, cnt, ec.age);
   }
 
   /**
@@ -8712,14 +9262,14 @@ public class Assets {
 
         double bcurSum = bals.curSum();
         double totWorth = fyW.getTotWorth();
-        eM.setStat(EM.RCMTGC, pors, clan, calcPercent(bcurSum, mtgCosts10.getRow(0).sum()), 1);
-        eM.setStat(EM.SGMTGC, pors, clan, calcPercent(bcurSum, mtgCosts10.getRow(1).sum()), 1);
-        eM.setStat(EM.RRAWMC, pors, clan, calcPercent(bcurSum, maintCosts10.getRow(0).sum()), 1);
-        eM.setStat(EM.SRAWMC, pors, clan, calcPercent(bcurSum, maintCosts10.getRow(1).sum()), 1);
-        eM.setStat(EM.RCREQGC, pors, clan, calcPercent(bcurSum, reqMaintCosts10.getRow(0).sum()), 1);
-        eM.setStat(EM.SGREQGC, pors, clan, calcPercent(bcurSum, reqMaintCosts10.getRow(1).sum()), 1);
-        eM.setStat(EM.RCREQMC, pors, clan, calcPercent(bcurSum, reqGrowthCosts10.getRow(0).sum()), 1);
-        eM.setStat(EM.SGREQMC, pors, clan, calcPercent(bcurSum, reqGrowthCosts10.getRow(1).sum()), 1);
+        setStat(EM.RCMTGC, pors, clan, calcPercent(bcurSum, mtgCosts10.getRow(0).sum()), 1);
+        setStat(EM.SGMTGC, pors, clan, calcPercent(bcurSum, mtgCosts10.getRow(1).sum()), 1);
+        setStat(EM.RRAWMC, pors, clan, calcPercent(bcurSum, maintCosts10.getRow(0).sum()), 1);
+        setStat(EM.SRAWMC, pors, clan, calcPercent(bcurSum, maintCosts10.getRow(1).sum()), 1);
+        setStat(EM.RCREQGC, pors, clan, calcPercent(bcurSum, reqMaintCosts10.getRow(0).sum()), 1);
+        setStat(EM.SGREQGC, pors, clan, calcPercent(bcurSum, reqMaintCosts10.getRow(1).sum()), 1);
+        setStat(EM.RCREQMC, pors, clan, calcPercent(bcurSum, reqGrowthCosts10.getRow(0).sum()), 1);
+        setStat(EM.SGREQMC, pors, clan, calcPercent(bcurSum, reqGrowthCosts10.getRow(1).sum()), 1);
         EM.isHere1(ec, "CashFlow.yearEnd before many setStat ddddc=" + ++ddddc);
         setStat(EM.RCTBAL, pors, clan, calcPercent(totWorth, fyW.getSumRCBal()), 1);
 
@@ -8729,12 +9279,12 @@ public class Assets {
         setStat("RBAL", pors, clan, calcPercent(totWorth, fyW.getSumRBal()), 1);
         setStat("CBAL", pors, clan, calcPercent(totWorth, fyW.getSumCBal()), 1);
         //      DoTotalWorths iyW,syW, tW, gSwapW, gGrowW, gCostW, fyW;
-        eM.setStat(EM.POORKNOWLEDGEEFFECT, poorKnowledgeAveEffect, 1);
-        eM.setStat(EM.POORHEALTHEFFECT, poorHealthAveEffect, 1);
+        setStat(EM.POORKNOWLEDGEEFFECT, poorKnowledgeAveEffect, 1);
+        setStat(EM.POORHEALTHEFFECT, poorHealthAveEffect, 1);
         // gameRes.MANUALSB.wet(pors, clan, manuals.sum(), 1);
         // in live Assets.CashFlow.yearEnd()
         //eM.setStat(EM.MANUALSFRAC, pors, clan, 100. * manuals.sum() * eM.nominalWealthPerTradeManual[pors] / totWorth, 1);
-        eM.setStat(EM.MANUALSFRAC, pors, clan, calcPercent(totWorth, manuals.sum() * eM.nominalWealthPerTradeManual[pors]), 1);
+        setStat(EM.MANUALSFRAC, pors, clan, calcPercent(totWorth, manuals.sum() * eM.nominalWealthPerTradeManual[pors]), 1);
         // gameRes.NEWKNOWLEDGEB.wet(pors, clan, newKnowledge.sum() / knowledge.sum(), 1);
         setStat(EM.NEWKNOWLEDGEFRAC, pors, clan, calcPercent(totWorth, newKnowledge.sum() * eM.nominalWealthPerNewKnowledge[pors][0]), 1);
         EM.isHere1(ec, "CashFlow.yearEnd before many setStat dddde=" + ++dddde);
