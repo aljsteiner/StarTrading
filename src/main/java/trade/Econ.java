@@ -873,7 +873,7 @@ public class Econ {
     myYearEndTime = new Date().getTime();
     try {
       if (E.debugEconCnt){
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -888,7 +888,7 @@ public class Econ {
       as.yearEnd();
       EM.wasHere3 = "after as.yearEnd " + name + "Y"+ EM.year + " yyyee1=" + yyyee1++;
       if (E.debugEconCnt){
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -903,7 +903,7 @@ public class Econ {
       if (as.getDie()) {
         dage++;
         if (E.debugEconCnt){
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
         }
         assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -920,12 +920,12 @@ public class Econ {
         hist.clear(); // wipe out previous hist
       }
       if (E.debugEconCnt){
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
       if (E.debugEconCnt && E.noAsserts) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
@@ -938,7 +938,7 @@ public class Econ {
       nowName = name;
       nowEc = this;
       if (E.debugEconCnt){
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       EM.wasHere3 = "at econ.yearEnd end after sync " + name + "Y"+ EM.year + " yyyee5=" + yyyee5++;
@@ -1463,11 +1463,11 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     
   
     if(E.debugEconCnt){
-  synchronized (EM.econCnt) {
+  synchronized (A4Row.econLock) {
       okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
     assert okEconCnt : "imWaiting Count Error " + name + "Y" + EM.year + " EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
     if (E.debugEconCnt && E.noAsserts) {
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
         }
@@ -1502,12 +1502,12 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     boolean dowait = doEndYearCnt[0] > limit;
     for (int timeLoop = 0; timeLoop < secs && dowait; timeLoop++) {
       if (E.debugEconCnt){
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       assert okEconCnt : "imWaiting Count Error " + name + "Y" + EM.year + " EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
       if (E.debugEconCnt && E.noAsserts) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
@@ -1528,12 +1528,12 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       if (doEndYearCnt[0] <= limit) {
         dowait = false; // no more waiting
         if (E.debugEconCnt){
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
         }
         assert okEconCnt : "imWaiting Count Error " + name + "Y" + EM.year + " EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
         if (E.debugEconCnt && E.noAsserts) {
-          synchronized (EM.econCnt) {
+          synchronized (A4Row.econLock) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -1542,7 +1542,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         }
       } else {
         if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
+          synchronized (A4Row.econLock) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -1558,7 +1558,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         } else {
           try {
             if (E.debugEconCnt) {
-              synchronized (EM.econCnt) {
+              synchronized (A4Row.econLock) {
           okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
         }
         assert okEconCnt : "imWaiting Count Error " + name + "Y" + EM.year + " EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -1566,31 +1566,22 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
             }
             Thread.sleep(1000L);
  if (E.debugEconCnt) {
-              synchronized (EM.econCnt) {
+              synchronized (A4Row.econLock) {
           okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
         }
         assert okEconCnt : "imWaiting Count Error " + name + "Y" + EM.year + " EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
          
             }
-          } catch (Exception ex) {
+          } catch (Exception | Error ex) {
   EM.firstStack = EM.secondStack+"";
        ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();      
-            System.err.println(st.sinceEcon() + " exception=" + ex.toString() + " found " + ex.getMessage() + EM.andMore());
+            System.err.println(eM.tError = (st.sinceEcon() + " caught=" + ex.toString() + " message " + ex.getMessage() + EM.andMore()));
             ex.printStackTrace(System.err);
            eM.flushes();
-      eM.flushes();
+           eM.flushes();
             EM.flushes();
             EM.flushes();
             st.setFatalError();
-            } catch (Error ex) {
-      EM.firstStack = EM.secondStack+"";
-ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
-      System.err.println(Econ.nowName  + " " + Econ.nowThread + "Error " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
-      ex.printStackTrace(System.err);
-      eM.flushes();
-      eM.flushes();
-      eM.flushes();
-      st.setFatalError();
           }
         }
 
@@ -1680,7 +1671,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    */
   void doYearEnd() {
     if (!didYearEnd) {
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -1705,7 +1696,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       prevEtIx = ixETList;
       int atCnt = 0;
       nowName = name;
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -1714,7 +1705,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
 
-      if ((doImw = eM.maxThreads[0][0] >= 22.0 && doEndYearCnt[0] > eM.maxThreads[0][0])) {  // wait only if over cnt
+      if ((doImw = eM.maxThreads[0][0] >= 2.0 && doEndYearCnt[0] > eM.maxThreads[0][0])) {  // wait only if over cnt
         imWaiting(doEndYearCnt, (int) eM.maxThreads[0][0], 6, "doYearEnd " + name);
       }
       iWaited = (doImw ? " notImWaited + " : "  + ");
@@ -1739,7 +1730,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         }
       }//DEBUGWAITTRACE
       if(E.debugEconCnt){
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
       assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -1749,7 +1740,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           }
       }
       }
-      if (EM.maxThreads[0][0] >= 22.) {
+      if (EM.maxThreads[0][0] >= 2.) {
         // now in the main thread, up the assigned thread count
         incrEndYearCnt();
         long afterT = etTimes[2] = (new Date()).getTime();
@@ -1759,7 +1750,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         //long msecs = EM.doYearTime - etTimes[1];
         sETList[prevEtIx] = atList = "ecTh=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " imCounted +" + moreTimes[2];
         if(E.debugEconCnt){
-          synchronized (EM.econCnt) {
+          synchronized (A4Row.econLock) {
           okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
         }
         assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -1771,7 +1762,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         }
         }
         EconThread emm = new EconThread(etTimes, atList, sETList, prevEtIx);
-      // synchronized (EM.econCnt) {
+      // synchronized (A4Row.econLock) {
          // okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
        // }
        // assert okEconCnt : "Count Error EM.econCnt=" + EM.econCnt + " not equal to (EM.porsCnt[0]=" + EM.porsCnt[0] + " EM.porsCnt[1]=" + EM.porsCnt[1] + ")";
@@ -1854,7 +1845,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         }//DEBUGWAITTRACE
       }
       if (false && E.debugEconCnt) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
@@ -1862,7 +1853,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       }
       yearEnd();
       if (false && E.debugEconCnt) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
@@ -1871,7 +1862,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       //synchronized (doEndYearCnt) {doEndYearCnt[0]--;}  // done
       decrEndYearCnt();
       if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }

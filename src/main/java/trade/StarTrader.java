@@ -5398,7 +5398,7 @@ public class StarTrader extends javax.swing.JFrame {
     controlPanels.getComponent(3);
     controlPanels.setSelectedIndex(3);
     displayPanel0Text.setRows(18);
-    String eer = "There was a fatal error\nMake any notes you remember of what happened.";
+    String eer = "There was a fatal error\nMake any notes you remember of what happened.\n" + eM.tError;
     if(E.debugOutput)eer += " \nThere should be a StarTraderOutput and StarTraderError file in the same folder as you *.exe game file.  Attach these files in the email you send about the error.";
     eer += "\nYou can send and email to aljsteiner@gmail.com \nSubject StarTrader error exit notes\nwPlease include your notes about the crash, and any comments about the game.";
     displayPanel0Text.setText(eer);
@@ -5822,7 +5822,7 @@ public class StarTrader extends javax.swing.JFrame {
     Econ t = eM.curEcon;
     if (!t.getDie()) {
       if (E.debugChangeEconCnt) {
-        synchronized (EM.econCnt) { // protect the increment of econCnt
+        synchronized (A4Row.econLock) { // protect the increment of econCnt
           EM.porsClanCnt[t.pors][t.clan]++;
           EM.clanCnt[t.clan]++;
           EM.porsCnt[t.pors]++;
@@ -6720,7 +6720,7 @@ public class StarTrader extends javax.swing.JFrame {
         }
       }
       if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
@@ -6749,7 +6749,7 @@ public class StarTrader extends javax.swing.JFrame {
         //start game create
         clanBias = new Random().nextInt(5);
         if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
+          synchronized (A4Row.econLock) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -6758,7 +6758,7 @@ public class StarTrader extends javax.swing.JFrame {
         for (envsLoop = lEcons; envsLoop < yEcons && !eM.dfe(); envsLoop++) {
           startEconState = (new Date()).getTime();
           if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
+            synchronized (A4Row.econLock) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
@@ -6774,7 +6774,7 @@ public class StarTrader extends javax.swing.JFrame {
           double newWorth = EM.getInitialEconWorth(econPorS, econClan);
           ec = curEc = EM.curEcon = newEcon(newWorth, econPorS, econClan);  // include new of Econ
           if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
+            synchronized (A4Row.econLock) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
@@ -6799,7 +6799,7 @@ public class StarTrader extends javax.swing.JFrame {
         int nClans = E.clan.values().length - 3;
         int finishedClans = 0, clansLoop = clanBias; // end when all 5 clans can create no more econs
         if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
+          synchronized (A4Row.econLock) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -6821,7 +6821,7 @@ public class StarTrader extends javax.swing.JFrame {
             finishedClans = 0; // start over finished future create clans
             EM.setCurEcon(ec = curEc = newEcon(clanWorth, econPorS, econClan));  // include new of Econ
             if (E.debugEconCnt) {
-              synchronized (EM.econCnt) {
+              synchronized (A4Row.econLock) {
                 if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                   EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
                 }
@@ -6883,7 +6883,7 @@ public class StarTrader extends javax.swing.JFrame {
       // do costs and trades here, ships initiate trades
       Econ[] wildCurs = new Econ[(int) eM.wildCursCnt[0][0]];
       if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
@@ -6927,7 +6927,7 @@ public class StarTrader extends javax.swing.JFrame {
             if (foundTradablePlanets > 0) {
               Econ cur2 = eM.curEcon.selectPlanet(tradablePlanets, foundTradablePlanets);
               if (E.debugEconCnt) {
-                synchronized (EM.econCnt) {
+                synchronized (A4Row.econLock) {
                   if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                     EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
                   }
@@ -6952,7 +6952,7 @@ public class StarTrader extends javax.swing.JFrame {
              //curStateName = "econYrStrt";
               eM.curEcon.yearStart(distance);
               if (E.debugEconCnt) {
-                synchronized (EM.econCnt) {
+                synchronized (A4Row.econLock) {
                   if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                     EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
                   }
@@ -6998,18 +6998,18 @@ public class StarTrader extends javax.swing.JFrame {
       } else {
        // curStateName = "ecYrEnds";
         if (E.debugEconCnt) {
-          /*synchronized (EM.econCnt) */
+          /*synchronized (A4Row.econLock) */
           {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
         }
-
+        setEconState(DOYEAREND);
         // loop to end years
         for (envsLoop2 = 0; envsLoop2 < maxEcons && !eM.dfe(); ++envsLoop2) {
           if (E.debugEconCnt) {
-            /* synchronized (EM.econCnt) */
+            /* synchronized (A4Row.econLock) */
             {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1] + " envsLoop2=" + envsLoop2);
@@ -7019,7 +7019,7 @@ public class StarTrader extends javax.swing.JFrame {
           ec = curEc = EM.econs.get(envsLoop2);
           EM.setCurEcon(ec);
           if (E.debugEconCnt) {
-            /* synchronized (EM.econCnt) */
+            /* synchronized (A4Row.econLock) */
             {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -7027,10 +7027,10 @@ public class StarTrader extends javax.swing.JFrame {
             }
           }
          // startEconState = (new Date()).getTime();
-          EM.wasHere = "after startEconState ";
+        //  EM.wasHere = "after startEconState ";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {
-            /* synchronized (EM.econCnt) */
+            /* synchronized (A4Row.econLock) */
             {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -7047,7 +7047,7 @@ public class StarTrader extends javax.swing.JFrame {
           EM.wasHere = "after printMem3 ";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {
-            /*synchronized (EM.econCnt) */
+            /*synchronized (A4Row.econLock) */
             {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -7060,7 +7060,7 @@ public class StarTrader extends javax.swing.JFrame {
           EM.wasHere = "after clearHist  ";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {
-            /* synchronized (EM.econCnt) */
+            /* synchronized (A4Row.econLock) */
             {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -7076,7 +7076,7 @@ public class StarTrader extends javax.swing.JFrame {
           EM.twh1 = new Date().getTime();
 
           if (E.debugEconCnt) {
-            /*synchronized (EM.econCnt)*/ {
+            /*synchronized (A4Row.econLock)*/ {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
@@ -7084,11 +7084,12 @@ public class StarTrader extends javax.swing.JFrame {
           }
           EM.wasHere = "after setLogEnvirn econCnt)";
           EM.twh1 = new Date().getTime();
+          setEconState(DOYEAREND);
           EM.curEcon.doYearEnd(); // finally Assets.CashFlow.yearEnd()
           EM.wasHere = "after EM.curEcon.doYearEnd()";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {
-            /* synchronized (EM.econCnt) */
+            /* synchronized (A4Row.econLock) */
             {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -7099,7 +7100,7 @@ public class StarTrader extends javax.swing.JFrame {
 
           if(E.debugDidEconYearEnd)System.out.println("-----DYE------" + " after year end cnt=" + envsLoop2 + " of" + maxEcons + " "  + EM.sinceRunYear() + " " + EM.curEconName + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
           if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
+            synchronized (A4Row.econLock) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
@@ -7111,7 +7112,7 @@ public class StarTrader extends javax.swing.JFrame {
           System.out.println(new Date().toString() + disp1);
           namesList.add(envsLoop2, disp1);
           if (E.debugEconCnt) {
-            synchronized (EM.econCnt) {
+            synchronized (A4Row.econLock) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
@@ -7125,7 +7126,7 @@ public class StarTrader extends javax.swing.JFrame {
         }
         setEconState(WAITING);
         if (E.debugEconCnt) {
-          synchronized (EM.econCnt) {
+          synchronized (A4Row.econLock) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -7156,7 +7157,7 @@ public class StarTrader extends javax.swing.JFrame {
         }// m
 
         // now set the counts and planets and ships
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           for (Econ t : EM.econs) {
             if (!t.getDie()) {
               EM.porsClanCnt[t.pors][t.clan]++;

@@ -129,6 +129,7 @@ class EM {
   static volatile int clanCnt[] = {0, 0, 0, 0, 0};
   static volatile Integer econCnt = 0;
   static volatile int deadCnt = 0;
+  static final int econLock[] = {0};
   // int porsCntd[] = {0, 0};
   static volatile int porsCnt[] = {0, 0};
 
@@ -200,7 +201,7 @@ class EM {
   static volatile double mEconLimits3[][] = {{100., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
-  static String tError = "";
+  static String tError = " no tError";
   static volatile Econ curEcon;  //eM only changes at the end a a year run, EM.curEcon
   static volatile String curEconName = "no Econ name";
   static volatile String curEconClan = "A";
@@ -3384,7 +3385,7 @@ onceAgain:
     doVal("years To Win", winDif, mwinDif, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the years before a winner is declared");
     doVal("resourceCosts", mab1, mmab1, "raise the cost of resources planet and ship, makes game harder");
     doVal("staffCosts", mac1, mmac1, "raise the costs of staff for planets and ships, makes planets and ships die more often");
- //   doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
+    doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
     doVal("haveColors", haveColors, mHaveColors, "Above slider 50 the tab display will show the color of the current economy. The changing of colors helps understand how fast the game is going.  Some persons have trouble with blinking colors, so setting this slider below 50 will stop the color changes.");
     doVal("haveCash", haveCash, mHaveCash, "Above slider 50 the tab display Economies will start with some cash, cash is just another resource that can be traded, think of it as bars of gold, not as paper money");
     doVal("minEconomies ", minEcons, mMinEcons, "iincrease the minimum number of economies after the startup numbers, the game creates new economies, new economies start to be added at a random clan, rotating to other clans next");

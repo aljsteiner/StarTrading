@@ -2183,7 +2183,7 @@ public class Assets {
     }
     getTradeInit(true); // force creation of trade values and rawProspects2
     if (E.debugEconCnt) {
-      synchronized (EM.econCnt) {
+      synchronized (A4Row.econLock) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
         }
@@ -9877,7 +9877,7 @@ public class Assets {
               }
             }
             
-           synchronized (EM.econCnt) {
+           synchronized (A4Row.econLock) {
             EM.clanCnt[clan]--;
             EM.porsClanCnt[pors][clan]--;
             EM.porsCnt[pors]--;
@@ -9900,7 +9900,7 @@ public class Assets {
        EM.isHere("--EYEYdg--",ec,"end of dead stats");
       }// end of dead
       if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
@@ -9932,7 +9932,7 @@ public class Assets {
 
       //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
       if (E.debugEconCnt) {
-        synchronized (EM.econCnt) {
+        synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
