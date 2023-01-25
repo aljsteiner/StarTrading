@@ -231,9 +231,9 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.46";
+  static final public String versionText = "19.47";
   static final public String storyText
-          = "         StarTrader       Version 19.46\n" +
+          = "         StarTrader       Version 19.47\n" +
 "“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Strategic trader mini economics”: is a mini strategic economics game emphasizing cooperation over competition.  Each planet or ship is an economy having assets of resources, staff and knowledge in 7 sectors.  Each year random factors change costs and growth.  Each financial sector suffers costs using up some resources and some staff, surplus resources and staff can be used for finding more resources and growing more staff.  \n" +
 "\n" +
 "Resource and staff costs increase in a sector as units of resource or staff increase, and as health gets poorer, costs decrease in a sector as knowledge increases making the sector more efficient.  Each year after annual costs, the financial sectors with some surplus assets can grow resources and staff, find new knowledge and convert some manuals into knowledge.  Staff with work attributes find new resources, grow new staff, and pay costs.  Staff with faculty attributes help staff move to a higher of 16 grades.  Staff with research attributes find new knowledge and convert manuals to knowledge.\n" +
@@ -5398,7 +5398,8 @@ public class StarTrader extends javax.swing.JFrame {
     controlPanels.getComponent(3);
     controlPanels.setSelectedIndex(3);
     displayPanel0Text.setRows(18);
-    String eer = "There was a fatal error\nMake any notes you remember of what happened.\n" + eM.tError;
+    String eer = "There was a fatal error\nMake any notes you remember of what happened.\n" + eM.tError
+    + "\n" + EM.firstStack + "\n" + EM.secondStack + "\n";
     if(E.debugOutput)eer += " \nThere should be a StarTraderOutput and StarTraderError file in the same folder as you *.exe game file.  Attach these files in the email you send about the error.";
     eer += "\nYou can send and email to aljsteiner@gmail.com \nSubject StarTrader error exit notes\nwPlease include your notes about the crash, and any comments about the game.";
     displayPanel0Text.setText(eer);
@@ -5423,9 +5424,9 @@ public class StarTrader extends javax.swing.JFrame {
     EM.flushes();
     EM.flushes();
     if (hadFatalError) {
-     // System.exit(-19);
+      //System.exit(-19);
     }
-   // System.exit(-18);
+   //System.exit(-18); be able to see the error
     EM.flushes();
     throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
     //  controlPanels.setSelectedComponent(log);
@@ -5566,7 +5567,7 @@ public class StarTrader extends javax.swing.JFrame {
     if (sameState && sameName && sameWh
     && stateConstA != STATS && stateConstA != RUNSDONE && stateConstA != STOPPED && stateConstA != FATALERR) {
       sameEconState++;
-      assert E.debugStuck && sameEconState < 51 : "STUCK at runYears2.setEconState Year" + EM.year  + sinceRY2() + sinceRY3() + sinceEcon() + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState  + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      assert E.debugStuck && sameEconState < 151 : "STUCK at runYears2.setEconState Year" + EM.year  + sinceRY2() + sinceRY3() + sinceEcon() + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState  + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 50) {
         eM.doMyErr("STUCK at:doYear" + eM.year + myNow + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
@@ -5681,7 +5682,7 @@ public class StarTrader extends javax.swing.JFrame {
             }
             done = true; //end the loop stateCnt 
             setEconState(STATS);
-            // paintCurDisplay(ec); // force final display as stats not A display
+           paintCurDisplay(ec); // force final display as stats not A display
             break;
           default:
             if (E.debugStatsOut1) {
@@ -5774,14 +5775,13 @@ public class StarTrader extends javax.swing.JFrame {
     // EM.porsCnt[0] = EM.planets.size();
     // EM.porsCnt[1] = EM.ships.size();
     double xpos = -9999.;
-    ec = curEc = eM.curEcon = null;
+    Econ newEC = null;
     // now try to find a dead economy to use instead of recreating one
     if (pors == E.P) {
       for (Econ n : eM.econs) {
         EM.wasHere = "n=" + n + " " + n.getDie() == null ? " null getDie()" : " found getDie()";
         if (n.getDie() && n.getPors() == E.P && n.getDAge() > 2) {
-          eM.setCurEcon(ec = curEc = eM.curEcon = n);   // take a dead one
-          //  EM.econCnt++;
+          eM.setCurEcon(newEC = n);
           EM.wasHere = "-------MK--------found dead Planet cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
           System.out.println(EM.wasHere);
           break;
@@ -5791,7 +5791,7 @@ public class StarTrader extends javax.swing.JFrame {
     else if ((eM.curEcon == null) && pors == E.S) {
       for (Econ n : eM.econs) {
         if (n.getDie() && n.pors == E.S && n.getDAge() > 2) {
-          eM.setCurEcon(ec = curEc = eM.curEcon = n);
+          eM.setCurEcon(newEC = n);
           //    EM.econCnt++;
           EM.wasHere = "-------ML--------found dead Ship cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
           System.out.println(EM.wasHere);
@@ -5799,11 +5799,11 @@ public class StarTrader extends javax.swing.JFrame {
         }
       }// for
     }//E.S
-    if (eM.curEcon == null) {  // no dead one found create one
+    if (newEC == null) {  // no dead one found create one
       EM.wasHere = "-------MMa--------Init new Econ" + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
       System.out.println(EM.wasHere);
-      EM.setCurEcon(ec = curEc = EM.curEcon = new Econ());
-      EM.econs.add(EM.curEcon); // add to the main list
+      EM.setCurEcon(ec = curEc = newEC = new Econ());
+      EM.econs.add(newEC); // add to the main list
       // EM.econCnt++;
     }
     NumberFormat nameF = NumberFormat.getNumberInstance();
@@ -7597,7 +7597,6 @@ public class StarTrader extends javax.swing.JFrame {
       //  displayPanel1.setVisible(true);
       if (stateConst == STATS) {
         display.setVisible(false);
-
         controlPanels.setSelectedIndex(4);
         cpIx2 = controlPanels.getSelectedIndex();
 

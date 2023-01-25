@@ -1374,7 +1374,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         planet.doYearEnd();
       }
 
-      eM.curEcon = myCur; // reset curEcon to its entry value
+      //eM.curEcon = myCur; // reset curEcon to its entry value
+      eM.setCurEcon(myCur); // reset to entry value
     }
   }
 
@@ -1761,7 +1762,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
 
         }
         }
-        EconThread emm = new EconThread(etTimes, atList, sETList, prevEtIx);
+        EconThread emm = new EconThread(this,etTimes, atList, sETList, prevEtIx);
       // synchronized (A4Row.econLock) {
          // okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
        // }
@@ -1769,7 +1770,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         //
         emm.setPriority(Thread.MIN_PRIORITY);
         etTimes[3] = (new Date()).getTime(); // after create
+        int acge = eM.curEcon.age;
         emm.start();
+        int aabge = eM.curEcon.age;
         etTimes[5] = (new Date()).getTime(); // after start
       } else {  // skip threads, just yearEnd
         etTimes[2] = etTimes[3] = etTimes[4] = etTimes[5] = (new Date()).getTime(); // after create
@@ -1791,13 +1794,15 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     // now Econ.EconThread
 
     String atList = "none";
+    Econ ec;
     long startEt;
     String etList[];
     int prevIx;
     long[] etTimes;
     long[] moreTimes = new long[letTimes];
 
-    EconThread(long[] setTimes, String aList, String[] sETList, int prevEtIx) {
+    EconThread(Econ aaec,long[] setTimes, String aList, String[] sETList, int prevEtIx) {
+      ec = aaec;
       etTimes = setTimes;
       atList = aList;
       etList = sETList;
@@ -1806,6 +1811,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     }
 
     public void run() {
+      int aage = eM.curEcon.age; 
+      aage = ec.age;
       int tCnts = 0;
       int le = 10;
       long etStart = etTimes[6] = (new Date()).getTime(); // thread run
@@ -1819,7 +1826,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       moreTimes[6] = etTimes[6] - etTimes[5]; // thread started
       long etMore = etStart - EM.doYearTime;
       int atCnt = 0;
-      eM.curEcon = ec;
+      EM.setCurEcon(ec);
+     // eM.curEcon = ec;
       nowName = ec.name;
       nowThread = Thread.currentThread().getName();
       int doEndYearCnts = doEndYearCnt[0];
@@ -1851,7 +1859,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           }
         }
       }
-      yearEnd();
+      ec.yearEnd();
       if (false && E.debugEconCnt) {
         synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {

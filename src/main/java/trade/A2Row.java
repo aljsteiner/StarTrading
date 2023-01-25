@@ -24,7 +24,6 @@ import java.util.ArrayList;
  * @author albert
  */
 public class A2Row {
-
   EM eM = EM.eM;
   E eE = EM.eE;
   Econ ec;
@@ -1463,7 +1462,7 @@ public class A2Row {
     // set fudge to aPrevent creating values beyound limits
     double fudge = (1. + limLow) * (.3 + mult);
     double ahlf = alhlf * fudge; // lower half
-    EM.curEcon.hist.add(new History(History.debuggingMinor11, "n=" + EM.curEcon.as.n + " " + titla, "Hv" + EM.curEcon.df(amax), "Lv" + EM.curEcon.df(amin), "H-L" + EM.curEcon.df(adif), "mlt=" + EM.curEcon.df(mult), "fud=" + EM.curEcon.df(fudge), "hlf" + EM.curEcon.df(alhlf), "*" + EM.curEcon.df(ahlf), "ave=" + EM.curEcon.df(ave), "lims=" + EM.curEcon.df(limLow), EM.curEcon.df(limHigh), "abcdefghijklmn"));
+    ec.hist.add(new History(History.debuggingMinor11, "n=" + ec.as.n + " " + titla, "Hv" + ec.df(amax), "Lv" + ec.df(amin), "H-L" + ec.df(adif), "mlt=" + ec.df(mult), "fud=" + ec.df(fudge), "hlf" + ec.df(alhlf), "*" + ec.df(ahlf), "ave=" + ec.df(ave), "lims=" + ec.df(limLow), ec.df(limHigh), "abcdefghijklmn"));
 
     // derived in google sheet game tests
     for (int m : E.a2lsecs) {
@@ -1476,7 +1475,7 @@ public class A2Row {
         set(m, tVal);
         if (History.dl > 4) {
           // list action for each calculation
-          EM.curEcon.hist.add(new History(History.debuggingMinor11, "n=" + EM.curEcon.as.n + " " + titla + m, "v=" + EM.curEcon.df(aVal), "=>" + EM.curEcon.df(dVal), "=>" + EM.curEcon.df(tVal1), "=>" + EM.curEcon.df(tVal2), "=>" + EM.curEcon.df(tVal3), "=>_" + EM.curEcon.df(tVal), "ave=" + EM.curEcon.df(ave), "dV=" + EM.curEcon.df(dVal), "abcef,ghijk.lmnop.qrst"));
+          ec.hist.add(new History(History.debuggingMinor11, "n=" + ec.as.n + " " + titla + m, "v=" + ec.df(aVal), "=>" + ec.df(dVal), "=>" + ec.df(tVal1), "=>" + ec.df(tVal2), "=>" + ec.df(tVal3), "=>_" + ec.df(tVal), "ave=" + ec.df(ave), "dV=" + ec.df(dVal), "abcef,ghijk.lmnop.qrst"));
         }
       }
       else if (aVal <= ave) {  // aVal <= ave ,includes ave
@@ -1490,7 +1489,7 @@ public class A2Row {
         tVal = Math.min(limHigh, tVal3);  // some value above 1
         if (History.dl > 4) {
           // list action for each calculation
-          EM.curEcon.hist.add(new History(History.debuggingMinor11, "n=" + EM.curEcon.as.n + " " + titla + m, "v=" + EM.curEcon.df(aVal), "=>" + EM.curEcon.df(dVal), "=>" + EM.curEcon.df(tVal1), "=>" + EM.curEcon.df(tVal2), "=>" + EM.curEcon.df(tVal3), "=>_" + EM.curEcon.df(tVal), "ave=" + EM.curEcon.df(ave), "dV=" + EM.curEcon.df(dVal), "abcef,ghijk.lmnop.qrst"));
+          ec.hist.add(new History(History.debuggingMinor11, "n=" + ec.as.n + " " + titla + m, "v=" + ec.df(aVal), "=>" + ec.df(dVal), "=>" + ec.df(tVal1), "=>" + ec.df(tVal2), "=>" + ec.df(tVal3), "=>_" + ec.df(tVal), "ave=" + ec.df(ave), "dV=" + ec.df(dVal), "abcef,ghijk.lmnop.qrst"));
           set(m, tVal);
         }
       }
@@ -1508,7 +1507,7 @@ public class A2Row {
         set(m, tVal);
         if (History.dl > 4) {
           // list action for each calculation
-          EM.curEcon.hist.add(new History(History.debuggingMinor11, "n=" + EM.curEcon.as.n + " " + titla + m, "v=" + EM.curEcon.df(aVal), "=>" + EM.curEcon.df(dVal), "=>" + EM.curEcon.df(tVal1), "=>" + EM.curEcon.df(tVal2), "=>" + EM.curEcon.df(tVal3), "=>^" + EM.curEcon.df(tVal), "ave=" + EM.curEcon.df(ave), "dV=" + EM.curEcon.df(dVal), "mnopq,rst,uvwxyz"));
+          ec.hist.add(new History(History.debuggingMinor11, "n=" + ec.as.n + " " + titla + m, "v=" + ec.df(aVal), "=>" + ec.df(dVal), "=>" + ec.df(tVal1), "=>" + ec.df(tVal2), "=>" + ec.df(tVal3), "=>^" + ec.df(tVal), "ave=" + ec.df(ave), "dV=" + ec.df(dVal), "mnopq,rst,uvwxyz"));
         }
       }
     }
@@ -1532,7 +1531,7 @@ public class A2Row {
    * reciprocal @return a new ARow with strategic values
    */
   A2Row strategicRecipValBbyMultLim(String titla, A6Row B, double mult, double alimLow) {
-    Econ ec = EM.curEcon;
+   // Econ ec = EM.curEcon;
     double amax = B.curMax(0);
     double amin = B.curMin();
     double ave = (amax + amin) / 2.;  // ave = m
@@ -1648,7 +1647,7 @@ public class A2Row {
    * high results and opposite
    */
   A2Row strategicRecipValBbyLim(String titla, A2Row B, double aLimLow) {
-    Econ ec = EM.curEcon;
+    //Econ ec = EM.curEcon;
     double amax = B.curMax(0);
     double amin = B.curMin(0);
     // neg means means straight results not reciprical

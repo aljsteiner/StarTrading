@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>C:\Users\aljst\Netbeans1Folder\OGST2\target\starTraderMaven-19.46.jar</jar>
-  <outfile>C:\Users\aljst\Netbeans1Folder\OGST2\target\StarTrader19.46c.exe</outfile>
+  <outfile>C:\Users\aljst\Netbeans1Folder\OGST2\target\StarTrader19.46d.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>

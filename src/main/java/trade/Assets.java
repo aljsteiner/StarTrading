@@ -1109,7 +1109,7 @@ public class Assets {
         eM.wasHere = "Assets.getTradeInit after aStartCashFlow";
       }
       eM.wasHere = "Assets.getTradeInit after start cashflow";
-      cur.getTradeInit(forceInit); // pass to cur
+      cur.getTradeInit(forceInit); // pass to cur CashFlow
       eM.wasHere = "Assets.getTradeInit after getTradeInit";
       cur = null; // now release CashFlow instance
     } // release cur et all
@@ -4722,10 +4722,10 @@ public class Assets {
           }
         }
        // assert avail >= cost: "cost=" + EM.mf(cost) + " exceeds available=" + EM.mf(avail) + ", " + sp.aschar + sourceIx + "=" + EM.mf(avail) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j;
-        assert availSp >= costSp:"costsp=" + EM.mf(costSp) + " exceeds availsp=" + EM.mf(availSp) + ", " + sp.aschar + sourceIx + " balSp=" + EM.mf(balSp) + " remSp" + EM.mf(costSp - availSp) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j;
+        assert availSp >= costSp:"costSp=" + EM.mf(costSp) + " exceeds availSp=" + EM.mf(availSp) + ", " + sp.aschar + sourceIx + " balSp=" + EM.mf(balSp) + " remSp" + EM.mf(costSp - availSp) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j;
         if (E.debugCosts) {
-          if (E.noAsserts && avail - cost < -0.0) {
-            EM.doMyErr("cost=" + EM.mf(cost) + " exceeds available=" + EM.mf(avail) + ", " + sp.aschar + sourceIx + "=" + EM.mf(avail) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j);
+          if (E.noAsserts && availSp < costSp) {
+            EM.doMyErr("costsp=" + EM.mf(costSp) + " exceeds availsp=" + EM.mf(availSp) + ", " + sp.aschar + sourceIx + "=" + EM.mf(availSp) + ", O" + op.aschar + sourceIx + "=" + EM.mf(availOp) + ", n=" + n + ", reDo" + reDo + ", i=" + i + ", j=" + j);
           }
         }
 
@@ -8070,7 +8070,7 @@ public class Assets {
       int mMax = 4,m=0; // max loops internal vars
       // do we need more future fund or is it full
       double ffFull = EM.getInitialEconWorth(pors, clan)* 5.0;
-      for (m = 0; m < mMax && (doing || xcess) && ffFull > eM.clanFutureFunds[clan]+ yearsFutureFund; m++) {
+      for (m = 0; m < mMax && (doing || xcess) && !eM.dfe() && ffFull > eM.clanFutureFunds[clan]+ yearsFutureFund; m++) {
         xcess = doing = false; // false unless section does doing
         // only continue sizeFF the yearly dues process
         if (resTypeName.contains("izeFF")) {
@@ -8272,7 +8272,7 @@ public class Assets {
         } // did nothing do rest of swap 
 
         // now test again whether the pevious code found something to process
-        val = doing || xcess ? Math.min(val, Math.min(maxFutureTrans,(maxF4 = mtgAvails6.get(sourceIx) * (0.89 - reservMult)))): 0.0;
+        val = doing || xcess ? Math.min(val, Math.min(bals.get(ixWRSrc, srcIx),Math.min(maxFutureTrans,(maxF4 = mtgAvails6.get(sourceIx) * (0.89 - reservMult))))): 0.0;
         if ((doing || xcess) && val > minFutureTrans) {
           // find cashValue/startYearWorth to transfer for size 
           //srcIx = bals.getRow(ixWRSrc).maxIx();
@@ -8346,7 +8346,7 @@ public class Assets {
           emergeFutureFund += resTypeName.contains("merg") ? rsval : 0.;
           excessFutureFund += resTypeName.contains("merg") ? 0.0 : rsval;
           yearsFutureFundTimes++;
-          // cost is units no cashValue;
+          // cost is units not cashValue;
           sys[ixWRSrc*2].cost3(val, srcIx,reservMult);
           //   E.sysmsg("did transfer val=%5.0f, name=%5s, m=%d",val,resTypeName,m);
           if (E.debugFFOut) {
@@ -8802,6 +8802,7 @@ public class Assets {
     /**
      * get tradingGoods and tradingOfferWorth assets.getTradingGoods nulls
      * CashFlow so myTrade is nulled
+     * sets flag didGoods
      *
      * @return the reference to bids
      */
@@ -8828,20 +8829,34 @@ public class Assets {
       return bids;
     }
 
-    ARow getManuals() {
+    /** get Assets.manuals
+     * 
+     * @return return reference to Assets.manuals
+     */
+    ARow getManuals() { //Assets.CashFlow.getManuals
       return manuals;
     }
 
-    ARow getNewKnowledge() {
+    /** get newKnowledge
+     * 
+     * @return Assets.newKnowledge
+     */
+    ARow getNewKnowledge() { //Assets.CashFlow
       return newKnowledge;
     }
 
-    ARow getCommonKnowledge() {
+    /** get commonKnowledge
+     * 
+     * @return Assets.commonKnowledge
+     */
+    ARow getCommonKnowledge() {//Assets.CashFlow
       return commonKnowledge;
     }
 
+    /** init values needed by swaps
+     * 
+     */
     void yinitN() {  // Assets.CashFlow
-
       prevFlagg = flagg; // grow
       prevFlagh = flagh;  // health priority
       prevFlagf = flagf;   // grow xfer s if needed, ignore h
@@ -8974,6 +8989,7 @@ public class Assets {
      */
     double yearEnd() {  // Assets.CashFlow.yearEnd() after trading done
       String aPre = "E@";
+      if(eM.dfe()) return 0.;
       EM.setCurEcon(ec);
       curGrowGoal = eM.goalGrowth[pors][clan];
       curMaintGoal = eM.goalHealth[pors][clan];
@@ -8989,6 +9005,7 @@ public class Assets {
       //     ec.saveHist = true;
       didStart = false;
       EM.wasHere = "CashFlow.yearEnd before start cccaa=" + ++cccaa;
+      if(eM.dfe()) return 0.;
       start();
       didStart = true;
       //   DoTotalWorths tW, rawCW, preSwapW,gSwapW, gGrowW, gCostW, fyW;
@@ -9014,6 +9031,7 @@ public class Assets {
       // }
       cmd = E.SwpCmd.NOT;
 
+      if(eM.dfe()) return 0.;
       rawProspects2 = makeZero(rawProspects2);
       rawFertilities2 = makeZero(rawFertilities2);
       // initialize prevns to cmd = not
@@ -9055,6 +9073,7 @@ public class Assets {
         StackTraceElement ab = Thread.currentThread().getStackTrace()[3];
         hist.add(new History(aPre, 5, "n" + n + "set preCosts", ">>>", a0.getMethodName(), "at", a0.getFileName(), wh(a0.getLineNumber()), (swapped ? "swapped" : "!swapped"), "n=" + wh(n), "yCalcCosts", "next", "<<<<<<"));
       }
+      if(eM.dfe()) return 0.;
       yCalcCosts(aPre, lightYearsTraveled, curGrowGoal, curMaintGoal); //renew rawProspects2 etc.
       EM.wasHere = "CashFlow.endYear after yCalcCosts cccad=" + ++cccad;
       if (!didInitRawProspects) {
@@ -9093,6 +9112,7 @@ public class Assets {
         if (r.growth != growths.A[2]) {
           eM.aErr("r.growth not the same as growths.A[0] ccca=" + ++ccca);
         }
+        if(eM.dfe()) return 0.;
         // do growths of knowledge and each SubAsset
         doGrowth(aPre);
         EM.wasHere = "CashFlow.endYear after doGrowth cccae" + ++cccae;
@@ -9110,6 +9130,7 @@ public class Assets {
         if ((rem = bals.curSum() - mtgCosts10.curSum()) < PZERO) {
           E.myTest(true, "year end costsSum= %7.3f exceeds balancesSum= %7.3f,remnantSum= %7.3f age=" + ec.age + ", year=" + eM.year + ", rc sum=" + EM.mf(bals.getRow(0).sum()), mtgCosts10.curSum(), bals.curSum(), rem);
         }
+        if(eM.dfe()) return 0.;
         // live accounts
         doMaintCost(aPre);
         EM.wasHere = "CashFlow yearEnd live after doMaintCost cccaf=" + ++cccaf;
@@ -9139,7 +9160,7 @@ public class Assets {
           hist.add(new History(aPre, History.valuesMinor7, ">>>n" + n + "post Health at", wh(a0.getLineNumber()), (swapped ? "swapped" : "!swapped"), "n=" + wh(n), "H=" + EM.mf(health), "$=" + EM.mf(sumTotWorth)));
 
         }
-
+if(eM.dfe()) return 0.;
         //live
         fyW = new DoTotalWorths();
         fyW.setPrev(syW);
@@ -9233,6 +9254,7 @@ public class Assets {
           setStat("RCGGT100PERCENT", pors, clan, rcPercentInc, 1);
         }
         EM.isHere1(ec, "CashFlow.yearEnd before many setStat ddddb=" + ++ddddb);
+        if(eM.dfe()) return 0.;
         double rcWorthPercentInc = 100. * (fyW.getSumRCWorth() - syW.getSumRCWorth()) / syW.getSumRCWorth();
         double rcwp = rcWorthPercentInc;
         if (E.debugMisc && (syW.getSumRCWorth() == 0.0)) {
@@ -9320,6 +9342,7 @@ public class Assets {
         tW = new DoTotalWorths();
         // double worthincr1 = 100. * (fyW.sumTotWorth - syW.sumTotWorth) / syW.sumTotWorth;
         setStat("WTRADEDINCR", pors, clan, worthIncrPercent, 1);
+        if(eM.dfe()) return 0.;
         // check for commit again
         if (tradeAccepted) {
           setStat(EM.DWORTH, pors, clan, fyW.getTotWorth(), 1);
@@ -9394,6 +9417,7 @@ public class Assets {
             }
           } //sIx
         }
+        if(eM.dfe()) return 0.;
         //smallest to largest
         //  if (year == yearTradeLost && oclan >= 0) {
         if (tradeLost && oclan >= 0) {
@@ -9472,6 +9496,7 @@ public class Assets {
             setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
           }
         }
+        if(eM.dfe()) return 0.;
         setStat(eM.sumCatEffRBen, pors, clan, catEffRGBen, 1);
         setStat(eM.sumCatEffSBen, pors, clan, catEffSGBen, 1);
         setStat(eM.sumCatEffManualsBen, pors, clan, catEffManualsBen, 1);
@@ -9498,6 +9523,7 @@ public class Assets {
 // ---------------------- end of live stats ---------------------------------
       } else // now dead stats
       { // dead, be sure died is set
+        if(eM.dfe()) return 0.;
         EM.isHere1(ec, " CashFlow.yearEnd start of dead cccg=" + ++cccg);
         if (E.debugEconCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -9633,6 +9659,7 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
+          if(eM.dfe()) return 0.;
           if (fav >= 4.7) {
             // gameRes.WTRADEDINCRF5.wet(pors, clan, worthincr1, 1);
             setStat("DEADWTRADEDINCRF5", pors, clan, worthincr1, 1);
@@ -9815,6 +9842,7 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
+          if(eM.dfe()) return 0.;
           /*
     doRes("DeadNegProsp", "DeadNegProsp", "Died either R or S had a negative",  2,2,3,  ROWS1 | LIST3 | LIST20 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 |  LIST3 | LIST20  | LIST0YRS |  CUMUNITS | BOTH | SKIPUNSET,0L, 0L);
     doRes("DeadRatioS", "DeadRatioS", "Resource  S values simply too small",  2,2,3,  ROWS1 | LIST3 | LIST20 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 |  LIST3 | LIST20  | LIST0YRS |  CUMUNITS | BOTH | SKIPUNSET,0L, 0L);
@@ -9906,6 +9934,7 @@ public class Assets {
           }
         }
       }
+      if(eM.dfe()) return 0.;
       //Assets.CashFlow.yearEnd  final cleanup for starting the next year
       didGoods = false;
       // sLoops[0] = 
@@ -10195,7 +10224,7 @@ public class Assets {
 
       // loop swaps till done or not swappet or maxn
       maxn = (int) eM.maxn[pors];
-      for (n = 0; swapped && !done && n < maxn; n++, nn++) {
+      for (n = 0; swapped && !eM.dfe() && !done && n < maxn; n++, nn++) {
 
         //move to swaps
         //  yCalcCosts("C#", lightYearsTraveled, curGrowGoal, curMaintGoal);  //includes yinitN
@@ -10254,6 +10283,7 @@ public class Assets {
      * @param yearsTraveled input years traveled
      */
     synchronized void calcRawCosts(A6Row balances, A6Row rawUnitGrowths, A6Row rawGrowths, A6Row invMEfficiency, A6Row invGEfficiency, int ix, int tIx, A10Row consumerReqMaintCosts10, A10Row nReqMaint, A10Row consumerReqGrowthCosts10, A10Row nReqGrowth, A10Row consumerMaintCosts10, A10Row nMaint, A10Row mTravel1Yr, A10Row nTravel1Yr, A10Row travelYearsCosts, A10Row consumerGrowthCosts10, A10Row nGrowth, ARow swork, double yearsTraveled) {  // Assets.CashFlow.calcRawCosts
+      int aage = eM.curEcon.age; // test for null
       double t1, t2, t3, t4 = -999., t5, t6, t7, rawG, swork2 = 01.;
       int rcsg = ix;
       // int ix2 = (int) ix / 2;
@@ -10279,10 +10309,14 @@ public class Assets {
         //   hist.add(new History("#a", History.valuesMajor6, maintTits[ix]+"C", nMaint.A[2+4+ix]));
         //hist.add(new History("#a", History.valuesMajor6, "consumerMaintCosts10 ix=" + ix, consumerMaintCosts10.A[6]));
       }
+      int bbge = eM.curEcon.age;
       bals.resum(1);bals.resum(0);
+      bbge = eM.curEcon.age;
       double rm = .6; // random multiplier
       // i loops across the consumers, get rawGrowths and rawG here
       for (i = 0; i < E.lsecs; i++) {
+        int aaage = eM.curEcon.age; // test for null
+        aaage = ec.age;// test for null
         ARow kMaint = new ARow(ec);
         rawGrowths.getRow(2 + ix).set(i,
                 sys[ix].rawGrowth.set(i, rawG = s.work.get(i)
@@ -10473,6 +10507,7 @@ public class Assets {
      * @param lightYearsTraveled
      */
     synchronized void yCalcRawCosts(double lightYearsTraveled, String aPre, double curMaintGoal, double curGrowthGoal) {  //CashFlow.yCalcRawCosts
+      int aage = eM.curEcon.age; // test curEcon null
       double t1, t2, t3, t4, t5, t6;
       // zero output objects
       reqMaintCosts = makeZero(reqMaintCosts, "reqGCosts");
@@ -10892,6 +10927,7 @@ public class Assets {
      */
     // Assets.CashFlow.getNeeds
     public A6Row getNeeds(String title, String description, Assets.yrphase yphase, int rawCostsN, int aDl, ABalRows bals, A10Row maintCosts, A10Row travelCosts, A10Row rawGrowthCosts, A6Row rawGrowths, A10Row reqMaintCosts, A10Row reqGrowthCosts, A2Row rawFertilities2, A2Row rawProspects2, A10Row mtNegs, A10Row growthNegs, A10Row mtgNegs, A6Row growths, double maintGoal, double growthGoal, double growMult, double growYears, A6Row goalmtgNeeds, A6Row mtNeeds, A6Row mtgAvails6, A6Row goalmtNeeds, A6Row goalmtg1Needs, A10Row goalmtg1Negs) {
+      int aage = eM.curEcon.age; // test curEcon
       A6Row rtn = new A6Row(ec, History.valuesMajor6, "needs");
       if (aDl > 3) {
         hist.add(new History("@n", History.valuesMinor7, title, ec.name + " >getNeeds", "phase=" + yphase.name() + ", " + description));
@@ -11666,6 +11702,7 @@ public class Assets {
         }
         prevns[0] = new HSwaps();
       }
+      if(eM.dfe()) return false;
       EM.wasHere = "CashFlow.swaps after new prevns[o] aaab=" + ++aaab + " n=" + n;
       prevns[1].copyn(cur);
       lTitle = " Costs " + name;
@@ -11694,6 +11731,7 @@ public class Assets {
       }
       EM.wasHere = "CashFlow.endYear after resetting ixWRSrc,srcIx aaac=" + ++aaac + "  n=" + n;
 
+            if(eM.dfe()) return false;
       // exit only if goals are met and rawProspect (worst balance problem > 0
       // bail out if bad bres, quit if you can't fix it
       if ((n > eM.maxn[pors] * .5 && rawProspects2.curMin() > eM.minProspects[0]) || (rawFertilities2.curMin() > curGrowGoal && rawProspects2.curMin() > curMaintGoal && rawProspects2.curMin() > eM.mtgWEmergency[pors][clan]) || (n > 2 && bres > 0 && reDo >= maxReDo && rawProspects2.curMin() < E.NZERO)) {
@@ -11782,6 +11820,7 @@ public class Assets {
           }
         }
       }
+            if(eM.dfe()) return false;
       if (n > 0) {
         // save a new HSwaps from cur into prevgood[0]
         prevgood[0] = new HSwaps();

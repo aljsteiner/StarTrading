@@ -212,7 +212,8 @@ class EM {
   static volatile String otherEconClan = "A";
 
   /**
-   * set curEcon, curEconName curEconClan;curEconTime
+   * set curEcon, curEconName curEconClan;curEconTime,curEconAge
+   * get a null error the offered Econ is null
    *
    * @param x econ to be set in curEcon
    * @return curEconName
@@ -248,7 +249,7 @@ class EM {
   static final double[][] mMinEconsMult = {{.5, 10.0}};
   static volatile double[][] minEcons = {{30.}}; // goes into last envsPerYear;
   static final double[][] mMinEcons = {{10., 100.}};
-  static volatile double[][] maxThreads = {{1.0}};
+  static volatile double[][] maxThreads = {{10.0}};
   static final double[][] mmaxThreads = {{1.0, 12.0}};
   static volatile int[] iMaxThreads = {1};
   static volatile double[][] haveColors = {{.3}};
@@ -708,6 +709,21 @@ class EM {
   }
 
   static String eo = "none";
+  /** pause for a long time
+   * 
+   */
+  protected static void pauses(){
+    try {
+    for(int rep=0; rep < 2000;rep++){
+      Thread.sleep(1000);
+    }
+    } catch (Exception | Error ex) { // print and ignore this error
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      System.err.println("Ignore " + eo + " pauses() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
+    }
+  }
 
   /**
    * flush System.out and System.err ignoring any errors
@@ -776,10 +792,11 @@ class EM {
     new Throwable().printStackTrace(pw); // later
     secondStack = sw.toString();
     newError = true;
-    System.err.println("doMyError thread=" + Thread.currentThread().getName() + " " + aLine + addMore());
+    System.err.println(tError =("\n>>>>>>doMyError thread=" + Thread.currentThread().getName() + " " + aLine + addMore()));
     st.setFatalError(st.redish); // should do exit
     flushes();
-    System.exit(-11);
+    pauses();
+  //  System.exit(-11);
     //throw new MyErr(Econ.nowName + " " + Econ.nowThread + " " + aLine);
   }
 
