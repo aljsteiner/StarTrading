@@ -512,10 +512,10 @@ class EM {
    */
   int rende3 = 700;
 
-  void init() {
+  void aInit() {
     try {
       String dateString = MYDATEFORMAT.format(new Date());
-      String rOut = "New Game " + dateString + "\r\n";
+      String rOut = "New Game V" + StarTrader.versionText + " " + dateString + "\r\n";
       sw = new StringWriter();
       pw = new PrintWriter(sw);
       Econ.nowThread = Thread.currentThread().getName(); // goes into Static Econ

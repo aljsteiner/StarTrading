@@ -231,9 +231,9 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.47";
+  static final public String versionText = "19.48";
   static final public String storyText
-          = "         StarTrader       Version 19.47\n" +
+          = "         StarTrader       Version " + versionText + "\n" +
 "“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Strategic trader mini economics”: is a mini strategic economics game emphasizing cooperation over competition.  Each planet or ship is an economy having assets of resources, staff and knowledge in 7 sectors.  Each year random factors change costs and growth.  Each financial sector suffers costs using up some resources and some staff, surplus resources and staff can be used for finding more resources and growing more staff.  \n" +
 "\n" +
 "Resource and staff costs increase in a sector as units of resource or staff increase, and as health gets poorer, costs decrease in a sector as knowledge increases making the sector more efficient.  Each year after annual costs, the financial sectors with some surplus assets can grow resources and staff, find new knowledge and convert some manuals into knowledge.  Staff with work attributes find new resources, grow new staff, and pay costs.  Staff with faculty attributes help staff move to a higher of 16 grades.  Staff with research attributes find new knowledge and convert manuals to knowledge.\n" +
@@ -541,44 +541,37 @@ public class StarTrader extends javax.swing.JFrame {
     jScrollPane3 = new javax.swing.JScrollPane();
     settingsComment = new javax.swing.JTextArea();
     gameButtonDown = new java.awt.Button();
-    clan = new javax.swing.JPanel();
-    clanTextPane = new javax.swing.JScrollPane();
-    clanTextField = new javax.swing.JTextArea();
-    clanPanel0 = new javax.swing.JPanel();
-    clanTextField0 = new javax.swing.JTextField();
-    gameLabelP5 = new javax.swing.JLabel();
-    clanSliderP0 = new javax.swing.JSlider();
-    jSeparator6 = new javax.swing.JSeparator();
-    gameLabelS5 = new javax.swing.JLabel();
-    clanSliderS0 = new javax.swing.JSlider();
-    clanPanel1 = new javax.swing.JPanel();
-    clanTextField1 = new javax.swing.JTextField();
-    gameLabelP6 = new javax.swing.JLabel();
-    clanSliderP1 = new javax.swing.JSlider();
-    jSeparator7 = new javax.swing.JSeparator();
-    gameLabelS6 = new javax.swing.JLabel();
-    clanSliderS1 = new javax.swing.JSlider();
-    clanPanel2 = new javax.swing.JPanel();
-    clanTextField2 = new javax.swing.JTextField();
-    gameLabelP7 = new javax.swing.JLabel();
-    clanSliderP2 = new javax.swing.JSlider();
-    jSeparator8 = new javax.swing.JSeparator();
-    gameLabelS7 = new javax.swing.JLabel();
-    clanSliderS2 = new javax.swing.JSlider();
-    clanPanel3 = new javax.swing.JPanel();
-    clanTextField3 = new javax.swing.JTextField();
-    clanLabelP3 = new javax.swing.JLabel();
-    clanSliderP3 = new javax.swing.JSlider();
-    jSeparator9 = new javax.swing.JSeparator();
-    gameLabelS8 = new javax.swing.JLabel();
-    clanSliderS3 = new javax.swing.JSlider();
-    clanPanel4 = new javax.swing.JPanel();
-    clanTextField4 = new javax.swing.JTextField();
-    clanLabelP4 = new javax.swing.JLabel();
-    clanSliderP4 = new javax.swing.JSlider();
-    jSeparator10 = new javax.swing.JSeparator();
-    clanLabelS4 = new javax.swing.JLabel();
-    clanSliderS4 = new javax.swing.JSlider();
+    javax.swing.JPanel log = new javax.swing.JPanel();
+    logTableScrollPanel = new javax.swing.JScrollPane();
+    logDlevel2 = new javax.swing.JLabel();
+    LogDlen1Slider = new javax.swing.JSlider();
+    logDlen1 = new javax.swing.JLabel();
+    logDLevel1Slider = new javax.swing.JSlider();
+    SpinnerModel startModel1 = new SpinnerNumberModel(10,
+      0, //min
+      2000000, //max
+      10);
+    logM1Spinner = new javax.swing.JSpinner(startModel1);
+    LogDLen2Slider = new javax.swing.JSlider();
+    logDLevel2Slider = new javax.swing.JSlider();
+    logDlen2 = new javax.swing.JLabel();
+    logDlevel1 = new javax.swing.JLabel();
+    SpinnerModel startModel2 = new SpinnerNumberModel(10,
+      0, //min
+      2000000, //max
+      10);
+    logM2Spinner = new javax.swing.JSpinner(startModel2);
+    logNamesScrollPanel = new javax.swing.JScrollPane();
+    namesList = new DefaultListModel();
+    logEnvirnNamesList = new javax.swing.JList(namesList);
+    Start1Name = new javax.swing.JLabel();
+    Start2Name = new javax.swing.JLabel();
+    logRadioButtonStart1 = new javax.swing.JRadioButton();
+    logRadioButtonStart2 = new javax.swing.JRadioButton();
+    logActionJump = new javax.swing.JRadioButton();
+    logActionAdd = new javax.swing.JRadioButton();
+    logActionDel = new javax.swing.JRadioButton();
+    logDisplayTable = new javax.swing.JTable();
     display = new javax.swing.JPanel();
     displayPanel0 = new javax.swing.JPanel();
     displayPanel0Text = new javax.swing.JTextArea();
@@ -624,37 +617,6 @@ public class StarTrader extends javax.swing.JFrame {
     statsField = new javax.swing.JTextField();
     statsScrollPane2 = new javax.swing.JScrollPane();
     statsTable1 = new javax.swing.JTable();
-    javax.swing.JPanel log = new javax.swing.JPanel();
-    logTableScrollPanel = new javax.swing.JScrollPane();
-    logDlevel2 = new javax.swing.JLabel();
-    LogDlen1Slider = new javax.swing.JSlider();
-    logDlen1 = new javax.swing.JLabel();
-    logDLevel1Slider = new javax.swing.JSlider();
-    SpinnerModel startModel1 = new SpinnerNumberModel(10,
-      0, //min
-      2000000, //max
-      10);
-    logM1Spinner = new javax.swing.JSpinner(startModel1);
-    LogDLen2Slider = new javax.swing.JSlider();
-    logDLevel2Slider = new javax.swing.JSlider();
-    logDlen2 = new javax.swing.JLabel();
-    logDlevel1 = new javax.swing.JLabel();
-    SpinnerModel startModel2 = new SpinnerNumberModel(10,
-      0, //min
-      2000000, //max
-      10);
-    logM2Spinner = new javax.swing.JSpinner(startModel2);
-    logNamesScrollPanel = new javax.swing.JScrollPane();
-    namesList = new DefaultListModel();
-    logEnvirnNamesList = new javax.swing.JList(namesList);
-    Start1Name = new javax.swing.JLabel();
-    Start2Name = new javax.swing.JLabel();
-    logRadioButtonStart1 = new javax.swing.JRadioButton();
-    logRadioButtonStart2 = new javax.swing.JRadioButton();
-    logActionJump = new javax.swing.JRadioButton();
-    logActionAdd = new javax.swing.JRadioButton();
-    logActionDel = new javax.swing.JRadioButton();
-    logDisplayTable = new javax.swing.JTable();
 
     gameButtonUp.setLabel("up");
     gameButtonUp.setMaximumSize(new java.awt.Dimension(70, 55));
@@ -2019,301 +1981,507 @@ public class StarTrader extends javax.swing.JFrame {
 
     controlPanels.addTab("Settings", game);
 
-    clan.setAutoscrolls(true);
-    clan.setMaximumSize(new java.awt.Dimension(1000, 800));
-    clan.setMinimumSize(new java.awt.Dimension(800, 700));
-    clan.setName(""); // NOI18N
-    clan.setPreferredSize(new java.awt.Dimension(800, 700));
-    clan.setLayout(new java.awt.GridBagLayout());
+    log.setBackground(new java.awt.Color(255, 255, 255));
+    log.setAutoscrolls(true);
+    log.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    log.setMaximumSize(new java.awt.Dimension(1800, 1200));
+    log.setMinimumSize(new java.awt.Dimension(500, 450));
+    log.setPreferredSize(new java.awt.Dimension(1200, 800));
+    log.setLayout(new java.awt.GridBagLayout());
 
-    clanTextField.setColumns(20);
-    clanTextField.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
-    clanTextField.setRows(5);
-    clanTextField.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    clanTextField.setMinimumSize(new java.awt.Dimension(50, 100));
-    clanTextField.setPreferredSize(new java.awt.Dimension(75, 150));
-    clanTextPane.setViewportView(clanTextField);
+    logTableScrollPanel.setAutoscrolls(true);
+    logTableScrollPanel.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+    logTableScrollPanel.setMaximumSize(new java.awt.Dimension(1800, 1200));
+    logTableScrollPanel.setMinimumSize(new java.awt.Dimension(500, 450));
+    logTableScrollPanel.setPreferredSize(new java.awt.Dimension(1200, 800));
+    logTableScrollPanel.addInputMethodListener(new java.awt.event.InputMethodListener() {
+      public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+        logTableScrollPanelCaretPositionChanged(evt);
+      }
+      public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+        logTableScrollPanelInputMethodTextChanged(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 56;
+    gridBagConstraints.gridwidth = 19;
+    gridBagConstraints.gridheight = 58;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.ipadx = 1100;
+    gridBagConstraints.ipady = 600;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(19, 0, 0, 0);
+    log.add(logTableScrollPanel, gridBagConstraints);
 
-    clan.add(clanTextPane, new java.awt.GridBagConstraints());
+    logDlevel2.setText("DLevel2");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 14;
+    gridBagConstraints.gridy = 26;
+    gridBagConstraints.gridheight = 14;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(4, 19, 0, 0);
+    log.add(logDlevel2, gridBagConstraints);
 
-    clanPanel0.setMaximumSize(new java.awt.Dimension(1100, 65));
-    clanPanel0.setMinimumSize(new java.awt.Dimension(700, 45));
-    clanPanel0.setPreferredSize(new java.awt.Dimension(700, 55));
-    clanPanel0.setLayout(new javax.swing.BoxLayout(clanPanel0, javax.swing.BoxLayout.LINE_AXIS));
+    LogDlen1Slider.setMajorTickSpacing(25);
+    LogDlen1Slider.setMaximum(75);
+    LogDlen1Slider.setMinorTickSpacing(5);
+    LogDlen1Slider.setPaintLabels(true);
+    LogDlen1Slider.setPaintTicks(true);
+    LogDlen1Slider.setValue(20);
+    LogDlen1Slider.setMaximumSize(new java.awt.Dimension(200, 35));
+    LogDlen1Slider.setMinimumSize(new java.awt.Dimension(24, 12));
+    LogDlen1Slider.setName("Length"); // NOI18N
+    LogDlen1Slider.setPreferredSize(new java.awt.Dimension(120, 35));
+    LogDlen1Slider.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        LogDlen1SliderStateChanged(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 13;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridheight = 9;
+    gridBagConstraints.ipadx = 84;
+    gridBagConstraints.ipady = 23;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(1, 15, 0, 0);
+    log.add(LogDlen1Slider, gridBagConstraints);
+    LogDlen1Slider.getAccessibleContext().setAccessibleName("Length");
 
-    clanTextField0.setEditable(false);
-    clanTextField0.setText("tb set");
-    clanTextField0.setMaximumSize(new java.awt.Dimension(200, 45));
-    clanTextField0.setMinimumSize(new java.awt.Dimension(100, 35));
-    clanTextField0.setPreferredSize(new java.awt.Dimension(100, 35));
-    clanPanel0.add(clanTextField0);
+    logDlen1.setText("DLen1");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 12;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridheight = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 0);
+    log.add(logDlen1, gridBagConstraints);
 
-    gameLabelP5.setText("P");
-    clanPanel0.add(gameLabelP5);
+    logDLevel1Slider.setMajorTickSpacing(5);
+    logDLevel1Slider.setMaximum(15);
+    logDLevel1Slider.setMinorTickSpacing(1);
+    logDLevel1Slider.setPaintLabels(true);
+    logDLevel1Slider.setPaintTicks(true);
+    logDLevel1Slider.setValue(2);
+    logDLevel1Slider.setMinimumSize(new java.awt.Dimension(36, 35));
+    logDLevel1Slider.setPreferredSize(new java.awt.Dimension(200, 35));
+    logDLevel1Slider.setValueIsAdjusting(true);
+    logDLevel1Slider.setVerifyInputWhenFocusTarget(false);
+    logDLevel1Slider.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        logDLevel1SliderStateChanged(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 15;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridheight = 6;
+    gridBagConstraints.ipadx = 93;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
+    log.add(logDLevel1Slider, gridBagConstraints);
+    logDLevel1Slider.getAccessibleContext().setAccessibleName("Level Slider");
 
-    clanSliderP0.setMajorTickSpacing(10);
-    clanSliderP0.setMinorTickSpacing(5);
-    clanSliderP0.setPaintLabels(true);
-    clanSliderP0.setPaintTicks(true);
-    clanSliderP0.setSnapToTicks(true);
-    clanSliderP0.setToolTipText("Slider1");
-    clanSliderP0.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderP0.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderP0.setName("Slider1"); // NOI18N
-    clanSliderP0.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderP0.setValueIsAdjusting(true);
-    clanPanel0.add(clanSliderP0);
+    logM1Spinner.setName("histStartValue"); // NOI18N
+    logM1Spinner.setValue(1);
+    logM1Spinner.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        logM1SpinnerStateChanged(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridwidth = 5;
+    gridBagConstraints.gridheight = 3;
+    gridBagConstraints.ipadx = 38;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(1, 6, 0, 0);
+    log.add(logM1Spinner, gridBagConstraints);
 
-    jSeparator6.setMaximumSize(new java.awt.Dimension(50, 40));
-    jSeparator6.setMinimumSize(new java.awt.Dimension(20, 30));
-    jSeparator6.setPreferredSize(new java.awt.Dimension(20, 40));
-    clanPanel0.add(jSeparator6);
+    LogDLen2Slider.setMajorTickSpacing(25);
+    LogDLen2Slider.setMaximum(75);
+    LogDLen2Slider.setMinorTickSpacing(5);
+    LogDLen2Slider.setPaintLabels(true);
+    LogDLen2Slider.setPaintTicks(true);
+    LogDLen2Slider.setValue(20);
+    LogDLen2Slider.setMaximumSize(new java.awt.Dimension(200, 45));
+    LogDLen2Slider.setName("Length"); // NOI18N
+    LogDLen2Slider.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        LogDLen2SliderStateChanged(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 13;
+    gridBagConstraints.gridy = 14;
+    gridBagConstraints.gridheight = 29;
+    gridBagConstraints.ipadx = 72;
+    gridBagConstraints.ipady = -6;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(0, 15, 0, 0);
+    log.add(LogDLen2Slider, gridBagConstraints);
 
-    gameLabelS5.setText("S");
-    clanPanel0.add(gameLabelS5);
+    logDLevel2Slider.setMajorTickSpacing(5);
+    logDLevel2Slider.setMaximum(15);
+    logDLevel2Slider.setMinorTickSpacing(1);
+    logDLevel2Slider.setPaintLabels(true);
+    logDLevel2Slider.setPaintTicks(true);
+    logDLevel2Slider.setValue(2);
+    logDLevel2Slider.setValueIsAdjusting(true);
+    logDLevel2Slider.setVerifyInputWhenFocusTarget(false);
+    logDLevel2Slider.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        logDLevel2SliderStateChanged(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 15;
+    gridBagConstraints.gridy = 26;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.gridheight = 30;
+    gridBagConstraints.ipadx = 84;
+    gridBagConstraints.ipady = -7;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(2, 22, 0, 0);
+    log.add(logDLevel2Slider, gridBagConstraints);
 
-    clanSliderS0.setMajorTickSpacing(10);
-    clanSliderS0.setMinorTickSpacing(5);
-    clanSliderS0.setPaintLabels(true);
-    clanSliderS0.setPaintTicks(true);
-    clanSliderS0.setSnapToTicks(true);
-    clanSliderS0.setToolTipText("hello1");
-    clanSliderS0.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderS0.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderS0.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderS0.setValueIsAdjusting(true);
-    clanPanel0.add(clanSliderS0);
+    logDlen2.setText("DLen2");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 12;
+    gridBagConstraints.gridy = 14;
+    gridBagConstraints.gridheight = 13;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 0);
+    log.add(logDlen2, gridBagConstraints);
 
+    logDlevel1.setText("DLevel1");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 14;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridheight = 4;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(10, 19, 0, 0);
+    log.add(logDlevel1, gridBagConstraints);
+
+    logM2Spinner.setName("histStartValue"); // NOI18N
+    logM2Spinner.setValue(1);
+    logM2Spinner.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        logM2SpinnerStateChanged(evt);
+      }
+    });
+    logM2Spinner.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseReleased(java.awt.event.MouseEvent evt) {
+        logM2SpinnerMouseReleased(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.gridwidth = 6;
+    gridBagConstraints.gridheight = 11;
+    gridBagConstraints.ipadx = 40;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
+    log.add(logM2Spinner, gridBagConstraints);
+
+    logNamesScrollPanel.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    logNamesScrollPanel.setPreferredSize(new java.awt.Dimension(350, 2000));
+
+    logEnvirnNamesList.setModel(namesList
+    );
+    logEnvirnNamesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    logEnvirnNamesList.setMaximumSize(new java.awt.Dimension(300, 2000));
+    logEnvirnNamesList.setMinimumSize(new java.awt.Dimension(50, 50));
+    logEnvirnNamesList.setPreferredSize(new java.awt.Dimension(300, 2000));
+    logEnvirnNamesList.setVisibleRowCount(3);
+    logEnvirnNamesList.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        logEnvirnNamesListMouseClicked(evt);
+      }
+    });
+    logNamesScrollPanel.setViewportView(logEnvirnNamesList);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 17;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridheight = 57;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.ipadx = 279;
+    gridBagConstraints.ipady = 80;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(10, 14, 0, 0);
+    log.add(logNamesScrollPanel, gridBagConstraints);
+
+    Start1Name.setBackground(new java.awt.Color(255, 102, 204));
+    Start1Name.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+    Start1Name.setForeground(new java.awt.Color(204, 0, 0));
+    Start1Name.setText("P000001");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 10;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.ipadx = 10;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 2, 0, 0);
+    log.add(Start1Name, gridBagConstraints);
+
+    Start2Name.setBackground(new java.awt.Color(255, 102, 204));
+    Start2Name.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+    Start2Name.setForeground(new java.awt.Color(204, 0, 0));
+    Start2Name.setText("P00001");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 10;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.gridheight = 10;
+    gridBagConstraints.ipadx = 9;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(1, 2, 0, 0);
+    log.add(Start2Name, gridBagConstraints);
+
+    logButtonGroup1or2.add(logRadioButtonStart1);
+    logRadioButtonStart1.setText("Start1");
+    logRadioButtonStart1.setToolTipText("Planet");
+    logRadioButtonStart1.setActionCommand("1");
+    logRadioButtonStart1.addItemListener(new java.awt.event.ItemListener() {
+      public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        logRadioButtonStart1ItemStateChanged(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.gridheight = 4;
+    gridBagConstraints.ipadx = 5;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(1, 10, 0, 0);
+    log.add(logRadioButtonStart1, gridBagConstraints);
+
+    logButtonGroup1or2.add(logRadioButtonStart2);
+    logRadioButtonStart2.setText("Start2");
+    logRadioButtonStart2.setActionCommand("2");
+    logRadioButtonStart2.addItemListener(new java.awt.event.ItemListener() {
+      public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        logRadioButtonStart2ItemStateChanged(evt);
+      }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 3;
-    gridBagConstraints.gridwidth = 28;
-    gridBagConstraints.gridheight = 3;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    clan.add(clanPanel0, gridBagConstraints);
+    gridBagConstraints.gridwidth = 3;
+    gridBagConstraints.gridheight = 12;
+    gridBagConstraints.ipadx = 15;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+    log.add(logRadioButtonStart2, gridBagConstraints);
 
-    clanPanel1.setMaximumSize(new java.awt.Dimension(1100, 65));
-    clanPanel1.setMinimumSize(new java.awt.Dimension(700, 45));
-    clanPanel1.setPreferredSize(new java.awt.Dimension(700, 55));
-    clanPanel1.setLayout(new javax.swing.BoxLayout(clanPanel1, javax.swing.BoxLayout.LINE_AXIS));
-
-    clanTextField1.setEditable(false);
-    clanTextField1.setText("tb set");
-    clanTextField1.setMaximumSize(new java.awt.Dimension(200, 45));
-    clanTextField1.setMinimumSize(new java.awt.Dimension(100, 35));
-    clanTextField1.setPreferredSize(new java.awt.Dimension(100, 35));
-    clanPanel1.add(clanTextField1);
-
-    gameLabelP6.setText("P");
-    clanPanel1.add(gameLabelP6);
-
-    clanSliderP1.setMajorTickSpacing(10);
-    clanSliderP1.setMinorTickSpacing(5);
-    clanSliderP1.setPaintLabels(true);
-    clanSliderP1.setPaintTicks(true);
-    clanSliderP1.setSnapToTicks(true);
-    clanSliderP1.setToolTipText("Slider1");
-    clanSliderP1.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderP1.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderP1.setName("Slider1"); // NOI18N
-    clanSliderP1.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderP1.setValueIsAdjusting(true);
-    clanPanel1.add(clanSliderP1);
-
-    jSeparator7.setMaximumSize(new java.awt.Dimension(50, 40));
-    jSeparator7.setMinimumSize(new java.awt.Dimension(20, 30));
-    jSeparator7.setPreferredSize(new java.awt.Dimension(20, 40));
-    clanPanel1.add(jSeparator7);
-
-    gameLabelS6.setText("S");
-    clanPanel1.add(gameLabelS6);
-
-    clanSliderS1.setMajorTickSpacing(10);
-    clanSliderS1.setMinorTickSpacing(5);
-    clanSliderS1.setPaintLabels(true);
-    clanSliderS1.setPaintTicks(true);
-    clanSliderS1.setSnapToTicks(true);
-    clanSliderS1.setToolTipText("hello1");
-    clanSliderS1.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderS1.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderS1.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderS1.setValueIsAdjusting(true);
-    clanPanel1.add(clanSliderS1);
-
+    logBGactions.add(logActionJump);
+    logActionJump.setText("Jump");
+    logActionJump.setName("logActionJump22"); // NOI18N
+    logActionJump.addItemListener(new java.awt.event.ItemListener() {
+      public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        logActionJumpItemStateChanged(evt);
+      }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 7;
-    gridBagConstraints.gridwidth = 28;
-    gridBagConstraints.gridheight = 3;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    clan.add(clanPanel1, gridBagConstraints);
+    gridBagConstraints.gridy = 26;
+    gridBagConstraints.gridheight = 15;
+    gridBagConstraints.ipadx = -5;
+    gridBagConstraints.ipady = -5;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(4, 6, 0, 0);
+    log.add(logActionJump, gridBagConstraints);
 
-    clanPanel2.setMaximumSize(new java.awt.Dimension(1100, 65));
-    clanPanel2.setMinimumSize(new java.awt.Dimension(700, 45));
-    clanPanel2.setPreferredSize(new java.awt.Dimension(700, 55));
-    clanPanel2.setLayout(new javax.swing.BoxLayout(clanPanel2, javax.swing.BoxLayout.LINE_AXIS));
-
-    clanTextField2.setEditable(false);
-    clanTextField2.setText("tb set");
-    clanTextField2.setMaximumSize(new java.awt.Dimension(200, 45));
-    clanTextField2.setMinimumSize(new java.awt.Dimension(100, 35));
-    clanTextField2.setPreferredSize(new java.awt.Dimension(100, 35));
-    clanPanel2.add(clanTextField2);
-
-    gameLabelP7.setText("P");
-    clanPanel2.add(gameLabelP7);
-
-    clanSliderP2.setMajorTickSpacing(10);
-    clanSliderP2.setMinorTickSpacing(5);
-    clanSliderP2.setPaintLabels(true);
-    clanSliderP2.setPaintTicks(true);
-    clanSliderP2.setSnapToTicks(true);
-    clanSliderP2.setToolTipText("Slider1");
-    clanSliderP2.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderP2.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderP2.setName("Slider1"); // NOI18N
-    clanSliderP2.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderP2.setValueIsAdjusting(true);
-    clanPanel2.add(clanSliderP2);
-
-    jSeparator8.setMaximumSize(new java.awt.Dimension(50, 40));
-    jSeparator8.setMinimumSize(new java.awt.Dimension(20, 30));
-    jSeparator8.setPreferredSize(new java.awt.Dimension(20, 40));
-    clanPanel2.add(jSeparator8);
-
-    gameLabelS7.setText("S");
-    clanPanel2.add(gameLabelS7);
-
-    clanSliderS2.setMajorTickSpacing(10);
-    clanSliderS2.setMinorTickSpacing(5);
-    clanSliderS2.setPaintLabels(true);
-    clanSliderS2.setPaintTicks(true);
-    clanSliderS2.setSnapToTicks(true);
-    clanSliderS2.setToolTipText("hello1");
-    clanSliderS2.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderS2.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderS2.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderS2.setValueIsAdjusting(true);
-    clanPanel2.add(clanSliderS2);
-
+    logBGactions.add(logActionAdd);
+    logActionAdd.setText("add");
+    logActionAdd.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        logActionAddActionPerformed(evt);
+      }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 11;
-    gridBagConstraints.gridwidth = 28;
-    gridBagConstraints.gridheight = 3;
-    clan.add(clanPanel2, gridBagConstraints);
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 26;
+    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.gridheight = 16;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(4, 3, 0, 0);
+    log.add(logActionAdd, gridBagConstraints);
 
-    clanPanel3.setMaximumSize(new java.awt.Dimension(1100, 65));
-    clanPanel3.setMinimumSize(new java.awt.Dimension(700, 45));
-    clanPanel3.setPreferredSize(new java.awt.Dimension(700, 55));
-    clanPanel3.setLayout(new javax.swing.BoxLayout(clanPanel3, javax.swing.BoxLayout.LINE_AXIS));
-
-    clanTextField3.setEditable(false);
-    clanTextField3.setText("tb set");
-    clanTextField3.setMaximumSize(new java.awt.Dimension(200, 45));
-    clanTextField3.setMinimumSize(new java.awt.Dimension(100, 35));
-    clanTextField3.setPreferredSize(new java.awt.Dimension(100, 35));
-    clanPanel3.add(clanTextField3);
-
-    clanLabelP3.setText("P");
-    clanPanel3.add(clanLabelP3);
-
-    clanSliderP3.setMajorTickSpacing(10);
-    clanSliderP3.setMinorTickSpacing(5);
-    clanSliderP3.setPaintLabels(true);
-    clanSliderP3.setPaintTicks(true);
-    clanSliderP3.setSnapToTicks(true);
-    clanSliderP3.setToolTipText("Slider1");
-    clanSliderP3.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderP3.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderP3.setName("Slider1"); // NOI18N
-    clanSliderP3.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderP3.setValueIsAdjusting(true);
-    clanPanel3.add(clanSliderP3);
-
-    jSeparator9.setMaximumSize(new java.awt.Dimension(50, 40));
-    jSeparator9.setMinimumSize(new java.awt.Dimension(20, 30));
-    jSeparator9.setPreferredSize(new java.awt.Dimension(20, 40));
-    clanPanel3.add(jSeparator9);
-
-    gameLabelS8.setText("S");
-    clanPanel3.add(gameLabelS8);
-
-    clanSliderS3.setMajorTickSpacing(10);
-    clanSliderS3.setMinorTickSpacing(5);
-    clanSliderS3.setPaintLabels(true);
-    clanSliderS3.setPaintTicks(true);
-    clanSliderS3.setSnapToTicks(true);
-    clanSliderS3.setToolTipText("hello1");
-    clanSliderS3.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderS3.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderS3.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderS3.setValueIsAdjusting(true);
-    clanPanel3.add(clanSliderS3);
-
+    logBGactions.add(logActionDel);
+    logActionDel.setText("del");
+    logActionDel.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        logActionDelActionPerformed(evt);
+      }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 15;
-    gridBagConstraints.gridwidth = 28;
-    gridBagConstraints.gridheight = 3;
-    clan.add(clanPanel3, gridBagConstraints);
+    gridBagConstraints.gridx = 7;
+    gridBagConstraints.gridy = 26;
+    gridBagConstraints.gridheight = 16;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(4, 2, 0, 0);
+    log.add(logActionDel, gridBagConstraints);
 
-    clanPanel4.setMaximumSize(new java.awt.Dimension(1100, 65));
-    clanPanel4.setMinimumSize(new java.awt.Dimension(700, 45));
-    clanPanel4.setPreferredSize(new java.awt.Dimension(700, 55));
-    clanPanel4.setLayout(new javax.swing.BoxLayout(clanPanel4, javax.swing.BoxLayout.LINE_AXIS));
+    logDisplayTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    logDisplayTable.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    logDisplayTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null}
+      },
+      new String [] {
+        "Title", "col0", "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"
+      }
+    ) {
+      Class[] types = new Class [] {
+        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+      };
+      boolean[] canEdit = new boolean [] {
+        false, false, false, false, false, false, false, false, false, false, false
+      };
 
-    clanTextField4.setEditable(false);
-    clanTextField4.setText("tb set");
-    clanTextField4.setMaximumSize(new java.awt.Dimension(200, 45));
-    clanTextField4.setMinimumSize(new java.awt.Dimension(100, 35));
-    clanTextField4.setPreferredSize(new java.awt.Dimension(100, 35));
-    clanPanel4.add(clanTextField4);
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
 
-    clanLabelP4.setText("P");
-    clanPanel4.add(clanLabelP4);
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return canEdit [columnIndex];
+      }
+    });
+    logDisplayTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+    logDisplayTable.setColumnSelectionAllowed(true);
+    logDisplayTable.setDebugGraphicsOptions(javax.swing.DebugGraphics.LOG_OPTION);
+    logDisplayTable.setGridColor(new java.awt.Color(153, 153, 255));
+    logDisplayTable.setMaximumSize(new java.awt.Dimension(1800, 1200));
+    logDisplayTable.setMinimumSize(new java.awt.Dimension(500, 450));
+    logDisplayTable.setPreferredSize(new java.awt.Dimension(1200, 800));
+    logDisplayTable.getTableHeader().setResizingAllowed(false);
+    logDisplayTable.getTableHeader().setReorderingAllowed(false);
+    log.add(logDisplayTable, new java.awt.GridBagConstraints());
+    logDisplayTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    if (logDisplayTable.getColumnModel().getColumnCount() > 0) {
+      logDisplayTable.getColumnModel().getColumn(0).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+      logDisplayTable.getColumnModel().getColumn(1).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(2).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(3).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(4).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(5).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(6).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(7).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(8).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(9).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(10).setResizable(false);
+    }
+    logDisplayTable.getAccessibleContext().setAccessibleName("logTable");
 
-    clanSliderP4.setMajorTickSpacing(10);
-    clanSliderP4.setMinorTickSpacing(5);
-    clanSliderP4.setPaintLabels(true);
-    clanSliderP4.setPaintTicks(true);
-    clanSliderP4.setSnapToTicks(true);
-    clanSliderP4.setToolTipText("Slider1");
-    clanSliderP4.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderP4.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderP4.setName("Slider1"); // NOI18N
-    clanSliderP4.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderP4.setValueIsAdjusting(true);
-    clanPanel4.add(clanSliderP4);
-
-    jSeparator10.setMaximumSize(new java.awt.Dimension(50, 40));
-    jSeparator10.setMinimumSize(new java.awt.Dimension(20, 30));
-    jSeparator10.setPreferredSize(new java.awt.Dimension(20, 40));
-    clanPanel4.add(jSeparator10);
-
-    clanLabelS4.setText("S");
-    clanPanel4.add(clanLabelS4);
-
-    clanSliderS4.setMajorTickSpacing(10);
-    clanSliderS4.setMinorTickSpacing(5);
-    clanSliderS4.setPaintLabels(true);
-    clanSliderS4.setPaintTicks(true);
-    clanSliderS4.setSnapToTicks(true);
-    clanSliderS4.setToolTipText("hello1");
-    clanSliderS4.setMaximumSize(new java.awt.Dimension(400, 45));
-    clanSliderS4.setMinimumSize(new java.awt.Dimension(250, 45));
-    clanSliderS4.setPreferredSize(new java.awt.Dimension(300, 45));
-    clanSliderS4.setValueIsAdjusting(true);
-    clanPanel4.add(clanSliderS4);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 19;
-    gridBagConstraints.gridwidth = 28;
-    gridBagConstraints.gridheight = 3;
-    clan.add(clanPanel4, gridBagConstraints);
-
-    controlPanels.addTab("clan", clan);
+    controlPanels.addTab("logs", log);
 
     display.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
     display.setAlignmentY(300.0F);
@@ -2461,6 +2629,8 @@ public class StarTrader extends javax.swing.JFrame {
 
     statsButtonGroupReportNumber.add(statsButton0);
     statsButton0.setText("0");
+    statsButton0.setMargin(new java.awt.Insets(1, 1, 1, 1));
+    statsButton0.setMaximumSize(new java.awt.Dimension(35, 21));
     statsButton0.addItemListener(new java.awt.event.ItemListener() {
       public void itemStateChanged(java.awt.event.ItemEvent evt) {
         statsButton0ItemStateChanged(evt);
@@ -2480,6 +2650,8 @@ public class StarTrader extends javax.swing.JFrame {
 
     statsButtonGroupReportNumber.add(statsButton1);
     statsButton1.setText("1");
+    statsButton1.setMaximumSize(new java.awt.Dimension(35, 21));
+    statsButton1.setPreferredSize(new java.awt.Dimension(32, 21));
     statsButton1.addItemListener(new java.awt.event.ItemListener() {
       public void itemStateChanged(java.awt.event.ItemEvent evt) {
         statsButton1ItemStateChanged(evt);
@@ -3157,508 +3329,6 @@ public class StarTrader extends javax.swing.JFrame {
     stats.add(statsScrollPane2);
 
     controlPanels.addTab("stats", stats);
-
-    log.setBackground(new java.awt.Color(255, 255, 255));
-    log.setAutoscrolls(true);
-    log.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    log.setMaximumSize(new java.awt.Dimension(1800, 1200));
-    log.setMinimumSize(new java.awt.Dimension(500, 450));
-    log.setPreferredSize(new java.awt.Dimension(1200, 800));
-    log.setLayout(new java.awt.GridBagLayout());
-
-    logTableScrollPanel.setAutoscrolls(true);
-    logTableScrollPanel.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
-    logTableScrollPanel.setMaximumSize(new java.awt.Dimension(1800, 1200));
-    logTableScrollPanel.setMinimumSize(new java.awt.Dimension(500, 450));
-    logTableScrollPanel.setPreferredSize(new java.awt.Dimension(1200, 800));
-    logTableScrollPanel.addInputMethodListener(new java.awt.event.InputMethodListener() {
-      public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-        logTableScrollPanelCaretPositionChanged(evt);
-      }
-      public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-        logTableScrollPanelInputMethodTextChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 56;
-    gridBagConstraints.gridwidth = 19;
-    gridBagConstraints.gridheight = 58;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.ipadx = 1100;
-    gridBagConstraints.ipady = 600;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(19, 0, 0, 0);
-    log.add(logTableScrollPanel, gridBagConstraints);
-
-    logDlevel2.setText("DLevel2");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 14;
-    gridBagConstraints.gridy = 26;
-    gridBagConstraints.gridheight = 14;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(4, 19, 0, 0);
-    log.add(logDlevel2, gridBagConstraints);
-
-    LogDlen1Slider.setMajorTickSpacing(25);
-    LogDlen1Slider.setMaximum(75);
-    LogDlen1Slider.setMinorTickSpacing(5);
-    LogDlen1Slider.setPaintLabels(true);
-    LogDlen1Slider.setPaintTicks(true);
-    LogDlen1Slider.setValue(20);
-    LogDlen1Slider.setMaximumSize(new java.awt.Dimension(200, 35));
-    LogDlen1Slider.setMinimumSize(new java.awt.Dimension(24, 12));
-    LogDlen1Slider.setName("Length"); // NOI18N
-    LogDlen1Slider.setPreferredSize(new java.awt.Dimension(120, 35));
-    LogDlen1Slider.addChangeListener(new javax.swing.event.ChangeListener() {
-      public void stateChanged(javax.swing.event.ChangeEvent evt) {
-        LogDlen1SliderStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 13;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridheight = 9;
-    gridBagConstraints.ipadx = 84;
-    gridBagConstraints.ipady = 23;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(1, 15, 0, 0);
-    log.add(LogDlen1Slider, gridBagConstraints);
-    LogDlen1Slider.getAccessibleContext().setAccessibleName("Length");
-
-    logDlen1.setText("DLen1");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 12;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridheight = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 0);
-    log.add(logDlen1, gridBagConstraints);
-
-    logDLevel1Slider.setMajorTickSpacing(5);
-    logDLevel1Slider.setMaximum(15);
-    logDLevel1Slider.setMinorTickSpacing(1);
-    logDLevel1Slider.setPaintLabels(true);
-    logDLevel1Slider.setPaintTicks(true);
-    logDLevel1Slider.setValue(2);
-    logDLevel1Slider.setMinimumSize(new java.awt.Dimension(36, 35));
-    logDLevel1Slider.setPreferredSize(new java.awt.Dimension(200, 35));
-    logDLevel1Slider.setValueIsAdjusting(true);
-    logDLevel1Slider.setVerifyInputWhenFocusTarget(false);
-    logDLevel1Slider.addChangeListener(new javax.swing.event.ChangeListener() {
-      public void stateChanged(javax.swing.event.ChangeEvent evt) {
-        logDLevel1SliderStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 15;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridheight = 6;
-    gridBagConstraints.ipadx = 93;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
-    log.add(logDLevel1Slider, gridBagConstraints);
-    logDLevel1Slider.getAccessibleContext().setAccessibleName("Level Slider");
-
-    logM1Spinner.setName("histStartValue"); // NOI18N
-    logM1Spinner.setValue(1);
-    logM1Spinner.addChangeListener(new javax.swing.event.ChangeListener() {
-      public void stateChanged(javax.swing.event.ChangeEvent evt) {
-        logM1SpinnerStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 4;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridwidth = 5;
-    gridBagConstraints.gridheight = 3;
-    gridBagConstraints.ipadx = 38;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(1, 6, 0, 0);
-    log.add(logM1Spinner, gridBagConstraints);
-
-    LogDLen2Slider.setMajorTickSpacing(25);
-    LogDLen2Slider.setMaximum(75);
-    LogDLen2Slider.setMinorTickSpacing(5);
-    LogDLen2Slider.setPaintLabels(true);
-    LogDLen2Slider.setPaintTicks(true);
-    LogDLen2Slider.setValue(20);
-    LogDLen2Slider.setMaximumSize(new java.awt.Dimension(200, 45));
-    LogDLen2Slider.setName("Length"); // NOI18N
-    LogDLen2Slider.addChangeListener(new javax.swing.event.ChangeListener() {
-      public void stateChanged(javax.swing.event.ChangeEvent evt) {
-        LogDLen2SliderStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 13;
-    gridBagConstraints.gridy = 14;
-    gridBagConstraints.gridheight = 29;
-    gridBagConstraints.ipadx = 72;
-    gridBagConstraints.ipady = -6;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 15, 0, 0);
-    log.add(LogDLen2Slider, gridBagConstraints);
-
-    logDLevel2Slider.setMajorTickSpacing(5);
-    logDLevel2Slider.setMaximum(15);
-    logDLevel2Slider.setMinorTickSpacing(1);
-    logDLevel2Slider.setPaintLabels(true);
-    logDLevel2Slider.setPaintTicks(true);
-    logDLevel2Slider.setValue(2);
-    logDLevel2Slider.setValueIsAdjusting(true);
-    logDLevel2Slider.setVerifyInputWhenFocusTarget(false);
-    logDLevel2Slider.addChangeListener(new javax.swing.event.ChangeListener() {
-      public void stateChanged(javax.swing.event.ChangeEvent evt) {
-        logDLevel2SliderStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 15;
-    gridBagConstraints.gridy = 26;
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.gridheight = 30;
-    gridBagConstraints.ipadx = 84;
-    gridBagConstraints.ipady = -7;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(2, 22, 0, 0);
-    log.add(logDLevel2Slider, gridBagConstraints);
-
-    logDlen2.setText("DLen2");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 12;
-    gridBagConstraints.gridy = 14;
-    gridBagConstraints.gridheight = 13;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 0);
-    log.add(logDlen2, gridBagConstraints);
-
-    logDlevel1.setText("DLevel1");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 14;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridheight = 4;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(10, 19, 0, 0);
-    log.add(logDlevel1, gridBagConstraints);
-
-    logM2Spinner.setName("histStartValue"); // NOI18N
-    logM2Spinner.setValue(1);
-    logM2Spinner.addChangeListener(new javax.swing.event.ChangeListener() {
-      public void stateChanged(javax.swing.event.ChangeEvent evt) {
-        logM2SpinnerStateChanged(evt);
-      }
-    });
-    logM2Spinner.addMouseListener(new java.awt.event.MouseAdapter() {
-      public void mouseReleased(java.awt.event.MouseEvent evt) {
-        logM2SpinnerMouseReleased(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 4;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.gridwidth = 6;
-    gridBagConstraints.gridheight = 11;
-    gridBagConstraints.ipadx = 40;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
-    log.add(logM2Spinner, gridBagConstraints);
-
-    logNamesScrollPanel.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    logNamesScrollPanel.setPreferredSize(new java.awt.Dimension(350, 2000));
-
-    logEnvirnNamesList.setModel(namesList
-    );
-    logEnvirnNamesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    logEnvirnNamesList.setMaximumSize(new java.awt.Dimension(300, 2000));
-    logEnvirnNamesList.setMinimumSize(new java.awt.Dimension(50, 50));
-    logEnvirnNamesList.setPreferredSize(new java.awt.Dimension(300, 2000));
-    logEnvirnNamesList.setVisibleRowCount(3);
-    logEnvirnNamesList.addMouseListener(new java.awt.event.MouseAdapter() {
-      public void mouseClicked(java.awt.event.MouseEvent evt) {
-        logEnvirnNamesListMouseClicked(evt);
-      }
-    });
-    logNamesScrollPanel.setViewportView(logEnvirnNamesList);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 17;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridheight = 57;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.ipadx = 279;
-    gridBagConstraints.ipady = 80;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(10, 14, 0, 0);
-    log.add(logNamesScrollPanel, gridBagConstraints);
-
-    Start1Name.setBackground(new java.awt.Color(255, 102, 204));
-    Start1Name.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-    Start1Name.setForeground(new java.awt.Color(204, 0, 0));
-    Start1Name.setText("P000001");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 10;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.ipadx = 10;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 2, 0, 0);
-    log.add(Start1Name, gridBagConstraints);
-
-    Start2Name.setBackground(new java.awt.Color(255, 102, 204));
-    Start2Name.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-    Start2Name.setForeground(new java.awt.Color(204, 0, 0));
-    Start2Name.setText("P00001");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 10;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.gridheight = 10;
-    gridBagConstraints.ipadx = 9;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(1, 2, 0, 0);
-    log.add(Start2Name, gridBagConstraints);
-
-    logButtonGroup1or2.add(logRadioButtonStart1);
-    logRadioButtonStart1.setText("Start1");
-    logRadioButtonStart1.setToolTipText("Planet");
-    logRadioButtonStart1.setActionCommand("1");
-    logRadioButtonStart1.addItemListener(new java.awt.event.ItemListener() {
-      public void itemStateChanged(java.awt.event.ItemEvent evt) {
-        logRadioButtonStart1ItemStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.gridheight = 4;
-    gridBagConstraints.ipadx = 5;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(1, 10, 0, 0);
-    log.add(logRadioButtonStart1, gridBagConstraints);
-
-    logButtonGroup1or2.add(logRadioButtonStart2);
-    logRadioButtonStart2.setText("Start2");
-    logRadioButtonStart2.setActionCommand("2");
-    logRadioButtonStart2.addItemListener(new java.awt.event.ItemListener() {
-      public void itemStateChanged(java.awt.event.ItemEvent evt) {
-        logRadioButtonStart2ItemStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.gridwidth = 3;
-    gridBagConstraints.gridheight = 12;
-    gridBagConstraints.ipadx = 15;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
-    log.add(logRadioButtonStart2, gridBagConstraints);
-
-    logBGactions.add(logActionJump);
-    logActionJump.setText("Jump");
-    logActionJump.setName("logActionJump22"); // NOI18N
-    logActionJump.addItemListener(new java.awt.event.ItemListener() {
-      public void itemStateChanged(java.awt.event.ItemEvent evt) {
-        logActionJumpItemStateChanged(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 26;
-    gridBagConstraints.gridheight = 15;
-    gridBagConstraints.ipadx = -5;
-    gridBagConstraints.ipady = -5;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(4, 6, 0, 0);
-    log.add(logActionJump, gridBagConstraints);
-
-    logBGactions.add(logActionAdd);
-    logActionAdd.setText("add");
-    logActionAdd.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        logActionAddActionPerformed(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 26;
-    gridBagConstraints.gridwidth = 4;
-    gridBagConstraints.gridheight = 16;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(4, 3, 0, 0);
-    log.add(logActionAdd, gridBagConstraints);
-
-    logBGactions.add(logActionDel);
-    logActionDel.setText("del");
-    logActionDel.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        logActionDelActionPerformed(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 7;
-    gridBagConstraints.gridy = 26;
-    gridBagConstraints.gridheight = 16;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(4, 2, 0, 0);
-    log.add(logActionDel, gridBagConstraints);
-
-    logDisplayTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    logDisplayTable.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-    logDisplayTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null}
-      },
-      new String [] {
-        "Title", "col0", "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"
-      }
-    ) {
-      Class[] types = new Class [] {
-        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-      };
-      boolean[] canEdit = new boolean [] {
-        false, false, false, false, false, false, false, false, false, false, false
-      };
-
-      public Class getColumnClass(int columnIndex) {
-        return types [columnIndex];
-      }
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    logDisplayTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-    logDisplayTable.setColumnSelectionAllowed(true);
-    logDisplayTable.setDebugGraphicsOptions(javax.swing.DebugGraphics.LOG_OPTION);
-    logDisplayTable.setGridColor(new java.awt.Color(153, 153, 255));
-    logDisplayTable.setMaximumSize(new java.awt.Dimension(1800, 1200));
-    logDisplayTable.setMinimumSize(new java.awt.Dimension(500, 450));
-    logDisplayTable.setPreferredSize(new java.awt.Dimension(1200, 800));
-    logDisplayTable.getTableHeader().setResizingAllowed(false);
-    logDisplayTable.getTableHeader().setReorderingAllowed(false);
-    log.add(logDisplayTable, new java.awt.GridBagConstraints());
-    logDisplayTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    if (logDisplayTable.getColumnModel().getColumnCount() > 0) {
-      logDisplayTable.getColumnModel().getColumn(0).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(0).setPreferredWidth(200);
-      logDisplayTable.getColumnModel().getColumn(1).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(2).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(3).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(4).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(5).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(6).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(7).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(8).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(9).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(10).setResizable(false);
-    }
-    logDisplayTable.getAccessibleContext().setAccessibleName("logTable");
-
-    controlPanels.addTab("logs", log);
 
     getContentPane().add(controlPanels);
     controlPanels.getAccessibleContext().setAccessibleName("traderPanel");
@@ -5074,37 +4744,11 @@ public class StarTrader extends javax.swing.JFrame {
   protected javax.swing.JLabel Start1Name;
   protected javax.swing.JLabel Start2Name;
   protected javax.swing.JPanel bigPanel;
-  protected javax.swing.JPanel clan;
   protected javax.swing.JRadioButton clanBlue;
   protected javax.swing.ButtonGroup clanButtonGroupActiveClan;
   protected javax.swing.JRadioButton clanGreen;
-  protected javax.swing.JLabel clanLabelP3;
-  protected javax.swing.JLabel clanLabelP4;
-  protected javax.swing.JLabel clanLabelS4;
   protected javax.swing.JRadioButton clanOrange;
-  protected javax.swing.JPanel clanPanel0;
-  protected javax.swing.JPanel clanPanel1;
-  protected javax.swing.JPanel clanPanel2;
-  protected javax.swing.JPanel clanPanel3;
-  protected javax.swing.JPanel clanPanel4;
   protected javax.swing.JRadioButton clanRed;
-  protected javax.swing.JSlider clanSliderP0;
-  protected javax.swing.JSlider clanSliderP1;
-  protected javax.swing.JSlider clanSliderP2;
-  protected javax.swing.JSlider clanSliderP3;
-  protected javax.swing.JSlider clanSliderP4;
-  protected javax.swing.JSlider clanSliderS0;
-  protected javax.swing.JSlider clanSliderS1;
-  protected javax.swing.JSlider clanSliderS2;
-  protected javax.swing.JSlider clanSliderS3;
-  protected javax.swing.JSlider clanSliderS4;
-  protected javax.swing.JTextArea clanTextField;
-  protected javax.swing.JTextField clanTextField0;
-  protected javax.swing.JTextField clanTextField1;
-  protected javax.swing.JTextField clanTextField2;
-  protected javax.swing.JTextField clanTextField3;
-  protected javax.swing.JTextField clanTextField4;
-  protected javax.swing.JScrollPane clanTextPane;
   protected javax.swing.JRadioButton clanYellow;
   protected javax.swing.JTabbedPane controlPanels;
   protected javax.swing.JPanel display;
@@ -5118,13 +4762,6 @@ public class StarTrader extends javax.swing.JFrame {
   protected java.awt.Button gameButtonUp1;
   protected javax.swing.JButton gameCtlButtonRun1Year1;
   protected javax.swing.JButton gameCtlButtonRun5Years1;
-  protected javax.swing.JLabel gameLabelP5;
-  protected javax.swing.JLabel gameLabelP6;
-  protected javax.swing.JLabel gameLabelP7;
-  protected javax.swing.JLabel gameLabelS5;
-  protected javax.swing.JLabel gameLabelS6;
-  protected javax.swing.JLabel gameLabelS7;
-  protected javax.swing.JLabel gameLabelS8;
   protected javax.swing.JRadioButton gameMaster;
   protected javax.swing.JPanel gamePanel0;
   protected javax.swing.JPanel gamePanel1;
@@ -5177,7 +4814,6 @@ public class StarTrader extends javax.swing.JFrame {
   protected javax.swing.JScrollPane jScrollPane1;
   protected javax.swing.JScrollPane jScrollPane3;
   protected javax.swing.JSeparator jSeparator1;
-  protected javax.swing.JSeparator jSeparator10;
   protected javax.swing.JSeparator jSeparator11;
   protected javax.swing.JSeparator jSeparator13;
   protected javax.swing.JSeparator jSeparator14;
@@ -5187,10 +4823,6 @@ public class StarTrader extends javax.swing.JFrame {
   protected javax.swing.JSeparator jSeparator3;
   protected javax.swing.JSeparator jSeparator4;
   protected javax.swing.JSeparator jSeparator5;
-  protected javax.swing.JSeparator jSeparator6;
-  protected javax.swing.JSeparator jSeparator7;
-  protected javax.swing.JSeparator jSeparator8;
-  protected javax.swing.JSeparator jSeparator9;
   protected javax.swing.JTable jTable1;
   protected javax.swing.JRadioButton logActionAdd;
   protected javax.swing.JRadioButton logActionDel;
@@ -6186,14 +5818,14 @@ public class StarTrader extends javax.swing.JFrame {
   //static int[] envsPerYear = {10, 20, 30, 40, 50, 60, 10};
   JSlider[] gameSlidersP = {gameSliderP0, gameSliderP1, gameSliderP2, gameSliderP3, gameSliderP4, gameSliderP5, gameSliderP6, gameSliderP7, gameSliderP8, gameSliderP9};
   JSlider[] gameSlidersS = {gameSliderS0, gameSliderS1, gameSliderS2, gameSliderS3, gameSliderS4, gameSliderS5, gameSliderS6, gameSliderS7, gameSliderS8, gameSliderS9};
-  JSlider[] clanSlidersP = {clanSliderP0, clanSliderP1, clanSliderP2, clanSliderP3, clanSliderP4};
-  JSlider[] clanSlidersS = {clanSliderS0, clanSliderS1, clanSliderS2, clanSliderS3, clanSliderS4};
+ // JSlider[] clanSlidersP = {clanSliderP0, clanSliderP1, clanSliderP2, clanSliderP3, clanSliderP4};
+  //JSlider[] clanSlidersS = {clanSliderS0, clanSliderS1, clanSliderS2, clanSliderS3, clanSliderS4};
   JTextField[] gameTextFields = {gameTextField0, gameTextField1, gameTextField2, gameTextField3, gameTextField4, gameTextField5, gameTextField6, gameTextField7, gameTextField8, gameTextField9};
-  JTextField[] clanTextFields = {clanTextField0, clanTextField1, clanTextField2, clanTextField3, clanTextField4};
+  //JTextField[] clanTextFields = {clanTextField0, clanTextField1, clanTextField2, clanTextField3, clanTextField4};
   JPanel gamePanels[] = {gamePanel0, gamePanel1, gamePanel2, gamePanel3, gamePanel4, gamePanel5, gamePanel6, gamePanel7, gamePanel8, gamePanel9};
-  JPanel clanPanels[] = {clanPanel0, clanPanel1, clanPanel2, clanPanel3, clanPanel4};
-  JLabel clanLabelsP[] = {gameLabelP5, gameLabelP6, gameLabelP7, clanLabelP3, clanLabelP4};
-  JLabel clanLabelsS[] = {gameLabelS5, gameLabelS6, gameLabelS7, gameLabelS8, clanLabelS4};
+  //JPanel clanPanels[] = {clanPanel0, clanPanel1, clanPanel2, clanPanel3, clanPanel4};
+  //JLabel clanLabelsP[] = {gameLabelP5, gameLabelP6, gameLabelP7, clanLabelP3, clanLabelP4};
+ // JLabel clanLabelsS[] = {gameLabelS5, gameLabelS6, gameLabelS7, gameLabelS8, clanLabelS4};
   double fullRes[] = {1., 2.};
   int lGameRes = fullRes.length;
 
@@ -6287,7 +5919,7 @@ public class StarTrader extends javax.swing.JFrame {
         statsTable1.setPreferredSize(new Dimension(myW3, myH2));
       }
       eE.init(eM, this);
-      eM.init();
+      eM.aInit();
       this.pack();
       Rectangle statsR = stats.getBounds();
       int ss1 = statsR.width;

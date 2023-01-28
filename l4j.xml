@@ -2,10 +2,10 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\aljst\Netbeans1Folder\OGST2\target\starTraderMaven-19.46.jar</jar>
-  <outfile>C:\Users\aljst\Netbeans1Folder\OGST2\target\StarTrader19.46d.exe</outfile>
+  <jar>C:\Users\aljst\Netbeans1Folder\OGST2\target\starTraderMaven-19.47.jar</jar>
+  <outfile>C:\Users\aljst\Netbeans1Folder\OGST2\target\StarTrader19.47.exe</outfile>
   <errTitle></errTitle>
-  <cmdLine></cmdLine>
+  <cmdLine>-ea</cmdLine>
   <chdir>.</chdir>
   <priority>normal</priority>
   <downloadUrl></downloadUrl>
@@ -16,7 +16,7 @@
   <icon></icon>
   <jre>
     <path>C:\Program Files\Java\jdk-19</path>
-    <requiresJdk>false</requiresJdk>
+    <requiresJdk>true</requiresJdk>
     <requires64Bit>true</requires64Bit>
     <minVersion>19</minVersion>
     <maxVersion>20</maxVersion>
