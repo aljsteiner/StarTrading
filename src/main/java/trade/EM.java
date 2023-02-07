@@ -1261,7 +1261,7 @@ class EM {
    * @return true if EM.fatalError, EM.newError or StarTrader.fatalError
    */
   static boolean dfe() {
-    return newError || fatalError || stopExe|| StarTrader.fatalError;
+    return newError || fatalError || stopExe || StarTrader.fatalError;
   }
 
   /**
