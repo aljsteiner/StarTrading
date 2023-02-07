@@ -245,10 +245,10 @@ class EM {
   static final double[][] mMinEconsMult = {{.5, 10.0}};
   static volatile double[][] minEcons = {{30.}}; // goes into last envsPerYear;
   static final double[][] mMinEcons = {{10., 100.}};
-  static volatile double[][] maxThreads = {{1.0}};
+  static volatile double[][] maxThreads = {{10.0}};
   static final double[][] mmaxThreads = {{1.0, 12.0}};
   static volatile int[] iMaxThreads = {1};
-  static volatile double[][] haveColors = {{.3}};
+  static volatile double[][] haveColors = {{1.3}};
   static final double[][] mHaveColors = {{0.2, 2.2}};
   static volatile double[][] haveCash = {{2.0}};
   static final double[][] mHaveCash = {{0.2, 2.2}};
@@ -3382,7 +3382,7 @@ onceAgain:
     doVal("years To Win", winDif, mwinDif, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the years before a winner is declared");
     doVal("resourceCosts", mab1, mmab1, "raise the cost of resources planet and ship, makes game harder");
     doVal("staffCosts", mac1, mmac1, "raise the costs of staff for planets and ships, makes planets and ships die more often");
- //   doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
+    doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
     doVal("haveColors", haveColors, mHaveColors, "Above slider 50 the tab display will show the color of the current economy. The changing of colors helps understand how fast the game is going.  Some persons have trouble with blinking colors, so setting this slider below 50 will stop the color changes.");
     doVal("haveCash", haveCash, mHaveCash, "Above slider 50 the tab display Economies will start with some cash, cash is just another resource that can be traded, think of it as bars of gold, not as paper money");
     doVal("minEconomies ", minEcons, mMinEcons, "iincrease the minimum number of economies after the startup numbers, the game creates new economies, new economies start to be added at a random clan, rotating to other clans next");
