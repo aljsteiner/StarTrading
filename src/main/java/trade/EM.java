@@ -129,6 +129,7 @@ class EM {
   static volatile int clanCnt[] = {0, 0, 0, 0, 0};
   static volatile Integer econCnt = 0;
   static volatile int deadCnt = 0;
+  static final int econLock[] = {0};
   // int porsCntd[] = {0, 0};
   static volatile int porsCnt[] = {0, 0};
 
@@ -200,17 +201,19 @@ class EM {
   static volatile double mEconLimits3[][] = {{100., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
-  static String tError = "";
+  static String tError = " no tError";
   static volatile Econ curEcon;  //eM only changes at the end a a year run, EM.curEcon
   static volatile String curEconName = "no Econ name";
   static volatile String curEconClan = "A";
   static volatile long curEconTime = 0; // time of this econ
+  static volatile int curEconAge=0;
   static volatile Econ otherEcon;
   static volatile String otherEconName = "no other name";
   static volatile String otherEconClan = "A";
 
   /**
-   * set curEcon, curEconName curEconClan;curEconTime
+   * set curEcon, curEconName curEconClan;curEconTime,curEconAge
+   * get a null error the offered Econ is null
    *
    * @param x econ to be set in curEcon
    * @return curEconName
@@ -221,6 +224,7 @@ class EM {
     }
     curEcon = x;
     curEconClan = x.getColor();
+    curEconAge = x.getAge();
     return curEconName = x.getName();
   }
 
@@ -248,7 +252,7 @@ class EM {
   static volatile double[][] maxThreads = {{10.0}};
   static final double[][] mmaxThreads = {{1.0, 12.0}};
   static volatile int[] iMaxThreads = {1};
-  static volatile double[][] haveColors = {{1.3}};
+  static volatile double[][] haveColors = {{.3}};
   static final double[][] mHaveColors = {{0.2, 2.2}};
   static volatile double[][] haveCash = {{2.0}};
   static final double[][] mHaveCash = {{0.2, 2.2}};
@@ -508,10 +512,10 @@ class EM {
    */
   int rende3 = 700;
 
-  void init() {
+  void aInit() {
     try {
       String dateString = MYDATEFORMAT.format(new Date());
-      String rOut = "New Game " + dateString + "\r\n";
+      String rOut = "New Game V" + StarTrader.versionText + " " + dateString + "\r\n";
       sw = new StringWriter();
       pw = new PrintWriter(sw);
       Econ.nowThread = Thread.currentThread().getName(); // goes into Static Econ
@@ -705,6 +709,21 @@ class EM {
   }
 
   static String eo = "none";
+  /** pause for a long time
+   * 
+   */
+  protected static void pauses(){
+    try {
+    for(int rep=0; rep < 2000;rep++){
+      Thread.sleep(1000);
+    }
+    } catch (Exception | Error ex) { // print and ignore this error
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      System.err.println("Ignore " + eo + " pauses() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
+    }
+  }
 
   /**
    * flush System.out and System.err ignoring any errors
@@ -773,10 +792,11 @@ class EM {
     new Throwable().printStackTrace(pw); // later
     secondStack = sw.toString();
     newError = true;
-    System.err.println("doMyError thread=" + Thread.currentThread().getName() + " " + aLine + addMore());
+    System.err.println(tError =("\n>>>>>>doMyError thread=" + Thread.currentThread().getName() + " " + aLine + addMore()));
     st.setFatalError(st.redish); // should do exit
     flushes();
-    System.exit(-11);
+    pauses();
+  //  System.exit(-11);
     //throw new MyErr(Econ.nowName + " " + Econ.nowThread + " " + aLine);
   }
 
@@ -1261,7 +1281,7 @@ class EM {
    * @return true if EM.fatalError, EM.newError or StarTrader.fatalError
    */
   static boolean dfe() {
-    return newError || fatalError || stopExe || StarTrader.fatalError;
+    return newError || fatalError || stopExe|| StarTrader.fatalError;
   }
 
   /**
@@ -3762,7 +3782,7 @@ onceAgain:
   private boolean unset = true;  // value in this rn nerver been set
   private boolean myUnset = false;
   private boolean myCumUnset = false;
-  private static long valid = 0; // number of cur in this rn valid 2 = 0,1 etc.
+  long valid = 0; // number of cur in this rn valid 2 = 0,1 etc.
   private long myAop = 0;
   private int myRn = 0;
   private String myDetail = "";
@@ -5434,9 +5454,9 @@ onceAgain:
    * @param v the value to be set
    * @return v
    */
-  double setStat(int rn, int pors, int clan, double v) {
+  double oldsetStat(int rn, int pors, int clan, double v) {
     int age = curEcon.age;
-    return setStat(rn, pors, clan, v, 1, age);
+    return oldsetStat(rn, pors, clan, v, 1, age);
   }
 
   /**
@@ -5449,9 +5469,9 @@ onceAgain:
    * @param cnt cnt of occurances usually 0 or 1
    * @return v
    */
-  double setStat(int rn, int pors, int clan, double v, int cnt) {
+  double oldsetStat(int rn, int pors, int clan, double v, int cnt) {
     int age = curEcon.age;
-    return setStat(rn, pors, clan, v, cnt, age);
+    return oldsetStat(rn, pors, clan, v, cnt, age);
   }
 
   /**
@@ -5469,7 +5489,7 @@ onceAgain:
   static volatile int ste = 0, lstk = 0, a = -5, b = -5, curm = 0;
 
   //synchronized 
-  double setStat(int rn, int pors, int clan, double v, int cnt, int age
+  double oldsetStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
       //long resLock[][][] = resI[rn];
@@ -5633,7 +5653,7 @@ onceAgain:
    * @return v
    */
   // int cntStatsPrints = 0;
-  double setMaxStat(int rn, int pors, int clan, double v, int cnt, int age
+  double oldsetMaxStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
       synchronized (syncRes) {
@@ -5792,7 +5812,7 @@ onceAgain:
    * @return v
    */
   // int cntStatsPrints = 0;
-  double setMinStat(int rn, int pors, int clan, double v, int cnt, int age
+  double oldsetMinStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
       synchronized (syncRes) {
@@ -5946,11 +5966,11 @@ onceAgain:
    * @param cnt greater than 0 if this set is to be counted
    * @return v
    */
-  double setStat(int rn, double v, int cnt) {
+  double oldsetStat(int rn, double v, int cnt) {
     int age = curEcon.age;
     int clan = curEcon.clan;
     int pors = curEcon.pors;
-    return setStat(rn, pors, clan, v, cnt, age);
+    return oldsetStat(rn, pors, clan, v, cnt, age);
   }
 
   static int putRowsPrint1Count = 0;

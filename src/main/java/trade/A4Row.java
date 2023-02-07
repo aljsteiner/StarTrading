@@ -34,6 +34,7 @@ import java.util.ArrayList;
  */
 public class A4Row {
 
+  static final int econLock[] = {0}; //same lock as A4Row definition
   Econ ec = EM.curEcon;
   private int[] ix;
   String titl = "unset";

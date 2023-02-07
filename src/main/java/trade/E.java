@@ -87,11 +87,11 @@ static StarTrader st;
   static final boolean distributable = false;  //set true before making a jar fine available to public
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugfalse = false;
-  static final boolean debugOutput = distributable; //distributable;
+  static final boolean debugOutput = true; //distributable;
   static final boolean outputLess = true;  // reduce the output chars in mf2
   //static final boolean debugOutput = true;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
-  static final boolean resetOut = distributable;  //change out, err to 
+  static final boolean resetOut = debugOutput;  //change out, err to 
   static final boolean debugDoYearOut = debugMaster; //output messages in doyear and subs
   static final boolean debugAssetsOut = debugMaster; //output messages Assets
   static final boolean debugEconOut = debugMaster; //output messages in Econ
@@ -1691,21 +1691,28 @@ static StarTrader st;
    * test of double NaN or Infinite skip testing if not debugDouble
    *
    * @param trouble value to be tested
+   * @param vs description of current situation
    * @return if debugDouble (if NaN 0, if Infinite 100.0) otherwise trouble
    */
   static double doubleTrouble(Double trouble, String vs) {
       Econ ec = EM.curEcon;
-      Assets as = ec.as;
-      if (trouble.isNaN()) {
+         if (trouble.isNaN()) {
         if (E.debugDouble) {
-          eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
+            Assets as = ec.as;
+            int asTerm = as.term; // force possible null ec
+            throw new MyErr("Not a number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
+        //  eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
         } else {
           return 0.0;
         }
       }
       if (trouble.isInfinite()) {
         if (E.debugDouble) {
-          eM.doMyErr(String.format("Infinite number found, %s term%d,i%d,j%d,m%d,n%d", vs, as.term, as.i, as.j, as.m, as.n));
+           Assets as = ec.as;
+           int asTerm = as.term; // force possible null ec
+            throw new MyErr("Infinite number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
+        //  eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
+          
         } else {
           return 100.0;
         }

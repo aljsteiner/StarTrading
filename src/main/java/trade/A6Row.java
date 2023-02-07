@@ -36,8 +36,8 @@ import java.util.ArrayList;
  */
 public class A6Row extends A6Rowa {
 
-  EM eM = EM.eM;
-  Econ ec = EM.curEcon;
+ // EM eM = EM.eM;
+  //Econ ec = EM.curEcon;
 
   // int blev = History.debuggingMinor11;
 //  int lev = History.debuggingMinor11;
@@ -58,6 +58,7 @@ public class A6Row extends A6Rowa {
    */
   public A6Row(Econ ec) {
     super(ec, 6, tbal, History.informationMajor8, "unset");
+    int ag = ec.age;// create null error if null ec
     eM = StarTrader.eM;
     lev = 9;
     balances = false;
