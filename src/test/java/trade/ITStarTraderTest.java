@@ -29,7 +29,6 @@ import static trade.StarTrader.itTesting;
 import static trade.StarTrader.main3;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -38,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * This is a class to test the program StarTrader in a number of ways
  * Only when the tests are ok may the github be updated
  */
-public class TestStarTraderTest {
+public class ITStarTraderTest {
   static protected E eE;
   static EM eM;
   static StarTrader st;
@@ -60,16 +59,24 @@ public class TestStarTraderTest {
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
     try {
-     System.err.println("starting out in test TestStarTraderTest main " + Thread.currentThread().getName());
+     System.err.println("starting out in test ITStarTraderTest main " + Thread.currentThread().getName());
       //     System.exit(-25);
-    mainStart(args);
+    StarTrader.mainStart(args);
    testing = true;
     itTesting = true;
     StarTrader.main3();
     
     assertEquals(false,fatalError);
-     if(st.fatalError) throw new MyErr("fatal error at new StarTrader");
+     if(StarTrader.fatalError) throw new MyErr("fatal error at new StarTrader");
      System.err.println(" passed first test, StarTrader started");
+     } catch (Error | Exception ex) {
+      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      EM.flushes();
+      System.err.println(EM.curEconName + " " + Thread.currentThread().getName() + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      ex.printStackTrace(System.err);
+      EM.flushes();
+      fatalError = true;
+      assertEquals(false,fatalError);
       /* Create and display the form */
        /* Create and display the form */
     // java.awt.EventQueue.invokeAndWait(() -> {
@@ -80,15 +87,15 @@ public class TestStarTraderTest {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
-  
+     assertEquals(false,fatalError);
     }
-    System.out.println("TestStarTraderTest finished " + (st.fatalError?" fatalError": " no Error"));
+    System.out.println("ITStarTraderTest finished " + (StarTrader.fatalError?" fatalError": " no Error"));
     
-    System.exit(-3);
+   // System.exit(-3);
     System.exit(0);
   } // main
   
-  public TestStarTraderTest(){
+  public ITStarTraderTest(){
      System.err.println("starting out in test test TestStarTraderTest main " + Thread.currentThread().getName());
     assertEquals(false,fatalError); //I think it goes to main()
     System.exit(-24);  

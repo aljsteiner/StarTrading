@@ -56,11 +56,11 @@ public class TestStarTrader {
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
     try {
-      System.err.println("starting out in test main " + Thread.currentThread().getName());
-    mainStart(args);
+      E.sysmsg("starting out in test main " + Thread.currentThread().getName());
+    StarTrader.mainStart(args);
     StarTrader.main3();
-     if(st.fatalError) throw new MyErr("fatal error at new StarTrader");
-     System.err.println(" passed first test, StarTrader started");
+     if(StarTrader.fatalError) throw new MyErr("fatal error at new TestStarTraderTest");
+     E.sysmsg(" passed first test,  started");
       /* Create and display the form */
        /* Create and display the form */
      java.awt.EventQueue.invokeAndWait(() -> {
@@ -81,21 +81,13 @@ public class TestStarTrader {
       System.err.println("passed second year run");
      //System.exit(0);
       System.err.println("oops passed exit");
-     } catch (InvocationTargetException ex) {
+     } catch (Error | Exception ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
-      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
+      System.err.println(EM.curEconName + " " + Thread.currentThread().getName() + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
       ex.printStackTrace(System.err);
       EM.flushes();
-      fatalError = true;
-    } catch (InterruptedException ex) {
-      java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-      EM.flushes();
-      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
-      ex.printStackTrace(System.err);
-      EM.flushes();
-      fatalError = true;
-
+      fatalError = true; 
     } finally {
       if (EM.bKeep != null) {
         EM.bKeep.close();
