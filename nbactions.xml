@@ -81,7 +81,7 @@
                 <exec.executable>java</exec.executable>
                 <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"test"</exec.appArgs>
-                <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.mainClass>trade.TestStarTraderTest</exec.mainClass>
               <vertx.timeout>9999</vertx.timeout> 
             </properties>
         </action>
@@ -154,7 +154,7 @@
                 <exec.executable>java</exec.executable>
                 <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"test"</exec.appArgs>
-                <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.mainClass>trade.ITStarTraderTest</exec.mainClass>
             </properties>
         </action>
         <action>

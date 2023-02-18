@@ -45,21 +45,16 @@ package trade;
 // import java.desktop/javax.swing.plaf.synth.SynthGraphicsUtils.paintText;
 import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.Error;
-import java.lang.Exception;
-import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
@@ -68,29 +63,9 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import static trade.EM.addlErr;
-import static trade.EM.isEmpty;
-import static trade.EM.prevLine;
-import static trade.EM.twh1;
-import static trade.EM.twh2;
-import static trade.EM.twh3;
-import static trade.EM.twh4;
-import static trade.EM.twh5;
-import static trade.EM.twh6;
-import static trade.EM.twh7;
-import static trade.EM.twh8;
-import static trade.EM.wasHere;
-import static trade.EM.wasHere2;
-import static trade.EM.wasHere3;
-import static trade.EM.wasHere4;
-import static trade.EM.wasHere5;
-import static trade.EM.wasHere6;
-import static trade.EM.wasHere7;
-import static trade.EM.wasHere8;
 
 /**
  * see if these imports stay here // import
@@ -233,146 +208,145 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
   static final public String versionText = "19.48";
   static final public String storyText
-          = "         StarTrader       Version " + versionText + "\n" +
-"“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Strategic trader mini economics”: is a mini strategic economics game emphasizing cooperation over competition.  Each planet or ship is an economy having assets of resources, staff and knowledge in 7 sectors.  Each year random factors change costs and growth.  Each financial sector suffers costs using up some resources and some staff, surplus resources and staff can be used for finding more resources and growing more staff.  \n" +
-"\n" +
-"Resource and staff costs increase in a sector as units of resource or staff increase, and as health gets poorer, costs decrease in a sector as knowledge increases making the sector more efficient.  Each year after annual costs, the financial sectors with some surplus assets can grow resources and staff, find new knowledge and convert some manuals into knowledge.  Staff with work attributes find new resources, grow new staff, and pay costs.  Staff with faculty attributes help staff move to a higher of 16 grades.  Staff with research attributes find new knowledge and convert manuals to knowledge.\n" +
-"\n" +
-"Trading allows a pair of ships and planets to trade goods from strong sectors to weak sectors that need assets to survive to the next year.  In each trade some manuals are traded, allowing knowledge to be moved between economies.  Generally older economies can trade more manuals to new economies than newer economies can trade to older economies.  The trade process consists of each economy generating an offer that is evaluated by the other economy.  Each economy calculates a strategic value for each bid, deciding how much surplus to trade for a need.  Unsatisfactory offers are rejected to be refined until it is accepted or the trade fails after too many rejections.  Ships try to predict how well a trade with a given planet will help choosing from the planets close enough for a trade.  The cost of travel is included in each accepted or rejected trade.\n" +
-"\n" +
-"Each economy has 2 weak financial sectors and 2 strong financial sectors.  After possible trades, an economy may swap resources and staff to ensure that each financial sector has  enough resources and staff to survive to the next year.  Economies without enough resources or staff in any financial sector cannot survive to the next year, that planet or ship dies.\n" +
-"\n" +
-"This is a strategy game for one to five players. The game-master sets the nature of the game as well as how the winner is picked.  The clan-masters set the economic policies for the ships and the planets in their clan.  \n" +
-"\n" +
-"Clan-masters can set the favor their clan has for another clan. The higher the favor the more discount will be given the other clan in trade, and the more likely the trade will succeed.\n" +
-"\n" +
-"See the instructions about downloading and running this game at the end of this README.\n" +
-"\n" +
-"Stats or statistics, are reports on the life of each clan.  There are 21 different pages of statistics.  The first 3 pages are the probably the most useful.  After looking at statistics the players can change some settings to try to better their chance of winning.\n" +
-"\n" +
-"There are 5 clans each including both planets and ships.  Clan-masters manage the robots that run the 5 clans by changing settings for their clan.  Clan-masters change the base settings before they are changed by the game's random multipliers.  Each year each economy experiences different random changes to their effective settings. The clans are  named the colors: red, orange, yellow, green, blue.  Eventually one clan with  the highest score is declared the winner and the stats(statistics) background is set to the color of the winning clan.  You may continue to play after a winner is selected and the winner may change after the next round of years.  Also the game-master may change the settings changing which stats do the most to select the winner. \n" +
-"\n" +
-"A winner is declared only after enough years have passed and one  clan has a score sufficiently higher than all the other clans.  Clan-masters can look in the stats tab clicking on the page numbers for different pages to try to see how to raise their score.  Their score is based on the sum of multiple scores for their clan’s ships and planets.  Clicking on the title of a row in a page gives a more detailed description of the meaning of the numbers in this row.  In a “sum” row the values for ships and planets are summed together in the ship columns, otherwise there are different sums for planets and for ships.\n" +
-"\n" +
-"The game-master has seven score settings that influence the scoring, and may change the winner.  You can change your settings and continue the game even if it has picked a winner.  After more years there could be a different winner. The game master should then communicate the changes of settings to the clan-masters so they can change their clan settings to try to improve their score based on the changed master settings.\n" +
-"\n" +
-"Clan-masters can go to the settings tab and click on the link of the color of their clan, then they click on up or down or one of the ten settings being displayed for their clan.  They change their clan’s settings to try to raise their score during the next round of years, and/or try to increase the number of their planets and ships that survive.  After all clan-masters are finished, the game-master starts another round of 1, 5, 10, or 20 years.  \n" +
-"\n" +
-"The default settings selects the clan that gave the most help in trading the last year of the round.  Of course the clan-master must balance growth and help for each year.  The robots run the game for those years without any possible changes by the game-manager or the clan-manager.\n" +
-"\n" +
-"This game is being developed on a Windows laptop with a screen about 1920 pixels wide and 1080 pixels deep.  It will run on smaller screens, but that may move parts of the scenes in funny ways.  Since it is written in Java, it can be run on systems other than windows with large enough screens and a java JRE (Java Runtime Environment) which allows the file ending with .jar to run on this host operating system.  \n" +
-"\n" +
-"The most important settings instructions are placed early in the settings.  Additional explanations of settings are later in this README.  Because this is a strategy game, it is useful to understand the guts of the game so that clan-masters can understand the possible changes to the strategy of their clan to try to win under the priorities set by the game-master.  Of course there are always some unintended results for any change to settings.\n" +
-"\n" +
-"The “keep” function, described in more detail later, enables you to keep changes, comments and sample results for later games, so that clan-masters can develop plans and strategies for exploring finances and have them preset into their next games.  One person can run several or all clans, trying different strategies for the different clans.\n" +
-"\n" +
-"You can notice that planets and ships are dying and if too many die the game will create more economies.  These deaths affect your clan’s scoring.  On the first page of settings, the game-master can change the difficulty which increases or decreases the number of economy deaths each year.  If there are more economies the years take longer.  \n" +
-"\n" +
-"The following explanation of how the game works, and the tables of numbers, stats, can help you understand what is happening to each clan.  You can change the clan settings to try to better your score, but as in any economics, sometimes the changes help, sometimes they don’t, and it is even harder to be sure which change helped if you change multiple settings at the same time.  Changed settings remain changed for the rest of the game, and you can use “keep” to keep settings for following games.  Have fun!!\n" +
-"\n" +
-"Each year some planets or ships die because they have insufficient infrastructure (short on food, or short on buildings to survive the “winter”, etc.).  If they have good health the planets will also grow with added resources and added staff.   Ships trade “goods” from planets with a surplus of certain goods to keep for the next year to trade with another planet with insufficient amounts of those goods, enabling that planet to survive; unfortunately, the ship may decide incorrectly about whether the next planet picked by the ship needs those traded goods.  Ships do not mine or grow resources and staff; to survive they must get all staff and resources from planets by trading.  And each year they need to add size to keep up with the growing size of the planet trading partners.  Ships and planets may sometimes survive one or two years without a successful trade. There are some statistics which show how planets and ships without trades grow and survive.\n" +
-"\n" +
-"The planets and ships are economies with mostly similar rules and some very different priority settings. Each economy has 2 stressed financial sectors, 2 very successful financial sectors, and 3 other ok financial sectors. Of course each unit represents a large amount of the item.  \n" +
-"\n" +
-"Each economy has assets resources: working SubAsset Resource and reserved SubAsset Cargo, assets staff: working SubAsset.Staff and reserved SubAsset Guests, in addition each financial sector has knowledge: commonKnowledges (everyone may have it), newKnowledge (found by staff in the researchEquivalent), manuals (about parts of common knowledge).\n" +
-"\n" +
-"Each year ships select a relatively close planet to trade excess resources and staff for needed resources and staff.  At the end of each year all of the costs are calculated.  Costs from each financial sector are subtracted from the balance of each sector.    Costs are increased by poor health .  Health is poor if there is a limited amount of assets available at one or more financial sectors. Each year there are required infrastructure growth and maintenance costs necessary to survive the year but do not decrease the resources and staff. Then the yearly costs for maintenance and travel are calculated and subtracted.  Any remaining assets can be used for sector growth.  \n" +
-"\n" +
-"New staff are added during growth to the lowest staff grade while many of the staff move up one or more grades, and new knowledge is discovered by the research equivalent staff.  Engineer equivalent staff perform the work that is needed to increase resources.  Faculty equivalent staff are needed for staff to advance grades.  Researcher equivalent staff discover new knowledge which makes years more efficient, decreasing the percentage costs of maintenance, travel and growth.\n" +
-"\n" +
-"After a set of years are finished, the display switches to the “stats” tab.  Each row has 11 columns, a longer column with a short title of the line, than either 5 or 10 values.  If you click on the title, a longer description of the column will appear in the opening above the table columns.  If only the right 5 columns are numbers, each number represents the sum of the ship and planet values for that clan.  If the numbers are too large to fit in the column, they are reduced by some number of tens, and the title will say how many zeros to add before the decimal point.  If the title ends in “thisYr”, the values are for the current year.  If the title ends in “cur/1” the values are for the current year, “cur/2” is for the previous year.  If the title ends in “cum”, this is a cumulative value, the sum of all the years.  If the year value has a “U” appended, then the numbers are the number of times the value was saved in this year or since starting the game with “cum”.  If the title year value has “ave” appended then values are the average, the values divided by the number of times added.  If % is appended to the title with “ave” or just the title, it means the numbers are a percent.  If neither “ave” or “U” is appended, the number is the sum of saved values for the year.  If you put a reason in box to the right of the remember button, then click the remember button, that row, the description and the reason will be added to the “keep” file.\n" +
-"\n" +
-"There are 21 buttons with numbers. If you hover over a number a popup will list the description of the results for the number.  Click the number to fill the result table with results for that description.  Some of the pages have results grouped for different ages so you can see if values change as planets and ships age.\n" +
-"\n" +
-"There are instructions at the end of this document to describe how to get the files you need to run this game and even how you can use a program called “apache-netbeans” to edit source files and change the guts of the game yourself and build new versions of the game to run.\n" +
-"\n" +
-"The game-master changes overall game settings, setting rules for all ships and planets, thus the game-master can set up many different games of economic strategy.   The game-master sets the difficulty of the game, and the amount of random increases or decreases to the priorities,  costs, growth, etc. There are five clans each with a clan-master.  One or more players can divide up the roles of game-master and clan-masters.  Clans without a clan-master run with the preset settings for that clan.  The clan-masters can alter any of the settings and leave unchanged the rest of the clan settings for the robots which calculate the moves for each clan planet and ship.\n" +
-"\n" +
-"You need to download the StarTrader19.40.jar file to a folder such as myGame where you can run it following the instructions near the end of this README.  Your virus protection will possibly say that this is a bad file, or a potentially bad file, or some similar warning.  You need to keep assuring it several times that you trust the file and wish to download and run the file.  The first tab labeled “story” is a copy of this README, click the next tab “Settings” to manage the settings.\n" +
-"\n" +
-"The instructions about the functioning of the game are long and complicated because all of the action is done by robots.  To instruct the robots, you need to understand their activity and the kind of decisions they are making.  Clan-masters change the values about how robots make choices, but neither the game-master or the clan-masters change rules, they only change the values about how decisions are made by the robots.\n" +
-"\n" +
-"Directly under the “story” tab is a button called “master”, this is the tab for the game-master, and the settings shown under it are the settings for the game as a whole.  After each setting name there are one or two sliders for “planets” then “ships.”   If there is only one slider, this setting applies for both planets and ships.  As you run your mouse pointer over each name, the description in the green window below the sliders describes that setting.  The down button takes you to the next group of settings.\n" +
-"\n" +
-"Beside the gray master button are 5 colored tabs named “red”, “orange”, “yellow”, “green”, “blue” for the five clans.  Click one of those tabs, such as “orange”.  The area around the settings turns orange, the settings change to those for the “orange” clan, any changes apply only to the orange clan.\n" +
-"\n" +
-"If settings for one or more of the clans are unchanged, the game will run with the existing settings.  After finishing changes for the game and all clans, the game master can click either the “1 yr” or “5 yr” button to run the game for 1 or 5 years.  Sometimes you need to click again in the middle of the button to get it to take effect.\n" +
-"\n" +
-"While running the game will change to the “display” tab and show some lines that change as the game runs year by year.  The color of the screen becomes the color of that clan of the current ship or planet unless the “haveColors” setting is set to less than 50.  Elapsed time is shown in milliseconds since the start of the game, start of the year, or the start of using an econ.  Each econ name starts with a “P” if a planet or with “S” if a ship,  the letters are followed by 4 digits.  The digits are the number of the created econ.  The word or words at the top left are the name of the year’s state.  A series of lines display the counts of interesting facts about the game for as the game progresses through the years.  Facts such as the number or creations, the number of trades, the number of deaths, the number of current ships and current planets.  The screen is updated around 60 times a second, a single planet or ship econ may be current for up to several seconds.\n" +
-"\n" +
-"The first state is the “future fund create”, planets or ships (economies) are created from funds put in the future fund each year by each clan economy.  Only planets are created until there are enough planets by a game rule and two clan rules, then a clan ship can be created.  By default, clan planets can only trade with as many ships as they allow clan ships.  Putting resources into ships limits the growth in worth of the clan, but it provides the infrastructure to protect planets. \n" +
-"\n" +
-"The next state is “game create”: each year the game creates enough economies to bring the number of planets and ships up to the minimum for the year.  The default number of economies grows for the first six years, then it drops to a low number, new planets or ships will be created by the game in any year where the number of economies falls below the default number..\n" +
-"\n" +
-"The next very quick state is “year start”, ships and planets are readied  for another year.  The state will not usually appear in the display.  This is when catastrophes occur.  They destroy much of the staff of a sector and resources of a sector, but this is also where econs find new resources to replace resources that have been mined.  Every year’s mined resources depreciates the amount of resources that can be mined the next year until no more resources can be mined.  Catastrophes help planets find additional resources, and help ships to develop new knowledge.\n" +
-"\n" +
-"Since ships carry relatively large units of resources compared to planets, assume the ships are of a size like the moon, and perhaps they travel faster than light by jumping between high stress points below the surface of stars.  Ships require large staff to operate, expand and repair the ships because of the stress of the way they travel.\n" +
-"\n" +
-"The next state is “search”.  A limited number of planets that are close enough to the ship are chosen.  Planets that have already traded are eliminated unless there is a surplus of ships for planets of this clan.  Each planet and ship keeps a trade history; these histories are updated at each trade so that the planets can be selected by their search history.  The assumption is that ships cannot have real time access to the current trade possibilities of any of the trading candidates.\n" +
-"\n" +
-"The next state is a trade.  These are “potlatch” trades since the ship and planet do not have a common currency.  They need to evaluate each of their financial sectors of resources and staff to determine what they need the most, or what sectors have the highest strategic value, and which have the lowest strategic value.  Each partner tries to trade low strategic value goods for high strategic value goods.   Of course the trading partner may need some of your high value goods, not some of your low value goods, so at each turn the offers are changed to satisfy your own needs with goods you hope the partner will accept.  Each partner gets up to nine turns; a partner may reject a trade if the offers are too unsatisfactory by changing the turn number to -1.  A trade is accepted if both partners can accept an offer without trying to change the offer, the turn number is set to zero, the goods (cargo and guests) in the offer are actually moved between economies, then the trade is recorded as accepted.  Trades can also be “rejected” by one partner, and is then “lost” by the other partner.  If there are more ships than planets, multiple ships can attempt to trade with a given planet.  Multiple ships on a planet can also attempt to trade with each other.  \n" +
-"\n" +
-"Planets and ships start trading with a profit goal.  The profit goals for a clan's ships and planets can be changed by the clan-master.  These goals are later changed by the “favor” of the trading partner, and the history of trades, rejects and lost trades experienced by the clan.\n" +
-"\n" +
-"After all the ships had an opportunity to trade, the next state is “endYear”.  Since endYear’s do not involve any other economy, multiple endYears can run at once.  Initially multiple cpus can run multiple threads to do endYears.  The number of threads can be changed in the settings. \n" +
-"\n" +
-"During the endYear resources and staff may be swapped between working and reserved, reserved cost less, but do not provide any work.  In addition resources and staff may be repurposed, that is they are moved to a different financial sector.  This is a very costly operation that is only used if trading does not supply some of the critically needed resources or staff.  After each swap, a test is done to see if it generated an overall benefit, if not the swap may be redone several times.  During the swaps, emergency actions may donate to the “future funds” some resources or staff from high cost sectors which have too many units in relation to the other sectors.  This reduces the costs for the sectors with few units.\n" +
-"\n" +
-"Each financial sector incurs costs from each of the other sectors.  If at the end of the swaps, one or more of the sectors cannot pay the yearly costs or has insufficient infrastructure to survive the whole year then the economy of a ship or planet dies.  All of its staff and resources are lost.  Otherwise at the end of the year, when enough resources and staff are available, growth is applied to resources, staff and knowledge.  \n" +
-"\n" +
-"As knowledge increases, years become more efficient and costs decrease.  Each year the research equivalent set of staff find new knowledge, they also convert manuals received in trades into more common knowledge.  After a year, new knowledge becomes common knowledge.\n" +
-"\n" +
-"After each run a large set of statistics is available to be viewed about the planets and ships,  At some later time another ship or planet will be established at the same location. By default, between 10% to 20% of planet and ships die each year.\n" +
-"\n" +
-"At the end of the years the window should change to the “stats” tab.  There are 21 buttons for 21 different views of the statistics about what happened with the clan finances.  There are also buttons to run the game for 1 or 5 or 10 or 20 years.  When they are clicked the screen goes back to the display tab.\n" +
-"\n" +
-"After you have become familiar with the game by running it several times you can “keep” some of the settings you change, so that they will be automatically set to the kept value in the following games.  You can also write comments to indicate why you made the changes.  You keep settings by clicking the “keep” button, then any changes you have made on the current settings page will be kept when you leave that page.  These kept values are in a file called “keep”.  You can find the “keep” file in the same folder into which you copied the java .jar or .exe file.  You can also use the “remember” button on the statistics pages to remember a line whose title you click.  \n" +
-"Runs can be 1 year, 5 years, 10 or 20 years.  Initial difficulty settings make it so that between 7% to 20% of the economies die each year.  Statistics after each run help show the problems the ship and planets failed and may give some ideas about changing clan priorities to increase planet and ship survival. \n" +
-"\n" +
-"If too many or not enough economies fail each year, the game master can change a game difficulty setting to alter results. After viewing their statistics each clan-master can change a few settings, then the game-master starts another run.  It is a good strategy to only change a few settings at each new game, keep the settings and a comment about why you changed the setting, you may also want to “remember” some results that suggested the change in settings.\n" +
-"\n" +
-"The game-master changes settings about how all planets and ships survive and grow.  Also the game-master can adjust how the winning score is calculated and when the score is good enough to win the game.  “Save the planets”  increases the score of a clan based on the number of planets and ships that the clan's barters have helped, and how much the barters helped.  The game-master can change settings so that  “Highest worth wins”, or “most planets wins” or many other games.  You can play the game for as many runs as you choose. \n" +
-"\n" +
-"At the start of the year each economy projects what its resources will be at the end of the year. Each resource and staff sector is given a strategic value  related to how much more is needed for a good year.  In addition, if a planet or ship might not survive the year with the current resources and staff, an SOS flag is set.  Each year each ship tries to find a planet for a good trade in a way that both of them will be more able to survive and have good growth.  The game-master can adjust how much the ship knows about planets. Ships may know nothing and just make a random choice.  Ships may be able to use a history that is updated every time they trade with a planet,  Ships may be able to get direct knowledge about what planets have to make the best trade, combined with the cost of travel to that planet.\n" +
-"\n" +
-"Clan-masters choose a friendship level with each of the other clans.  The higher the friendship, the better trade will be given the ship and planet.  Ships can trade with each other, if more than one ship is trading at a given planet.  \n" +
-"\n" +
-"Each year there are costs for simply living: “maintenance”, communicating and moving between parts of the economy or between planets: “travel”, and hopefully increasing resources, staff and knowledge: “growth”. When a planet or ship has enough to survive the year,  the additional resources determine the health of the planet or ship.  Planets and ships with poor health are less efficient in doing the required work for that year.  This means that life and growth take more resources and staff and accomplishes less.  The work becomes more efficient for each sector each year as the knowledge for that sector increases.  \n" +
-"\n" +
-"When there are more resources and/or staff than needed for maintenance and travel, those resources and work can be applied to growth in that sector.  Each of the required  or infrastructure Maintenance and required or infrastructure Growth require a combination of resources and staff, just as growth requires a combination of resources and staff.  Every year each financial sector will only be able to do the amount of work enabled by the required combination of resources and staff, there will be some resources or staff for each sector which cannot be used.\n" +
-"\n" +
-"The resources and staff subAssets for each sector are working resources and staff.   Cargo and guest subAssets are the reserved resources and staff, they do no work and their yearly costs are reduced, they are available to convert to working assets or to be traded.\n" +
-"\n" +
-"Each year during the Cash Flow activity, the potential costs for each financial sector are calculated.  Any sectors with insufficient prospective resources or work to meet the required costs, must move any available reserves to working status.  If that is not enough assets from other sectors may be repurposed.  Of course the cost of such repurposing is quite high, taking well over 10 times the resulting increase in assets for the needy sector.\n" +
-"\n" +
-"The game-master sets a number of priorities and values over the game for all the clans.  The game-master adjusts the difficulty of the game and other options that significantly change the nature of challenges in the game.  A normal goal is to have no more than 10% of ships and 10% of planets die in a single year of the game.  Catastrophes can occur at the year start before it is time to trade.  A catastrophe can destroy a large fraction of the resources for one or two financial sectors, and the staff for a financial sector, but they also discover additional resources for one or more sectors.  These additional resources replace the decay of resources as they are mined\n" +
-"\n" +
-"The game-master chooses which results are most important for deciding the winner in the game.  The winner may be the clan that gave the most help to clans, or that helped the most planets or the most planets and ships, or had the highest worth, or had the most planets, etc.  The winner may change after each run of one or more years.  \n" +
-"\n" +
-"After players have set clan priorities and other levels, the game-master can run the game for 1,5,10, or 20 years.  When the years are finished, results are available, there are 20 different pages showing different results and showing some of the same results in different ways.  Pages 0,1,2 list the most important results.  Any page with the score at the top will be set to the background color of the clan with the highest score, the winner when the score gets good enough to win.\n" +
-"\n" +
-"Each planet and ship have seven financial sectors.  Each sector has resources, cargo(resource but in reserve not working), staff, guests(staff but in reserve not working), and knowledge of 3 kinds (common knowledge, new knowledge, and manuals(researchers work to get new knowledge or common knowledge from manuals), but trades can only trade manuals from ships).\n" +
-"\n" +
-"The game is available in a folder at: \n" +
-"https://drive.google.com/drive/folders/1P-hw8Wk9BcwEdHSS8CdAbDDjtjyEQTF_?usp=sharing.  The folder contains a pdf of this README and the file  StarTrader1946.exe and does not require your installation of Java.\n" +
-"\n" +
-"You need to download the StarTrader1946.exe file to a place such as Desktop.myGame where you can run it following the instructions near the end of this README. First make a new folder in the Desktop folder, with the name myGame.  You must download to a folder that is not part of a streaming memory such as GoogleDrive, the jar file gets stuck trying to run on a streaming memory.  Double click on the StarTrader1946.exe file in myGame to run the game.  Check for new subversions of the game at least once a month.  Each copy of  the newly downloaded file has a version.subversion added to the name.  Delete unwanted files by right clicking the file and choosing the delete option. StarTrader is set up to run on a Windows 10 machine with at least an 11 or 12 inch screen.  It will probably run on other desktop or laptops, if they will also have a current Java.  Instructions for running the game are given much earlier in the README.\n" +
-"\n" +
-"Ignore the following instructions unless you want to try to change the guts of the game.\n" +
-"The source of the game is in the folder you downloaded, go to src.java.trade. (all the source files)\n" +
-"I use Apache Netbeans, the latest version, and the latest java 1.8 19 version of openJDK.  Here are many of the settings you will need  in Apache NetBeans currently version 12.4.  You must be logged in as a windows administrator to have the windows permissions to install NetBeans.  \n" +
-"\n" +
-"Once you have installed NetBeans and downloaded the source files:\n" +
-"1.Left Click the NetBeans Tools menu and select Java Platforms, click \"Add Platform...\" browse to C:\\Program Files\\Java and choose the latest installed jdk1.8.0_xxx \n" +
-"2.Open NetBeans IDE and create a new ant project with the existing source\n" +
-"3.Create a source folder such as C:\\Users\\Public\\netbeans\\Trader19.xx\n" +
-"4.Right click the project name, at versioning create a git repository in Trader19.xx\n" +
-"5.Right click the project name, at git select pull and fill out the form as requested\n" +
-"6.Right click the project name, select properties, select formatting, select project specific options, choose all languages, choose Tabs And Indents, Enable Indentation, Expand Tabs to Spaces, Number of Spaces per indent=2, tab Size = 2, Right Margin=80,Line Wrap After words\n" +
-"7.Download the latest Java openJDK after signing the license, install it into the Java folder under C:\\Program Files or leave it in download files\n" +
-"8.Right click the project name, select properties, and under “Source Packages” select the package “trade” to get a list of the Java Classes.  The StarTrader.java source contains the ‘main’ method with the user interface logic.  Classes E.java and EM.java contain lots of data tables needed for the user interface, E.java contains most of the fixed data, EM.java contains data that can change from the user settings changes and the statistics of the current run of the game, EM.java also contains methods for processing settings and statistics. "
-           
-          + "";
+          = "         StarTrader       Version " + versionText + "\n"
+            + "“Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Strategic trader mini economics”: is a mini strategic economics game emphasizing cooperation over competition.  Each planet or ship is an economy having assets of resources, staff and knowledge in 7 sectors.  Each year random factors change costs and growth.  Each financial sector suffers costs using up some resources and some staff, surplus resources and staff can be used for finding more resources and growing more staff.  \n"
+            + "\n"
+            + "Resource and staff costs increase in a sector as units of resource or staff increase, and as health gets poorer, costs decrease in a sector as knowledge increases making the sector more efficient.  Each year after annual costs, the financial sectors with some surplus assets can grow resources and staff, find new knowledge and convert some manuals into knowledge.  Staff with work attributes find new resources, grow new staff, and pay costs.  Staff with faculty attributes help staff move to a higher of 16 grades.  Staff with research attributes find new knowledge and convert manuals to knowledge.\n"
+            + "\n"
+            + "Trading allows a pair of ships and planets to trade goods from strong sectors to weak sectors that need assets to survive to the next year.  In each trade some manuals are traded, allowing knowledge to be moved between economies.  Generally older economies can trade more manuals to new economies than newer economies can trade to older economies.  The trade process consists of each economy generating an offer that is evaluated by the other economy.  Each economy calculates a strategic value for each bid, deciding how much surplus to trade for a need.  Unsatisfactory offers are rejected to be refined until it is accepted or the trade fails after too many rejections.  Ships try to predict how well a trade with a given planet will help choosing from the planets close enough for a trade.  The cost of travel is included in each accepted or rejected trade.\n"
+            + "\n"
+            + "Each economy has 2 weak financial sectors and 2 strong financial sectors.  After possible trades, an economy may swap resources and staff to ensure that each financial sector has  enough resources and staff to survive to the next year.  Economies without enough resources or staff in any financial sector cannot survive to the next year, that planet or ship dies.\n"
+            + "\n"
+            + "This is a strategy game for one to five players. The game-master sets the nature of the game as well as how the winner is picked.  The clan-masters set the economic policies for the ships and the planets in their clan.  \n"
+            + "\n"
+            + "Clan-masters can set the favor their clan has for another clan. The higher the favor the more discount will be given the other clan in trade, and the more likely the trade will succeed.\n"
+            + "\n"
+            + "See the instructions about downloading and running this game at the end of this README.\n"
+            + "\n"
+            + "Stats or statistics, are reports on the life of each clan.  There are 21 different pages of statistics.  The first 3 pages are the probably the most useful.  After looking at statistics the players can change some settings to try to better their chance of winning.\n"
+            + "\n"
+            + "There are 5 clans each including both planets and ships.  Clan-masters manage the robots that run the 5 clans by changing settings for their clan.  Clan-masters change the base settings before they are changed by the game's random multipliers.  Each year each economy experiences different random changes to their effective settings. The clans are  named the colors: red, orange, yellow, green, blue.  Eventually one clan with  the highest score is declared the winner and the stats(statistics) background is set to the color of the winning clan.  You may continue to play after a winner is selected and the winner may change after the next round of years.  Also the game-master may change the settings changing which stats do the most to select the winner. \n"
+            + "\n"
+            + "A winner is declared only after enough years have passed and one  clan has a score sufficiently higher than all the other clans.  Clan-masters can look in the stats tab clicking on the page numbers for different pages to try to see how to raise their score.  Their score is based on the sum of multiple scores for their clan’s ships and planets.  Clicking on the title of a row in a page gives a more detailed description of the meaning of the numbers in this row.  In a “sum” row the values for ships and planets are summed together in the ship columns, otherwise there are different sums for planets and for ships.\n"
+            + "\n"
+            + "The game-master has seven score settings that influence the scoring, and may change the winner.  You can change your settings and continue the game even if it has picked a winner.  After more years there could be a different winner. The game master should then communicate the changes of settings to the clan-masters so they can change their clan settings to try to improve their score based on the changed master settings.\n"
+            + "\n"
+            + "Clan-masters can go to the settings tab and click on the link of the color of their clan, then they click on up or down or one of the ten settings being displayed for their clan.  They change their clan’s settings to try to raise their score during the next round of years, and/or try to increase the number of their planets and ships that survive.  After all clan-masters are finished, the game-master starts another round of 1, 5, 10, or 20 years.  \n"
+            + "\n"
+            + "The default settings selects the clan that gave the most help in trading the last year of the round.  Of course the clan-master must balance growth and help for each year.  The robots run the game for those years without any possible changes by the game-manager or the clan-manager.\n"
+            + "\n"
+            + "This game is being developed on a Windows laptop with a screen about 1920 pixels wide and 1080 pixels deep.  It will run on smaller screens, but that may move parts of the scenes in funny ways.  Since it is written in Java, it can be run on systems other than windows with large enough screens and a java JRE (Java Runtime Environment) which allows the file ending with .jar to run on this host operating system.  \n"
+            + "\n"
+            + "The most important settings instructions are placed early in the settings.  Additional explanations of settings are later in this README.  Because this is a strategy game, it is useful to understand the guts of the game so that clan-masters can understand the possible changes to the strategy of their clan to try to win under the priorities set by the game-master.  Of course there are always some unintended results for any change to settings.\n"
+            + "\n"
+            + "The “keep” function, described in more detail later, enables you to keep changes, comments and sample results for later games, so that clan-masters can develop plans and strategies for exploring finances and have them preset into their next games.  One person can run several or all clans, trying different strategies for the different clans.\n"
+            + "\n"
+            + "You can notice that planets and ships are dying and if too many die the game will create more economies.  These deaths affect your clan’s scoring.  On the first page of settings, the game-master can change the difficulty which increases or decreases the number of economy deaths each year.  If there are more economies the years take longer.  \n"
+            + "\n"
+            + "The following explanation of how the game works, and the tables of numbers, stats, can help you understand what is happening to each clan.  You can change the clan settings to try to better your score, but as in any economics, sometimes the changes help, sometimes they don’t, and it is even harder to be sure which change helped if you change multiple settings at the same time.  Changed settings remain changed for the rest of the game, and you can use “keep” to keep settings for following games.  Have fun!!\n"
+            + "\n"
+            + "Each year some planets or ships die because they have insufficient infrastructure (short on food, or short on buildings to survive the “winter”, etc.).  If they have good health the planets will also grow with added resources and added staff.   Ships trade “goods” from planets with a surplus of certain goods to keep for the next year to trade with another planet with insufficient amounts of those goods, enabling that planet to survive; unfortunately, the ship may decide incorrectly about whether the next planet picked by the ship needs those traded goods.  Ships do not mine or grow resources and staff; to survive they must get all staff and resources from planets by trading.  And each year they need to add size to keep up with the growing size of the planet trading partners.  Ships and planets may sometimes survive one or two years without a successful trade. There are some statistics which show how planets and ships without trades grow and survive.\n"
+            + "\n"
+            + "The planets and ships are economies with mostly similar rules and some very different priority settings. Each economy has 2 stressed financial sectors, 2 very successful financial sectors, and 3 other ok financial sectors. Of course each unit represents a large amount of the item.  \n"
+            + "\n"
+            + "Each economy has assets resources: working SubAsset Resource and reserved SubAsset Cargo, assets staff: working SubAsset.Staff and reserved SubAsset Guests, in addition each financial sector has knowledge: commonKnowledges (everyone may have it), newKnowledge (found by staff in the researchEquivalent), manuals (about parts of common knowledge).\n"
+            + "\n"
+            + "Each year ships select a relatively close planet to trade excess resources and staff for needed resources and staff.  At the end of each year all of the costs are calculated.  Costs from each financial sector are subtracted from the balance of each sector.    Costs are increased by poor health .  Health is poor if there is a limited amount of assets available at one or more financial sectors. Each year there are required infrastructure growth and maintenance costs necessary to survive the year but do not decrease the resources and staff. Then the yearly costs for maintenance and travel are calculated and subtracted.  Any remaining assets can be used for sector growth.  \n"
+            + "\n"
+            + "New staff are added during growth to the lowest staff grade while many of the staff move up one or more grades, and new knowledge is discovered by the research equivalent staff.  Engineer equivalent staff perform the work that is needed to increase resources.  Faculty equivalent staff are needed for staff to advance grades.  Researcher equivalent staff discover new knowledge which makes years more efficient, decreasing the percentage costs of maintenance, travel and growth.\n"
+            + "\n"
+            + "After a set of years are finished, the display switches to the “stats” tab.  Each row has 11 columns, a longer column with a short title of the line, than either 5 or 10 values.  If you click on the title, a longer description of the column will appear in the opening above the table columns.  If only the right 5 columns are numbers, each number represents the sum of the ship and planet values for that clan.  If the numbers are too large to fit in the column, they are reduced by some number of tens, and the title will say how many zeros to add before the decimal point.  If the title ends in “thisYr”, the values are for the current year.  If the title ends in “cur/1” the values are for the current year, “cur/2” is for the previous year.  If the title ends in “cum”, this is a cumulative value, the sum of all the years.  If the year value has a “U” appended, then the numbers are the number of times the value was saved in this year or since starting the game with “cum”.  If the title year value has “ave” appended then values are the average, the values divided by the number of times added.  If % is appended to the title with “ave” or just the title, it means the numbers are a percent.  If neither “ave” or “U” is appended, the number is the sum of saved values for the year.  If you put a reason in box to the right of the remember button, then click the remember button, that row, the description and the reason will be added to the “keep” file.\n"
+            + "\n"
+            + "There are 21 buttons with numbers. If you hover over a number a popup will list the description of the results for the number.  Click the number to fill the result table with results for that description.  Some of the pages have results grouped for different ages so you can see if values change as planets and ships age.\n"
+            + "\n"
+            + "There are instructions at the end of this document to describe how to get the files you need to run this game and even how you can use a program called “apache-netbeans” to edit source files and change the guts of the game yourself and build new versions of the game to run.\n"
+            + "\n"
+            + "The game-master changes overall game settings, setting rules for all ships and planets, thus the game-master can set up many different games of economic strategy.   The game-master sets the difficulty of the game, and the amount of random increases or decreases to the priorities,  costs, growth, etc. There are five clans each with a clan-master.  One or more players can divide up the roles of game-master and clan-masters.  Clans without a clan-master run with the preset settings for that clan.  The clan-masters can alter any of the settings and leave unchanged the rest of the clan settings for the robots which calculate the moves for each clan planet and ship.\n"
+            + "\n"
+            + "You need to download the StarTrader19.40.jar file to a folder such as myGame where you can run it following the instructions near the end of this README.  Your virus protection will possibly say that this is a bad file, or a potentially bad file, or some similar warning.  You need to keep assuring it several times that you trust the file and wish to download and run the file.  The first tab labeled “story” is a copy of this README, click the next tab “Settings” to manage the settings.\n"
+            + "\n"
+            + "The instructions about the functioning of the game are long and complicated because all of the action is done by robots.  To instruct the robots, you need to understand their activity and the kind of decisions they are making.  Clan-masters change the values about how robots make choices, but neither the game-master or the clan-masters change rules, they only change the values about how decisions are made by the robots.\n"
+            + "\n"
+            + "Directly under the “story” tab is a button called “master”, this is the tab for the game-master, and the settings shown under it are the settings for the game as a whole.  After each setting name there are one or two sliders for “planets” then “ships.”   If there is only one slider, this setting applies for both planets and ships.  As you run your mouse pointer over each name, the description in the green window below the sliders describes that setting.  The down button takes you to the next group of settings.\n"
+            + "\n"
+            + "Beside the gray master button are 5 colored tabs named “red”, “orange”, “yellow”, “green”, “blue” for the five clans.  Click one of those tabs, such as “orange”.  The area around the settings turns orange, the settings change to those for the “orange” clan, any changes apply only to the orange clan.\n"
+            + "\n"
+            + "If settings for one or more of the clans are unchanged, the game will run with the existing settings.  After finishing changes for the game and all clans, the game master can click either the “1 yr” or “5 yr” button to run the game for 1 or 5 years.  Sometimes you need to click again in the middle of the button to get it to take effect.\n"
+            + "\n"
+            + "While running the game will change to the “display” tab and show some lines that change as the game runs year by year.  The color of the screen becomes the color of that clan of the current ship or planet unless the “haveColors” setting is set to less than 50.  Elapsed time is shown in milliseconds since the start of the game, start of the year, or the start of using an econ.  Each econ name starts with a “P” if a planet or with “S” if a ship,  the letters are followed by 4 digits.  The digits are the number of the created econ.  The word or words at the top left are the name of the year’s state.  A series of lines display the counts of interesting facts about the game for as the game progresses through the years.  Facts such as the number or creations, the number of trades, the number of deaths, the number of current ships and current planets.  The screen is updated around 60 times a second, a single planet or ship econ may be current for up to several seconds.\n"
+            + "\n"
+            + "The first state is the “future fund create”, planets or ships (economies) are created from funds put in the future fund each year by each clan economy.  Only planets are created until there are enough planets by a game rule and two clan rules, then a clan ship can be created.  By default, clan planets can only trade with as many ships as they allow clan ships.  Putting resources into ships limits the growth in worth of the clan, but it provides the infrastructure to protect planets. \n"
+            + "\n"
+            + "The next state is “game create”: each year the game creates enough economies to bring the number of planets and ships up to the minimum for the year.  The default number of economies grows for the first six years, then it drops to a low number, new planets or ships will be created by the game in any year where the number of economies falls below the default number..\n"
+            + "\n"
+            + "The next very quick state is “year start”, ships and planets are readied  for another year.  The state will not usually appear in the display.  This is when catastrophes occur.  They destroy much of the staff of a sector and resources of a sector, but this is also where econs find new resources to replace resources that have been mined.  Every year’s mined resources depreciates the amount of resources that can be mined the next year until no more resources can be mined.  Catastrophes help planets find additional resources, and help ships to develop new knowledge.\n"
+            + "\n"
+            + "Since ships carry relatively large units of resources compared to planets, assume the ships are of a size like the moon, and perhaps they travel faster than light by jumping between high stress points below the surface of stars.  Ships require large staff to operate, expand and repair the ships because of the stress of the way they travel.\n"
+            + "\n"
+            + "The next state is “search”.  A limited number of planets that are close enough to the ship are chosen.  Planets that have already traded are eliminated unless there is a surplus of ships for planets of this clan.  Each planet and ship keeps a trade history; these histories are updated at each trade so that the planets can be selected by their search history.  The assumption is that ships cannot have real time access to the current trade possibilities of any of the trading candidates.\n"
+            + "\n"
+            + "The next state is a trade.  These are “potlatch” trades since the ship and planet do not have a common currency.  They need to evaluate each of their financial sectors of resources and staff to determine what they need the most, or what sectors have the highest strategic value, and which have the lowest strategic value.  Each partner tries to trade low strategic value goods for high strategic value goods.   Of course the trading partner may need some of your high value goods, not some of your low value goods, so at each turn the offers are changed to satisfy your own needs with goods you hope the partner will accept.  Each partner gets up to nine turns; a partner may reject a trade if the offers are too unsatisfactory by changing the turn number to -1.  A trade is accepted if both partners can accept an offer without trying to change the offer, the turn number is set to zero, the goods (cargo and guests) in the offer are actually moved between economies, then the trade is recorded as accepted.  Trades can also be “rejected” by one partner, and is then “lost” by the other partner.  If there are more ships than planets, multiple ships can attempt to trade with a given planet.  Multiple ships on a planet can also attempt to trade with each other.  \n"
+            + "\n"
+            + "Planets and ships start trading with a profit goal.  The profit goals for a clan's ships and planets can be changed by the clan-master.  These goals are later changed by the “favor” of the trading partner, and the history of trades, rejects and lost trades experienced by the clan.\n"
+            + "\n"
+            + "After all the ships had an opportunity to trade, the next state is “endYear”.  Since endYear’s do not involve any other economy, multiple endYears can run at once.  Initially multiple cpus can run multiple threads to do endYears.  The number of threads can be changed in the settings. \n"
+            + "\n"
+            + "During the endYear resources and staff may be swapped between working and reserved, reserved cost less, but do not provide any work.  In addition resources and staff may be repurposed, that is they are moved to a different financial sector.  This is a very costly operation that is only used if trading does not supply some of the critically needed resources or staff.  After each swap, a test is done to see if it generated an overall benefit, if not the swap may be redone several times.  During the swaps, emergency actions may donate to the “future funds” some resources or staff from high cost sectors which have too many units in relation to the other sectors.  This reduces the costs for the sectors with few units.\n"
+            + "\n"
+            + "Each financial sector incurs costs from each of the other sectors.  If at the end of the swaps, one or more of the sectors cannot pay the yearly costs or has insufficient infrastructure to survive the whole year then the economy of a ship or planet dies.  All of its staff and resources are lost.  Otherwise at the end of the year, when enough resources and staff are available, growth is applied to resources, staff and knowledge.  \n"
+            + "\n"
+            + "As knowledge increases, years become more efficient and costs decrease.  Each year the research equivalent set of staff find new knowledge, they also convert manuals received in trades into more common knowledge.  After a year, new knowledge becomes common knowledge.\n"
+            + "\n"
+            + "After each run a large set of statistics is available to be viewed about the planets and ships,  At some later time another ship or planet will be established at the same location. By default, between 10% to 20% of planet and ships die each year.\n"
+            + "\n"
+            + "At the end of the years the window should change to the “stats” tab.  There are 21 buttons for 21 different views of the statistics about what happened with the clan finances.  There are also buttons to run the game for 1 or 5 or 10 or 20 years.  When they are clicked the screen goes back to the display tab.\n"
+            + "\n"
+            + "After you have become familiar with the game by running it several times you can “keep” some of the settings you change, so that they will be automatically set to the kept value in the following games.  You can also write comments to indicate why you made the changes.  You keep settings by clicking the “keep” button, then any changes you have made on the current settings page will be kept when you leave that page.  These kept values are in a file called “keep”.  You can find the “keep” file in the same folder into which you copied the java .jar or .exe file.  You can also use the “remember” button on the statistics pages to remember a line whose title you click.  \n"
+            + "Runs can be 1 year, 5 years, 10 or 20 years.  Initial difficulty settings make it so that between 7% to 20% of the economies die each year.  Statistics after each run help show the problems the ship and planets failed and may give some ideas about changing clan priorities to increase planet and ship survival. \n"
+            + "\n"
+            + "If too many or not enough economies fail each year, the game master can change a game difficulty setting to alter results. After viewing their statistics each clan-master can change a few settings, then the game-master starts another run.  It is a good strategy to only change a few settings at each new game, keep the settings and a comment about why you changed the setting, you may also want to “remember” some results that suggested the change in settings.\n"
+            + "\n"
+            + "The game-master changes settings about how all planets and ships survive and grow.  Also the game-master can adjust how the winning score is calculated and when the score is good enough to win the game.  “Save the planets”  increases the score of a clan based on the number of planets and ships that the clan's barters have helped, and how much the barters helped.  The game-master can change settings so that  “Highest worth wins”, or “most planets wins” or many other games.  You can play the game for as many runs as you choose. \n"
+            + "\n"
+            + "At the start of the year each economy projects what its resources will be at the end of the year. Each resource and staff sector is given a strategic value  related to how much more is needed for a good year.  In addition, if a planet or ship might not survive the year with the current resources and staff, an SOS flag is set.  Each year each ship tries to find a planet for a good trade in a way that both of them will be more able to survive and have good growth.  The game-master can adjust how much the ship knows about planets. Ships may know nothing and just make a random choice.  Ships may be able to use a history that is updated every time they trade with a planet,  Ships may be able to get direct knowledge about what planets have to make the best trade, combined with the cost of travel to that planet.\n"
+            + "\n"
+            + "Clan-masters choose a friendship level with each of the other clans.  The higher the friendship, the better trade will be given the ship and planet.  Ships can trade with each other, if more than one ship is trading at a given planet.  \n"
+            + "\n"
+            + "Each year there are costs for simply living: “maintenance”, communicating and moving between parts of the economy or between planets: “travel”, and hopefully increasing resources, staff and knowledge: “growth”. When a planet or ship has enough to survive the year,  the additional resources determine the health of the planet or ship.  Planets and ships with poor health are less efficient in doing the required work for that year.  This means that life and growth take more resources and staff and accomplishes less.  The work becomes more efficient for each sector each year as the knowledge for that sector increases.  \n"
+            + "\n"
+            + "When there are more resources and/or staff than needed for maintenance and travel, those resources and work can be applied to growth in that sector.  Each of the required  or infrastructure Maintenance and required or infrastructure Growth require a combination of resources and staff, just as growth requires a combination of resources and staff.  Every year each financial sector will only be able to do the amount of work enabled by the required combination of resources and staff, there will be some resources or staff for each sector which cannot be used.\n"
+            + "\n"
+            + "The resources and staff subAssets for each sector are working resources and staff.   Cargo and guest subAssets are the reserved resources and staff, they do no work and their yearly costs are reduced, they are available to convert to working assets or to be traded.\n"
+            + "\n"
+            + "Each year during the Cash Flow activity, the potential costs for each financial sector are calculated.  Any sectors with insufficient prospective resources or work to meet the required costs, must move any available reserves to working status.  If that is not enough assets from other sectors may be repurposed.  Of course the cost of such repurposing is quite high, taking well over 10 times the resulting increase in assets for the needy sector.\n"
+            + "\n"
+            + "The game-master sets a number of priorities and values over the game for all the clans.  The game-master adjusts the difficulty of the game and other options that significantly change the nature of challenges in the game.  A normal goal is to have no more than 10% of ships and 10% of planets die in a single year of the game.  Catastrophes can occur at the year start before it is time to trade.  A catastrophe can destroy a large fraction of the resources for one or two financial sectors, and the staff for a financial sector, but they also discover additional resources for one or more sectors.  These additional resources replace the decay of resources as they are mined\n"
+            + "\n"
+            + "The game-master chooses which results are most important for deciding the winner in the game.  The winner may be the clan that gave the most help to clans, or that helped the most planets or the most planets and ships, or had the highest worth, or had the most planets, etc.  The winner may change after each run of one or more years.  \n"
+            + "\n"
+            + "After players have set clan priorities and other levels, the game-master can run the game for 1,5,10, or 20 years.  When the years are finished, results are available, there are 20 different pages showing different results and showing some of the same results in different ways.  Pages 0,1,2 list the most important results.  Any page with the score at the top will be set to the background color of the clan with the highest score, the winner when the score gets good enough to win.\n"
+            + "\n"
+            + "Each planet and ship have seven financial sectors.  Each sector has resources, cargo(resource but in reserve not working), staff, guests(staff but in reserve not working), and knowledge of 3 kinds (common knowledge, new knowledge, and manuals(researchers work to get new knowledge or common knowledge from manuals), but trades can only trade manuals from ships).\n"
+            + "\n"
+            + "The game is available in a folder at: \n"
+            + "https://drive.google.com/drive/folders/1P-hw8Wk9BcwEdHSS8CdAbDDjtjyEQTF_?usp=sharing.  The folder contains a pdf of this README and the file  StarTrader1946.exe and does not require your installation of Java.\n"
+            + "\n"
+            + "You need to download the StarTrader1946.exe file to a place such as Desktop.myGame where you can run it following the instructions near the end of this README. First make a new folder in the Desktop folder, with the name myGame.  You must download to a folder that is not part of a streaming memory such as GoogleDrive, the jar file gets stuck trying to run on a streaming memory.  Double click on the StarTrader1946.exe file in myGame to run the game.  Check for new subversions of the game at least once a month.  Each copy of  the newly downloaded file has a version.subversion added to the name.  Delete unwanted files by right clicking the file and choosing the delete option. StarTrader is set up to run on a Windows 10 machine with at least an 11 or 12 inch screen.  It will probably run on other desktop or laptops, if they will also have a current Java.  Instructions for running the game are given much earlier in the README.\n"
+            + "\n"
+            + "Ignore the following instructions unless you want to try to change the guts of the game.\n"
+            + "The source of the game is in the folder you downloaded, go to src.java.trade. (all the source files)\n"
+            + "I use Apache Netbeans, the latest version, and the latest java 1.8 19 version of openJDK.  Here are many of the settings you will need  in Apache NetBeans currently version 12.4.  You must be logged in as a windows administrator to have the windows permissions to install NetBeans.  \n"
+            + "\n"
+            + "Once you have installed NetBeans and downloaded the source files:\n"
+            + "1.Left Click the NetBeans Tools menu and select Java Platforms, click \"Add Platform...\" browse to C:\\Program Files\\Java and choose the latest installed jdk1.8.0_xxx \n"
+            + "2.Open NetBeans IDE and create a new ant project with the existing source\n"
+            + "3.Create a source folder such as C:\\Users\\Public\\netbeans\\Trader19.xx\n"
+            + "4.Right click the project name, at versioning create a git repository in Trader19.xx\n"
+            + "5.Right click the project name, at git select pull and fill out the form as requested\n"
+            + "6.Right click the project name, select properties, select formatting, select project specific options, choose all languages, choose Tabs And Indents, Enable Indentation, Expand Tabs to Spaces, Number of Spaces per indent=2, tab Size = 2, Right Margin=80,Line Wrap After words\n"
+            + "7.Download the latest Java openJDK after signing the license, install it into the Java folder under C:\\Program Files or leave it in download files\n"
+            + "8.Right click the project name, select properties, and under “Source Packages” select the package “trade” to get a list of the Java Classes.  The StarTrader.java source contains the ‘main’ method with the user interface logic.  Classes E.java and EM.java contain lots of data tables needed for the user interface, E.java contains most of the fixed data, EM.java contains data that can change from the user settings changes and the statistics of the current run of the game, EM.java also contains methods for processing settings and statistics. "
+            + "";
 
   static int iii = 0;
   // The following is a list of states
@@ -3397,17 +3371,21 @@ public class StarTrader extends javax.swing.JFrame {
         M = eM.logEnvirn[0].logM[0] = format.parse(evt.getText().toString()).intValue();
         setLogM(0, M);
         System.out.println(since() + "LogsInputMethodTextChanged logDisplay1Start=" + whole.format(eM.logEnvirn[0].logM[0]));
-      } else if (source.equals("logDisplay2Start")) {
+      }
+      else if (source.equals("logDisplay2Start")) {
         M = eM.logEnvirn[1].logM[1] = format.parse(evt.getText().toString()).intValue();
         setLogM(1, M);
         System.out.println(since() + "LogsInputMethodTextChanged logDisplay1Start=" + whole.format(eM.logEnvirn[1].logM[1]));
-      } else if (source.equals("StaffDeathsPerYear")) {
+      }
+      else if (source.equals("StaffDeathsPerYear")) {
         //      E.staffDeathRate[0] = ((Number) StaffDeathsPerYear.getValue()).doubleValue();
-      } else {
+      }
+      else {
         M = format.parse(evt.getText().toString()).intValue();
         System.out.println(since() + "LogsInputMethodTextChanged unknown=" + source + ", value=" + M);
       }
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -3434,7 +3412,8 @@ public class StarTrader extends javax.swing.JFrame {
       setLogM(1, m);
       displayLog();
       System.out.println(since() + " logM2SpinnerStateChanged=" + eM.logEnvirn[1].logM[1] + " lev=" + eM.logEnvirn[1].logLev[1] + " first bunch=" + eM.logEnvirn[1].logLen[1]);
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -3457,7 +3436,8 @@ public class StarTrader extends javax.swing.JFrame {
         displayLog();
         System.out.println(since() + " levelSlider2StateChanged=" + eM.logEnvirn[1].logLev[1]);
       }
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -3480,7 +3460,8 @@ public class StarTrader extends javax.swing.JFrame {
         displayLog();
       }
 
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -3506,7 +3487,8 @@ public class StarTrader extends javax.swing.JFrame {
       int start2 = format.parse(logM1Spinner.getValue().toString()).intValue();
       System.out.println(since() + " logDisplay1StartStateChanged=" + eM.logEnvirn[0].logM[0] + " lev=" + eM.logEnvirn[0].logLev[0] + " start2=" + start2);
 
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -3540,7 +3522,8 @@ public class StarTrader extends javax.swing.JFrame {
         displayLog();
         System.out.println(since() + " DLen1StateChanged=" + m);
       }
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -3638,10 +3621,12 @@ public class StarTrader extends javax.swing.JFrame {
     if (ix == 2) {
       statsButton0.setSelected(true);
       statsButton0.setToolTipText(statsButton0Tip);
-    } else if (ix == 1) {
+    }
+    else if (ix == 1) {
       gameMaster.setSelected(true);
       gameTextField.setText("Game Master set options for the overall game, note that there are many options to make planets or ships die quickly");
-    } else if (ix == 3) {
+    }
+    else if (ix == 3) {
 
     }
 
@@ -3801,7 +3786,8 @@ public class StarTrader extends javax.swing.JFrame {
     System.out.println("in Run1Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
-    } else {
+    }
+    else {
       runYears(1);
     }
   }//GEN-LAST:event_gameCtlButtonRun1Year1MouseClicked
@@ -3810,7 +3796,8 @@ public class StarTrader extends javax.swing.JFrame {
 
     if (eM.fatalError) {
       setFatalError();
-    } else {
+    }
+    else {
       runYears(5);
     }
   }//GEN-LAST:event_gameCtlButtonRun5Years1MouseClicked
@@ -4510,7 +4497,8 @@ public class StarTrader extends javax.swing.JFrame {
     System.out.println("in stats Run 1Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
-    } else {
+    }
+    else {
       runYears(1);
     }
   }//GEN-LAST:event_statsCtlButtonRun1YrMouseClicked
@@ -4523,7 +4511,8 @@ public class StarTrader extends javax.swing.JFrame {
     System.out.println("in stats Run 5Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
-    } else {
+    }
+    else {
       runYears(5);
     }
   }//GEN-LAST:event_statsCtlButtonRun5YrMouseClicked
@@ -4659,14 +4648,15 @@ public class StarTrader extends javax.swing.JFrame {
   }//GEN-LAST:event_statsField2ActionPerformed
 
   private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-   // System.exit(0);
+    // System.exit(0);
   }//GEN-LAST:event_formWindowClosed
 
   private void statsCtlButtonRun10YrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsCtlButtonRun10YrMouseClicked
     System.out.println("in stats Run 10Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
-    } else {
+    }
+    else {
       runYears(10);
     }
   }//GEN-LAST:event_statsCtlButtonRun10YrMouseClicked
@@ -4675,7 +4665,8 @@ public class StarTrader extends javax.swing.JFrame {
     System.out.println("in stats Run 20Year Mouse Clicked");
     if (eM.fatalError) {
       setFatalError();
-    } else {
+    }
+    else {
       runYears(20);
     }
   }//GEN-LAST:event_statsCtlButtonRun20YrMouseClicked
@@ -4905,7 +4896,8 @@ public class StarTrader extends javax.swing.JFrame {
       saveLogM(0, m);
       displayLog();
 
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -4922,7 +4914,8 @@ public class StarTrader extends javax.swing.JFrame {
 
   public void logM1MouseClicked(java.awt.event.MouseEvent evt) {
     try {
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -4989,22 +4982,22 @@ public class StarTrader extends javax.swing.JFrame {
       int siz = eM.hists[0].size();
       int siz1 = siz - 87;
       siz = siz1 < 0 ? 0 : siz1;
-       Boolean ll = eM.logEnvirn[0].logM[0] > 50;
+      Boolean ll = eM.logEnvirn[0].logM[0] > 50;
       if (ll) {
-      eM.hists[0] = eM.logEnvirn[0].hists[0];
-      eM.hists[1] = eM.logEnvirn[1].hists[0];
-      eM.logEnvirn[0].logLen[0] = 90;
-      LogDlen1Slider.setValue(70);
-      eM.logEnvirn[0].logLen[1] = 5;
-      eM.logEnvirn[0].logLev[0] = 15;
-      eM.logEnvirn[0].logLev[1] = 15;
-      eM.hists[0].add(new History(3, "final string", "ERROR ==============================="));
-    
-      eM.logEnvirn[0].logM[0] = siz;
-      logM1Spinner.setValue(siz);
-      // change to display the log of the erring Econ
-      // do not try to display a log that does not exist
-     
+        eM.hists[0] = eM.logEnvirn[0].hists[0];
+        eM.hists[1] = eM.logEnvirn[1].hists[0];
+        eM.logEnvirn[0].logLen[0] = 90;
+        LogDlen1Slider.setValue(70);
+        eM.logEnvirn[0].logLen[1] = 5;
+        eM.logEnvirn[0].logLev[0] = 15;
+        eM.logEnvirn[0].logLev[1] = 15;
+        eM.hists[0].add(new History(3, "final string", "ERROR ==============================="));
+
+        eM.logEnvirn[0].logM[0] = siz;
+        logM1Spinner.setValue(siz);
+        // change to display the log of the erring Econ
+        // do not try to display a log that does not exist
+
         eM.logEnvirn[0].logLev[0] = 20;
         logDLevel1Slider.setValue(20);
         displayLog();
@@ -5031,8 +5024,10 @@ public class StarTrader extends javax.swing.JFrame {
     controlPanels.setSelectedIndex(3);
     displayPanel0Text.setRows(18);
     String eer = "There was a fatal error\nMake any notes you remember of what happened.\n" + eM.tError
-    + "\n" + EM.firstStack + "\n" + EM.secondStack + "\n";
-    if(E.debugOutput)eer += " \nThere should be a StarTraderOutput and StarTraderError file in the same folder as you *.exe game file.  Attach these files in the email you send about the error.";
+                 + "\n" + EM.firstStack + "\n" + EM.secondStack + "\n";
+    if (E.debugOutput) {
+      eer += " \nThere should be a StarTraderOutput and StarTraderError file in the same folder as you *.exe game file.  Attach these files in the email you send about the error.";
+    }
     eer += "\nYou can send and email to aljsteiner@gmail.com \nSubject StarTrader error exit notes\nwPlease include your notes about the crash, and any comments about the game.";
     displayPanel0Text.setText(eer);
     EM.flushes();
@@ -5058,7 +5053,7 @@ public class StarTrader extends javax.swing.JFrame {
     if (hadFatalError) {
       //System.exit(-19);
     }
-   //System.exit(-18); be able to see the error
+    //System.exit(-18); be able to see the error
     EM.flushes();
     throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
     //  controlPanels.setSelectedComponent(log);
@@ -5128,7 +5123,8 @@ public class StarTrader extends javax.swing.JFrame {
       rYrs1.start();  // start runYears2 the annimation thread
       //    stateConst = STATS;
       // runBackgroundYears4(nYears);
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -5145,13 +5141,14 @@ public class StarTrader extends javax.swing.JFrame {
   int pprevState = 0;
 
   /**
-   * in the annimation thread (runYears2) check the Econ state for stuck if no change in stateConst,EM.curEconName,EM.wasHere;
-   * and prevState not STATS,  STOPPED, FATALERR, RUNSDONE
+   * in the annimation thread (runYears2) check the Econ state for stuck if no
+   * change in stateConst,EM.curEconName,EM.wasHere; and prevState not STATS,
+   * STOPPED, FATALERR, RUNSDONE
    *
    */
   void checkEconState() {
     ec = curEc = EM.curEcon;
-    curEconName = (ec == null ? "noneYet" : ec.name == null? "noName": ec.name);
+    curEconName = (ec == null ? "noneYet" : ec.name == null ? "noName" : ec.name);
     prevEconName = prevEconName == null ? "aint named" : prevEconName;
     boolean sameName = prevEconName.equals(curEconName);
     String wh = EM.wasHere == null ? "wasn't here" : EM.wasHere;
@@ -5161,33 +5158,38 @@ public class StarTrader extends javax.swing.JFrame {
     boolean sameState = stateConst == prevState;
     long myNow = new Date().getTime() - eM.curEconTime;
     if (sameState && sameName && sameWh
-            && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
+        && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
       sameEconState++;
-      assert E.debugStuck && sameEconState < 91 : "STUCK at runYears2.checkEconState Y" + eM.year + " EconTime" + myNow + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      assert E.debugStuck && sameEconState < 91 : "STUCK at runYears2.checkEconState Y" + eM.year + " EconTime" + myNow + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 90) {
         EM.doMyErr("STUCK at:doYear" + EM.year + myNow + " " + stateStringNames[stateConst] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
-    } else {
-      EM.wasHere5 = "----CES----in runYears2.setEconState Year" + EM.year +" " + Thread.currentThread().getName() + " econTime" + myNow + " " + stateStringNames[stateConst]+ "=> " + stateStringNames[stateConst] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + sinceRY2() + sinceRY3() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+    }
+    else {
+      EM.wasHere5 = "----CES----in runYears2.setEconState Year" + EM.year + " " + Thread.currentThread().getName() + " econTime" + myNow + " " + stateStringNames[stateConst] + "=> " + stateStringNames[stateConst] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + sinceRY2() + sinceRY3() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
       prevEconName = EM.curEconName;
       prevWasHere = EM.wasHere == null ? "no Was Here" : EM.wasHere; // move the reference
       stateCnt = 0;
-      if(E.debugThreadsOut && prevState != stateConst && (true || stateConst == CREATING || stateConst == STATS || stateConst == TRADING || prevState == RUNSDONE || prevState == STATS)) System.out.println(EM.wasHere5 + EM.threadsStacks());
+      if (E.debugThreadsOut && prevState != stateConst && (true || stateConst == CREATING || stateConst == STATS || stateConst == TRADING || prevState == RUNSDONE || prevState == STATS)) {
+        System.out.println(EM.wasHere5 + EM.threadsStacks());
+      }
       pprevState = prevState;
-      prevState = stateConst ;
+      prevState = stateConst;
       sameEconState = 0;  //zero no dif counter
       startEconState = (new Date()).getTime();
     }
   }
 
-   /**
-   * set the Econ state in the runBackgroundYears4, and check for stuck if no change in stateConst,EM.curEconName,EM.wasHere and stateConstA not STATS,  STOPPED, FATALERR, RUNSDONE  See also checkEconState for getting stuck
+  /**
+   * set the Econ state in the runBackgroundYears4, and check for stuck if no
+   * change in stateConst,EM.curEconName,EM.wasHere and stateConstA not STATS,
+   * STOPPED, FATALERR, RUNSDONE See also checkEconState for getting stuck
    *
    * @param stateConstA value to be set
    */
   void setEconState(int stateConstA) {
     ec = curEc = EM.curEcon;
-    curEconName = (ec == null ? "noneYet" : ec.name == null? "noName": ec.name);
+    curEconName = (ec == null ? "noneYet" : ec.name == null ? "noName" : ec.name);
     prevEconName = prevEconName == null ? "aint named" : prevEconName;
     boolean sameName = prevEconName.equals(curEconName);
     String wh = EM.wasHere == null ? "wasn't here" : EM.wasHere;
@@ -5197,18 +5199,21 @@ public class StarTrader extends javax.swing.JFrame {
     boolean sameState = stateConst == prevState;
     long myNow = new Date().getTime() - eM.curEconTime;
     if (sameState && sameName && sameWh
-    && stateConstA != STATS && stateConstA != RUNSDONE && stateConstA != STOPPED && stateConstA != FATALERR) {
+        && stateConstA != STATS && stateConstA != RUNSDONE && stateConstA != STOPPED && stateConstA != FATALERR) {
       sameEconState++;
-      assert E.debugStuck && sameEconState < 151 : "STUCK at runYears2.setEconState Year" + EM.year  + sinceRY2() + sinceRY3() + sinceEcon() + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState  + " main3 testing"+ " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+      assert E.debugStuck && sameEconState < 151 : "STUCK at runYears2.setEconState Year" + EM.year + sinceRY2() + sinceRY3() + sinceEcon() + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 50) {
         eM.doMyErr("STUCK at:doYear" + eM.year + myNow + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
-    } else {
-      EM.wasHere5 = "----SES----in runYears2.setEconState Year" + EM.year +" " + Thread.currentThread().getName() + " " + stateStringNames[stateConst]+ "=> " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + sinceRY2() + sinceRY3() + sinceEcon() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 +" cntr9=" + cntr9;
+    }
+    else {
+      EM.wasHere5 = "----SES----in runYears2.setEconState Year" + EM.year + " " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + "=> " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " millisecs=" + sinceRY2() + sinceRY3() + sinceEcon() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
       prevEconName = EM.curEconName;
       prevWasHere = EM.wasHere == null ? "no Was Here" : EM.wasHere; // move the reference
       stateCnt = 0;
-      if(E.debugThreadsOut && (stateConstA != stateConst || prevState != stateConst ) && (stateConstA == CREATING || stateConstA == STATS || stateConstA == TRADING || prevState == RUNSDONE || stateConst == STATS || stateConst == RUNSDONE || prevState == STATS)) System.out.println(EM.wasHere5 + EM.threadsStacks());
+      if (E.debugThreadsOut && (stateConstA != stateConst || prevState != stateConst) && (stateConstA == CREATING || stateConstA == STATS || stateConstA == TRADING || prevState == RUNSDONE || stateConst == STATS || stateConst == RUNSDONE || prevState == STATS)) {
+        System.out.println(EM.wasHere5 + EM.threadsStacks());
+      }
       pprevState = prevState;
       prevState = stateConst = stateConstA;
       sameEconState = 0;  //zero no dif counter
@@ -5225,18 +5230,20 @@ public class StarTrader extends javax.swing.JFrame {
     try {
       ec = curEc = eM.curEcon;;
       startRY2 = (new Date()).getTime();  //started runYears2
-      if(E.debugStatsOut1) {
+      if (E.debugStatsOut1) {
         System.out.println(EM.wasHere3 = "-------MA--------runYears2;" + sinceA() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "runYears2 is eventDispatchThread not a separate animation thread");
       paintCurDisplay(ec);
-      if(E.debugStatsOut1)System.out.println(EM.wasHere3 = "------MB------- runYears2;" + sinceA() + sinceRY2() + stateStringNames[stateConst] + "Y" + EM.year);
-      
+      if (E.debugStatsOut1) {
+        System.out.println(EM.wasHere3 = "------MB------- runYears2;" + sinceA() + sinceRY2() + stateStringNames[stateConst] + "Y" + EM.year);
+      }
+
       RunYrs3 rYrs3 = new RunYrs3(); // the thread for background running runYear()->doYear
       rYrs3.setPriority(2);
       rYrs3.start();  // start the background job runBackgroundYears4
-      if(E.debugStatsOut1){
-        System.out.println(EM.wasHere3 = "-------MC--------runYears2;" + sinceA()+ sinceRY2() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
+      if (E.debugStatsOut1) {
+        System.out.println(EM.wasHere3 = "-------MC--------runYears2;" + sinceA() + sinceRY2() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       //  stateConst = STARTING;
       paintCurDisplay(ec = curEc = eM.curEcon);
@@ -5246,25 +5253,32 @@ public class StarTrader extends javax.swing.JFrame {
       // start the annimation loop until done or error, waiting to call paintCurDisplay again
       for (stateCnt = 0; !EM.dfe() && !done; stateCnt++) {
         ec = curEc = EM.curEcon;
-        EM.wasHere3 = "---------AA--------runYears2 " + EM.curEconName + " before checkEconState " + stateStringNames[stateConst] + " " + Thread.currentThread().getName() + " " + EM.curEconName + "Y" + EM.year + " cnt" + stateCnt + " " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() ;
-        assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3: "Thread count too low-" + Thread.activeCount() ;
-        if (E.debugStatsOut1)System.out.println(EM.wasHere3);
+        EM.wasHere3 = "---------AA--------runYears2 " + EM.curEconName + " before checkEconState " + stateStringNames[stateConst] + " " + Thread.currentThread().getName() + " " + EM.curEconName + "Y" + EM.year + " cnt" + stateCnt + " " + sinceA() + sinceAA() + sinceRY2() + sinceRY3();
+        assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3 : "Thread count too low-" + Thread.activeCount();
+        if (E.debugStatsOut1) {
+          System.out.println(EM.wasHere3);
+        }
         checkEconState(); // check for stuck
-        if (E.debugStatsOut2)System.out.println("------NC------^^runYears2 " + sinceA() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
-        if (E.debugStatsOut1)System.out.println("----------RYa-------runYears2 " + sinceA()+ sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+        if (E.debugStatsOut2) {
+          System.out.println("------NC------^^runYears2 " + sinceA() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + " cnt" + stateCnt + "::" + sameEconState);
+        }
+        if (E.debugStatsOut1) {
+          System.out.println("----------RYa-------runYears2 " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+        }
         paintCurDisplay(ec);
         // now do waits until the next check of stateConst and paintCurDisplay
-        if (E.debugStatsOut2)System.out.println("----------RYb-------runYears2 " + sinceA()+ sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+        if (E.debugStatsOut2) {
+          System.out.println("----------RYb-------runYears2 " + sinceA() + sinceAA() + sinceRY2() + sinceRY3() + stateConst + " cnts" + stateCnt + "::" + sameEconState + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+        }
         switch (stateConst) {
           case CONSTRUCTING:
           case CONSTRUCTED:
           case WAITING:
-          case STARTING:
-            //paintCurDisplay(eM.curEcon);
-             {
-              Thread.sleep(blip);
-            }
-            break;
+          case STARTING: //paintCurDisplay(eM.curEcon);
+          {
+            Thread.sleep(blip);
+          }
+          break;
           case CREATING:
           //  paintCurDisplay(eM.curEcon);
           // Thread.sleep(blip);
@@ -5302,7 +5316,7 @@ public class StarTrader extends javax.swing.JFrame {
             done = true;  //stop looping
             // paintCurDisplay(ec = curEc = eM.curEcon); // force final display as stats not display
             if (E.debugStatsOut1) {
-              System.out.println("----------MD-------runYears2;" + since()+ sinceAA() + " " + stateStringNames[stateConst] + "Y" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("----------MD-------runYears2;" + since() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             listRes(fullRes); //done in runBackgroundYears4
             break;
@@ -5310,20 +5324,21 @@ public class StarTrader extends javax.swing.JFrame {
           case RUNSDONE:
             // no wait
             if (E.debugStatsOut1) {
-              System.out.println("----------ME-----runYears2;" + since()+ sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("----------ME-----runYears2;" + since() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             done = true; //end the loop stateCnt 
             setEconState(STATS);
-           paintCurDisplay(ec); // force final display as stats not A display
+            paintCurDisplay(ec); // force final display as stats not A display
             break;
           default:
             if (E.debugStatsOut1) {
-              System.out.println("--------MF--------runYears2;" + since()+ sinceAA() + " stateCnt =" + stateCnt + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
+              System.out.println("--------MF--------runYears2;" + since() + sinceAA() + " stateCnt =" + stateCnt + " " + stateStringNames[stateConst] + "Y" + EM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
             if (did) {
               done = true;
               setEconState(STATS);
-            } else {
+            }
+            else {
               Thread.sleep(blip);
             }
             if (E.debugStatsOut1) {
@@ -5331,7 +5346,8 @@ public class StarTrader extends javax.swing.JFrame {
             }
         } // switch stateConst
       }// stateCnt end
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -5349,17 +5365,21 @@ public class StarTrader extends javax.swing.JFrame {
     eM.setMoreValues();
     stateConst = STARTING;
     long myStart = new Date().getTime();
-    if(E.debugStatsOut1)System.err.println("------MII------starting in runBackGroundYears4 thread=" + Thread.currentThread().getName() + "startTime" + (new Date().getTime() - startTime));
-    if(E.debugStatsOut1)System.err.println(EM.prevLine = "---------MI----- in runBackGroundYears4 nYears=" + nYears + " thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + "<<<<<<<<");
+    if (E.debugStatsOut1) {
+      System.err.println("------MII------starting in runBackGroundYears4 thread=" + Thread.currentThread().getName() + "startTime" + (new Date().getTime() - startTime));
+    }
+    if (E.debugStatsOut1) {
+      System.err.println(EM.prevLine = "---------MI----- in runBackGroundYears4 nYears=" + nYears + " thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + "<<<<<<<<");
+    }
     // E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "is eventDispatchThread");
     EM.clearWH();
-  //  assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3: "Thread count too low-" + Thread.activeCount() ;
+    //  assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3: "Thread count too low-" + Thread.activeCount() ;
 
     for (int nn = 0; nn < nYears && !EM.dfe() && !EM.stopExe && !doStop && !fatalError; nn++) {
       EM.errLine = "-------MJ---------in runBackroundYears4" + since() + "run year="
-              + (EM.year) + " background years=" + nn + " btime="
-              + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + EM.year;
-      if(E.debugStatsOut1) {
+                   + (EM.year) + " background years=" + nn + " btime="
+                   + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + EM.year;
+      if (E.debugStatsOut1) {
         System.err.println(EM.errLine);
       }
       aaTime = (new Date()).getTime();
@@ -5368,7 +5388,7 @@ public class StarTrader extends javax.swing.JFrame {
     setEconState(STATS);
     int cpIx2 = 0, cpIx3 = 0, cpIx4 = 0;
     EM.errLine = "-------MJz---------runBackroundYears4 after STATS " + since() + sinceA() + sinceAA() + " background years=" + nn + " btime="
-            + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + "Y" + eM.year;
+                 + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + "Y" + eM.year;
     if (E.debugStatsOut1) {
       System.err.println(EM.errLine + "<<<<<<<<<<<<<<<<<<<");
     }
@@ -5468,7 +5488,8 @@ public class StarTrader extends javax.swing.JFrame {
       }
       if (t.pors == P) {
         eM.planets.add(t);
-      } else {
+      }
+      else {
         eM.ships.add(t);
       }
       EM.wasHere = "-------MMc--------" + sinceA() + " counted Econ" + EM.econCnt + "::" + EM.econs.size() + " planets" + EM.porsCnt[0] + "::" + EM.planets.size() + " ships" + EM.porsCnt[1] + "::" + EM.ships.size() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " name=" + name + sinceRunYear();
@@ -5532,31 +5553,42 @@ public class StarTrader extends javax.swing.JFrame {
   public String sinceRunYear() {
     return since("year" + eM.year + " ", startYear);
   }
-  
-  /** Seconds since aaTime start of runYears2
-   * 
+
+  /**
+   * Seconds since aaTime start of runYears2
+   *
    * @return fraction seconds since aaTime in runYears2
    */
-  public String sinceAA(){return since(" aaTime", aaTime);}
+  public String sinceAA() {
+    return since(" aaTime", aaTime);
+  }
 
-  /** Seconds since aTime start of runYears2
-   * 
+  /**
+   * Seconds since aTime start of runYears2
+   *
    * @return fraction seconds since aTime in runYears2
    */
-  public String sinceA(){return since(" aTime", aTime);}
-  
-  /** Seconds since  start of runYears2
-   * 
+  public String sinceA() {
+    return since(" aTime", aTime);
+  }
+
+  /**
+   * Seconds since start of runYears2
+   *
    * @return fraction seconds since start runYears2
    */
-  public String sinceRY2(){return since(" ry2Time", startRY2);}
-  
-   /** Seconds since start of runYears2
-   * 
+  public String sinceRY2() {
+    return since(" ry2Time", startRY2);
+  }
+
+  /**
+   * Seconds since start of runYears2
+   *
    * @return fraction seconds since start runYears2
    */
-  
-  public String sinceRY3(){return since(" ry3Time", startRY3);}
+  public String sinceRY3() {
+    return since(" ry3Time", startRY3);
+  }
 
   /**
    * format the seconds since a given recorded time
@@ -5663,7 +5695,8 @@ public class StarTrader extends javax.swing.JFrame {
       }
       if (E.logSizeHis[k] < 1) {
         System.out.printf("hist %d is empty\n", k);
-      } else {
+      }
+      else {
         int ma, mb, mc, r0, r1, rp;
         r1 = rp = r0 = -1;
         boolean showLine = false;
@@ -5691,21 +5724,26 @@ public class StarTrader extends javax.swing.JFrame {
             System.out.println("in displayLog null line at k=" + k + " m=" + m);
             m = mEnd;
             // E.myTest(dr == null, "null dr at k=" + k + " m=" + m);
-          } else {
+          }
+          else {
             drlev = dr.level;
             if (drlev == 20 && maxLev > 5) {
               showLine = true;
               if (m < mb) {
                 row = rowsStart;
               }
-            } else if (drlev == 1 && rp != 1 && m < mb) {
+            }
+            else if (drlev == 1 && rp != 1 && m < mb) {
               showLine = true;
               row = rowsStart;
-            } else if ((drlev == 1 || drlev == 2) && rp == 1 && row == rowsStart + 1 && m < mb) {
+            }
+            else if ((drlev == 1 || drlev == 2) && rp == 1 && row == rowsStart + 1 && m < mb) {
               showLine = true;
-            } else if (drlev <= maxLev && m >= mb) {
+            }
+            else if (drlev <= maxLev && m >= mb) {
               showLine = true;
-            } else {
+            }
+            else {
               showLine = false;
             }
             rp = drlev;
@@ -5760,7 +5798,8 @@ public class StarTrader extends javax.swing.JFrame {
       ListSelectionModel lsm = (ListSelectionModel) e.getSource();
       if (lsm.isSelectionEmpty()) {
         //      System.out.println(since() + " No rows are selected.");
-      } else {
+      }
+      else {
         int selectedRow = lsm.getMinSelectionIndex();
         int nrows = logRowCount;
         ;
@@ -5783,11 +5822,13 @@ public class StarTrader extends javax.swing.JFrame {
             am2 = am1 < 0 ? 2 : am1; // keep it positive
             am3 = am2 > eM.hists[0].size() ? eM.hists[0].size() - 20 : am2;
             // am = am - E.logLen[0] * 3 / 4;
-          } else {
+          }
+          else {
             am3 = am2 = am1 = am;
           }
           setLogM(0, am3);
-        } else { // second section
+        }
+        else { // second section
           k = 1;
           int logStart = E.logLen[0] + 1; // go past the -- -- --
           am = logRowToM[selectedRow];
@@ -5796,7 +5837,8 @@ public class StarTrader extends javax.swing.JFrame {
             am2 = am1 < 0 ? 10 : am1; // keep positive
             am3 = am2 > eM.hists[1].size() ? eM.hists[1].size() - 20 : am2;
             // am = am - E.logLen[0] - E.logLen[1] * 3 / 4;
-          } else {
+          }
+          else {
             am3 = am2 = am1 = am;
           }
           setLogM(1, am3);
@@ -5818,14 +5860,14 @@ public class StarTrader extends javax.swing.JFrame {
   //static int[] envsPerYear = {10, 20, 30, 40, 50, 60, 10};
   JSlider[] gameSlidersP = {gameSliderP0, gameSliderP1, gameSliderP2, gameSliderP3, gameSliderP4, gameSliderP5, gameSliderP6, gameSliderP7, gameSliderP8, gameSliderP9};
   JSlider[] gameSlidersS = {gameSliderS0, gameSliderS1, gameSliderS2, gameSliderS3, gameSliderS4, gameSliderS5, gameSliderS6, gameSliderS7, gameSliderS8, gameSliderS9};
- // JSlider[] clanSlidersP = {clanSliderP0, clanSliderP1, clanSliderP2, clanSliderP3, clanSliderP4};
+  // JSlider[] clanSlidersP = {clanSliderP0, clanSliderP1, clanSliderP2, clanSliderP3, clanSliderP4};
   //JSlider[] clanSlidersS = {clanSliderS0, clanSliderS1, clanSliderS2, clanSliderS3, clanSliderS4};
   JTextField[] gameTextFields = {gameTextField0, gameTextField1, gameTextField2, gameTextField3, gameTextField4, gameTextField5, gameTextField6, gameTextField7, gameTextField8, gameTextField9};
   //JTextField[] clanTextFields = {clanTextField0, clanTextField1, clanTextField2, clanTextField3, clanTextField4};
   JPanel gamePanels[] = {gamePanel0, gamePanel1, gamePanel2, gamePanel3, gamePanel4, gamePanel5, gamePanel6, gamePanel7, gamePanel8, gamePanel9};
   //JPanel clanPanels[] = {clanPanel0, clanPanel1, clanPanel2, clanPanel3, clanPanel4};
   //JLabel clanLabelsP[] = {gameLabelP5, gameLabelP6, gameLabelP7, clanLabelP3, clanLabelP4};
- // JLabel clanLabelsS[] = {gameLabelS5, gameLabelS6, gameLabelS7, gameLabelS8, clanLabelS4};
+  // JLabel clanLabelsS[] = {gameLabelS5, gameLabelS6, gameLabelS7, gameLabelS8, clanLabelS4};
   double fullRes[] = {1., 2.};
   int lGameRes = fullRes.length;
 
@@ -5847,7 +5889,8 @@ public class StarTrader extends javax.swing.JFrame {
       starTrader2();
       Thread.sleep(2000);
       //   runYears(1);
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -5927,14 +5970,14 @@ public class StarTrader extends javax.swing.JFrame {
       Rectangle stR = statsTable1.getBounds();
       System.out.println("===============StarTraderresize2 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
       System.out.println("=================StarTrader  sized stats w=" + statsR.width + ", h=" + statsR.height
-              + ", statsP w=" + spR.width + ", h=" + spR.height
-              + ", statsTable w=" + stR.width + ", h=" + stR.height
-      + " big=" + EM.mf(123456789012345678901234567890.)
-      + " med1=" + EM.mf(1234567. * 123456.)
-      + " med2=" + EM.mf(12345678. * 123456.)
-      + " med3=" + EM.mf(123456789. * 123456.)
-      + " med4=" + EM.mf(123456789012. * 123456.)
-      + " med5=" + EM.mf(123456789012345. * 123456.));
+                         + ", statsP w=" + spR.width + ", h=" + spR.height
+                         + ", statsTable w=" + stR.width + ", h=" + stR.height
+                         + " big=" + EM.mf(123456789012345678901234567890.)
+                         + " med1=" + EM.mf(1234567. * 123456.)
+                         + " med2=" + EM.mf(12345678. * 123456.)
+                         + " med3=" + EM.mf(123456789. * 123456.)
+                         + " med4=" + EM.mf(123456789012. * 123456.)
+                         + " med5=" + EM.mf(123456789012345. * 123456.));
       int statsTW = statsTable1.getWidth();
       int storyTextField1W = storyTextField1.getWidth();
       int storyTextPaneW = storyTextPane.getWidth();
@@ -5998,9 +6041,9 @@ public class StarTrader extends javax.swing.JFrame {
       int scrnH = scrnR.height;
       int scrnW = scrnR.width;
       System.out.println(Thread.currentThread().getName() + " =================StarTrader sized6 screen w=" + scrnW + ", h=" + scrnH
-              + ", stats w=" + statsR.width + ", h=" + statsR.height
-              + ", statsP w=" + spR.width + ", h=" + spR.height
-              + ", statsTable w=" + stR.width + ", h=" + stR.height);
+                         + ", stats w=" + statsR.width + ", h=" + statsR.height
+                         + ", statsP w=" + spR.width + ", h=" + spR.height
+                         + ", statsTable w=" + stR.width + ", h=" + stR.height);
       storyTextField1.setText(storyText);
       storyTextField1.setCaretPosition(0);
       //storyVersionField.setText(versionText);
@@ -6013,7 +6056,7 @@ public class StarTrader extends javax.swing.JFrame {
       // set the following gamePanelChange if wanted before first year
       // gamePanelChange(5, -2, gamePanels, gameTextFields, gameSlidersP, gameSlidersS, fullVals, curVals);
       //  runYear();  // do if a year execution before game request
-      System.out.println(Thread.currentThread().getName() + " ======================StarTrader before gamePanelChange ========================");
+      E.sysmsg(Thread.currentThread().getName() + "StarTrader before gamePanelChange ");
       gamePanelChange(5, -2, gamePanels, gameTextFields, gameSlidersP, gameSlidersS, fullVals, curVals);
       //eM.curEcon.runYear(.0);
       //eM.curEcon.runYear(.0);
@@ -6021,12 +6064,13 @@ public class StarTrader extends javax.swing.JFrame {
       //eM.curEcon.runYear(.0);
       //eM.curEcon.runYear(.0);
       String gchgdone = "================gamePaneChange done ==============";
-
-      System.out.println(gchgdone);
-      System.err.println(gchgdone);
+      E.sysmsg("gamePanelChange done");
+      // System.out.println(gchgdone);
+      //System.err.println(gchgdone);
       printMem3();
-      stateConst = CONSTRUCTED;
-    } catch (Exception | Error ex) {
+      setEconState(CONSTRUCTED);
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -6042,11 +6086,16 @@ public class StarTrader extends javax.swing.JFrame {
 
   long gigMem = 1000000000L;
   String prGigMem = "";
-  /** print memory facts at this time 
-   * 
+
+  /**
+   * print memory facts at this time
+   *
    */
-  public static void printMem3() { EM.printMem3();}
-  void oldprintMem3(){
+  public static void printMem3() {
+    EM.printMem3();
+  }
+
+  void oldprintMem3() {
     // runtime.gc(); // garbage collect
     totMem = runtime.totalMemory();
     freeMem = runtime.freeMemory();
@@ -6058,7 +6107,7 @@ public class StarTrader extends javax.swing.JFrame {
   }
 
   void printMem() {
-   // System.out.println();
+    // System.out.println();
   }
 
   int[] clanShipsDone = {0, 0, 0, 0, 0};
@@ -6118,19 +6167,19 @@ public class StarTrader extends javax.swing.JFrame {
           jjj = planet.getAge();
           jjj = planet.getAge() < 3 ? 5 : 7;
           jjj = (int) (shipsDone
-                  + EM.porsVisited[E.P] + .0001); // force a double value
+                       + EM.porsVisited[E.P] + .0001); // force a double value
           // jjj = 0;
           jjj = (int) (shipsDone
-                  / (jjj + .0001)); // never divide by zero
+                       / (jjj + .0001)); // never divide by zero
           jjj = (int) (shipsDone
-                  / (shipsDone
-                  + EM.porsVisited[E.P] + .0001));
+                       / (shipsDone
+                          + EM.porsVisited[E.P] + .0001));
           jjj = planet.visitedShipNext; // index of last saved ship
 
           // check that planet is close enough, expand distance for hirgher loops
           if ((lsel = planet.calcLY(planet, curShip))
-                  < (lse2 = eM.maxLY[0]
-                  + eM.addLY[E.P] * eM.multLYM[majorLoops])) {
+              < (lse2 = eM.maxLY[0]
+                        + eM.addLY[E.P] * eM.multLYM[majorLoops])) {
             // check new planet always can trade
             boolean q0 = planet.canDoAnotherBarter();
             // new planets up to 3 year get preference -- ignore
@@ -6295,7 +6344,8 @@ public class StarTrader extends javax.swing.JFrame {
       paintWaiting();
       if (!doStop && !eM.dfe()) {
         eM.doStartYear();  //move stats up for the next year
-      } else {
+      }
+      else {
         stateConst = STOPPED;
         return;
       }
@@ -6344,10 +6394,12 @@ public class StarTrader extends javax.swing.JFrame {
           eM.names2ec.put(t.name, t);
           if (t.pors == P) {
             eM.planets.add(t);
-          } else {
+          }
+          else {
             eM.ships.add(t);
           }
-        } else {
+        }
+        else {
           EM.deadCnt++;
         }
       }
@@ -6361,7 +6413,8 @@ public class StarTrader extends javax.swing.JFrame {
       if (doStop || eM.dfe()) {
         stateConst = STOPPED;
         paintStopped();
-      } else {
+      }
+      else {
         // set up the preexisting names on the namelist
         int tyear;
         eM.envsPerYear[eM.envsPerYear.length - 1] = (int) eM.minEcons[0][0];
@@ -6425,7 +6478,8 @@ public class StarTrader extends javax.swing.JFrame {
 
       if (doStop || eM.dfe()) {
         stateConst = STOPPED;
-      } else {
+      }
+      else {
         paintFutureFundEconCreate();
         E.msgcnt = 0;
         int nClans = E.clan.values().length - 3;
@@ -6489,7 +6543,8 @@ public class StarTrader extends javax.swing.JFrame {
       } // end doStop future fund
       if (doStop || eM.dfe()) {
         stateConst = STOPPED;
-      } else {
+      }
+      else {
         //stateConst = STARTYR;
         paintStartYear();
         //curStateName = "startYear";
@@ -6505,7 +6560,8 @@ public class StarTrader extends javax.swing.JFrame {
             //   E.msgcnt = 0;
             eM.curEcon.yearStart(0.);
             //      paintStartYear(eM.curEcon);
-          } else {
+          }
+          else {
             //      EM.gameRes.DEAD.set(eM.curEcon.pors, eM.curEcon.clan, 1.);
 
           }
@@ -6524,14 +6580,17 @@ public class StarTrader extends javax.swing.JFrame {
       // start trading the newest planets/ships get first choice, and make the first trades
       // assume newest planets are by newest ships, 
       EM.wasHere6 = "-----BT---- before trading starts, " + stateStringNames[stateConst] + " year=" + eM.year;
-      if(E.debugStatsOut1)System.out.println(EM.wasHere6);
+      if (E.debugStatsOut1) {
+        System.out.println(EM.wasHere6);
+      }
       paintTrade(curEc, curEc);
-    //  curStateName = "trading";
+      //  curStateName = "trading";
       E.msgcnt = 0;
       if (doStop || eM.dfe()) {
         paintStopped();
         stateConst = STOPPED;
-      } else {
+      }
+      else {
 
         printMem3();
         for (int n = 0; n < E.LCLANS && !eM.dfe(); n++) {
@@ -6580,8 +6639,8 @@ public class StarTrader extends javax.swing.JFrame {
               //  distance = distance < .01 ? eM.nominalDistance[0] : distance; // add arbitrary distance if none
               //  eM.curEcon = cur1;  // was a repeat
               E.msgcnt = 0;
-             // paintEconYearStart(eM.curEcon);
-             //curStateName = "econYrStrt";
+              // paintEconYearStart(eM.curEcon);
+              //curStateName = "econYrStrt";
               eM.curEcon.yearStart(distance);
               if (E.debugEconCnt) {
                 synchronized (A4Row.econLock) {
@@ -6593,10 +6652,11 @@ public class StarTrader extends javax.swing.JFrame {
               //    E.msgcnt = 0;
               eM.setCurEcon(ec = curEc = eM.curEcon = cur1);
               paintTrade(eM.curEcon, cur2);
-             // startEconState = (new Date()).getTime();
+              // startEconState = (new Date()).getTime();
               //     eM.curEcon.sStartTrade(eM.curEcon, cur2);
               // paintTrade(eM.curEcon,cur2);
-            } else {
+            }
+            else {
               //       EM.gameRes.DEAD.set(eM.curEcon.pors, eM.curEcon.clan, 1.);
 
             }
@@ -6627,8 +6687,9 @@ public class StarTrader extends javax.swing.JFrame {
       int maxEcons = eM.econs.size();
       if (doStop || eM.dfe()) {
         stateConst = STOPPED;
-      } else {
-       // curStateName = "ecYrEnds";
+      }
+      else {
+        // curStateName = "ecYrEnds";
         if (E.debugEconCnt) {
           /*synchronized (A4Row.econLock) */
           {
@@ -6658,8 +6719,8 @@ public class StarTrader extends javax.swing.JFrame {
               }
             }
           }
-         // startEconState = (new Date()).getTime();
-        //  EM.wasHere = "after startEconState ";
+          // startEconState = (new Date()).getTime();
+          //  EM.wasHere = "after startEconState ";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {
             /* synchronized (A4Row.econLock) */
@@ -6730,7 +6791,9 @@ public class StarTrader extends javax.swing.JFrame {
           }
           //   paintEconEndYear(EM.curEcon);
 
-          if(E.debugDidEconYearEnd)System.out.println("-----DYE------" + " after year end cnt=" + envsLoop2 + " of" + maxEcons + " "  + EM.sinceRunYear() + " " + EM.curEconName + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
+          if (E.debugDidEconYearEnd) {
+            System.out.println("-----DYE------" + " after year end cnt=" + envsLoop2 + " of" + maxEcons + " " + EM.sinceRunYear() + " " + EM.curEconName + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
+          }
           if (E.debugEconCnt) {
             synchronized (A4Row.econLock) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -6739,8 +6802,8 @@ public class StarTrader extends javax.swing.JFrame {
             }
           }
           String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[EM.curEcon.clan] + " " + EM.curEconName + " h="
-                  + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.age
-                  + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
+                         + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.age
+                         + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
           System.out.println(new Date().toString() + disp1);
           namesList.add(envsLoop2, disp1);
           if (E.debugEconCnt) {
@@ -6799,23 +6862,24 @@ public class StarTrader extends javax.swing.JFrame {
               //        EM.names2ec.put(t.name, t);
               if (t.pors == P) {
                 EM.planets.add(t);
-              } else {
+              }
+              else {
                 EM.ships.add(t);
               }
             }
           }
         }
         namesList.clear();
-       // stateConst = ENDYR; already done
+        // stateConst = ENDYR; already done
         maxEcons = EM.econs.size();
         for (envsLoop2 = 0; envsLoop2 < maxEcons && !EM.dfe(); ++envsLoop2) {
           EM.setCurEcon(ec = curEc = EM.econs.get(envsLoop2));
           //    System.out.printf(new Date().toString() + " in doYear at envsLoop2 econ.yearEnd() name=" + EM.curEcon.name);
 
           String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[EM.curEcon.clan]
-                  + " " + EM.curEcon.name + " h=" + EM.curEcon.df(EM.curEcon.getHealth())
-                  + ", age=" + EM.curEcon.age
-                  + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
+                         + " " + EM.curEcon.name + " h=" + EM.curEcon.df(EM.curEcon.getHealth())
+                         + ", age=" + EM.curEcon.age
+                         + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
           System.out.println(new Date().toString() + disp1);
           namesList.add(envsLoop2, disp1);
         } // finish curEcon.name list
@@ -6866,7 +6930,8 @@ public class StarTrader extends javax.swing.JFrame {
           if (lsm.isSelectionEmpty()) {
             System.out.println(since() + "Names: No rows are selected.");
             EM.wasHere = "econ=" + eMCurEcon + " doYear finally Names: No rows are selected.";
-          } else {
+          }
+          else {
             int selectedRow = lsm.getMinSelectionIndex();
 
             namesListRow = selectedRow;
@@ -6890,7 +6955,8 @@ public class StarTrader extends javax.swing.JFrame {
       //System.exit(-21);
       //ex.printStackTrace(System.err);
       // go to finally
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -6899,10 +6965,11 @@ public class StarTrader extends javax.swing.JFrame {
       System.err.println(EM.tError = ("-----BBB----doYear bException=" + ex.toString() + " " + since() + " " + EM.curEconName + " " + Econ.nowThread + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
       // ex.printStackTrace(System.err);
       EM.flushes();
-     //System.exit(-25);
+      //System.exit(-25);
       setFatalError();
       throw new WasFatalError(EM.tError);
-    } finally {
+    }
+    finally {
       setEconState(RUNSDONE);
       EM.flushes();
       if (EM.dfe()) {
@@ -7024,8 +7091,8 @@ public class StarTrader extends javax.swing.JFrame {
         gameP = gamePlanets[0] = gamePlanets[0] < EM.porsCnt[E.P] ? EM.porsCnt[E.P] : gamePlanets[0];
         gameS = gameShips[0] = gameShips[0] < EM.porsCnt[E.S] ? EM.porsCnt[E.S] : gameShips[0];
       }
-   //   assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3: "Thread count too low-" + Thread.activeCount() ;
-                                       
+      //   assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3: "Thread count too low-" + Thread.activeCount() ;
+
       controlPanels.getComponent(3);
       controlPanels.setSelectedIndex(3);
       displayPanel0Text.setRows(18);
@@ -7060,7 +7127,8 @@ public class StarTrader extends javax.swing.JFrame {
 
       if (curEc == null) {
 
-      } else { // curEc != null
+      }
+      else { // curEc != null
         //      econCnt = curEc.econCnt;
 
         //String linez =  "both=" + curEc.mf(eM.econCnt) + " Planets=" + curEc.mf(eM.porsCnt[E.P]) + " ships=" + curEc.mf(eM.porsCnt[E.S]) + newLine  + since () + sinceRunYear() + newLine;
@@ -7078,55 +7146,61 @@ public class StarTrader extends javax.swing.JFrame {
         String disp1 = "year" + eM.year + " ";
         disp1 += (stateConst == TRADING ? tradingEcon() : sinceEcon());
         disp1 += " " + EM.econCnt + ":" + EM.econs.size() + " Planets=" + EM.porsCnt[E.P] + " ships=" + EM.porsCnt[E.S] + " died=" + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.S + 1, 0, 5) + newLine
-                + " Total Wealth=" + EM.mf(totalWealth) + " minWealth=" + EM.mf(minWealth) + " maxWealth=" + EM.mf(maxWealth) + newLine
-                + "yrAveWorth =" + EM.mf(bworth) + " Planets " + EM.mf(pworth) + " Ships " + EM.mf(sworth) + newLine
-                + "initAveRCSG =" + EM.mf(initBrcsg) + " Planets " + EM.mf(initPrcsg) + " Ships " + EM.mf(initSrcsg) + newLine
-                + "iyrAveRCSG =" + EM.mf(brcsg) + " Planets " + EM.mf(prcsg) + " Ships " + EM.mf(srcsg) + newLine
-                + "TradedYear " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + newLine
-                + "GameYrs    " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                + "TradedGame " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " also:" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " rej:" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.S + 1, 0, 5) + " lost:" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                + "BothCreated " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                + "GameCreated" + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                + "FutCreated  " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                + "GCatastrophies " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                + "Difficulty" + EM.difficultyPercent[0] + " DiedGame "
-                + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.S + 1, 0, 5)
-                + ":acc=" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.S + 1, 0, 5)
-                + ":rej=" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.S + 1, 0, 5)
-                + ":lost=" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.P, E.S + 1, 0, 5)
-                + " Planets " + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.P + 1, 0, 5)
-                + ":" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.P + 1, 0, 5)
-                + ":" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.P + 1, 0, 5)
-                + ":" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.P, E.P + 1, 0, 5)
-                + " Ships " + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.S, E.S + 1, 0, 5)
-                + ":" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.S, E.S + 1, 0, 5)
-                + ":" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.S, E.S + 1, 0, 5)
-                + ":" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.S, E.S + 1, 0, 5)
-                + newLine;
+                 + " Total Wealth=" + EM.mf(totalWealth) + " minWealth=" + EM.mf(minWealth) + " maxWealth=" + EM.mf(maxWealth) + newLine
+                 + "yrAveWorth =" + EM.mf(bworth) + " Planets " + EM.mf(pworth) + " Ships " + EM.mf(sworth) + newLine
+                 + "initAveRCSG =" + EM.mf(initBrcsg) + " Planets " + EM.mf(initPrcsg) + " Ships " + EM.mf(initSrcsg) + newLine
+                 + "iyrAveRCSG =" + EM.mf(brcsg) + " Planets " + EM.mf(prcsg) + " Ships " + EM.mf(srcsg) + newLine
+                 + "TradedYear " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + newLine
+                 + "GameYrs    " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "TradedGame " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " also:" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " rej:" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.S + 1, 0, 5) + " lost:" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "BothCreated " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "GameCreated" + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "FutCreated  " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "GCatastrophies " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "Difficulty" + EM.difficultyPercent[0] + " DiedGame "
+                 + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.S + 1, 0, 5)
+                 + ":acc=" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.S + 1, 0, 5)
+                 + ":rej=" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.S + 1, 0, 5)
+                 + ":lost=" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.P, E.S + 1, 0, 5)
+                 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.P + 1, 0, 5)
+                 + ":" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.P + 1, 0, 5)
+                 + ":" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.P + 1, 0, 5)
+                 + ":" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.P, E.P + 1, 0, 5)
+                 + " Ships " + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.S, E.S + 1, 0, 5)
+                 + ":" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.S, E.S + 1, 0, 5)
+                 + ":" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.S, E.S + 1, 0, 5)
+                 + ":" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.S, E.S + 1, 0, 5)
+                 + newLine;
         int tmp1;
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNLstS1, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "LostSOS1 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNLstS1, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLstS1, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
-        } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNLstS2, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        }
+        else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNLstS2, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "LostSOS2 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNLstS2, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLstS2, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
-        } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNLstS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        }
+        else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNLstS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "LostSOS3 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNLstS3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLstS3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNHlpdSos1, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "HelpdSOS1 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNHlpdSos1, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNHlpdSos1, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
-        } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNHlpdSos2, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        }
+        else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNHlpdSos2, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "HelpdSOS2 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNHlpdSos2, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNHlpdSos2, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
-        } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNHlpdSos3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        }
+        else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNHlpdSos3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "HelpdSOS1 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNHlpdSos3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNHlpdSos3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS1 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
-        } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS2, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        }
+        else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS2, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS2 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS2, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS2, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
-        } else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        }
+        else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS3 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
         disp1 += "year" + eM.year + " Threads=" + Econ.getThreadCnt() + ":" + Thread.activeCount() + " " + EM.wasHere8 + " " + since() + " " + sinceRunYear() + "  " + newLine;
-        disp1 += "more " + EM.wasHere8  + EM.mem()+ newLine;
+        disp1 += "more " + EM.wasHere8 + EM.mem() + newLine;
 
         /*
        + "==millisecs econ per year= millisecs per year/econs  ===========" + newLine;
@@ -7143,15 +7217,15 @@ public class StarTrader extends javax.swing.JFrame {
           int yMax = y + entPerRow;
           for (; y < yMax && theYear[y] > -1; y++) {
             disp1 += "(" + theYear[y] + ")" + "T" + yearSecPerEcon[y]
-                    + " W" + EM.mf(yearTW[y]) + "/"
-                    + EM.mf(gameTW[y])
-                    + "  E" + yearEcons[y] + "/"
-                    + gameEcons[y] + "  P"
-                    + yearPlanets[y] + "/"
-                    + gamePlanets[y] + "  S"
-                    + yearShips[y] + "/"
-                    + gameShips[y]
-                    + (y < yMax - 1 ? " === " : "");
+                     + " W" + EM.mf(yearTW[y]) + "/"
+                     + EM.mf(gameTW[y])
+                     + "  E" + yearEcons[y] + "/"
+                     + gameEcons[y] + "  P"
+                     + yearPlanets[y] + "/"
+                     + gamePlanets[y] + "  S"
+                     + yearShips[y] + "/"
+                     + gameShips[y]
+                     + (y < yMax - 1 ? " === " : "");
 
           }
           disp1 += newLine;
@@ -7232,7 +7306,7 @@ public class StarTrader extends javax.swing.JFrame {
         controlPanels.setSelectedIndex(4);
         cpIx2 = controlPanels.getSelectedIndex();
 
-       listRes(0, resLoops, fullRes);
+        listRes(0, resLoops, fullRes);
         controlPanels.setSelectedIndex(4);
         cpIx3 = controlPanels.getSelectedIndex();
         stats.setVisible(true);
@@ -7242,7 +7316,8 @@ public class StarTrader extends javax.swing.JFrame {
         controlPanels.repaint();
         controlPanels.setVisible(true);
         cpIx4 = controlPanels.getSelectedIndex();
-      } else {  // not STATS
+      }
+      else {  // not STATS
         controlPanels.setSelectedIndex(3);
         display.setVisible(true);
         if (eM.haveColors[0][0] > 1.2 && curEc != null) {
@@ -7259,12 +7334,13 @@ public class StarTrader extends javax.swing.JFrame {
           curDisplayPrints++;
           long nTime = new Date().getTime();
           String aLine = "------DA-----paintCurDisplay " + (nTime - startTime) + " " + stateStringNames[stateConst] + "Y" + EM.year + " eCnt=" + EM.econCnt + ":" + EM.econs.size() + ":"
-                  + EM.curEconName + "::" + Econ.nowName + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4 ;
+                         + EM.curEconName + "::" + Econ.nowName + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4;
 
           System.out.println(aLine);
         }
       }
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -7319,7 +7395,8 @@ public class StarTrader extends javax.swing.JFrame {
       //Start1Name.setForeground(E.clan.values()[eM.logEnvirn[dN].clan].getColor(eM.logEnvirn[dN].pors));
       //Start1Name.setBackground(E.clan.values()[eM.logEnvirn[dN].clan].getInvColor(eM.logEnvirn[dN].pors));
       //Start1Name.setBackground(new Color(-E.clanColors[eM.logEnvirn[dN].pors][eM.logEnvirn[dN].group]));
-    } else {
+    }
+    else {
       E.dN = 1;
       eM.logEnvirn[1] = En;
       Start2Name.setText(En.name);
@@ -7379,7 +7456,8 @@ public class StarTrader extends javax.swing.JFrame {
     if (dN == 0) {
       logM1Spinner.setValue(M);
       //   logM1Spinner.setBackground(E.clan.values()[eM.logEnvirn[dN].clan].getInvColor(eM.logEnvirn[dN].pors));
-    } else {
+    }
+    else {
       logM2Spinner.setValue(M);
       logM2Spinner.setBackground(E.clan.values()[eM.logEnvirn[dN].clan].getInvColor(eM.logEnvirn[dN].pors));
     }
@@ -7394,7 +7472,8 @@ public class StarTrader extends javax.swing.JFrame {
     if (dN == 0) {
       LogDlen1Slider.setValue(len);
       //  LogDlen1Slider.setBackground(E.clan.values()[eM.logEnvirn[dN].clan].getInvColor(eM.logEnvirn[dN].pors));
-    } else {
+    }
+    else {
       LogDLen2Slider.setValue(len);
       // LogDLen2Slider.setBackground(E.clan.values()[eM.logEnvirn[dN].clan].getInvColor(eM.logEnvirn[dN].pors));
     }
@@ -7410,7 +7489,8 @@ public class StarTrader extends javax.swing.JFrame {
     if (dN == 0) {
       logDLevel1Slider.setValue(lev);
       //   logDLevel1Slider.setBackground(E.clan.values()[eM.logEnvirn[dN].clan].getInvColor(eM.logEnvirn[dN].pors));
-    } else {
+    }
+    else {
       logDLevel2Slider.setValue(lev);
       //  logDLevel2Slider.setBackground(E.clan.values()[eM.logEnvirn[dN].clan].getInvColor(eM.logEnvirn[dN].pors));
     }
@@ -7482,7 +7562,8 @@ public class StarTrader extends javax.swing.JFrame {
           eM.gamePorS = E.P;
           if (gc <= 4) {
             oldval = eM.valI[v][eM.sliderC][0][0];
-          } else {
+          }
+          else {
             oldval = eM.valI[v][eM.sliderC][eM.gamePorS][eM.gameClanStatus];
           }
           val = gamePSliders[p].getValue();
@@ -7494,9 +7575,11 @@ public class StarTrader extends javax.swing.JFrame {
             eM.gamePorS = E.S;
             if (gc <= 2) {
               oldval = eM.valI[v][eM.sliderC][0][eM.gamePorS];
-            } else if (gc <= 4) {
+            }
+            else if (gc <= 4) {
               oldval = eM.valI[v][eM.sliderC][eM.gamePorS][0];
-            } else {
+            }
+            else {
               oldval = eM.valI[v][eM.sliderC][eM.gamePorS][eM.gameClanStatus];
             }
             val = gameSSliders[p].getValue();
@@ -7515,7 +7598,8 @@ public class StarTrader extends javax.swing.JFrame {
         }
         EM.flushes();
       }
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -7564,7 +7648,8 @@ public class StarTrader extends javax.swing.JFrame {
           System.out.print("game master panel=" + eM.gPntr);
         }
         klan = 0;
-      } else {
+      }
+      else {
         if (E.debugSettingsTab) {
           System.out.print("clan panel" + eM.gameClanStatus + "=" + eM.cPntr);
         }
@@ -7581,20 +7666,23 @@ public class StarTrader extends javax.swing.JFrame {
         }
         if (eM.gameClanStatus == 5) {
           eM.gPntr = Math.max(0, eM.gPntr - 1);
-        } else {
+        }
+        else {
           eM.cPntr = Math.max(0, eM.cPntr - 1);
         }
         if (E.debugSettingsTab) {
           System.out.println();
         }
-      } else if (action == -2) { // restart from the beginning
+      }
+      else if (action == -2) { // restart from the beginning
         if (eM.gameClanStatus == 5) {
           eM.gPntr = 0;  // rewind
           klan = 0;
           if (E.debugSettingsTab) {
             System.out.print("Restart at the first game master panel ");
           }
-        } else {
+        }
+        else {
           eM.cPntr = 0;
           klan = clan;
           if (E.debugSettingsTab) {
@@ -7617,20 +7705,23 @@ public class StarTrader extends javax.swing.JFrame {
             if (E.debugSettingsTab) {
               System.out.print("Remain at the current game-master no additional panel" + eM.gPntr + " ");
             }
-          } else {
+          }
+          else {
             klan = 0;
             eM.gPntr++;
             if (E.debugSettingsTab) {
               System.out.print("Move to the next game-master panel=" + eM.gPntr + " ");
             }
           }
-        } else {
+        }
+        else {
           klan = clan;
           if (eM.cStart[eM.cPntr + 1] < 0) {
             if (E.debugSettingsTab) {
               System.out.print("Remain at current clan-master panel, not additonal panel=" + eM.cPntr);
             }
-          } else {
+          }
+          else {
             eM.cPntr++;
             if (E.debugSettingsTab) {
               System.out.print("Advance to the next clan-master panel" + eM.cPntr);
@@ -7646,7 +7737,8 @@ public class StarTrader extends javax.swing.JFrame {
         if (E.debugSettingsTab) {
           System.out.println("Start the next game-master panel at vv =" + eM.vv + " = " + eM.valS[eM.vv][0]);
         }
-      } else {
+      }
+      else {
         klan = clan;
         eM.vv = eM.cStart[eM.cPntr];
         int ix = 0;
@@ -7722,7 +7814,8 @@ public class StarTrader extends javax.swing.JFrame {
           int sliderC = eM.sliderC;
           if (gc == eM.vfour || gc == eM.vten) {
             v = eM.valI[currentVals1[nn]][sliderC][E.S][klan];
-          } else if (gc == eM.vtwo) {
+          }
+          else if (gc == eM.vtwo) {
             v = eM.valI[currentVals1[nn]][sliderC][0][E.S];
           }
           //    v = (vl = eM.valI[currentVals1[nn]][sliderC].length) > 1 ? (vv = eM.valI[currentVals1[nn]][sliderC][E.S][klan]) : eM.valI[currentVals1[nn]][sliderC][0].length > 1? (vv = eM.valI[currentVals1[nn]][eM.sliderC][0][E.S]: -1);
@@ -7747,7 +7840,8 @@ public class StarTrader extends javax.swing.JFrame {
             gameSSliders[nn].setValueIsAdjusting(true);
             //     panelAr[nn].setBackground(shipBackgroundColor);
             //    panelAr[nn].setForeground(shipInvColor);
-          } else {
+          }
+          else {
             gameSSliders[nn].setEnabled(false);
             gameSSliders[nn].setVisible(false);
             if (E.debugSettingsTab) {
@@ -7755,7 +7849,8 @@ public class StarTrader extends javax.swing.JFrame {
             }
           }
           nn++;
-        } else {
+        }
+        else {
           if (E.debugSettingsTab) {
             System.out.println(" >>>>SKIP line=" + nn + ", gc=" + gc + ", klan=" + klan + ", clan=" + eM.gameClanStatus + ", desc=" + eM.valS[currentVals1[nn]][0]);
           }
@@ -7789,7 +7884,8 @@ public class StarTrader extends javax.swing.JFrame {
         System.out.println(
                 " " + new Date().toString());
       }
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -7958,7 +8054,8 @@ public class StarTrader extends javax.swing.JFrame {
         ListSelectionModel lsm = (ListSelectionModel) e.getSource();
         if (lsm.isSelectionEmpty()) {
           //      System.out.println(since() + " No rows are selected.");
-        } else {
+        }
+        else {
           int selectedRow = lsm.getMinSelectionIndex();
           statsField.setText(stringTemp = resExt[selectedRow]);
           if (eM.rememberFromPage) {
@@ -8023,7 +8120,6 @@ public class StarTrader extends javax.swing.JFrame {
   /**
    * @param args the command line arguments
    */
-
   public static void main(String args[]) throws IOException {
     /* Set the Nimbus look and feel --change to animation*/
 
@@ -8038,9 +8134,10 @@ public class StarTrader extends javax.swing.JFrame {
       st.setVisible(true);
       stateConst = CONSTRUCTED;
 
-      if (testing || (args.length > 0 && (args[0].contains("test") ))) {
+      if (testing || (args.length > 0 && (args[0].contains("test")))) {
         main3();
-      } else {
+      }
+      else {
         System.err.println("----MSa----continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -8048,19 +8145,20 @@ public class StarTrader extends javax.swing.JFrame {
           @Override
           public void run() {
             st.setVisible(true);
-            if(args.length > 0 && (args[0].contains("run5")) ){
+            if (args.length > 0 && (args[0].contains("run5"))) {
               st.runYears(5);
-            } else
-             if(args.length > 0 && (args[0].contains("run100")) ){
-              st.runYears(100);      
-            } else
-             if(args.length > 0 && (args[0].contains("run20")) ){
+            }
+            else if (args.length > 0 && (args[0].contains("run100"))) {
+              st.runYears(100);
+            }
+            else if (args.length > 0 && (args[0].contains("run20"))) {
               st.runYears(20);
-              } else
-             if(args.length > 0 && (args[0].contains("run10")) ){
+            }
+            else if (args.length > 0 && (args[0].contains("run10"))) {
               st.runYears(10);
-            }  
-        }});// invokeLater
+            }
+          }
+        });// invokeLater
       } // end if test
       /* } catch (InterruptedException ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -8078,7 +8176,8 @@ public class StarTrader extends javax.swing.JFrame {
       EM.flushes();
       fatalError = true;;
        */
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -8089,8 +8188,9 @@ public class StarTrader extends javax.swing.JFrame {
       ex.printStackTrace(System.err);
       EM.flushes();
       fatalError = true;;
-    } finally {
-      System.err.println("----MEa-----main finally do flushes next then close bKeep");
+    }
+    finally {
+      E.sysmsg("----MEa-----main finally do flushes next then close bKeep");
       EM.flushes();
       if (EM.bKeep != null) {
         EM.bKeep.close();
@@ -8112,26 +8212,27 @@ public class StarTrader extends javax.swing.JFrame {
       // E.bRemember.write(rOut,0,rOut.length());
       // E.bKeep.write(rOut,0,rOut.length());
       PrintStream jout, jerr, jout1, jerr1;
-      
+
       if (E.debugOutput || (args.length > 0 && args[0].contains("see"))) {
-      //if (E.debugOutput) {
+        //if (E.debugOutput) {
         jout = new PrintStream(new File("StarTraderOutput.txt"));
         //  jout1 = new PrintStream(new File("StarTraderOut1.txt"));
         //  jout1.println("jout1 line");
-        jout.println("jout line0");
-        System.out.println("----MSO0----System.out line 0");
+        jout.println("jout line0 " + (new Date()).toString());
+        System.out.println("----MSO0----System.out line 0" + (new Date()).toString());
         jerr = new PrintStream(new File("StarTraderErrors.txt"));
+        jerr.println("jout line0 " + (new Date()).toString());
         //     jerr1 = new PrintStream(new File("StarTraderErr1.txt"));
         if (E.resetOut || (args.length > 0 && args[0].contains("see"))) {
-      //  if (E.resetOut) {
+          //  if (E.resetOut) {
           System.setOut(jout);
-          System.out.println("-----MSOO----output to System.out after setOut");
+          System.out.println("-----MSOO----output to System.out after setOut " + (new Date()).toString());
           System.setErr(jerr);
-          System.err.println("----MSOE----output to System.err after setErr");
+          System.err.println("----MSOE----output to System.err after setErr " + (new Date()).toString());
 
         }
-        System.out.println("-----MSOo1-----output after if statment");
-        System.err.println("----MSOe1-----output to err after if statment");
+        System.out.println("-----MSOo1-----output after if statment " + (new Date()).toString());
+        System.err.println("----MSOe1-----output to err after if statment " + (new Date()).toString());
       }
 
       for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -8141,7 +8242,8 @@ public class StarTrader extends javax.swing.JFrame {
           break;
         }
       }
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
@@ -8151,14 +8253,15 @@ public class StarTrader extends javax.swing.JFrame {
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + EM.addMore());
       ex.printStackTrace(System.err);
       EM.flushes();
-      fatalError = true;st.fatalError = true;
-    //  System.exit(-17);
+      fatalError = true;
+      st.fatalError = true;
+      //  System.exit(-17);
     }
   }// mainStart
 
-  static int myYears=2;
-  static volatile int cntr1 = 0, cntra=0,cntrb=0,cntrc=0;
-  static volatile long ttime = 0,bbtime=0,rtime=0;
+  static int myYears = 2;
+  static volatile int cntr1 = 0, cntra = 0, cntrb = 0, cntrc = 0;
+  static volatile long ttime = 0, bbtime = 0, rtime = 0;
   static volatile int cntr2 = 0;
   static volatile int cntr3 = 0;
   static volatile int cntr3a = 0;
@@ -8179,7 +8282,7 @@ public class StarTrader extends javax.swing.JFrame {
       System.err.println("------TA0-----enter main3 thread=" + Thread.currentThread().getName() + ", " + (new Date().getTime() - startTime) + EM.mem());
       testing = true; // flag in testing mode
       st.setVisible(true);
-     bbtime = new Date().getTime();
+      bbtime = new Date().getTime();
       Runnable tests1 = new Runnable() {
         public void run() {  //tests1.run
           try {
@@ -8191,9 +8294,11 @@ public class StarTrader extends javax.swing.JFrame {
             if (!eM.dfe()) {
               System.err.println("----TA------run main3 start testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1 + EM.mem());
               while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                System.out.println("----TT----tests1 round1 waiting out testing thread=" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() + ", cntr1=" + cntr1++);
-                if(cntr1 == 9)EM.printAddMore();
-                assert cntr1 < 11 : "stuck round1 " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() + "  at cntr1=" + cntr1;
+                System.out.println("----TT----tests1 round1 waiting out testing thread=" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + ", cntr1=" + cntr1++);
+                if (cntr1 == 9) {
+                  EM.printAddMore();
+                }
+                assert cntr1 < 11 : "stuck round1 " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + "  at cntr1=" + cntr1;
                 if (E.noAsserts && cntr1 > 10) {
                   eM.doMyErr("stuck at cntr1 > 10");
                 }
@@ -8203,14 +8308,14 @@ public class StarTrader extends javax.swing.JFrame {
               eM.randFrac[1][0] = .7;
               EM.difficultyPercent[0] = 80;
               stateConst = STARTING;
-              System.out.println("-----TA2-----Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() );
+              System.out.println("-----TA2-----Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem());
               stateConst = RUNNING;
 
               st.runYears(2); // higher random
               // wait for runYears to finish
               cntr1 = 0;
               while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                System.out.println("----TA3----main3 test1 round3 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() + ", cnt1=" + cntr1++);
+                System.out.println("----TA3----main3 test1 round3 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + ", cnt1=" + cntr1++);
                 assert cntr1 < 81 : " stuck at wait round3 cntr1=" + cntr1;
                 if (E.noAsserts && cntr1 > 40) {
                   eM.doMyErr("stuck at cntr > 40");
@@ -8224,15 +8329,15 @@ public class StarTrader extends javax.swing.JFrame {
                 double[] rrr = {5., .7};
                 eM.resourceGrowth = eM.staffGrowth = rrr;
                 //stateConst = STARTING;
-                System.err.println("----R4----Countinue main3 round4 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem());
+                System.err.println("----R4----Countinue main3 round4 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem());
                 stateConst = RUNNING;
 
                 st.runYears(2); // higher random
                 // wait for runYears to finish
                 cntr1 = 0;
                 while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                  System.err.println("#######main3 round5 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem()  + ", cntr1=" + cntr1++);
-                  assert cntr1 < 81 : " stuck waiting in round5 " + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() + " cntr1=" + cntr1;
+                  System.err.println("#######main3 round5 waiting testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + ", cntr1=" + cntr1++);
+                  assert cntr1 < 81 : " stuck waiting in round5 " + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + " cntr1=" + cntr1;
                   if (E.noAsserts && cntr1 > 80) {
                     eM.doMyErr(" stuck waiting in round5 " + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + " cntr1=" + cntr1);
                   }
@@ -8241,10 +8346,11 @@ public class StarTrader extends javax.swing.JFrame {
                 if (!eM.dfe() && !st.fatalError) {
                   //  eM.difficultyPercent[0] = 15.;
                   //stateConst = STARTING;
-                  System.err.println("----R6----Countinue main3 round6 test1 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + " stuck waiting in round5 " + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() + " cntr1=" + cntr1);
+                  System.err.println("----R6----Countinue main3 round6 test1 doing testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + " stuck waiting in round5 " + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + " cntr1=" + cntr1);
                   stateConst = RUNNING;
-                  if(!itTesting)st.runYears(2); // much lower difficulty
-                  // wait for runYears to finish
+                  if (!itTesting) {
+                    st.runYears(2); // much lower difficulty
+                  }                  // wait for runYears to finish
                   cntr1 = 0;
                   System.err.println("#######main3 round7 before testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr1=" + cntr1);
                   while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
@@ -8261,8 +8367,9 @@ public class StarTrader extends javax.swing.JFrame {
                     stateConst = RUNNING;
 
                     //st.runYears(20); // higher random
-                    if(!itTesting)st.runYears(2); // higher random
-                    // wait for runYears to finish
+                    if (!itTesting) {
+                      st.runYears(2); // higher random
+                    }                    // wait for runYears to finish
                     cntr1 = 0;
 
                     while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
@@ -8286,15 +8393,17 @@ public class StarTrader extends javax.swing.JFrame {
         stateConst = RUNNING;
              */
 
-          } catch (WasFatalError ex) {
+          }
+          catch (WasFatalError ex) {
             ex.printStackTrace(EM.pw);
             EM.thirdStack = EM.sw.toString();
             eM.flushes();
             System.err.println("Main3 test Error " + ex.toString() + " " + EM.curEconName + " " + Thread.currentThread().getName() + EM.andMore());
             //ex.printStackTrace(System.err);
-           // System.exit(-12);
+            // System.exit(-12);
             // go to finally
-          } catch (Exception | Error ex) {
+          }
+          catch (Exception | Error ex) {
             EM.firstStack = EM.secondStack + "";
             ex.printStackTrace(EM.pw);
             EM.secondStack = EM.sw.toString();
@@ -8308,26 +8417,26 @@ public class StarTrader extends javax.swing.JFrame {
           }
         } //tests1.run
       }; // end tests1
-      
-             eM.randFrac[0][0] = .7; // increase game random
-              eM.randFrac[1][0] = .7;
-              EM.difficultyPercent[0] = 80;
-              stateConst = STARTING;
-              rtime = new Date().getTime();
-              System.out.println("-----TAa-----Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times r" + EM.since(rtime) + ":t" + EM.since(ttime) + ":s" + EM.since(startTime)  + EM.mem() );
-         //    stateConst = RUNNING;
-              st.runYears(myYears); // higher random
-              // wait for runYears to finish
-              cntra = 0;
-              while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-                System.out.println("----TA3----main3 test1 rounda waiting testing thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() + ", cntra=" + cntra++);
-                assert cntr1 < 91 : " stuck at wait rounda "  + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime)  + EM.mem() + ", cntra=" + cntra;
-                EM.wasHere8 = "--rnda lcnt=" + (90-cntra) + " rtime" + EM.since(rtime) + EM.mem();
-                if (E.noAsserts && cntr1 > 40) {
-                  eM.doMyErr("stuck at cntr > 40");
-                }
-                Thread.sleep(4000);
-              }
+
+      eM.randFrac[0][0] = .7; // increase game random
+      eM.randFrac[1][0] = .7;
+      EM.difficultyPercent[0] = 80;
+      stateConst = STARTING;
+      rtime = new Date().getTime();
+      System.out.println("-----TAa-----Countinue main3 test1 round2 doing testingthread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", times r" + EM.since(rtime) + ":t" + EM.since(ttime) + ":s" + EM.since(startTime) + EM.mem());
+      //    stateConst = RUNNING;
+      st.runYears(myYears); // higher random
+      // wait for runYears to finish
+      cntra = 0;
+      while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
+        System.out.println("----TA3----main3 test1 rounda waiting testing thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + ", cntra=" + cntra++);
+        assert cntr1 < 91 : " stuck at wait rounda " + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + ", cntra=" + cntra;
+        EM.wasHere8 = "--rnda lcnt=" + (90 - cntra) + " rtime" + EM.since(rtime) + EM.mem();
+        if (E.noAsserts && cntr1 > 40) {
+          eM.doMyErr("stuck at cntr > 40");
+        }
+        Thread.sleep(4000);
+      }
       eM.difficultyPercent[0] = 80.;
       EM.prioritySetMult[0][0] = 1.0;
       EM.prioritySetMult[1][0] = 1.0;
@@ -8338,43 +8447,45 @@ public class StarTrader extends javax.swing.JFrame {
       EM.clanStartFutureFundDues[1][1] = 1000.;
       st.runYears(2); // higher difficult
 
-   //   SwingUtilities.invokeAndWait(tests1);
-   //   SwingUtilities.invokeLater(tests1);
+      //   SwingUtilities.invokeAndWait(tests1);
+      //   SwingUtilities.invokeLater(tests1);
       cntr1 = 0;
       rtime = (new Date().getTime());
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("testing waiting out round1 thread=" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since(bbtime) + ":" + EM.since(rtime) + ", cntr1=" + ++cntr1);
-        
+
         assert cntr1 < 101 : " stuck waiting after round1 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since(bbtime) + ":" + EM.since(ttime) + " cntr1=" + cntr1;
-EM.wasHere8 = "--rnd1 lcnt=" + (100-cntr1) + " rtime" + EM.since(rtime) + EM.mem();
-Thread.sleep(4000);
+        EM.wasHere8 = "--rnd1 lcnt=" + (100 - cntr1) + " rtime" + EM.since(rtime) + EM.mem();
+        Thread.sleep(4000);
       }
-    //  eM.maxThreads[0][0] = 7.;
+      //  eM.maxThreads[0][0] = 7.;
       eM.difficultyPercent[0] = 60.;
       EM.prioritySetMult[0][0] = 2.9;
       EM.prioritySetMult[1][0] = 2.9;
       cntr2 = 0;
       rtime = (new Date().getTime());
       st.runYears(2);
-      
-       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out round2 thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + EM.since("rtime",rtime) + ", cntr2=" + ++cntr2);
-       EM.wasHere8 = "--rnd3 lcnt=" + (100-cntr2) + " rtime" + EM.since(rtime) + EM.mem(); 
-       assert cntr2 < 101 : " stuck waiting after round2 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime",rtime) + ":" + EM.since("startTime",startTime) + " cntr2=" + cntr2;
-       Thread.sleep(4000);
+
+      while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
+        System.err.println("tests1 waiting out round2 thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + EM.since("rtime", rtime) + ", cntr2=" + ++cntr2);
+        EM.wasHere8 = "--rnd3 lcnt=" + (100 - cntr2) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr2 < 101 : " stuck waiting after round2 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime", rtime) + ":" + EM.since("startTime", startTime) + " cntr2=" + cntr2;
+        Thread.sleep(4000);
       }
       eM.difficultyPercent[0] = 55.;
       EM.prioritySetMult[0][0] = 2.5;
       EM.prioritySetMult[1][0] = 2.5;
       cntr3 = 0;
-      if(!itTesting)st.runYears(2);
+      if (!itTesting) {
+        st.runYears(2);
+      }
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("tests1 waiting out round3 thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + EM.since("rtime",rtime) + ", cntr3=" + ++cntr3);
-       EM.wasHere8 = "--rnd3 lcnt=" + (100-cntr3) + " rtime" + EM.since(rtime) + EM.mem(); 
-       assert cntr3 < 101 : " stuck waiting after round3 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime",rtime) + ":" + EM.since("startTime",startTime) + " cntr3=" + cntr3;
-Thread.sleep(4000);
+        System.err.println("tests1 waiting out round3 thread=" + Thread.currentThread().getName() + ", " + stateStringNames[stateConst] + EM.since("rtime", rtime) + ", cntr3=" + ++cntr3);
+        EM.wasHere8 = "--rnd3 lcnt=" + (100 - cntr3) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr3 < 101 : " stuck waiting after round3 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime", rtime) + ":" + EM.since("startTime", startTime) + " cntr3=" + cntr3;
+        Thread.sleep(4000);
       }
       EM.prioritySetMult[0][0] = 2.3;
       EM.prioritySetMult[1][0] = 2.3;
@@ -8384,28 +8495,31 @@ Thread.sleep(4000);
       EM.clanStartFutureFundDues[1][0] = 700.;
       EM.clanStartFutureFundDues[1][2] = 700.;
       EM.clanStartFutureFundDues[1][1] = 700.;
-      if(!itTesting)st.runYears(2); // higher difficult
-      // SwingUtilities.invokeLater(tests1);
+      if (!itTesting) {
+        st.runYears(2); // higher difficult
+      }      // SwingUtilities.invokeLater(tests1);
       cntr4 = 0;
       ttime = (new Date().getTime());
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("tests1 waiting out round4 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr4=" + cntr4++);
-       EM.wasHere8 = "--rnd4 lcnt=" + (100-cntr4) + " rtime" + EM.since(rtime) + EM.mem(); 
-        assert cntr4 < 101 : " stuck waiting after round4 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime",rtime) + ":" + EM.since() + " cntr4=" + cntr3;
-         Thread.sleep(4000);
+        EM.wasHere8 = "--rnd4 lcnt=" + (100 - cntr4) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr4 < 101 : " stuck waiting after round4 " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", times " + EM.since("rtime", rtime) + ":" + EM.since() + " cntr4=" + cntr3;
+        Thread.sleep(4000);
       }
-     // eM.maxThreads[0][0] = 7.;
+      // eM.maxThreads[0][0] = 7.;
       EM.prioritySetMult[0][0] = 2.8;
       EM.prioritySetMult[1][0] = 2.8;
       EM.vdifMult = 0.085;
       cntr5 = 0;
       rtime = (new Date().getTime());
-      if(!itTesting)st.runYears(2);
+      if (!itTesting) {
+        st.runYears(2);
+      }
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M5---waiting out round5 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr5=" + ++cntr5);
-        EM.wasHere8 = "--rnd5 lcnt=" + (150-cntr5) + " rtime" + EM.since(rtime) + EM.mem(); 
+        EM.wasHere8 = "--rnd5 lcnt=" + (150 - cntr5) + " rtime" + EM.since(rtime) + EM.mem();
         assert cntr5 < 151 : " stuck waiting after round5 cntr5=" + cntr5;
         Thread.sleep(4000);
       }
@@ -8416,12 +8530,14 @@ Thread.sleep(4000);
       EM.vdifMult = 0.09;
       cntr6 = 0;
       rtime = (new Date().getTime());
-      if(!itTesting)st.runYears(2);
+      if (!itTesting) {
+        st.runYears(2);
+      }
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M6----waiting out round6 testing thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + EM.since(ttime) + ", cntr6=" + ++cntr6);
-        EM.wasHere8 = "--rnd6 lcnt=" + (200-cntr6) + " rtime" + EM.since(rtime) + EM.mem();
-        assert cntr6 < 201 : " stuck waiting after round6 cntr6 > 201" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5+ " cntr6=" + cntr6 + EM.mem();
+        EM.wasHere8 = "--rnd6 lcnt=" + (200 - cntr6) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr6 < 201 : " stuck waiting after round6 cntr6 > 201" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + EM.mem();
         Thread.sleep(4000);
       }
       //  double mab1[] = {.60, .60}; // resource costs planet,ship
@@ -8430,28 +8546,32 @@ Thread.sleep(4000);
       eM.mab1[1] = 2.;
       eM.mac1[0] = 2.;
       eM.mac1[1] = 2.;
-      if(!itTesting)st.runYears(2);
+      if (!itTesting) {
+        st.runYears(2);
+      }
       cntr7 = 0;
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M7----waiting out testing round7 =" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + ++cntr7);
-        EM.wasHere8 = "--rnd7 lcnt=" + (200-cntr7) + " rtime" + EM.since(rtime) + EM.mem();
-        assert cntr7 < 201 : " stuck waiting after round7 cntr7=" + cntr7  + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + cntr7;
-                Thread.sleep(4000);
+        EM.wasHere8 = "--rnd7 lcnt=" + (200 - cntr7) + " rtime" + EM.since(rtime) + EM.mem();
+        assert cntr7 < 201 : " stuck waiting after round7 cntr7=" + cntr7 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr7=" + cntr7;
+        Thread.sleep(4000);
       }
 
       eM.resourceGrowth[0] = 2.;
       eM.resourceGrowth[1] = .5;
       eM.staffGrowth[0] = 2.;
       eM.staffGrowth[1] = .5;
-      if(!itTesting)st.runYears(2);
+      if (!itTesting) {
+        st.runYears(2);
+      }
       cntr8 = 0;
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
-        System.err.println("----M8----waiting out testing round8 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr8=" + ++cntr8 + EM.mem()  + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7);
-        EM.wasHere8 = "--rnd8 lcnt=" + (210-cntr8) + " rtime" + EM.since(rtime) + EM.mem();
+        System.err.println("----M8----waiting out testing round8 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + ", msecs" + (new Date().getTime() - startTime) + ", cntr8=" + ++cntr8 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7);
+        EM.wasHere8 = "--rnd8 lcnt=" + (210 - cntr8) + " rtime" + EM.since(rtime) + EM.mem();
         assert cntr8 < 211 : " stuck waiting after round119 cntr8=" + cntr8 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime);
-      Thread.sleep(4000);
+        Thread.sleep(4000);
       }
 
       eM.randFrac[0][0] = .9;
@@ -8464,18 +8584,19 @@ Thread.sleep(4000);
       // wait for runYears to finish
       while ((stateConst >= CONSTRUCTING && stateConst <= ENDYR && !EM.dfe())) {
         System.err.println("----M9----waiting out testing round9 thread=" + Thread.currentThread().getName() + ", stateConst=" + stateStringNames[stateConst] + EM.mem() + ", msecs" + (new Date().getTime() - startTime) + ", cntr9=" + ++cntr9);
-        EM.wasHere8 = "--rnd9 lcnt=" + (250-cntr9) + " rtime" + EM.since(rtime) + EM.mem();
+        EM.wasHere8 = "--rnd9 lcnt=" + (250 - cntr9) + " rtime" + EM.since(rtime) + EM.mem();
         assert cntr9 < 251 : " stuck waiting after round9 cntr9=" + cntr9 + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " " + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.mem() + EM.since(startTime); //(new Date().getTime() - startTime);
         Thread.sleep(4000);
       }
-      System.err.println("tests1 after testing round9 exit ok thread=" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.since() + EM.since("rtime",rtime) 
-              + ", cntr9=" + cntr9 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2 
-              + " cntr3=" + cntr3+ " cntr4=" + cntr4
-+ " cntr5=" + cntr5 + " cntr6="
-              + " cntr7=" + cntr7 + " cntr8=" + cntr8);
-     // System.exit(0);  // success
-  
-    } catch (WasFatalError ex) {
+      System.err.println("tests1 after testing round9 exit ok thread=" + Thread.currentThread().getName() + " " + stateStringNames[stateConst] + EM.since() + EM.since("rtime", rtime)
+                         + ", cntr9=" + cntr9 + EM.mem() + " cntr1=" + cntr1 + " cntr2=" + cntr2
+                         + " cntr3=" + cntr3 + " cntr4=" + cntr4
+                         + " cntr5=" + cntr5 + " cntr6="
+                         + " cntr7=" + cntr7 + " cntr8=" + cntr8);
+      // System.exit(0);  // success
+
+    }
+    catch (WasFatalError ex) {
       ex.printStackTrace(EM.pw);
       EM.thirdStack = EM.sw.toString();
       eM.flushes();
@@ -8483,7 +8604,8 @@ Thread.sleep(4000);
       //ex.printStackTrace(System.err);
       //System.exit(-17);
       // go to finally
-    } catch (Exception | Error ex) {
+    }
+    catch (Exception | Error ex) {
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
       EM.firstStack = EM.secondStack + "";

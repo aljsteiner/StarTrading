@@ -2,25 +2,48 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\aljst\Netbeans1Folder\OGST2\target\starTraderMaven-19.46.jar</jar>
-  <outfile>C:\Users\aljst\Netbeans1Folder\OGST2\target\StarTrader19.46c.exe</outfile>
+  <jar>C:\Users\aljst\OldGoogle Drive\OGNB3\OGST2\target\starTraderMaven-19.48.jar</jar>
+  <outfile>C:\Users\aljst\OldGoogle Drive\OGNB3\OGST2\target\starTrader19.48.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
   <priority>normal</priority>
-  <downloadUrl></downloadUrl>
+  <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon></icon>
+  <singleInstance>
+    <mutexName>StarTrader</mutexName>
+    <windowTitle>StarTrader</windowTitle>
+  </singleInstance>
   <jre>
     <path>C:\Program Files\Java\jdk-19</path>
-    <requiresJdk>false</requiresJdk>
-    <requires64Bit>true</requires64Bit>
+    <bundledJre64Bit>true</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion>19</minVersion>
-    <maxVersion>20</maxVersion>
-    <initialHeapSize>2000</initialHeapSize>
+    <maxVersion>22</maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+    <initialHeapSize>1000</initialHeapSize>
+    <initialHeapPercent>20</initialHeapPercent>
     <maxHeapSize>4000</maxHeapSize>
+    <maxHeapPercent>50</maxHeapPercent>
+    <opt>-ea</opt>
   </jre>
+  <versionInfo>
+    <fileVersion>19.48.0.0</fileVersion>
+    <txtFileVersion>StarTrader.19.48</txtFileVersion>
+    <fileDescription>A mini economics help each other game</fileDescription>
+    <copyright>Albert Steiner 2023</copyright>
+    <productVersion>19.48.0.0</productVersion>
+    <txtProductVersion>StarTrader19.48</txtProductVersion>
+    <productName>StarTrader</productName>
+    <companyName></companyName>
+    <internalName>StarTrader</internalName>
+    <originalFilename>StarTrader19.48.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
 </launch4jConfig>

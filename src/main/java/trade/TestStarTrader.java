@@ -17,7 +17,6 @@
  */
 package trade;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
@@ -70,8 +69,7 @@ public class TestStarTrader {
       st.runYears(1);
       if(st.fatalError) throw new MyErr("fatal error at second run");
       System.err.println("passed second year run");
-      System.exit(0);
-      System.err.println("oops passed exit");
+      
      } catch (InvocationTargetException ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
@@ -91,7 +89,9 @@ public class TestStarTrader {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
-
+      System.exit(0);
+      System.err.println("oops passed exit");
+      System.exit(-23);
     }
     //</editor-fold>
 

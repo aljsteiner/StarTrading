@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
-//import java.util.TreeSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -1866,13 +1865,13 @@ static StarTrader st;
     int Fline3 = ac.getLineNumber();
     String Mname3 = ac.getMethodName();
 
-    String aDate = new Date().toString();
+    String aDate = ":" + new Date().toString();
     int year = EM.year;
     //System.out.println(EM.st.since() + ">>>>>>>>>sysmsg" + EM.st.since());
     // test true debugs to allow 
-    if(debugAssetsOut || debugEconOut || debugDoYearOut || debugCashFlowOut || debugTradesOut || debugFutureFund || debugThreadsOut){
+    if((debugOutput || debugAssetsOut || debugEconOut || debugDoYearOut || debugCashFlowOut || debugTradesOut || debugFutureFund || debugThreadsOut) && !sysmsgDone){
     msgcnt++;
-    System.out.format(">>>>>>>>>sysmsg>>" + msgcnt + "<" + msgs + EM.st.since() + "Y" + EM.year + " " + EM.curEconName + ":"  + Fname + "." + Fline + ";" + Cname + "." + Mname
+    System.out.format(">>>>>>>>>sysmsg>>" + msgcnt + "<" + msgs + aDate +  EM.st.since() + "Y" + EM.year + " " + EM.curEconName + ":"  + Fname + "." + Fline + ";" + Cname + "." + Mname
             + "<<<<<<<<<<\n>>>>>>>>>> " + form + "%n", v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26], v[27], v[28], v[29], v[30]);
     }
     if (msgcnt > msgs) {

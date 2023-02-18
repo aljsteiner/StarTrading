@@ -17,19 +17,13 @@
  */
 package trade;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static trade.StarTrader.fatalError;
-import static trade.StarTrader.mainStart;
+import static trade.StarTrader.itTesting;
 import static trade.StarTrader.startTime;
 import static trade.StarTrader.testing;
-import static trade.StarTrader.itTesting;
-import static trade.StarTrader.main3;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -93,10 +87,11 @@ public class ITStarTraderTest {
     
    // System.exit(-3);
     System.exit(0);
+    System.exit(-27);
   } // main
   
   public ITStarTraderTest(){
-     System.err.println("starting out in test test TestStarTraderTest main " + Thread.currentThread().getName());
+     System.err.println("starting out in test test ITStarTraderTest main " + Thread.currentThread().getName());
     assertEquals(false,fatalError); //I think it goes to main()
     System.exit(-24);  
   }
