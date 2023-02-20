@@ -17,6 +17,7 @@
 
 ******* sometimes new lines went to the end, recently they went to start.  no always done
 
+2/19/2023 version 19.49 put paintCurDisplay in doYear, do one stats
 12/27/22 now have some kind of looping in testing rnd6 add more System.out lines
 12/24/22 Still have liveLock with threads, the Assets.CashFlow.yearEnd() has too
 many calls to setStats in the same sequence requiring synchronization, this 

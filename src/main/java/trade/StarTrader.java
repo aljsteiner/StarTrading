@@ -394,6 +394,7 @@ public class StarTrader extends javax.swing.JFrame {
   static volatile String curEconName = "no econ";
   static boolean doStop = false; // set by game or stats stop execution
   static boolean fatalError = false;
+  static boolean statsDone = false;
   static volatile int stateCnt = -11;
   static volatile int yearsToRun = -22;
   // static int econCnt = -5;
@@ -5228,6 +5229,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
   void runYears2() {
     try {
+      statsDone = false;
       ec = curEc = eM.curEcon;;
       startRY2 = (new Date()).getTime();  //started runYears2
       if (E.debugStatsOut1) {
@@ -5246,13 +5248,14 @@ public class StarTrader extends javax.swing.JFrame {
         System.out.println(EM.wasHere3 = "-------MC--------runYears2;" + sinceA() + sinceRY2() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       //  stateConst = STARTING;
-      paintCurDisplay(ec = curEc = eM.curEcon);
+      
       // now continue EDS thread with updating display
       Boolean done = false, did = false;
       aTime = (new Date()).getTime();
       // start the annimation loop until done or error, waiting to call paintCurDisplay again
       for (stateCnt = 0; !EM.dfe() && !done; stateCnt++) {
         ec = curEc = EM.curEcon;
+        paintCurDisplay(ec);
         EM.wasHere3 = "---------AA--------runYears2 " + EM.curEconName + " before checkEconState " + stateStringNames[stateConst] + " " + Thread.currentThread().getName() + " " + EM.curEconName + "Y" + EM.year + " cnt" + stateCnt + " " + sinceA() + sinceAA() + sinceRY2() + sinceRY3();
         assert stateConst > SWAPS || EM.year < 1 || Thread.activeCount() > 3 : "Thread count too low-" + Thread.activeCount();
         if (E.debugStatsOut1) {
@@ -5281,24 +5284,29 @@ public class StarTrader extends javax.swing.JFrame {
           break;
           case CREATING:
           //  paintCurDisplay(eM.curEcon);
+          statsDone = false;
           // Thread.sleep(blip);
           // break;
           case FUTUREFUNDCREATE:
-            // paintCurDisplay(eM.curEcon);
+            statsDone = false;
+            paintCurDisplay(eM.curEcon);
             Thread.sleep(blip);
             break;
           case STARTYR:
-            // paintCurDisplay(eM.curEcon);
+            statsDone = false;
+            paintCurDisplay(eM.curEcon);
             Thread.sleep(blip);
             did = true;
             break;
           case SEARCH:
             // paintCurDisplay(eM.curEcon);
+            statsDone = false;
             Thread.sleep(blip);
             did = false;
             break;
           case SWAPS:
             //  paintCurDisplay(eM.curEcon);
+            statsDone = false;
             Thread.sleep(blip5);
             did = false;
             break;
@@ -5386,6 +5394,7 @@ public class StarTrader extends javax.swing.JFrame {
       runYear();
     } // nn end loop
     setEconState(STATS);
+    paintCurDisplay(EM.curEcon);
     int cpIx2 = 0, cpIx3 = 0, cpIx4 = 0;
     EM.errLine = "-------MJz---------runBackroundYears4 after STATS " + since() + sinceA() + sinceAA() + " background years=" + nn + " btime="
                  + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + "Y" + eM.year;
@@ -6458,6 +6467,7 @@ public class StarTrader extends javax.swing.JFrame {
           int econPorS = EM.getNewPorS(econClan);
           double newWorth = EM.getInitialEconWorth(econPorS, econClan);
           ec = curEc = EM.curEcon = newEcon(newWorth, econPorS, econClan);  // include new of Econ
+          paintCurDisplay(eM.curEcon);
           if (E.debugEconCnt) {
             synchronized (A4Row.econLock) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -6506,6 +6516,7 @@ public class StarTrader extends javax.swing.JFrame {
             System.out.println("year" + eM.year + " " + "  clan=" + econClan + " initial clan worth=" + clanWorth + " econCnt=" + eM.econCnt);
             finishedClans = 0; // start over finished future create clans
             EM.setCurEcon(ec = curEc = newEcon(clanWorth, econPorS, econClan));  // include new of Econ
+            paintCurDisplay(eM.curEcon);
             if (E.debugEconCnt) {
               synchronized (A4Row.econLock) {
                 if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -6600,7 +6611,7 @@ public class StarTrader extends javax.swing.JFrame {
         for (shipsLoop = eM.ships.size() - 1; shipsLoop >= 0 && !eM.dfe(); shipsLoop--) {
           eM.setCurEcon(ec = curEc = eM.ships.get(shipsLoop));
           //startEconState = (new Date()).getTime();
-          //paintCurDisplay(eM.curEcon);
+          paintCurDisplay(eM.curEcon);
           E.msgs = E.dmsgs;;  // reset sysMsg counter before each trade
 
           if (!eM.curEcon.getDie()) {  //live
@@ -6711,6 +6722,7 @@ public class StarTrader extends javax.swing.JFrame {
           }
           ec = curEc = EM.econs.get(envsLoop2);
           EM.setCurEcon(ec);
+          paintCurDisplay(eM.curEcon);
           if (E.debugEconCnt) {
             /* synchronized (A4Row.econLock) */
             {
@@ -6789,6 +6801,7 @@ public class StarTrader extends javax.swing.JFrame {
               }
             }
           }
+          paintCurDisplay(eM.curEcon);
           //   paintEconEndYear(EM.curEcon);
 
           if (E.debugDidEconYearEnd) {
@@ -6836,6 +6849,7 @@ public class StarTrader extends javax.swing.JFrame {
           }
         }
         setEconState(ENDYR);
+        paintCurDisplay(eM.curEcon);
         if (E.debugThreads) {
           System.out.println("------EYg-----Ending year=" + EM.andET());
         }
@@ -6889,6 +6903,7 @@ public class StarTrader extends javax.swing.JFrame {
         long[] resi23 = resi2[2];
         EM.wasHere = "before EM.doEndYear()";
         eM.doEndYear();
+        paintCurDisplay(eM.curEcon);
         EM.wasHere = "after EM.doEndYear()";
         long[][][] resii = eM.resI[0];
         long[][] resii2 = resii[1];
@@ -7039,7 +7054,7 @@ public class StarTrader extends javax.swing.JFrame {
    *
    * @param curEc the current econ usually EM.curEcon
    */
-  void paintCurDisplay(Econ curEc) {
+  synchronized void paintCurDisplay(Econ curEc) {
     try {
       int numEcons = EM.econs.size();
       int rN = 999999;
@@ -7239,33 +7254,34 @@ public class StarTrader extends javax.swing.JFrame {
           case WAITING:
             displayPanel0Text.setText(
                     "Waiting     " + disp1);
+            statsDone=false;
             break;
           case STARTING:
             displayPanel0Text.setText(
-                    "Starting   " + disp1);
+                    "Starting   " + disp1); statsDone=false;
             break;
           case CREATING:
             displayPanel0Text.setText(
-                    "gameCreate   " + disp1);
+                    "gameCreate   " + disp1); statsDone=false;
           case FUTUREFUNDCREATE:
             displayPanel0Text.setText(
-                    "FutFCreate  " + disp1);
+                    "FutFCreate  " + disp1); statsDone=false;
             break;
           case STARTYR:
             displayPanel0Text.setText(
-                    "StartYear  " + disp1);
+                    "StartYear  " + disp1); statsDone=false;
             break;
           case SEARCH:
             displayPanel0Text.setText(
-                    "Searching  " + disp1);
+                    "Searching  " + disp1); statsDone=false;
             break;
           case SWAPS:
             displayPanel0Text.setText(
-                    "Swaping    " + disp1);
+                    "Swaping    " + disp1); statsDone=false;
             break;
           case TRADING:
             displayPanel0Text.setText(
-                    "Trading    " + disp1);
+                    "Trading    " + disp1); statsDone=false;
             break;
           case ENDYR:
             displayPanel0Text.setText(
@@ -7301,7 +7317,7 @@ public class StarTrader extends javax.swing.JFrame {
       //  displayPanel1Operation.setVisible(true);
       //  displayPanel1SinceYearStart.setVisible(true);
       //  displayPanel1.setVisible(true);
-      if (stateConst == STATS) {
+      if (stateConst == STATS && !statsDone) {
         display.setVisible(false);
         controlPanels.setSelectedIndex(4);
         cpIx2 = controlPanels.getSelectedIndex();
@@ -7315,6 +7331,7 @@ public class StarTrader extends javax.swing.JFrame {
         controlPanels.revalidate();
         controlPanels.repaint();
         controlPanels.setVisible(true);
+        statsDone = true;
         cpIx4 = controlPanels.getSelectedIndex();
       }
       else {  // not STATS

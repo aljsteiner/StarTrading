@@ -2,13 +2,13 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\aljst\OldGoogle Drive\OGNB3\OGST2\target\starTraderMaven-19.48.jar</jar>
-  <outfile>C:\Users\aljst\OldGoogle Drive\OGNB3\OGST2\target\starTrader19.48.exe</outfile>
+  <jar>C:\Users\aljst\Desktop\game1F\OGST2\target\distF\starTraderMaven-19.48.jar</jar>
+  <outfile>C:\Users\aljst\Desktop\game1F\OGST2\target\distF\starTrader19.48.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
-  <chdir>.</chdir>
+  <chdir>.\jdkb-19.0.2</chdir>
   <priority>normal</priority>
-  <downloadUrl>http://java.com/download</downloadUrl>
+  <downloadUrl>https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_windows-x64_bin.zip.sha256</downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
@@ -19,7 +19,7 @@
     <windowTitle>StarTrader</windowTitle>
   </singleInstance>
   <jre>
-    <path>C:\Program Files\Java\jdk-19</path>
+    <path>.\jdkb-19.0.2\bin\javaw.exe</path>
     <bundledJre64Bit>true</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion>19</minVersion>
