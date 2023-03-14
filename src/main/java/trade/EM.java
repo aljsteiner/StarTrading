@@ -43,10 +43,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.JTable;
-import static trade.StarTrader.startTime;
 
 /**
  * this is an output interface, it specifies where to put values using values
@@ -4126,8 +4124,8 @@ onceAgain:
 
   void defRes() {
 
-    doRes(SCORE, "Score", "Winner has the highest score the result of combining the different priorities set by several value entries which increase the score", 3, 4, 3, LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
+    doRes(SCORE, "Score", "Winner has the highest score the result of combining the different priorities set by several value entries which increase the score", 3, 4, 3,LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);   
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR  | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(INCRRCSG, "%incr rcsg", "percent incr rcsg Value  year end rcsg/inital rcsg");
@@ -4362,7 +4360,7 @@ onceAgain:
     doRes(TRADELASTRECEIVE, "Last Received", "Final received goods%tot balance");
     doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade");
    
-    doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given%totBalance", 2, 2, 2, LIST40 | THISYEARAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given%totBalance", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal not strategic amount given in trade ");
    
     doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade");
@@ -6589,13 +6587,14 @@ onceAgain:
             if (doSum && (i == getP)) { // only do the first half of sums
               for (int mm = 1; mm < E.lclans; mm++) {
                 //String ss[] = {">>>This", "row sums", "planets", "and ships", ">>>>>>>>>>"};
+                //String ss[] = {"999999.", "ave of the", "P and S", "sums", ">>>>>>>>>>"};
                 table.setValueAt(ss[mm], row, mm + 1);
               }
             } else { // second half of sum
               for (int m = 0; m < E.lclans; m++) {
                 table.setValueAt(((sums += aVal = getRowEntryValue(rn, dd[(int) i] + myCmd, m, ageIx)) < -93456789.0 ? "------" : valForTable(aVal)), row, (int) i * E.lclans + m + 1);
               }
-              table.setValueAt(valForTable(sums), row, 1);
+              table.setValueAt(valForTable(sums/E.LCLANS), row, 1); // average
             }
           }
           table.setValueAt(description + suffix + powers, row, 0);

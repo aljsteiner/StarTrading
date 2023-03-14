@@ -615,6 +615,7 @@ public class StarTrader extends javax.swing.JFrame {
     setBounds(new java.awt.Rectangle(0, 0, 1250, 1250));
     setMaximizedBounds(new java.awt.Rectangle(0, 0, 1, 0));
     setMinimumSize(new java.awt.Dimension(800, 600));
+    setPreferredSize(new java.awt.Dimension(1920, 1200));
     setResizable(false);
     addInputMethodListener(new java.awt.event.InputMethodListener() {
       public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
@@ -636,10 +637,10 @@ public class StarTrader extends javax.swing.JFrame {
     controlPanels.setDebugGraphicsOptions(javax.swing.DebugGraphics.BUFFERED_OPTION);
     controlPanels.setDoubleBuffered(true);
     controlPanels.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-    controlPanels.setMaximumSize(new java.awt.Dimension(1800, 1200));
+    controlPanels.setMaximumSize(new java.awt.Dimension(2400, 1800));
     controlPanels.setMinimumSize(new java.awt.Dimension(500, 450));
     controlPanels.setOpaque(true);
-    controlPanels.setPreferredSize(new java.awt.Dimension(1200, 800));
+    controlPanels.setPreferredSize(new java.awt.Dimension(1920, 1200));
     controlPanels.setBackground(bg1);
     controlPanels.addChangeListener(new javax.swing.event.ChangeListener() {
       public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -655,10 +656,11 @@ public class StarTrader extends javax.swing.JFrame {
     story.setAlignmentX(0.0F);
     story.setAlignmentY(0.0F);
     story.setAutoscrolls(true);
-    story.setMaximumSize(new java.awt.Dimension(1200, 1500));
+    story.setMaximumSize(new java.awt.Dimension(2400, 1800));
     story.setMinimumSize(new java.awt.Dimension(600, 400));
     story.setName(""); // NOI18N
-    story.setPreferredSize(new java.awt.Dimension(1000, 700));
+    story.setPreferredSize(new java.awt.Dimension(1920, 1200));
+    story.setVerifyInputWhenFocusTarget(false);
 
     storyTextPane.setAutoscrolls(true);
     storyTextPane.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -698,10 +700,10 @@ public class StarTrader extends javax.swing.JFrame {
     game.setAlignmentX(0.0F);
     game.setAlignmentY(0.0F);
     game.setAutoscrolls(true);
-    game.setMaximumSize(new java.awt.Dimension(1200, 1200));
+    game.setMaximumSize(new java.awt.Dimension(2400, 1800));
     game.setMinimumSize(new java.awt.Dimension(800, 600));
     game.setName("Settings"); // NOI18N
-    game.setPreferredSize(new java.awt.Dimension(900, 900));
+    game.setPreferredSize(new java.awt.Dimension(1920, 1200));
     game.addComponentListener(new java.awt.event.ComponentAdapter() {
       public void componentShown(java.awt.event.ComponentEvent evt) {
         gameComponentShown(evt);
@@ -1009,19 +1011,26 @@ public class StarTrader extends javax.swing.JFrame {
     game.add(settingsStop, new java.awt.GridBagConstraints());
 
     gameToLabelPlanet.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+    gameToLabelPlanet.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
     gameToLabelPlanet.setText("Planet");
-    gameToLabelPlanet.setMaximumSize(new java.awt.Dimension(500, 40));
+    gameToLabelPlanet.setMaximumSize(new java.awt.Dimension(900, 40));
     gameToLabelPlanet.setMinimumSize(new java.awt.Dimension(200, 20));
-    gameToLabelPlanet.setPreferredSize(new java.awt.Dimension(250, 21));
+    gameToLabelPlanet.setPreferredSize(new java.awt.Dimension(850, 21));
+    gameToLabelPlanet.setRequestFocusEnabled(false);
     game.add(gameToLabelPlanet, new java.awt.GridBagConstraints());
 
     gameTopLabelShip.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-    gameTopLabelShip.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    gameTopLabelShip.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     gameTopLabelShip.setText("ship");
-    gameTopLabelShip.setMaximumSize(new java.awt.Dimension(500, 40));
+    gameTopLabelShip.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+    gameTopLabelShip.setMaximumSize(new java.awt.Dimension(2000, 40));
     gameTopLabelShip.setMinimumSize(new java.awt.Dimension(300, 15));
-    gameTopLabelShip.setPreferredSize(new java.awt.Dimension(350, 25));
-    game.add(gameTopLabelShip, new java.awt.GridBagConstraints());
+    gameTopLabelShip.setPreferredSize(new java.awt.Dimension(1950, 25));
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    game.add(gameTopLabelShip, gridBagConstraints);
 
     gameTopRightFill.setEditable(false);
     gameTopRightFill.setBackground(new java.awt.Color(255, 255, 153));
@@ -1042,7 +1051,7 @@ public class StarTrader extends javax.swing.JFrame {
     gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.weightx = 0.3;
     game.add(gameTopRightFill, gridBagConstraints);
 
     gamePanel0.setAlignmentX(0.1F);
@@ -1110,8 +1119,8 @@ public class StarTrader extends javax.swing.JFrame {
     gameSliderS0.setPaintTicks(true);
     gameSliderS0.setSnapToTicks(true);
     gameSliderS0.setToolTipText("hello1");
-    gameSliderS0.setMaximumSize(new java.awt.Dimension(450, 45));
-    gameSliderS0.setMinimumSize(new java.awt.Dimension(150, 45));
+    gameSliderS0.setMaximumSize(new java.awt.Dimension(400, 45));
+    gameSliderS0.setMinimumSize(new java.awt.Dimension(250, 45));
     gameSliderS0.setPreferredSize(new java.awt.Dimension(300, 45));
     gameSliderS0.setValueIsAdjusting(true);
     gameSliderS0.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1123,6 +1132,7 @@ public class StarTrader extends javax.swing.JFrame {
       }
     });
     gamePanel0.add(gameSliderS0);
+    gameSliderS0.getAccessibleContext().setAccessibleDescription("Ship setting");
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -1231,6 +1241,7 @@ public class StarTrader extends javax.swing.JFrame {
       }
     });
     gamePanel1.add(gameSliderS1);
+    gameSliderS1.getAccessibleContext().setAccessibleDescription("Ship settings");
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -1914,15 +1925,15 @@ public class StarTrader extends javax.swing.JFrame {
         .addComponent(gameTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(85, Short.MAX_VALUE))
+        .addContainerGap(82, Short.MAX_VALUE))
     );
     gamePanelBottomPanelLayout.setVerticalGroup(
       gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(gamePanelBottomPanelLayout.createSequentialGroup()
-        .addGroup(gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(gameTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(197, Short.MAX_VALUE))
+        .addGroup(gamePanelBottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+          .addComponent(gameTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jScrollPane3))
+        .addContainerGap(155, Short.MAX_VALUE))
     );
 
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2460,16 +2471,16 @@ public class StarTrader extends javax.swing.JFrame {
 
     display.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
     display.setAlignmentY(300.0F);
-    display.setMaximumSize(new java.awt.Dimension(1500, 1200));
+    display.setMaximumSize(new java.awt.Dimension(2400, 1800));
     display.setMinimumSize(new java.awt.Dimension(300, 400));
-    display.setPreferredSize(new java.awt.Dimension(1200, 700));
+    display.setPreferredSize(new java.awt.Dimension(1920, 1200));
     display.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
     displayPanel0.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     displayPanel0.setToolTipText("primary display");
-    displayPanel0.setMaximumSize(new java.awt.Dimension(1500, 1200));
+    displayPanel0.setMaximumSize(new java.awt.Dimension(2400, 1800));
     displayPanel0.setMinimumSize(new java.awt.Dimension(400, 200));
-    displayPanel0.setPreferredSize(new java.awt.Dimension(1200, 700));
+    displayPanel0.setPreferredSize(new java.awt.Dimension(1920, 1200));
     displayPanel0.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
     displayPanel0Text.setColumns(70);
@@ -2480,23 +2491,24 @@ public class StarTrader extends javax.swing.JFrame {
     displayPanel0Text.setAlignmentX(0.0F);
     displayPanel0Text.setAlignmentY(0.0F);
     displayPanel0Text.setBorder(null);
-    displayPanel0Text.setMaximumSize(new java.awt.Dimension(1400, 1200));
+    displayPanel0Text.setMaximumSize(new java.awt.Dimension(2400, 1800));
     displayPanel0Text.setMinimumSize(new java.awt.Dimension(800, 300));
     displayPanel0Text.setName(""); // NOI18N
     displayPanel0Text.setOpaque(false);
-    displayPanel0Text.setPreferredSize(new java.awt.Dimension(1260, 600));
+    displayPanel0Text.setPreferredSize(new java.awt.Dimension(1920, 1200));
     displayPanel0.add(displayPanel0Text);
 
     display.add(displayPanel0);
+    displayPanel0.getAccessibleContext().setAccessibleName("");
 
     displayPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-    displayPanel1.setMaximumSize(new java.awt.Dimension(1200, 600));
+    displayPanel1.setMaximumSize(new java.awt.Dimension(2400, 1800));
     displayPanel1.setMinimumSize(new java.awt.Dimension(800, 20));
     displayPanel1.setName("displayTPanel"); // NOI18N
-    displayPanel1.setPreferredSize(new java.awt.Dimension(1200, 600));
+    displayPanel1.setPreferredSize(new java.awt.Dimension(1920, 1200));
     displayPanel1.setRequestFocusEnabled(false);
 
-    jScrollPane1.setPreferredSize(new java.awt.Dimension(1200, 600));
+    jScrollPane1.setPreferredSize(new java.awt.Dimension(1920, 1200));
 
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -2529,7 +2541,8 @@ public class StarTrader extends javax.swing.JFrame {
       }
     });
     jTable1.setColumnSelectionAllowed(true);
-    jTable1.setPreferredSize(new java.awt.Dimension(1175, 500));
+    jTable1.setMaximumSize(new java.awt.Dimension(2147483647, 1600));
+    jTable1.setPreferredSize(new java.awt.Dimension(1920, 1600));
     jTable1.getTableHeader().setReorderingAllowed(false);
     jScrollPane1.setViewportView(jTable1);
     jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -2574,15 +2587,15 @@ public class StarTrader extends javax.swing.JFrame {
     controlPanels.addTab("display", display);
 
     stats.setAutoscrolls(true);
-    stats.setMaximumSize(new java.awt.Dimension(1800, 1200));
-    stats.setMinimumSize(new java.awt.Dimension(500, 4500));
-    stats.setPreferredSize(new java.awt.Dimension(1250, 1000));
+    stats.setMaximumSize(new java.awt.Dimension(2400, 1800));
+    stats.setMinimumSize(new java.awt.Dimension(500, 400));
+    stats.setPreferredSize(new java.awt.Dimension(1920, 1200));
     stats.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEADING, 0, 0));
 
     topPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 255, 153), 2));
     topPane.setAlignmentX(0.0F);
     topPane.setAlignmentY(0.0F);
-    topPane.setMaximumSize(new java.awt.Dimension(1259, 100));
+    topPane.setMaximumSize(new java.awt.Dimension(2400, 1800));
     topPane.setMinimumSize(new java.awt.Dimension(800, 50));
     topPane.setNextFocusableComponent(statsTable1);
     topPane.setPreferredSize(new java.awt.Dimension(1250, 60));
@@ -3145,10 +3158,10 @@ public class StarTrader extends javax.swing.JFrame {
     statsScrollPane2.setAlignmentX(0.0F);
     statsScrollPane2.setAlignmentY(5.0F);
     statsScrollPane2.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-    statsScrollPane2.setMaximumSize(new java.awt.Dimension(1200, 1000));
+    statsScrollPane2.setMaximumSize(new java.awt.Dimension(2400, 1800));
     statsScrollPane2.setMinimumSize(new java.awt.Dimension(700, 400));
     statsScrollPane2.setName("StatsScroll"); // NOI18N
-    statsScrollPane2.setPreferredSize(new java.awt.Dimension(1200, 900));
+    statsScrollPane2.setPreferredSize(new java.awt.Dimension(1920, 1200));
     statsScrollPane2.setRequestFocusEnabled(false);
     statsScrollPane2.setVerifyInputWhenFocusTarget(false);
 
@@ -3280,9 +3293,9 @@ public class StarTrader extends javax.swing.JFrame {
     statsTable1.setAlignmentY(0.0F);
     statsTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
     statsTable1.setColumnSelectionAllowed(true);
-    statsTable1.setMaximumSize(new java.awt.Dimension(1200, 1000));
+    statsTable1.setMaximumSize(new java.awt.Dimension(2400, 1800));
     statsTable1.setMinimumSize(new java.awt.Dimension(700, 400));
-    statsTable1.setPreferredSize(new java.awt.Dimension(1200, 1000));
+    statsTable1.setPreferredSize(new java.awt.Dimension(1920, 1200));
     statsTable1.getTableHeader().setReorderingAllowed(false);
     statsScrollPane2.setViewportView(statsTable1);
     statsTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -5398,6 +5411,7 @@ public class StarTrader extends javax.swing.JFrame {
     int cpIx2 = 0, cpIx3 = 0, cpIx4 = 0;
     EM.errLine = "-------MJz---------runBackroundYears4 after STATS " + since() + sinceA() + sinceAA() + " background years=" + nn + " btime="
                  + (new Date().getTime() - myStart) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + "Y" + eM.year;
+    controlPanels.setSelectedIndex(4);
     if (E.debugStatsOut1) {
       System.err.println(EM.errLine + "<<<<<<<<<<<<<<<<<<<");
     }
@@ -5946,20 +5960,32 @@ public class StarTrader extends javax.swing.JFrame {
       screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       screenHeight = screenSize.height; //1080
       screenWidth = screenSize.width;  // 1920
-      myHeight = Math.max(500, Math.min((int) (screenHeight * .93), 1250));
-      EM.panelH[0][0] = Math.max(500., Math.min((int) (screenHeight * .93), 1250));
+      myHeight = Math.max(500, Math.min((int) (screenHeight * .98), 1250));
+      myWidth = Math.max(700, Math.min((int) (screenWidth * .98), 1920));
+      EM.panelH[0][0] = Math.max(500., Math.min((int) (screenHeight * .98), 1250));
       EM.tableH[0][0] = Math.max(500., EM.panelH[0][0] - 200.);
-      myWidth = Math.max(700, Math.min((int) (screenWidth * .95), 1850));
+      EM.tableH[0][0] = Math.max(500., EM.panelH[0][0] - 120.);
       EM.panelW[0][0] = Math.max(700, Math.min((int) (screenWidth * .95), 1850));
+      EM.panelW[0][0] = Math.max(700, Math.min((int) (screenWidth * .98), 1850));
       myW3 = Math.max(650, (myW2 = Math.max(600, (int) (myWidth * .99))) - 300);
+      myW3 = Math.max(650, (myW2 = Math.max(600, (int) (myWidth * .97))) - 200);
+      myH2 = Math.max(500, myHeight - 200);
       E.sysmsg("resize1 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
-      if (screenHeight < 600 || screenWidth < 600) {
+      if (screenHeight < 1080 || screenWidth < 1920) {
+        myHeight = Math.max(840, Math.min((int) (screenHeight * .97), 1080));
+        myH2 = Math.max(740, myHeight - 200);
+        myWidth = Math.max(1600, Math.min((int) (screenWidth * .97), 1920));
+        myW3 = Math.max(1500, (myW2 = Math.max(1550, (int) (myWidth * .97))) - 150);
+         E.sysmsg("resize2 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
+      if (screenHeight < 650 || screenWidth < 1100) {
         // if(screenHeight < 2700 || screenWidth < 1200){
         myHeight = Math.max(500, Math.min((int) (screenHeight * .97), 1250));
         myH2 = Math.max(500, myHeight - 200);
         myWidth = Math.max(500, Math.min((int) (screenWidth * .97), 2200));
         myW3 = Math.max(450, (myW2 = Math.max(400, (int) (myWidth * .99))) - 300);
-        E.sysmsg("resize2 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
+      }
+        }
+        E.sysmsg("resiz3 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
         this.setSize(myWidth, myHeight);
         controlPanels.setSize(myWidth, myHeight);
         stats.setMaximumSize(new Dimension(myW2, (int) (myHeight * 1.50)));
@@ -5967,9 +5993,9 @@ public class StarTrader extends javax.swing.JFrame {
         stats.setPreferredSize(new Dimension(myWidth, myHeight));
         statsScrollPane2.setPreferredSize(new Dimension(myW2, myH2));
         statsTable1.setMaximumSize(new Dimension(myW3 + 100, myH2 + 100));
-        statsTable1.setMinimumSize(new Dimension(myW3 - 100, myH2 - 100));
+        statsTable1.setMinimumSize(new Dimension(myW3 - 400, myH2 - 400));
         statsTable1.setPreferredSize(new Dimension(myW3, myH2));
-      }
+    
       eE.init(eM, this);
       eM.aInit();
       this.pack();
@@ -5977,8 +6003,8 @@ public class StarTrader extends javax.swing.JFrame {
       int ss1 = statsR.width;
       Rectangle spR = statsScrollPane2.getBounds();
       Rectangle stR = statsTable1.getBounds();
-      System.out.println("===============StarTraderresize2 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
-      System.out.println("=================StarTrader  sized stats w=" + statsR.width + ", h=" + statsR.height
+      System.out.println("------RSH---StarTraderresize4 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
+      System.out.println("-----RSW----StarTrader  sized stats w=" + statsR.width + ", h=" + statsR.height
                          + ", statsP w=" + spR.width + ", h=" + spR.height
                          + ", statsTable w=" + stR.width + ", h=" + stR.height
                          + " big=" + EM.mf(123456789012345678901234567890.)
@@ -5992,7 +6018,7 @@ public class StarTrader extends javax.swing.JFrame {
       int storyTextPaneW = storyTextPane.getWidth();
       int storyW = story.getWidth();
       //  int logW = log.getWidth();
-      System.out.println("----------- stf1w=" + storyTextField1W + ", stp=" + storyTextPaneW + ", story=" + storyW);
+      System.out.println("------RST----- stf1w=" + storyTextField1W + ", stp=" + storyTextPaneW + ", story=" + storyW);
       E.sysmsg("after pack statsTable1.width=" + statsTW);
       //   statsTable = new javax.swing.JTable();
       JSlider[] gameSlidersP1 = {gameSliderP0, gameSliderP1, gameSliderP2, gameSliderP3, gameSliderP4, gameSliderP5, gameSliderP6, gameSliderP7, gameSliderP8, gameSliderP9};
@@ -6041,7 +6067,7 @@ public class StarTrader extends javax.swing.JFrame {
 
       //   TreeMap<Double, Econ> runOrder = new TreeMap<Double, Econ>();
       putInitValues();
-      System.out.println("===================StarTrader resize4 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
+      System.out.println("----RST2=4----StarTrader resize4 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
       statsR = stats.getBounds();
       ss1 = statsR.width;
       spR = statsScrollPane2.getBounds();
@@ -6049,7 +6075,7 @@ public class StarTrader extends javax.swing.JFrame {
       Rectangle scrnR = this.getBounds();
       int scrnH = scrnR.height;
       int scrnW = scrnR.width;
-      System.out.println(Thread.currentThread().getName() + " =================StarTrader sized6 screen w=" + scrnW + ", h=" + scrnH
+      System.out.println("----RST5-----StarTrader" + Thread.currentThread().getName()  + " sized6 screen w=" + scrnW + ", h=" + scrnH
                          + ", stats w=" + statsR.width + ", h=" + statsR.height
                          + ", statsP w=" + spR.width + ", h=" + spR.height
                          + ", statsTable w=" + stR.width + ", h=" + stR.height);
@@ -7317,22 +7343,26 @@ public class StarTrader extends javax.swing.JFrame {
       //  displayPanel1Operation.setVisible(true);
       //  displayPanel1SinceYearStart.setVisible(true);
       //  displayPanel1.setVisible(true);
-      if (stateConst == STATS && !statsDone) {
+      if (stateConst == STATS) {
+        controlPanels.setSelectedIndex(4);
         display.setVisible(false);
-        controlPanels.setSelectedIndex(4);
         cpIx2 = controlPanels.getSelectedIndex();
-
-        listRes(0, resLoops, fullRes);
+        if(!statsDone)listRes(0, resLoops, fullRes);
         controlPanels.setSelectedIndex(4);
-        cpIx3 = controlPanels.getSelectedIndex();
         stats.setVisible(true);
         stats.revalidate();
         stats.repaint();
         controlPanels.revalidate();
         controlPanels.repaint();
         controlPanels.setVisible(true);
+        System.out.println("------DAa-----paintCurDisplay "  + " " + stateStringNames[stateConst] + "Y" + EM.year  + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4);  
+        cpIx3 = controlPanels.getSelectedIndex();
         statsDone = true;
+        controlPanels.setSelectedIndex(4);
         cpIx4 = controlPanels.getSelectedIndex();
+          long nTime = new Date().getTime();
+          String aLine = "------DAb-----paintCurDisplay " + " curDisplayPrints" + curDisplayPrints + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4;
+          System.out.println(aLine);   
       }
       else {  // not STATS
         controlPanels.setSelectedIndex(3);
@@ -7347,11 +7377,11 @@ public class StarTrader extends javax.swing.JFrame {
       }
       controlPanels.setVisible(true);
       if (stateCnt % 50 == 0 || stateConst == STATS) {
-        if (curDisplayPrints < E.ssMax * 5) {
+        if (true || curDisplayPrints < E.ssMax * 5) {
           curDisplayPrints++;
           long nTime = new Date().getTime();
           String aLine = "------DA-----paintCurDisplay " + (nTime - startTime) + " " + stateStringNames[stateConst] + "Y" + EM.year + " eCnt=" + EM.econCnt + ":" + EM.econs.size() + ":"
-                         + EM.curEconName + "::" + Econ.nowName + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4;
+                         + EM.curEconName + "::" + Econ.nowName + " curDisplayPrints" + curDisplayPrints + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4;
 
           System.out.println(aLine);
         }

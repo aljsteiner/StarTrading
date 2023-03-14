@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\aljst\Desktop\game1F\OGST2\target\distF\starTraderMaven-19.48.jar</jar>
-  <outfile>C:\Users\aljst\Desktop\game1F\OGST2\target\distF\starTrader19.48.exe</outfile>
+  <jar>C:\Users\aljst\Desktop\game1F\OGST2\target\distF\starTraderMaven-19.49.jar</jar>
+  <outfile>C:\Users\aljst\Desktop\game1F\OGST2\target\distF\starTrader19.49.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.\jdkb-19.0.2</chdir>
@@ -22,9 +22,9 @@
     <path>.\jdkb-19.0.2\bin\javaw.exe</path>
     <bundledJre64Bit>true</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
-    <minVersion>19</minVersion>
+    <minVersion>19.0.2</minVersion>
     <maxVersion>22</maxVersion>
-    <jdkPreference>preferJre</jdkPreference>
+    <jdkPreference>jdkOnly</jdkPreference>
     <runtimeBits>64/32</runtimeBits>
     <initialHeapSize>1000</initialHeapSize>
     <initialHeapPercent>20</initialHeapPercent>

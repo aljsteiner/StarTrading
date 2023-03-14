@@ -90,7 +90,8 @@ static StarTrader st;
   static final boolean outputLess = true;  // reduce the output chars in mf2
   //static final boolean debugOutput = true;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
-  static final boolean resetOut = debugOutput;  //change out, err to 
+ //static final boolean resetOut = debugOutput;  //change out, err to
+  static final boolean resetOut = false;  //change out, err to
   static final boolean debugDoYearOut = debugMaster; //output messages in doyear and subs
   static final boolean debugAssetsOut = debugMaster; //output messages Assets
   static final boolean debugEconOut = debugMaster; //output messages in Econ
@@ -1848,7 +1849,7 @@ static StarTrader st;
     StackTraceElement[] stackTraces = Thread.currentThread().getStackTrace();
     int ss = stackTraces.length;
     //System.out.println(" length Thread.currentThread().StackTraceLength=" + ss);
-    StackTraceElement aa = stackTraces[3];
+    StackTraceElement aa = (ss < 4 ? stackTraces[2] : stackTraces[3]);
     StackTraceElement ab = (ss < 5 ? aa : stackTraces[4]);
     StackTraceElement ac = (ss < 6 ? aa : stackTraces[5]);
     StackTraceElement ad = (ss < 7 ? aa : stackTraces[6]);
