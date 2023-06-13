@@ -41,6 +41,6 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.alignMultilineLambdaParams>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.alignMultilineLambdaParams>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.alignMultilineThrows>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.alignMultilineThrows>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.placeFinallyOnNewLine>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.placeFinallyOnNewLine>
-        <netbeans.hint.jdkPlatform>JDK-19</netbeans.hint.jdkPlatform>
+        <netbeans.hint.jdkPlatform>JDK_1.8</netbeans.hint.jdkPlatform>
     </properties>
 </project-shared-configuration>

@@ -1168,7 +1168,7 @@ public class Assets {
         int le = eM.lStatsWaitList;
         int prevIx = eM.ixStatsWaitList;
         eM.ixStatsWaitList = (++eM.ixStatsWaitList) % eM.lStatsWaitList;
-        prevIx = prevIx >= eM.lStatsWaitList ? 0 : prevIx;// I don't know why there was out of bounds sometimes
+        int prevIxa = prevIx >= eM.lStatsWaitList ? 0 : prevIx;// I don't know why there was out of bounds sometimes
         int atCnt = 0;
         long nTime = (new Date()).getTime();
         long moreT = nTime - eM.doYearTime;
@@ -1225,7 +1225,7 @@ public class Assets {
         //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
        synchronized (resL){
         if (E.debugStatsOut) {
-          statsWaitList[prevIx] = "setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          statsWaitList[prevIxa] = "setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           StackTraceElement[] stks = Thread.currentThread().getStackTrace();
           lstk = stks.length - 1;
@@ -1237,11 +1237,11 @@ public class Assets {
                       && prevCalls[ste].getLineNumber() != 0
                       && !prevCalls[ste].getMethodName().contentEquals("setStat")) {
                 if (atCnt == 0) {
-                  statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+                  statsWaitList[prevIxa] += prevCalls[ste].getMethodName() + " ";
                 }
                 String pcs = prevCalls[ste].getFileName();
                 int pci = prevCalls[ste].getLineNumber();
-                statsWaitList[prevIx] += " "
+                statsWaitList[prevIxa] += " "
                         + " at "
                         + pcs
                         + "." + pci;
@@ -1263,7 +1263,7 @@ public class Assets {
           resICurmCC[ISSET] += 1;
         }
 
-        statsWaitList[prevIx] = "";
+        statsWaitList[prevIxa] = "";
         if (E.debugStatsOut) {
           if (rn > 0) {
             long endSt = (new Date()).getTime();
@@ -1310,12 +1310,13 @@ public class Assets {
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //     ex.printStackTrace(System.err);
       st.setFatalError();
-      throw new WasFatalError(eM.tError);
+      //throw new WasFatalError(eM.tError);
     }
+    return  v;
   }
 
   /**
-   * set a maxStatistic value and a count
+   * set a maxStatistic value and a count in the designated statistic
    *
    * @param rn the name of this statistic
    * @param pors planet=0 ship=1
@@ -1337,16 +1338,18 @@ public class Assets {
         long nTime = (new Date()).getTime();
         long moreT = nTime - doYearTime;
         if (E.debugStatsOut) {
-          statsWaitList[prevIx] = "setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+           //prevent Ix too large
+          int prevIxa = prevIx < lStatsWaitList?prevIx:lStatsWaitList;
+          statsWaitList[prevIxa] = "setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           int lstk = Thread.currentThread().getStackTrace().length - 1;
           for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
             prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
             if (!prevCalls[ste].getMethodName().contentEquals("setMaxStat")) {
               if (atCnt == 0) {
-                statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+                statsWaitList[prevIxa] += prevCalls[ste].getMethodName() + " ";
               }
-              statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+              statsWaitList[prevIxa] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
             }
             atCnt++;
           }//for
@@ -1469,12 +1472,13 @@ public class Assets {
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //     ex.printStackTrace(System.err);
       st.setFatalError();
-      throw new WasFatalError(eM.tError);
+     // throw new WasFatalError(eM.tError);
     }
+    return v;
   }
 
   /**
-   * set a min Statistic value and a count
+   * set a min Statistic value and a count in the designated statistic 
    *
    * @param rn the name of this statistic
    * @param pors planet=0 ship=1
@@ -1496,16 +1500,18 @@ public class Assets {
         long nTime = (new Date()).getTime();
         long moreT = nTime - doYearTime;
         if (E.debugStatsOut) {
-          statsWaitList[prevIx] = "setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          //prevent Ix too large
+          int prevIxa = prevIx < lStatsWaitList?prevIx:lStatsWaitList;
+          statsWaitList[prevIxa] = "setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           int lstk = Thread.currentThread().getStackTrace().length - 1;
           for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
             prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
             if (!prevCalls[ste].getMethodName().contentEquals("setMinStat")) {
               if (atCnt == 0) {
-                statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+                statsWaitList[prevIxa] += prevCalls[ste].getMethodName() + " ";
               }
-              statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+              statsWaitList[prevIxa] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
             }
             atCnt++;
           }//for
@@ -1628,8 +1634,9 @@ public class Assets {
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //     ex.printStackTrace(System.err);
       st.setFatalError();
-      throw new WasFatalError(eM.tError);
+      //throw new WasFatalError(eM.tError);
     }
+    return v;
   }
 
   /**

@@ -32,7 +32,7 @@ import trade.Econ;
 import trade.MyErr;
 import trade.StarTrader;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

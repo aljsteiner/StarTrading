@@ -20,6 +20,8 @@ package trade;
 import java.io.IOException;
 import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static trade.StarTrader.fatalError;
 import static trade.StarTrader.itTesting;
 import static trade.StarTrader.startTime;
@@ -61,6 +63,7 @@ public class ITStarTraderTest {
     StarTrader.main3();
     
     assertEquals(false,fatalError);
+    assertFalse(fatalError);
      if(StarTrader.fatalError) throw new MyErr("fatal error at new StarTrader");
      System.err.println(" passed first test, StarTrader started");
      } catch (Error | Exception ex) {
@@ -70,6 +73,7 @@ public class ITStarTraderTest {
       ex.printStackTrace(System.err);
       EM.flushes();
       fatalError = true;
+      assertFalse(fatalError);
       assertEquals(false,fatalError);
       /* Create and display the form */
        /* Create and display the form */
@@ -81,6 +85,7 @@ public class ITStarTraderTest {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
+      assertFalse(fatalError);
      assertEquals(false,fatalError);
     }
     System.out.println("ITStarTraderTest finished " + (StarTrader.fatalError?" fatalError": " no Error"));
@@ -92,7 +97,8 @@ public class ITStarTraderTest {
   
   public ITStarTraderTest(){
      System.err.println("starting out in test test ITStarTraderTest main " + Thread.currentThread().getName());
-    assertEquals(false,fatalError); //I think it goes to main()
+     assertFalse(fatalError);
+     assertEquals(false,fatalError); //I think it goes to main()
     System.exit(-24);  
   }
   

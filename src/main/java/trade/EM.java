@@ -196,7 +196,7 @@ class EM {
   static volatile double econLimits2[] = {150.}; // more limiting of econs
   static final double mEconLimits2[][] = {{75., 550.}};
   static volatile double econLimits3[] = {110.}; // max of econs
-  static volatile double mEconLimits3[][] = {{100., 600.}};
+  static volatile double mEconLimits3[][] = {{75., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
   static String tError = " no tError";
@@ -3286,7 +3286,7 @@ onceAgain:
     boolean rtn = ((gc >= vone && gc <= vfour) && gameClanStatus == 5)
             || (vten == gc || gc == vfive) && (0 <= gameClanStatus && 4 >= gameClanStatus);
     if (E.debugSettingsTabOut) {
-      System.out.println("at 2146 match game clan vv=" + vv + " valS=" + valS[vv][vDesc] + " match game clan status=" + gameClanStatus + ", gc=" + gc + ", " + (rtn ? "" : "!!") + "rtn");
+      System.out.println("----MGSc----match game clan vv=" + vv + " valS=" + valS[vv][vDesc] + " match game clan status=" + gameClanStatus + ", gc=" + gc + ", " + (rtn ? "" : "!!") + "rtn");
     }
     return rtn;
   }
@@ -3372,6 +3372,7 @@ onceAgain:
    */
   void runVals() throws IOException {
     doVal("difficulty", difficultyPercent, mDifficultyPercent, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the difficulty for ships as well as  Planets ,more difficulty increases costs of  resources and staff each year, increases the probability of ship and planet deaths.  More difficulty probably requires more clan-master expertise.");
+   doVal("maxEcons", econLimits3, mEconLimits3, "Increase the max number of econs (planets+ships) in this game, it maxEcons too large the game will blow up out of memory, depending on your available memory");
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
     doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
     doVal("clanRisks", clanRisk, mClanRisk, "increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
@@ -3387,16 +3388,16 @@ onceAgain:
     winner = scoreVals(DIED, iNumberDied, ICUM, isI);
     winner = scoreVals(BOTHCREATE, iBothCreateScore, ICUM, isI);
      */
-    doVal("wGiven", wGiven, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the sub-score for the percent given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
-    doVal("wGiven2", wGiven2, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for the percent given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
-    doVal("wGenerous", wGenerous, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the value of  the percent given in trade by the clan.");
-    doVal("iGiven", iGiven, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for number of economies traded. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
-    doVal("wLiveWorthScore", wLiveWorthScore, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for the clan final worth.");
-    doVal("iLiveWorthScore", iLiveWorthScore, mNegPluScoreMult, "increase slider, increase the winning score for the clan final count of planets and ships");
-    doVal("iBothCreateScore", iBothCreateScore, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for the number of this clan in ever created");
-    doVal("wYearTradeV", wYearTradeV, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for the increase in the year trade increase");
-    doVal("wYearTradeI", wYearTradeI, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for thee increase in the number of economies with at least one trade that year");
-    doVal("iNumberDiedI", iNumberDied, mNegPluScoreMult, "Decrease the winning score for the number of dead economies for this clan this year");
+    doVal("wGiven", wGiven, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the sub-score for TRADELASTGAVE the last value given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
+    doVal("wGiven2", wGiven2, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for TRADENOMINALGAVE the nominal value given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
+    doVal("wGenerous", wGenerous, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for TRADESTRATLASTGAVE the strategic value given in trade by the clan. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
+    doVal("iGiven", iGiven, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the score for TRADELASTGAVE the number of economies traded. The sub-score is higher based on how much the clan value is higher than the smallest clan value.");
+    doVal("wLiveWorthScore", wLiveWorthScore, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for LIVEWORTH the clan final worth.");
+    doVal("iLiveWorthScore", iLiveWorthScore, mNegPluScoreMult, "increase slider, increase the winning score for LIVEWORTH the clan final count of planets and ships");
+    doVal("iBothCreateScore", iBothCreateScore, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for BOTHCREATE the number of this clan in ever created");
+    doVal("wYearTradeV", wYearTradeV, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for the increase in WTRADEDINCRMULT the year trade increase");
+    doVal("wYearTradeI", wYearTradeI, mNegPluScoreMult, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the winning score for WTRADEDINCRMULT the increase in the number of economies with at least one trade that year");
+    doVal("iNumberDiedI", iNumberDied, mNegPluScoreMult, "Decrease the winning score for DIED the number of dead economies for this clan this year");
     doVal("years To Win", winDif, mwinDif, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the years before a winner is declared");
     doVal("resourceCosts", mab1, mmab1, "raise the cost of resources planet and ship, makes game harder");
     doVal("staffCosts", mac1, mmac1, "raise the costs of staff for planets and ships, makes planets and ships die more often");
@@ -3435,7 +3436,7 @@ onceAgain:
 
     // doVal("econLimits1  ", econLimits1, mEconLimits1, "Increase the max number of econs (planets+ships) in this game");
     //  doVal("econLimits2  ", econLimits2, mEconLimits2, "Increase the max number of econs (planets+ships) in this game");
-    //  doVal("maxEcons", econLimits3, mEconLimits3, "Increase the max number of econs (planets+ships) in this game");
+
     doVal("Clan Ships per planets", clanShipFrac, mClanShipFrac, "increase faction of ships per planets for this clan only, limited by All ships per planets and game ships per planets");
     doVal("All ships per planets", clanAllShipFrac, mClanAllShipFrac, "for this clan increase the fraction of ships per all planets, limited by Clan Ships per planets  and game Ships per planets ");
     doVal("Ships per planets", gameShipFrac, mGameShipFrac, "increase the fraction of ships in the game. bit for each clan, limited by clanShipFrac and clanAllShipFrac");
@@ -4125,7 +4126,7 @@ onceAgain:
 
   void defRes() {
 
-    doRes(SCORE, "Score", "Winner has the highest score the result of combining the different priorities set by several value entries which increase the score", 3, 4, 3,LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);   
+    doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3,LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);   
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9 | THISYEAR  | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEAR | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
     doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given%totBalance", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal not strategic amount given in trade ", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
@@ -7307,7 +7308,7 @@ onceAgain:
   static int sValsCnt = -1;
   static double difPercent = 0.0;
   static double difMult = 0.0;
-  static double winDif[][] = {{6.000}};
+  static double winDif[][] = {{6.000}};  //set by doVal "years to win"
   static double mwinDif[][] = {{2.2, 40.0}, {2.2, 40.0}};
   static double curDif = 0.0;
 
