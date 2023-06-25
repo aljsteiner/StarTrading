@@ -85,7 +85,7 @@ public class Assets {
   int oclan;
   int opors;
   int oClan = -5, oPors = -6;  //in Assets preInstantiation
-  int year;  // copy of eM.year
+  int year=-16;  // copy of eM.year
   int myEconCnt;
   boolean died = false;
   boolean sos = false;
@@ -181,15 +181,15 @@ public class Assets {
   int visitedShipOrdinal = 0;
   int econVisited = 0; // count of econs trying trade this year
   String tradingShipName = "none";
-  int yearTradeAccepted = -20;
-  int yearTradeRejected = -10;
-  int yearTradeLost = -20;
-  int yearTradeMissed = -20;
-  int yearCatastrophy = -20;
-  int yearSwapForwardFundEmergency = -20;
-  int yearSOS = -20;
-  int yearCreated = -20;
-  int prevAcceptedYear = -20;  // set near end of endYear
+  int yearTradeAccepted = -31;
+  int yearTradeRejected = -12;
+  int yearTradeLost = -23;
+  int yearTradeMissed = -24;
+  int yearCatastrophy = -17;
+  int yearSwapForwardFundEmergency = -18;
+  int yearSOS = -25;
+  int yearCreated = -22;
+  int prevAcceptedYear = -21;  // set near end of endYear
   int prevNotAcceptedYear = -20;
   boolean newTradeYear1 = false; // set by Assets.barter
 
@@ -2116,8 +2116,8 @@ public class Assets {
     cur.yearEnd();
     EM.isHere("--CEYE--",ec, "after CashFlow.yearEnd aaadd1 " + aaadd1++);
 
-    if (E.debugMisc && syW != null) {
-      throw new MyErr("CashFlow.yearEnd did not null syW, probably skipped some code");
+    if (E.debugMisc && !EM.dfe() && syW != null) {
+      EM.doMyErr("CashFlow.yearEnd did not null syW, probably skipped some code");
     }
     //
     cashFlowSubAssetBalances.copyValues(balances);
@@ -9469,8 +9469,10 @@ if(eM.dfe()) return 0.;
         } else if (tradeLost) {
           setStat("WLOSTTRADEDINCR", pors, clan, worthIncrPercent, 1);
         } else {
-          if (prevAcceptedYear == eM.year) {
-            throw new MyErr("Illegal prev and noPrev barter for the same year=" + eM.year + ", ship=" + tradingShipName);
+          // assert false || false: this is an error;
+          assert tradeAccepted || (prevAcceptedYear != eM.year): "assert illegal preveAcceptedYear==EM.year and " + (tradeMissed? " tradeMissed" : " !Tmissed") + (tradeAccepted ? " tradeAccepted" : " !TAccepted") + (tradeLost ? " tradeLost" : " !TLost") + (tradeRejected?" tradeRejected" : " !TRejectd") + " year" + EM.year + " clan" +clan + " oclan" + oclan + " fav"+fav  + ", ship=" + tradingShipName;
+          if (!tradeAccepted && (prevAcceptedYear == eM.year)) {
+            EM.doMyErr( "illegal preveAcceptedYear==EM.year and " + (tradeMissed? " tradeMissed" : " !Tmissed") + (tradeAccepted ? " tradeAccepted" : " !TAccepted") + (tradeLost ? " tradeLost" : " !TLost") + (tradeRejected?" tradeRejected" : " !TRejectd") + " year" + EM.year + " clan" +clan + " oclan" + oclan + " fav"+fav + ", ship=" + tradingShipName);
           }
          // if (prevNotAcceptedYear != eM.year) {
            // prevNotAcceptedYear = eM.year;

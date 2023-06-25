@@ -1889,6 +1889,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           System.out.println(etList[prevIx]);
         }
       }
+      EM.setCurEcon(ec);
+      ec.st.paintCurDisplay(ec);
     }
   } // Econ Thread
 }// Econ

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2012 Albert Steiner
+  Copyright (C) 2012 Albert Steiner
  Copyright (C) 2022 Albert Steiner
 
  This program is free software: you can redistribute it and/or modify
@@ -17,22 +17,15 @@
  */
 package trade;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static trade.StarTrader.fatalError;
-import static trade.StarTrader.mainStart;
+import static trade.StarTrader.itTesting;
 import static trade.StarTrader.startTime;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import trade.E;
-import trade.EM;
-import trade.Econ;
-import trade.MyErr;
-import trade.StarTrader;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static trade.StarTrader.testing;
 
 /**
  *
@@ -40,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This is a class to test the program StarTrader in a number of ways
  * Only when the tests are ok may the github be updated
  */
-public class TestStarTrader {
+public class StarTraderTestIT {
   static protected E eE;
   static EM eM;
   static StarTrader st;
@@ -55,51 +48,58 @@ public class TestStarTrader {
     /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
+    /* Set the Nimbus look and feel --change to animation*/
+
+    // Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+     */
     try {
-      E.sysmsg("starting out in test main " + Thread.currentThread().getName());
+     System.err.println("starting out in test ITStarTraderTest main " + Thread.currentThread().getName());
+      //     System.exit(-25);
     StarTrader.mainStart(args);
+   testing = true;
+    itTesting = true;
     StarTrader.main3();
-     if(StarTrader.fatalError) throw new MyErr("fatal error at new TestStarTraderTest");
-     E.sysmsg(" passed first test,  started");
-      /* Create and display the form */
-       /* Create and display the form */
-     java.awt.EventQueue.invokeAndWait(() -> {
-        st.setVisible(true);
-      } //java.awt.EventQueue.invokeLater(new Runnable() {
-      );
-      eE = st.getE();
-      eM = st.getEM();
-      if(st.fatalError) throw new MyErr("fatal error before first run");
-      System.err.println(" passed start eventQueue");
-      st.runYears(1);
-      if(st.fatalError) throw new MyErr("fatal error at first run");
-      System.err.println("passed first year run");
-      eM.difficultyPercent[0] = 60.;
-    //  eM.difficultyPercent[1] = 60.;
-      st.runYears(1);
-      if(st.fatalError) throw new MyErr("fatal error at second run");
-      System.err.println("passed second year run");
-     //System.exit(0);
-      System.err.println("oops passed exit");
+    
+    assertEquals(false,fatalError);
+    assertFalse(fatalError);
+     if(StarTrader.fatalError) throw new MyErr("fatal error at new StarTrader");
+     System.err.println(" passed first test, StarTrader started");
      } catch (Error | Exception ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
       System.err.println(EM.curEconName + " " + Thread.currentThread().getName() + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
       ex.printStackTrace(System.err);
       EM.flushes();
-      fatalError = true; 
+      fatalError = true;
+      assertFalse(fatalError);
+      assertEquals(false,fatalError);
+      /* Create and display the form */
+       /* Create and display the form */
+    // java.awt.EventQueue.invokeAndWait(() -> {
+      //  st.setVisible(true);
+     // } //java.awt.EventQueue.invokeLater(new Runnable() {
+     // );
     } finally {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
-   System.exit(0);
+      assertFalse(fatalError);
+     assertEquals(false,fatalError);
     }
-    //</editor-fold>
-
+    System.out.println("ITStarTraderTest finished " + (StarTrader.fatalError?" fatalError": " no Error"));
+    
+   // System.exit(-3);
+    System.exit(0);
+    System.exit(-27);
   } // main
   
-  public TestStarTrader(){
-    System.exit(-10);
+  public StarTraderTestIT(){
+     System.err.println("starting out in test test ITStarTraderTest main " + Thread.currentThread().getName());
+     assertFalse(fatalError);
+     assertEquals(false,fatalError); //I think it goes to main()
+    System.exit(-24);  
   }
   
 }

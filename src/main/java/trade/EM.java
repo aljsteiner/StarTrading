@@ -539,7 +539,7 @@ class EM {
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       flushes();
-      System.err.println("Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
+      System.err.println("Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
       System.exit(-17);
       fatalError = true;
 
@@ -558,6 +558,17 @@ class EM {
     return a == null || a.isEmpty();
   }
   ;
+  
+   /**
+   * determine of a string does not exist or is empty
+   *
+   * @param a string to be tested
+   * @return true if string exists or is gt length 0
+   */
+  static Boolean notEmpty(String a) {
+    return a != null &&  !a.isEmpty();
+  }
+  ;
   protected static String curThread = "";
 
   /**
@@ -566,7 +577,7 @@ class EM {
    * @return return string
    */
   protected static String threadsStacks() {
-    String ret = "\n Start ThreadStacks by " + Thread.currentThread().getName() + since() + sinceDoYear();
+    String ret = "\n----THs---- Start ThreadStacks by " + Thread.currentThread().getName() + since() + sinceDoYear() +"\n" + mem() + lfe() ;
     Thread[] tarray = new Thread[10];
     Thread.enumerate(tarray);
     for (Thread th : tarray) {
@@ -575,7 +586,7 @@ class EM {
         StackTraceElement[] stk = th.getStackTrace();
         // Map<Thread,StackTraceElement[]> tMap = Thread.getAllStackTraces();
         // for(StackTraceElement[] val:tMap.values()){
-        ret += ("\nthreadStacks thread=" + th.getName() + "\n");
+        ret += ("\nthreadStacks thread=" + th.getName() + " P" + th.getPriority() + " L" + stk.length + "\n");
         for (StackTraceElement elem : stk) {
           ret += ("at " + elem.getClassName() + "." + elem.getMethodName() + "(" + elem.getFileName() + ":" + elem.getLineNumber() + ")" + "\n");
           //ret += elem.toString();
@@ -588,11 +599,11 @@ class EM {
   }
 
   /**
-   * print addMore() then set didMore=false;
+   * printAddMore() then set didMore=false;
    *
    */
   static void printAddMore() {
-    System.out.println("----PAM---" + addMore());
+    System.out.println("----PAM---" + andMore());
     didMore = false;
   }
 
@@ -627,8 +638,9 @@ class EM {
     //threadsStacks();
     String rrr = "";
     String rtn = (isEmpty(addlErr) && isEmpty(wasHere) && isEmpty(wasHere2) && isEmpty(wasHere3) && isEmpty(wasHere4) && isEmpty(wasHere5) && isEmpty(wasHere6) && isEmpty(wasHere7) && isEmpty(wasHere8) && isEmpty(prevLine) && isEmpty(firstStack) && isEmpty(secondStack) && isEmpty(thirdStack) && isEmpty(fourthStack) ? "" : "\n");
+    rtn += "\n" + lfe();
     if (didMore) {
-      return rtn += "======didMore=====";
+      return rtn += "\n======didMore===== stop already did andMore";
     } else {
       didMore = true;
       rtn += ", thread=" + (curThread = Thread.currentThread().getName()) + ", Ty=" + ((new Date()).getTime() - StarTrader.startYear)
@@ -719,7 +731,7 @@ class EM {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("Ignore " + eo + " pauses() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
+      System.err.println("Ignore " + eo + " pauses() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
     }
   }
 
@@ -748,7 +760,7 @@ class EM {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
+      System.err.println("Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
     }
   }
 
@@ -776,7 +788,7 @@ class EM {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("waitFlushes Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore());
+      System.err.println("waitFlushes Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
     }
   }
 
@@ -789,8 +801,9 @@ class EM {
     //  System.err.println(aLine + andMore()); //later
     new Throwable().printStackTrace(pw); // later
     secondStack = sw.toString();
+    if(!dfe())System.err.println("-----NWER-----doMyErr setting newError");
     newError = true;
-    System.err.println(tError =("\n>>>>>>doMyError thread=" + Thread.currentThread().getName() + " " + aLine + addMore()));
+    System.err.println(tError =("\n------DMER----doMyError thread=" + Thread.currentThread().getName() + " " + aLine + andMore()));
     st.setFatalError(st.redish); // should do exit
     flushes();
     pauses();
@@ -808,7 +821,7 @@ class EM {
   protected static String sinceStartTime() {
     long now = (new Date()).getTime();
     double nu = now - startTime;
-    return mf(nu * .001);
+    return " " + mf(nu * .001);
   }
 
   static long runYearsTime;
@@ -822,7 +835,7 @@ class EM {
   protected static String since(long oldTime) {
     long now = (new Date()).getTime();
     double nu = now - oldTime;
-    return mf(nu * .001);
+    return " " + mf(nu * .001);
   }
 
   /**
@@ -844,7 +857,7 @@ class EM {
    * @return seconds nnn.mmm
    */
   public static String since() {
-    return "since game start" + since(StarTrader.startTime);
+    return " since game start" + since(StarTrader.startTime);
   }
 
   /**
@@ -1279,7 +1292,7 @@ class EM {
    * @return true if EM.fatalError, EM.newError or StarTrader.fatalError
    */
   static boolean dfe() {
-    return newError || fatalError || stopExe|| StarTrader.fatalError;
+    return newError || fatalError || stopExe|| StarTrader.fatalError || StarTrader.doStop;
   }
 
   /**
@@ -1288,8 +1301,11 @@ class EM {
    * @return found EM.newError or found EM.fatalError or found
    * StarTrader.fatalError
    */
+  static String efe() {
+    return (newError ? " found EM.newError " : " no newE ") + (fatalError ? " found EM.fatalError" : " no EM.fatalE") + (stopExe ? " found EM.stopExe" : " no EM.stopExe") + (StarTrader.fatalError ? " found StarTrader.fatalError" : " no StarTrader.fatalE");
+  }
   static String lfe() {
-    return (newError ? " found EM.newError " : " no newError ") + (fatalError ? " found EM.fatalError" : " no EM.fatalError") + (stopExe ? " found EM.stopExe" : " no EM.stopExe") + (StarTrader.fatalError ? " found StarTrader.fatalError" : " no StarTrader.fatalError");
+    return "---ERR---" + (newError ? " new" : "") + (fatalError ? " fatal" : "") + (stopExe ? " stop" : "") + (StarTrader.fatalError ? " Sfatal" : "") + (StarTrader.doStop? " Dstop":"");
   }
 
   /**
@@ -3017,7 +3033,7 @@ onceAgain:
       System.err.println("doReadKeepVals error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore());
       System.err.flush();
       // ex.printStackTrace(System.err);
-      System.err.println("doReadKeepVals Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr + addMore());
+      System.err.println("doReadKeepVals Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr + andMore());
     } finally {
       return ret;
     }
@@ -6838,7 +6854,7 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       flushes();
-      System.err.println(tError = ("Remember " + curEconName + " " + Econ.nowThread + "Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + addMore()));
+      System.err.println(tError = ("Remember " + curEconName + " " + Econ.nowThread + "Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore()));
       System.exit(-23);
       throw new WasFatalError(tError);
     }
