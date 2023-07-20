@@ -395,10 +395,9 @@ public class StarTrader extends javax.swing.JFrame {
   static volatile String curStateName = stateStringNames[0];
   static volatile String prevEconName = "no name";
   static volatile String curEconName = "no econ";
-  static volatile boolean doStop = false; // set by game or stats stop execution
-  static volatile boolean fatalError = false;
-  static volatile boolean statsDone = false;
-  static volatile boolean listResDone = false;
+  static boolean doStop = false; // set by game or stats stop execution
+  static boolean fatalError = false;
+  static boolean statsDone = false;
   static volatile int stateCnt = -11;
   static volatile int yearsToRun = -22;
   // static int econCnt = -5;
@@ -4981,13 +4980,10 @@ public class StarTrader extends javax.swing.JFrame {
    */
   void setFatalError(Color rrr) {
     boolean hadFatalError = false;
- //   getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
-  //  EM.flushes();
+    getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
+    EM.flushes();
     if (EM.dfe()) {
-      System.err.println("-----OLDE------old Erors=" + EM.lfe());
       hadFatalError = true;
-    } else {
-      System.err.println("----NWER----new Error set");
     }
     eM.stopExe = true;
     eM.fatalError = true;
@@ -5072,11 +5068,11 @@ public class StarTrader extends javax.swing.JFrame {
     EM.flushes();
     EM.flushes();
     if (hadFatalError) {
-      System.exit(-19);
+      //System.exit(-19);
     }
-    System.exit(-18);// be able to see the error
+    //System.exit(-18); be able to see the error
     EM.flushes();
-   // throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
+    throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
     //  controlPanels.setSelectedComponent(log);
   }
 
@@ -5233,10 +5229,7 @@ public class StarTrader extends javax.swing.JFrame {
       prevWasHere = EM.wasHere == null ? "no Was Here" : EM.wasHere; // move the reference
       stateCnt = 0;
       if (E.debugThreadsOut && (stateConstA != stateConst || prevState != stateConst) && (stateConstA == CREATING || stateConstA == STATS || stateConstA == TRADING || prevState == RUNSDONE || stateConst == STATS || stateConst == RUNSDONE || prevState == STATS)) {
-        System.out.println("-----WRN-----" + EM.wasHere5 
-        + " " + "stateConstA" + stateConstA + " " + stateStringNames[stateConstA] 
-        +  " prevState" + prevState + " " + stateStringNames[prevState] 
-        +  EM.threadsStacks());
+        System.out.println(EM.wasHere5 + EM.threadsStacks());
       }
       pprevState = prevState;
       prevState = stateConst = stateConstA;
@@ -5349,7 +5342,7 @@ public class StarTrader extends javax.swing.JFrame {
             if (E.debugStatsOut1) {
               System.out.println("----------MD-------runYears2;" + since() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
-           //  listRes(fullRes); //done in runBackgroundYears4
+            listRes(fullRes); //done in runBackgroundYears4
             break;
 
           case RUNSDONE:
@@ -5431,7 +5424,7 @@ public class StarTrader extends javax.swing.JFrame {
       controlPanels.setSelectedIndex(4);
       cpIx2 = controlPanels.getSelectedIndex();
       stats.setVisible(true);
-      // listRes(0, resLoops, fullRes); // in paintCurDisplay
+      listRes(0, resLoops, fullRes);
       //controlPanels.setSelectedIndex(4);
       cpIx3 = controlPanels.getSelectedIndex();
       stats.setVisible(true);
@@ -6298,7 +6291,6 @@ public class StarTrader extends javax.swing.JFrame {
    * runBackgroundYears4 years
    */
   public synchronized void runYear() {
-    listResDone = false;
     if (eM.fatalError) {
       setFatalError();
       return;
@@ -6463,9 +6455,9 @@ public class StarTrader extends javax.swing.JFrame {
       else {
         // set up the preexisting names on the namelist
         int tyear;
-        eM.envsPerYear[eM.envsPerYear.length - 1] = (int) eM.minEcons[0][0];
+        eM.envsPerYear[eM.lEnvsPerYear - 1] = ((int)eM.econLimits3[0]) >> 2;//  /4 Max game created econs
         // yEcons the number of Econs we can have this year.
-        int yEcons = (int) (eM.minEconsMult[0][0] * (eM.envsPerYear[tyear = (eM.year < eM.envsPerYear.length ? eM.year : eM.envsPerYear.length - 1)]));
+        int yEcons = (int) (eM.minEconsMult[0][0] * (eM.envsPerYear[tyear = (eM.year < eM.lEnvsPerYear ? eM.year : eM.lEnvsPerYear- 1)]));
         //dnow = new Date();
         System.out.println(since() + " tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
         printMem();
@@ -7202,16 +7194,14 @@ public class StarTrader extends javax.swing.JFrame {
                  + "yrAveWorth =" + EM.mf(bworth) + " Planets " + EM.mf(pworth) + " Ships " + EM.mf(sworth) + newLine
                  + "initAveRCSG =" + EM.mf(initBrcsg) + " Planets " + EM.mf(initPrcsg) + " Ships " + EM.mf(initSrcsg) + newLine
                  + "iyrAveRCSG =" + EM.mf(brcsg) + " Planets " + EM.mf(prcsg) + " Ships " + EM.mf(srcsg) + newLine
-                 + "TradedYear " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS) + ":" + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, E.LCLANS) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + newLine
+                 + "TradedYear " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + newLine
                  + "GameYrs    " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "TradedGame " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " also:" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " rej:" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.S + 1, 0, 5) + " lost:" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "BothCreated " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "GameCreated" + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                 + "FutCreated  " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUR0, E.P, E.S + 1, 0, 5) +":" + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                 + "GCatastrophies " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "FutCreated  " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "GCatastrophies " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "Difficulty" + EM.difficultyPercent[0] + " DiedGame "
-                 + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUR0, E.P, E.S + 1, 0, 5) 
-                 + ":" 
                  + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.S + 1, 0, 5)
                  + ":acc=" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.S + 1, 0, 5)
                  + ":rej=" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.S + 1, 0, 5)
@@ -7356,11 +7346,11 @@ public class StarTrader extends javax.swing.JFrame {
       //  displayPanel1Operation.setVisible(true);
       //  displayPanel1SinceYearStart.setVisible(true);
       //  displayPanel1.setVisible(true);
-      if (stateConst == STATS  && !EM.dfe()) {  // stop if error
+      if (stateConst == STATS) {
         controlPanels.setSelectedIndex(4);
         display.setVisible(false);
         cpIx2 = controlPanels.getSelectedIndex();
-        if(!statsDone && !EM.dfe())listRes(0, resLoops, fullRes);
+        if(!statsDone)listRes(0, resLoops, fullRes);
         controlPanels.setSelectedIndex(4);
         stats.setVisible(true);
         stats.revalidate();
@@ -7378,7 +7368,6 @@ public class StarTrader extends javax.swing.JFrame {
           System.out.println(aLine);   
       }
       else {  // not STATS
-        if(!EM.dfe()){
         controlPanels.setSelectedIndex(3);
         display.setVisible(true);
         if (eM.haveColors[0][0] > 1.2 && curEc != null) {
@@ -7388,9 +7377,7 @@ public class StarTrader extends javax.swing.JFrame {
         }
         display.revalidate();
         display.repaint();
-        }
       }
-      if(!EM.dfe()){
       controlPanels.setVisible(true);
       if (stateCnt % 50 == 0 || stateConst == STATS) {
         if (true || curDisplayPrints < E.ssMax * 5) {
@@ -7401,7 +7388,6 @@ public class StarTrader extends javax.swing.JFrame {
 
           System.out.println(aLine);
         }
-      }
       }
     }
     catch (Exception | Error ex) {
@@ -7616,12 +7602,12 @@ public class StarTrader extends javax.swing.JFrame {
       if (E.debugSettingsTab) {
         System.out.println(EM.wasHere5);
       }
-      for (int p = 0; !EM.dfe() &&  p < 10 ; p++) { // go through elements in this panel
+      for (int p = 0; p < 10; p++) { // go through elements in this panel
         EM.wasHere5 = "in ST.getGameValues " + " getGameValues #" + p + " vv=" + (v = currentVals1[p]) + ", clan =" + eM.gameClanStatus;
         if (E.debugSettingsTab) {
           System.out.print(EM.wasHere5);
         }
-        if (v > -1 && panelAr[p].isEnabled() && !eM.dfe()) {
+        if (v > -1 && panelAr[p].isEnabled()) {
           gc = eM.valI[v][eM.modeC][0][0];
           eM.gamePorS = E.P;
           if (gc <= 4) {
@@ -7635,7 +7621,7 @@ public class StarTrader extends javax.swing.JFrame {
             System.out.println(" planet name=" + eM.valS[v][0] + ", gc=" + gc + " val=" + val + ", oldval=" + oldval);
           }
           eM.putVal(val, currentVals1[p], E.P, eM.gameClanStatus);
-          if (gameSSliders[p].isEnabled() && !eM.dfe()) {
+          if (gameSSliders[p].isEnabled()) {
             eM.gamePorS = E.S;
             if (gc <= 2) {
               oldval = eM.valI[v][eM.sliderC][0][eM.gamePorS];
@@ -7743,38 +7729,38 @@ public class StarTrader extends javax.swing.JFrame {
           eM.gPntr = 0;  // rewind
           klan = 0;
           if (E.debugSettingsTab) {
-            System.out.print("----RGMPa-----Restart at the first game master panel ");
+            System.out.print("Restart at the first game master panel ");
           }
         }
         else {
           eM.cPntr = 0;
           klan = clan;
           if (E.debugSettingsTab) {
-            System.out.print("-----RGUPa-----Restart at the first user panel clan=" + clan);
+            System.out.print("Restart at the first user panel clan=" + clan);
           }
         }
         if (E.debugSettingsTab) {
-          System.out.println("----RGDaa----" + new Date().toString());
+          System.out.println(new Date().toString());
         }
       } // go to the next set of panels
       else if (action > 0) {
         int savGPntr = eM.gPntr;
         int savCPntr = eM.cPntr;
         if (E.debugSettingsTab) {
-          System.out.print("----RGM----=Move to the next ");
+          System.out.print("Move to the next ");
         }
         if (eM.gameClanStatus == 5) {
           klan = 0;
           if (eM.gStart[eM.gPntr + 1] < 0) {
             if (E.debugSettingsTab) {
-              System.out.print("----RGMC-----Remain at the current game-master no additional panel" + eM.gPntr + " ");
+              System.out.print("Remain at the current game-master no additional panel" + eM.gPntr + " ");
             }
           }
           else {
             klan = 0;
             eM.gPntr++;
             if (E.debugSettingsTab) {
-              System.out.print("----RGMNa----Move to the next game-master panel=" + eM.gPntr + " ");
+              System.out.print("Move to the next game-master panel=" + eM.gPntr + " ");
             }
           }
         }
@@ -7782,13 +7768,13 @@ public class StarTrader extends javax.swing.JFrame {
           klan = clan;
           if (eM.cStart[eM.cPntr + 1] < 0) {
             if (E.debugSettingsTab) {
-              System.out.print("----RGMC----Remain at current clan-master panel, not additonal panel=" + eM.cPntr);
+              System.out.print("Remain at current clan-master panel, not additonal panel=" + eM.cPntr);
             }
           }
           else {
             eM.cPntr++;
             if (E.debugSettingsTab) {
-              System.out.print("----RGAN----Advance to the next clan-master panel" + eM.cPntr);
+              System.out.print("Advance to the next clan-master panel" + eM.cPntr);
             }
           }
         }
@@ -7799,7 +7785,7 @@ public class StarTrader extends javax.swing.JFrame {
         klan = 0;
         eM.vv = eM.gStart[eM.gPntr];
         if (E.debugSettingsTab) {
-          System.out.println("-----GMPa-----Start the next game-master panel at vv =" + eM.vv + " = " + eM.valS[eM.vv][0]);
+          System.out.println("Start the next game-master panel at vv =" + eM.vv + " = " + eM.valS[eM.vv][0]);
         }
       }
       else {
@@ -7811,7 +7797,7 @@ public class StarTrader extends javax.swing.JFrame {
           ix = iy;
         }
         if (E.debugSettingsTab) {
-          System.out.println("----RGSN----Start the next clan-master panel at cPntr=" + eM.cPntr + " " + iy + ":" + ix + "=" + eM.valS[ix][0]);
+          System.out.println("Start the next clan-master panel at cPntr=" + eM.cPntr + " " + iy + ":" + ix + "=" + eM.valS[ix][0]);
         }
       }
       nn = 0;
@@ -7822,7 +7808,7 @@ public class StarTrader extends javax.swing.JFrame {
         int vfive = eM.vfive;
         int vten = eM.vten;
         if (E.debugSettingsTab) {
-          System.out.println("----RGLa----line nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0] + " clan=" + eM.gameClanStatus + " ??displaying?? ww=" + eM.vv + " = " + eM.valS[eM.vv][0]);
+          System.out.println("line nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0] + " clan=" + eM.gameClanStatus + " ??displaying?? ww=" + eM.vv + " = " + eM.valS[eM.vv][0]);
           // System.out.print(nn);
           // System.out.print("nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0]);
           // System.out.print(eM.gameClanStatus);
@@ -7834,7 +7820,7 @@ public class StarTrader extends javax.swing.JFrame {
         currentVals1[nn] = eM.vv;  // the object to display
         if (eM.matchGameClanStatus(eM.vv)) {
           if (E.debugSettingsTab) {
-            System.out.println("----RGDa----DISPLAY clan planet " + ", desc=" + eM.valS[currentVals1[nn]][0] + ", klan=" + klan + ", line=" + nn + ", sliderV=" + eM.valI[currentVals1[nn]][eM.sliderC][eM.gamePorS][klan] + ", ww=" + currentVals1[nn] + ", clan=" + eM.gameClanStatus);
+            System.out.println(" <<<<<DISPLAY clan planet " + ", desc=" + eM.valS[currentVals1[nn]][0] + ", klan=" + klan + ", line=" + nn + ", sliderV=" + eM.valI[currentVals1[nn]][eM.sliderC][eM.gamePorS][klan] + ", ww=" + currentVals1[nn] + ", clan=" + eM.gameClanStatus);
           }
           // E.sysmsg(" <<<<<DISPLAY clan=" + eM.gameClanStatus);
 
@@ -7887,7 +7873,7 @@ public class StarTrader extends javax.swing.JFrame {
           // enable staff slider if value > -1 the staff values exist as positive slider vals
           if (v > -1) {
             if (E.debugSettingsTab) {
-              System.out.println("---RGDSa----DISPLAY ship sliderV=" + v + ", clan=" + eM.gameClanStatus + ", klan=" + klan + ", line=" + nn + ", desc=" + eM.valS[currentVals1[nn]][0]);
+              System.out.println(" <<<<<DISPLAY ship sliderV=" + v + ", clan=" + eM.gameClanStatus + ", klan=" + klan + ", line=" + nn + ", desc=" + eM.valS[currentVals1[nn]][0]);
             }
             // gamePSliders[nn].setForeground(Color.blue);
             gameSSliders[nn].setSnapToTicks(false);
@@ -7909,14 +7895,14 @@ public class StarTrader extends javax.swing.JFrame {
             gameSSliders[nn].setEnabled(false);
             gameSSliders[nn].setVisible(false);
             if (E.debugSettingsTab) {
-              System.out.println("----RGNSa----NO DISPLAY ship sliderv=" + v + ", clan=" + eM.gameClanStatus + ", gc=" + gc + ", klan=" + klan + ", desc=" + eM.valS[currentVals1[nn]][0]);
+              System.out.println(" <<<<< NO DISPLAY ship sliderv=" + v + ", clan=" + eM.gameClanStatus + ", gc=" + gc + ", klan=" + klan + ", desc=" + eM.valS[currentVals1[nn]][0]);
             }
           }
           nn++;
         }
         else {
           if (E.debugSettingsTab) {
-            System.out.println("----RGSa----SKIP line=" + nn + ", gc=" + gc + ", klan=" + klan + ", clan=" + eM.gameClanStatus + ", desc=" + eM.valS[currentVals1[nn]][0]);
+            System.out.println(" >>>>SKIP line=" + nn + ", gc=" + gc + ", klan=" + klan + ", clan=" + eM.gameClanStatus + ", desc=" + eM.valS[currentVals1[nn]][0]);
           }
         }
 
@@ -7925,7 +7911,7 @@ public class StarTrader extends javax.swing.JFrame {
       if (eM.vv >= eM.vvend) {
         int vv2 = eM.gameClanStatus == 5 ? eM.gStart[0] : eM.cStart[0];
         if (E.debugOutput) {
-          System.out.println("----RGso-----start over from" + eM.vv + " panel clan=" + eM.gameClanStatus + " action=" + action + " start=" + (eM.vv = vv2) + " length=" + eM.vvend + " ");
+          System.out.println("start over from" + eM.vv + " panel clan=" + eM.gameClanStatus + " action=" + action + " start=" + (eM.vv = vv2) + " length=" + eM.vvend + " ");
         }
         System.out.println(new Date().toString());
         eM.gameDisplayNumber[eM.gameClanStatus] = eM.prevGameDisplayNumber[eM.gameClanStatus] = 0; // start over
@@ -7938,13 +7924,13 @@ public class StarTrader extends javax.swing.JFrame {
           panelAr[nn].setEnabled(false);
           panelAr[nn++].setVisible(false);
           System.out.print("disable panel nn=" + nn + " clan=" + eM.gameClanStatus);
-          System.out.println("----RGUa---- " + new Date().toString());
+          System.out.println(" " + new Date().toString());
         }
       }
 
       if (E.debugOutput) {
         System.out.print(
-                "----RGXa----exit gamePanelChange clan=" + eM.gameClanStatus + " action=" + action);
+                "exit gamePanelChange clan=" + eM.gameClanStatus + " action=" + action);
         System.out.println(
                 " " + new Date().toString());
       }
@@ -7954,7 +7940,7 @@ public class StarTrader extends javax.swing.JFrame {
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
       EM.newError = true;
-      System.err.println("----RGEXa----" + Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      System.err.println(Econ.nowName + since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
       eM.flushes();
       eM.flushes();
@@ -8069,12 +8055,6 @@ public class StarTrader extends javax.swing.JFrame {
   static int listResNoteCount = 0;
 
   synchronized void listRes(int list, long resLoops[][], double[] fullRes) {
-    if(listResDone){
-      System.err.println("-----LRDh-----listRes already done once this year");
-      return;
-    }
-    listResDone = true;
-    System.out.println("-----LRDs---- listRes started");
     arow = 0;
     eM.getWinner(); // recalc winner, my be after settings changed
     eM.rememberFromPage = false; // forget remember at a new page
@@ -8199,10 +8179,11 @@ public class StarTrader extends javax.swing.JFrame {
      */
     try {
       //   E.bRemember = Files.newBufferedWriter(E.REMEMBER, E.CHARSET);
-      System.err.println("-----MSaa-------starting out in oldmain thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
+      System.err.println("----MA----starting out in oldmain thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
       mainStart(args);
       st.setVisible(true);
       stateConst = CONSTRUCTED;
+      if(args[0].contains("ITtest")) {testing = itTesting = true; }
 
       if (testing || (args.length > 0 && (args[0].contains("test")))) {
         main3();
@@ -8276,14 +8257,14 @@ public class StarTrader extends javax.swing.JFrame {
   public static void mainStart(String args[]) throws IOException {
     try {
       //   E.bRemember = Files.newBufferedWriter(E.REMEMBER, E.CHARSET);
-      System.err.println("----MSa-----starting out in mainStart thread=" + Thread.currentThread().getName());
+      System.err.println("----MSa-----starting out in mainStart args[0]=" + args[0] + " thread=" + Thread.currentThread().getName());
       //  String dateString = EM.MYDATEFORMAT.format(new Date());
       //  String rOut = "New Game " + dateString + "\n";
       // E.bRemember.write(rOut,0,rOut.length());
       // E.bKeep.write(rOut,0,rOut.length());
       PrintStream jout, jerr, jout1, jerr1;
 
-      if (E.debugOutput || (args.length > 0 && args[0].contains("see"))) {
+      if (E.debugOutput || (args.length > 0 && args[0].contains("see") && !args[0].contains("Only"))) {
         //if (E.debugOutput) {
         jout = new PrintStream(new File("StarTraderOutput.txt"));
         //  jout1 = new PrintStream(new File("StarTraderOut1.txt"));
@@ -8293,7 +8274,7 @@ public class StarTrader extends javax.swing.JFrame {
         jerr = new PrintStream(new File("StarTraderErrors.txt"));
         jerr.println("jout line0 " + (new Date()).toString());
         //     jerr1 = new PrintStream(new File("StarTraderErr1.txt"));
-        if (E.resetOut || (args.length > 0 && args[0].contains("see"))) {
+        if (E.resetOut || (args.length > 0 && args[0].contains("see") && !args[0].contains("Only"))) {
           //  if (E.resetOut) {
           System.setOut(jout);
           System.out.println("-----MSOO----output to System.out after setOut " + (new Date()).toString());
@@ -8320,7 +8301,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.newError = true;
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
-      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + EM.andMore());
+      System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + EM.addMore());
       ex.printStackTrace(System.err);
       EM.flushes();
       fatalError = true;
@@ -8350,7 +8331,8 @@ public class StarTrader extends javax.swing.JFrame {
   public static void main3() {
     try {
       System.err.println("------TA0-----enter main3 thread=" + Thread.currentThread().getName() + ", " + (new Date().getTime() - startTime) + EM.mem());
-      testing = true; // flag in testing mode
+       E.debugDoRes=false; 
+       testing = true; // flag in testing mode
       st.setVisible(true);
       bbtime = new Date().getTime();
       Runnable tests1 = new Runnable() {

@@ -120,7 +120,8 @@ class EM {
   // static volatile ArrayList<EM> ems = new ArrayList<EM>();
   static volatile TreeMap<String, Econ> names2ec = new TreeMap<String, Econ>();
   static volatile ArrayList<String> emNames = new ArrayList<String>();
-  static int[] envsPerYear = {10, 20, 40, 60, 40}; //see minEcons
+  static int[] envsPerYear = {40, 40, 50, 60, 20}; //see minEcons
+  static int lEnvsPerYear = envsPerYear.length;
   // int porsClanCntd[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; // defaults
   static volatile int porsClanCnt[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
   //int clanCntd[] = {0, 0, 0, 0, 0};
@@ -194,9 +195,9 @@ class EM {
   static volatile double econLimits1[] = {150.}; // start limiting econs
   static final double mEconLimits1[][] = {{100., 500.}, {200., 500.}};
   static volatile double econLimits2[] = {150.}; // more limiting of econs
-  static final double mEconLimits2[][] = {{75., 550.}};
+  static final double mEconLimits2[][] = {{35., 550.}};
   static volatile double econLimits3[] = {110.}; // max of econs
-  static volatile double mEconLimits3[][] = {{75., 600.}};
+  static volatile double mEconLimits3[][] = {{35., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
   static String tError = " no tError";
@@ -591,7 +592,7 @@ class EM {
           ret += ("at " + elem.getClassName() + "." + elem.getMethodName() + "(" + elem.getFileName() + ":" + elem.getLineNumber() + ")" + "\n");
           //ret += elem.toString();
         }
-        // ret += "\n";
+         ret += "\n****end ThreadsStacks****\n";
         // System.err.println(ret);
       }
     }
@@ -1304,6 +1305,11 @@ class EM {
   static String efe() {
     return (newError ? " found EM.newError " : " no newE ") + (fatalError ? " found EM.fatalError" : " no EM.fatalE") + (stopExe ? " found EM.stopExe" : " no EM.stopExe") + (StarTrader.fatalError ? " found StarTrader.fatalError" : " no StarTrader.fatalE");
   }
+  /**
+   * list fatal Errors if they are found
+   *
+   * @return any found error
+   */
   static String lfe() {
     return "---ERR---" + (newError ? " new" : "") + (fatalError ? " fatal" : "") + (stopExe ? " stop" : "") + (StarTrader.fatalError ? " Sfatal" : "") + (StarTrader.doStop? " Dstop":"");
   }
@@ -2614,7 +2620,7 @@ class EM {
 
   /**
    * sub doVal1 assign the next vv and the initial storage that will be filled
-   * in doVal3
+   * in doVal1
    *
    * @param gc the storage type code
    * @param vdesc the title of the storage
@@ -2634,7 +2640,7 @@ class EM {
     valD[vv][gameLim] = lims; //valD[vv][1]...
     int[][] val7 = {{-1}}; // unused
     valI[vv][sevenC] = val7; //unused
-    if (E.debugSettingsTabOut) {
+    if (E.debugSettingsTabOut && E.debugDoRes) {
       System.out.printf("in doVal1 vv=%2d, gc=%1d, desc=%7s, detail=%7s, %n", vv, gc, vdesc, vdetail);
     }
 
@@ -2801,7 +2807,7 @@ class EM {
     double t1 = 0., t2 = 0., t3 = 0.;
     int j1 = -3, j2 = -4, j3 = -5, j4 = -6, j5 = -7;
     int klan = clan < 5 ? clan : clan == 5 ? 0 : clan % 5;
-    if (E.debugSettingsTabOut) {
+    if (E.debugSettingsTabOut && E.debugDoRes) {
       System.out.format("in doval5 gc=%1d, lmode=%1d, mode=%1d, vv=%3d =\"%5s\",xCnt=%1d, xStrt[xCnt]=%2d,  iinput=%3d, pors=%1d,klan=%1d,val=%7.2f, low=%7.2f,high=%7.2f 00slider 0123=" + valI[vv][sliderC][0][0] + " " + valI[vv][prevSliderC][0][0] + " " + valI[vv][prev2SliderC][0][0] + " " + valI[vv][prev3SliderC][0][0] + " " + "%n", gc, valI[vv][modeC].length, valI[vv][modeC][0][0], vv, valS[vv][vDesc], xCntr, xCntr < 0 ? 9999 : xStart[(int) (xCntr / lDisp)], iinput, pors, clan, val, low, high);
     }
     // test for legal gc
@@ -3144,7 +3150,7 @@ onceAgain:
     int va  = -1;
     int gc = valI[vv][modeC][vFill][0];
     int klan = clan % 5;
-    if (E.debugPutValue2) {
+    if (E.debugPutValue2 && E.debugDoRes) {
       // System.out.print("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan);
     }
 
@@ -3152,7 +3158,7 @@ onceAgain:
       //double sosfrac[] = {.3, .35};
       if ((gc == vone && pors == E.P) || gc == vtwo) {
         if (slider == (va  = valI[vv][sliderC][vFill][pors])) {
-          if (E.debugPutValue2) {
+          if (E.debugPutValue2 && E.debugDoRes) {
             System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", Thread=" + Thread.currentThread().getName() + ", Ty=" + ((new Date().getTime() - st.startYear)) + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + " no change");
           }
           return 0; // no change
@@ -3165,7 +3171,7 @@ onceAgain:
         int prev2Slider = valI[vv][prev2SliderC][vFill][pors] = valI[vv][prevSliderC][vFill][pors];
         int prevSlider = valI[vv][prevSliderC][vFill][pors] = valI[vv][sliderC][vFill][pors];
         valI[vv][sliderC][vFill][pors] = slider; // a new value for slider
-        if (E.debugPutValue) {
+        if (E.debugPutValue && E.debugDoRes) {
           System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
         }
         doWriteKeepVals(vv, vFill, pors, val1, val0, slider, prevSlider, prev2Slider);
@@ -3174,7 +3180,7 @@ onceAgain:
       //double[][] rsefficiencyGMax = {{2.}, {2.}}
       else if ((gc == vthree && pors == E.P) || gc == vfour) {
         if (slider == (va  = valI[vv][sliderC][pors][vFill])) {
-          if (E.debugPutValue2) {
+          if (E.debugPutValue2 && E.debugDoRes) {
             System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + "no change");
           }
           return 0; // no change
@@ -3185,14 +3191,14 @@ onceAgain:
         int prev2Slider = valI[vv][prev2SliderC][pors][vFill] = valI[vv][prevSliderC][pors][vFill];
         int prevSlider = valI[vv][prevSliderC][pors][vFill] = valI[vv][sliderC][pors][vFill];
         valI[vv][sliderC][pors][vFill] = slider; // a new value for slider
-        if (E.debugPutValue) {
+        if (E.debugPutValue && E.debugDoRes) {
           System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
         }
         doWriteKeepVals(vv, pors, vFill, val1, val0, slider, prevSlider, prev2Slider);
         return 1;
       } else if (gc == vseven) {
         if (slider == (va  = valI[vv][sliderC][pors][vFill])) {
-          if (E.debugPutValue2) {
+          if (E.debugPutValue2 && E.debugDoRes) {
             System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + " no change");
           }
           return 0; // no change
@@ -3205,7 +3211,7 @@ onceAgain:
         int prev2Slider = valI[vv][prev2SliderC][vFill][valI[vv][sevenC][vFill][vFill]] = valI[vv][prevSliderC][vFill][valI[vv][sevenC][vFill][vFill]];
         int prevSlider = valI[vv][prevSliderC][vFill][valI[vv][sevenC][vFill][vFill]] = valI[vv][sliderC][vFill][valI[vv][sevenC][vFill][vFill]];
         valI[vv][sliderC][vFill][valI[vv][sevenC][vFill][vFill]] = slider; // a new value for slider
-        if (E.debugPutValue) {
+        if (E.debugPutValue && E.debugDoRes) {
           System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
         }
         doWriteKeepVals(vv, pors, valI[vv][sevenC][vFill][vFill], val1, val0, slider, prevSlider, prev2Slider);
@@ -3214,11 +3220,11 @@ onceAgain:
     } //  double[][] clanStartFutureFundDues = {{700., 700., 700., 700., 700.}, {600., 600., 600., 600., 600.}};
     else if ((gc == vten || gc == vfive)) {
       va  = valI[vv][sliderC][pors][klan];
-      if (E.debugPutValue2) {
+      if (E.debugPutValue2 && E.debugDoRes) {
         System.out.print(" old slider=" + va  + ", new slider=" + slider);
       }
       if (slider == va) {
-        if (E.debugPutValue2) {
+        if (E.debugPutValue2 && E.debugDoRes) {
           System.out.println("no change");
         }
         return 0; // no change
@@ -3230,13 +3236,13 @@ onceAgain:
       int prev2Slider = valI[vv][prev2SliderC][pors][clan] = valI[vv][prevSliderC][pors][clan];
       int prevSlider = valI[vv][prevSliderC][pors][clan] = valI[vv][sliderC][pors][clan];
       valI[vv][sliderC][pors][clan] = slider; // a new value for slider
-      if (E.debugPutValue) {
+      if (E.debugPutValue && E.debugDoRes) {
         System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
       }
       doWriteKeepVals(vv, pors, clan, val1, val0, slider, prevSlider, prev2Slider);
       return 1;
     } else if (E.debugSettingsTab) {  //problem with gc
-      if (E.debugPutValue2) {
+      if (E.debugPutValue2 && E.debugDoRes) {
         System.out.println("gc oops =" + valS[vv][0] + ", old slider=" + va  + ", new slider=" + slider + ", gc=" + gc + ", pors=" + pors + ", clan=" + clan);
       }
       String verr = "putval illegal gc=" + gc + "  " + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors + ", klan=" + klan;
@@ -4826,7 +4832,7 @@ onceAgain:
     if (e4 > rende3) {
       doMyErr("---------------------Fatal e4=%3d > rende3=%3d size of resI,resV,resS increase size of rende3");
     }
-    System.out.println("in doRes a, rn=" + e4 + " < rende3=" + rende3 + ", dName=" + dName + ", desc=" + desc + ", detail=" + detail + ",locks=" + lock0 + ", " + lock1 + ", " + lock2 + ", " + lock3);//%o,%o,%o,%o %n", e4, rende3, dName, desc, detail, lock0, lock1, lock2, lock3);
+    if(E.debugDoRes)System.out.println("in doRes a, rn=" + e4 + " < rende3=" + rende3 + ", dName=" + dName + ", desc=" + desc + ", detail=" + detail + ",locks=" + lock0 + ", " + lock1 + ", " + lock2 + ", " + lock3);//%o,%o,%o,%o %n", e4, rende3, dName, desc, detail, lock0, lock1, lock2, lock3);
     if (resMap.containsKey(dName)) {
       doMyErr(">>>>>>dName=" + dName + " already exists, e4=" + e4);
     }

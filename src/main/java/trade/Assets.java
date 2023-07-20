@@ -85,7 +85,7 @@ public class Assets {
   int oclan;
   int opors;
   int oClan = -5, oPors = -6;  //in Assets preInstantiation
-  int year=-16;  // copy of eM.year
+  int year;  // copy of eM.year
   int myEconCnt;
   boolean died = false;
   boolean sos = false;
@@ -181,15 +181,15 @@ public class Assets {
   int visitedShipOrdinal = 0;
   int econVisited = 0; // count of econs trying trade this year
   String tradingShipName = "none";
-  int yearTradeAccepted = -31;
-  int yearTradeRejected = -12;
-  int yearTradeLost = -23;
-  int yearTradeMissed = -24;
-  int yearCatastrophy = -17;
-  int yearSwapForwardFundEmergency = -18;
-  int yearSOS = -25;
-  int yearCreated = -22;
-  int prevAcceptedYear = -21;  // set near end of endYear
+  int yearTradeAccepted = -20;
+  int yearTradeRejected = -10;
+  int yearTradeLost = -20;
+  int yearTradeMissed = -20;
+  int yearCatastrophy = -20;
+  int yearSwapForwardFundEmergency = -20;
+  int yearSOS = -20;
+  int yearCreated = -20;
+  int prevAcceptedYear = -20;  // set near end of endYear
   int prevNotAcceptedYear = -20;
   boolean newTradeYear1 = false; // set by Assets.barter
 
@@ -1168,7 +1168,7 @@ public class Assets {
         int le = eM.lStatsWaitList;
         int prevIx = eM.ixStatsWaitList;
         eM.ixStatsWaitList = (++eM.ixStatsWaitList) % eM.lStatsWaitList;
-        int prevIxa = prevIx >= eM.lStatsWaitList ? 0 : prevIx;// I don't know why there was out of bounds sometimes
+        prevIx = prevIx >= eM.lStatsWaitList ? 0 : prevIx;// I don't know why there was out of bounds sometimes
         int atCnt = 0;
         long nTime = (new Date()).getTime();
         long moreT = nTime - eM.doYearTime;
@@ -1225,7 +1225,7 @@ public class Assets {
         //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
        synchronized (resL){
         if (E.debugStatsOut) {
-          statsWaitList[prevIxa] = "setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          statsWaitList[prevIx] = "setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           StackTraceElement[] stks = Thread.currentThread().getStackTrace();
           lstk = stks.length - 1;
@@ -1237,11 +1237,11 @@ public class Assets {
                       && prevCalls[ste].getLineNumber() != 0
                       && !prevCalls[ste].getMethodName().contentEquals("setStat")) {
                 if (atCnt == 0) {
-                  statsWaitList[prevIxa] += prevCalls[ste].getMethodName() + " ";
+                  statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
                 }
                 String pcs = prevCalls[ste].getFileName();
                 int pci = prevCalls[ste].getLineNumber();
-                statsWaitList[prevIxa] += " "
+                statsWaitList[prevIx] += " "
                         + " at "
                         + pcs
                         + "." + pci;
@@ -1263,7 +1263,7 @@ public class Assets {
           resICurmCC[ISSET] += 1;
         }
 
-        statsWaitList[prevIxa] = "";
+        statsWaitList[prevIx] = "";
         if (E.debugStatsOut) {
           if (rn > 0) {
             long endSt = (new Date()).getTime();
@@ -1310,13 +1310,12 @@ public class Assets {
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //     ex.printStackTrace(System.err);
       st.setFatalError();
-      //throw new WasFatalError(eM.tError);
+      throw new WasFatalError(eM.tError);
     }
-    return  v;
   }
 
   /**
-   * set a maxStatistic value and a count in the designated statistic
+   * set a maxStatistic value and a count
    *
    * @param rn the name of this statistic
    * @param pors planet=0 ship=1
@@ -1338,18 +1337,16 @@ public class Assets {
         long nTime = (new Date()).getTime();
         long moreT = nTime - doYearTime;
         if (E.debugStatsOut) {
-           //prevent Ix too large
-          int prevIxa = prevIx < lStatsWaitList?prevIx:lStatsWaitList;
-          statsWaitList[prevIxa] = "setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          statsWaitList[prevIx] = "setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           int lstk = Thread.currentThread().getStackTrace().length - 1;
           for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
             prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
             if (!prevCalls[ste].getMethodName().contentEquals("setMaxStat")) {
               if (atCnt == 0) {
-                statsWaitList[prevIxa] += prevCalls[ste].getMethodName() + " ";
+                statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
               }
-              statsWaitList[prevIxa] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+              statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
             }
             atCnt++;
           }//for
@@ -1472,13 +1469,12 @@ public class Assets {
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //     ex.printStackTrace(System.err);
       st.setFatalError();
-     // throw new WasFatalError(eM.tError);
+      throw new WasFatalError(eM.tError);
     }
-    return v;
   }
 
   /**
-   * set a min Statistic value and a count in the designated statistic 
+   * set a min Statistic value and a count
    *
    * @param rn the name of this statistic
    * @param pors planet=0 ship=1
@@ -1500,18 +1496,16 @@ public class Assets {
         long nTime = (new Date()).getTime();
         long moreT = nTime - doYearTime;
         if (E.debugStatsOut) {
-          //prevent Ix too large
-          int prevIxa = prevIx < lStatsWaitList?prevIx:lStatsWaitList;
-          statsWaitList[prevIxa] = "setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          statsWaitList[prevIx] = "setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           int lstk = Thread.currentThread().getStackTrace().length - 1;
           for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
             prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
             if (!prevCalls[ste].getMethodName().contentEquals("setMinStat")) {
               if (atCnt == 0) {
-                statsWaitList[prevIxa] += prevCalls[ste].getMethodName() + " ";
+                statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
               }
-              statsWaitList[prevIxa] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+              statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
             }
             atCnt++;
           }//for
@@ -1634,9 +1628,8 @@ public class Assets {
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //     ex.printStackTrace(System.err);
       st.setFatalError();
-      //throw new WasFatalError(eM.tError);
+      throw new WasFatalError(eM.tError);
     }
-    return v;
   }
 
   /**
@@ -2116,8 +2109,8 @@ public class Assets {
     cur.yearEnd();
     EM.isHere("--CEYE--",ec, "after CashFlow.yearEnd aaadd1 " + aaadd1++);
 
-    if (E.debugMisc && !EM.dfe() && syW != null) {
-      EM.doMyErr("CashFlow.yearEnd did not null syW, probably skipped some code");
+    if (E.debugMisc && syW != null) {
+      throw new MyErr("CashFlow.yearEnd did not null syW, probably skipped some code");
     }
     //
     cashFlowSubAssetBalances.copyValues(balances);
@@ -5609,7 +5602,7 @@ public class Assets {
         }
         //    E.sysmsg(name + "Enter Trades.barter term=" + term);
         hist.add(new History(aPre0, mRes, name + "ntr barter" + ">>>>>>>>>>", "myIx" + prevOffer.myIx, "c" + (prevOffer.cargos[prevOffer.myIx] == c.balance ? "c == cargos" : " c != cargos"), "<<<<<<<<<<<<<"));
-
+        if(E.debugAssetsStats)if(((EM.barterStart - term) % 6) == 0) st.paintCurDisplay(eM.curEcon);
         // ===================== t18 =======================================
         if (term >= EM.barterStart) {  // go to the next section
           //  tradedFirstStrategicReceipts = totalStrategicRequests;
@@ -9469,10 +9462,8 @@ if(eM.dfe()) return 0.;
         } else if (tradeLost) {
           setStat("WLOSTTRADEDINCR", pors, clan, worthIncrPercent, 1);
         } else {
-          // assert false || false: this is an error;
-          assert tradeAccepted || (prevAcceptedYear != eM.year): "assert illegal preveAcceptedYear==EM.year and " + (tradeMissed? " tradeMissed" : " !Tmissed") + (tradeAccepted ? " tradeAccepted" : " !TAccepted") + (tradeLost ? " tradeLost" : " !TLost") + (tradeRejected?" tradeRejected" : " !TRejectd") + " year" + EM.year + " clan" +clan + " oclan" + oclan + " fav"+fav  + ", ship=" + tradingShipName;
-          if (!tradeAccepted && (prevAcceptedYear == eM.year)) {
-            EM.doMyErr( "illegal preveAcceptedYear==EM.year and " + (tradeMissed? " tradeMissed" : " !Tmissed") + (tradeAccepted ? " tradeAccepted" : " !TAccepted") + (tradeLost ? " tradeLost" : " !TLost") + (tradeRejected?" tradeRejected" : " !TRejectd") + " year" + EM.year + " clan" +clan + " oclan" + oclan + " fav"+fav + ", ship=" + tradingShipName);
+          if (prevAcceptedYear == eM.year) {
+            throw new MyErr("Illegal prev and noPrev barter for the same year=" + eM.year + ", ship=" + tradingShipName);
           }
          // if (prevNotAcceptedYear != eM.year) {
            // prevNotAcceptedYear = eM.year;
@@ -10246,6 +10237,8 @@ if(eM.dfe()) return 0.;
           balances.checkBalances(cur);
         }
         yphase = yrphase.SWAPING;
+        // update display during swap loops
+        if(E.debugAssetsStats)if((n % 10) == 0) st.paintCurDisplay(eM.curEcon);
         swapped = swaps("S%", lightYearsTraveled); // do possible swaps
         failed = !swapped;
         if(n%5==0)EM.isHere("SWa",ec,"after swaps" + n + (swapped ? " swapped ":" failed ") + EM.sinceDoYear());

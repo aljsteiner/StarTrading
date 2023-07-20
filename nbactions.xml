@@ -1,36 +1,344 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>integration-test.single</actionName>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"none"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+        <action>
+            <actionName>run5a</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"run5"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+        <action>
+            <actionName>run20a</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"run20"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+        <action>
+            <actionName>test</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>compile</goal>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+         <action>
+            <actionName>CUSTOM-"testStarTrader"</actionName>
+            <displayName>"testStarTrader"</displayName>
+            <goals>
+                <goal>test-compile</goal>
+                <goal>surefire:test</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.TestStarTraderTest</exec.mainClass>
+              <vertx.timeout>9999</vertx.timeout> 
+            </properties>
+        </action>
+        <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <jpda.listen>true</jpda.listen>
+                <exec.workingdir2>J:\My Drive\netbeans\starTraderMaven\src\main\java\trade</exec.workingdir2>
+                <exec.vmArgs>-ea -Xmx4g -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+                <exec.appArgs>"none"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+        <action>
+            <actionName>profile</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"none"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+        <action>
+            <actionName>run.single.main</actionName>
+            <preAction>build-with-dependencies</preAction>
             <packagings>
                 <packaging>*</packaging>
             </packagings>
             <goals>
-                <goal>pre-integration-test</goal>
-                <goal>failsafe:integration-test</goal>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.classpathScope>${classPathScope}</exec.classpathScope>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-runtesta</actionName>
+            <displayName>runtesta</displayName>
+             <dependencies>
+        <!-- junit 5 -->
+              <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.5.2</version>
+                <scope>test</scope>
+              </dependency>
+             </dependencies>
+            <preAction>build-with-dependencies</preAction>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>integration-test</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>runtestA</activatedProfile>
+            </activatedProfiles>
+            <properties>
+                <test>DummyToSkipUnitTests</test>
+                <failIfNoTests>false</failIfNoTests>
+                <it.test>${packageClassName}#trade.StarTrader</it.test>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"runtest"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+        <action>
+            <actionName>integration-test.single</actionName>
+            <preAction>build-with-dependencies</preAction>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>clean,integration-test</goal>
             </goals>
             <properties>
                 <test>DummyToSkipUnitTests</test>
                 <failIfNoTests>false</failIfNoTests>
-                <it.test>trade.ITStarTraderTest.java</it.test>
-                
-                
-                
-                
-                
+                <it.test>${packageClassName}#trade.StarTrader</it.test>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.ITStarTraderTest</exec.mainClass>
             </properties>
         </action>
-        
-        
-        
-         
-        
-        
-        
-        
-        
-        
-        
+         <action>
+            <actionName>CUSTOM-runtestOnly</actionName>
+            <displayName>runtestOnly</displayName>
+         <plugin>   
+            <dependencies>
+                <!-- junit 5 -->
+              <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.5.2</version>
+                <scope>test</scope>
+              </dependency>
+             </dependencies>
+            
+        <artifactId>maven-surefire-plugin</artifactId>
+        <scope>test</scope>
+        <configuration>
+          <includes>
+            <include>**/*Test*.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+            <preAction>build-with-dependencies</preAction>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"runtestOnly"</exec.appArgs>
+                <exec.mainClass>trade.StarTraderTest</exec.mainClass>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>runtestOnly</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-runtestandsee</actionName>
+            <displayName>runtestandseea</displayName>
+            
+            <preAction>build-with-dependencies</preAction>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"runtestandsee"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>runtestandseea</activatedProfile>
+            </activatedProfiles>
+        </action>
+         <action>
+            <actionName>CUSTOM-run100b</actionName>
+            <displayName>run100b</displayName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"run100"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>run100</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-run5</actionName>
+            <displayName>run5b</displayName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"run5"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>run5</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-run20</actionName>
+            <displayName>run20</displayName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"run20"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>run20</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-test(default-test)</actionName>
+            <displayName>test(default-test)</displayName>
+            <preAction>build-with-dependencies</preAction>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>integration-test</goal>
+                
+            </goals>
+            <properties>
+                <test>DummyToSkipUnitTests</test>
+                <failIfNoTests>false</failIfNoTests>
+                <it.test>${packageClassName}#trade.TestStarTraderTest</it.test>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
+                <exec.mainClass>trade.TestStarTraderTest</exec.mainClass>
+            </properties>
+        </action>
         
         
     </actions>

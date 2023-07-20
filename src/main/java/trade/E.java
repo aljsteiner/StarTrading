@@ -116,6 +116,7 @@ static StarTrader st;
   static final boolean debugTradeSetup = debugMaster; // distance, location etc
   static final boolean debugSwaps = debugMaster; // doloops other swap tests
   static final boolean debugDidEconYearEnd = debugMaster; // StarTrader.doYear() doYearEdn
+  static final boolean debugAssetsStats = false; // why stats aren't showing
   static final boolean debugStats = debugMaster; // why stats aren't showing
   static final boolean debugStatsOut = debugMaster; // stats output
   static final boolean debugScannerOut = debugMaster; // scanner output
@@ -125,6 +126,8 @@ static StarTrader st;
   static final boolean tradeDebugTerms =  debugMaster;
   static final boolean debugSettingsTab = debugMaster; //errors from settings doValx
   static final boolean debugSettingsTabOut = debugMaster; //errors from settings doValx
+  static final boolean debugSettingsTab2 = debugMaster; //errors from settings doValx
+  static boolean debugDoRes = debugMaster; //errors from settings doValx
   static final boolean SWAPTRADESYSTEMOUT = debugMaster;  //Swap outputs
   static final boolean PAINTDISPLAYOUT = debugMaster; //outputs from StarTrader displays
   static final boolean tradeInitOut = debugMaster;
