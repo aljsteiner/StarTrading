@@ -7750,7 +7750,7 @@ public class Assets {
       EM.wasHere = "CashFlow.init... before calc Priority eeef=" + ++eeef;
       calcPriority(percentDifficulty); // calc this years piority into priorityYr and as.difficulty
       EM.wasHere = "CashFlow.init... before calcCatastrophy eeeg=" + ++eeeg;
-      if (!didCashFlowInit) { // do init only, use rs the life of the Econ
+      if (!didCashFlowInit || EM.AlwaysMakeRS) { // do init only, use rs the life of the Econ or not
         rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);
         calcCatastrophy();
       }

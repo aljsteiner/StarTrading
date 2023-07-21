@@ -52,7 +52,8 @@
             </properties>
         </action>
         <action>
-            <actionName>test</actionName>
+            <actionName>CUSTOM-test</actionName>
+            <displayName>test</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -154,6 +155,7 @@
                 <packaging>jar</packaging>
             </packagings>
             <goals>
+                <goal>clean</goal>
                 <goal>integration-test</goal>
             </goals>
             <activatedProfiles>
@@ -167,7 +169,7 @@
                 <exec.executable>java</exec.executable>
                 <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
                 <exec.appArgs>"runtest"</exec.appArgs>
-                <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.mainClass>trade.StarTraderTest</exec.mainClass>
             </properties>
         </action>
         <action>

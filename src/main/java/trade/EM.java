@@ -1651,6 +1651,7 @@ class EM {
   }
 
   double vFracSum = 0.;
+  static boolean AlwaysMakeRS = true;
 
   /**
    * obsolete make a multiplyer for CashFlow.calcRawCosts, creates a table rs
