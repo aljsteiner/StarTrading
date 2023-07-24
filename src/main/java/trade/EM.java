@@ -539,8 +539,9 @@ class EM {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
+      ex.printStackTrace(System.err);
       flushes();
-      System.err.println("Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
+      System.err.println("aInit Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
       System.exit(-17);
       fatalError = true;
 
@@ -1311,7 +1312,7 @@ class EM {
    * @return any found error
    */
   static String lfe() {
-    return "---ERR---" + (newError ? " new" : "") + (fatalError ? " fatal" : "") + (stopExe ? " stop" : "") + (StarTrader.fatalError ? " Sfatal" : "") + (StarTrader.doStop? " Dstop":"");
+    return "---ListERRs---" + (newError ? " new" : "") + (fatalError ? " fatal" : "") + (stopExe ? " stop" : "") + (StarTrader.fatalError ? " STfatal" : "") + (StarTrader.doStop? " doStop":"") + " ---endErrs---\n";
   }
 
   /**
@@ -3820,9 +3821,9 @@ onceAgain:
   static final int WTRADEDINCRMULT = ++e4;
   static final int DIED = ++e4;
   static final int BOTHCREATE = ++e4;
-  static final int INITRCSG = ++e4;
   static final int LIVERCSG = ++e4;
   static final int INCRRCSG = ++e4;
+  static final int INITRCSG = ++e4;
   static final int HIGHRCSG = ++e4;
   static final int LOWRCSG = ++e4;
   static final int MAXRCSG = ++e4;
@@ -3885,9 +3886,13 @@ onceAgain:
   static final int RCfrac = ++e4;
   static final int SGfrac = ++e4;
   static final int MISSINGNAME = ++e4;
-  static final int TradeFirstStrategicValue = ++e4;
+  
+  static final int TRADELASTRECEIVE = ++e4;
+  static final int TRADESTRATLASTRECEIVE = ++e4;
+  static final int TRADERECEIVELASTPERCENTFIRST = ++e4;
   static final int TradeLastStrategicValue = ++e4;
   static final int AlsoTradeLastStrategicValue = ++e4;
+  static final int TradeLastStrategicGoal = ++e4;
   static final int TradeStrategicValueLastPercentFirst = ++e4;
   static final int rejectNegRequests = ++e4;
   static final int rejectNegRequestsTerm = ++e4;
@@ -4045,6 +4050,8 @@ onceAgain:
   static final int DIEDSM1X3RN1 = ++e4;
   static final int DIEDSM1X2RN1 = ++e4;
   static final int DIEDSN1RM1X1 = ++e4;
+  static final int TradeFirstStrategicValue = ++e4;
+
   static final int TradeCriticalBidRequestsFirst = ++e4;
   static final int TradeCriticalBidRequests = ++e4;
   static final int TradeBidRequestsFirst = ++e4;
@@ -4054,11 +4061,10 @@ onceAgain:
   static final int TradeAlsoBidRequestsFirst = ++e4;
   static final int TradeAlsoBidRequests = ++e4;
   static final int TRADEFIRSTRECEIVE = ++e4;
-  static final int TRADELASTRECEIVE = ++e4;
-  static final int TRADERECEIVELASTPERCENTFIRST = ++e4;
+  ;
   static final int TRADEFIRSTGAVE = ++e4;
   static final int TRADESTRATFIRSTRECEIVE = ++e4;
-  static final int TRADESTRATLASTRECEIVE = ++e4;
+
   static final int TRADESTRATFIRSTGAVE = ++e4;
   static final int TradeNominalReceivePercentNominalOffer = ++e4;
   static final int MaxNominalReceivePercentNominalOffer = ++e4;
@@ -4089,12 +4095,13 @@ onceAgain:
   static final int BEFORETRADEWORTH = ++e4;
   static final int AFTERTRADEWORTH = ++e4;
   static final int TRADEWORTHINCRPERCENT = ++e4;
+  static final int TRADEWORTHINCR = ++e4;
   static final int TradeAcceptValuePerGoal = ++e4;
   static final int TradeRejectValuePerGoal = ++e4;
   static final int TradeLostValuePerGoal = ++e4;
+  
+ 
   static final int TradeFirstStrategicGoal = ++e4;
-  static final int TradeLastStrategicGoal = ++e4;
-
   static final int AlsoTradeStrategicValueLastPercentFirst = ++e4;
   static final int TradeRejectedStrategicGoal = ++e4;
   static final int TradeLostStrategicGoal = ++e4;
@@ -4151,22 +4158,23 @@ onceAgain:
 
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3,LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);   
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9 | THISYEAR  | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEAR | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
-    doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given%totBalance", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal not strategic amount given in trade ", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-   doRes(TRADESTRATLASTGAVE, "TradeStrategicLastGave", "Percent nominal amount given in trade per sumrcsg may be used for scoreing", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given strategic worth", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET,   LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TRADENOMINALGAV, "TradeNominalGiven", "Nominal worth not strategic worth given in trade ", 2, 2, 2, LIST40 5 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURNUM | CUR | BOTH | SKIPUNSET,0L);
+   doRes(TRADESTRATLASTGAVE, "TradeStrategicLastGave", "Percent nominal amount given in trade per sumrcsg may be used for scoreing", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase at total trades this year/start year worth part of scoring ", 2, 3, 2, LIST0 | LIST1 | LIST4 | THISYEAR | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(DIED, "DIED", "planets or ships died", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST14 | THISYEARUNITS | CUMUNITS | BOTH, 0, 0, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
-    doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0,  LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+ //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(INCRRCSG, "%incr rcsg", "percent incr rcsg Value  year end rcsg/inital rcsg");
-    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
+    doRes(INCRRCSG, "%incr rcsg", "this years incr rcsg Value  year end rcsg - start rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
     doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
-    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | THISYEAR | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(WORTHIFRAC, "PercInitWorth ", "Percent of Final/Initial Worth Value including working, reserve: resource, staff, knowledge");
-    doRes(WORTHINCR, "PercYrIncWorth", "Percent worth increase per year");
+    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     /*
       static final int HIGHWORTH = ++e4;
   static final int LOWWORTH = ++e4;
@@ -4180,7 +4188,7 @@ onceAgain:
    static final int DMISCHIGHWORTH = ++e4;
   static final int DMISCLOWWORTH = ++e4;
      */
-    doRes(TRADEWORTH, "Trade worth", "trade accepted Econs average yearly worth", 2, 2, 0, LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(TRADEWORTH, "Trade worth", "trade accepted Econs average yearly worth", 2, 2, 0, LIST7 | LIST15 | LIST16 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(HIGHWORTH, "T high worth", "trade accepted high Econs average yearly worth", 2, 2, 0, LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LOWWORTH, "T low worth", "trade acceptedlow Econs average yearly worth", 2, 2, 0, LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
 
@@ -4387,7 +4395,7 @@ onceAgain:
     doRes(TradeAlsoCriticalBidRequests, "BidAlsoCriticalRequests", "Critical requested bids");
     
     doRes(TRADELASTRECEIVE, "Last Received", "Final received goods%tot balance");
-    doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade");  
+    doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade", 2, 2, 2, LIST7 | LIST15 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L); 
     doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 2, 2, 2, LIST7 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeCriticalBidRequestsFirst, "BidFirstCriticalRequests", "First Critical requested bids");   
@@ -4411,7 +4419,8 @@ onceAgain:
     doRes(YearMinStrategicReceivePercentStrategicOffer, "YearMinStratReceive%StratGiven", "Year Min % of Strategic Received Per Strategic  Given");
     doRes(BEFORETRADEWORTH, "BeforeTradeWorth", "Worth before A trade");
     doRes(AFTERTRADEWORTH, "AfterTradeWorth", "Worth after a trade");
-    doRes(TRADEWORTHINCRPERCENT, "TradeWorthIncr%", "% increase in Worth after trade", 2, 3, 2,  LIST4 | THISYEARAVE, 0, 0, LIST41 | ROWS3 | CUMUNITS);
+    doRes(TRADEWORTHINCRPERCENT, "%TradeWorthIncr", "% increase in Worth after trade", 2, 3, 2,  LIST41 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
+   doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 3, 2,  LIST41 | THISYEAR | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0,0);
     doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST41 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST41 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeRejectValuePerGoal, "RejectValue%Goal", "Rejected percent value per goal");
     doRes(TradeLostValuePerGoal, "LostValue%Goal", "Lost percent value per goal");

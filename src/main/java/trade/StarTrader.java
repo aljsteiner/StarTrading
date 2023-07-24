@@ -4980,7 +4980,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
   void setFatalError(Color rrr) {
     boolean hadFatalError = false;
-    getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
+    if(!EM.dfe())getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
     EM.flushes();
     if (EM.dfe()) {
       hadFatalError = true;
@@ -5406,7 +5406,7 @@ public class StarTrader extends javax.swing.JFrame {
       if (E.debugStatsOut1) {
         System.err.println(EM.errLine);
       }
-      aaTime = (new Date()).getTime();
+      aaTime = (new Date()).getTime();      // this goes in error
       runYear();
     } // nn end loop
     setEconState(STATS);
@@ -7004,6 +7004,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
       EM.secondStack = EM.sw.toString();
+      ex.printStackTrace(System.err);
       EM.newError = true;
       EM.flushes();
       System.err.println(EM.tError = ("-----BBB----doYear bException=" + ex.toString() + " " + since() + " " + EM.curEconName + " " + Econ.nowThread + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
@@ -7346,7 +7347,7 @@ public class StarTrader extends javax.swing.JFrame {
       //  displayPanel1Operation.setVisible(true);
       //  displayPanel1SinceYearStart.setVisible(true);
       //  displayPanel1.setVisible(true);
-      if (stateConst == STATS) {
+      if (stateConst == STATS  && !EM.dfe()) {
         controlPanels.setSelectedIndex(4);
         display.setVisible(false);
         cpIx2 = controlPanels.getSelectedIndex();

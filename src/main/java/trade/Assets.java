@@ -153,6 +153,7 @@ public class Assets {
   boolean didInitRawProspects = false;
   double econsCnt;
   double worthIncrPercent = 0.;
+  double worthIncr = 0.;
   static double[][][] maintRequired = E.maintRequired;
   static double[][][] mxCosts = E.maintCost;
   static double[][][] tCosts = E.shipTravelLightyearCostsBySourcePerConsumer;
@@ -2553,6 +2554,7 @@ public class Assets {
     double fracPreTrade;
     double percentValuePerGoal;
     double worthIncrPercent;
+    double worthIncr;
     double additionToKnowledgeBiasForSumKnowledge
             = eM.additionalKnowledgeGrowthForBonus[0] / 7;
     double multiplierForEfficiencyFromRequirements
@@ -2665,7 +2667,7 @@ public class Assets {
     double maxAvail = 0.; // max available for a given swap
     double maxavail1, maxavail2, maxavail3, maxavail4;
 
-    //values for Assets.CashFlow.Trades
+    //values Assets.CashFlow for Assets.CashFlow.Trades
     double requests, offers, unitRequests, unitOffers, unitGets;
     double totalReceipts, totalSend, totalRequests, totalOffers, needs;
     double strategicRequests = 0., strategicOffers = 0., strategicFrac = 0., totalStrategicRequests = 0.;
@@ -6211,7 +6213,7 @@ public class Assets {
           //   nominalRequests -= (bidV < NZERO) ? bidV * nv : 0.;
           //  criticalNominalRequests -= (bidV < NZERO && ix > criticalHighSectors) ? bidV * nv : 0.;
           // offers
-          else {
+          else { //offers
             if (m > (E.L2SECS - lcntr)) {
               //  criticalStrategicOffers += bidV * nv * stratMultV;
               //   criticalNominalOffers += bidV * nv;
@@ -6243,7 +6245,6 @@ public class Assets {
         tradedCash = bCash = myOffer.getCash();
         plusCash = bCash > PZERO ? bCash : 0.;
         negCash = bCash < NZERO ? bCash : 0.;
-        ;
         offeredManuals = myOffer.getValueMoreManuals(myIx).sum();
         requestedManuals = myOffer.getValueMoreManuals(oIx).sum();
         // calculate the mult against both request and some based on requests
@@ -6308,7 +6309,7 @@ public class Assets {
                 "sC=" + EM.mf((criticalStrategicOffers - sumCriticalStrategicRequests) * eM.tradeCriticalFrac[pors][clan]),
                 "sN=" + EM.mf((nominalOffers - nominalRequests) * eM.nominalFracs[ifSearch][pors][clan]), "<<<<<<<"));
         hist.add(new History(aPre, History.valuesMinor7, " Sums ", "rq" + EM.mf(requests), "Of" + EM.mf(offers), "csh=" + EM.mf(cash), "bC" + EM.mf(bCash), "sv" + EM.mf(strategicValue), "xf" + EM.mf(excessOffers), "<<<<<"));
-        hist.add(new History(aPre, History.valuesMinor7, " from Offers", "cK" + EM.mf(myOffer.commonKnowledge[myIx].sum()), EM.mf(myOffer.commonKnowledge[oIx].sum()), "mls" + EM.mf(offeredManuals), EM.mf(requestedManuals), "total o=", EM.mf(totalStrategicOffers), "r=", EM.mf(totalStrategicRequests), "<<<<<<<<<<"));
+     //   hist.add(new History(aPre, History.valuesMinor7, " from Offers", "cK" + EM.mf(myOffer.commonKnowledge[myIx].sum()), EM.mf(myOffer.commonKnowledge[oIx].sum()), "mls" + EM.mf(offeredManuals), EM.mf(requestedManuals), "total o=", EM.mf(totalStrategicOffers), "r=", EM.mf(totalStrategicRequests), "<<<<<<<<<<"));
 
         E.myTestDouble(offers, "offers");
         E.myTestDouble(requests, "requests");
@@ -8559,12 +8560,13 @@ public class Assets {
         fracPostTrade = 100. * postTradeAvail / postTradeSum4;
         // see if/how much frac avail increases
         tradeAvailIncrPercent = preTradeAvail < E.PZERO ? 1. : 100. * (postTradeAvail - preTradeAvail) / preTradeAvail;
-        tW = btW;
+       // btW = tW;
         tW = new DoTotalWorths();  // in Assets.CashFlow.Barter
         tWTotWorth = tW.getTotWorth();
         btWTotWorth = btW.getTotWorth();
         btWrcsgSum = btW.getSumRCSGBal();
         worthIncrPercent = btWTotWorth < E.PZERO ? 1. : 100. * (tWTotWorth - btWTotWorth) / btWTotWorth;
+        worthIncr =tWTotWorth - btWTotWorth;
         percentValuePerGoal = strategicGoal > E.PZERO ? 100. * strategicValue / strategicGoal : 1.;
         retOffer.set2Values(ec, btWTotWorth, btW.getSumRCSGBal(), tWTotWorth); // needed in TradeRecord SearchRecord
 
@@ -8599,7 +8601,7 @@ public class Assets {
           setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
           setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
           setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
-          setStat(EM.TRADEWORTHINCRPERCENT, pors, clan, worthIncrPercent, 1);
+          setStat(EM.TRADEWORTHINCR, pors, clan, worthIncr, 1);
           setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
           setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
           setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
@@ -8633,7 +8635,7 @@ public class Assets {
           setStat(EM.TRADELASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, requests), 1);
           setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
           setStat(EM.TRADEFIRSTGAVE, pors, clan, calcPercent(btWrcsgSum, sendSumFirst), 1);
-          setStat(EM.TRADELASTGAVE, pors, clan, calcPercent(btWrcsgSum, sendSum), 1);
+          setStat(EM.TRADELASTGAVE, pors, clan, offers, 1);
           setStat(EM.TRADENOMINALGAVE, pors, clan, nominalOffers, 1);
           setStat(EM.TRADESTRATFIRSTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequestsFirst), 1);
           setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
@@ -9184,7 +9186,9 @@ if(eM.dfe()) return 0.;
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, initialSumWorth, 1);
-        setStat(EM.INCRRCSG, pors, clan, calcPercent(iyW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
+        setStat(EM.WORTHINCR, pors, clan, fyW.sumTotWorth - syW.sumTotWorth, 1); 
+      //  setStat(EM.RCSG, pors, clan, syW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
+        setStat(EM.INCRRCSG, pors, clan, fyW.getSumRCSGBal()- syW.getSumRCSGBal(), 1);
         setStat(EM.LIVERCSG, pors, clan, fyW.getSumRCSGBal(), 1);
         setStat(EM.INITRCSG, pors, clan, iyW.getSumRCSGBal(), 1);
         setMax(EM.MAXRCSG, pors, clan, fyW.getSumRCSGBal(), 1);
