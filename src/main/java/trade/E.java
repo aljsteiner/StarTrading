@@ -41,7 +41,7 @@ public class E {
   // it also holds tables used to calculate growth etc.
   // StarTrader working set of statsButto?nTip
 
- static final public String statsButton0Tip = "0: Cum Game Worths,";
+  static final public String statsButton0Tip = "0: Cum Game Worths,";
   static final public String statsButton1Tip = "1: cum Favors and trade effects";
   static final public String statsButton2Tip = "2: catastrophes, deaths, randoms, forwardfund";
   static final public String statsButton3Tip = "3: deaths. trades acc";
@@ -53,7 +53,7 @@ public class E {
   static final public String statsButton9Tip = "9: Catastrophes, Fertility, health and effects";
   static final public String statsButton10Tip = "10: list by ages deaths with trades missed, rejected, lost";
   static final public String statsButton11Tip = "11: list by ages deaths with trades accepted ";
-  static final public String statsButton12Tip = "12: list by ages deaths with negative prospects";
+  static final public String statsButton12Tip = "12: list by ages trades missed, rejected, lost";
   static final public String statsButton13Tip = "13: list by ages affects with growths depreciation";
   static final public String statsButton14Tip = "14: list by ages affects with catastrophies, forwardFunds ";
   static final public String statsButton15Tip = "15: list by ages live trades";

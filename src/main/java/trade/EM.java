@@ -76,7 +76,7 @@ class EM {
   EM copyTo; // during a copy, doVal, doRes etc must copy
   boolean doingCopy = false;
 
-  static final public String statsButton0Tip = "0: Cum Game Worths,";
+ static final public String statsButton0Tip = "0: Cum Game Worths,";
   static final public String statsButton1Tip = "1: cum Favors and trade effects";
   static final public String statsButton2Tip = "2: catastrophes, deaths, randoms, forwardfund";
   static final public String statsButton3Tip = "3: deaths. trades acc";
@@ -88,7 +88,7 @@ class EM {
   static final public String statsButton9Tip = "9: Catastrophes, Fertility, health and effects";
   static final public String statsButton10Tip = "10: list by ages deaths with trades missed, rejected, lost";
   static final public String statsButton11Tip = "11: list by ages deaths with trades accepted ";
-  static final public String statsButton12Tip = "12: list by ages deaths with negative prospects";
+  static final public String statsButton12Tip = "12: list by ages trades missed, rejected, lost";
   static final public String statsButton13Tip = "13: list by ages affects with growths depreciation";
   static final public String statsButton14Tip = "14: list by ages affects with catastrophies, forwardFunds ";
   static final public String statsButton15Tip = "15: list by ages live trades";
@@ -97,7 +97,7 @@ class EM {
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
   static final public String statsButton20Tip = "20: rcsg";
-  static final public String statsButton21Tip = "21: TB assigned";
+    static final public String statsButton21Tip = "21: TB assigned";
   static final public String statsButton22Tip = "22: TB assigned";
   static final public String statsButton23Tip = "23: display table";
 
@@ -3886,7 +3886,44 @@ onceAgain:
   static final int RCfrac = ++e4;
   static final int SGfrac = ++e4;
   static final int MISSINGNAME = ++e4;
-  
+  static final int WORTHINCRN0 = ++e4;
+  static final int GROWTHSN0 = ++e4;
+  static final int FERTILITYSN0 = ++e4;
+  static final int RCSGINCRN0 = ++e4;
+  static final int WORTHINCRN1 = ++e4;
+  static final int GROWTHSN1 = ++e4;
+  static final int FERTILITYSN1 = ++e4;
+  static final int RCSGINCRN1 = ++e4;
+  static final int WORTHINCRN2 = ++e4;
+  static final int GROWTHSN2 = ++e4;
+  static final int FERTILITYSN2 = ++e4;
+  static final int RCSGINCRN2 = ++e4;
+  static final int WORTHINCRN3 = ++e4;
+  static final int GROWTHSN3 = ++e4;
+  static final int FERTILITYSN3 = ++e4;
+  static final int RCSGINCRN3 = ++e4;
+  static final int DWORTHINCRN0 = ++e4;
+  static final int DGROWTHSN0 = ++e4;
+  static final int DFERTILITYSN0 = ++e4;
+  static final int DRCSGINCRN0 = ++e4;
+  static final int DWORTHINCRN1 = ++e4;
+  static final int DGROWTHSN1 = ++e4;
+  static final int DFERTILITYSN1 = ++e4;
+  static final int DRCSGINCRN1 = ++e4;
+  static final int DWORTHINCRN2 = ++e4;
+  static final int DGROWTHSN2 = ++e4;
+  static final int DFERTILITYSN2 = ++e4;
+  static final int DRCSGINCRN2 = ++e4;
+  static final int DWORTHINCRN3 = ++e4;
+  static final int DGROWTHSN3 = ++e4;
+  static final int DFERTILITYSN3 = ++e4;
+  static final int DRCSGINCRN3 = ++e4;
+  /*
+        int[] worthIncrA = {EM.WORTHINCRN0,EM.WORTHINCRN1,EM.WORTHINCRN2,EM.WORTHINCRN3};
+        int[] growthsA =  {EM.GROWTHSN0,EM.GROWTHSN1,EM.GROWTHSN2,EM.GROWTHSN3};
+        int[] fertilitiesA =  {EM.FERTILITYSN0,EM.FERTILITYSN1,EM.FERTILITYSN2,EM.FERTILITYSN3};
+        int[] rcsgIncrA = {EM.RCSGINCRN0,EM.RCSGINCRN1,EM.RCSGINCRN2,EM.RCSGINCRN3};
+  */
   static final int TRADELASTRECEIVE = ++e4;
   static final int TRADESTRATLASTRECEIVE = ++e4;
   static final int TRADERECEIVELASTPERCENTFIRST = ++e4;
@@ -4159,7 +4196,7 @@ onceAgain:
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3,LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);   
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9 | THISYEAR  | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEAR | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
     doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given strategic worth", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET,   LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TRADENOMINALGAV, "TradeNominalGiven", "Nominal worth not strategic worth given in trade ", 2, 2, 2, LIST40 5 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURNUM | CUR | BOTH | SKIPUNSET,0L);
+    doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth not strategic worth given in trade ", 2, 2, 2, LIST40  | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURUNITS | CUR | BOTH | SKIPUNSET,0L);
    doRes(TRADESTRATLASTGAVE, "TradeStrategicLastGave", "Percent nominal amount given in trade per sumrcsg may be used for scoreing", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase at total trades this year/start year worth part of scoring ", 2, 3, 2, LIST0 | LIST1 | LIST4 | THISYEAR | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(DIED, "DIED", "planets or ships died", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST14 | THISYEARUNITS | CUMUNITS | BOTH, 0, 0, 0);
@@ -4224,6 +4261,45 @@ onceAgain:
     doRes("swapSSXchg", "swapSSXchg", "Uses of S Xchg Scost Swap percent of RC");
     doRes("swapSRXchg", "swapSRXchg", "Uses of S Xchg Rcost Swap percent of RC");
     doRes(MISSINGNAME, "missing name", "tried an unknown name", 6, 2, 0, LIST0 | CUMUNITS | CURUNITS | CURAVE | CUMAVE | SKIPUNSET | both, 0, 0, 0);
+     /*
+        int[] worthIncrA = {EM.WORTHINCRN0,EM.WORTHINCRN1,EM.WORTHINCRN2,EM.WORTHINCRN3};
+        int[] growthsA =  {EM.GROWTHSN0,EM.GROWTHSN1,EM.GROWTHSN2,EM.GROWTHSN3};
+        int[] fertilitiesA =  {EM.FERTILITYSN0,EM.FERTILITYSN1,EM.FERTILITYSN2,EM.FERTILITYSN3};
+        int[] rcsgIncrA = {EM.RCSGINCRN0,EM.RCSGINCRN1,EM.RCSGINCRN2,EM.RCSGINCRN3};
+  */
+    doRes(WORTHINCRN0,"AccWorthIncr","yearly increase in worth if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(WORTHINCRN1,"noAcc1WorInc","yearly increase in worth if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(WORTHINCRN2,"noAcc2WorInc","yearly increase in worth if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(WORTHINCRN3,"noAcc3WorInc","yearly increase in worth if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN0,"AccGrowths","yearly growth if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN1,"noAcc1Growths","yearly growth if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN2,"noAcc2Growths","yearly growth if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN3,"noAcc3Growths","yearly growth if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(FERTILITYSN0,"AccFertility","fertility if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(FERTILITYSN1,"noAcc1Fertility","fertility if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(FERTILITYSN2,"noAcc2Fertility","fertility if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(FERTILITYSN3,"noAcc3Fertility","fertility if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(RCSGINCRN0,"AccRCSGIncr","yearly increase in RCSG if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(RCSGINCRN1,"noAcc1RCSGInc","yearly increase in RCSG if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(RCSGINCRN2,"noAcc2RCSGInc","yearly increase in RCSG if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(RCSGINCRN3,"noAcc3RCSGInc","yearly increase in RCSG if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DWORTHINCRN0,"dAccWorthIncr","died yearly increase in worth if trade accepted",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DWORTHINCRN1,"dnoAcc1WorInc","died yearly increase in worth if trade not accepted for 1 year",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DWORTHINCRN2,"dnoAcc2WorInc","died yearly increase in worth if trade not accepted for 2 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DWORTHINCRN3,"dnoAcc3WorInc","died yearly increase in worth if trade not accepted for 3 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DGROWTHSN0,"dAccGrowths","died yearly growth if trade accepted",2,2,2,LIST11 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DGROWTHSN1,"dnoAcc1Growths","died yearly growth if trade not accepted for 1 year",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DGROWTHSN2,"dnoAcc2Growths","died yearly growth if trade not accepted for 2 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DGROWTHSN3,"dnoAcc3Growths","died yearly growth if trade not accepted for 3 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DFERTILITYSN0,"dAccFertility","died fertility if trade accepted",2,2,2,LIST11 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DFERTILITYSN1,"dnoAcc1Fertility","died fertility if trade not accepted for 1 year",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DFERTILITYSN2,"dnoAcc2Fertility","died fertility if trade not accepted for 2 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DFERTILITYSN3,"dnoAcc3Fertility","died fertility if trade not accepted for 3 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DRCSGINCRN0,"dAccRCSGIncr","died yearly increase in RCSG if trade accepted",2,2,2,LIST11 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DRCSGINCRN1,"dnoAcc1RCSGInc","died yearly increase in RCSG if trade not accepted for 1 year",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DRCSGINCRN2,"dnoAcc2RCSGInc","died yearly increase in RCSG if trade not accepted for 2 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(DRCSGINCRN3,"dnoAcc3RCSGInc","died yearly increase in RCSG if trade not accepted for 3 years",2,2,2,LIST10 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+  
     doRes(rejectTinyRequestsFirst, "rejectRequests1", "trade with a offer too small show Requests first value", 2, 2, 0, LIST4 | LIST5 | THISYEARUNITS | BOTH, 0, 0, 0);
     doRes(rejectTinyRequestsPercentFirst, "rejectTReq%First", "trade with a offer too small show request percent of first request", 2, 2, 0, LIST4 | LIST5 | LIST15 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(rejectTinyRequestsTerm, "rejectTinyReqTerm", "trade with a offer too small show term");
@@ -4397,13 +4473,13 @@ onceAgain:
     doRes(TRADELASTRECEIVE, "Last Received", "Final received goods%tot balance");
     doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade", 2, 2, 2, LIST7 | LIST15 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L); 
     doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 2, 2, 2, LIST7 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 2, 2, 2, LIST7 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST22 | CURAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeCriticalBidRequestsFirst, "BidFirstCriticalRequests", "First Critical requested bids");   
     doRes(TradeAlsoBidRequestsFirst, "BidAlsoFirstRequests", "First requested bids");
     doRes(TradeAlsoCriticalBidRequestsFirst, "BidAlsoFirstCriticalRequests", "First Critical requested bids");
-    doRes(TRADEFIRSTGAVE, "TradeFirstGiven", "First goods given%totBalance", 2, 2, 2, 0, ROWS1 | LIST4 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TRADEFIRSTGAVE, "TradeFirstGiven", "First goods given%totBalance", 2, 2, 2, 0, ROWS1 | LIST4 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST22 | CURAVE | BOTH | SKIPUNSET, 0L);
     doRes(TRADEFIRSTRECEIVE, "First Received", "First received goods%tot balance"); 
-    doRes(TRADESTRATFIRSTRECEIVE, "StrategicFirstReceived", "First strategic amount received in trade", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TRADESTRATFIRSTRECEIVE, "StrategicFirstReceived", "First strategic amount received in trade", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST22 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
      doRes(TRADESTRATFIRSTGAVE, "TradeStrategicFirstGave", "First amount given in trade");
     doRes(TradeNominalReceivePercentNominalOffer, "NomReceive%NomOffer", "% of Nominal Received Per Nominal  Given", 2, 2, 2,  LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(MaxNominalReceivePercentNominalOffer, "MaxNomReceive%NomOffer", "Max % of Nominal Received Per Nominal  Given", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);

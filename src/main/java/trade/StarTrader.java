@@ -176,7 +176,7 @@ public class StarTrader extends javax.swing.JFrame {
    * StarTrader E EM contain the used set of stats descriptors
    *
    */
-  static final public String statsButton0Tip = "0: Cum Game Worths,";
+ static final public String statsButton0Tip = "0: Cum Game Worths,";
   static final public String statsButton1Tip = "1: cum Favors and trade effects";
   static final public String statsButton2Tip = "2: catastrophes, deaths, randoms, forwardfund";
   static final public String statsButton3Tip = "3: deaths. trades acc";
@@ -188,7 +188,7 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String statsButton9Tip = "9: Catastrophes, Fertility, health and effects";
   static final public String statsButton10Tip = "10: list by ages deaths with trades missed, rejected, lost";
   static final public String statsButton11Tip = "11: list by ages deaths with trades accepted ";
-  static final public String statsButton12Tip = "12: list by ages deaths with negative prospects";
+  static final public String statsButton12Tip = "12: list by ages trades missed, rejected, lost";
   static final public String statsButton13Tip = "13: list by ages affects with growths depreciation";
   static final public String statsButton14Tip = "14: list by ages affects with catastrophies, forwardFunds ";
   static final public String statsButton15Tip = "15: list by ages live trades";
@@ -196,8 +196,8 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String statsButton17Tip = "17: list by ages helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
-  static final public String statsButton20Tip = "20: TB assigned";
-  static final public String statsButton21Tip = "21: TB assigned";
+  static final public String statsButton20Tip = "20: rcsg";
+    static final public String statsButton21Tip = "21: TB assigned";
   static final public String statsButton22Tip = "22: TB assigned";
   static final public String statsButton23Tip = "23: display table";
 
@@ -8184,7 +8184,7 @@ public class StarTrader extends javax.swing.JFrame {
       mainStart(args);
       st.setVisible(true);
       stateConst = CONSTRUCTED;
-      if(args[0].contains("ITtest")) {testing = itTesting = true; }
+      if(args.length > 0 && args[0].contains("ITtest")) {testing = itTesting = true; }
 
       if (testing || (args.length > 0 && (args[0].contains("test")))) {
         main3();
@@ -8239,6 +8239,7 @@ public class StarTrader extends javax.swing.JFrame {
       System.err.println(Econ.nowName + " " + Econ.nowThread + new Date().toString() + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr);
       ex.printStackTrace(System.err);
       EM.flushes();
+      System.exit(-21);
       fatalError = true;;
     }
     finally {
@@ -8258,7 +8259,11 @@ public class StarTrader extends javax.swing.JFrame {
   public static void mainStart(String args[]) throws IOException {
     try {
       //   E.bRemember = Files.newBufferedWriter(E.REMEMBER, E.CHARSET);
-      System.err.println("----MSa-----starting out in mainStart args[0]=" + args[0] + " thread=" + Thread.currentThread().getName());
+      
+      if(args.length > 0){System.err.println("----MSa-----starting out in mainStart args[0]=" + args[0] + " thread=" + Thread.currentThread().getName());
+      } else {
+        System.err.println("----MSa2-----starting out in mainStart thread=" + Thread.currentThread().getName());
+      }
       //  String dateString = EM.MYDATEFORMAT.format(new Date());
       //  String rOut = "New Game " + dateString + "\n";
       // E.bRemember.write(rOut,0,rOut.length());
@@ -8307,7 +8312,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.flushes();
       fatalError = true;
       st.fatalError = true;
-      //  System.exit(-17);
+      System.exit(-17);
     }
   }// mainStart
 

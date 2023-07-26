@@ -149,7 +149,7 @@ public class Assets {
   int i = -4, j = -4, k = -4, l = -4, m = -4, n = -4, splus = -4, term = -4;
   double clanRisk;
 
-  A2Row initRawProspects2;
+  A2Row initRawProspects2;   // Assets variables
   boolean didInitRawProspects = false;
   double econsCnt;
   double worthIncrPercent = 0.;
@@ -163,7 +163,7 @@ public class Assets {
   double[] trand;   // reference to random numbers in Econ
   History h1, h2, h3, h4, h5, h6, h7, h8; // pointers to history lines
 
-// Assets last trade value if multiple trades this year
+// Assets variables last trade value if multiple trades this year
   // int term = -4;  // term or level of trade
   double preTradeSum4 = 0., preTradeAvail = 0., postTradeSum4 = 0., postTradeAvail = 0.;
   int tradedSuccessTrades; // successful trades this year
@@ -190,7 +190,7 @@ public class Assets {
   int yearSwapForwardFundEmergency = -20;
   int yearSOS = -20;
   int yearCreated = -20;
-  int prevAcceptedYear = -20;  // set near end of endYear
+  int lastAcceptedYear = -20;  // set near end of endYear
   int prevNotAcceptedYear = -20;
   boolean newTradeYear1 = false; // set by Assets.barter
 
@@ -2287,18 +2287,18 @@ public class Assets {
    */
   Offer barter(Offer inOffer) {  // Assets.barter
 
-    newTradeYear1 = prevAcceptedYear != eM.year;
+    newTradeYear1 = lastAcceptedYear != eM.year;
     yrphase yphase = yrphase.TRADE;
-    if (prevAcceptedYear != eM.year) { //a new year barter
+    if (lastAcceptedYear != eM.year) { //a new year barter
       newTradeYear1 = true;
-     // prevAcceptedYear = eM.year; moved to Assets.CashFlow
+     // lastAcceptedYear = eM.year; moved to Assets.CashFlow
       tradingShipName = inOffer.cnName[1]; // the ship name
       visitedShipNames[0][visitedShipOrdinal] = tradingShipName;
       int vl = visitedShipNames[0].length - 1;
       // don't overfill the array of names;
       visitedShipOrdinal = visitedShipOrdinal < vl ? visitedShipOrdinal + 1 : vl;
     }
-   // prevAcceptedYear = eM.year; moved to Assets.CashFlow
+   // lastAcceptedYear = eM.year; moved to Assets.CashFlow
     if (cur == null) {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
@@ -2837,6 +2837,10 @@ public class Assets {
       double[] sumBals = {sumRCBal, sumSGBal, sumRBal, sumCBal, sumSBal, sumGBal};
       //   double[] sumMins = {minRCBal, minSGBal, minRBal, minCBal, minSBal, minGBal};
       double sumRCSGBal = sumRCBal + sumSGBal;
+      double sumGrowth = growths.curSum();  // rcsg growths
+      double minFertility = rawFertilities2.curMin();
+      double sumFertility = rawFertilities2.curSum();
+      double aveFertility = sumFertility/14.;
       double sumTotBalances = sumRCSGBal;
       double sumSWorth = staff.worth.sum();
       double sumGWorth = guests.worth.sum();
@@ -6252,9 +6256,9 @@ public class Assets {
         goodFrac = bids.negSum() > NZERO || -goodC.negSum() * 2 > -bids.negSum() ? 1. : -goodC.negSum() * 2 / -bids.negSum();
         offeredManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[opors][oclan]);
         requestedManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[pors][clan]);
-        offers = totalStrategicOffers = multV.plusSum() + offeredManualsValue + plusCash;
+        offers = tradedTotalStrategicOffers = totalStrategicOffers = multV.plusSum() + offeredManualsValue + plusCash;
         nominalOffers = nominalV.plusSum();
-        totalNominalOffers = nominalOffers + offeredManualsValue + plusCash;
+        tradedTotalNominalOffers = totalNominalOffers = nominalOffers + offeredManualsValue + plusCash;
         //   sendSum = bids.plusSum() + offeredManuals + plusCash;
         totalSend = unitOffers = multV.plusSum() + plusCash;
         requests = totalStrategicRequests = -multV.negSum() + requestedManualsValue + negCash;
@@ -8575,7 +8579,7 @@ public class Assets {
           tradedSuccessTrades++;
           tradeAccepted = true;
           tradeMissed = tradeRejected = tradeLost = false;
-          prevAcceptedYear = yearTradeAccepted = year;
+          lastAcceptedYear = yearTradeAccepted = year;
           EM.tradedCnt++;
           if (firstVisit) {
             EM.porsTraded[pors]++;
@@ -8621,7 +8625,7 @@ public class Assets {
           tradedSuccessTrades++;
           tradeAccepted = true;
           tradeMissed = tradeRejected = tradeLost = false;
-          prevAcceptedYear = yearTradeAccepted = year;
+          lastAcceptedYear = yearTradeAccepted = year;
           EM.tradedCnt++;
           EM.porsTraded[pors]++;
           EM.porsClanTraded[pors][clan]++;
@@ -9092,8 +9096,12 @@ public class Assets {
       yearsFutureFundTimes = 0;
       yearsFutureFund = 0.;
       excessFutureFund = emergeFutureFund = 0.;
-
-// enter here for live results
+      int prevAccYears = EM.year - lastAcceptedYear;
+      // find number of years without trade accepted 3 max
+      int ixAccYears = prevAccYears > 3 || prevAccYears < 0? 0: prevAccYears;
+      gSwapW = new DoTotalWorths();
+      
+     // enter here for live results each prospect > PZERO
       if (rawProspects2.curMin() > PZERO) { //proceed  if live,skip if dead
         n = 0;
 
@@ -9162,7 +9170,7 @@ public class Assets {
           hist.add(new History(aPre, History.valuesMinor7, ">>>n" + n + "post Health at", wh(a0.getLineNumber()), (swapped ? "swapped" : "!swapped"), "n=" + wh(n), "H=" + EM.mf(health), "$=" + EM.mf(sumTotWorth)));
 
         }
-if(eM.dfe()) return 0.;
+       if(eM.dfe()) return 0.;
         //live
         fyW = new DoTotalWorths();
         fyW.setPrev(syW);
@@ -9183,12 +9191,18 @@ if(eM.dfe()) return 0.;
         //     hist.add(new History(4, ">>>end swap loop", "<<<<"));
         //  startYearTotWorth = syW.getTotWorth();
         double tprev = 0.;
+        double totalYearWorthIncr = fyW.sumTotWorth - syW.sumTotWorth;
+        double percentYearWorthIncr = (totalYearWorthIncr * 100.)/syW.sumTotWorth;
+        double sumGrowth = fyW.sumGrowth;
+        double sumYearRCSGincr = (fyW.sumRCSGBal - syW.sumRCSGBal);
+        double percentYearRCSGincr = sumYearRCSGincr * 100 / syW.sumRCSGBal;
+        
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, initialSumWorth, 1);
-        setStat(EM.WORTHINCR, pors, clan, fyW.sumTotWorth - syW.sumTotWorth, 1); 
+        setStat(EM.WORTHINCR, pors, clan, totalYearWorthIncr, 1); 
       //  setStat(EM.RCSG, pors, clan, syW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
-        setStat(EM.INCRRCSG, pors, clan, fyW.getSumRCSGBal()- syW.getSumRCSGBal(), 1);
+        setStat(EM.INCRRCSG, pors, clan, sumYearRCSGincr, 1);
         setStat(EM.LIVERCSG, pors, clan, fyW.getSumRCSGBal(), 1);
         setStat(EM.INITRCSG, pors, clan, iyW.getSumRCSGBal(), 1);
         setMax(EM.MAXRCSG, pors, clan, fyW.getSumRCSGBal(), 1);
@@ -9198,6 +9212,14 @@ if(eM.dfe()) return 0.;
         } else {
           setStat(EM.LOWRCSG, pors, clan, fyW.getSumRCSGBal(), 1);
         }
+        int[] worthIncrA = {EM.WORTHINCRN0,EM.WORTHINCRN1,EM.WORTHINCRN2,EM.WORTHINCRN3};
+        int[] growthsA =  {EM.GROWTHSN0,EM.GROWTHSN1,EM.GROWTHSN2,EM.GROWTHSN3};
+        int[] fertilitiesA =  {EM.FERTILITYSN0,EM.FERTILITYSN1,EM.FERTILITYSN2,EM.FERTILITYSN3};
+        int[] rcsgIncrA = {EM.RCSGINCRN0,EM.RCSGINCRN1,EM.RCSGINCRN2,EM.RCSGINCRN3};
+        setStat(worthIncrA[ixAccYears],pors,clan,totalYearWorthIncr,1);
+        setStat(growthsA[ixAccYears],pors,clan,gSwapW.sumGrowth,1);
+        setStat(rcsgIncrA[ixAccYears],pors,clan,sumYearRCSGincr,1);
+        setStat(fertilitiesA[ixAccYears],pors,clan,gSwapW.aveFertility,1);
         if (tradeAccepted) {
           setStat(EM.TRADEWORTH, pors, clan, fyW.getTotWorth(), 1);
           if (ec.getHiLo()) {
@@ -9466,7 +9488,7 @@ if(eM.dfe()) return 0.;
         } else if (tradeLost) {
           setStat("WLOSTTRADEDINCR", pors, clan, worthIncrPercent, 1);
         } else {
-          if (prevAcceptedYear == eM.year) {
+          if (lastAcceptedYear == eM.year) {
             throw new MyErr("Illegal prev and noPrev barter for the same year=" + eM.year + ", ship=" + tradingShipName);
           }
          // if (prevNotAcceptedYear != eM.year) {
@@ -9477,11 +9499,11 @@ if(eM.dfe()) return 0.;
           setStat(EM.TradeMissedStrategicGoal, pors, clan, 1.0, 1); // no goal
           EM.wasHere = "CashFlow.yearEnd before many setStat ddddg=" + ++ddddg;
 
-          if (eM.year - prevAcceptedYear == 1) {
+          if (eM.year - lastAcceptedYear == 1) {
             setStat("WORTHAYRNOTRADEINCR", pors, clan, worthIncrPercent, 1);
-          } else if (eM.year - prevAcceptedYear == 2) {
+          } else if (eM.year - lastAcceptedYear == 2) {
             setStat("WORTH2YRNOTRADEINCR", pors, clan, worthIncrPercent, 1);
-          } else if (eM.year - prevAcceptedYear >= 3) {
+          } else if (eM.year - lastAcceptedYear >= 3) {
             setStat("WORTH3YRNOTRADEINCR", pors, clan, worthIncrPercent, 1);
           }
         } //--- did year missed stats, years traded stats
@@ -9525,10 +9547,16 @@ if(eM.dfe()) return 0.;
         }
         EM.isHere("--EYEYf--",ec,"end of live stats");
 // ---------------------- end of live stats ---------------------------------
-      } else // now dead stats
+      } else //now dead stats
       { // dead, be sure died is set
         if(eM.dfe()) return 0.;
         EM.isHere1(ec, " CashFlow.yearEnd start of dead cccg=" + ++cccg);
+        fyW = new DoTotalWorths(); // dead final values
+        double totalYearWorthIncr = fyW.sumTotWorth - syW.sumTotWorth;
+        double percentYearWorthIncr = (totalYearWorthIncr * 100.)/syW.sumTotWorth;
+        double sumGrowth = fyW.sumGrowth;
+        double sumYearRCSGincr = (fyW.sumRCSGBal - syW.sumRCSGBal);
+        double percentYearRCSGincr = sumYearRCSGincr * 100 / syW.sumRCSGBal;
         if (E.debugEconCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -9542,6 +9570,14 @@ if(eM.dfe()) return 0.;
           double worthincr1 = 100. * (fyW.sumTotWorth - syW.sumTotWorth) / syW.sumTotWorth;
           setStat(EM.DIED, pors, clan, worthincr1, 1);
           setStat(EM.DIEDPERCENT, pors, clan, 100., 1);
+          int[] worthIncrA = {EM.DWORTHINCRN0,EM.DWORTHINCRN1,EM.DWORTHINCRN2,EM.DWORTHINCRN3};
+        int[] growthsA =  {EM.DGROWTHSN0,EM.DGROWTHSN1,EM.DGROWTHSN2,EM.DGROWTHSN3};
+        int[] fertilitiesA =  {EM.DFERTILITYSN0,EM.DFERTILITYSN1,EM.DFERTILITYSN2,EM.DFERTILITYSN3};
+        int[] rcsgIncrA = {EM.DRCSGINCRN0,EM.DRCSGINCRN1,EM.DRCSGINCRN2,EM.DRCSGINCRN3};
+        setStat(worthIncrA[ixAccYears],pors,clan,totalYearWorthIncr,1);
+        setStat(growthsA[ixAccYears],pors,clan,gSwapW.sumGrowth,1);
+        setStat(rcsgIncrA[ixAccYears],pors,clan,sumYearRCSGincr,1);
+        setStat(fertilitiesA[ixAccYears],pors,clan,gSwapW.aveFertility,1);
           if (tradeAccepted && oclan >= 0) {
             setStat(EM.DTRADEACC, pors, clan, worthIncrPercent, 1); // me
             if (ec.getHiLo()) {
@@ -10904,7 +10940,7 @@ if(eM.dfe()) return 0.;
      * possible growth fertilities = (bal - rqC)/rqC
      * @param rawFertilities2 output Min frac of required Growth&Maint and
      * growth before any growth limits
-     * <ol start=0><li>rc<li>sg<li</ol>
+     * <ol start=0><li>rc<li>sg<li></ol>
      * @param rawProspects2 output each sector availW*14/(rcSum+sgSum) a
      * proportional measure of availability against sum of balances. so size
      * independent
