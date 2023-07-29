@@ -2837,7 +2837,7 @@ public class Assets {
       double[] sumBals = {sumRCBal, sumSGBal, sumRBal, sumCBal, sumSBal, sumGBal};
       //   double[] sumMins = {minRCBal, minSGBal, minRBal, minCBal, minSBal, minGBal};
       double sumRCSGBal = sumRCBal + sumSGBal;
-      double sumGrowth = growths.curSum();  // rcsg growths
+      double sumGrowths = growths.sum4();  // sum rcsg growths
       double minFertility = rawFertilities2.curMin();
       double sumFertility = rawFertilities2.curSum();
       double aveFertility = sumFertility/14.;
@@ -3921,7 +3921,7 @@ public class Assets {
 
       /**
        * calculate growth of each SubAsset staff are limited by cumulative unit
-       * decay, maxGrowth with efficiency, random values and priority resources
+       * decay, maxStaffGrowth with efficiency, random values and priority resources
        * are limited by cumulative unit decay, efficiency, priority and random
        * values, cumulative unit decay grows from the previous years growth
        * again random factors are applied rawUnitGrowth is passed on the
@@ -3935,6 +3935,7 @@ public class Assets {
         prevUnitGrowth = make(rawUnitGrowth).copy();
         prevWorth = make(worth).copy();
         prevHealth = make(health).copy();
+        // growthsix includes the catstrophy benefits from last year
         prevGrowth = bals.getRow(GROWTHSIX + sIx).copy();
         cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDECAYIX + sIx);
         // prevFertility = make(fertility);
@@ -3944,7 +3945,8 @@ public class Assets {
         if (sIx == 2) {
           aChar[sIx] = "s";
         }
-        if (!didDecay) { // no decay if already done this year 
+        if (!didDecay) { // no more cumulative decay if already done this year 
+          // prevGrowth includes the catstrophy benefits from last year
           ARow newDecay = new ARow(ec).setAmultV(prevGrowth, eM.growthDecay[sIx][pors]);
           cumulativeUnitDecay.add(newDecay);
           // later    handle bonuses  didDecay = true;
@@ -3971,15 +3973,15 @@ public class Assets {
         // calculate raw growth for this year.  A function of game growth value,
         // economy priorities, and groEfficiency
 
-        // find growth fraction, less as the balance sum increases until large maxGrowth
+        // find growth fraction, less as the balance sum increases until large maxStaffGrowth
         //    double yuGrow[] = {0.,0.,0.,0.,0.,0.,0.,0.};
         // calculate each raw unit growth
         for (int n = 0; n < LSECS; n++) {
           // double a1 = balance.get(n);
           // double a2 = partner.balance.get(n);
           // yearlyUnitGrowth1 will go negative if decay is larger
-          //limit staff growth by eM.maxGrowth[pors]
-          growthFrac = fracGrowths.set(n, (eM.maxGrowth[pors] - balance.get(n)) / eM.maxGrowth[pors]);
+          //limit staff growth by eM.maxStaffGrowth[pors]
+          growthFrac = fracGrowths.set(n, (eM.maxStaffGrowth[pors] - balance.get(n)) / eM.maxStaffGrowth[pors]);
           double dBonusYUnitGrowth = bonusYearlyUnitGrowth.set(n, cumulativeUnitBonus.get(n) + (bonusLeft = (bonusYears.get(n) > PZERO ? bonusUnitGrowth.get(n) : 0.)));
           // growth = defined growth *(staff limit) + bonus growth - decay
           double dYrUnitGrowth = yearlyUnitGrowth.set(n, eM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) + dBonusYUnitGrowth - cumulativeUnitDecay.get(n));
@@ -4007,7 +4009,7 @@ public class Assets {
                     && bonusUnitGrowth.get(n) > 0.) {
               bonusUnitGrowth.set(n, bonusUnitGrowth.get(n) - bonusUnitGrowth.get(n) / (bonusYears.get(n) + eM.catastrophyBonusYearsBias[pors][0]));
             }
-            //           didDecay = true;
+                       didDecay = true;
           }
 
           if (rawValue < -0.0) {
@@ -4326,6 +4328,7 @@ public class Assets {
                 grades[ix][k] -= yesSkipGrades;
 
               }
+               assert grades[ix][k] >= NZERO : "in doGrow negative grade[" + ix + "][" + k + "]=" + EM.mf(grades[ix][k]) + " gradesUp" + gradesUp + " yesSkipGrades" + EM.mf3(yesSkipGrades) + " grades[" + ix + "][" + k+ gradesUp + "]=" + EM.mf(grades[ix][k+gradesUp]) + "\n";
               E.myTest(grades[ix][k] < NZERO, "doGrow1 neg grade %7.3f=grades[%1.0f][%2.0f] %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k], ix + 0., k + 0., gradesUp + 0., yesSkipGrades, grades[ix][k + gradesUp], ix + 0., k + gradesUp + 0.);
               /**
                * constrain fraction of upgrades for Full Staff by the fraction
@@ -7765,6 +7768,7 @@ public class Assets {
         sys[k].calcGrowth();
       }
       didDecay = true; // after first calcGrowth
+      rawFertilities2 = new A2Row(ec); //for DoTotalWorths
       EM.wasHere = "CashFlow.init... after calcGrowth loop eeei" + ++eeei;
       //  System.out.println("5631 near end CashFlow.initCashFlow");
       didStart = (ec.age < 1 ? false : didStart);// probably age = -1 before year
@@ -7923,7 +7927,8 @@ public class Assets {
       //  if (eM.randFrac[pors][0] > PZERO && ec.age > 2 && ((t1 = cRand(31)) < (t2 =eM.userCatastrophyFreq[pors][clan] * (cc = eM.gameUserCatastrophyMult[pors][0]) * cRand(34))) && t1 > 0.) {
       // cc will be both user and game catastrophy values
       // random 0.0 to 1.0,%5lt; asum of 0-.65 + 0-.65
-      if ((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] + (t2 = eM.gameUserCatastrophyMult[pors][0]))) {
+      if((t2 = eM.gameUserCatastrophyMult[pors][0]) == 0.0) return; // skip if 0
+      if((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] + (t2 = eM.gameUserCatastrophyMult[pors][0]))) {
         int r1 = new Random().nextInt(7);
         int r2 = new Random().nextInt(7);
         int s1 = new Random().nextInt(7);
@@ -9193,7 +9198,7 @@ public class Assets {
         double tprev = 0.;
         double totalYearWorthIncr = fyW.sumTotWorth - syW.sumTotWorth;
         double percentYearWorthIncr = (totalYearWorthIncr * 100.)/syW.sumTotWorth;
-        double sumGrowth = fyW.sumGrowth;
+        double sumGrowth = fyW.sumGrowths;
         double sumYearRCSGincr = (fyW.sumRCSGBal - syW.sumRCSGBal);
         double percentYearRCSGincr = sumYearRCSGincr * 100 / syW.sumRCSGBal;
         
@@ -9217,7 +9222,7 @@ public class Assets {
         int[] fertilitiesA =  {EM.FERTILITYSN0,EM.FERTILITYSN1,EM.FERTILITYSN2,EM.FERTILITYSN3};
         int[] rcsgIncrA = {EM.RCSGINCRN0,EM.RCSGINCRN1,EM.RCSGINCRN2,EM.RCSGINCRN3};
         setStat(worthIncrA[ixAccYears],pors,clan,totalYearWorthIncr,1);
-        setStat(growthsA[ixAccYears],pors,clan,gSwapW.sumGrowth,1);
+        setStat(growthsA[ixAccYears],pors,clan,gSwapW.sumGrowths,1);
         setStat(rcsgIncrA[ixAccYears],pors,clan,sumYearRCSGincr,1);
         setStat(fertilitiesA[ixAccYears],pors,clan,gSwapW.aveFertility,1);
         if (tradeAccepted) {
@@ -9554,7 +9559,7 @@ public class Assets {
         fyW = new DoTotalWorths(); // dead final values
         double totalYearWorthIncr = fyW.sumTotWorth - syW.sumTotWorth;
         double percentYearWorthIncr = (totalYearWorthIncr * 100.)/syW.sumTotWorth;
-        double sumGrowth = fyW.sumGrowth;
+        double sumGrowth = fyW.sumGrowths;
         double sumYearRCSGincr = (fyW.sumRCSGBal - syW.sumRCSGBal);
         double percentYearRCSGincr = sumYearRCSGincr * 100 / syW.sumRCSGBal;
         if (E.debugEconCnt) {
@@ -9575,7 +9580,7 @@ public class Assets {
         int[] fertilitiesA =  {EM.DFERTILITYSN0,EM.DFERTILITYSN1,EM.DFERTILITYSN2,EM.DFERTILITYSN3};
         int[] rcsgIncrA = {EM.DRCSGINCRN0,EM.DRCSGINCRN1,EM.DRCSGINCRN2,EM.DRCSGINCRN3};
         setStat(worthIncrA[ixAccYears],pors,clan,totalYearWorthIncr,1);
-        setStat(growthsA[ixAccYears],pors,clan,gSwapW.sumGrowth,1);
+        setStat(growthsA[ixAccYears],pors,clan,gSwapW.sumGrowths,1);
         setStat(rcsgIncrA[ixAccYears],pors,clan,sumYearRCSGincr,1);
         setStat(fertilitiesA[ixAccYears],pors,clan,gSwapW.aveFertility,1);
           if (tradeAccepted && oclan >= 0) {
@@ -9996,7 +10001,7 @@ public class Assets {
       didStart = true;
       getTradingGoods();
       didStart = false; // force start at next initCashFlow
-      didDecay = false;
+      didDecay = false;  // second setting
       syW = null; // get rid of hanging DoTotalWorths
 
       //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur

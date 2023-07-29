@@ -687,7 +687,9 @@ static StarTrader st;
    * upgrade as indicated by that fraction. In addition, more staff upgrade
    * depending on the effective faculty before the upgrade.
    */
-  static double[] fractionStaffUpgrade = {2.3, 2.4, 1., .6, 3.3, 2.5, 1., .25, 3.25, 2.5, 1.5, .25, 2.25, 1.5, 1., 0.};
+ // static double[] fractionStaffUpgrade = {2.3, 2.4, 1., .6, 3.3, 2.5, 1., .25, 3.25, 2.5, 1.5, .25, 2.25, 1.5, 1., 0.};
+  // all0w more upgrades between types
+  static double[] fractionStaffUpgrade = {2.3, 2.4, 2.0, .6, 3.3, 2.5, 2.3, 2.25, 3.25, 2.5, 2.5, 2.25, 2.25, 1.5, 1., 0.};
 //  static protected int[][] limitJumpsPerFaculty = {{15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}};
 //  static protected double[] knowledgeRequiredPerFacultyForJumping = {75., 75., 75., 75., 100., 100., 100., 100., 125., 125., 125., 125., 150., 150., 150., 150.};
 

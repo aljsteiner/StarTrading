@@ -195,8 +195,8 @@ public class ABalRows extends A6Rowa {
     resum(0);
     resum(1);
     for (int m : I03) {
-      rtn.A[m + 2] = A[iX + m].copy();
-      rtn.aCnt[m]++;
+      rtn.A[m + BALANCESIX] = A[iX + m].copy();
+      rtn.aCnt[m+BALANCESIX]++;
     }
     rtn.A[0] = new ARow(ec).setAdd(rtn.A[2] , rtn.A[3]);
     rtn.A[1] = new ARow(ec).setAdd(rtn.A[4] , rtn.A[5]);
@@ -436,7 +436,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * get reference to a single ARow corresponding to the index
+   * get reference to a single BonusUnitsARow corresponding to the index
    *
    * @param m index of the BonusUnits ARow s
    * @return growth ARow for index m
@@ -457,7 +457,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * get the Bonus Units references of bals
+   * get the A6 CumulativeUnitDecay references from bals
    *
    * @param lev level of the new A6Row
    * @param titl titl of the new A6Row
@@ -468,7 +468,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * list the cumulative decay rows in bals
+   * list the CumulativeUnitDecay rows in bals
    *
    * @param blev highest level that will be listed
    * @param apre prefix of listed rows
@@ -477,5 +477,14 @@ public class ABalRows extends A6Rowa {
   void listCumDecay(int blev, String apre, int alev) {
     sendHist(CUMULATIVEUNITDECAYIX, CUMULATIVEUNITDECAYIX + 3, blev, apre, alev);
   }
-
+  
+  /**
+   * get reference to a single ARow of CumulativeUnitDecay corresponding to the index
+   *
+   * @param m index of the CumulativeUnitDecay ARow s
+   * @return growth ARow for index m
+   */
+  ARow getCumDecayRow(int m) {
+    return A[CUMULATIVEUNITDECAYIX + m];
+  }
 }

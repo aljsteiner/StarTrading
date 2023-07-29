@@ -1094,6 +1094,49 @@ class EM {
       }
     }
   }
+  
+  /**
+   * format the value to a 5 character string and a sign 
+   *
+   * @param v input value
+   * @return value as a string
+   */
+  static public String mf3(Double v) {
+    if (v.isNaN()) {
+      return "# " + v;
+    }
+    // infinite returns inf sign
+    if (!E.outputLess) {  // ignore the need for less than 9 char out
+      return mf(v);
+    } else {
+      NumberFormat dFrac = NumberFormat.getNumberInstance();
+      NumberFormat exp = new DecimalFormat("0.###E0");
+      if (v == .0 || v == -0) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return dFrac.format(v);
+      } else if ((v > -.001 && v < -.000001) || (v > .0000001 && v < .001)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(3);
+        return dFrac.format(v);
+      } else if ((v > -99. && v < -.001) || (v > .001 && v < 99.)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(2);
+        return dFrac.format(v);
+      } else if ((v > -999. && v < -.001) || (v > .001 && v < 999.)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return dFrac.format(v);
+      } else if ((v > -99999. && v < -.001) || (v > .001 && v < 99999.)) {
+        // I hope no .
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(0);
+        return dFrac.format(v);
+      } else {
+        return exp.format(v);
+      }
+    }
+  }
 
   /**
    * format the value
@@ -2394,10 +2437,10 @@ class EM {
   static double[][] mInitTravelYears = {{0.3, 2.0}, {3., 20.}};
   double maintMinPriority = 1.;
   double growthMinPriority = .5;  // only each limited fertility
-  double maxGrowth[] = {900000, 900000};
-  double max7Growth[] = {7 * maxGrowth[0], 7 * maxGrowth[1]};
-  double max14Growth[] = {14 * maxGrowth[0], 14 * maxGrowth[1]};
-  static double mMaxGrowth[][] = {{100000, 99990000}, {100000, 99990000}};
+  double maxStaffGrowth[] = {900000, 900000};
+  double max7Growth[] = {7 * maxStaffGrowth[0], 7 * maxStaffGrowth[1]};
+  double max14Growth[] = {14 * maxStaffGrowth[0], 14 * maxStaffGrowth[1]};
+  static double mMaxStaffGrowth[][] = {{100000, 99990000}, {100000, 99990000}};
   // [pors][clan]
   double goalResvFrac[][] = {{.1, .1, .1, .1, .1}, {.5, .5, .5, .5, .5}};
   double goalGrowth[][] = {{.6, .6, .6, .6, .6}, {.5, .5, .5, .5, .5}};
@@ -3468,7 +3511,7 @@ onceAgain:
     doVal("cargoGrowth", cargoGrowth, mCargoGrowth, "increase amount of cargo growth per year dependent of units of staff");
     doVal("staffGrowth", staffGrowth, mStaffGrowth, "increase amount of staff growth per year, dependent on units of staff");
     doVal("guestGrowth", guestsGrowth, mGuestsGrowth, "increase amount of guest growth per year, dependent on units of guests");
-    doVal("maxGrowth", maxGrowth, mMaxGrowth, "increase the largest possible size, growths will slow to prevent reaching this size");
+    doVal("maxStaffGrowth", maxStaffGrowth, mMaxStaffGrowth, "increase the largest possible staffsize, staff growths will slow to prevent reaching this size");
     doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the decays of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
     doVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
     doVal("InitYrsTraveled", initTravelYears, mInitTravelYears, "Increase initial travel cost");

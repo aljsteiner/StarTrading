@@ -73,6 +73,7 @@ public class A6Rowa {
   volatile int dA[] = {0, 1, 2, 3, 4, 5};
   static int d29[] = {2, 3, 4, 5, 6, 7, 8, 9};
   static final int[] I29 = d29;
+  static int BALANCESIX = 2;
   static final int lsums = 2;
   int lsubs = 2;
   volatile ARow[] A = new ARow[lA];
@@ -99,7 +100,7 @@ public class A6Rowa {
   static final int RIX = ABalRows.RIX, CIX = ABalRows.CIX, SIX = ABalRows.SIX, GIX = ABalRows.GIX;
   static final int RCIX = ABalRows.RCIX;
   static final int SGIX = ABalRows.SGIX;
-  
+
   String aPre;
   int blev;
   int lev;
@@ -109,27 +110,27 @@ public class A6Rowa {
    * primary constructor for a new balances zeroed object to be set later
    *
    * @param newEM current or newEM depending on call
-   * @param nRows  number of rows in object
+   * @param nRows number of rows in object
    * @param bal t == tbal (balances), bal == tcost (costs) otherwise neither
    * @param alev level for listing with sendHist
    * @param atitl title for listing with sendHist
    */
-  public A6Rowa(EM newEM,Econ ec,int nRows, int t, int alev, String atitl) {
-    A6Rowa1(newEM,ec,nRows, t, alev, atitl);
+  public A6Rowa(EM newEM, Econ ec, int nRows, int t, int alev, String atitl) {
+    A6Rowa1(newEM, ec, nRows, t, alev, atitl);
     // System.out.println("A6Rowa after A.length=" + A.length + ", lA=" + lA + ", dA.length=" + dA.length);
   }
-  
-   /**
+
+  /**
    * primary constructor for a new balances zeroed object to be set later
    *
    * @param newEM current or newEM depending on call
-   * @param nRows  number of rows in object
+   * @param nRows number of rows in object
    * @param bal t == tbal (balances), bal == tcost (costs) otherwise neither
    * @param alev level for listing with sendHist
    * @param atitl title for listing with sendHist
    */
-  public A6Rowa(Econ newEc,int nRows, int t, int alev, String atitl) {
-    A6Rowa1(EM.eM,newEc,nRows, t, alev, atitl);
+  public A6Rowa(Econ newEc, int nRows, int t, int alev, String atitl) {
+    A6Rowa1(EM.eM, newEc, nRows, t, alev, atitl);
     // System.out.println("A6Rowa after A.length=" + A.length + ", lA=" + lA + ", dA.length=" + dA.length);
   }
 
@@ -137,7 +138,7 @@ public class A6Rowa {
    * The no parameter constructor
    */
   public A6Rowa(Econ newEc) {
-    A6Rowa1(EM.eM,newEc,lA, tbal, History.informationMajor8, "A6Rowa");
+    A6Rowa1(EM.eM, newEc, lA, tbal, History.informationMajor8, "A6Rowa");
   }
 
   /**
@@ -145,12 +146,12 @@ public class A6Rowa {
    *
    * @param newEM current or newEM depending on call
    * @param newEC ec supplied in call to constructor
-   * @param nRows  number of rows in object
+   * @param nRows number of rows in object
    * @param bal t == tbal (balances), bal == tcost (costs) otherwise neither
    * @param alev level for listing with sendHist
    * @param atitl title for listing with sendHist
    */
-  public void A6Rowa1(EM newEM,Econ newEc,int nRows, int t, int alev, String atitl) {
+  public void A6Rowa1(EM newEM, Econ newEc, int nRows, int t, int alev, String atitl) {
     eM = newEM;
     ec = newEc;
     as = ec.as;
@@ -174,35 +175,38 @@ public class A6Rowa {
       aCnt[n] = -11;
       aResum[n] = -11;
     }
-    if(balances == true && (nRows == 6 || nRows ==  ABalRows.BALSLENGTH)){
-    // zero the subassets 2,3 staff,guests
-    gradesA = new double[4][][];
-    for (int i = 2; i < LSUBASSETS; i++) {
+    if (balances == true && (nRows == 6 || nRows == ABalRows.BALSLENGTH)) {
+      // zero the subassets 2,3 staff,guests
+      gradesA = new double[4][][];
+      for (int i = 2; i < LSUBASSETS; i++) {
         gradesA[i] = new double[LSECS][];
-      // construct the sectors
-      for (int m : ASECS) {
-        // copy the sectors
+        // construct the sectors
+        for (int m : ASECS) {
+          // copy the sectors
           // construct the grades vector
           gradesA[i][m] = new double[LGRADES];
-        // zero the grades
-        for (int n : IAGRADES) {
-          gradesA[i][m][n] = 0.;
+          // zero the grades
+          for (int n : IAGRADES) {
+            gradesA[i][m][n] = 0.;
+          }
         }
       }
     }
-  }
 
     //  System.out.println("A6Rowa1 before A.length =" + A.length + ", lA=" + lA + ", lev=" + lev + ", title=" + titl);
   }
-  
-  /** make a balances subClone with the balances part of ABalRow
-   * The rows reference the same ARow instances as in bals
-   * 
-   * @return 
+
+  /**
+   * make a balances subClone with the balances part of ABalRow The rows
+   * reference the same ARow instances as in bals
+   *
+   * @return
    */
-  A6Row makeA6(){
+  A6Row makeA6() {
     A6Row ret = new A6Row(ec);
-    for(int i=0;i<6;i++){ret.A[i] = A[i];} // copy row references
+    for (int i = 0; i < 6; i++) {
+      ret.A[i] = A[i];
+    } // copy row references
     ret.aResum = aResum;
     ret.balances = true;
     ret.gradesA = gradesA;
@@ -224,32 +228,34 @@ public class A6Rowa {
     costs = t == tcost;
     return t;
   }
-  
-  A6Rowa unzero(String tit,int start,int number){
-    for(int n=0; n<number;n++){
-      String tt = tit +start + n;
-      A[start+n].unzero(tt);
+
+  A6Rowa unzero(String tit, int start, int number) {
+    for (int n = 0; n < number; n++) {
+      String tt = tit + start + n;
+      A[start + n].unzero(tt);
     }
     return this;
   }
-  
-  double doubleTrouble(Double trouble){
-    if(trouble.isNaN()){
-      if(E.debugDouble){
-        throw new MyErr(String.format("Not a number found, term%d, i%d, j%d, m%d, n%d",as.term,as.i,as.j,as.m,as.n)); 
-      } else {
+
+  double doubleTrouble(Double trouble) {
+    if (trouble.isNaN()) {
+      if (E.debugDouble) {
+        throw new MyErr(String.format("Not a number found, term%d, i%d, j%d, m%d, n%d", as.term, as.i, as.j, as.m, as.n));
+      }
+      else {
         return 0.0;
       }
     }
-    if(trouble.isInfinite()){
-      if(E.debugDouble){
-      throw new MyErr(String.format("Infinite number found, term%d,i%d,j%d,m%d,n%d",as.term,as.i,as.j,as.m,as.n));
-      } else {
+    if (trouble.isInfinite()) {
+      if (E.debugDouble) {
+        throw new MyErr(String.format("Infinite number found, term%d,i%d,j%d,m%d,n%d", as.term, as.i, as.j, as.m, as.n));
+      }
+      else {
         return 100.0;
       }
     }
-      return (double)trouble;
-    }
+    return (double) trouble;
+  }
 
   /**
    * make a copy of the grades array
@@ -296,35 +302,37 @@ public class A6Rowa {
     }
     return gradesA[n]; // return reference
   }
-  
+
   /**
    * return reference to a set of grades staff & guests
    *
    * @param n index of which grades 2=staff,3=guests
    * @return a reference to gradesA[n]
    */
-  double[][][] getGrades(){
-   // double bGrades[][][] = gradesA;
-   // bGrades[sIx] = myGrades[;
+  double[][][] getGrades() {
+    // double bGrades[][][] = gradesA;
+    // bGrades[sIx] = myGrades[;
     return gradesA;
   }
-  
-  /** get the grades reference for Guests
-   * 
+
+  /**
+   * get the grades reference for Guests
+   *
    * @return guest grades array
    */
-  double[][] getGuestGrades(){
+  double[][] getGuestGrades() {
     return gradesA[3];
   }
-/** get the grades reference for Staff
-   * 
+
+  /**
+   * get the grades reference for Staff
+   *
    * @return staff grades array
    */
-  double[][] getStaffGrades(){
+  double[][] getStaffGrades() {
     return gradesA[2];
   }
-  
-  
+
   /**
    * set level to be used in listing in hist with sendHist in object
    *
@@ -353,7 +361,7 @@ public class A6Rowa {
   public A6Rowa zero() {
     for (int m = 0; m < lA; m++) {
       for (int n : ASECS) {
-        set(m,n,0.);
+        set(m, n, 0.);
       }
     }
 
@@ -378,7 +386,6 @@ public class A6Rowa {
     return this;
   }
 
-
   /**
    * copy A6Rowa object, copy each by each of calling A6Row use as A6Row b =
    * a.copy(); no change to a, rtn is a new object lev,titl,balances,costs,blev
@@ -389,10 +396,8 @@ public class A6Rowa {
   public A6Rowa copy(Econ newEc) {
     ec = newEc;
     String tit = titl + ""; // force a new reference
-    return this.copy(lev, tit, EM.eM,newEc);
+    return this.copy(lev, tit, EM.eM, newEc);
   }
-  
-
 
   /**
    * copy A6Rowa object, copy each by each of calling A6Rowa use as A6Rowa b =
@@ -402,10 +407,10 @@ public class A6Rowa {
    * @param lev the display level for this A6Rowa routine
    * @return new object copy of this object
    */
-  public A6Rowa copy(int lev,Econ newEc) {
+  public A6Rowa copy(int lev, Econ newEc) {
     ec = newEc;
     String tit = titl + ""; // force a new reference
-    return copy(lev, tit, EM.eM,newEc);
+    return copy(lev, tit, EM.eM, newEc);
   }
 
   /**
@@ -417,15 +422,16 @@ public class A6Rowa {
    * @param tit the new title for the copy
    * @return new object copy of this object
    */
-  public A6Rowa copy(int lev, String tit, EM newEM,Econ newEc) {
+  public A6Rowa copy(int lev, String tit, EM newEM, Econ newEc) {
     int t = balances ? tbal : costs ? tcost : tnone;
-    A6Rowa rtn = new A6Rowa(newEM,newEc,lA, t, lev, tit + "");
+    A6Rowa rtn = new A6Rowa(newEM, newEc, lA, t, lev, tit + "");
     rtn.blev = blev;
     rtn.eM = newEM;
     for (int m = 0; m < lA; m++) {
       if (A[m] != null) {
         rtn.A[m] = A[m].copy();
-      } else {
+      }
+      else {
         rtn.A[m] = new ARow(ec).zero();
       }
     }
@@ -433,15 +439,15 @@ public class A6Rowa {
     if (gradesA != null) {
       // construct number of subassets
       rtn.gradesA = new double[LSUBASSETS][][];
-      for(int ii = 2; ii< LSUBASSETS;ii++){
+      for (int ii = 2; ii < LSUBASSETS; ii++) {
         rtn.gradesA[ii] = new double[E.LSECS][];
-        for(int mm=0; mm < E.LSECS;mm++){
+        for (int mm = 0; mm < E.LSECS; mm++) {
           rtn.gradesA[ii][mm] = new double[E.LGRADES];
         }
       }
-    
+
       // copy the subassets 2,3 if they exist
-      for(int i = 2; i < LSUBASSETS; i++) {
+      for (int i = 2; i < LSUBASSETS; i++) {
         if (gradesA[i] != null) {
           // construct the sectors
           for (int m : ASECS) {
@@ -449,10 +455,11 @@ public class A6Rowa {
             if (gradesA[i][m] != null) {
               // copy the grades
               for (int n : IAGRADES) {
-                if(E.debugDouble){
-                rtn.gradesA[i][m][n] = doubleTrouble(gradesA[i][m][n]);
-                }else{
-                   rtn.gradesA[i][m][n] = gradesA[i][m][n];
+                if (E.debugDouble) {
+                  rtn.gradesA[i][m][n] = doubleTrouble(gradesA[i][m][n]);
+                }
+                else {
+                  rtn.gradesA[i][m][n] = gradesA[i][m][n];
                 }
               }
             }
@@ -483,8 +490,8 @@ public class A6Rowa {
     }
     return rtn;
   }
-  
-    public A6Rowa set(A6Rowa aa) {
+
+  public A6Rowa set(A6Rowa aa) {
     int t = balances ? tbal : costs ? tcost : tnone;
     for (int m = 0; m < lA; m++) {
       if (aa.A[m] != null) {
@@ -495,7 +502,7 @@ public class A6Rowa {
     if (aa.gradesA != null) {
       // construct number of subassets
       gradesA = new double[LSUBASSETS][][];
-    
+
       // copy the subassets 2,3 if they exist
       for (int i = 2; i < LSUBASSETS; i++) {
         if (aa.gradesA[i] != null) {
@@ -507,16 +514,17 @@ public class A6Rowa {
               gradesA[i][m] = new double[E.lgrades];
               // copy the grades
               for (int n : IAGRADES) {
-                if(E.debugDouble){
-                gradesA[i][m][n] = doubleTrouble(aa.gradesA[i][m][n]);
-                }else {
-                 gradesA[i][m][n] = aa.gradesA[i][m][n]; 
+                if (E.debugDouble) {
+                  gradesA[i][m][n] = doubleTrouble(aa.gradesA[i][m][n]);
+                }
+                else {
+                  gradesA[i][m][n] = aa.gradesA[i][m][n];
                 }
               }
             }
           }
         }
-      }   
+      }
     }
     mResum[0] = aa.mResum1;
     mResum[1] = aa.mResum2;
@@ -542,10 +550,9 @@ public class A6Rowa {
     noChecking = false;
     return this;
   }
-    
 
-  public ABalRows copyBals(Econ ec,int lev,String tit,EM newEM){
-  ABalRows rtn = new ABalRows(ec);
+  public ABalRows copyBals(Econ ec, int lev, String tit, EM newEM) {
+    ABalRows rtn = new ABalRows(ec);
     rtn.blev = blev;
     rtn.eM = newEM;
     for (int m = 0; m < lA; m++) {
@@ -569,10 +576,11 @@ public class A6Rowa {
               rtn.gradesA[i][m] = new double[E.lgrades];
               // copy the grades
               for (int n : IAGRADES) {
-                if(E.debugDouble){
-                rtn.gradesA[i][m][n] = doubleTrouble(gradesA[i][m][n]);
-                } else {
-                 rtn.gradesA[i][m][n] = gradesA[i][m][n]; 
+                if (E.debugDouble) {
+                  rtn.gradesA[i][m][n] = doubleTrouble(gradesA[i][m][n]);
+                }
+                else {
+                  rtn.gradesA[i][m][n] = gradesA[i][m][n];
                 }
               }
             }
@@ -602,65 +610,69 @@ public class A6Rowa {
       }
     }
     return rtn;
-}
-
-  /** copy calling instance to a new instance with new references
-   * 
-   * @param newEM possible change EM or use existing EM
-   * @return 
-   */
-  public A6Rowa newCopy(EM newEM,Econ newEc) {
-    return copy(lev,titl,newEM,newEc);
   }
 
-  /** copy the values of prev into this, 
-   * particularly do not change the reference of each ARow
+  /**
+   * copy calling instance to a new instance with new references
+   *
+   * @param newEM possible change EM or use existing EM
+   * @return
+   */
+  public A6Rowa newCopy(EM newEM, Econ newEc) {
+    return copy(lev, titl, newEM, newEc);
+  }
+
+  /**
+   * copy the values of prev into this, particularly do not change the reference
+   * of each ARow
+   *
    * @param prev a previous copy of this A6Row
    * @return this with updated values and setCnt
    */
-     public A6Rowa copyValues(A6Rowa prev){
-       if(prev != null){
-         int len = A.length;
-       for(int m=0; m < len;m++){
-         for(int n=0;n< E.LSECS;n++){
-           if(E.debugDouble){
-            set(m,n,doubleTrouble(prev.get(m,n)));
-           } else {
-            set(m,n,prev.get(m,n));
-           }
+  public A6Rowa copyValues(A6Rowa prev) {
+    if (prev != null) {
+      int len = A.length;
+      for (int m = 0; m < len; m++) {
+        for (int n = 0; n < E.LSECS; n++) {
+          if (E.debugDouble) {
+            set(m, n, doubleTrouble(prev.get(m, n)));
           }
-         }// end m     
-       }
-        return this; 
-       }
-     
-     /** copy to A6Row
-      * 
-      * @param startIx  //location of in this AxRow, 2 if this is A6Row
-      * @param aLev  // new A6Row level 
-      * @param aTitl  // new A6Row title
-      * @return 
-      */
+          else {
+            set(m, n, prev.get(m, n));
+          }
+        }
+      }// end m     
+    }
+    return this;
+  }
+
+  /**
+   * copy to A6Row
+   *
+   * @param startIx //location of in this AxRow, 2 if this is A6Row
+   * @param aLev // new A6Row level
+   * @param aTitl // new A6Row title
+   * @return
+   */
   A6Row copy6(int startIx, int aLev, String aTitl) {
-    A6Row rtn = new A6Row(ec,aLev, aTitl).zero();
+    A6Row rtn = new A6Row(ec, aLev, aTitl).zero();
     rtn.balances = true;
     rtn.titl = aTitl + "";
     rtn.lev = aLev;
     rtn.balances = true;
 
-    for (int m=0;m<4;m++) {
-      for (int n=0;n<E.LSECS;n++) {
-        if(E.debugDouble){
-        rtn.A[m / 2].add(n, rtn.A[lsums + m].set(n, doubleTrouble(A[startIx + m].get(n))));
-        }else {
+    for (int m = 0; m < 4; m++) {
+      for (int n = 0; n < E.LSECS; n++) {
+        if (E.debugDouble) {
+          rtn.A[m / 2].add(n, rtn.A[lsums + m].set(n, doubleTrouble(A[startIx + m].get(n))));
+        }
+        else {
           rtn.A[m / 2].add(n, rtn.A[lsums + m].set(n, A[startIx + m].get(n)));
         }
       }
     }
     return rtn;
   }
-  
-  
 
   /**
    * return a copy of rows 0,1
@@ -670,7 +682,7 @@ public class A6Rowa {
    * @return a new A2Row each value copied from this A10Row
    */
   public A2Row copy2(int lev, String tit) {
-    A2Row rtn = new A2Row(ec,lev, tit);
+    A2Row rtn = new A2Row(ec, lev, tit);
     resum(0);
     resum(1);
     rtn.A[0].set(A[0]);
@@ -705,10 +717,10 @@ public class A6Rowa {
     minSum[x] = minSum2[x] = negSum[x] = plusSum[x] = sum[x] = 0.;
     for (int g = 0; g < L2SECS; g++) {
       if (g < LSECS) {
-        minC = get(rowIx1,g); //A[rowIx1].values[g];
+        minC = get(rowIx1, g); //A[rowIx1].values[g];
       }
       else {
-        minC = get(rowIx2,g-E.LSECS); //A[rowIx2].values[g - LSECS];
+        minC = get(rowIx2, g - E.LSECS); //A[rowIx2].values[g - LSECS];
       }
       sum[x] += minC;
       if (minC < NZERO) {
@@ -740,20 +752,23 @@ public class A6Rowa {
     }
   }
 
-  /** again sum rc or sg if m %eq; one of them
-   * aResum contains the sum of setCnts for the 2 ARows sumed to this sum Row
-   * aResum is set to the sum of setCnts when a resum is dome
-   * 
-   * @param m The number of the index in A for ARow for to be a sum, if m is not a sum row ignore
-   * 
+  /**
+   * again sum rc or sg if m %eq; one of them aResum contains the sum of setCnts
+   * for the 2 ARows sumed to this sum Row aResum is set to the sum of setCnts
+   * when a resum is dome
+   *
+   * @param m The number of the index in A for ARow for to be a sum, if m is not
+   * a sum row ignore
+   *
    */
   void resum(int m) {
-    if(m<100) return; // disable resum
-//    System.out.println("into resum title=" + titl + " la=" + lA + ", length A=" + A.length + ", m=" + m);
+    if (m < 100) {
+      return; // disable resum
+    }//    System.out.println("into resum title=" + titl + " la=" + lA + ", length A=" + A.length + ", m=" + m);
     if (A[m] == null) {
       A[m] = new ARow(ec);
     }
-    int ma = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
+    int ma = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
     for (int mm : dResums) { // iterate over arrays of iX values and ARows
       if (mm == ma) {
         // check for a change since the last calculation of mResum[mm]
@@ -761,7 +776,7 @@ public class A6Rowa {
         for (int nn : mResum[mm]) {  // check the full iX array for changes
           sumr += A[nn].getSetCnt();
         }
-        didResum=false;
+        didResum = false;
         if (sumr != aResum[mm]) {  // check for changes since last resum
           // resum A[mm], by adding in all mResum rows
           ARow bb = new ARow(ec).set(A[mm]); // save prev value
@@ -770,9 +785,10 @@ public class A6Rowa {
           for (int rr : mResum[mm]) { // set by sub class
             //       System.out.printf(" ARow %2d", rr);
             for (int q : E.ASECS) {// add to rc or sg
-              if(E.debugDouble){
-              A[mm].add(q, doubleTrouble(A[rr].get(q)));  // add in appropriate values
-              }else {
+              if (E.debugDouble) {
+                A[mm].add(q, doubleTrouble(A[rr].get(q)));  // add in appropriate values
+              }
+              else {
                 A[mm].add(q, A[rr].get(q));  // add in appropriate values 
               }
             }
@@ -783,7 +799,7 @@ public class A6Rowa {
           for (int nn : mResum[mm]) {
             aResum[mm] += A[nn].getSetCnt();
           }
-          didResum=true;
+          didResum = true;
         }
       }
     }
@@ -855,7 +871,7 @@ public class A6Rowa {
    */
   double curSum() {
     checkIx(0);
-    return sum[0];
+    return sum4();
   }
 
   /**
@@ -865,7 +881,7 @@ public class A6Rowa {
    */
   double curAve() {
     checkIx(0);
-    return sum[0] * E.invL2secs;
+    return sum4() * E.invL2secs;
   }
 
   /**
@@ -909,20 +925,32 @@ public class A6Rowa {
   }
 
   /**
-   * sum the unit balances r c s g all sectors
-   * returns the same value as curSum, but always 
-   * sums the individual SubAsset balances
+   * sum the unit balances r c s g all sectors returns the same value as curSum,
+   * but always sums the individual SubAsset balances
+   *
+   * @param bias the bias to the first element
    *
    * @return sum each value in rows 2-5;
    */
-  double sum4() {
+  double sum4(int bias) {
     double sum = 0;
-    for (int m : d25) {
+    for (int m : d03) {
       for (int n : ASECS) {
         sum += get(m, n);
       }
     }
     return sum;
+  }
+
+  /**
+   * sum the unit balances r c s g all sectors returns the same value as curSum,
+   * but always sums the individual SubAsset balances
+   *
+   * @return sum each value in rows 2-5;
+   */
+  double sum4() {
+
+    return sum4(BALANCESIX);
   }
 
   /**
@@ -1058,98 +1086,111 @@ public class A6Rowa {
    * @return A[n].get(m)
    */
   public double get(int m, int n) {
-   if(m>1){
-         if(E.debugDouble){
-            return doubleTrouble(A[m].values[n]);
-         } else {
-       return A[m].values[n];
-         }
-     } else if(m == 0){
-       if(E.debugDouble){
-         return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n]);
-    } else {
-     return  A[0].values[n] = A[2].values[n] + A[3].values[n]; 
+    if (m > 1) {
+      if (E.debugDouble) {
+        return doubleTrouble(A[m].values[n]);
+      }
+      else {
+        return A[m].values[n];
+      }
     }
-     } else if(m == 1){
-       if(E.debugDouble){
-         return doubleTrouble( A[1].values[n] = A[4].values[n] + A[5].values[n]);
-    } else {
-     return   A[1].values[n] = A[4].values[n] + A[5].values[n]; 
-       }
-    }  else {
-    int al = A.length;
-    assert m < A.length:"error m" + m + " indexes more than length" + al;
-    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
-    resum(m);
-     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances && costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
-    double bal1 = 0.;
-    double both = 0.;
-    if(E.debugResumP && ! ignoreIf && !noChecking){
-        bal1 = gett(mm,n);
-        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
-    // add in the 10row if needed
-        both += ignoreIf? 0.0:costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;
-    // ignore test if ignoreIf is true
-   
-    double dif = bal1 - both;
-    boolean badDif = E.PZERO < dif || E.NZERO > - dif; // trouble if true
-    // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
-    assert !badDif : "resum error sector" + n + " length" + al + " lsubs" + lsubs + (noChecking?" noChecking":" !noChecking") + (didResum?" didResum": " !didResum") + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
+    else if (m == 0) {
+      if (E.debugDouble) {
+        return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n]);
+      }
+      else {
+        return A[0].values[n] = A[2].values[n] + A[3].values[n];
+      }
     }
-    if(noChecking){noChecking=true;}
-    if(E.debugDouble){
-    return doubleTrouble(A[m].get(n));
-    } else {
-     return A[m].get(n); 
+    else if (m == 1) {
+      if (E.debugDouble) {
+        return doubleTrouble(A[1].values[n] = A[4].values[n] + A[5].values[n]);
+      }
+      else {
+        return A[1].values[n] = A[4].values[n] + A[5].values[n];
+      }
     }
-     }
-  }
-  
-  /** get the nn'th element in the values of the object
-   * 
-   * @param nn the number of the element
-   * @return 
-   */
-  public double get(int nn) {
-    return get(nn/E.LSECS,nn%E.LSECS);
+    else {
+      int al = A.length;
+      assert m < A.length : "get(m,n) error m" + m + " indexes more than length" + al;
+      int mm = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
+      resum(m);
+      boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances && costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
+      double bal1 = 0.;
+      double both = 0.;
+      if (E.debugResumP && !ignoreIf && !noChecking) {
+        bal1 = gett(mm, n);
+        both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
+        // add in the 10row if needed
+        both += ignoreIf ? 0.0 : costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+        // ignore test if ignoreIf is true
+
+        double dif = bal1 - both;
+        boolean badDif = E.PZERO < dif || E.NZERO > -dif; // trouble if true
+        // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
+        assert !badDif : "resum error sector" + n + " length" + al + " lsubs" + lsubs + (noChecking ? " noChecking" : " !noChecking") + (didResum ? " didResum" : " !didResum") + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
+      }
+      if (noChecking) {
+        noChecking = true;
+      }
+      if (E.debugDouble) {
+        return doubleTrouble(A[m].get(n));
+      }
+      else {
+        return A[m].get(n);
+      }
+    }
   }
 
   /**
-   * get the value of rows 0,1 by sector m = m%2
-   * resum m%2 
+   * get the nn'th element in the values of the object
+   *
+   * @param nn the number of the element
+   * @return
+   */
+  public double get(int nn) {
+    return get(nn / E.LSECS, nn % E.LSECS);
+  }
+
+  /**
+   * get the value of rows 0,1 by sector m = m%2 resum m%2
    *
    * @param m index of row to use
    * @param n index of value in selected row
    * @return the value of value n in the selected row
    */
   public double gett(int m, int n) {
-  if(m>1){
-         if(E.debugDouble){
-            return doubleTrouble(A[m].values[n]);
-         } else {
-       return A[m].values[n];
-         }
-     } else if(m == 0){
-       if(E.debugDouble){
-         return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n]);
-    } else {
-     return  A[0].values[n] = A[2].values[n] + A[3].values[n]; 
+    if (m > 1) {
+      if (E.debugDouble) {
+        return doubleTrouble(A[m].values[n]);
+      }
+      else {
+        return A[m].values[n];
+      }
     }
-     } else if(m == 1){
-       if(E.debugDouble){
-         return doubleTrouble( A[1].values[n] = A[4].values[n] + A[5].values[n]);
-    } else {
-     return   A[1].values[n] = A[4].values[n] + A[5].values[n]; 
-       }
-    } 
-  return 0;
+    else if (m == 0) {
+      if (E.debugDouble) {
+        return doubleTrouble(A[0].values[n] = A[2].values[n] + A[3].values[n]);
+      }
+      else {
+        return A[0].values[n] = A[2].values[n] + A[3].values[n];
+      }
+    }
+    else if (m == 1) {
+      if (E.debugDouble) {
+        return doubleTrouble(A[1].values[n] = A[4].values[n] + A[5].values[n]);
+      }
+      else {
+        return A[1].values[n] = A[4].values[n] + A[5].values[n];
+      }
+    }
+    return 0;
   }
 
-    /**
-   * get the value of balances working row by sector 
-   * resum m%2 
+  /**
+   * get the value of balances working row by sector resum m%2
    *
-   * @param m index of working row 
+   * @param m index of working row
    * @param n index of value in selected row
    * @return the value of value n in the selected row
    */
@@ -1164,11 +1205,10 @@ public class A6Rowa {
     }
   }
 
-   /**
-   * get the value of balances reserve row by sector 
-   * resum m%2 
+  /**
+   * get the value of balances reserve row by sector resum m%2
    *
-   * @param m index of reserve row 
+   * @param m index of reserve row
    * @param n index of value in selected row
    * @return the value of value n in the selected row
    */
@@ -1204,12 +1244,13 @@ public class A6Rowa {
     A[4] = (sb);  // s r + g r
     A[5] = (gb);  // s s + g s
     for (int n : ASECS) {
-      if(E.debugDouble){
-      set(0, n, doubleTrouble(get(2, n) + get(3, n)));
-      set(1, n, doubleTrouble(get(4, n) + get(5, n)));
-      } else {
+      if (E.debugDouble) {
+        set(0, n, doubleTrouble(get(2, n) + get(3, n)));
+        set(1, n, doubleTrouble(get(4, n) + get(5, n)));
+      }
+      else {
         set(0, n, get(2, n) + get(3, n));
-      set(1, n, get(4, n) + get(5, n));
+        set(1, n, get(4, n) + get(5, n));
       }
     }
     return this;
@@ -1254,83 +1295,92 @@ public class A6Rowa {
   /**
    * set internal ARow m to ARow B testing for a Double error
    *
-   * @param m    number of row to be set
-   * @param b    ARow to be set into that row of object
+   * @param m number of row to be set
+   * @param b ARow to be set into that row of object
    * @return ARow B
    */
   public ARow set2(int m, ARow b) {
-    if(m < 6){
-      assert m > 1:"tried to set"+m + " sum balance not working or reserve";
+    if (m < 6) {
+      assert m > 1 : "tried to set" + m + " sum balance not working or reserve";
     }
-    return A[m].set2(b,this.titl,m);
+    return A[m].set2(b, this.titl, m);
   }
 
   /**
    * set internal ARow m to B and C
    *
-   * @param m   row to be stored
-   * @param B   row to be added each by each
-   * @param C   second row to be added each by each
+   * @param m row to be stored
+   * @param B row to be added each by each
+   * @param C second row to be added each by each
    * @return return each B + C
    */
   public ARow set(int m, ARow B, ARow C) {
     noChecking = true;
 
     ARow ret = A[m].set(B, C);
-    noChecking = false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return ret;
   }
 
   /**
-   * set internal ARow m, sector n to val
-   * if balances && m <%lt; 6 then assert m %gt; 1 and do resum
-   * @param m      selector of row number
-   * @param n      selector of entry in row
-   * @param val    value to be tested as a Double then stored
+   * set internal ARow m, sector n to val if balances && m <%lt; 6 then assert m
+   * %gt; 1 and do resum @param m selector of row numbe
+   *
+   * r
+   * @param n selector of entry in row
+   * @param val value to be tested as a Double then stored
    * @return val
    */
   public double set(int m, int n, Double val) {
     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
     int al = A.length;
-    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
-     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances && costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
+    int mm = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
+    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances && costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
     double bal1 = 0.;
     double both = 0.;
-    if(E.debugResumP && !ignoreIf && !noChecking){
-        bal1 = gett(mm,n);
-        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
-    // add in the 10row if needed
-        both += ignoreIf? 0.0:costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;
-    // ignore test if ignoreIf is true
-   
-    double dif = bal1 - both;
-    boolean badDif = E.PZERO < dif || E.NZERO > - dif; // trouble if true
-    // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
-    assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
-    }
-     // change the actual value, set updates that row setCnt
-    double ret = A[m].set(n,val);
+    if (E.debugResumP && !ignoreIf && !noChecking) {
+      bal1 = gett(mm, n);
+      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
+      // add in the 10row if needed
+      both += ignoreIf ? 0.0 : costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+      // ignore test if ignoreIf is true
 
-    if(noChecking){noChecking = true;} else
-    //if a legal class also set the row 0 or 1 row
-    if(!ignoreIf && false ){ // skip for now
-        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
-    // add in the 10row if needed
-        both += costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;   
-       A[mm].set(n,both);
+      double dif = bal1 - both;
+      boolean badDif = E.PZERO < dif || E.NZERO > -dif; // trouble if true
+      // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
+      assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
+    }
+    // change the actual value, set updates that row setCnt
+    double ret = A[m].set(n, val);
+
+    if (noChecking) {
+      noChecking = true;
+    }
+    else //if a legal class also set the row 0 or 1 row
+    if (!ignoreIf && false) { // skip for now
+      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
+      // add in the 10row if needed
+      both += costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+      A[mm].set(n, both);
     }
     return ret;
   }
-   /**
-   * set internal ARow m, sector n to val
-   * if balances && m <%lt; 6 then assert m %gt; 1 and do resum
-   * @param m      selector of row number
-   * @param n      selector of entry in row
-   * @param val    value to be tested as a Double then stored
-   * @param desc   description of set
+
+  /**
+   * set internal ARow m, sector n to val if balances && m <%lt; 6 then assert m
+   * %gt; 1 and do resum @param m selector of row numbe
+   *
+   * r
+   * @param n selector of entry in row
+   * @param val value to be tested as a Double then stored
+   * @param desc description of set
    * @return val
    */
-  public double set(int m,int n, Double val,String desc){return set(m,n,val);}
+  public double set(int m, int n, Double val, String desc) {
+    return set(m, n, val);
+  }
 
   /**
    * set internal ARow m, sector n to val, evaluate m as 0 or 1
@@ -1342,55 +1392,58 @@ public class A6Rowa {
    */
   public double sett(int m, int n, double val) {
     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
-    int mm = m < 2? m: (m-2)/2; // find proper rc or sg
-    double ret = A[m].set(n,val);
-      // do a local resum
+    int mm = m < 2 ? m : (m - 2) / 2; // find proper rc or sg
+    double ret = A[m].set(n, val);
+    // do a local resum
     //A[mm].set(n,get(lsums + mm*2,n) + get(3+mm*2,n));
     return ret;
   }
 
   /**
-   * add to row m, sector n value val
-   * test for Double problems and if balances set row 0 or 1
-   * @param m  row to object to be set
-   * @param n  sector of row to be added to
+   * add to row m, sector n value val test for Double problems and if balances
+   * set row 0 or 1
+   *
+   * @param m row to object to be set
+   * @param n sector of row to be added to
    * @param val
    * @return return the result in A[m].get(n) value after add
    */
   double add(int m, int n, double val) {
-  //  E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
-     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+    //  E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
+    E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
     int al = A.length;
-    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
-     boolean ignoreIf = !(al==6 || al==ABalRows.BALSLENGTH || al==10) || !(balances || costs10) || m < 0 || costs10? m > 9 : balances ? m > 5 : false  ;
+    int mm = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
+    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances || costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
     double bal1 = 0.;
     double both = 0.;
-    if(E.debugResumP && !ignoreIf && !noChecking){
-        bal1 = gett(mm,n);
-        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
-    // add in the 10row if needed
-        both += ignoreIf? 0.0:costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;
-    // ignore test if ignoreIf is true
-   
-    double dif = bal1 - both;
-    boolean badDif = E.PZERO < dif || E.NZERO > - dif; // trouble if true
-    // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
-    assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ?  " r" + EM.mf(gett(2+ mm*lsubs,n)) +  " c" + EM.mf(gett(3+ mm*lsubs,n)) + " s" + EM.mf(gett(4+ mm*lsubs,n)) + " g" + EM.mf(gett(5+ mm*lsubs,n)) :" working" + EM.mf(gett(2+ mm*lsubs,n)) + " reserve" + EM.mf(gett(3+mm*2,n)) ) ;
-             }
-    double ret = A[m].add(n,val);
-    if(noChecking){ noChecking=true;} else
-     //if a legal class also set the row 0 or 1 row
-    if(!ignoreIf & false ){
-        both = gett(lsums + 0 + mm*lsubs,n) + gett(lsums + 1 +mm*lsubs,n);
-    // add in the 10row if needed
-          both += costs10? gett(lsums + 2 + mm*lsubs,n) + gett(lsums + 3 + mm*lsubs,n): 0.0;   
-       A[mm].set(n,both);
+    if (E.debugResumP && !ignoreIf && !noChecking) {
+      bal1 = gett(mm, n);
+      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
+      // add in the 10row if needed
+      both += ignoreIf ? 0.0 : costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+      // ignore test if ignoreIf is true
+
+      double dif = bal1 - both;
+      boolean badDif = E.PZERO < dif || E.NZERO > -dif; // trouble if true
+      // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
+      assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
+    }
+    double ret = A[m].add(n, val);
+    if (noChecking) {
+      noChecking = true;
+    }
+    else //if a legal class also set the row 0 or 1 row
+    if (!ignoreIf & false) {
+      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
+      // add in the 10row if needed
+      both += costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+      A[mm].set(n, both);
     }
     return ret;
-    
+
   }
-  
-   /**
+
+  /**
    * multiply raw growth by a fertility
    *
    * @param a raw growth
@@ -1398,8 +1451,8 @@ public class A6Rowa {
    * @return return the A6Row with r,c,s,g multiplied, a resum needed
    */
   public A6Rowa setAmultF(A6Row a, A2Row f) {
-    noChecking=true;
-    noChecking=true;
+    noChecking = true;
+    noChecking = true;
     for (int n : ASECS) {
       for (int m : A01) {
         for (int mm : A01) {
@@ -1407,7 +1460,9 @@ public class A6Rowa {
         }
       }
     }
-    noChecking=false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1423,63 +1478,67 @@ public class A6Rowa {
     for (int m : E.d6) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
-        if(E.debugDouble){
-        set(m, n, doubleTrouble(this.get(m, n)
-                - (V
-                * B.get(m, n))));
-        }else{
-           set(m, n, this.get(m, n)
-                - (V
-                * B.get(m, n)));
-           if(balances && m < 6){
-             int mm = (int)((m-2)/2);  // get row 0 or 1 rc  or sg
-      assert m>1: "error must set only working or reserve values";
-      //resum((int)((m -2)/2)); // 0=2,3,1=4,5
-      // local resum
-      A[mm].set(n,get(mm*2+2,n) + get(3 + mm*2));
-    }
+        if (E.debugDouble) {
+          set(m, n, doubleTrouble(this.get(m, n)
+                                  - (V
+                                     * B.get(m, n))));
+        }
+        else {
+          set(m, n, this.get(m, n)
+                    - (V
+                       * B.get(m, n)));
+          if (balances && m < 6) {
+            int mm = (int) ((m - 2) / 2);  // get row 0 or 1 rc  or sg
+            assert m > 1 : "error must set only working or reserve values";
+            //resum((int)((m -2)/2)); // 0=2,3,1=4,5
+            // local resum
+            A[mm].set(n, get(mm * 2 + 2, n) + get(3 + mm * 2));
+          }
         }
       }
     }
     noChecking = true;
-    resum(0);resum(1);
+    resum(0);
+    resum(1);
     return this;
   }
 
   /**
    * set to Min of each by each B,C
    *
-   * @param B  the first A6Rowa
-   * @param C  the second A6Rowa
+   * @param B the first A6Rowa
+   * @param C the second A6Rowa
    * @return min each by each B,C, 0 = min(2,4),1=min(3,5)
    */
   public A6Rowa setMin(A6Rowa B, A6Rowa C) {
     noChecking = true;
     double b = 1., c = 1.;
     int al = A.length;
-    for (int m =0;m < al; m++ ) {
-      for (int n=0;n<E.LSECS;n++) {
+    for (int m = 0; m < al; m++) {
+      for (int n = 0; n < E.LSECS; n++) {
         // do the rr,rs,sr,ss sets first
         b = doubleTrouble(B.get(m, n));
         c = doubleTrouble(C.get(m, n));
         A[m].set(n, b < c ? b : c);
-        if(balances && m < 6){
-          if(m == 5){ //the last balance row
-            int mm = (int)((m-2)/2);
-            A[0].set(n,get(2,n) + get(3,n));
-            A[1].set(n,get(4,n) + get(5,n));
+        if (balances && m < 6) {
+          if (m == 5) { //the last balance row
+            int mm = (int) ((m - 2) / 2);
+            A[0].set(n, get(2, n) + get(3, n));
+            A[1].set(n, get(4, n) + get(5, n));
           }
         }
       }
     }
-    noChecking=false; resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
   /**
    * set to Max of each by each B,C
    *
-   * @param B  first A6Rowa
+   * @param B first A6Rowa
    * @param C second A6Rowa
    * @return min each by each B,C, 0 = min(2,4),1=min(3,5)
    */
@@ -1492,16 +1551,18 @@ public class A6Rowa {
         b = doubleTrouble(B.get(m, n));
         c = doubleTrouble(C.get(m, n));
         A[m].set(n, b > c ? b : c);
-        if(balances && m < 6){
-          if(m == 5){ //the last balance row
-            int mm = (int)((m-2)/2);
-            A[0].set(n,get(2,n) + get(3,n));
-            A[1].set(n,get(4,n) + get(5,n));
+        if (balances && m < 6) {
+          if (m == 5) { //the last balance row
+            int mm = (int) ((m - 2) / 2);
+            A[0].set(n, get(2, n) + get(3, n));
+            A[1].set(n, get(4, n) + get(5, n));
           }
         }
       }
     }
-    noChecking=false; resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1515,24 +1576,26 @@ public class A6Rowa {
    */
   public A6Rowa setMax(A6Rowa a, A6Rowa b, A6Rowa c) {
     noChecking = true;
-    double ab = 1, abc = 1,al=A.length;
+    double ab = 1, abc = 1, al = A.length;
     for (int m = 0; m < al; m++) {
-      for (int n =0;n<E.LSECS;n++) {
+      for (int n = 0; n < E.LSECS; n++) {
         // do the rr,rs,sr,ss etc
         ab = doubleTrouble(a.get(m, n)) > doubleTrouble(b.get(m, n)) ? doubleTrouble(a.get(m, n)) : doubleTrouble(b.get(m, n));
         abc = ab > doubleTrouble(c.get(m, n)) ? ab : doubleTrouble(c.get(m, n));
         //set(m, n, abc);
-         A[m].set(n,abc);
-        if(balances && m < 6){
-          if(m == 5){ //the last balance row
-            int mm = (int)((m-2)/2);
-            A[0].set(n,get(2,n) + get(3,n));
-            A[1].set(n,get(4,n) + get(5,n));
+        A[m].set(n, abc);
+        if (balances && m < 6) {
+          if (m == 5) { //the last balance row
+            int mm = (int) ((m - 2) / 2);
+            A[0].set(n, get(2, n) + get(3, n));
+            A[1].set(n, get(4, n) + get(5, n));
           }
         }
       }
     }
-    noChecking = false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1557,7 +1620,9 @@ public class A6Rowa {
         set(m, n, abcd);
       }
     }
-    noChecking = false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1581,7 +1646,9 @@ public class A6Rowa {
         set(m, n, b < c ? b : c < d ? c : d);
       }
     }
-    noChecking = false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1599,11 +1666,13 @@ public class A6Rowa {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         set(m, n,
-                doubleTrouble(A.get(m, n))
-                * doubleTrouble(B.get(m, n)));
+            doubleTrouble(A.get(m, n))
+            * doubleTrouble(B.get(m, n)));
       }
     }
-    noChecking = false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1611,41 +1680,48 @@ public class A6Rowa {
    * set object to each A mult by V
    *
    * @param a the ARowA object being multiplied
-   * @param v  value of multiplier
-   * @return  each entry in each row multiplied by v
+   * @param v value of multiplier
+   * @return each entry in each row multiplied by v
    */
   public A6Rowa setAmultV1(A6Rowa a, double v) {
-    noChecking=true;
+    noChecking = true;
     // mult each member set of 2 rows each A by corresponding B
     int al = a.A.length;
     for (int m = 2; m < al; m++) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         set(m, n,
-                doubleTrouble(a.get(m, n))
-                * doubleTrouble(v));
+            doubleTrouble(a.get(m, n))
+            * doubleTrouble(v));
       }
     }
-    noChecking = true;resum(0);resum(1);
+    noChecking = true;
+    resum(0);
+    resum(1);
     return this;
   }
-  
+
   /**
    * set object to each A mult by V
    *
    * @param a the ARowA object being multiplied
-   * @param v  value of multiplier
-   * @return  each entry in each row multiplied by v
+   * @param v value of multiplier
+   * @return each entry in each row multiplied by v
    */
-  public A10Row notsetAmultV(A10Row a, Double v) {return (A10Row)setAmultV1((A6Rowa)a,v);}
-   /**
+  public A10Row notsetAmultV(A10Row a, Double v) {
+    return (A10Row) setAmultV1((A6Rowa) a, v);
+  }
+
+  /**
    * set object to each A mult by V
    *
    * @param a the ARowA object being multiplied
-   * @param v  value of multiplier
-   * @return  each entry in each row multiplied by v
+   * @param v value of multiplier
+   * @return each entry in each row multiplied by v
    */
-  public A6Rowa setAmultV(A6Rowa a, Double v) {return (A10Row)setAmultV1((A6Rowa)a,v);}
+  public A6Rowa setAmultV(A6Rowa a, Double v) {
+    return (A10Row) setAmultV1((A6Rowa) a, v);
+  }
 
   /**
    * set instance to the each by each sum of A +B + C
@@ -1661,12 +1737,14 @@ public class A6Rowa {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         this.set(m, n,
-                doubleTrouble(A.get(m, n))
-                + doubleTrouble(B.get(m, n))
-                + doubleTrouble(C.get(m, n)));
+                 doubleTrouble(A.get(m, n))
+                 + doubleTrouble(B.get(m, n))
+                 + doubleTrouble(C.get(m, n)));
       }
     }
-    noChecking = false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1681,10 +1759,12 @@ public class A6Rowa {
     noChecking = true;
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
-        this.set(m, n,doubleTrouble( A.get(m, n)) + doubleTrouble(B.get(m, n)));
+        this.set(m, n, doubleTrouble(A.get(m, n)) + doubleTrouble(B.get(m, n)));
       }
     }
-    noChecking = false;resum(0);resum(1);
+    noChecking = false;
+    resum(0);
+    resum(1);
     return this;
   }
 
@@ -1774,23 +1854,22 @@ public class A6Rowa {
   void sendHist() {
     sendHistBal(ec.blev, aPre, lev, titl, 0, 5);
   }
-  
-  /** create a history line from a String 
-   * use econ aPre and lev
-   * use title from the title of the calling A6Rowa
-   * 
+
+  /**
+   * create a history line from a String use econ aPre and lev use title from
+   * the title of the calling A6Rowa
+   *
    * @param aString this string will be broken into 13 character columns
    */
-  void sendHist(String aString){
+  void sendHist(String aString) {
     int alen = aString.length();
-    String atitl = aString.substring(0,Math.min(alen,10));
+    String atitl = aString.substring(0, Math.min(alen, 10));
     String bbb = " ";
-    if(alen > 10){
-      bbb = aString.substring(11,alen);
+    if (alen > 10) {
+      bbb = aString.substring(11, alen);
     }
-    hist.add(new History(ec.aPre,ec.lev," " + ec.name + " " + atitl,bbb));
+    hist.add(new History(ec.aPre, ec.lev, " " + ec.name + " " + atitl, bbb));
   }
-  
 
   /**
    * send listing to hist for the first 2 balance rows if econCnt for this Econ

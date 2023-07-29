@@ -521,6 +521,7 @@ public class StarTrader extends javax.swing.JFrame {
     gameButtonDown = new java.awt.Button();
     javax.swing.JPanel log = new javax.swing.JPanel();
     logTableScrollPanel = new javax.swing.JScrollPane();
+    logDisplayTable = new javax.swing.JTable();
     logDlevel2 = new javax.swing.JLabel();
     LogDlen1Slider = new javax.swing.JSlider();
     logDlen1 = new javax.swing.JLabel();
@@ -549,7 +550,6 @@ public class StarTrader extends javax.swing.JFrame {
     logActionJump = new javax.swing.JRadioButton();
     logActionAdd = new javax.swing.JRadioButton();
     logActionDel = new javax.swing.JRadioButton();
-    logDisplayTable = new javax.swing.JTable();
     display = new javax.swing.JPanel();
     displayPanel0 = new javax.swing.JPanel();
     displayPanel0Text = new javax.swing.JTextArea();
@@ -595,6 +595,7 @@ public class StarTrader extends javax.swing.JFrame {
     statsField = new javax.swing.JTextField();
     statsScrollPane2 = new javax.swing.JScrollPane();
     statsTable1 = new javax.swing.JTable();
+    jPanel1 = new javax.swing.JPanel();
 
     gameButtonUp.setLabel("up");
     gameButtonUp.setMaximumSize(new java.awt.Dimension(70, 55));
@@ -618,7 +619,6 @@ public class StarTrader extends javax.swing.JFrame {
     setBounds(new java.awt.Rectangle(0, 0, 1250, 1250));
     setMaximizedBounds(new java.awt.Rectangle(0, 0, 1, 0));
     setMinimumSize(new java.awt.Dimension(800, 600));
-    setPreferredSize(new java.awt.Dimension(1920, 1200));
     setResizable(false);
     addInputMethodListener(new java.awt.event.InputMethodListener() {
       public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
@@ -1978,6 +1978,7 @@ public class StarTrader extends javax.swing.JFrame {
     log.setPreferredSize(new java.awt.Dimension(1200, 800));
     log.setLayout(new java.awt.GridBagLayout());
 
+    logTableScrollPanel.setAlignmentY(5.0F);
     logTableScrollPanel.setAutoscrolls(true);
     logTableScrollPanel.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
     logTableScrollPanel.setMaximumSize(new java.awt.Dimension(1800, 1200));
@@ -1991,6 +1992,157 @@ public class StarTrader extends javax.swing.JFrame {
         logTableScrollPanelInputMethodTextChanged(evt);
       }
     });
+
+    logDisplayTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    logDisplayTable.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+    logDisplayTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null},
+        {null, null, null, null, null, null, null, null, null, null, null}
+      },
+      new String [] {
+        "Title", "col0", "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"
+      }
+    ) {
+      Class[] types = new Class [] {
+        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+      };
+      boolean[] canEdit = new boolean [] {
+        false, false, false, false, false, false, false, false, false, false, false
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
+
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return canEdit [columnIndex];
+      }
+    });
+    logDisplayTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+    logDisplayTable.setColumnSelectionAllowed(true);
+    logDisplayTable.setDebugGraphicsOptions(javax.swing.DebugGraphics.LOG_OPTION);
+    logDisplayTable.setGridColor(new java.awt.Color(153, 153, 255));
+    logDisplayTable.setMaximumSize(new java.awt.Dimension(1800, 1200));
+    logDisplayTable.setMinimumSize(new java.awt.Dimension(500, 450));
+    logDisplayTable.setPreferredSize(new java.awt.Dimension(1200, 800));
+    logDisplayTable.getTableHeader().setResizingAllowed(false);
+    logDisplayTable.getTableHeader().setReorderingAllowed(false);
+    logTableScrollPanel.setViewportView(logDisplayTable);
+    logDisplayTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    if (logDisplayTable.getColumnModel().getColumnCount() > 0) {
+      logDisplayTable.getColumnModel().getColumn(0).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+      logDisplayTable.getColumnModel().getColumn(1).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(2).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(3).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(4).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(5).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(6).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(7).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(8).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(9).setResizable(false);
+      logDisplayTable.getColumnModel().getColumn(10).setResizable(false);
+    }
+    logDisplayTable.getAccessibleContext().setAccessibleName("logTable");
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 56;
@@ -2319,156 +2471,6 @@ public class StarTrader extends javax.swing.JFrame {
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.insets = new java.awt.Insets(4, 2, 0, 0);
     log.add(logActionDel, gridBagConstraints);
-
-    logDisplayTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    logDisplayTable.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-    logDisplayTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null}
-      },
-      new String [] {
-        "Title", "col0", "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"
-      }
-    ) {
-      Class[] types = new Class [] {
-        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-      };
-      boolean[] canEdit = new boolean [] {
-        false, false, false, false, false, false, false, false, false, false, false
-      };
-
-      public Class getColumnClass(int columnIndex) {
-        return types [columnIndex];
-      }
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    logDisplayTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-    logDisplayTable.setColumnSelectionAllowed(true);
-    logDisplayTable.setDebugGraphicsOptions(javax.swing.DebugGraphics.LOG_OPTION);
-    logDisplayTable.setGridColor(new java.awt.Color(153, 153, 255));
-    logDisplayTable.setMaximumSize(new java.awt.Dimension(1800, 1200));
-    logDisplayTable.setMinimumSize(new java.awt.Dimension(500, 450));
-    logDisplayTable.setPreferredSize(new java.awt.Dimension(1200, 800));
-    logDisplayTable.getTableHeader().setResizingAllowed(false);
-    logDisplayTable.getTableHeader().setReorderingAllowed(false);
-    log.add(logDisplayTable, new java.awt.GridBagConstraints());
-    logDisplayTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    if (logDisplayTable.getColumnModel().getColumnCount() > 0) {
-      logDisplayTable.getColumnModel().getColumn(0).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(0).setPreferredWidth(200);
-      logDisplayTable.getColumnModel().getColumn(1).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(2).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(3).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(4).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(5).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(6).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(7).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(8).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(9).setResizable(false);
-      logDisplayTable.getColumnModel().getColumn(10).setResizable(false);
-    }
-    logDisplayTable.getAccessibleContext().setAccessibleName("logTable");
 
     controlPanels.addTab("logs", log);
 
@@ -3320,6 +3322,19 @@ public class StarTrader extends javax.swing.JFrame {
     stats.add(statsScrollPane2);
 
     controlPanels.addTab("stats", stats);
+
+    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+    jPanel1.setLayout(jPanel1Layout);
+    jPanel1Layout.setHorizontalGroup(
+      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 1920, Short.MAX_VALUE)
+    );
+    jPanel1Layout.setVerticalGroup(
+      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 1169, Short.MAX_VALUE)
+    );
+
+    controlPanels.addTab("tab6", jPanel1);
 
     getContentPane().add(controlPanels);
     controlPanels.getAccessibleContext().setAccessibleName("traderPanel");
@@ -4819,6 +4834,7 @@ public class StarTrader extends javax.swing.JFrame {
   protected javax.swing.JTextField gameTopRightFill;
   protected javax.swing.JPanel gameXtraPanel1;
   protected javax.swing.ButtonGroup initButtonGroupPorS;
+  protected javax.swing.JPanel jPanel1;
   protected javax.swing.JScrollPane jScrollPane1;
   protected javax.swing.JScrollPane jScrollPane3;
   protected javax.swing.JSeparator jSeparator1;
