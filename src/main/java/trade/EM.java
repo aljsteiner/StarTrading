@@ -2111,6 +2111,8 @@ class EM {
   static double[][] growthDecay = {resourceGrowthDecay, resourceGrowthDecay, staffGrowthDecay, staffGrowthDecay};
   static final double[][] mfracBiasInGrowth = {{.1, .3}, {.1, .3}};
   static final double[][] mfracPriorityInGrowth = {{.3, .7}, {.3, .7}};  //mult priority in growth calc and percent to frac
+  static double maxFracBonusGrowth[] = {1.5,1.5}; // limit size of bonus growth so rawUnitGrow - decay + bonus growth is less than assetsUnitGrowth * maxFracGonusGrowth
+  static final double[][] mMaxFracBonusGrowth = {{.5,2.5},{.5,2.5}};
   static double[][] clanFutureFundEmerg2 = {{.15, .15, .15, .15, .15}, {.15, .15, .15, .15, .15}};
   static final double[][] mClanFutureFundEmerg = {{.01, .3}, {.01, .3}};
   static double[][] clanFutureFundEmerg1 = {{.25, .25, .25, .25, .25}, {.25, .25, .25, .25, .25}};
@@ -2437,9 +2439,9 @@ class EM {
   static double[][] mInitTravelYears = {{0.3, 2.0}, {3., 20.}};
   double maintMinPriority = 1.;
   double growthMinPriority = .5;  // only each limited fertility
-  double maxStaffGrowth[] = {900000, 900000};
-  double max7Growth[] = {7 * maxStaffGrowth[0], 7 * maxStaffGrowth[1]};
-  double max14Growth[] = {14 * maxStaffGrowth[0], 14 * maxStaffGrowth[1]};
+  static double maxStaffGrowth[] = {900000, 900000};
+  static double max7Growth[] = {7 * maxStaffGrowth[0], 7 * maxStaffGrowth[1]};
+  static double max14Growth[] = {14 * maxStaffGrowth[0], 14 * maxStaffGrowth[1]};
   static double mMaxStaffGrowth[][] = {{100000, 99990000}, {100000, 99990000}};
   // [pors][clan]
   double goalResvFrac[][] = {{.1, .1, .1, .1, .1}, {.5, .5, .5, .5, .5}};

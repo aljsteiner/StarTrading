@@ -36,33 +36,38 @@ public class ABalRows extends A6Rowa {
   // static int rcIx = -2;
   static final int RCIX2 = -2;
   static final int BALS = 0;
-  static int BALANCESIX = E.lsums; // L4
-  static int lsums = E.lsums;
-  static int lsubs = E.lsubs;
-  static final int MCOSTSIX = BALANCESIX + lsubs; // L2 mtcosts are travel costs of ship
-  static final int TCOSTSIX = MCOSTSIX + lsums;  //L2  6
-  static final int GROWTHSIX = TCOSTSIX + lsums; //L4  8
-  static int bonusYearsIx = GROWTHSIX + lsubs; //L4  12
-  static final int BONUSYEARSIX = GROWTHSIX + lsubs; //16 L4
-  static int bonusUnitsIx = BONUSYEARSIX + lsubs;//20 L4
-  static final int BONUSUNITSIX = BONUSYEARSIX + lsubs;//24 L4
-  static int CUMULATIVEUNITBONUSIX = BONUSUNITSIX+lsubs;//26 L4
-  static final int CUMULATIVEUNITDECAYIX = CUMULATIVEUNITBONUSIX + lsubs; //32 L4
-  static final int RAWUNITGROWTHSIX = CUMULATIVEUNITDECAYIX + lsubs; //36
-  static final int BONUSYEARLYUNITGROWTHSIX = RAWUNITGROWTHSIX + lsubs; //40
-  static final int RAWGROWTHSIX = BONUSYEARLYUNITGROWTHSIX + lsubs; //44 
-  static final int TRADEDGROWTHSIX = RAWGROWTHSIX + lsubs; //48
-  static final int SWAPPEDGROWTHSIX = TRADEDGROWTHSIX + lsubs; //52
-  static final int COMMONKNOWLEDGEIX = SWAPPEDGROWTHSIX + lsubs; //56
-  static final int NEWKNOWLEDGEIX = COMMONKNOWLEDGEIX + 1; //60
-  static final int MANUALSIX = NEWKNOWLEDGEIX + 1; //61
-  static final int BALSLENGTH = MANUALSIX + 2; //63
+  //static final int BALANCESIX = E.lsums; // L4
+  static final int lsums = E.lsums;
+  static final int LSUMS = E.lsums;
+  static final int lsubs = E.lsubs;
+  static final int LSUBS = E.lsubs;
+  static int balz = 0;
+  static final int BALANCESIX = balz += LSUMS;
+  static final int MCOSTSIX = balz += LSUBS; // 6 mtcosts are travel costs of ship
+  static final int TCOSTSIX = balz += LSUBS;  //10
+  static final int GROWTHSIX = balz += LSUBS; //14
+  //static int bonusYearsIx = GROWTHSIX + lsubs; //L4  12
+  static final int BONUSYEARSIX = balz += LSUBS; //16 L4
+ // static int bonusUnitsIx = BONUSYEARSIX + lsubs;//20 L4
+  static final int BONUSUNITSIX = balz += LSUBS;//24 L4
+  static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
+  static final int CUMULATIVEUNITBONUSIX = balz += LSUBS;//32 L4
+  static final int CUMULATIVEUNITDECAYIX = balz += LSUBS; //36 L4
+  static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
+  static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //44
+  static final int RAWGROWTHSIX = balz += LSUBS; //48 
+  static final int TRADEDGROWTHSIX = balz += LSUBS; //52
+  static final int SWAPPEDGROWTHSIX = balz += LSUBS; //56
+  static final int COMMONKNOWLEDGEIX = balz += LSUBS; //60
+  static final int NEWKNOWLEDGEIX = balz += LSUBS; //61
+  static final int MANUALSIX = balz += 1; //62
+  static final int BALSLENGTH = balz += 2; //64
   static int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
   static int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
   static int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
   static int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
   // end of index values for bals
-  static final String[] titls = {" bals rc ", " bals sg ", " bals r ", " bals c ", " bals s", " bals g ", "MTCOSTS r", "MTCOSTS s", "growths r ", " growths c ", " growths s ", " growths g ", " bonusYears r ", " bonusYears c ", " bonusYears s ", " bonusYears g ", " bonusUnits r ", " bonusUnits c ", " bonusUnits s ", " bonusUnits g", " cumDecay r ", " cumDecay c ", " cumDecay s ", " cumDecay g","rawUnitsGrowth r", "rawUnitsGrowth c", "rawUnitsGrowth s", "rawUnitsGrowth g","rawGrowth r","rawGrowth c","rawGrowth s","rawGrowth g","tradedGrowth r","tradedGrowth c","tradedGrowth s","tradedGrowthg", "swappedGrowth r", "swappedGrowth c", "swappedGrowth s", "swappedGrowth g","commonKnowledge","newKnowledge","manuals"};
+  static final String[] titls = {" bals rc ", " bals sg ", " bals r ", " bals c ", " bals s", " bals g ", "MTCOSTS r", "MTCOSTS s", "growths r ", " growths c ", " growths s ", " growths g ", " bonusYears r ", " bonusYears c ", " bonusYears s ", " bonusYears g ", " bonusUnits r ", " bonusUnits c ", " bonusUnits s ", " bonusUnits g", " limBUnits r", " limBUnits c", " limBUnits s", " limBUnits g", " cumDecay r ", " cumDecay c ", " cumDecay s ", " cumDecay g","rawUnitsGrowth r", "rawUnitsGrowth c", "rawUnitsGrowth s", "rawUnitsGrowth g","rawGrowth r","rawGrowth c","rawGrowth s","rawGrowth g","tradedGrowth r","tradedGrowth c","tradedGrowth s","tradedGrowthg", "swappedGrowth r", "swappedGrowth c", "swappedGrowth s", "swappedGrowth g","commonKnowledge","newKnowledge","manuals"};
 
   /**
    * principal constructor of ABalRows a set of rows that are balances
@@ -367,8 +372,8 @@ public class ABalRows extends A6Rowa {
    * @param titl titl of the new A6Row
    * @return a mew A6Row using the growths section of bals
    */
-  A6Row getRawUnitGrowths(int lev, String titl) {
-    return use4(RAWUNITGROWTHSIX, lev, titl);
+  A6Row getRawYearlyUnitGrowths(int lev, String titl) {
+    return use4(RAWYEARLYUNITGROWTHSIX, lev, titl);
   }
 
   /**
@@ -377,8 +382,8 @@ public class ABalRows extends A6Rowa {
    * @param m index of the growths ARow s
    * @return growth ARow for index m
    */
-  ARow getRawUnitGrowthsRow(int m) {
-    return A[RAWUNITGROWTHSIX + m];
+  ARow getRawYearlyUnitGrowthsRow(int m) {
+    return A[RAWYEARLYUNITGROWTHSIX + m];
   }
 
   /**
@@ -388,8 +393,8 @@ public class ABalRows extends A6Rowa {
    * @param apre prefix of listed rows
    * @param alev level of listed rows
    */
-  void listRawUnitGrowths(int blev, String apre, int alev) {
-    sendHist(RAWUNITGROWTHSIX, RAWUNITGROWTHSIX + 3, blev, apre, alev);
+  void listRawYearlyUnitGrowths(int blev, String apre, int alev) {
+    sendHist(RAWYEARLYUNITGROWTHSIX, RAWYEARLYUNITGROWTHSIX + 3, blev, apre, alev);
   }
 
   /**

@@ -48,7 +48,7 @@ public class A6Rowa {
   static int d01[] = {0, 1};
   static final int[] I01 = d01;
   static final int[] A01 = d01;
-  static int do2[] = {0, 2};
+  static int d02[] = {0, 2};
   static final int[] ASECS = E.ASECS;
   static final int[] A2SECS = E.A2SECS;
   static final int[] IA2SECS = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 10, 11, 12, 13};
@@ -930,13 +930,31 @@ public class A6Rowa {
    *
    * @param bias the bias to the first element
    *
-   * @return sum each value in rows 2-5;
+   * @return sum each value in rows 9 1 2 3;
    */
   double sum4(int bias) {
     double sum = 0;
     for (int m : d03) {
       for (int n : ASECS) {
-        sum += get(m, n);
+        sum += get(bias + m, n);
+      }
+    }
+    return sum;
+  }
+  
+   /**
+   * sum the unit balances r s all sectors returns the same value as curSum,
+   * but always sums the individual SubAsset balances
+   *
+   * @param bias the bias to the first element
+   *
+   * @return sum each value in rows 0 2;
+   */
+  double sum2(int bias) {
+    double sum = 0;
+    for (int m : d02) {
+      for (int n : ASECS) {
+        sum += get(bias + m, n);
       }
     }
     return sum;
@@ -949,7 +967,6 @@ public class A6Rowa {
    * @return sum each value in rows 2-5;
    */
   double sum4() {
-
     return sum4(BALANCESIX);
   }
 
