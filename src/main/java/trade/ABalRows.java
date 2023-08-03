@@ -41,12 +41,14 @@ public class ABalRows extends A6Rowa {
   static final int LSUMS = E.lsums;
   static final int lsubs = E.lsubs;
   static final int LSUBS = E.lsubs;
+  static final int A02[] = {0,2};
+  static final int A03[] = {0,1,2,3};
   static int balz = 0;
   static final int BALANCESIX = balz += LSUMS;
   static final int MCOSTSIX = balz += LSUBS; // 6 mtcosts are travel costs of ship
   static final int TCOSTSIX = balz += LSUBS;  //10
   static final int GROWTHSIX = balz += LSUBS; //14
-  //static int bonusYearsIx = GROWTHSIX + lsubs; //L4  12
+  static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
   static final int BONUSYEARSIX = balz += LSUBS; //16 L4
  // static int bonusUnitsIx = BONUSYEARSIX + lsubs;//20 L4
   static final int BONUSUNITSIX = balz += LSUBS;//24 L4
@@ -269,6 +271,72 @@ public class ABalRows extends A6Rowa {
       A[MCOSTSIX] = mcosts10.A[2];
       A[MCOSTSIX + 1] = mcosts10.A[6];
       return this;
+  }
+  
+  /**  set 4 result rows at biasA from rows at biasB - rows at biasC
+   * 
+   * @param biasA  The start row number of rows to be set
+   * @param biasB  The start row number of values to be subtracted from
+   * @param biasC  The start row number of values to be subtracted
+   */
+  void setA4toBminusC(int biasA, int biasB,int biasC){
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        A[rowIx+biasA].set(secIx,A[rowIx+biasB].get(secIx) - A[rowIx+biasC].get(secIx) );
+      }
+    }
+  }
+  /**  set 4 result rows at biasA from rows at biasB multby rows at biasC
+   * 
+   * @param biasA  The start row number of rows to be set
+   * @param biasB  The start row number of values to be multiplied
+   * @param biasC  The start row number of values of the multiplier
+   */
+  void setA4toBmultC(int biasA, int biasB,int biasC){
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        A[rowIx+biasA].set(secIx,A[rowIx+biasB].get(secIx) * A[rowIx+biasC].get(secIx) );
+      }
+    }
+  }
+   /**  set 4 result rows at biasA from rows at biasB multby value
+   * 
+   * @param biasA  The start row number of rows to be set
+   * @param biasB  The start row number of values to be multiplied
+   * @param c  The value of the multiplier
+   */
+  void setA4toBmultV(int biasA, int biasB,double c){
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        A[rowIx+biasA].set(secIx,A[rowIx+biasB].get(secIx) * c );
+      }
+    }
+  }
+  /**  set 4 result rows at biasA from rows at biasB to add to rows at biasC
+   * 
+   * @param biasA  The start row number of rows to be set
+   * @param biasB  The start row number of values to be multiplied
+   * @param biasC  The start row number of values of the multiplier
+   */
+  void setA4toBaddC(int biasA, int biasB,int biasC){
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        A[rowIx+biasA].set(secIx,A[rowIx+biasB].get(secIx) + A[rowIx+biasC].get(secIx) );
+      }
+    }
+  }
+  /**  set 4 result rows at biasA from rows at biasC to divide rows at biasB
+   * 
+   * @param biasA  The start row number of rows to be set
+   * @param biasB  The start row number of values to be divided
+   * @param biasC  The start row number of values of the divisor
+   */
+  void setA4toCdividB(int biasA, int biasB,int biasC){
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        A[rowIx+biasA].set(secIx,A[rowIx+biasB].get(secIx) / A[rowIx+biasC].get(secIx) );
+      }
+    }
   }
 
   /**

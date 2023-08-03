@@ -844,14 +844,14 @@ public class ARow {
   }
 
   /**
-   * set to ARow A by double V
+   * set to ARow A by value V
    *
    * @param A ARow
    * @param V double
    */
   ARow setAmultV(ARow A, double V) {
-    for (int i = 0; i < E.lsecs; i++) {
-      set(i, A.get(i) * V);
+    for (int secIx:E.ASECS) {
+      set(secIx, A.get(secIx) * V);
     }
     return this;
   }

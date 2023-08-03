@@ -2,6 +2,7 @@
 <actions>
         <action>
             <actionName>run</actionName>
+            <displayName>run</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -18,7 +19,8 @@
             </properties>
         </action>
         <action>
-            <actionName>run5a</actionName>
+            <actionName>CUSTOM-run5a</actionName>
+            <displayName>run5a</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -36,6 +38,7 @@
         </action>
         <action>
             <actionName>run20a</actionName>
+            <displayName>run20a</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -48,6 +51,25 @@
                 <exec.executable>java</exec.executable>
                 <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"run20"</exec.appArgs>
+                <exec.mainClass>trade.StarTrader</exec.mainClass>
+            </properties>
+        </action>
+         <action>
+            <actionName>CUSTOM-testb</actionName>
+            <displayName>testb</displayName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>compile</goal>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.appArgs>"test"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
             </properties>
         </action>
@@ -237,8 +259,7 @@
         </action>
         <action>
             <actionName>CUSTOM-runtestandsee</actionName>
-            <displayName>runtestandseea</displayName>
-            
+            <displayName>runtestandseea</displayName> 
             <preAction>build-with-dependencies</preAction>
             <packagings>
                 <packaging>jar</packaging>

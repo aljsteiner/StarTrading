@@ -2413,6 +2413,7 @@ public class Assets {
     SubAsset[] others = {staff, guests, resource, cargo};
     SubAsset c = cargo, g = guests;
     SubAsset[] workers = {resource, staff};
+    String[] subStrs = {"r","c","s","g"};
 
     double sumBonusUnitGrowth = 0.;
     double sumCumDecay = 0.;
@@ -4323,10 +4324,15 @@ public class Assets {
         double tmp4 = tmp3 < E.PZERO ? growth.sum() : tmp3;
         nzStat(growthNames[sIx], tmp4);
         hist.add(new History(aPre, History.valuesMajor6, aschar + " balance", balance));
-        hist.add(new History(aPre, History.valuesMajor6, aschar + " worth", worth));
+        hist.add(new History(aPre, History.valuesMajor6,subStrs[sIx] + "worth", worth));
         hist.add(new History(aPre, 3, "grow " + aschar, growth));
         if (!sstaff) {
           balance.add(growth);  // ARow adds all sectors
+          if(sIx == E.R){
+            r.worth.setAmultV(balance, eM.nominalWealthPerResource[pors]);
+          }else {
+            worth.setAmultV(balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+          }        
         } else {
           /* facultyEquiv = makeZero(facultyEquiv);
            researcherEquiv = makeZero(researcherEquiv);
@@ -4391,7 +4397,7 @@ public class Assets {
             if (grades[ix][0] < NZERO) {
               E.myTest(true, "doGrow4 neg grade %7.3f=grades[%1.0f][0] %7.3f=growth.get[%1.0f]", grades[ix][0], ix + 0., growth.get(ix), ix + 0.);
             }
-            sumGrades();  // sum researcher, manualsToKnowledge equiv
+            sumGrades();  // sum researcher, manualsToKnowledge equiv ,worth
             if (!reserve) { // skip knowledge for guests
               // now upgrade the knowledge for sector ix.
               kIncr = moreK.set(ix, knowledge.get(ix) + cRand(6 + ix) * s.researcherEquiv.get(ix) * eM.knowledgeGrowthPerResearcher[0] + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (knowledge.get(ix) > eM.nominalKnowledgeForBonus[0] ? knowledge.get(ix) * eM.additionalKnowledgeGrowthForBonus[0] : 0.) * s.groEfficiency.get(ix));
@@ -7783,6 +7789,10 @@ public class Assets {
         sys[i].growth = growths.A[2 + i] = bals.A[GROWTHSIX + i];
         growths.aCnt[2 + i]++;
       }
+      r.worth = bals.getRow(ABalRows.CURWORTHSIX);//set SubAssets worths instance
+      c.worth = bals.getRow(ABalRows.CURWORTHSIX+1);
+      s.worth = bals.getRow(ABalRows.CURWORTHSIX+2);
+      g.worth = bals.getRow(ABalRows.CURWORTHSIX+3);
       EM.wasHere = "CashFlow.init... after growths for eeee=" + ++eeee;
       rawGrowths.setUseBalances(History.informationMinor9, "rawGrowth", r.rawGrowth, c.rawGrowth, s.rawGrowth, g.rawGrowth);
       invMEff.setUseBalances(History.valuesMinor7, "invMEff", r.invMaintEfficiency, c.invMaintEfficiency, s.invMaintEfficiency, g.invMaintEfficiency);
@@ -8609,7 +8619,7 @@ public class Assets {
         tWTotWorth = tW.getTotWorth();
         btWTotWorth = btW.getTotWorth();
         btWrcsgSum = btW.getSumRCSGBal();
-        worthIncrPercent = btWTotWorth < E.PZERO ? 1. : 100. * (tWTotWorth - btWTotWorth) / btWTotWorth;
+        worthIncrPercent = btWTotWorth < E.PZERO ? 1. : 100. * (tWTotWorth - btWTotWorth) / startYrSumWorth;
         worthIncr =tWTotWorth - btWTotWorth;
         percentValuePerGoal = strategicGoal > E.PZERO ? 100. * strategicValue / strategicGoal : 1.;
         retOffer.set2Values(ec, btWTotWorth, btW.getSumRCSGBal(), tWTotWorth); // needed in TradeRecord SearchRecord
@@ -8643,8 +8653,8 @@ public class Assets {
           setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
           setStat(EM.TRADESTRATFIRSTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequestsFirst), 1);
           setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
-          setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
-          setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
+         // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
+         // setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
           setStat(EM.TRADEWORTHINCR, pors, clan, worthIncr, 1);
           setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
           setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
@@ -8685,8 +8695,8 @@ public class Assets {
           setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
           setStat(EM.TRADESTRATFIRSTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequestsFirst), 1);
           setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
-          setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
-          setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
+         // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
+         // setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
           setStat(EM.TRADEWORTHINCRPERCENT, pors, clan, worthIncrPercent, 1);
           setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
           setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
@@ -9165,6 +9175,10 @@ public class Assets {
         if(eM.dfe()) return 0.;
         // do growths of knowledge and each SubAsset
         doGrowth(aPre);
+         r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
+      c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+      s.sumGrades(); // sets s worth
+      g.sumGrades(); // sets g worth
         EM.wasHere = "CashFlow.endYear after doGrowth cccae" + ++cccae;
         gGrowW = new DoTotalWorths();
         sumTotWorth = gGrowW.getTotWorth();
@@ -9186,6 +9200,10 @@ public class Assets {
         EM.wasHere = "CashFlow yearEnd live after doMaintCost cccaf=" + ++cccaf;
         doTravCost(aPre);
         doGrowthCost(aPre);
+         r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
+      c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+      s.sumGrades(); // sets s worth
+      g.sumGrades(); // sets g worth
         //      DoTotalWorths syW, tW, gSwapW, gGrowW, gCostW, fyW;
         gCostW = new DoTotalWorths();
         sumTotWorth = gCostW.getTotWorth();  //after costs taken
@@ -10030,6 +10048,7 @@ public class Assets {
       lostTrade = false;
       newTradeYear2 = false;
       newTradeYear1 = false;
+      didCashFlowInit = false; // set true at aStartCashFlow
       fav = -4;
       oTradedEcons = new Econ[20];
       oTradedEconsNext = 0;
@@ -10666,6 +10685,10 @@ public class Assets {
       calcRawCosts(balances, rawUnitGrowths, rawGrowths, invMEff, invGEff, 3, 8 * defeat789, consumerReqMaintCosts10, reqMaintCosts10, consumerReqGrowthCosts10, reqGrowthCosts10, consumerMaintCosts10, maintCosts10, consumerTrav1YrCosts10, nTrav1Yr, travelCosts10, consumerRawGrowthCosts10, rawGrowthCosts10, s.work, lightYearsTraveled);
       lTitle = "yCalcRawCosts " + ec.name;
       histTitles(lTitle);
+      r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
+      c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+      s.sumGrades(); // sets worth
+      g.sumGrades(); // sets worth
 
       //   travelCosts10.setAmultV(nTrav1Yr, lightYearsTraveled);
       consumerTravelCosts10.setAmultV(consumerTrav1YrCosts10, lightYearsTraveled);
@@ -10719,6 +10742,10 @@ public class Assets {
       double mtgResults10[] = new double[40];
       histTitles("D$", "get needs process");
       mtgNeeds6 = getNeeds("mtgNeeds6", "goals and  nyear,fracGrowth", yphase, n, n < 2 && !ec.clearHist() ? History.debuggingMinor11 : History.loopMinorConditionals5, bals, maintCosts10, travelCosts10, rawGrowthCosts10, rawGrowths, reqMaintCosts10, reqGrowthCosts10, rawFertilities2, rawProspects2, mtCosts10, growthCosts10, mtgCosts10, growths, curMaintGoal, curGrowthGoal, eM.futGrowthFrac[pors][clan], eM.futGrowthYrMult[pors][clan], mtggNeeds6, mtNeeds6, mtgAvails6, mtGNeeds6, goalmtg1Needs6, goalmtg1Neg10);
+      r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
+      c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+      s.sumGrades(); // sets s worth
+      g.sumGrades(); // sets g worth
 
       histTitles("C%", "rtd yCalcRawCosts");
       growths.sendHist(hist, "C%");

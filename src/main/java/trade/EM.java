@@ -3880,6 +3880,45 @@ onceAgain:
   static final int WORTHIFRAC = ++e4;
   static final int WORTHINCR = ++e4;
   static final int TRADEWORTH = ++e4;
+  static final int CATWORTHINCR = ++e4;
+  static final int TRADEWORTHINCR = ++e4;
+  static final int GROWTHWORTHINCR = ++e4;
+  static final int COSTWORTHDECR = ++e4;
+  static final int WORTHINCRN0 = ++e4;
+  static final int WORTHINCRN1 = ++e4;
+  static final int WORTHINCRN2 = ++e4;
+  static final int WORTHINCRN3 = ++e4;
+  static final int GROWTHSN0 = ++e4;
+  static final int FERTILITYSN0 = ++e4;
+  static final int RCSGINCRN0 = ++e4;
+
+  static final int GROWTHSN1 = ++e4;
+  static final int FERTILITYSN1 = ++e4;
+  static final int RCSGINCRN1 = ++e4;
+
+  static final int GROWTHSN2 = ++e4;
+  static final int FERTILITYSN2 = ++e4;
+  static final int RCSGINCRN2 = ++e4;
+
+  static final int GROWTHSN3 = ++e4;
+  static final int FERTILITYSN3 = ++e4;
+  static final int RCSGINCRN3 = ++e4;
+  static final int DWORTHINCRN0 = ++e4;
+  static final int DGROWTHSN0 = ++e4;
+  static final int DFERTILITYSN0 = ++e4;
+  static final int DRCSGINCRN0 = ++e4;
+  static final int DWORTHINCRN1 = ++e4;
+  static final int DGROWTHSN1 = ++e4;
+  static final int DFERTILITYSN1 = ++e4;
+  static final int DRCSGINCRN1 = ++e4;
+  static final int DWORTHINCRN2 = ++e4;
+  static final int DGROWTHSN2 = ++e4;
+  static final int DFERTILITYSN2 = ++e4;
+  static final int DRCSGINCRN2 = ++e4;
+  static final int DWORTHINCRN3 = ++e4;
+  static final int DGROWTHSN3 = ++e4;
+  static final int DFERTILITYSN3 = ++e4;
+  static final int DRCSGINCRN3 = ++e4;
   static final int HIGHWORTH = ++e4;
   static final int LOWWORTH = ++e4;
   static final int MISCWORTH = ++e4;
@@ -3931,38 +3970,7 @@ onceAgain:
   static final int RCfrac = ++e4;
   static final int SGfrac = ++e4;
   static final int MISSINGNAME = ++e4;
-  static final int WORTHINCRN0 = ++e4;
-  static final int GROWTHSN0 = ++e4;
-  static final int FERTILITYSN0 = ++e4;
-  static final int RCSGINCRN0 = ++e4;
-  static final int WORTHINCRN1 = ++e4;
-  static final int GROWTHSN1 = ++e4;
-  static final int FERTILITYSN1 = ++e4;
-  static final int RCSGINCRN1 = ++e4;
-  static final int WORTHINCRN2 = ++e4;
-  static final int GROWTHSN2 = ++e4;
-  static final int FERTILITYSN2 = ++e4;
-  static final int RCSGINCRN2 = ++e4;
-  static final int WORTHINCRN3 = ++e4;
-  static final int GROWTHSN3 = ++e4;
-  static final int FERTILITYSN3 = ++e4;
-  static final int RCSGINCRN3 = ++e4;
-  static final int DWORTHINCRN0 = ++e4;
-  static final int DGROWTHSN0 = ++e4;
-  static final int DFERTILITYSN0 = ++e4;
-  static final int DRCSGINCRN0 = ++e4;
-  static final int DWORTHINCRN1 = ++e4;
-  static final int DGROWTHSN1 = ++e4;
-  static final int DFERTILITYSN1 = ++e4;
-  static final int DRCSGINCRN1 = ++e4;
-  static final int DWORTHINCRN2 = ++e4;
-  static final int DGROWTHSN2 = ++e4;
-  static final int DFERTILITYSN2 = ++e4;
-  static final int DRCSGINCRN2 = ++e4;
-  static final int DWORTHINCRN3 = ++e4;
-  static final int DGROWTHSN3 = ++e4;
-  static final int DFERTILITYSN3 = ++e4;
-  static final int DRCSGINCRN3 = ++e4;
+
   /*
         int[] worthIncrA = {EM.WORTHINCRN0,EM.WORTHINCRN1,EM.WORTHINCRN2,EM.WORTHINCRN3};
         int[] growthsA =  {EM.GROWTHSN0,EM.GROWTHSN1,EM.GROWTHSN2,EM.GROWTHSN3};
@@ -4174,10 +4182,9 @@ onceAgain:
   static final int TRADEOSOSR1 = ++e4;
   static final int TRADEOSOSR2 = ++e4;
   static final int TRADEOSOSR3 = ++e4;
-  static final int BEFORETRADEWORTH = ++e4;
-  static final int AFTERTRADEWORTH = ++e4;
+ // static final int BEFORETRADEWORTH = ++e4;
+  //static final int AFTERTRADEWORTH = ++e4;
   static final int TRADEWORTHINCRPERCENT = ++e4;
-  static final int TRADEWORTHINCR = ++e4;
   static final int TradeAcceptValuePerGoal = ++e4;
   static final int TradeRejectValuePerGoal = ++e4;
   static final int TradeLostValuePerGoal = ++e4;
@@ -4257,6 +4264,14 @@ onceAgain:
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
+       doRes(WORTHINCRN0,"AccWorthIncr","yearly increase in worth if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(WORTHINCRN1,"noAcc1WorInc","yearly increase in worth if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(WORTHINCRN2,"noAcc2WorInc","yearly increase in worth if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(WORTHINCRN3,"noAcc3WorInc","yearly increase in worth if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN0,"AccGrowths","yearly growth if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN1,"noAcc1Growths","yearly growth if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN2,"noAcc2Growths","yearly growth if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+    doRes(GROWTHSN3,"noAcc3Growths","yearly growth if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
     /*
       static final int HIGHWORTH = ++e4;
   static final int LOWWORTH = ++e4;
@@ -4270,7 +4285,7 @@ onceAgain:
    static final int DMISCHIGHWORTH = ++e4;
   static final int DMISCLOWWORTH = ++e4;
      */
-    doRes(TRADEWORTH, "Trade worth", "trade accepted Econs average yearly worth", 2, 2, 0, LIST7 | LIST15 | LIST16 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(TRADEWORTH, "TradeS worth", "trade accepted Econs  yearly worth", 2, 2, 0, LIST7 | LIST15 | LIST16 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(HIGHWORTH, "T high worth", "trade accepted high Econs average yearly worth", 2, 2, 0, LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LOWWORTH, "T low worth", "trade acceptedlow Econs average yearly worth", 2, 2, 0, LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
 
@@ -4312,14 +4327,7 @@ onceAgain:
         int[] fertilitiesA =  {EM.FERTILITYSN0,EM.FERTILITYSN1,EM.FERTILITYSN2,EM.FERTILITYSN3};
         int[] rcsgIncrA = {EM.RCSGINCRN0,EM.RCSGINCRN1,EM.RCSGINCRN2,EM.RCSGINCRN3};
   */
-    doRes(WORTHINCRN0,"AccWorthIncr","yearly increase in worth if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
-    doRes(WORTHINCRN1,"noAcc1WorInc","yearly increase in worth if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
-    doRes(WORTHINCRN2,"noAcc2WorInc","yearly increase in worth if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
-    doRes(WORTHINCRN3,"noAcc3WorInc","yearly increase in worth if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
-    doRes(GROWTHSN0,"AccGrowths","yearly growth if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
-    doRes(GROWTHSN1,"noAcc1Growths","yearly growth if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
-    doRes(GROWTHSN2,"noAcc2Growths","yearly growth if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
-    doRes(GROWTHSN3,"noAcc3Growths","yearly growth if trade not accepted for 3 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
+ 
     doRes(FERTILITYSN0,"AccFertility","fertility if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
     doRes(FERTILITYSN1,"noAcc1Fertility","fertility if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
     doRes(FERTILITYSN2,"noAcc2Fertility","fertility if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
@@ -4538,8 +4546,8 @@ onceAgain:
     doRes(YearTradeStrategicReceivePercentStrategicOffer, "YearStratReceive%StratGiven", "Year % of Strategic Received Per Strategic  Given");
     doRes(YearMaxStrategicReceivePercentStrategicOffer, "YearMaxStratReceive%StratGiven", "Year Max % of Strategic Received Per Strategic  Given");
     doRes(YearMinStrategicReceivePercentStrategicOffer, "YearMinStratReceive%StratGiven", "Year Min % of Strategic Received Per Strategic  Given");
-    doRes(BEFORETRADEWORTH, "BeforeTradeWorth", "Worth before A trade");
-    doRes(AFTERTRADEWORTH, "AfterTradeWorth", "Worth after a trade");
+ //   doRes(BEFORETRADEWORTH, "BeforeTradeWorth", "Worth before A trade");
+   // doRes(AFTERTRADEWORTH, "AfterTradeWorth", "Worth after a trade");
     doRes(TRADEWORTHINCRPERCENT, "%TradeWorthIncr", "% increase in Worth after trade", 2, 3, 2,  LIST41 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
    doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 3, 2,  LIST41 | THISYEAR | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0,0);
     doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST41 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST41 | CUMAVE | BOTH | SKIPUNSET, 0L);
