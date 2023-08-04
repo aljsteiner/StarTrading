@@ -151,13 +151,46 @@ public class ARow {
       }
     }
   }
-  
+  /** test value for illegal double value using E.dTrouble
+   * issue error if E.debugDouble
+   * 
+   * @param trouble  value to be tested if E.debugDouble
+   * @return valid trouble
+   */
   double dTrouble(Double trouble){
      return E.doubleTrouble(trouble,"");
   }
   
+  /** test value for illegal double value using E.dTrouble
+   * issue error if E.debugDouble
+   * 
+   * @param trouble  value to be tested if E.debugDouble
+   * @return valid trouble
+   */
   double doubleTrouble(Double trouble){
  return E.doubleTrouble(trouble,"");
+    }
+    
+     /** test value for illegal double value using E.dTrouble
+   * issue error if E.debugDouble
+   * 
+   * @param trouble  value to be tested if E.debugDouble
+   * @param cmt comment with trouble
+   * @return valid trouble
+   */
+  double dTrouble(Double trouble,String cmt){
+     return E.doubleTrouble(trouble,cmt);
+  }
+  
+  /** test value for illegal double value using E.dTrouble
+   * issue error if E.debugDouble
+   * 
+   * @param trouble  value to be tested if E.debugDouble
+   * 
+   * @return valid trouble
+   */
+  double doubleTrouble(Double trouble,String cmt){
+ return E.doubleTrouble(trouble,cmt);
     }
 
   /**

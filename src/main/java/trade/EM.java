@@ -981,7 +981,11 @@ class EM {
    * @return string of the value
    */
   static public String mf(int v) {
-    return v + ""; // force v into a string
+    boolean t = mfShort;
+    mfShort = true;
+    String rt =  mf(v + 0.);
+    mfShort = t;
+    return rt;
   }
 
   /**
@@ -1004,18 +1008,24 @@ class EM {
    * @return desc + mf(v)
    */
   static public String mf2(String desc, Double v) {
-    return " " + desc + mf2(v);
+    boolean t = mfShort;
+    mfShort = true;
+    String rt = " " + desc + mf(v);
+    mfShort = t;
+    return rt;
   }
 
+  static boolean mfShort = false;
   /**
-   * format the Double value to a 9 char string
+   * format the Double value to a x char string
+   * if myWidth > 1800 make max 15 char string
    *
    * @param v the input value
    * @return value as a string
    */
   static public String mf(Double v) {
     if (v.isNaN()) {
-      return "# " + v;
+      return "# "+ v;
     }
     // infinite returns inf sign
     NumberFormat dFrac = NumberFormat.getNumberInstance();
@@ -1023,28 +1033,133 @@ class EM {
     NumberFormat exp = new DecimalFormat("0.###E0");
     if (v > -999999. && (v % 1 > E.NZERO) && v < 999999. && (v % 1 < E.PZERO)) {  //very close to zero remainder
       return whole.format(v);
-    }
-    if (v == .0 || v == -0) {  // actual zero
+    } else 
+      if(mfShort || myWidth <1190){ // 7 characters
+      if ((v < 0.0 && v > -.0000001) || (v > .000001 && v < 1.0)) {
       dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(1);
+      dFrac.setMaximumFractionDigits(5);
       return dFrac.format(v);
-    } else if ((v > -999999. && v < -.001) || (v > .001 && v < 999999.)) {
+      } else  if ((v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(3);
       return dFrac.format(v);
-    } else if ((v > -9999999. && v < -.001) || (v > .001 && v < 9999999.)) {
+    } else if ((v > -9999. && v < -0.0) || (v > .001 && v < 9999.)) {
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(2);
       return dFrac.format(v);
-    } else if ((v > -99999999. && v < -.001) || (v > .001 && v < 99999999.)) {
+    } else if ((v > -99999. && v < -0.0) || (v > .001 && v < 99999.)) {
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(1);
       return "w" + dFrac.format(v);
-    } else if ((v > -999999999. && v < -.001) || (v > .001 && v < 999999999.)) {
+    } else if ((v > -999999. && v < -0.00) || (v > .001 && v < 999999.)) {
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(0);
       return dFrac.format(v);
-    } else if ((v > -.001 && v < -.0000001) || (v > .0000001 && v < .001)) {
+    } else {
+      return exp.format(v);
+    } 
+    }
+    else if (v == .0 || v == -0) {  // actual zero
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(1);
+      return dFrac.format(v);
+    } else
+    if(myWidth > 1800){ // 15 characters
+      if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(7);
+      return dFrac.format(v);
+      } else  if ((v > -999999999999. && v < -0.00) || (v > .001 && v < 999999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(3);
+      return dFrac.format(v);
+    } else if ((v > -9999999999999. && v < -0.0) || (v > .001 && v < 9999999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(2);
+      return dFrac.format(v);
+    } else if ((v > -99999999999999. && v < -0.0) || (v > .001 && v < 99999999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(1);
+      return "w" + dFrac.format(v);
+    } else if ((v > -999999999999999. && v < -0.00) || (v > .001 && v < 999999999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(0);
+      return dFrac.format(v);
+    } else {
+      return exp.format(v);
+    } 
+    } else if(myWidth > 1500){ // 12 characters
+      if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(7);
+      return dFrac.format(v);
+      } else  if ((v > -99999999. && v < -0.00) || (v > .001 && v < 99999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(3);
+      return dFrac.format(v);
+    } else if ((v > -999999999. && v < -0.0) || (v > .001 && v < 999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(2);
+      return dFrac.format(v);
+    } else if ((v > -9999999999. && v < -0.0) || (v > .001 && v < 9999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(1);
+      return "w" + dFrac.format(v);
+    } else if ((v > -99999999999. && v < -0.00) || (v > .001 && v < 99999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(0);
+      return dFrac.format(v);
+    } else {
+      return exp.format(v);
+    } 
+    } else if(myWidth > 1200){  // 9 numbers
+      if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(7);
+      return dFrac.format(v);
+      } else if ((v > -99999. && v < 0.0) || (v > .001 && v < 99999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(3);
+      return dFrac.format(v);
+    } else if ((v > -999999. && v < 0.0) || (v > .001 && v < 999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(2);
+      return dFrac.format(v);
+    } else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(1);
+      return "w" + dFrac.format(v);
+    } else if ((v > -99999999. && v < 0.0) || (v > .001 && v < 99999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(0);
+      return dFrac.format(v);
+    
+    } else {
+      return exp.format(v);
+    } 
+    
+    } else 
+     if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(7);
+      return dFrac.format(v);
+      } else  if ((v > -999999. && v < 0.0) || (v > .001 && v < 999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(3);
+      return dFrac.format(v);
+    } else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(2);
+      return dFrac.format(v);
+    } else if ((v > -99999999. && v < 0.0) || (v > .001 && v < 99999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(1);
+      return "w" + dFrac.format(v);
+    } else if ((v > -999999999. && v < 0.0) || (v > .001 && v < 999999999.)) {
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(0);
+      return dFrac.format(v);
+    } else if ((v > 0.0 && v < -.0000001) || (v > .0000001 && v < .001)) {
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(7);
       return dFrac.format(v);
@@ -1060,39 +1175,11 @@ class EM {
    * @return value as a string
    */
   static public String mf2(Double v) {
-    if (v.isNaN()) {
-      return "# " + v;
-    }
-    // infinite returns inf sign
-    if (!E.outputLess) {  // ignore the need for less than 9 char out
-      return mf(v);
-    } else {
-      NumberFormat dFrac = NumberFormat.getNumberInstance();
-      NumberFormat exp = new DecimalFormat("0.###E0");
-      if (v == .0 || v == -0) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(1);
-        return dFrac.format(v);
-      } else if ((v > -.001 && v < -.000001) || (v > .0000001 && v < .001)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(6);
-        return dFrac.format(v);
-      } else if ((v > -99999. && v < -.001) || (v > .001 && v < 99999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(2);
-        return dFrac.format(v);
-      } else if ((v > -999999. && v < -.001) || (v > .001 && v < 999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(2);
-        return dFrac.format(v);
-      } else if ((v > -9999999. && v < -.001) || (v > .001 && v < 9999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(0);
-        return dFrac.format(v);
-      } else {
-        return exp.format(v);
-      }
-    }
+    boolean t = mfShort;
+    mfShort = true;
+    String rt = mf(v);
+    mfShort = t;
+    return rt;
   }
   
   /**
@@ -2101,7 +2188,7 @@ class EM {
   static final double[][] mStaffGrowth = {{.01, 6.}, {0.002, .9}};
   static double[] staffGrowthDecay = {.0006, .0006}; //per unit
   static final double[][] mStaffGrowthDecay = {{.00003, .009}, {.00003, .009}};
-  static double[] travelGrowth = {.0015, .0025}; // this multiplies against work
+  static double[] travelGrowth = {.0015, .0005}; // this multiplies against work
   static final double[][] mTravelGrowth = {{.0001, .001}, {.0001, .01}}; //
   static double[] guestsGrowth = {0.000001, .00000001};
   static final double[][] mGuestsGrowth = {{0.0000001, 0.00009}, {0.000000001, 0.0000009}};
@@ -3860,6 +3947,16 @@ onceAgain:
   static int e4 = -1;
   static final int SCORE = ++e4;
   static final int LIVEWORTH = ++e4;
+  static final int STARTWORTH = ++e4;
+  // static final int TESTWORTH3 = ++e4;
+  static final int WORTHIFRAC = ++e4;
+  static final int WORTHINCR = ++e4;
+    static final int TRADEWORTH = ++e4;
+        static final int TRADEWORTHINCR = ++e4;   
+  static final int CATWORTHINCR = ++e4;
+  static final int CUMCATWORTH = ++e4;
+  static final int GROWTHWORTHINCR = ++e4;
+  static final int COSTWORTHDECR = ++e4;
   static final int TRADELASTGAVE = ++e4;
   static final int TRADENOMINALGAVE = ++e4;
   static final int TRADESTRATLASTGAVE = ++e4;
@@ -3875,19 +3972,13 @@ onceAgain:
   static final int MINRCSG = ++e4;
 
   //static final int TRADESTRATEGICGAVE = ++e4;
-  static final int STARTWORTH = ++e4;
-  // static final int TESTWORTH3 = ++e4;
-  static final int WORTHIFRAC = ++e4;
-  static final int WORTHINCR = ++e4;
-  static final int TRADEWORTH = ++e4;
-  static final int CATWORTHINCR = ++e4;
-  static final int TRADEWORTHINCR = ++e4;
-  static final int GROWTHWORTHINCR = ++e4;
-  static final int COSTWORTHDECR = ++e4;
+  
   static final int WORTHINCRN0 = ++e4;
   static final int WORTHINCRN1 = ++e4;
   static final int WORTHINCRN2 = ++e4;
   static final int WORTHINCRN3 = ++e4;
+  static final int GROWTHS = ++e4;
+  static final int RAWUNITGROWTHS = ++e4;
   static final int GROWTHSN0 = ++e4;
   static final int FERTILITYSN0 = ++e4;
   static final int RCSGINCRN0 = ++e4;
@@ -4246,7 +4337,7 @@ onceAgain:
   void defRes() {
 
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3,LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);   
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9 | THISYEAR  | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEAR | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR  | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEAR | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR |  SKIPUNSET);
     doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given strategic worth", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET,   LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth not strategic worth given in trade ", 2, 2, 2, LIST40  | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET,  ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURUNITS | CUR | BOTH | SKIPUNSET,0L);
    doRes(TRADESTRATLASTGAVE, "TradeStrategicLastGave", "Percent nominal amount given in trade per sumrcsg may be used for scoreing", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
@@ -4256,14 +4347,27 @@ onceAgain:
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0,  LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
  //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(INCRRCSG, "%incr rcsg", "this years incr rcsg Value  year end rcsg - start rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, LIST7 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
+    doRes(INCRRCSG, "%incr rcsg", "this years incr rcsg Value  year end rcsg - start rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17  | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
     doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
-    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET,LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET,LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(CUMCATWORTH,"CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET,LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(  GROWTHS, "GrOWTH", "growth for this year before cost reduction", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET,LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+     doRes(  RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth  this year before cost reduction", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET,LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+      doRes(  GROWTHWORTHINCR, "GrthIncWorth", "worth increase this year from growth before cost reduction", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET,LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after growth this year", 2, 2, 0, LIST0 | LIST1 |LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET,LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+     /*
+  static final int TRADEWORTH = ++e4;
+  static final int CATWORTHINCR = ++e4;
+
+  static final int GROWTHWORTHINCR = ++e4;
+  static final int COSTWORTHDECR = ++e4;
+  */
        doRes(WORTHINCRN0,"AccWorthIncr","yearly increase in worth if trade accepted",2,2,2,LIST15 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
     doRes(WORTHINCRN1,"noAcc1WorInc","yearly increase in worth if trade not accepted for 1 year",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
     doRes(WORTHINCRN2,"noAcc2WorInc","yearly increase in worth if trade not accepted for 2 years",2,2,2,LIST12 | CURAVE |BOTH | SKIPUNSET, 0,0,0);
@@ -4936,10 +5040,10 @@ onceAgain:
    * @param detail detailed description available by clicking description
    * @param depth number of successive years displayed 1-6 ydepth=1
    * @param fracs number of fraction digits
-   * @param lock0 0'th lock to match the offered keys
-   * @param lock1 1'th lock to match offered keys may be empty
-   * @param lock2 2nd lock to match offered keys, may be empty
-   * @param lock3 3rd lock to match offered keys may be empty
+   * @param lock0 0'th lock to match the offered keys consisting of LIST- pages to contain the result, types of display and skip types
+   * @param lock1 1'th alternative set of matches
+   * @param lock2 2nd alternative set of matches
+   * @param lock3 3rd alternative set of matches
    *
    * @return rN the index of a vector of result integer index into
    * resI,resV,resS
@@ -6638,7 +6742,7 @@ onceAgain:
    * @return string with possible % and shorter
    */
   private String valForTable(double val) {
-    return (yesPercent ? mf2(val) + "%" : mf2(val));
+    return (yesPercent ? mf(val) + "%" : mf(val));
   }
 
   /**

@@ -44,16 +44,20 @@ public class ABalRows extends A6Rowa {
   static final int A02[] = {0,2};
   static final int A03[] = {0,1,2,3};
   static int balz = 0;
+  //static String[] titls 
   static final int BALANCESIX = balz += LSUMS;
   static final int MCOSTSIX = balz += LSUBS; // 6 mtcosts are travel costs of ship
   static final int TCOSTSIX = balz += LSUBS;  //10
   static final int GROWTHSIX = balz += LSUBS; //14
+  static final int PREVWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
+  static final int GROWTHWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
   static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
+  static final int BONUSWHORTHIX = balz += LSUBS; //16 L4
   static final int BONUSYEARSIX = balz += LSUBS; //16 L4
- // static int bonusUnitsIx = BONUSYEARSIX + lsubs;//20 L4
   static final int BONUSUNITSIX = balz += LSUBS;//24 L4
   static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
-  static final int CUMULATIVEUNITBONUSIX = balz += LSUBS;//32 L4
+  static final int CUMBONUSWORTHIX = balz += LSUBS;//32 L4
+  static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
   static final int CUMULATIVEUNITDECAYIX = balz += LSUBS; //36 L4
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
   static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //44
@@ -463,38 +467,6 @@ public class ABalRows extends A6Rowa {
    */
   void listRawYearlyUnitGrowths(int blev, String apre, int alev) {
     sendHist(RAWYEARLYUNITGROWTHSIX, RAWYEARLYUNITGROWTHSIX + 3, blev, apre, alev);
-  }
-
-  /**
-   * get the Bonus Years references of bals
-   *
-   * @param lev level of the new A6Row
-   * @param titl titl of the new A6Row
-   * @return the selected bals references in an A6Row
-   */
-  A6Row getBonusYears(int lev, String titl) {
-    return use4(BONUSYEARSIX, lev, titl);
-  }
-
-  /**
-   * get reference to a single ARow corresponding to the index
-   *
-   * @param m index of the BonusYears ARow s
-   * @return growth ARow for index m
-   */
-  ARow getBonusYearsRow(int m) {
-    return A[BONUSYEARSIX + m];
-  }
-
-  /**
-   * list the bonus years rows in bals
-   *
-   * @param blev highest level that will be listed
-   * @param apre prefix of listed rows
-   * @param alev level of listed rows
-   */
-  void listBonusYears(int blev, String apre, int alev) {
-    sendHist(BONUSYEARSIX, BONUSYEARSIX + 3, blev, apre, alev);
   }
 
   /**

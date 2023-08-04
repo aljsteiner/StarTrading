@@ -492,7 +492,7 @@ public class A6Rowa {
   }
 
   public A6Rowa set(A6Rowa aa) {
-    int t = balances ? tbal : costs ? tcost : tnone;
+    int t = aa.balances ? tbal : aa.costs ? tcost : tnone;
     for (int m = 0; m < lA; m++) {
       if (aa.A[m] != null) {
         this.A[m] = new ARow(ec);
@@ -1272,6 +1272,20 @@ public class A6Rowa {
     }
     return this;
   }
+  
+  /** copy 4 rows of values from rows biasA to biasB
+   * 
+   * @param biasA the index of the first row of the sources
+   * @param biasB the index of the second row of targets
+   */
+  void copy4AtoB(int biasA,int biasB){
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        A[biasA+rowIx].set(secIx,A[biasB+rowIx].get(secIx));
+      }
+    }
+  }
+          
 
   /**
    * set an A6Rowa instance to the references r0-r5, use this for worths, use
@@ -1310,17 +1324,17 @@ public class A6Rowa {
   }
 
   /**
-   * set internal ARow m to ARow B testing for a Double error
+   * set internal row rowIx to ARow B testing for a Double error
    *
-   * @param m number of row to be set
+   * @param rowIx number of row to be set
    * @param b ARow to be set into that row of object
    * @return ARow B
    */
-  public ARow set2(int m, ARow b) {
-    if (m < 6) {
-      assert m > 1 : "tried to set" + m + " sum balance not working or reserve";
+  public ARow set2(int rowIx, ARow b) {
+    if (rowIx < 6) {
+      assert rowIx > 1 : "tried to set" + rowIx + " sum balance not working or reserve";
     }
-    return A[m].set2(b, this.titl, m);
+    return A[rowIx].set2(b, this.titl, rowIx);
   }
 
   /**

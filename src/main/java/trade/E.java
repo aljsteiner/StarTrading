@@ -253,8 +253,9 @@ static StarTrader st;
   static final int lsums = 2;// rc sg
   static final int LSUMS = lsums;
   static final int BALANCESIX = lsums;
-  static final int lsubs = 4; // r c s g
-  static final int LSUBS = lsubs;
+  static final int LSUBS = 4; // r c s g
+  static final int lsubs = LSUBS;
+  static final int ASUBS[] = {0,1,2,3};
 
   public enum sectors {
     LIFE, STRUCT, ENERGY, PROPEL, DEFENSE, GOV, COLONIST

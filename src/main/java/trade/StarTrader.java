@@ -1077,7 +1077,7 @@ public class StarTrader extends javax.swing.JFrame {
     gameTextField0.setText("tb set");
     gameTextField0.setMaximumSize(new java.awt.Dimension(300, 45));
     gameTextField0.setMinimumSize(new java.awt.Dimension(100, 35));
-    gameTextField0.setPreferredSize(new java.awt.Dimension(150, 35));
+    gameTextField0.setPreferredSize(new java.awt.Dimension(250, 35));
     gameTextField0.setRequestFocusEnabled(false);
     gameTextField0.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -6007,6 +6007,7 @@ public class StarTrader extends javax.swing.JFrame {
         E.sysmsg("resiz3 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
         this.setSize(myWidth, myHeight);
         controlPanels.setSize(myWidth, myHeight);
+        EM.myWidth = myWidth;
         stats.setMaximumSize(new Dimension(myW2, (int) (myHeight * 1.50)));
         stats.setMinimumSize(new Dimension((int) (myWidth * .9), (int) (myHeight * .9)));
         stats.setPreferredSize(new Dimension(myWidth, myHeight));
