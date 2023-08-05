@@ -9163,7 +9163,15 @@ public class Assets {
         // do growths of knowledge and each SubAsset
         setStat(EM.GROWTHS, pors, clan, bals.sum4(ABalRows.GROWTHSIX), 1);
         setStat(EM.RAWUNITGROWTHS, pors, clan, bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX), 1);
-         r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
+        setStat(EM.RGROWTH, pors, clan, bals.rowSum(ABalRows.GROWTHSIX), 1);
+        setStat(EM.CGROWTH, pors, clan, bals.rowSum(ABalRows.GROWTHSIX+1), 1);
+        setStat(EM.SGROWTH, pors, clan, bals.rowSum(ABalRows.GROWTHSIX+2), 1);
+        setStat(EM.GGROWTH, pors, clan, bals.rowSum(ABalRows.GROWTHSIX+3), 1);
+        setStat(EM.RAWRGROWTH, pors, clan, bals.rowSum(ABalRows.RAWYEARLYUNITGROWTHSIX), 1);
+        setStat(EM.RAWCGROWTH, pors, clan, bals.rowSum(ABalRows.RAWYEARLYUNITGROWTHSIX+1), 1);
+        setStat(EM.RAWSGROWTH, pors, clan, bals.rowSum(ABalRows.RAWYEARLYUNITGROWTHSIX+2), 1);
+        setStat(EM.RAWGGROWTH, pors, clan, bals.rowSum(ABalRows.RAWYEARLYUNITGROWTHSIX+3), 1);
+      r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
       c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
       s.sumGrades(); // sets s worth
       g.sumGrades(); // sets g worth
@@ -10424,8 +10432,7 @@ public class Assets {
         ARow kMaint = new ARow(ec);
         // set same ARow twice
         bals.set(ABalRows.GROWTHSIX+ix,i,sys[ix].rawGrowth.set(i, rawG = s.work.get(i)
-                        * sys[ix].rawUnitGrowth.get(i)
-                        * cRand(i + ix + 10)));
+       * bals.get(ABalRows.RAWYEARLYUNITGROWTHSIX,i) * cRand(i + ix + 10)));                                  //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
 
         // j loops across services that as a sum are used by consumers
         for (j = 0; j < E.lsecs; j++) {
