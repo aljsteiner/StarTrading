@@ -2222,9 +2222,9 @@ class EM {
   //3/15/15 more staff  public static double[] fracPriorityInGrowth = {.5, .5};  //mult priority in growth calc
   static Double minRand = .1;
   static double[] fracBiasInGrowth = {.22, .002};
-  static double[][] mFracBiasInGrowth = {{.02, .9}, {.02, .9}};
-  static double[] fracPriorityInGrowth = {.6, .5};  //mult priority in growth calc and percent to frac
-  static final double[][] mFracPriorityInGrowth = {{.1, .9}, {.1, .9}};
+  static double[][] mFracBiasInGrowth = {{.02, .9}, {.0002, .9}};
+  static double[] fracPriorityInGrowth = {.6, .1};  //mult priority in growth calc and percent to frac
+  static final double[][] mFracPriorityInGrowth = {{.01, .9}, {.001, .9}};
   static double[] resourceGrowth = {3.7, .0002}; // growth per work
   static final double[][] mResourceGrowth = {{.01, 6.}, {0.00002, 2.9}};
   // decay mining cumulative related to each years growth
@@ -4025,9 +4025,9 @@ onceAgain:
   static int rende4;
   static int e4 = -1;
   static final int SCORE = ++e4;
-  static final int LIVEWORTH = ++e4;
   static final int STARTWORTH = ++e4;
-  // static final int TESTWORTH3 = ++e4;
+  static final int LIVEWORTH = ++e4;
+  static final int DIED = ++e4;
   static final int WORTHIFRAC = ++e4;
   static final int WORTHINCR = ++e4;
   static final int TRADEWORTH = ++e4;
@@ -4049,12 +4049,16 @@ onceAgain:
   static final int RAWCGROWTH = ++e4;
   static final int RAWSGROWTH = ++e4;
   static final int RAWGGROWTH = ++e4;
+    static final int RAWURGROWTH = ++e4;
+  static final int RAWCUGROWTH = ++e4;
+  static final int RAWSUGROWTH = ++e4;
+  static final int RAWGUGROWTH = ++e4;
   static final int COSTWORTHDECR = ++e4;
   static final int TRADELASTGAVE = ++e4;
   static final int TRADENOMINALGAVE = ++e4;
   static final int TRADESTRATLASTGAVE = ++e4;
   static final int WTRADEDINCRMULT = ++e4;
-  static final int DIED = ++e4;
+
   static final int BOTHCREATE = ++e4;
   static final int LIVERCSG = ++e4;
   static final int INCRRCSG = ++e4;
@@ -4454,6 +4458,10 @@ onceAgain:
     doRes(RAWCGROWTH, "C growth", "C rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(RAWSGROWTH, "S growth", "S rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(RAWGGROWTH, "G growth", "G rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET,  LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+     doRes(RAWRUGROWTH, "R growth", "R rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RAWCUGROWTH, "C growth", "C rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RAWSUGROWTH, "S growth", "S rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RAWGUGROWTH, "G growth", "G rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET,  LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after growth this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     /*
   static final int TRADEWORTH = ++e4;

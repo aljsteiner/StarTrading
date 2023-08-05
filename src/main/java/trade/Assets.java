@@ -3998,13 +3998,13 @@ public class Assets {
           growthFrac = fracGrowths.set(secIx, (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors]);
           double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.get(secIx) + (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
           
-          double dYrPotentialUnitGrowth = rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]);
+          double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx,rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]));
           double dRawYearlyUnitGrowth = rawYearlyUnitGrowth.set(secIx,dYrPotentialUnitGrowth - cumulativeUnitDecay.get(secIx));
           double dPotentialSumUnitGrowth = dRawYearlyUnitGrowth + dBonusYearUnitGrowth;
           double dExcessSumUnitGrowth = dPotentialSumUnitGrowth - dYrPotentialUnitGrowth * EM.maxFracBonusGrowth[pors];
           double dLimitedBonusYearUnitGrowth = limitedBonusYearlyUnitGrowth.set(secIx,dExcessSumUnitGrowth > 0.0 ? dExcessSumUnitGrowth : 0.0);
          // limitedBonusYearlyUnitGrowth.set(secIx,dLimitedBonusYearUnitGrowth);
-          double drawUnitGrowth = rawUnitGrowth.set(secIx,dRawYearlyUnitGrowth + dLimitedBonusYearUnitGrowth);
+          double drawUnitGrowth = ,rawUnitGrowth.set(secIx,dRawYearlyUnitGrowth + dLimitedBonusYearUnitGrowth);
           
            double dYearlyBonusGrowthFrac = bals.set(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx, secIx,dLimitedBonusYearUnitGrowth/drawUnitGrowth );
           // doub)
@@ -4020,7 +4020,7 @@ public class Assets {
            * raw unit growth in ships, is dependent on lightYearsTraveled raw growth
            * for planets dependent on staff work
            */
-          bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx,rawUValue = rawUnitGrowth.set(secIx, (rg1.set(secIx, (sstaff ? rg3.set(secIx, lightYearsTraveled * eM.travelGrowth[E.S]) : 1.) * rawSectorPriorityUnitGrowth.get(secIx)))));
+          rawUValue = bals.set(ABalRows.RAWUNITGROWTHSIX + sIx, secIx,rawUnitGrowth.set(secIx, (rg1.set(secIx, (sstaff ? rg3.set(secIx, lightYearsTraveled * eM.travelGrowth[E.S]) : 1.) * rawSectorPriorityUnitGrowth.get(secIx))));
           //raw growth is calculated  in Assets.CashFlow.calcRawCosts
          // double dRawGrowthValue = rawGrowth.set(secIx, s.work.get(secIx) * rawUValue * cRand(secIx + 4)*1.5);
     
@@ -4046,7 +4046,7 @@ public class Assets {
           }
         }//end for on secIx
 
-        bals.set2(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx,rawUnitGrowth);
+        bals.set2(ABalRows.RAWUNITGROWTHSIX + sIx,rawUnitGrowth);
         String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
         String[] bonusYearlyUnitGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
         int[] depreciations = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
@@ -9171,6 +9171,10 @@ public class Assets {
         setStat(EM.RAWCGROWTH, pors, clan, bals.rowSum(ABalRows.RAWYEARLYUNITGROWTHSIX+1), 1);
         setStat(EM.RAWSGROWTH, pors, clan, bals.rowSum(ABalRows.RAWYEARLYUNITGROWTHSIX+2), 1);
         setStat(EM.RAWGGROWTH, pors, clan, bals.rowSum(ABalRows.RAWYEARLYUNITGROWTHSIX+3), 1);
+         setStat(EM.RAWRUGROWTH, pors, clan, bals.rowSum(ABalRows.RAWUNITGROWTHSIX), 1);
+        setStat(EM.RAWCUGROWTH, pors, clan, bals.rowSum(ABalRows.RAWUNITGROWTHSIX+1), 1);
+        setStat(EM.RAWSUGROWTH, pors, clan, bals.rowSum(ABalRows.RAWUNITGROWTHSIX+2), 1);
+        setStat(EM.RAWGUGROWTH, pors, clan, bals.rowSum(ABalRows.RAWUNITGROWTHSIX+3), 1);
       r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
       c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
       s.sumGrades(); // sets s worth

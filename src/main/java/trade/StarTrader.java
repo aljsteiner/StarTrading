@@ -8010,6 +8010,8 @@ public class StarTrader extends javax.swing.JFrame {
       }
     });
   }
+  
+  
 
   /**
    * this string holds pointers to longer explanations for given results

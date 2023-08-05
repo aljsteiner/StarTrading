@@ -59,6 +59,7 @@ public class ABalRows extends A6Rowa {
   static final int CUMBONUSWORTHIX = balz += LSUBS;//32 L4
   static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
   static final int CUMULATIVEUNITDECAYIX = balz += LSUBS; //36 L4
+  static final int RAWYUNITGROWTHSIX = balz += LSUBS; //40
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
   static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //44
   static final int RAWGROWTHSIX = balz += LSUBS; //48 
