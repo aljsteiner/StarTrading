@@ -55,12 +55,14 @@
             </properties>
         </action>
          <action>
-            <actionName>CUSTOM-testb</actionName>
-            <displayName>testb</displayName>
-            <packagings>
+            <actionName>CUSTOM-testc</actionName>
+            <displayName>testc</displayName>
+           <packagings>
                 <packaging>jar</packaging>
             </packagings>
+            <preAction>build-with-dependencies</preAction>
             <goals>
+                <goal>clean</goal>
                 <goal>compile</goal>
                 <goal>process-classes</goal>
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
@@ -104,9 +106,9 @@
             <properties>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
+                <exec.vmArgs>-eac -Xmx6g</exec.vmArgs>
                 <exec.appArgs>"test"</exec.appArgs>
-                <exec.mainClass>trade.TestStarTraderTest</exec.mainClass>
+                <exec.mainClass>trade.StarTraderTesta</exec.mainClass>
               <vertx.timeout>9999</vertx.timeout> 
             </properties>
         </action>
@@ -313,7 +315,7 @@
             <properties>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.vmArgs>-eac -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"run5"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
             </properties>

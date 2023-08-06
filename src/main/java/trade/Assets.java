@@ -3554,7 +3554,7 @@ public class Assets {
         aName = "resource";
         other = staff;
         oPartner = guests;
-        bals.set2(ABalRows.CURWORTHSIX, worth);
+        worth = bals.getRow(ABalRows.CURWORTHSIX+0);
 
         initSubAsset(sIx, reserve, partner);
         // at start of econ, allocate resources according to ySectorPriorityYr
@@ -3569,7 +3569,7 @@ public class Assets {
 
       void initCargo(int sIx, boolean reserve, SubAsset partner, double resources) {
         aName = "cargo";
-        bals.set2(ABalRows.CURWORTHSIX+1, worth);
+        worth = bals.getRow(ABalRows.CURWORTHSIX+1);;
         initSubAsset(sIx, reserve, partner);
         sstaff = false;
         other = guests;
@@ -3586,7 +3586,7 @@ public class Assets {
 
       void initStaff(int asIx, boolean reserve, SubAsset partner, double initCol) {
         aName = "staff";
-        bals.set2(ABalRows.CURWORTHSIX+2, worth);
+        worth = bals.getRow(ABalRows.CURWORTHSIX+2);
         initSubAsset(asIx, reserve, partner);
         sstaff = true;
         other = resource;
@@ -3623,7 +3623,7 @@ public class Assets {
       // Assets.CashFlow.SubAsset
       void initGuests(int sIx, boolean reserve, SubAsset partner, double acolonists) {
         aschar = "guests";
-        bals.set2(ABalRows.CURWORTHSIX+3, worth);
+        worth = bals.getRow(ABalRows.CURWORTHSIX+3);
         initSubAsset(sIx, reserve, partner);
         sstaff = true;
         other = cargo;
@@ -3670,7 +3670,8 @@ public class Assets {
         this.partner = apartner;
 
         // make sure balance
-        balances.A[asIx + 2] = balance = bals.getRow(ABalRows.BALANCESIX + asIx);
+        balances.A[asIx + 2] = sys[asIx].balance = bals.getRow(ABalRows.BALANCESIX + asIx);
+        balances.aCnt[asIx + 2]++;
         sys[asIx].growth = growth = growths.A[2 + asIx] = bals.getRow(GROWTHSIX + asIx);
         growths.aCnt[2 + asIx]++;
         //  growth = bals.getRow(ABalRows.GROWTHSIX + asIx);
@@ -3680,7 +3681,7 @@ public class Assets {
         cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDECAYIX + asIx);
         cumUnitBonus = bals.getRow(ABalRows.CUMUNITBONUSIX + asIx);
         bonusUnitGrowth = bals.getRow(ABalRows.BONUSUNITSIX + asIx);
-       // bonusYears = bals.getRow(ABalRows.BONUSYEARSIX + asIx);
+        bonusYears = bals.getRow(ABalRows.BONUSYEARSIX + asIx);
         rawYearlyUnitGrowth = bals.getRow(ABalRows.RAWYEARLYUNITGROWTHSIX + asIx);
         yearlyBonusGrowthFrac = bals.getRow(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + asIx);
         rawGrowth = bals.getRow(ABalRows.RAWGROWTHSIX + asIx);
@@ -4004,7 +4005,7 @@ public class Assets {
           double dExcessSumUnitGrowth = dPotentialSumUnitGrowth - dYrPotentialUnitGrowth * EM.maxFracBonusGrowth[pors];
           double dLimitedBonusYearUnitGrowth = limitedBonusYearlyUnitGrowth.set(secIx,dExcessSumUnitGrowth > 0.0 ? dExcessSumUnitGrowth : 0.0);
          // limitedBonusYearlyUnitGrowth.set(secIx,dLimitedBonusYearUnitGrowth);
-          double drawUnitGrowth = ,rawUnitGrowth.set(secIx,dRawYearlyUnitGrowth + dLimitedBonusYearUnitGrowth);
+          double drawUnitGrowth = rawUnitGrowth.set(secIx,dRawYearlyUnitGrowth + dLimitedBonusYearUnitGrowth);
           
            double dYearlyBonusGrowthFrac = bals.set(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx, secIx,dLimitedBonusYearUnitGrowth/drawUnitGrowth );
           // doub)
@@ -4020,7 +4021,7 @@ public class Assets {
            * raw unit growth in ships, is dependent on lightYearsTraveled raw growth
            * for planets dependent on staff work
            */
-          rawUValue = bals.set(ABalRows.RAWUNITGROWTHSIX + sIx, secIx,rawUnitGrowth.set(secIx, (rg1.set(secIx, (sstaff ? rg3.set(secIx, lightYearsTraveled * eM.travelGrowth[E.S]) : 1.) * rawSectorPriorityUnitGrowth.get(secIx))));
+          rawUValue = bals.set(ABalRows.RAWUNITGROWTHSIX + sIx, secIx,rawUnitGrowth.set(secIx, (rg1.set(secIx, (sstaff ? rg3.set(secIx, lightYearsTraveled * eM.travelGrowth[E.S]) : 1.) * rawSectorPriorityUnitGrowth.get(secIx)))));
           //raw growth is calculated  in Assets.CashFlow.calcRawCosts
          // double dRawGrowthValue = rawGrowth.set(secIx, s.work.get(secIx) * rawUValue * cRand(secIx + 4)*1.5);
     
@@ -9211,18 +9212,22 @@ public class Assets {
         }
         if(eM.dfe()) return 0.;
         // live accounts
+        bals.copy4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
         doMaintCost(aPre);
         EM.wasHere = "CashFlow yearEnd live after doMaintCost cccaf=" + ++cccaf;
         doTravCost(aPre);
         doGrowthCost(aPre);
+        bals.set2(ABalRows.MTGCOSTSIX,mtgCosts10.getRow(0));
+        bals.set2(ABalRows.MTGCOSTSIX+2,mtgCosts10.getRow(1));
          r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
-      c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+        c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
       s.sumGrades(); // sets s worth
       g.sumGrades(); // sets g worth
         //      DoTotalWorths syW, tW, gSwapW, gGrowW, gCostW, fyW;
         gCostW = new DoTotalWorths();
         sumTotWorth = gCostW.getTotWorth();  //after costs taken
-
+         bals.setA4toBminusC(ABalRows.COSTWORTHSIX,ABalRows.CURWORTHSIX,ABalRows.PREVWORTHSIX);
+         setStat(EM.COSTWORTHDECR, pors, clan,bals.sum4(ABalRows.COSTWORTHSIX) , 1);
         EM.wasHere = "CashFlow.YearEnd live after doGrowth & do...Cost ccce=" + ++ccce;
         if (History.dl > History.informationMinor9) {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];

@@ -46,11 +46,14 @@ public class ABalRows extends A6Rowa {
   static int balz = 0;
   //static String[] titls 
   static final int BALANCESIX = balz += LSUMS;
+  static final int MANUALSIX = balz += 1;
+  static final int COMMONKNOWLEDGEIX = balz += LSUBS; //
+  static final int NEWKNOWLEDGEIX = balz += LSUBS; //
   static final int MCOSTSIX = balz += LSUBS; // 6 mtcosts are travel costs of ship
   static final int TCOSTSIX = balz += LSUBS;  //10
   static final int GROWTHSIX = balz += LSUBS; //14
-  static final int PREVWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
-  static final int GROWTHWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
+  static final int PREVWORTHSIX = balz += LSUBS; //
+  static final int GROWTHWORTHSIX = balz += LSUBS; //
   static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
   static final int BONUSWHORTHIX = balz += LSUBS; //16 L4
   static final int BONUSYEARSIX = balz += LSUBS; //16 L4
@@ -59,15 +62,18 @@ public class ABalRows extends A6Rowa {
   static final int CUMBONUSWORTHIX = balz += LSUBS;//32 L4
   static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
   static final int CUMULATIVEUNITDECAYIX = balz += LSUBS; //36 L4
-  static final int RAWYUNITGROWTHSIX = balz += LSUBS; //40
+  static final int RAWUNITGROWTHSIX = balz += LSUBS; //40
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
+  static final int STARTZEROINGIX = balz; //
   static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //44
   static final int RAWGROWTHSIX = balz += LSUBS; //48 
+  static final int COSTWORTHSIX = balz += LSUBS; //
+  static final int YEARINCRWORTHSIX = balz += LSUBS; //
+  static final int MTGCOSTSWORTHSIX = balz += LSUBS; //
+  static final int MTGCOSTSIX = balz += LSUBS; //
   static final int TRADEDGROWTHSIX = balz += LSUBS; //52
-  static final int SWAPPEDGROWTHSIX = balz += LSUBS; //56
-  static final int COMMONKNOWLEDGEIX = balz += LSUBS; //60
-  static final int NEWKNOWLEDGEIX = balz += LSUBS; //61
-  static final int MANUALSIX = balz += 1; //62
+  static final int SWAPPEDGROWTHSIX = balz += LSUBS; //
+  static final int endOfArrays = balz += LSUBS; //
   static final int BALSLENGTH = balz += 2; //64
   static int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
   static int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};

@@ -2235,7 +2235,7 @@ class EM {
   static final double[][] mCargoGrowth = {{0.00000001, 0.00009}, {0.0000000001, 0.0000009}};
   // cargo decay use resourceGrowthDecay
   static double[] staffGrowth = {3.7, .0002}; // growth per work
-  static final double[][] mStaffGrowth = {{.01, 6.}, {0.00002, 2.9}};
+  static final double[][] mStaffGrowth = {{0.00002, 6.}, {0.00002, 2.9}};
   static double[] staffGrowthDecay = {.0006, .0006}; //per unit
   static final double[][] mStaffGrowthDecay = {{.00003, .009}, {.00003, .009}};
   static double[] travelGrowth = {.0015, .0005}; // this multiplies against work
@@ -4027,6 +4027,7 @@ onceAgain:
   static final int SCORE = ++e4;
   static final int STARTWORTH = ++e4;
   static final int LIVEWORTH = ++e4;
+  static final int COSTWORTHDECR = ++e4;
   static final int DIED = ++e4;
   static final int WORTHIFRAC = ++e4;
   static final int WORTHINCR = ++e4;
@@ -4035,6 +4036,7 @@ onceAgain:
   static final int CATWORTHINCR = ++e4;
   static final int CUMCATWORTH = ++e4;
   static final int GROWTHS = ++e4;
+
   static final int RAWUNITGROWTHS = ++e4;
   static final int GROWTHWORTHINCR = ++e4;
   static final int RGROWTHV = ++e4;
@@ -4049,11 +4051,11 @@ onceAgain:
   static final int RAWCGROWTH = ++e4;
   static final int RAWSGROWTH = ++e4;
   static final int RAWGGROWTH = ++e4;
-    static final int RAWURGROWTH = ++e4;
+    static final int RAWRUGROWTH = ++e4;
   static final int RAWCUGROWTH = ++e4;
   static final int RAWSUGROWTH = ++e4;
   static final int RAWGUGROWTH = ++e4;
-  static final int COSTWORTHDECR = ++e4;
+
   static final int TRADELASTGAVE = ++e4;
   static final int TRADENOMINALGAVE = ++e4;
   static final int TRADESTRATLASTGAVE = ++e4;
@@ -4462,7 +4464,7 @@ onceAgain:
     doRes(RAWCUGROWTH, "C growth", "C rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(RAWSUGROWTH, "S growth", "S rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(RAWGUGROWTH, "G growth", "G rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET,  LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after growth this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 2, 2, 2, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     /*
   static final int TRADEWORTH = ++e4;
   static final int CATWORTHINCR = ++e4;

@@ -7219,7 +7219,7 @@ public class StarTrader extends javax.swing.JFrame {
                  + "GameCreated" + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "FutCreated  " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "GCatastrophies " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                 + "Difficulty" + EM.difficultyPercent[0] + " DiedGame "
+                 + "Difficulty" + EM.mf(EM.difficultyPercent[0]) + " DiedGame "
                  + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.S + 1, 0, 5)
                  + ":acc=" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.S + 1, 0, 5)
                  + ":rej=" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.S + 1, 0, 5)
@@ -7278,7 +7278,7 @@ public class StarTrader extends javax.swing.JFrame {
         for (int y = 0; y < yearsL && theYear[y] > -1;) {
           int yMax = y + entPerRow;
           for (; y < yMax && theYear[y] > -1; y++) {
-            disp1 += "(" + theYear[y] + ")" + "T" + yearSecPerEcon[y]
+            disp1 += "(" + theYear[y] + ")" + "T" + EM.mf(yearSecPerEcon[y])
                      + " W" + EM.mf(yearTW[y]) + "/"
                      + EM.mf(gameTW[y])
                      + "  E" + yearEcons[y] + "/"
