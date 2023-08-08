@@ -979,6 +979,7 @@ public class ARow {
 
   
   /** make sure all values are slightly more than zero
+   * set only values < UNZERO to UNZERO
    * 
    * @param tit row title for the E.sysmsg about unzeroing
    * @return the unzero'd ARow

@@ -5951,9 +5951,20 @@ public class StarTrader extends javax.swing.JFrame {
   public void starTrader2() {
     try {
       stateConst = CONSTRUCTING;
+      Double a1 = 2.0003;
+      Double a2 = -2.00077;
+      double a01 = 1.0;
+      double a3 = a1 % a01;
+      double a4 = a2 % -1.0;
+      double a5 = 3.0000000001;
+      double a6 = -5.0000000002;
+      // EM.test5 = true;
+      System.err.printf("----ST2----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
+      EM.test5 = false;
       this.eE = new E();
       this.eM = new EM(eE, this);
       EM.startTime = startTime;
+    
       for (int y = 0; y < yearsL; y++) {
         theYear[y] = -2;
         yearSecs[y] = 0;
@@ -6019,6 +6030,10 @@ public class StarTrader extends javax.swing.JFrame {
       eE.init(eM, this);
       eM.aInit();
       this.pack();
+ 
+    //   EM.test5 = true;
+      System.err.printf("----ST2b----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
+
       Rectangle statsR = stats.getBounds();
       int ss1 = statsR.width;
       Rectangle spR = statsScrollPane2.getBounds();
@@ -6123,7 +6138,12 @@ public class StarTrader extends javax.swing.JFrame {
       // System.out.println(gchgdone);
       //System.err.println(gchgdone);
       printMem3();
+
+      // EM.test5 = true;
+      System.err.printf("----ST2d----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
+      EM.test5 = false;
       setEconState(CONSTRUCTED);
+        System.err.println("---ST3---- a1 =" + EM.mf(a1));
     }
     catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
@@ -7212,18 +7232,19 @@ public class StarTrader extends javax.swing.JFrame {
                  + "yrAveWorth =" + EM.mf(bworth) + " Planets " + EM.mf(pworth) + " Ships " + EM.mf(sworth) + newLine
                  + "initAveRCSG =" + EM.mf(initBrcsg) + " Planets " + EM.mf(initPrcsg) + " Ships " + EM.mf(initSrcsg) + newLine
                  + "iyrAveRCSG =" + EM.mf(brcsg) + " Planets " + EM.mf(prcsg) + " Ships " + EM.mf(srcsg) + newLine
-                 + "TradedYear " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + newLine
+                 + "TradedYear " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS) +" " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, E.LCLANS)+ " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " , " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + " , "  + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + newLine
                  + "GameYrs    " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "TradedGame " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " also:" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " rej:" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.S + 1, 0, 5) + " lost:" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                 + "BothCreated " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                 + "GameCreated" + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                 + "FutCreated  " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "BothCreated " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0 , E.P, E.S + 1, 0, 5) + " , "+ eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.S + 1, 0, 5)  + " Planets " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "GameCreated"  + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0 , E.P, E.S + 1, 0, 5) + " , "+ eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5)  + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine 
+                 + "FutCreated  "  + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUR0 , E.P, E.S + 1, 0, 5) + " , "+ eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5)  + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "GCatastrophies " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "Difficulty" + EM.mf(EM.difficultyPercent[0]) + " DiedGame "
+                 + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUR0, E.P, E.S + 1, 0, 5) + ", "
                  + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.S + 1, 0, 5)
-                 + ":acc=" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.S + 1, 0, 5)
-                 + ":rej=" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.S + 1, 0, 5)
-                 + ":lost=" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.P, E.S + 1, 0, 5)
+                 + ":acc=" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUR0, E.P, E.S + 1, 0, 5) + ", "+ eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.S + 1, 0, 5)
+                 + ":rej=" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUR0, E.P, E.S + 1, 0, 5) + ", "+ eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.S + 1, 0, 5)
+                 + ":lost=" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUR0, E.P, E.S + 1, 0, 5) + ", "+ eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.P, E.S + 1, 0, 5)
                  + " Planets " + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUM, E.P, E.P + 1, 0, 5)
                  + ":" + eM.getCurCumPorsClanUnitSum(rNDAcc, EM.ICUM, E.P, E.P + 1, 0, 5)
                  + ":" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.P, E.P + 1, 0, 5)

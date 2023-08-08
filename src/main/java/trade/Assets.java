@@ -64,8 +64,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
-import java.util.TreeSet;
-import static trade.ABalRows.BALANCESIX;
 
 /**
  *
@@ -147,6 +145,7 @@ public class Assets {
   // int[] sLoops = new int[E.hcnt];  //count of swap loops (health only);
   static int maxn = 40;
   int i = -4, j = -4, k = -4, l = -4, m = -4, n = -4, splus = -4, term = -4;
+  int rowIx=-4, secIx=-4;
   double clanRisk;
 
   A2Row initRawProspects2;   // Assets variables
@@ -3268,9 +3267,9 @@ public class Assets {
       ARow bonusUnitGrowth = new ARow(ec);
       ARow fracGrowths = new ARow(ec);
       ARow rawBiasedUnitGrowth = new ARow(ec);
-        ARow rawSectorPriorityUnitGrowth = new ARow(ec);
-        ARow rawYearlyUnitGrowth = new ARow(ec);
-     // ARow rawGrowth = new ARow(ec);
+      ARow rawSectorPriorityUnitGrowth = new ARow(ec);
+      ARow rawYearlyUnitGrowth = new ARow(ec);
+      ARow rawGrowth = new ARow(ec);
       ARow yearlyUnitGrowth = new ARow(ec);
       ARow rawUnitGrowth = new ARow(ec);
       ARow rawUnitGrowthAfterDecay = new ARow(ec);
@@ -3279,7 +3278,6 @@ public class Assets {
       ARow bonusYearlyUnitGrowth = new ARow(ec);
       ARow limitedBonusYearlyUnitGrowth = new ARow(ec);
       ARow yearlyBonusGrowthFrac  = new ARow(ec);
-      ARow rawGrowth = new ARow(ec);
       ARow tradedGrowth = new ARow(ec);
       //   ARow fGrowth; // based on fertility function
       ARow growth = new ARow(ec);  // based on balance /
@@ -3930,8 +3928,8 @@ public class Assets {
        * are limited by cumulative unit decay, efficiency, priority and random
        * values, cumulative unit decay grows from the previous years growth
        * again random factors are applied 
-       * rawUnitGrowth is passed on the calcRawCosts and getNeeds 
-       * they calculate the final growth
+       * rawUnitGrowth is passed on to the calcRawCosts and getNeeds 
+       * and they calculate the final growth
        */
       void calcGrowth() { // Assets.CashFlow.SubAsset.calcGrowth
         splus = spluss[sIx];
@@ -3952,18 +3950,19 @@ public class Assets {
         bonusYears = bals.getRow(ABalRows.BONUSYEARSIX + sIx);
         bonusUnitGrowth = bals.getBonusUnitsRow(sIx);
   //      rawUnitGrowth = make(rawUnitGrowth);
-        rawGrowth = bals.getRow(ABalRows.RAWGROWTHSIX + sIx);
+       
         limitedBonusYearlyUnitGrowth = bals.getRow(ABalRows.LIMTEDBONUSYEARLYUNITGROWTHIX + sIx);
-        rawYearlyUnitGrowth = bals.getRow(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx);
-        prevUnitGrowth = rawUnitGrowth.copy();
+        rawYearlyUnitGrowth = bals.getRow(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx); // before decr
+        rawUnitGrowth = bals.getRow(ABalRows.RAWUNITGROWTHSIX + sIx);
+        rawGrowth = bals.getRow(ABalRows.RAWGROWTHSIX + sIx);
+     //   prevRawUnitGrowth = rawUnitGrowth.copy();
         prevWorth = make(worth).copy();
         prevHealth = make(health).copy();
         // growthsix includes the catstrophy benefits from last year
         prevGrowth = bals.getRow(GROWTHSIX + sIx).copy();
         cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDECAYIX + sIx);
-        cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDECAYIX + sIx);
         // prevFertility = make(fertility);
-        prevNeed = make(need).copy();
+       // prevNeed = make(need).copy();
        
         //   ARow newDecay;
         if (sIx == 2) {
@@ -3977,9 +3976,7 @@ public class Assets {
         }
        
         
-        //  ARow rg4 = new ARow(ec);
-        //    ARow uG1 = new ARow(ec);
-        // double[] yuGrow = new double[LSECS];
+       
         double bonusLeft = 0;
         if (sstaff) {
           sumGrades();// get recompute for work
@@ -3990,40 +3987,38 @@ public class Assets {
         // find growth fraction, less as the balance sum increases until large maxStaffGrowth
         //    double yuGrow[] = {0.,0.,0.,0.,0.,0.,0.,0.};
         // calculate each sector raw unit growth
-       // for (int secIx = 0; secIx < LSECS; secIx++) {
         for(int secIx:E.ASECS){
           // double a1 = balance.get(n);
           // double a2 = partner.balance.get(n);
           // yearlyUnitGrowth1 will go negative if decay is larger
           //limit staff growth by eM.maxStaffGrowth[pors]
           growthFrac = fracGrowths.set(secIx, (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors]);
-          double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.get(secIx) + (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
-          
+          double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
+         // double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.add(secIx , (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.))));
           double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx,rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]));
-          double dRawYearlyUnitGrowth = rawYearlyUnitGrowth.set(secIx,dYrPotentialUnitGrowth - cumulativeUnitDecay.get(secIx));
+       //   double dPotentialSumUnitGrowth = dYrPotentialUnitGrowth + dBonusYearUnitGrowth;
+          double dRawYearlyUnitGrowth = dYrPotentialUnitGrowth - cumulativeUnitDecay.get(secIx);
+          //dRawYearlyUnitGrowth must be positive
+          dRawYearlyUnitGrowth = dRawYearlyUnitGrowth > 0?dRawYearlyUnitGrowth : 0.0;
           double dPotentialSumUnitGrowth = dRawYearlyUnitGrowth + dBonusYearUnitGrowth;
           double dExcessSumUnitGrowth = dPotentialSumUnitGrowth - dYrPotentialUnitGrowth * EM.maxFracBonusGrowth[pors];
-          double dLimitedBonusYearUnitGrowth = limitedBonusYearlyUnitGrowth.set(secIx,dExcessSumUnitGrowth > 0.0 ? dExcessSumUnitGrowth : 0.0);
+          // only subtrace dExcess if it is positive, otherwise the dPotentialSumUnitGrowth is good
+          double dLimitedBonusYearUnitGrowth = limitedBonusYearlyUnitGrowth.set(secIx,dBonusYearUnitGrowth - (dExcessSumUnitGrowth > 0.0 ? dExcessSumUnitGrowth : 0.0));
          // limitedBonusYearlyUnitGrowth.set(secIx,dLimitedBonusYearUnitGrowth);
           double drawUnitGrowth = rawUnitGrowth.set(secIx,dRawYearlyUnitGrowth + dLimitedBonusYearUnitGrowth);
-          
+          // now find the frac of Bonus left in rawUnitGrowth
            double dYearlyBonusGrowthFrac = bals.set(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx, secIx,dLimitedBonusYearUnitGrowth/drawUnitGrowth );
-          // doub)
           
-          // now second factor calc priority and growthEfficiency(from knowledge)
-          rawSectorPriorityUnitGrowth.set(secIx, (yearlyUnitGrowth.get(secIx) * eM.fracPriorityInGrowth[pors] * ySectorPriorityYr.get(secIx)) * groEfficiency.get(secIx) * cRand(3 * sIx + secIx + 30));
-          // unit growth sum of biased unit growth and priority unit growth limit 0.0
-          //double rawUnitGrowthd = Math.max(0.0,rawUnitGrowth1.set(secIx, rawBiasedUnitGrowth.get(secIx) + rawSectorPriorityUnitGrowth.get(secIx)));
-          //get unitGrowth1, step one in final unit growth
-          // double rawUnitGrowthd = uG1.set(n, rawBiasedUnitGrowth.set(n, (yearlyUnitGrowth.get(secIx) * eM.fracBiasInGrowth[pors])) 
-          //           + rawPriorityUnitGrowth.set(secIx, (yearlyUnitGrowth.get(secIx) * eM.fracPriorityInGrowth[pors] * ySectorPriorityYr.get(secIx)) * groEfficiency.get(secIx) * cRand(3 * sIx + secIx + 30)));
+          // now the second factor calc priority and growthEfficiency(from knowledge)
+          rawSectorPriorityUnitGrowth.set(secIx, (rawUnitGrowth.get(secIx) * eM.fracPriorityInGrowth[pors] * ySectorPriorityYr.get(secIx)) * groEfficiency.get(secIx) * cRand(3 * sIx + secIx + 30));
+
           /*
            * raw unit growth in ships, is dependent on lightYearsTraveled raw growth
            * for planets dependent on staff work
            */
           rawUValue = bals.set(ABalRows.RAWUNITGROWTHSIX + sIx, secIx,rawUnitGrowth.set(secIx, (rg1.set(secIx, (sstaff ? rg3.set(secIx, lightYearsTraveled * eM.travelGrowth[E.S]) : 1.) * rawSectorPriorityUnitGrowth.get(secIx)))));
           //raw growth is calculated  in Assets.CashFlow.calcRawCosts
-         // double dRawGrowthValue = rawGrowth.set(secIx, s.work.get(secIx) * rawUValue * cRand(secIx + 4)*1.5);
+          double dRawGrowthValue = rawGrowth.set(secIx, s.work.get(secIx) * rawUValue *1.5);
     
           if (!didDecay) {
             // now count down the bonus units & years
@@ -4032,7 +4027,7 @@ public class Assets {
                     && bonusUnitGrowth.get(secIx) > 0.) {
               bonusUnitGrowth.add(secIx,  - bonusUnitGrowth.get(secIx) / (bonusYears.get(secIx) + EM.catastrophyBonusYearsBias[pors][0]));
             }
-                       didDecay = true;
+           didDecay = true;
           }
 
           if (rawValue < -0.0) {
@@ -4047,7 +4042,7 @@ public class Assets {
           }
         }//end for on secIx
 
-        bals.set2(ABalRows.RAWUNITGROWTHSIX + sIx,rawUnitGrowth);
+       // bals.set2(ABalRows.RAWUNITGROWTHSIX + sIx,rawUnitGrowth);
         String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
         String[] bonusYearlyUnitGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
         int[] depreciations = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
@@ -4072,7 +4067,7 @@ public class Assets {
           setStat(neg2RawUnitGrowths[sIx], rawUnitGrowth.getNegSum(), 1);
         }
         ec.aPre = aPre = "#G";
-        if (History.dl > 5) {
+        if (History.dl > 5 && Econ.saveHist) {
           hist.add(new History(aPre, 5, aschar + " growth[sIx][pors]", EM.mf(eM.assetsUnitGrowth[sIx][pors]), "sIx", wh(sIx), "pors", wh(pors), "fracBiax..", EM.mf(eM.fracBiasInGrowth[pors]), "fracPriority", EM.mf(eM.fracPriorityInGrowth[pors])));
           hist.add(new History(aPre, 5, aschar + " balance", balance));
           hist.add(new History(aPre, 5, aschar + " prevGrowth", prevGrowth));
@@ -7772,7 +7767,7 @@ public class Assets {
 
       //balances.setUseBalances(History.informationMinor9, "balances", r.balance, c.balance, s.balance, g.balance);
 
-      // reset x.growth and growths to the entering bals.
+      // Assets.CashFlows.aStartCashFlow reset x.growth and growths to the entering bals.
       for (i = 0; i < 4; i++) {
         sys[i].growth = growths.A[2 + i] = bals.A[GROWTHSIX + i];
         growths.aCnt[2 + i]++;
@@ -7782,7 +7777,7 @@ public class Assets {
       s.worth = bals.getRow(ABalRows.CURWORTHSIX+2);
       g.worth = bals.getRow(ABalRows.CURWORTHSIX+3);
       EM.wasHere = "CashFlow.init... after growths for eeee=" + ++eeee;
-      rawGrowths.setUseBalances(History.informationMinor9, "rawGrowth", r.rawGrowth, c.rawGrowth, s.rawGrowth, g.rawGrowth);
+      rawGrowths.setUseBalances(History.informationMinor9, "rawGrowth", r.rawGrowth, c.rawGrowth, s.rawGrowth, g.rawGrowth);// meaning unknown see calcGrowth
       invMEff.setUseBalances(History.valuesMinor7, "invMEff", r.invMaintEfficiency, c.invMaintEfficiency, s.invMaintEfficiency, g.invMaintEfficiency);
       invGEff.setUseBalances(History.valuesMinor7, "invGEff", r.invGroEfficiency, c.invGroEfficiency, s.invGroEfficiency, g.invGroEfficiency);
       //   calcPriority(percentDifficulty);
@@ -9163,7 +9158,8 @@ public class Assets {
         if(eM.dfe()) return 0.;
         // do growths of knowledge and each SubAsset
         setStat(EM.GROWTHS, pors, clan, bals.sum4(ABalRows.GROWTHSIX), 1);
-        setStat(EM.RAWUNITGROWTHS, pors, clan, bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX), 1);
+        setStat(EM.RAWYEARUNITGROWTHS, pors, clan, bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX), 1);
+        setStat(EM.RAWUNITGROWTHS, pors, clan, bals.sum4(ABalRows.RAWUNITGROWTHSIX), 1);
         setStat(EM.RGROWTH, pors, clan, bals.rowSum(ABalRows.GROWTHSIX), 1);
         setStat(EM.CGROWTH, pors, clan, bals.rowSum(ABalRows.GROWTHSIX+1), 1);
         setStat(EM.SGROWTH, pors, clan, bals.rowSum(ABalRows.GROWTHSIX+2), 1);
@@ -10420,7 +10416,7 @@ public class Assets {
        * by how close the service financial sectors, meet the demands from all
        * consumer aspects.
        */
-      if (n < 999 && (ix == 0 || ix == 2)) {  //r & s
+      if (Econ.saveHist && (n < 999 && (ix == 0 || ix == 2))) {  //r & s
         hist.add(new History("#a", History.valuesMajor6, "swork", swork));
         String[] balTits = {"r bal", "c bal", "s bal", "g bal"};
         hist.add(new History("#a", History.valuesMajor6, balTits[ix], balances.A[ix + 2]));
@@ -10439,9 +10435,9 @@ public class Assets {
         int aaage = eM.curEcon.age; // test for null
         aaage = ec.age;// test for null
         ARow kMaint = new ARow(ec);
-        // set same ARow twice
-        bals.set(ABalRows.GROWTHSIX+ix,i,sys[ix].rawGrowth.set(i, rawG = s.work.get(i)
-       * bals.get(ABalRows.RAWYEARLYUNITGROWTHSIX,i) * cRand(i + ix + 10)));                                  //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
+        // set same growth ARow twice
+        bals.set(ABalRows.GROWTHSIX+ix,i,sys[ix].growth.set(i, rawG = s.work.get(i)
+       * bals.get(ABalRows.RAWUNITGROWTHSIX,i) * cRand(i + ix + 10)));                                  //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
 
         // j loops across services that as a sum are used by consumers
         for (j = 0; j < E.lsecs; j++) {

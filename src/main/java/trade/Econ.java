@@ -827,7 +827,7 @@ public class Econ {
    *
    * @return true if hist is not to be kept;
    */
-  boolean saveHist = false;
+  static boolean saveHist = false;
   boolean myClearHist = false;  // set to false at yearStart
 
   boolean clearHist() {

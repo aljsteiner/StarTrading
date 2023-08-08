@@ -1026,7 +1026,7 @@ class EM {
   }
 
   static boolean mfShort = false;
-
+  static boolean test5 = false; // temp to test funcionss
   /**
    * format the Double value to a x char string if myWidth > 1800 make max 15
    * char string
@@ -1035,6 +1035,7 @@ class EM {
    * @return value as a string
    */
   static public String mf(Double v) {
+
     if (v.isNaN()) {
       return "# " + v;
     }
@@ -1042,16 +1043,24 @@ class EM {
     NumberFormat dFrac = NumberFormat.getNumberInstance();
     NumberFormat whole = NumberFormat.getNumberInstance();
     NumberFormat exp = new DecimalFormat("0.###E0");
-    if (v > -999999. && (v % 1 > E.NZERO) && v < 999999. && (v % 1 < E.PZERO)) {  //very close to zero remainder
-      return whole.format(v);
-    }
-    else if (mfShort || myWidth < 1190) { // 7 characters
-      if ((v < 0.0 && v > -.0000001) || (v > .000001 && v < 1.0)) {
+ 
+    if (mfShort || myWidth < 1190) { // 7 characters
+      if (v == .0 || v == -0) {  // actual zero
+      dFrac.setMinimumFractionDigits(0);
+      dFrac.setMaximumFractionDigits(1);
+      return dFrac.format(v);
+    } else
+      if ((v < 0.0 && v > -999999. && (-v % 1 < E.PZERO)) || (v >= 0.0 && v < 999999. && (v % 1 < E.PZERO))) {  //very close to zero remainder
+        if(test5)System.err.printf("----MFT1A--- v= %10.5f\n",v);
+      dFrac.setMaximumFractionDigits(0);
+      return dFrac.format(v);
+    } else
+      if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) { //6 7
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(5);
         return dFrac.format(v);
-      }
-      else if ((v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
+      } else
+     if ((v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         return dFrac.format(v);
@@ -1067,144 +1076,146 @@ class EM {
         return "w" + dFrac.format(v);
       }
       else if ((v > -999999. && v < -0.00) || (v > .001 && v < 999999.)) {
+        if(test5)System.err.printf("----MFT1--- v= %10.5f\n",v);
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
         return dFrac.format(v);
       }
-      else {
-        return exp.format(v);
-      }
-    }
+
     else if (v == .0 || v == -0) {  // actual zero
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(1);
       return dFrac.format(v);
     }
-    else if (myWidth > 1800) { // 15 characters
-      if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(7);
-        return dFrac.format(v);
-      }
-      else if ((v > -999999999999. && v < -0.00) || (v > .001 && v < 999999999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(3);
-        return dFrac.format(v);
-      }
-      else if ((v > -9999999999999. && v < -0.0) || (v > .001 && v < 9999999999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(2);
-        return dFrac.format(v);
-      }
-      else if ((v > -99999999999999. && v < -0.0) || (v > .001 && v < 99999999999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(1);
-        return "w" + dFrac.format(v);
-      }
-      else if ((v > -999999999999999. && v < -0.00) || (v > .001 && v < 999999999999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(0);
-        return dFrac.format(v);
-      }
-      else {
+     else {
         return exp.format(v);
-      }
     }
-    else if (myWidth > 1500) { // 12 characters
-      if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(7);
-        return dFrac.format(v);
-      }
-      else if ((v > -99999999. && v < -0.00) || (v > .001 && v < 99999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(3);
-        return dFrac.format(v);
-      }
-      else if ((v > -999999999. && v < -0.0) || (v > .001 && v < 999999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(2);
-        return dFrac.format(v);
-      }
-      else if ((v > -9999999999. && v < -0.0) || (v > .001 && v < 9999999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(1);
-        return "w" + dFrac.format(v);
-      }
-      else if ((v > -99999999999. && v < -0.00) || (v > .001 && v < 99999999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(0);
-        return dFrac.format(v);
-      }
-      else {
-        return exp.format(v);
-      }
-    }
-    else if (myWidth > 1200) {  // 9 numbers
-      if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(7);
-        return dFrac.format(v);
-      }
-      else if ((v > -99999. && v < 0.0) || (v > .001 && v < 99999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(3);
-        return dFrac.format(v);
-      }
-      else if ((v > -999999. && v < 0.0) || (v > .001 && v < 999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(2);
-        return dFrac.format(v);
-      }
-      else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(1);
-        return "w" + dFrac.format(v);
-      }
-      else if ((v > -99999999. && v < 0.0) || (v > .001 && v < 99999999.)) {
-        dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(0);
-        return dFrac.format(v);
-
-      }
-      else {
-        return exp.format(v);
-      }
-
-    }
-    else if ((v < 0.0 && v > -.0000001) || (v > .00000001 && v < 1.0)) {
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(7);
-      return dFrac.format(v);
-    }
-    else if ((v > -999999. && v < 0.0) || (v > .001 && v < 999999.)) {
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(3);
-      return dFrac.format(v);
-    }
-    else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(2);
-      return dFrac.format(v);
-    }
-    else if ((v > -99999999. && v < 0.0) || (v > .001 && v < 99999999.)) {
+    } // end v< 1190
+    if (myWidth < 1200) {  // 9 charcters
+      if (v == .0 || v == -0) {  // actual zero
       dFrac.setMinimumFractionDigits(0);
       dFrac.setMaximumFractionDigits(1);
-      return "w" + dFrac.format(v);
-    }
-    else if ((v > -999999999. && v < 0.0) || (v > .001 && v < 999999999.)) {
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(0);
       return dFrac.format(v);
-    }
-    else if ((v > 0.0 && v < -.0000001) || (v > .0000001 && v < .001)) {
+    } else
+      if ((v < 0.0 && v > -99999999. && (-v % 1 < E.PZERO)) || (v >= 0.0 && v < 99999999. && (v % 1 < E.PZERO))) {  //very close to zero remainder
+       dFrac.setMaximumFractionDigits(0);
+       return dFrac.format(v);
+      } else
+     if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(7);
+        return dFrac.format(v);
+      }
+      else if ((v > -9999. && v < 0.0) || (v > .001 && v < 99999.)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(3);
+        return dFrac.format(v);
+      }
+      else if ((v > -99999. && v < 0.0) || (v > .001 && v < 999999.)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(2);
+        return dFrac.format(v);
+      }
+      else if ((v > -999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return "w" + dFrac.format(v);
+      }
+      else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 99999999.)) { //8 9
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(0);
+        return dFrac.format(v);
+
+      }
+      else {
+        return exp.format(v);
+      }
+
+    } // end of < 1200
+    
+    else if (myWidth < 1500) { // 12 characters
+      if (v == .0 || v == -0) {  // actual zero
       dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(7);
+      dFrac.setMaximumFractionDigits(1);
       return dFrac.format(v);
+    } else
+      if ((v < 0.0 && v > -99999999. && (-v % 1 < E.PZERO)) || (v >= 0.0 && v < 99999999. && (v % 1 < E.PZERO))) {  //8 8 very close to zero remainder
+       dFrac.setMaximumFractionDigits(0);
+       return dFrac.format(v);
+      } else
+     if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) { // up to 9 fractions
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(9);
+        return dFrac.format(v);
+      }
+      else if ((v > -999999. && v < -0.0) || (v > .001 && v < 999999.)) { // 6 6 13 12
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(3);
+        return dFrac.format(v);
+    }
+      else if ((v > -9999999. && v < -0.0) || (v > .001 && v < 99999999.)) { // 7 8 13 13
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(2);
+        return dFrac.format(v);
+      }
+      else if ((v > -99999999. && v < -0.0) || (v > .001 && v < 99999999.)) { // 8 8 13 13
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return "w" + dFrac.format(v);
+      }
+      else if ((v > -99999999. && v < -0.00) || (v > .001 && v < 99999999.)) {// 8 8  12 11
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(0);
+        return dFrac.format(v);
+      }
+      else {
+        return exp.format(v);
+      }
+  }
+    else if (myWidth > 1800) { // 15 characters
+      if(test5)System.err.printf("----MFT9--- v= %10.5f\n",v);
+        if ((v < 0.0 && v > -999999999999. && ((-v % 1.0) < E.PZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PZERO))) {  //12 13  13 13 very close to zero remainder
+          
+       dFrac.setMaximumFractionDigits(0);
+       if(test5)System.err.printf("----MFT9a--- v= %10.5f rem=%10.5f\n",v,v % 1.0);
+       return dFrac.format(v);
+      }
+         if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(9);
+        if(test5)System.err.printf("----MFT9c--- v= %10.5f\n",v);
+        return dFrac.format(v);
+         }
+      else if ((v > -99999999. && v < -0.0) || (v > .001 && v < 999999999.)) { // 8 9
+        if(test5)System.err.printf("----MFT9d--- v= %10.5f\n",v);
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(3);
+        return dFrac.format(v);
+    }
+      else if ((v > -9999999999. && v < -0.0) || (v > .001 && v < 999999999.)) { // 9 9
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(2);
+        if(test5)System.err.printf("----MFT9e--- v= %10.5f\n",v);
+        return dFrac.format(v);
+      }
+      else if ((v > -9999999999. && v < -0.0) || (v > .00 && v < 99999999.)) { // 9 8
+        if(test5)System.err.printf("----MFT9f--- v= %10.5f\n",v);
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return "w" + dFrac.format(v);
+      }
+      else if ((v > -99999999999. && v < -0.00) || (v > .00 && v < 99999999999.)) {//11 11
+        if(test5)System.err.printf("----MFT9b--- v= %10.5f\n",v);
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(0);
+        return dFrac.format(v);
+      }
     }
     else {
       return exp.format(v);
     }
+    return exp.format(v);
+    
   }
 
   /**
@@ -4036,7 +4047,7 @@ onceAgain:
   static final int CATWORTHINCR = ++e4;
   static final int CUMCATWORTH = ++e4;
   static final int GROWTHS = ++e4;
-
+  static final int RAWYEARUNITGROWTHS = ++e4;
   static final int RAWUNITGROWTHS = ++e4;
   static final int GROWTHWORTHINCR = ++e4;
   static final int RGROWTHV = ++e4;
@@ -4449,8 +4460,9 @@ onceAgain:
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(GROWTHS, "GrOWTH", "growth for this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth  this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(GROWTHS, "GrOWTH", "growth for this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RAWYEARUNITGROWTHS, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | CURUNITS |CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth  this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | CURUNITS |CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
     doRes(GROWTHWORTHINCR, "GrthIncWorth", "worth increase this year from growth before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
      doRes(RGROWTHV, "R growth", "R growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CGROWTHV, "C growth", "C growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);

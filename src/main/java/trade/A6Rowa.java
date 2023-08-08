@@ -228,11 +228,18 @@ public class A6Rowa {
     costs = t == tcost;
     return t;
   }
-
+/** make sure all values are slightly more than zero
+   * set only values < UNZERO to UNZERO
+ * 
+ * @param tit
+ * @param start
+ * @param number
+ * @return 
+ */
   A6Rowa unzero(String tit, int start, int number) {
-    for (int n = 0; n < number; n++) {
-      String tt = tit + start + n;
-      A[start + n].unzero(tt);
+    for (int rowIx = 0; rowIx < number; rowIx++) {
+      String tt = tit + start + rowIx;
+      A[start + rowIx].unzero(tt);
     }
     return this;
   }
@@ -240,7 +247,7 @@ public class A6Rowa {
   double doubleTrouble(Double trouble) {
     if (trouble.isNaN()) {
       if (E.debugDouble) {
-        throw new MyErr(String.format("Not a number found, term%d, i%d, j%d, m%d, n%d", as.term, as.i, as.j, as.m, as.n));
+        throw new MyErr(String.format("Not a number found, term%d, i%d, j%d, m%d, n%d, rowIx%d", as.term, as.i, as.j, as.m, as.n, as.rowIx));
       }
       else {
         return 0.0;
