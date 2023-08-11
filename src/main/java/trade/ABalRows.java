@@ -61,7 +61,7 @@ public class ABalRows extends A6Rowa {
   static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
   static final int CUMBONUSWORTHIX = balz += LSUBS;//32 L4
   static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
-  static final int CUMULATIVEUNITDETERIORATIONIX = balz += LSUBS; //36 L4
+  static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; //36 L4
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //40
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
   static final int STARTZEROINGIX = balz; //
@@ -516,7 +516,7 @@ public class ABalRows extends A6Rowa {
    * @return the selected bals references in an A6Row
    */
   A6Row getCumDecay(int lev, String titl) {
-    return use4(CUMULATIVEUNITDETERIORATIONIX, lev, titl);
+    return use4(CUMULATIVEUNITDEPRECIATIONIX, lev, titl);
   }
 
   /**
@@ -527,7 +527,7 @@ public class ABalRows extends A6Rowa {
    * @param alev level of listed rows
    */
   void listCumDecay(int blev, String apre, int alev) {
-    sendHist(CUMULATIVEUNITDETERIORATIONIX, CUMULATIVEUNITDETERIORATIONIX + 3, blev, apre, alev);
+    sendHist(CUMULATIVEUNITDEPRECIATIONIX, CUMULATIVEUNITDEPRECIATIONIX + 3, blev, apre, alev);
   }
   
   /**
@@ -537,6 +537,6 @@ public class ABalRows extends A6Rowa {
    * @return growth ARow for index m
    */
   ARow getCumDecayRow(int m) {
-    return A[CUMULATIVEUNITDETERIORATIONIX + m];
+    return A[CUMULATIVEUNITDEPRECIATIONIX + m];
   }
 }

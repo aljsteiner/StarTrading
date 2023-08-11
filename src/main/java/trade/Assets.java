@@ -335,7 +335,7 @@ public class Assets {
   static final int BONUSUNITSIX = ABalRows.BONUSUNITSIX;
   //static int cumulativeUnitDecayIx = bonusUnitsIx + 4; //18
   //static int balsLength = cumulativeUnitDecayIx + 4; //22
-  static final int CUMULATIVEUNITDETERIORATIONIX = ABalRows.CUMULATIVEUNITDETERIORATIONIX;
+  static final int CUMULATIVEUNITDEPRECIATIONIX = ABalRows.CUMULATIVEUNITDEPRECIATIONIX;
   static final int BALSLENGTH = ABalRows.BALSLENGTH;
   static final int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
   static final int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
@@ -3676,7 +3676,7 @@ public class Assets {
         //         growth = growths.A[2 + asIx];
         //     fertility = makeZero(fertility);
         // move ARow references from bals, they will remain when SubAsset instance is freed
-        cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDETERIORATIONIX + asIx);
+        cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + asIx);
         cumUnitBonus = bals.getRow(ABalRows.CUMUNITBONUSIX + asIx);
         bonusUnitGrowth = bals.getRow(ABalRows.BONUSUNITSIX + asIx);
         bonusYears = bals.getRow(ABalRows.BONUSYEARSIX + asIx);
@@ -3689,9 +3689,9 @@ public class Assets {
         commonKnowledge = bals.getRow(ABalRows.COMMONKNOWLEDGEIX);
         manuals = bals.getRow(ABalRows.MANUALSIX);
         /*
-          static final int CUMULATIVEUNITDETERIORATIONIX = CUMUNITBONUSIX + 4; //24
-//  static int balsLength = CUMULATIVEDETERIORATIONIX + 4; //24
-  static final int RAWUNITSGROWTHIX = CUMULATIVEUNITDETERIORATIONIX + 4; //28
+          static final int CUMULATIVEUNITDEPRECIATIONIX = CUMUNITBONUSIX + 4; //24
+//  static int balsLength = CUMULATIVEDEPRECIATIONIX + 4; //24
+  static final int RAWUNITSGROWTHIX = CUMULATIVEUNITDEPRECIATIONIX + 4; //28
   static final int RAWGROWTHIX = RAWUNITSGROWTHIX + 4; //32
   static final int TRADEDGROWTHIX = RAWGROWTHIX + 4; //36
   static final int SWAPPEDGROWTHIX = TRADEDGROWTHIX + 4; //40
@@ -3960,7 +3960,7 @@ public class Assets {
         prevHealth = make(health).copy();
         // growthsix includes the catstrophy benefits from last year
         prevGrowth = bals.getRow(GROWTHSIX + sIx).copy();
-        cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDETERIORATIONIX + sIx);
+        cumulativeUnitDecay = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx);
         // prevFertility = make(fertility);
        // prevNeed = make(need).copy();
        
@@ -8035,7 +8035,7 @@ public class Assets {
         setStat("sCatNegDecay", pors, clan, deteriorationReduce1, 1);// 
         catEffSDecayBen += deteriorationReduce1;
         //setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
-       // setStat(eM.CRISISRESDETERIORATIONBONUSPERCENT, pors, clan, nd1, 1);
+       // setStat(eM.CRISISRESDEPRECIATIONBONUSPERCENT, pors, clan, nd1, 1);
         if (pors == E.P) {
           double rcd5 = r.cumulativeUnitDecay.get(r5);
          // double rd5 = -rDecayReduce2;
@@ -9037,7 +9037,7 @@ public class Assets {
       //    balances.A[i+2] = sys[i].balance = bals.getRow(BALANCESIX + i);
       //    sys[i].bonusUnitGrowth = bals.getRow(BONUSUNITSIX + i);
       //    sys[i].bonusYears = bals.getRow(BONUSYEARSIX + i);
-      //   sys[i].cumulativeUnitDecay = bals.getRow(CUMULATIVEDETERIORATIONIX + i);
+      //   sys[i].cumulativeUnitDecay = bals.getRow(CUMULATIVEDEPRECIATIONIX + i);
       //    growths.A[i+2] = sys[i].growth = growths.A[2+i] = bals.getRow(GROWTHSIX + i);
       //   growths.aCnt[2+i]++;
       //   }
@@ -9279,6 +9279,7 @@ public class Assets {
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, initialSumWorth, 1);
         setStat(EM.WORTHINCR, pors, clan, totalYearWorthIncr, 1); 
+        setStat(EM.DEPRECIATION, pors, clan,bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
       //  setStat(EM.RCSG, pors, clan, syW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
         setStat(EM.INCRRCSG, pors, clan, sumYearRCSGincr, 1);
         setStat(EM.LIVERCSG, pors, clan, fyW.getSumRCSGBal(), 1);

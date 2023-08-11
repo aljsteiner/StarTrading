@@ -4053,7 +4053,8 @@ onceAgain:
   static final int COSTWORTHDECR = ++e4;
   static final int DIED = ++e4;
   static final int WORTHIFRAC = ++e4;
-  static final int WORTHINCR = ++e4;
+  static final int WORTHINCR = ++e4; //DEPRECIATION
+  static final int DEPRECIATION = ++e4; //DEPRECIATION
   static final int TRADEWORTH = ++e4;
   static final int TRADEWORTHINCR = ++e4;
   static final int CATWORTHINCR = ++e4;
@@ -4428,11 +4429,11 @@ onceAgain:
   static final int NOCRISIS2INCR = ++e4;
   static final int NOCRISIS3INCR = ++e4;
   static final int CRISISRESREDUCEPERCENT = ++e4;
-  static final int CRISISRESDETERIORATIONBONUSPERCENT = ++e4;
+  static final int CRISISRESDEPRECIATIONBONUSPERCENT = ++e4;
   static final int CRISISSTAFFREDUCEPERCENT = ++e4;
   static final int CRISISRESREDUCESURPLUSPERCENT = ++e4;
   static final int CRISISSTAFFREDUCESURPLUSPERCENT = ++e4;
-  static final int CRISISSTAFFDETERIORATIONBONUSPERCENT = ++e4;
+  static final int CRISISSTAFFDEPRECIATIONBONUSPERCENT = ++e4;
   static final int CRISISSTAFFGROWTHPERCENTINCR = ++e4;
   static final int CRISISSTAFFGROWTHYEARSINCR = ++e4;
   static final int CRISISRESGROWTHPERCENTINCR = ++e4;
@@ -4472,6 +4473,7 @@ onceAgain:
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(DEPRECIATION, "Deterioration", "deterioration this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 |  THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
@@ -4941,9 +4943,9 @@ onceAgain:
     doRes(NOCRISIS2INCR, "IncWorth 2Yr No Crisis", "Percent Year increase Worrth/Year initial worth if 2 years of No catastrophy");
     doRes(NOCRISIS3INCR, "IncWorth 3Yr No Crisis", "Percent Year increase Worrth/Year initial worth if 3 years of No catastrophy");
     doRes(CRISISRESREDUCEPERCENT, "reduceResInCrisis", "Crisis reduce resource by percent of balance ", 1, 2, 1, LIST2 | CUMAVE | BOTH | SKIPUNSET, LIST9 | SKIPUNSET | BOTH | THISYEAR | THISYEARUNITS, LIST14 | CURAVE, 0);
-    doRes(CRISISRESDETERIORATIONBONUSPERCENT, "%ResBounusGrowth", " crisis bonus growth pecent of original potential unit growth");
+    doRes(CRISISRESDEPRECIATIONBONUSPERCENT, "%ResBounusGrowth", " crisis bonus growth pecent of original potential unit growth");
     doRes(CRISISSTAFFREDUCEPERCENT, "ReduceStaffInCrisis", "Crisis reduce staff by percent of balance");
-    doRes(CRISISSTAFFDETERIORATIONBONUSPERCENT, "%bounusStaffGrowthCrisis", "Crisis up staff Growth by percent of potential growth");
+    doRes(CRISISSTAFFDEPRECIATIONBONUSPERCENT, "%bounusStaffGrowthCrisis", "Crisis up staff Growth by percent of potential growth");
     doRes(CRISISRESREDUCESURPLUSPERCENT, "PercentSurplusReduceResourceCrisis", "Crisis surplus reduce resource by percent of balance");
     doRes(CRISISSTAFFREDUCESURPLUSPERCENT, "PercentReduceStaffCrisis", "Crisis surplus reduce staff by percent of balance");
     doRes(CRISISSTAFFGROWTHPERCENTINCR, "Crisis%IncreaseStGrow", "Crisis percent increase by staff growth for a few years");
