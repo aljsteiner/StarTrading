@@ -321,7 +321,7 @@ public class StarTrader extends javax.swing.JFrame {
 "\n" +
 "Each year during the Cash Flow activity, the potential costs for each financial sector are calculated.  Any sectors with insufficient prospective resources or work to meet the required costs, must move any available reserves to working status.  If that is not enough assets from other sectors may be repurposed.  Of course the cost of such repurposing is quite high, taking well over 10 times the resulting increase in assets for the needy sector.\n" +
 "\n" +
-"The game-master sets a number of priorities and values over the game for all the clans.  The game-master adjusts the difficulty of the game and other options that significantly change the nature of challenges in the game.  A normal goal is to have no more than 10% of ships and 10% of planets die in a single year of the game.  Catastrophes can occur at the year start before it is time to trade.  A catastrophe can destroy a large fraction of the resources for one or two financial sectors, and the staff for a financial sector, but they also discover additional resources for one or more sectors.  These additional resources replace the decay of resources as they are mined\n" +
+"The game-master sets a number of priorities and values over the game for all the clans.  The game-master adjusts the difficulty of the game and other options that significantly change the nature of challenges in the game.  A normal goal is to have no more than 10% of ships and 10% of planets die in a single year of the game.  Catastrophes can occur at the year start before it is time to trade.  A catastrophe can destroy a large fraction of the resources for one or two financial sectors, and the staff for a financial sector, but they also discover additional resources for one or more sectors.  These additional resources replace the deterioration of resources as they are mined\n" +
 "\n" +
 "The game-master chooses which results are most important for deciding the winner in the game.  The winner may be the clan that gave the most help to clans, or that helped the most planets or the most planets and ships, or had the highest worth, or had the most planets, etc.  The winner may change after each run of one or more years.  \n" +
 "\n" +
@@ -5951,14 +5951,14 @@ public class StarTrader extends javax.swing.JFrame {
   public void starTrader2() {
     try {
       stateConst = CONSTRUCTING;
-      Double a1 = 2.0003;
-      Double a2 = -2.00077;
+      Double a1 = 2.00003;
+      Double a2 = -2.000077;
       double a01 = 1.0;
       double a3 = a1 % a01;
       double a4 = a2 % -1.0;
       double a5 = 3.0000000001;
       double a6 = -5.0000000002;
-      // EM.test5 = true;
+       EM.test5 = true;
       System.err.printf("----ST2----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
       EM.test5 = false;
       this.eE = new E();
@@ -6031,7 +6031,7 @@ public class StarTrader extends javax.swing.JFrame {
       eM.aInit();
       this.pack();
  
-    //   EM.test5 = true;
+     //EM.test5 = true;
       System.err.printf("----ST2b----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
 
       Rectangle statsR = stats.getBounds();
@@ -6139,8 +6139,11 @@ public class StarTrader extends javax.swing.JFrame {
       //System.err.println(gchgdone);
       printMem3();
 
-      // EM.test5 = true;
-      System.err.printf("----ST2d----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
+       //EM.test5 = true;
+      Double a7 = -0.000041;
+      Double a8= -44.0005;
+       Double a9= 0.000011;
+      System.err.printf("----ST2d----a7=%15.7f,%s, a8=%15.7f,%s, a9=%10.7f,%s a6=%10.5f= %s, a2=%10.8f,%s\n",a7,EM.mf(a7),a8,EM.mf(a8),a9,EM.mf(a9),a6,EM.mf(a6),a2,EM.mf(a2));      
       EM.test5 = false;
       setEconState(CONSTRUCTED);
         System.err.println("---ST3---- a1 =" + EM.mf(a1));

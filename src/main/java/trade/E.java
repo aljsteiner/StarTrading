@@ -230,13 +230,13 @@ static StarTrader st;
   public static final int ship = 1;
   public static final int S = 1;
   public static final int les = 2;
-  public static final double PZERO = .00001; //for a > pzero
+  public static final double PZERO = .000001; //for a >5  pzero
   public static final double PZERO1 = .0000000001; 
-  public static final double NZERO = -.00001; // for a < nzero
-  public static final double PPZERO = .0000000001; //for a > pzero
+  public static final double NZERO = -.000001; // for a < nzero
+  public static final double PPZERO = .0000000001; //for a > 9 pzero
   public static final double NNZERO = -.0000000001;  // for a < nzero
   static double pzero = PZERO, nzero = NZERO;
-  public static final double UNZERO = .00000000000000001;
+  public static final double UNZERO = .00000000000000001;//17 zereo
   public static final double INVZERO = 1. / UNZERO;
   /** test whether is number is not zero
    * 

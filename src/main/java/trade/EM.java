@@ -1050,12 +1050,12 @@ class EM {
       dFrac.setMaximumFractionDigits(1);
       return dFrac.format(v);
     } else
-      if ((v < 0.0 && v > -999999. && (-v % 1 < E.PZERO)) || (v >= 0.0 && v < 999999. && (v % 1 < E.PZERO))) {  //very close to zero remainder
+      if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder //very close to zero remainder
         if(test5)System.err.printf("----MFT1A--- v= %10.5f\n",v);
       dFrac.setMaximumFractionDigits(0);
       return dFrac.format(v);
     } else
-      if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) { //6 7
+      if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) { //6 7
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(5);
         return dFrac.format(v);
@@ -1097,11 +1097,11 @@ class EM {
       dFrac.setMaximumFractionDigits(1);
       return dFrac.format(v);
     } else
-      if ((v < 0.0 && v > -99999999. && (-v % 1 < E.PZERO)) || (v >= 0.0 && v < 99999999. && (v % 1 < E.PZERO))) {  //very close to zero remainder
+     if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //very close to zero remainder
        dFrac.setMaximumFractionDigits(0);
        return dFrac.format(v);
       } else
-     if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) {
+     if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(7);
         return dFrac.format(v);
@@ -1139,16 +1139,16 @@ class EM {
       dFrac.setMaximumFractionDigits(1);
       return dFrac.format(v);
     } else
-      if ((v < 0.0 && v > -99999999. && (-v % 1 < E.PZERO)) || (v >= 0.0 && v < 99999999. && (v % 1 < E.PZERO))) {  //8 8 very close to zero remainder
+     if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //8 8 very close to zero remainder
        dFrac.setMaximumFractionDigits(0);
        return dFrac.format(v);
       } else
-     if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) { // up to 9 fractions
+     if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) { // up to 9 fractions
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(9);
         return dFrac.format(v);
       }
-      else if ((v > -999999. && v < -0.0) || (v > .001 && v < 999999.)) { // 6 6 13 12
+      else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 999999.)) { // 6 6 13 12
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         return dFrac.format(v);
@@ -1158,12 +1158,12 @@ class EM {
         dFrac.setMaximumFractionDigits(2);
         return dFrac.format(v);
       }
-      else if ((v > -99999999. && v < -0.0) || (v > .001 && v < 99999999.)) { // 8 8 13 13
+      else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 8 8 13 13
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
         return "w" + dFrac.format(v);
       }
-      else if ((v > -99999999. && v < -0.00) || (v > .001 && v < 99999999.)) {// 8 8  12 11
+      else if ((v > -99999999. && v < -0.00) || (v >= 0.0 && v < 99999999.)) {// 8 8  12 11
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
         return dFrac.format(v);
@@ -1173,45 +1173,57 @@ class EM {
       }
   }
     else if (myWidth > 1800) { // 15 characters
-      if(test5)System.err.printf("----MFT9--- v= %10.5f\n",v);
-        if ((v < 0.0 && v > -999999999999. && ((-v % 1.0) < E.PZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PZERO))) {  //12 13  13 13 very close to zero remainder
-          
+      if(test5)System.err.printf("----MFT9--- v= %15.9f\n",v);
+        if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder    
        dFrac.setMaximumFractionDigits(0);
-       if(test5)System.err.printf("----MFT9a--- v= %10.5f rem=%10.5f\n",v,v % 1.0);
+       if(test5)System.err.printf("----MFT9a--- v= %10.5f, " + dFrac.format(v) + " \n",v);
        return dFrac.format(v);
       }
-         if ((v < 0.0 && v > -.001) || (v > .0 && v <.001)) {
+         if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(9);
-        if(test5)System.err.printf("----MFT9c--- v= %10.5f\n",v);
+        if(test5)System.err.printf("----MFT9c--- v= %15.9f, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
          }
-      else if ((v > -99999999. && v < -0.0) || (v > .001 && v < 999999999.)) { // 8 9
-        if(test5)System.err.printf("----MFT9d--- v= %10.5f\n",v);
+      else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 9999999.)) { // 6 7 
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(3);
+        dFrac.setMaximumFractionDigits(5);
+        if(test5)System.err.printf("----MFT9k--- v= %15.9f, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
     }
-      else if ((v > -9999999999. && v < -0.0) || (v > .001 && v < 999999999.)) { // 9 9
+      else if ((v > -9999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 7 8 
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(4);
+        if(test5)System.err.printf("----MFT9d--- v= %15.8f, " + dFrac.format(v) + " \n",v);
+        return dFrac.format(v);
+    }
+      else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 8 9 
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(3);
+        if(test5)System.err.printf("----MFT9d--- v= %10.5f, " + dFrac.format(v) + " \n",v);
+        return dFrac.format(v);
+    }
+      else if ((v > -9999999999. && v < -0.0) || (v >= 0.0&& v < 999999999.)) { // 9 9
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(2);
-        if(test5)System.err.printf("----MFT9e--- v= %10.5f\n",v);
+        if(test5)System.err.printf("----MFT9e--- v= %10.3f, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
       }
-      else if ((v > -9999999999. && v < -0.0) || (v > .00 && v < 99999999.)) { // 9 8
-        if(test5)System.err.printf("----MFT9f--- v= %10.5f\n",v);
+      else if ((v > -9999999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 9 8
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
+        if(test5)System.err.printf("----MFT9f--- v= %10.7f, " + dFrac.format(v) + " \n",v);
         return "w" + dFrac.format(v);
       }
-      else if ((v > -99999999999. && v < -0.00) || (v > .00 && v < 99999999999.)) {//11 11
-        if(test5)System.err.printf("----MFT9b--- v= %10.5f\n",v);
+      else if ((v > -99999999999. && v < -0.00) || (v >= 0.0 && v < 99999999999.)) {//11 11
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
+        if(test5)System.err.printf("----MFT9d--- v= %10.7f, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
       }
     }
     else {
+      if(test5)System.err.printf("----MFT9g--- v= %10.5f, " + exp.format(v) + " \n",v);
       return exp.format(v);
     }
     return exp.format(v);
@@ -2238,13 +2250,13 @@ class EM {
   static final double[][] mFracPriorityInGrowth = {{.01, .9}, {.001, .9}};
   static double[] resourceGrowth = {3.7, .0002}; // growth per work
   static final double[][] mResourceGrowth = {{.01, 6.}, {0.00002, 2.9}};
-  // decay mining cumulative related to each years growth
+  // deterioration mining cumulative related to each years growth
   static double[] resourceGrowthDecay = {.0006, .0006}; //per unit
-  // decay mining cumulative related to each years growth
+  // deterioration mining cumulative related to each years growth
   static final double[][] mResourceGrowthDecay = {{.00003, .009}, {.00003, .009}};
   static double[] cargoGrowth = {0.000001, .00000001};
   static final double[][] mCargoGrowth = {{0.00000001, 0.00009}, {0.0000000001, 0.0000009}};
-  // cargo decay use resourceGrowthDecay
+  // cargo deterioration use resourceGrowthDecay
   static double[] staffGrowth = {3.7, .0002}; // growth per work
   static final double[][] mStaffGrowth = {{0.00002, 6.}, {0.00002, 2.9}};
   static double[] staffGrowthDecay = {.0006, .0006}; //per unit
@@ -2254,12 +2266,12 @@ class EM {
   static double[] guestsGrowth = {0.000001, .00000001};
   static final double[][] mGuestsGrowth = {{0.00000001, 0.00009}, {0.0000000001, 0.0000009}};
   static final double[][][] mRCSGGrowth = {mResourceGrowth, mCargoGrowth, mStaffGrowth, mGuestsGrowth};
-  // growth is in terms of staff units, decay is in term of previous yr growth
+  // growth is in terms of staff units, deterioration is in term of previous yr growth
   static double[][] assetsUnitGrowth = {resourceGrowth, cargoGrowth, staffGrowth, guestsGrowth};
   static double[][] growthDecay = {resourceGrowthDecay, resourceGrowthDecay, staffGrowthDecay, staffGrowthDecay};
   static final double[][] mfracBiasInGrowth = {{.1, .3}, {.1, .3}};
   static final double[][] mfracPriorityInGrowth = {{.3, .7}, {.3, .7}};  //mult priority in growth calc and percent to frac
-  static double maxFracBonusGrowth[] = {1.5, 1.5}; // limit size of bonus growth so rawUnitGrow - decay + bonus growth is less than assetsUnitGrowth * maxFracGonusGrowth
+  static double maxFracBonusGrowth[] = {1.5, 1.5}; // limit size of bonus growth so rawUnitGrow - deterioration + bonus growth is less than assetsUnitGrowth * maxFracGonusGrowth
   static final double[][] mMaxFracBonusGrowth = {{.5, 2.5}, {.5, 2.5}};
   static double[][] clanFutureFundEmerg2 = {{.15, .15, .15, .15, .15}, {.15, .15, .15, .15, .15}};
   static final double[][] mClanFutureFundEmerg = {{.01, .3}, {.01, .3}};
@@ -3692,7 +3704,7 @@ onceAgain:
     doVal("staffGrowth", staffGrowth, mStaffGrowth, "increase amount of staff growth per year, dependent on units of staff");
     doVal("guestGrowth", guestsGrowth, mGuestsGrowth, "increase amount of guest growth per year, dependent on units of guests");
     doVal("maxStaffGrowth", maxStaffGrowth, mMaxStaffGrowth, "increase the largest possible staffsize, staff growths will slow to prevent reaching this size");
-    doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the decays of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
+    doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the deteriorations of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
     doVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
     doVal("InitYrsTraveled", initTravelYears, mInitTravelYears, "Increase initial travel cost");
     doVal("favr", fav0, mfavs, "increase how much your clan favors clan red by giving a better barter discount, this increases the amount you help clan red ");
@@ -4047,8 +4059,9 @@ onceAgain:
   static final int CATWORTHINCR = ++e4;
   static final int CUMCATWORTH = ++e4;
   static final int GROWTHS = ++e4;
-  static final int RAWYEARUNITGROWTHS = ++e4;
+  static final int RAWYEARLYUNITGROWTHS = ++e4;
   static final int RAWUNITGROWTHS = ++e4;
+  static final int RAWGROWTHS = ++e4;
   static final int GROWTHWORTHINCR = ++e4;
   static final int RGROWTHV = ++e4;
   static final int CGROWTHV = ++e4;
@@ -4075,6 +4088,7 @@ onceAgain:
   static final int BOTHCREATE = ++e4;
   static final int LIVERCSG = ++e4;
   static final int INCRRCSG = ++e4;
+  static final int INCRGROWRCSG = ++e4;
   static final int INITRCSG = ++e4;
   static final int HIGHRCSG = ++e4;
   static final int LOWRCSG = ++e4;
@@ -4414,11 +4428,11 @@ onceAgain:
   static final int NOCRISIS2INCR = ++e4;
   static final int NOCRISIS3INCR = ++e4;
   static final int CRISISRESREDUCEPERCENT = ++e4;
-  static final int CRISISRESDECAYBONUSPERCENT = ++e4;
+  static final int CRISISRESDETERIORATIONBONUSPERCENT = ++e4;
   static final int CRISISSTAFFREDUCEPERCENT = ++e4;
   static final int CRISISRESREDUCESURPLUSPERCENT = ++e4;
   static final int CRISISSTAFFREDUCESURPLUSPERCENT = ++e4;
-  static final int CRISISSTAFFDECAYBONUSPERCENT = ++e4;
+  static final int CRISISSTAFFDETERIORATIONBONUSPERCENT = ++e4;
   static final int CRISISSTAFFGROWTHPERCENTINCR = ++e4;
   static final int CRISISSTAFFGROWTHYEARSINCR = ++e4;
   static final int CRISISRESGROWTHPERCENTINCR = ++e4;
@@ -4440,30 +4454,32 @@ onceAgain:
   void defRes() {
 
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEAR | THISYEARUNITS | THISYEARAVE | BOTH, ROWS1 | LIST432 | LIST5 | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CUR | SKIPUNSET);
-    doRes(TRADELASTGAVE, "TradelLastGiven", "last goods given strategic worth", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth not strategic worth given in trade ", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURUNITS | CUR | BOTH | SKIPUNSET, 0L);
-    doRes(TRADESTRATLASTGAVE, "TradeStrategicLastGave", "Percent nominal amount given in trade per sumrcsg may be used for scoreing", 2, 2, 2, LIST40 | LIST15 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase at total trades this year/start year worth part of scoring ", 2, 3, 2, LIST0 | LIST1 | LIST4 | THISYEAR | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(DIED, "DIED", "planets or ships died", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST14 | THISYEARUNITS | CUMUNITS | BOTH, 0, 0, 0);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9  | THISYEAR | SUM, LIST0 | LIST6 | LIST7 | LIST8 |  THISYEARUNITS | THISYEARAVE | BOTH, ROWS1  | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CURAVE | SKIPUNSET);
+    doRes(TRADELASTGAVE, "Trade given", "strategic worth of trade goods given ", 2, 2, 2, LIST40 | LIST15 |  THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth of trade goods given");
+    doRes(TRADESTRATLASTGAVE, "%trade Gaven", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing");
+    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
+    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST14 | THISYEARUNITS | CUMUNITS | BOTH, 0, 0, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(LIVERCSG, "Live rcsg", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(INCRRCSG, "%incr rcsg", "this years incr rcsg Value  year end rcsg - start rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(INCRGROWRCSG, "incrGrowRCSG", "this years incr rcsg Value  after grow rcsg - before grow rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 |  THISYEARAVE | BOTH, 0, 0, 0);
+     doRes(INCRRCSG, "%incrGrowrcsg", "this years incr rcsg Value  end year rcsg - start year rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
     doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(GROWTHS, "GrOWTH", "growth for this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWYEARUNITGROWTHS, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | CURUNITS |CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth  this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | CURUNITS |CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(GROWTHWORTHINCR, "GrthIncWorth", "worth increase this year from growth before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 |  THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE  | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RAWYEARLYUNITGROWTHS, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
+    doRes(RAWGROWTHS, "rawGrowthS", "Raw growth after depreciation this year before growths");
+    doRes(GROWTHWORTHINCR, "GrthIncWorth", "worth increase this year from growth before cost reduction");
      doRes(RGROWTHV, "R growth", "R growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CGROWTHV, "C growth", "C growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(SGROWTHV, "S growth", "S growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
@@ -4827,7 +4843,7 @@ onceAgain:
     doRes(sumCatEffSBen, "EffCatSBen", "Catastrophy Effective staff growth benefits");
     doRes(sumCatEffManualsBen, "EffCatManBen", "Catastrophy Effective manuals benefits");
     doRes(sumCatEffKnowBen, "EffCatKnoBen", "Catastrophy effective knowledge benefits");
-    doRes(sumCatEffRDecayBen, "EffRDecayBen", "Catastrophy effective resource decay decrements");
+    doRes(sumCatEffRDecayBen, "EffRDecayBen", "Catastrophy effective resource deterioration decrements");
     doRes(sumCatEffSDecayBen, "EffSDecayBen", "Catastrp[ju effoctove staff decau decrements");
     // repeatlists at "W..." at a later point rn 
     doRes("WTRADEDINCRF5", "Fav5Trd%IncW", "% Years worth increase at Favor5/start year worth", 2, 3, 2, both | SKIPUNSET, ROWS1 | LIST41 | CURAVE | BOTH | SKIPUNSET, ROWS2 | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | THISYEARAVE | BOTH | SKIPUNSET);
@@ -4925,9 +4941,9 @@ onceAgain:
     doRes(NOCRISIS2INCR, "IncWorth 2Yr No Crisis", "Percent Year increase Worrth/Year initial worth if 2 years of No catastrophy");
     doRes(NOCRISIS3INCR, "IncWorth 3Yr No Crisis", "Percent Year increase Worrth/Year initial worth if 3 years of No catastrophy");
     doRes(CRISISRESREDUCEPERCENT, "reduceResInCrisis", "Crisis reduce resource by percent of balance ", 1, 2, 1, LIST2 | CUMAVE | BOTH | SKIPUNSET, LIST9 | SKIPUNSET | BOTH | THISYEAR | THISYEARUNITS, LIST14 | CURAVE, 0);
-    doRes(CRISISRESDECAYBONUSPERCENT, "%ResBounusGrowth", " crisis bonus growth pecent of original potential unit growth");
+    doRes(CRISISRESDETERIORATIONBONUSPERCENT, "%ResBounusGrowth", " crisis bonus growth pecent of original potential unit growth");
     doRes(CRISISSTAFFREDUCEPERCENT, "ReduceStaffInCrisis", "Crisis reduce staff by percent of balance");
-    doRes(CRISISSTAFFDECAYBONUSPERCENT, "%bounusStaffGrowthCrisis", "Crisis up staff Growth by percent of potential growth");
+    doRes(CRISISSTAFFDETERIORATIONBONUSPERCENT, "%bounusStaffGrowthCrisis", "Crisis up staff Growth by percent of potential growth");
     doRes(CRISISRESREDUCESURPLUSPERCENT, "PercentSurplusReduceResourceCrisis", "Crisis surplus reduce resource by percent of balance");
     doRes(CRISISSTAFFREDUCESURPLUSPERCENT, "PercentReduceStaffCrisis", "Crisis surplus reduce staff by percent of balance");
     doRes(CRISISSTAFFGROWTHPERCENTINCR, "Crisis%IncreaseStGrow", "Crisis percent increase by staff growth for a few years");
