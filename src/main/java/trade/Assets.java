@@ -9627,6 +9627,8 @@ public class Assets {
         EM.isHere("--EYEYf--",ec,"end of live stats");
 // ---------------------- end of live stats ---------------------------------
       } else //now dead stats
+        ec.dead = true; // set econ to dead
+        ec.dyear = EM.year; // set year of death
       { // dead, be sure died is set
         if(eM.dfe()) return 0.;
         EM.isHere1(ec, " CashFlow.yearEnd start of dead cccg=" + ++cccg);

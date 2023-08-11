@@ -52,7 +52,8 @@
             </properties>
         </action>
         <action>
-            <actionName>test</actionName>
+            <actionName>CUSTOM-test</actionName>
+            <displayName>test</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -64,9 +65,9 @@
             <properties>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
                 <exec.appArgs>"test"</exec.appArgs>
-                <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.mainClass>trade.StarTraderTest</exec.mainClass>
             </properties>
         </action>
          <action>
@@ -81,7 +82,7 @@
                 <exec.executable>java</exec.executable>
                 <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"test"</exec.appArgs>
-                <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.mainClass>trade.StarTraderTest</exec.mainClass>
               <vertx.timeout>9999</vertx.timeout> 
             </properties>
         </action>
@@ -170,9 +171,9 @@
             <properties>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+                <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
                 <exec.appArgs>"runtestandsee"</exec.appArgs>
-                <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.mainClass>trade.StarTraderTest</exec.mainClass>
             </properties>
             <activatedProfiles>
                 <activatedProfile>runtestandsee</activatedProfile>

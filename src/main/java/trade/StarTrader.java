@@ -5487,7 +5487,7 @@ public class StarTrader extends javax.swing.JFrame {
         if (n.getDie() && n.pors == E.S && n.getDAge() > 2) {
           eM.setCurEcon(newEC = n);
           //    EM.econCnt++;
-          EM.wasHere = "-------ML--------found dead Ship cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
+          EM.wasHere = "-------ML--------found dead Shipt=" + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
           System.out.println(EM.wasHere);
           break;
         }
@@ -5506,11 +5506,11 @@ public class StarTrader extends javax.swing.JFrame {
     String name = (pors == 0 ? "P" : "S") + nameF.format(eM.nameCnt++);
     // reduce the size of ships cash by shipsPerPlanet
     // double mCash = eM.initialWorth[pors] * (pors == E.S ? 1.0 / shipsPerPlanet : 1.0);
-    EM.wasHere = "-------MMb--------Init new Econ" + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " name=" + name;
+    EM.wasHere = "-------MMb--------Init new Econ" + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name;
     System.out.println(EM.wasHere);
-    eM.curEcon.init(this, eM, name, clan, EM.econCnt, pors, xpos, eM.difficultyPercent[0], worth);
+    newEC.init(this, eM, name, clan, EM.econCnt, pors, xpos, eM.difficultyPercent[0], worth);
     startEconState = (new Date()).getTime();
-    EM.wasHere = "-------MN--------Inited  Econ" + EM.econCnt + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " name=" + name + sinceRunYear();
+    EM.wasHere = "-------MN--------Inited  Econ" + EM.econCnt + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name + sinceRunYear();
     System.out.println(EM.wasHere);
     // now update counts planets and ships
     Econ t = eM.curEcon;
@@ -5534,11 +5534,11 @@ public class StarTrader extends javax.swing.JFrame {
       else {
         eM.ships.add(t);
       }
-      EM.wasHere = "-------MMc--------" + sinceA() + " counted Econ" + EM.econCnt + "::" + EM.econs.size() + " planets" + EM.porsCnt[0] + "::" + EM.planets.size() + " ships" + EM.porsCnt[1] + "::" + EM.ships.size() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " name=" + name + sinceRunYear();
+      EM.wasHere = "-------MMc--------" + sinceA() + " counted Econ" + EM.econCnt + "::" + EM.econs.size() + " planets" + EM.porsCnt[0] + "::" + EM.planets.size() + " ships" + EM.porsCnt[1] + "::" + EM.ships.size() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name + sinceRunYear();
       System.out.println(EM.wasHere);
 
     }
-    return EM.curEcon;
+    return newEC;
   }
 
   /**
@@ -8303,7 +8303,7 @@ public class StarTrader extends javax.swing.JFrame {
     try {
       //   E.bRemember = Files.newBufferedWriter(E.REMEMBER, E.CHARSET);
       
-      if(args.length > 0){System.err.println("----MSa-----starting out in mainStart args[0]=" + args[0] + " thread=" + Thread.currentThread().getName());
+      if(args.length > 0){System.err.println("----MSaa-----starting out in mainStart args[0]=" + args[0] + " thread=" + Thread.currentThread().getName());
       } else {
         System.err.println("----MSa2-----starting out in mainStart thread=" + Thread.currentThread().getName());
       }
@@ -8319,14 +8319,14 @@ public class StarTrader extends javax.swing.JFrame {
         //  jout1 = new PrintStream(new File("StarTraderOut1.txt"));
         //  jout1.println("jout1 line");
         jout.println("jout line0 " + (new Date()).toString());
-        System.out.println("----MSO0----System.out line 0" + (new Date()).toString());
+        System.out.println("----MSO0----System.out line 0=" + (new Date()).toString());
         jerr = new PrintStream(new File("StarTraderErrors.txt"));
         jerr.println("jout line0 " + (new Date()).toString());
         //     jerr1 = new PrintStream(new File("StarTraderErr1.txt"));
         if (E.resetOut || (args.length > 0 && args[0].contains("see") && !args[0].contains("Only"))) {
           //  if (E.resetOut) {
           System.setOut(jout);
-          System.out.println("-----MSOO----output to System.out after setOut " + (new Date()).toString());
+          System.out.println("-----MSOb----output to System.out after setOut " + (new Date()).toString());
           System.setErr(jerr);
           System.err.println("----MSOE----output to System.err after setErr " + (new Date()).toString());
 

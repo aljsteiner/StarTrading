@@ -52,6 +52,8 @@ public class Econ {
   static E eE = EM.eE;
   Econ ec = this;
   String aPre = "&V";
+  Boolean dead = false;
+  int dyear = -5;
   int lev = History.informationMinor9;
   int blev = History.dl;
   int blev1 = History.dl;  // for addOHist
@@ -165,6 +167,8 @@ public class Econ {
     Econ.st = ast;
     this.year = eM.year;
     this.myEconCnt = econCnt;
+    dead = false;
+    dyear =-5;
 
     planetList = new ArrayList<TradeRecord>();
     //double res1 = 1.0, tworth2 = 0.;
@@ -365,6 +369,7 @@ public class Econ {
    * @return
    */
   int getN() {
+    if(dead) return -5;
     return as.getN();
   }
 
@@ -391,7 +396,7 @@ public class Econ {
    */
   int[] getNSavd() {
     int ret[] = {-7, -7, -7, -7, -7};
-    if (as != null) {
+    if (as != null  && !dead) {
       ret = as.getNSavd();
     }
     return ret;
@@ -403,7 +408,8 @@ public class Econ {
    * @return years dead
    */
   int getDAge() {
-    return dage;
+   if(dead) return EM.year - dyear;
+   return -5;
   }
 
   /**
@@ -412,6 +418,7 @@ public class Econ {
    * @return tradingGoods value of goods to be traded and requested
    */
   A2Row getTradingGoods() {
+    if(dead) return new A2Row(this);
     return as.getTradingGoods();
   }
 
@@ -421,6 +428,7 @@ public class Econ {
    * @return 1 year of the costs
    */
   double getSumTrade1YearTravelMaintCosts() {
+    if(dead)return 0.;
     return as.getSumTrade1YearTravelMaintCosts();
   }
 
@@ -438,6 +446,7 @@ public class Econ {
    * @return number of successful trades
    */
   int getTradedSuccessTrades() {
+    if(dead)return -5;
     return as.getTradedSuccessTrades();
   }
 
@@ -447,6 +456,7 @@ public class Econ {
    * @return the number of trades tried this year
    */
   int getTradedShipsTried() {
+        if(dead)return -5;
     int jjj = as.getTradedShipsTried();
     return as.getTradedShipsTried();
   }
@@ -471,6 +481,7 @@ public class Econ {
    * planets. a planet may appear for each round.
    */
   boolean planetCanTrade(int round) {
+    if(dead)return false;
     boolean go = canDoAnotherBarter(); // can go to trade
     go &= pors > 0; // any ship trades
     boolean go1 = EM.porsCnt[E.P] < 3;  //allow go beginnning of game
@@ -530,6 +541,7 @@ public class Econ {
 
   ;
   ARow getNewKnowledge() {
+        if(dead)return new ARow(this);
     return as.getNewKnowledge();
   }
 
@@ -544,6 +556,7 @@ public class Econ {
    * @return manuals count
    */
   ARow getManuals() {
+        if(dead)return new ARow(this);
     return as.getManuals();
   }
 
@@ -553,6 +566,7 @@ public class Econ {
    * @return true if SOS
    */
   boolean getSOS() {
+    if(dead) return false;
     return as.getSOS();
   }
 
@@ -562,6 +576,7 @@ public class Econ {
    * @return as.getYrTradesStarted()
    */
   int getYrTradesStarted() {
+    if(dead)return -5;
     return as.getYrTradesStarted();
   }
 
@@ -575,6 +590,8 @@ public class Econ {
    * @return a new trand of E.lrand length
    */
   protected double[] newRand(double[] trand) {
+    double ret[] = {-5.};
+    if(dead)return ret;
     trand = new double[E.lrand];
     // make range (0->.7 + 0->1*0->.5) = (0->1.2)
     //rMult = (eM.randFrac[pors][0] + eM.clanRisk[pors][clan] * eM.gameClanRiskMult[pors][0]);
@@ -609,6 +626,7 @@ public class Econ {
    * @return a random number centered around 1.0, possibly reduced by rMult
    */
   protected double cRand(int randx, double rMult) {
+    if(dead)return -1;
     if (eM.randFrac[pors][0] <= E.pzero) {  // not yet used
       return 1.;
     }
@@ -633,6 +651,7 @@ public class Econ {
    * @return a random number centered around 1.0, possibly reduced by rMult
    */
   protected double doRand(int randx, double rMult) {
+    if(dead)return -1.;
     int ix = randx % trand.length;
     double myCent = rCent * rMult;
     double myRand = trand[ix] * rMult; // now centered around myCent
@@ -648,14 +667,16 @@ public class Econ {
    * @return
    */
   protected double cRand(double[] trand, int randIx) {
+    if(dead) return -1.;
     return cRand(randIx, 1.0);
   } // cRand
 
-  /**
+  /**get the current health
    *
    * @return
    */
   protected double getHealth() {
+    if(dead) return -.5;
     return as.getHealth();
   }
 
@@ -667,7 +688,6 @@ public class Econ {
   double getHiLoMult() {
     return hiLoMult;
   }
-
   ;
   
   /** get the Hi true when the HiLoMult will increase the worth
@@ -685,6 +705,7 @@ public class Econ {
    * @return total asset worth
    */
   protected double getWorth() {
+    if(dead) return -1.;
     return as.getWorth();
   }
 
@@ -694,7 +715,7 @@ public class Econ {
    * @return die flag
    */
   protected boolean getDie() {
-    return as.getDie();
+    return !dead;
   }
 
   /**
@@ -703,6 +724,7 @@ public class Econ {
    * @return guest ARow
    */
   ARow getGuests() {
+    if(dead)return new ARow(this);
     return as.getGuests();
   }
 
@@ -712,10 +734,13 @@ public class Econ {
    * @return guest grades
    */
   double[][] getGuestGrades() {
+    double ret[][] = {{-1.}};
+    if(dead)return ret;
     return as.getGuestGrades();
   }
 
   ARow getCargo() {
+    if(dead)return new ARow(this);
     return as.getCargo();
   }
 
@@ -742,6 +767,7 @@ public class Econ {
   }
 
   double addCash(double cash) {
+    if(dead)return -1.;
     return as.addCash(cash);
   }
 
@@ -755,6 +781,7 @@ public class Econ {
    * @return
    */
   int getShipOrdinal() {
+    if(dead) return -1;
     return as.getShipOrdinal();
   }
 
@@ -765,6 +792,7 @@ public class Econ {
    * @param lightYears lightYearsTraveled for a ship
    */
   protected void yearStart(double lightYears) {
+    if(dead) return;
     age++; // move -1 to 0 for the first year
     // age the hists file, move 4->5, 3->4, 2->3, 1->2, new 1
     // except for the first year, or if the env is dead
@@ -867,6 +895,7 @@ public class Econ {
    * or more call to yearEnd in a given year
    */
   protected void yearEnd() {
+    if(dead)return;
     visitedShipNext = -1; // ignore everything in the list
     nowName = name;
     nowEc = this;
@@ -972,7 +1001,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    */
   void addOHist(ArrayList<History> oHist, History hh) {
     // do nothing if hist is being cleared or the hist level is > bLev highest allowed level
-    if (clearHist() || hh == null || hh.level > blev1) {
+    if (dead || clearHist() || hh == null || hh.level > blev1) {
       return;
     }
     oHist.add(hh);
@@ -988,7 +1017,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    */
   void addHist(ArrayList<History> hist, History hh) {
     // do nothing if hist is being cleared or the hist level is > bLev highest allowed level
-    if (clearHist() || hh == null || hh.level > blev2) {
+    if (dead || clearHist() || hh == null || hh.level > blev2) {
       return;
     }
     hist.add(hh);
@@ -1005,7 +1034,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    */
   void addHist(ArrayList<History> hist, int bLev, History hh) {
     // do nothing if hist is being cleared or the hist level is > bLev highest allowed level
-    if (clearHist() || hh == null || hh.level > bLev) {
+    if(dead || clearHist() || hh == null ) return;
+    if ( hh.level > bLev ) {
       int bb = hh.level;
       return;
     }
@@ -1064,6 +1094,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * @return
    */
   Econ selectPlanet(Econ[] wilda, int wLen) {
+    if(dead) return this;
     TradePriority[] tPriority = new TradePriority[wLen];
     String[] sPriority = new String[wLen];
     if (E.debugDisplayTrade) {
@@ -1164,6 +1195,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
   }
 
   protected double calcLY(Econ cur, Econ cur2) {
+    if(dead) return 0.;
     double x = (cur.xpos - cur2.xpos);
     double y = (cur.ypos - cur2.ypos);
     double z = (cur.zpos - cur2.zpos);
@@ -1231,6 +1263,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
   ArrayList<TradeRecord> mergeLists(ArrayList<TradeRecord> ownerList, ArrayList<TradeRecord> otherList, Offer aOffer) {
     // construct newOwnerList
     ArrayList<TradeRecord> newOwnerList = new ArrayList<TradeRecord>();
+    if(dead) return newOwnerList;
     int lOwnerList = ownerList.size();
     int yearsTooEarly = (int) (eM.year - eM.yearsToKeepTradeRecord[0][0]);
     // put new offer at the end
@@ -1269,6 +1302,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * @return distance Light Years ship moved
    */
   double moveLocation(Econ planet) {
+    if(dead) return 0.;
     if (E.debugTradeSetup) {
       if (planet.pors == E.S) {
         eM.doMyErr("Error cannot move to a star=" + planet.getName());
@@ -1306,6 +1340,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * @param planet
    */
   protected void sStartTrade(Econ ship, Econ planet) {  // only called for ships
+    if(dead) return;
     Econ myCur = eM.curEcon;  // save eM.curEcon for after trade
     Econ cn[] = {planet, ship};
     if (!ship.getDie()) {
@@ -1388,6 +1423,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * @return
    */
   Offer barter(Offer aOffer, Econ otherEcon, int term) {
+    if(dead) return aOffer;
     // keep a list of all the visited ships, even if barter failed
     nowName = name;
     if (visitedShipNext < 0 || visitedShipList[visitedShipNext] != otherEcon && term > eM.barterStart - 2) {
@@ -1415,6 +1451,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * @return the count of entries in visitedShipList
    */
   int getShipsVisited(Econ[] visitedShips) {
+    if(dead) return 0;
     visitedShips = visitedShipList;
     int vsmax = Math.min(visitedShipList.length, visitedShips.length);
     int lvs = visitedShips.length;
@@ -1437,6 +1474,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * @return whether this econ can do another trade this year
    */
   boolean canDoAnotherBarter() { // still in primary thread
+    if(dead)return true;
     double maxShips = eM.shipsPerPlanet(clan);
     return !(alreadyTrading || didYearEnd) && visitedShipNext < maxShips;
   }
@@ -1453,6 +1491,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * @param why string of why to wait for comments
    */
   void imWaiting(int[] what, int limit, int secs, String why) {
+    if(dead) return;
     int tCnts = 0;
     int le = 10;
     long imStart = (new Date()).getTime();
@@ -1597,6 +1636,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   void doMoreThreads(String doFor, String ecnName) {
+    if(dead)return;
     //   didYearEnd = true;  // flag no longer available to barter of end
     nowName = ecnName;
     if (eM.maxThreads[0][0] < 2.0) {
@@ -1629,6 +1669,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   void incrEndYearCnt() {
+    if(dead)return;
     synchronized (doEndYearCnt) {
       for(int ix=0;ix < maxEndYears-1;ix++){
        if(econNames[ix] == null){
@@ -1651,6 +1692,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   void decrEndYearCnt() {
+    if(dead)return;
     synchronized (doEndYearCnt) {
       doEndYearCnt[0]--;
       for(int ix=0;ix < maxEndYears-1;ix++){
@@ -1671,6 +1713,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   void doYearEnd() {
+    if(dead) return;
     if (!didYearEnd) {
       synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
