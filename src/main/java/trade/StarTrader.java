@@ -6859,7 +6859,7 @@ public class StarTrader extends javax.swing.JFrame {
           EM.wasHere = "after setLogEnvirn econCnt)";
           EM.twh1 = new Date().getTime();
           setEconState(DOYEAREND);
-          EM.curEcon.doYearEnd(); // finally Assets.CashFlow.yearEnd()
+          curEc.doYearEnd(); // finally Assets.CashFlow.yearEnd()
           EM.wasHere = "after EM.curEcon.doYearEnd()";
           EM.twh1 = new Date().getTime();
           if (E.debugEconCnt) {

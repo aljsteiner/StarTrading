@@ -200,7 +200,7 @@ class EM {
   static volatile double mEconLimits3[][] = {{35., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
-  static String tError = " no tError";
+  static String tError = " empty tError";
   static volatile Econ curEcon;  //eM only changes at the end a a year run, EM.curEcon
   static volatile String curEconName = "no Econ name";
   static volatile String curEconClan = "A";
@@ -581,7 +581,8 @@ class EM {
    * @return return string
    */
   protected static String threadsStacks() {
-    String ret = "\n----THs---- Start ThreadStacks by " + Thread.currentThread().getName() + since() + sinceDoYear() + "\n" + mem() + lfe();
+    String ret = "\n----THs---- " + curEconName + " Start ThreadStacks stacks by " + Thread.currentThread().getName() + since() + sinceDoYear() + "\n" + mem() + lfe() + "\n tError=" + tError + "\n";
+            
     Thread[] tarray = new Thread[10];
     Thread.enumerate(tarray);
     for (Thread th : tarray) {
@@ -595,7 +596,7 @@ class EM {
           ret += ("at " + elem.getClassName() + "." + elem.getMethodName() + "(" + elem.getFileName() + ":" + elem.getLineNumber() + ")" + "\n");
           //ret += elem.toString();
         }
-        ret += "\n****end ThreadsStacks****\n";
+        ret += "\n****end ThreadsStacks thread****\n";
         // System.err.println(ret);
       }
     }

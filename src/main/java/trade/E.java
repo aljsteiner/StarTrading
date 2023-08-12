@@ -92,7 +92,7 @@ static StarTrader st;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
  //static final boolean resetOut = debugOutput;  //change out, err to
   static final boolean resetOut = false;  //change out, err to
-  static final boolean debugDoYearOut = debugMaster; //output messages in doyear and subs
+  static final boolean debugDoYearEndOut = true; //output messages re yearEnd
   static final boolean debugAssetsOut = debugMaster; //output messages Assets
   static final boolean debugEconOut = debugMaster; //output messages in Econ
   static final boolean debugCashFlowOut = debugMaster; //output messages in CashFlow
@@ -146,6 +146,7 @@ static StarTrader st;
   static final boolean debugIsHere3Out = true;
   static final boolean debugPutRows2 = false; 
   static final boolean DEBUGWAITTRACE = false;
+  
  static final boolean debugLogsOut = debugMaster; // StarTrader logs output
  static final boolean debugThreads = false;
  static final boolean debugRsOut = false; // EM rs output

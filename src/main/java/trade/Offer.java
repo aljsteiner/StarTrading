@@ -703,7 +703,10 @@ public class Offer {
     prevMyIx = myIx;
     myIx = cn[0] == ec ? 0 : cn[1] == ec ? 1 : 2;
     oIx = (1 + myIx) % 2; // set to the other
-    E.myTest(myIx > 1, "ec for " + ec.getName() + " not in offer");
+    
+    System.err.println("----OFSM----" + ec.getName() + " setMyIx=" + myIx + " 0=" + cn[0].getName()  + " 1=" + cn[1].getName() );
+    assert myIx != 2: ec.getName() + " is not=" + cn[0].getName() + " or=" + cn[1].getName();
+    E.myTest(myIx > 1,  ec.getName() + " is not=" + cn[0].getName() + " or=" + cn[1].getName());
     return myIx;
   }
 
@@ -828,12 +831,15 @@ public class Offer {
    *
    * @param ashipC pointer to pointers to trade Cargo Guests
    */
-  void setC(ARow cargo
-  ) {
+  void setC(ARow cargo) {
+      assert cargos[myIx] == cn[myIx].as.bals.A[2+1] : cn[myIx].getName() + ", " + cn[oIx].getName() +  " c != bals.A[3], c=" + EM.mf(cargos[myIx].sum()) + " bals c=" + EM.mf(cn[myIx].as.bals.A[1+2].sum()) + " term=" + term + ", n=" + cn[myIx].as.n + ", m=" + cn[myIx].as.m ;
     
-      if(E.debugOfferCargos && cargos[myIx] != cn[myIx].as.bals.A[2+1])
-      {E.myTest(true,"c != bals.A[3], c %4.3g, bals c %4.3g, term=%d,n=%d,m=%d",cargos[myIx].sum(),cn[myIx].as.bals.A[1+2],term,cn[myIx].as.n,cn[myIx].as.m);
+      if(E.debugOfferCargos && cargos[myIx] != cn[myIx].as.bals.A[2+1]){
+            E.myTest(true,"c != bals.A[3], c=" + EM.mf(cargos[myIx].sum()) + " bals c=" + EM.mf(cn[myIx].as.bals.A[1+2].sum()) + " term=%d, n=%d, m=%d",term,cn[myIx].as.n,cn[myIx].as.m);
     }
+     // {
+     //E.myTest(true,"c != bals.A[3], c %4.3f, bals c %4.3f, term=%d, n=%d, m=%d",cargos[myIx].sum(),cn[myIx].as.bals.A[1+2],term,cn[myIx].as.n,cn[myIx].as.m);
+    //}
        if(E.debugOfferCargos && cargos[myIx] != cn[myIx].as.cur.c.balance  ){
       E.myTest(true,"c != cBalance, c %4.3g cbal %4.3g, term=%d,n=%d,m=%d",cargos[myIx].sum(), cn[myIx].as.cur.c.balance.sum(),term,cn[myIx].as.n,cn[myIx].as.m);}
        if(E.debugOfferCargos && this.cargos[myIx] != cargo ){

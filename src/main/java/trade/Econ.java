@@ -985,7 +985,7 @@ public class Econ {
       EM.firstStack = EM.secondStack+"";
 ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       EM.flushes();
-      System.err.println(Econ.nowName + st.since() + " " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
+      System.err.println("----EREYm----" + Econ.nowName + st.since() + " Econ.yearEnd " + Econ.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
       ex.printStackTrace(System.err);
       EM.flushes();
       st.setFatalError();
@@ -1713,8 +1713,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   void doYearEnd() {
-    if(dead) return;
-    if (!didYearEnd) {
+    
+    if (!dead && !didYearEnd) {
       synchronized (A4Row.econLock) {
         okEconCnt = (EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]));
       }
@@ -1725,7 +1725,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
         }
- 
+        
       didYearEnd = true;
       nowName = name;
       dyThreadName = Thread.currentThread().getName();
@@ -1829,7 +1829,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         EM.wasHere2 = sETList[prevEtIx] = atList = "ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6];
       }
 
-    }
+    }  // dead didYearEnd
   }//doYearEnd  
 
 // this is a inner thread class which  runs yearEnd
@@ -1847,13 +1847,14 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     EconThread(Econ aaec,long[] setTimes, String aList, String[] sETList, int prevEtIx) {
       ec = aaec;
       etTimes = setTimes;
-      atList = aList;
-      etList = sETList;
+      atList = aList;  //list of previous at locations
+      etList = sETList;  // list of previous econ ttimings
       prevIx = prevEtIx;
       etTimes[2] = (new Date()).getTime();
     }
 
     public void run() {
+      try {
       int aage = eM.curEcon.age; 
       aage = ec.age;
       int tCnts = 0;
@@ -1932,6 +1933,17 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           System.out.println(etList[prevIx]);
         }
       }
-    }
+    } catch (Exception | Error ex) {
+      EM.firstStack = EM.secondStack + "";
+      ex.printStackTrace(EM.pw);
+      EM.secondStack = EM.sw.toString();
+      System.out.flush();
+      System.err.flush();
+      System.err.println(EM.tError = ("-----EREMCC-----" + ec.name + " EconThread run Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + EM.andMore()));
+      //     ex.printStackTrace(System.err);
+      st.setFatalError();
+      throw new WasFatalError(EM.tError);
+    } // catch
+    } // run
   } // Econ Thread
 }// Econ

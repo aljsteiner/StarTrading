@@ -2098,21 +2098,24 @@ public class Assets {
     if (cur == null) {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
-     
+     EM.isHere("--CEYEa--",ec, " before CashFlow.yearEnd aaadd1 " + aaadd1++);
       if (E.debugEconCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-            EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
+            throw new MyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
         
       }
     }
     cur.yearEnd();
-    EM.isHere("--CEYE--",ec, "after CashFlow.yearEnd aaadd1 " + aaadd1++);
+    if(E.debugDoYearEndOut)System.err.println("-----YEDPm ---- " + ec.name + " near end " + (died ? "DEAD" : "LIVE") + " in Assets.yearEnd() ");
 
-    if (E.debugMisc && syW != null) {
-      throw new MyErr("CashFlow.yearEnd did not null syW, probably skipped some code");
+    assert cur.c.balance == bals.A[2+1] : getName() +  " c != bals.A[3], c=" + EM.mf(cur.c.balance.sum()) + " != bals c=" + EM.mf(bals.A[1+2].sum());
+    if (E.debugMisc && !died && !EM.dfe() && syW != null) {
+      EM.newError = true;
+      throw new MyErr("Assets.yearEnd says CashFlow.yearEnd did not null syW, probably skipped some code");
     }
     //
+
     cashFlowSubAssetBalances.copyValues(balances);
     cashFlowSubAssetsGrowths.copyValues(growths);
     // cashFlowSubAssetUnitsNeededToSurvive = mtgNeeds6;
@@ -2181,7 +2184,7 @@ public class Assets {
         }
       
     }
-    getTradeInit(true); // force creation of trade values and rawProspects2
+     if(!died)getTradeInit(true); // force creation of trade values and rawProspects2
     if (E.debugEconCnt) {
       synchronized (A4Row.econLock) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -2199,6 +2202,7 @@ public class Assets {
   
       
     }
+    
     cur = null; // release all CashFlow storage
     if (E.debugEconCnt) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -9643,13 +9647,15 @@ public class Assets {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
         }
+        fyW = new DoTotalWorths();  // never tried growth
+       if(E.debugDoYearEndOut)System.err.println("-----YEDP---- " + ec.name + " dead in Assets.CashFlow.yearEnd() ");
         if (!died) {  // list only once
           // DoTotalWorths iyW, syW, tW, gSwapW, gGrowW, gCostW, fyW;
           double tt3 = 0;
-          fyW = new DoTotalWorths();  // never tried growth
           //100. * (final worth - start year worth)/start year worth is percent increase
           double worthincr1 = 100. * (fyW.sumTotWorth - syW.sumTotWorth) / syW.sumTotWorth;
           setStat(EM.DIED, pors, clan, worthincr1, 1);
+          if(E.debugDoYearEndOut)System.err.println("-----YEDPa---- " + ec.name + " stats dead in Assets.CashFlow.yearEnd() ");
           setStat(EM.DIEDPERCENT, pors, clan, 100., 1);
           int[] worthIncrA = {EM.DWORTHINCRN0,EM.DWORTHINCRN1,EM.DWORTHINCRN2,EM.DWORTHINCRN3};
         int[] growthsA =  {EM.DGROWTHSN0,EM.DGROWTHSN1,EM.DGROWTHSN2,EM.DGROWTHSN3};
@@ -10057,6 +10063,7 @@ public class Assets {
       }
       if(eM.dfe()) return 0.;
       //Assets.CashFlow.yearEnd  final cleanup for starting the next year
+       if(E.debugDoYearEndOut)System.err.println("-----YEDPg ---- " + ec.name + " near end " + (died ? "DEAD" : "LIVE") + " in Assets.CashFlow.yearEnd() ");
       didGoods = false;
       // sLoops[0] = 
       n = 0;
@@ -10075,11 +10082,13 @@ public class Assets {
       fav = -4;
       oTradedEcons = new Econ[20];
       oTradedEconsNext = 0;
+            syW = null; // get rid of hanging DoTotalWorths
+      if(!died){
       didStart = true;
       getTradingGoods();
       didStart = false; // force start at next initCashFlow
       didDecay = false;  // second setting
-      syW = null; // get rid of hanging DoTotalWorths
+
 
       //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
       if (E.debugEconCnt) {
@@ -10094,6 +10103,8 @@ public class Assets {
         throw new MyErr("in CF.yearEnd end, syW != null");
       }
       return health = rawProspects2.curMin();
+      }
+      return 0.;
     }
 
     void yDestroyFiles() {
