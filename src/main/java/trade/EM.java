@@ -187,7 +187,7 @@ class EM {
   // .25 = 1ship/3 planets
   static volatile double[] gameShipFrac = {.70};  // 2.3 ships / econs .75 means 3ships/1 planet, .8 = 4ships/1planet
   static final double[][] mGameShipFrac = {{.25, 1.20}, {.25, 1.20}};
-// double[][] clanShipFrac = {{.70, .70, .70, .501, .6}, {.70, .70, .70, .501, .6}}; // .3->5. clan choice of clan ships / clan econs
+// double[][] clanShipFrac = {{.70, .70, .70, .501, .6}, {.70, .70, .70, .501, .6}}; // .3->5. clan choice of clan ships / clan econs %ships of your clan
   static volatile double[][] clanShipFrac = {{.501, .501, .501, .501, .6}};
   static final double[][] mClanShipFrac = {{.25, .81}, {.20, 1.20}};
   static volatile double[][] clanAllShipFrac = {{.501, .501, .501, .501, .501}}; // clan (ships/econs)
@@ -336,7 +336,7 @@ class EM {
    * @param clan for which clan
    * @return pors for the given clan
    */
-  static int getNewPorS(int clan) {
+    int getNewPorS(int clan) {
     double sFrac1 = 99.;
     double sFrac2 = 99.;
     double sFrac3 = 99.;
@@ -351,8 +351,9 @@ class EM {
                 && sFrac1 < eM.clanAllShipFrac[P][clan]
                 && sFrac2 < eM.gameShipFrac[P]
                 && sFrac3 < eM.clanShipFrac[P][clan]) ? E.S : E.P;
-    if (E.debugDoYearOut) {
-      System.out.println("%%%%newEcon lPlanets=" + eM.porsCnt[P]
+
+   
+     if(E.debugCreateOut)System.out.println("%%%%select newEcon pors lPlanets=" + eM.porsCnt[P]
                          + " lShips=" + eM.porsCnt[S]
                          + " lClanPlanets=" + eM.porsClanCnt[P][clan]
                          + " lEconCnt=" + eM.econCnt
@@ -368,7 +369,7 @@ class EM {
                                                                                                          + (sFrac1 < eM.clanAllShipFrac[P][clan] ? "S" : "P")
                                                                                                          + (sFrac2 < eM.gameShipFrac[P] ? "S" : "P")
                                                                                                          + (sFrac3 < eM.clanShipFrac[P][clan] ? "S" : "P"))));
-    }
+    
     return pors;
   }
 
@@ -850,6 +851,17 @@ class EM {
     double nu = now - oldTime;
     return " " + mf(nu * .001);
   }
+  /** return long current time in milliseconds
+   * 
+   * @return time in milliseconds for 1970?
+   */
+  static long now(){ return (new Date()).getTime(); }
+  /** return the seconds since pastTime as a string
+   * 
+   * @param pastTime a remembered pastTime
+   * @return time past in string seconds with millisecond fraction
+   */
+  String past(long pastTime){ return mf((now() - pastTime) * .001);}
 
   /**
    * get seconds since oldTime
@@ -859,9 +871,7 @@ class EM {
    * @return seconds ssss.mmm
    */
   protected static String since(String desc, long oldTime) {
-    long now = (new Date()).getTime();
-    double nu = now - oldTime;
-    return " " + desc + "=" + mf(nu * .001);
+    return " " + desc + "=" + mf( (oldTime -(new Date()).getTime()) * .001);
   }
 
   /**
@@ -7483,7 +7493,29 @@ onceAgain:
     }
     return wasHere6;
   }
-
+  /** print location file.number.method if debugAtJavaOut
+   * 
+   * @param num The l
+   * @return 
+   */
+  String atJava(int num){
+     StackTraceElement[] aa = Thread.currentThread().getStackTrace();
+    if(E.debugAtJavaOut && aa.length >= num) {
+      return " " + aa[num].getFileName() + "." + aa[num].getLineNumber() + "." + aa[num].getMethodName();
+    }
+    return "";
+  }
+/**  print a System.err line if E.debugDoYearEndOut or other debugs
+ * 
+ * @param flag a flag like ---FLAG---
+ * @param ec  current Econ
+ * @param what the 
+ */
+  void printHere(String flag, Econ ec, String what){
+    if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " game" + eM.past(startTime) + atJava(2) + what);
+   else if(E.debugDoYearEndOut)System.out.println(flag  + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+  }
+  
   /**
    * generate a string with names of Econ, Thread, file.line.method,
    * file.line.method why Place the string at variable wasHere

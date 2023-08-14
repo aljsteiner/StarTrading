@@ -5476,8 +5476,8 @@ public class StarTrader extends javax.swing.JFrame {
         EM.wasHere = "n=" + n + " " + n.getDie() == null ? " null getDie()" : " found getDie()";
         if (n.getDie() && n.getPors() == E.P && n.getDAge() > 2) {
           eM.setCurEcon(newEC = n);
-          EM.wasHere = "-------MK--------found dead Planet cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
-          System.out.println(EM.wasHere);
+          eM.printHere("-------MK--------",newEC,"found dead Planet cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+        //  System.out.println(EM.wasHere);
           break;
         }
       }// for
@@ -5487,8 +5487,8 @@ public class StarTrader extends javax.swing.JFrame {
         if (n.getDie() && n.pors == E.S && n.getDAge() > 2) {
           eM.setCurEcon(newEC = n);
           //    EM.econCnt++;
-          EM.wasHere = "-------ML--------found dead Shipt=" + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
-          System.out.println(EM.wasHere);
+          eM.printHere( "-------ML--------",newEC," found dead Shipt=" + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+        //  System.out.println(EM.wasHere);
           break;
         }
       }// for
@@ -5506,14 +5506,16 @@ public class StarTrader extends javax.swing.JFrame {
     String name = (pors == 0 ? "P" : "S") + nameF.format(eM.nameCnt++);
     // reduce the size of ships cash by shipsPerPlanet
     // double mCash = eM.initialWorth[pors] * (pors == E.S ? 1.0 / shipsPerPlanet : 1.0);
-    EM.wasHere = "-------MMb--------Init new Econ" + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name;
-    System.out.println(EM.wasHere);
+   
+    //System.out.println(EM.wasHere);
     newEC.init(this, eM, name, clan, EM.econCnt, pors, xpos, eM.difficultyPercent[0], worth);
+        eM.setCurEcon(newEC);
     startEconState = (new Date()).getTime();
-    EM.wasHere = "-------MN--------Inited  Econ" + EM.econCnt + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name + sinceRunYear();
-    System.out.println(EM.wasHere);
+     eM.printHere( "-------MMb--------",newEC,"Inited new Econ" + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name);
+  //  eM.printHere( "-------MN--------",newEC,"Inited  Econ" + EM.econCnt + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year );
     // now update counts planets and ships
-    Econ t = eM.curEcon;
+
+    Econ t = newEC;
     if (!t.getDie()) {
       if (E.debugChangeEconCnt) {
         synchronized (A4Row.econLock) { // protect the increment of econCnt
@@ -5534,8 +5536,8 @@ public class StarTrader extends javax.swing.JFrame {
       else {
         eM.ships.add(t);
       }
-      EM.wasHere = "-------MMc--------" + sinceA() + " counted Econ" + EM.econCnt + "::" + EM.econs.size() + " planets" + EM.porsCnt[0] + "::" + EM.planets.size() + " ships" + EM.porsCnt[1] + "::" + EM.ships.size() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name + sinceRunYear();
-      System.out.println(EM.wasHere);
+      eM.printHere("-------MMc--------",newEC, " counted Econ" + EM.econCnt + "::" + EM.econs.size() + " planets" + EM.porsCnt[0] + "::" + EM.planets.size() + " ships" + EM.porsCnt[1] + "::" + EM.ships.size() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name + sinceRunYear());
+    //  System.out.println(EM.wasHere);
 
     }
     return newEC;
@@ -6405,7 +6407,7 @@ public class StarTrader extends javax.swing.JFrame {
       NumberFormat whole = NumberFormat.getNumberInstance();
       whole.setMaximumFractionDigits(0);
       double curWorth = 1.;
-      if (E.debugDoYearOut) {
+      if (E.debugDoYearEndOut) {
         System.out.println("----DYa----Enter doYear statsTable1.width=" + statsTable1.getWidth());
       }
       // years is a -1 origin,
@@ -6477,11 +6479,11 @@ public class StarTrader extends javax.swing.JFrame {
             eM.ships.add(t);
           }
         }
-        else {
+        else { // dead
           EM.deadCnt++;
         }
       }
-      if (E.debugEconCnt) {
+      if(E.debugEconCnt) {
         synchronized (A4Row.econLock) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -6494,12 +6496,13 @@ public class StarTrader extends javax.swing.JFrame {
       }
       else {
         // set up the preexisting names on the namelist
-        int tyear;
-        eM.envsPerYear[eM.lEnvsPerYear - 1] = ((int)eM.econLimits3[0]) >> 2;//  /4 Max game created econs
-        // yEcons the number of Econs we can have this year.
+        int tyear = EM.year;
+        eM.envsPerYear[eM.lEnvsPerYear - 1] = ((int)eM.econLimits3[0]) >> 2;//  =1/4 * Max game created econs
+        // yEcons is the max number of Econs we can create this year.
         int yEcons = (int) (eM.minEconsMult[0][0] * (eM.envsPerYear[tyear = (eM.year < eM.lEnvsPerYear ? eM.year : eM.lEnvsPerYear- 1)]));
         //dnow = new Date();
-        System.out.println(since() + " tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
+   //     eM.printHere("----CRa----", ec," before game create tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
+        System.out.println("----CRa----" + since() + " tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
         printMem();
         lNamesList = namesList.getSize();
         lEcons = eM.econCnt;
@@ -6513,6 +6516,7 @@ public class StarTrader extends javax.swing.JFrame {
         clanBias = new Random().nextInt(5);
         if (E.debugEconCnt) {
           synchronized (A4Row.econLock) {
+            assert EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]): "EconCounts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1];
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
@@ -6522,6 +6526,7 @@ public class StarTrader extends javax.swing.JFrame {
           startEconState = (new Date()).getTime();
           if (E.debugEconCnt) {
             synchronized (A4Row.econLock) {
+              assert EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]): "EconCounts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1];
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
@@ -6530,15 +6535,17 @@ public class StarTrader extends javax.swing.JFrame {
           // dnow = new Date();
           // econCnt = envsLoop;
           econClan = (envsLoop + clanBias) % 5;
-          if (E.debugDoYearOut) {
-            System.out.println("------" + since() + " gCreate envsLoop=" + envsLoop + " maxE=" + yEcons + " eCnt=" + eM.econCnt + " clanBias=" + clanBias + " clan=" + econClan);
-          }
-          int econPorS = EM.getNewPorS(econClan);
+
+          //  eM.printHere("----CYc----", ec, "gCreate envsLoop=" + envsLoop + " maxE=" + yEcons + " eCnt=" + eM.econCnt + " clanBias=" + clanBias + " clan=" + econClan);
+         if(E.debugCreateOut)System.out.println("----CYc----" + since() + " gCreate envsLoop=" + envsLoop + " maxE=" + yEcons + " eCnt=" + eM.econCnt + " clanBias=" + clanBias + " clan=" + econClan);
+          int econPorS = eM.getNewPorS(econClan);
           double newWorth = EM.getInitialEconWorth(econPorS, econClan);
-          ec = curEc = EM.curEcon = newEcon(newWorth, econPorS, econClan);  // include new of Econ
+          ec = curEc = newEcon(newWorth, econPorS, econClan);  // include new of Econ
+          eM.setCurEcon(curEc);
           paintCurDisplay(eM.curEcon);
           if (E.debugEconCnt) {
             synchronized (A4Row.econLock) {
+              assert EM.econCnt == (EM.porsCnt[0] + EM.porsCnt[1]): "EconCounts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1];
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
                 EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
               }
@@ -6549,7 +6556,8 @@ public class StarTrader extends javax.swing.JFrame {
           Thread.yield();
           EM.curEcon.as.setStat(EM.YEARCREATE, EM.curEcon.pors, EM.curEcon.clan, curWorth, 1);
           EM.curEcon.as.setStat(EM.BOTHCREATE, EM.curEcon.pors, EM.curEcon.clan, curWorth, 1);
-          System.out.println("++++++++year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " gameCreated " + E.clanLetter[eM.curEcon.clan] + " " + Econ.nowName + E.clanLetter[eM.curEcon.clan] + " worth " + EM.mf(EM.curEcon.getWorth()) + " econssize=" + eM.econs.size());;
+          eM.printHere("----CYd----", ec," year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " gameCreated " + E.clanLetter[eM.curEcon.clan] + " " + Econ.nowName + E.clanLetter[eM.curEcon.clan] + " worth " + EM.mf(EM.curEcon.getWorth()) + " econssize=" + eM.econs.size());
+        // System.out.println("++++++++year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " gameCreated " + E.clanLetter[eM.curEcon.clan] + " " + Econ.nowName + E.clanLetter[eM.curEcon.clan] + " worth " + EM.mf(EM.curEcon.getWorth()) + " econssize=" + eM.econs.size());;
           // printMem();
           // E.msgcnt = 0;
         }// end for envsLoop
@@ -6577,7 +6585,7 @@ public class StarTrader extends javax.swing.JFrame {
           double mDif = limits3 > E.PZERO ? limits3 / 5 : 1.;
           //clanWorth over econLimits1 is at least initialWorth*4, otherwise just initial worth
           //double clanWorth = eM.econCnt > eM.econLimits1[0] ? Math.max(eM.initialWorth[0] * 4., eM.clanFutureFunds[econClan] / ((eM.econLimits3[0] - eM.econCnt) / 5.)) : eM.initialWorth[0];
-          int econPorS = EM.getNewPorS(econClan);
+          int econPorS = eM.getNewPorS(econClan);
           double clanWorth = EM.getInitialEconWorth(econPorS, econClan);
           // now make a econ if FFunds > clanWorth
           finishedClans++; // stop is if none of the next five
@@ -7068,7 +7076,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.wasHere = "----DYy----econ=" + Econ.nowName + " doYear in finally at end" + stateStringNames[stateConst] + "Y" + EM.year;
     }// end finally
     EM.wasHere = "----DYz----econ=" + Econ.nowName + sinceA() + sinceAA() + " doYear at end after finally " + stateStringNames[stateConst] + "Y" + EM.year;
-    if (E.debugDoYearOut) {
+    if (E.debugDoYearEndOut) {
       System.out.println(EM.wasHere);
     }
     return;

@@ -29,10 +29,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * This is an extension of the StarTrader main class. It contains data for settings 
- * These settings values have no user interface to change them. 
- * E contains constants and a few methods see EM for values
- * that StarTrader can change during the game
+ * This is an extension of the StarTrader main class. It contains data for
+ * settings These settings values have no user interface to change them. E
+ * contains constants and a few methods see EM for values that StarTrader can
+ * change during the game
  *
  * @author Albert Steiner
  */
@@ -62,18 +62,17 @@ public class E {
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
   static final public String statsButton20Tip = "20: rcsg";
-    static final public String statsButton21Tip = "21: TB assigned";
+  static final public String statsButton21Tip = "21: TB assigned";
   static final public String statsButton22Tip = "22: TB assigned";
   static final public String statsButton23Tip = "23: display table";
-  
-static EM eM;
-static StarTrader st;
+
+  static EM eM;
+  static StarTrader st;
   /**
    * ***********************************************************************
    * START DATA
    */
-  
-  
+
   /**
    * start debug flags, it is possible if static final boolean is false the code
    * enclosed by an if on this flag will never be compiled. In any case
@@ -82,7 +81,7 @@ static StarTrader st;
   //static final boolean noAsserts = true; // true expect not -ea in program call
   static final boolean noAsserts = false; // false expect -ea in call 
   static boolean ifassert = false; // preset for later test
-  
+
   static final boolean distributable = false;  //set true before making a jar fine available to public
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugfalse = false;
@@ -90,9 +89,9 @@ static StarTrader st;
   static final boolean outputLess = true;  // reduce the output chars in mf2
   //static final boolean debugOutput = true;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
- //static final boolean resetOut = debugOutput;  //change out, err to
+  //static final boolean resetOut = debugOutput;  //change out, err to
   static final boolean resetOut = false;  //change out, err to
-  static final boolean debugDoYearEndOut = true; //output messages re yearEnd
+  static final boolean debugCreateOut = debugMaster; //output messages Assets
   static final boolean debugAssetsOut = debugMaster; //output messages Assets
   static final boolean debugEconOut = debugMaster; //output messages in Econ
   static final boolean debugCashFlowOut = debugMaster; //output messages in CashFlow
@@ -123,7 +122,7 @@ static StarTrader st;
   static final boolean debugMisc = debugMaster; // other debug tests
   static final boolean debugCanTrade = debugMaster; // planet can trade
   static final boolean debugDisplayTrade = debugMaster; // Trade System.out msgs
-  static final boolean tradeDebugTerms =  debugMaster;
+  static final boolean tradeDebugTerms = debugMaster;
   static final boolean debugSettingsTab = debugMaster; //errors from settings doValx
   static final boolean debugSettingsTabOut = debugMaster; //errors from settings doValx
   static final boolean debugSettingsTab2 = debugMaster; //errors from settings doValx
@@ -136,23 +135,22 @@ static StarTrader st;
   static final boolean debugPutValue1 = outputLess; //test putValue processing
   static final boolean debugPutValue2 = outputLess; //test putValue processing
   static final boolean debugPutValue3 = false; //choose alternative for too big
-  static final boolean debugPutRowsOut6 = false; 
-  static final boolean debugPutRows6aOut = false; 
+  static final boolean debugPutRowsOut6 = false;
+  static final boolean debugPutRows6aOut = false;
   static final boolean debugPutRows6abOut = false;
   static final boolean debugPutRows6acOut = false;
   static final boolean debugPutRows6agOut = true;
   static final boolean debugIsHere1Out = true;
   static final boolean debugIsHere2Out = true;
   static final boolean debugIsHere3Out = true;
-  static final boolean debugPutRows2 = false; 
+  static final boolean debugPutRows2 = false;
   static final boolean DEBUGWAITTRACE = false;
-  
- static final boolean debugLogsOut = debugMaster; // StarTrader logs output
- static final boolean debugThreads = false;
- static final boolean debugRsOut = false; // EM rs output
- static final boolean debugFFOut = false; // EM Assets.CashFlow.calcForwardFund output
- static final boolean debugStatsOut1 = false; // stats output1
- static final boolean debugStatsOut2 = false; // stats output1
+  static final boolean debugLogsOut = debugMaster; // StarTrader logs output
+  static final boolean debugThreads = false;
+  static final boolean debugRsOut = false; // EM rs output
+  static final boolean debugFFOut = false; // EM Assets.CashFlow.calcForwardFund output
+  static final boolean debugStatsOut1 = false; // stats output1
+  static final boolean debugStatsOut2 = false; // stats output1
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPriorityOut = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
@@ -163,8 +161,10 @@ static StarTrader st;
   static final boolean debugThreadsOut = debugMaster; // threads output
   static final boolean debugThreadsOut1 = debugMaster; // threads output1
   static final boolean errEconInit = true;
-  
-    /**
+  static final boolean debugDoYearEndOut = true || debugFFOut; //output messages re yearEnd
+  static final boolean debugAtJavaOut = false; // output at java locations
+
+  /**
    * constructor for E the major repository of tables and values set by the game
    * master and the clan master. The game may have a number of instances of E
    * and EM
@@ -174,12 +174,12 @@ static StarTrader st;
     // ok if ifassert true, noAsserts false, error if ifassert false noAsserts false,
     // ok if ifassert false and noAsserts true,error if ifassert true and noAsserts true;
     // allow no -ea with debug
- //   if(ifassert == noAsserts)EM.doMyErr("improper value for E.noAsserts" + (ifassert?" yes ifassert ":"no ifassert") + (noAsserts?" yes noAsserts ":" no noAsserts "));
+    //   if(ifassert == noAsserts)EM.doMyErr("improper value for E.noAsserts" + (ifassert?" yes ifassert ":"no ifassert") + (noAsserts?" yes noAsserts ":" no noAsserts "));
   }
 
   ;
 
-  void init(EM em,StarTrader st) {
+  void init(EM em, StarTrader st) {
     this.eM = em;
     this.st = st;
     for (int m = 0; m < lsecs; m++) {
@@ -232,20 +232,22 @@ static StarTrader st;
   public static final int S = 1;
   public static final int les = 2;
   public static final double PZERO = .000001; //for a >5  pzero
-  public static final double PZERO1 = .0000000001; 
+  public static final double PZERO1 = .0000000001;
   public static final double NZERO = -.000001; // for a < nzero
   public static final double PPZERO = .0000000001; //for a > 9 pzero
   public static final double NNZERO = -.0000000001;  // for a < nzero
   static double pzero = PZERO, nzero = NZERO;
   public static final double UNZERO = .00000000000000001;//17 zereo
   public static final double INVZERO = 1. / UNZERO;
-  /** test whether is number is not zero
-   * 
+
+  /**
+   * test whether is number is not zero
+   *
    * @param n the number for a test
    * @return true if number is a number and is not very close to 0.0
    */
-  public static boolean nz(Double n){
-   return !(n.isNaN()  || (n > NNZERO && n < PPZERO));
+  public static boolean nz(Double n) {
+    return !(n.isNaN() || (n > NNZERO && n < PPZERO));
   }
   public static final int[] d2 = {0, 1}, A01 = d2;
   public static final int[] d4 = {0, 1, 2, 3}, A03 = d4;
@@ -256,7 +258,7 @@ static StarTrader st;
   static final int BALANCESIX = lsums;
   static final int LSUBS = 4; // r c s g
   static final int lsubs = LSUBS;
-  static final int ASUBS[] = {0,1,2,3};
+  static final int ASUBS[] = {0, 1, 2, 3};
 
   public enum sectors {
     LIFE, STRUCT, ENERGY, PROPEL, DEFENSE, GOV, COLONIST
@@ -333,7 +335,8 @@ static StarTrader st;
     public Color getColor(int ipors) {
       if (ipors == E.P) {
         return colorPlanet;
-      } else {
+      }
+      else {
         return colorShip;
       }
     }
@@ -353,14 +356,15 @@ static StarTrader st;
     public Color getInvColor(int ipors) {
       if (ipors == E.P) {
         return invPlanet;
-      } else {
+      }
+      else {
         return invShip;
       }
     }
   }
   static protected String[] groupNames = {"red", "orange", "yellow", "green", "blue"};
   public static final String[] clanNames = {"rodalians", "organtics", "yankels", "groknes", "brogles"};
-  static final String[] clanLetter = {"r","o","y","g","b"};
+  static final String[] clanLetter = {"r", "o", "y", "g", "b"};
   public static final int lclans = clanNames.length;
   public static final int LCLANS = lclans;
   Color ccc = new Color(255, 204, 204);
@@ -518,7 +522,7 @@ static StarTrader st;
   public static Set swpIncrs = new HashSet(Arrays.asList(swpIncrv));
   public static Set swpDecrs = new HashSet(Arrays.asList(swpDecrv));
   public static ArrayList<History> hist;
-  public static final int[] forwardFundSwapNs = {0,1,2,3,4,5,11,12,15,16,20,25,30,31,35,36,37};
+  public static final int[] forwardFundSwapNs = {0, 1, 2, 3, 4, 5, 11, 12, 15, 16, 20, 25, 30, 31, 35, 36, 37};
   static final Set ffSwapNs = new HashSet(Arrays.asList(forwardFundSwapNs));
 
   /**
@@ -689,12 +693,11 @@ static StarTrader st;
    * upgrade as indicated by that fraction. In addition, more staff upgrade
    * depending on the effective faculty before the upgrade.
    */
- // static double[] fractionStaffUpgrade = {2.3, 2.4, 1., .6, 3.3, 2.5, 1., .25, 3.25, 2.5, 1.5, .25, 2.25, 1.5, 1., 0.};
+  // static double[] fractionStaffUpgrade = {2.3, 2.4, 1., .6, 3.3, 2.5, 1., .25, 3.25, 2.5, 1.5, .25, 2.25, 1.5, 1., 0.};
   // all0w more upgrades between types
   static double[] fractionStaffUpgrade = {2.3, 2.4, 2.0, .6, 3.3, 2.5, 2.3, 2.25, 3.25, 2.5, 2.5, 2.25, 2.25, 1.5, 1., 0.};
 //  static protected int[][] limitJumpsPerFaculty = {{15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}};
 //  static protected double[] knowledgeRequiredPerFacultyForJumping = {75., 75., 75., 75., 100., 100., 100., 100., 125., 125., 125., 125., 150., 150., 150., 150.};
-
 
   // [sIx][p,s]
   //static final protected double growthEfficiencyDivMaint[] = {1.2,1,2};
@@ -703,7 +706,7 @@ static StarTrader st;
   public boolean equals(Object obj) {
     return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
   }
-;
+  ;
  
   /**
    * CalcReq growth fraction of SG ave to keep as S to reserve after growth
@@ -1658,7 +1661,8 @@ static StarTrader st;
   public static ARow copy(ARow old) {
     if (old == null) {
       return new ARow(EM.curEcon).zero();
-    } else {
+    }
+    else {
       return new ARow(old.getEc()).set(old);
     }
 
@@ -1681,15 +1685,18 @@ static StarTrader st;
       dFrac.setMaximumFractionDigits(1);
 
       return dFrac.format(v);
-    } else if ((v > -999999. && v < -.001) || (v > .001 && v < 999999.)) {
+    }
+    else if ((v > -999999. && v < -.001) || (v > .001 && v < 999999.)) {
       dFrac.setMinimumFractionDigits(2);
       dFrac.setMaximumFractionDigits(3);
       return dFrac.format(v);
-    } else if ((v > -.001 && v < -.0000001) || (v > .0000001 && v < .001)) {
+    }
+    else if ((v > -.001 && v < -.0000001) || (v > .0000001 && v < .001)) {
       dFrac.setMinimumFractionDigits(2);
       dFrac.setMaximumFractionDigits(7);
       return dFrac.format(v);
-    } else {
+    }
+    else {
       return exp.format(v);
     }
   }
@@ -1702,29 +1709,31 @@ static StarTrader st;
    * @return if debugDouble (if NaN 0, if Infinite 100.0) otherwise trouble
    */
   static double doubleTrouble(Double trouble, String vs) {
-      Econ ec = EM.curEcon;
-         if (trouble.isNaN()) {
-        if (E.debugDouble) {
-            Assets as = ec.as;
-            int asTerm = as.term; // force possible null ec
-            throw new MyErr("Not a number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
+    Econ ec = EM.curEcon;
+    if (trouble.isNaN()) {
+      if (E.debugDouble) {
+        Assets as = ec.as;
+        int asTerm = as.term; // force possible null ec
+        throw new MyErr("Not a number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
         //  eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
-        } else {
-          return 0.0;
-        }
       }
-      if (trouble.isInfinite()) {
-        if (E.debugDouble) {
-           Assets as = ec.as;
-           int asTerm = as.term; // force possible null ec
-            throw new MyErr("Infinite number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
+      else {
+        return 0.0;
+      }
+    }
+    if (trouble.isInfinite()) {
+      if (E.debugDouble) {
+        Assets as = ec.as;
+        int asTerm = as.term; // force possible null ec
+        throw new MyErr("Infinite number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
         //  eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
-          
-        } else {
-          return 100.0;
-        }
+
       }
-      return (double) trouble;   
+      else {
+        return 100.0;
+      }
+    }
+    return (double) trouble;
   }
 
   /**
@@ -1738,7 +1747,8 @@ static StarTrader st;
 
     if (myD.isInfinite()) {
       myTest(true, "Found %s infinite ", nD);
-    } else if (myD.isNaN()) {
+    }
+    else if (myD.isNaN()) {
       myTest(true, "Found %s not a number", nD);
     }
   }
@@ -1762,7 +1772,8 @@ static StarTrader st;
     }
     if (myD.isInfinite()) {
       myTest(true, "Found %s = \"%s\" infinite " + form, nD, myD, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20]);
-    } else if (myD.isNaN()) {
+    }
+    else if (myD.isNaN()) {
       myTest(true, "Found %s = \"%s\" is not a number " + form, nD, myD, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20]);
     }
   }
@@ -1786,7 +1797,8 @@ static StarTrader st;
     }
     if (myD.isInfinite()) {
       myTest(true, "Found %s = \"%s\" infinite " + form, nD, myD, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20]);
-    } else if (myD.isNaN()) {
+    }
+    else if (myD.isNaN()) {
       myTest(true, "Found %s = \"%s\" is not a number " + form, nD, myD, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20]);
     }
   }
@@ -1877,10 +1889,10 @@ static StarTrader st;
     int year = EM.year;
     //System.out.println(EM.st.since() + ">>>>>>>>>sysmsg" + EM.st.since());
     // test true debugs to allow 
-    if((debugOutput || debugAssetsOut || debugEconOut || debugDoYearOut || debugCashFlowOut || debugTradesOut || debugFutureFund || debugThreadsOut) && !sysmsgDone){
-    msgcnt++;
-    System.out.format(">>>>>>>>>sysmsg>>" + msgcnt + "<" + msgs + aDate +  EM.st.since() + "Y" + EM.year + " " + EM.curEconName + ":"  + Fname + "." + Fline + ";" + Cname + "." + Mname
-            + "<<<<<<<<<<\n>>>>>>>>>> " + form + "%n", v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26], v[27], v[28], v[29], v[30]);
+    if ((debugOutput || debugAssetsOut || debugEconOut || debugDoYearEndOut || debugCashFlowOut || debugTradesOut || debugFutureFund || debugThreadsOut) && !sysmsgDone) {
+      msgcnt++;
+      System.out.format(">>>>>>>>>sysmsg>>" + msgcnt + "<" + msgs + aDate + EM.st.since() + "Y" + EM.year + " " + EM.curEconName + ":" + Fname + "." + Fline + ";" + Cname + "." + Mname
+                        + "<<<<<<<<<<\n>>>>>>>>>> " + form + "%n", v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26], v[27], v[28], v[29], v[30]);
     }
     if (msgcnt > msgs) {
       new Throwable().printStackTrace();
@@ -1917,7 +1929,6 @@ static StarTrader st;
   static public double invL2secs = 1. / l2secs;
   static public double invLsecs = 1. / lsecs;
 
-
   /**
    * for my unfavored clans, the strategicFrac increases for their unfavor
    * myclan the strategicFrac increases by ok if requests/offers > strategicFrac
@@ -1926,7 +1937,6 @@ static StarTrader st;
    * && fav[oclan][myclan]>3.?sosFrac:1.)) *(1 - barterTimes*barterMult) values
    * 0. - 5.
    */
-
   static boolean trade2HistOutputs = false;
   static int trade1PlanetOverrideShipGoods = 6;
   static int tradePlanetAcceptHigherOffer = 7;
@@ -2068,17 +2078,17 @@ static StarTrader st;
   // 4 trainee, 4 engineer, 4 faculty, 4 researcher
   static final double[] sumWorkerMults = {.2, .3, .5, .9, 1.6, 3.8, 5.6, 10., 7.0, 7.0, 6.0, 5., 4., 4., 3., 3.};
   // for facultyEqv,  used to promote staff to next position
-  static final double[] sumFacultyMults = {0., 0., 0., 0.,  0., 0., 0.1, 0.2,  .3, .4, .7, 1., .7, .5, .5, .5, .3};
-  static final double[] staffPromotePerFaculty = {20., 15., 13., 12.,  10., 9., 8., 7.,  1., .6, .5, .3,  .3, .3, .2, .2};
+  static final double[] sumFacultyMults = {0., 0., 0., 0., 0., 0., 0.1, 0.2, .3, .4, .7, 1., .7, .5, .5, .5, .3};
+  static final double[] staffPromotePerFaculty = {20., 15., 13., 12., 10., 9., 8., 7., 1., .6, .5, .3, .3, .3, .2, .2};
   // 4 trainee, 4 engineer, 4 faculty, 4 researcher
-  static final double[] staffPromotePerResearcher = {0., 0., 0., 0.,  0., 0., 0., 0., 1.8, 1.7, 1.6, 1.5,  1.4, 1., .8, .6};
+  static final double[] staffPromotePerResearcher = {0., 0., 0., 0., 0., 0., 0., 0., 1.8, 1.7, 1.6, 1.5, 1.4, 1., .8, .6};
   // use multiplier for the sum of Knowledge can be created,and researcher equiv for staff permotion above
   static final double[] sumResearchMults = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0, 0., .3, .4, .5, .5, 1.};
   static final double[] sumManualToKnowledgeByStaff = {0., 0., 0., 0., .0, 0., 0.2, 0.4, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.9, 2.5};
-  static protected double[] deathPerYear = {.9, .97, 1.05, 1.20,  .9, .97, 1.05, 1.20,  .9, .97, 1.05, 1.20,  .9, .97, 1.05, 1.20,  .9, .97, 1.05, 1.20};
+  static protected double[] deathPerYear = {.9, .97, 1.05, 1.20, .9, .97, 1.05, 1.20, .9, .97, 1.05, 1.20, .9, .97, 1.05, 1.20, .9, .97, 1.05, 1.20};
   // 4 trainee, 4 engineer, 4 faculty, 4 researcher
   // used to calculate worth of staff
-  static protected double[] staffWorthBias = {.4, .5, .7, .8,  .9, 1., 1.1, 1.2,1.4,  1.6, 1.8, 2.,  2.1, 2.2, 2.3, 2.5};
+  static protected double[] staffWorthBias = {.4, .5, .7, .8, .9, 1., 1.1, 1.2, 1.4, 1.6, 1.8, 2., 2.1, 2.2, 2.3, 2.5};
 
   static public double additionalWorkerBonusForKnowledge = .02;
   static public double aGrowthBias[] = {1.0, 1.0};

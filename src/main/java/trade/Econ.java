@@ -121,7 +121,7 @@ public class Econ {
   ArrayList<TradeRecord> planetList = new ArrayList<TradeRecord>();
 
   ARow sectorPri;
-  long myStartTime, myFirstBarterTime, myBarterTime, myYearEndTime, mySwapStart, mySwapDone, myEnder;
+  long myStartTime=0;
 //  ArrayList<Offer> myPlanetOffers; // list of offers for this planet
   static int yearsKeep[] = {7, 7, 7, 7, 7};  // keep others offers by clan
   static int myYearsKeep[] = {12, 12, 12, 12, 12}; // keep my offers
@@ -163,6 +163,7 @@ public class Econ {
     eM = aeM;
     this.clan = clan;
     this.name = nowName = name;
+   initTime = new Date().getTime();
     nowEc = this;
     Econ.st = ast;
     this.year = eM.year;
@@ -538,8 +539,78 @@ public class Econ {
      */
     return true; //OK past all limits
   }
+  /** return Econ name with leading blank
+   * 
+   * @return Econ name
+   */
+  String printName(){ return " " + name + printInit() + printYearStart();}
 
-  ;
+   long initTime; // time of init for this Econ
+   int initCnt = 100; // times since last init print
+   static int initPrintCnt = 10; // number of calls with no print
+   /** return the initTime if initCnt %gt; initPrintCnt
+    * 
+    * @return Econ past initTime every initPrintCnt
+    */
+   String printInit() {
+     if( initCnt++ > initPrintCnt) {
+       initCnt = 0;
+       return " nI" + eM.past(initTime);
+     }
+     return "";
+   }
+     /** seconds since the start of this year
+    * 
+    * @return Econ past initTime every initPrintCnt
+    */
+   String printYearStart() {
+       return " ys" + eM.past(myStartTime);
+   }
+
+   static int printGameTimeCnt = 100; // times since last init print
+   static int printGameMaxCnt = 10; // number of calls with no print
+   /** return the initTime if initCnt %gt; initPrintCnt
+    * 
+    * @return Econ past initTime every initPrintCnt
+    */
+   String printGameTime() {
+     if( printGameTimeCnt++ > printGameMaxCnt) {
+       printGameTimeCnt = 0;
+       return " game" + eM.past(EM.startTime);
+     }
+     return "";
+   }
+   
+   long aYearEndTime = 0; // start of Assets.CashFlow.YearEnd
+   /**  seconds since start of YearEnd if E.debugDoYearEndOut
+    * 
+    * @return seconds since startYearEndTime
+    */
+  String printYearEndStart(){
+    if(startYearEndTime > 0 && E.debugDoYearEndOut) {
+      return " eye" + eM.past(startYearEndTime);
+    } 
+    if(aYearEndTime >0 && E.debugDoYearEndOut) {
+       return " aye" + eM.past(aYearEndTime);
+    }
+    return "";
+  }
+  /** name of thread and seconds after start if startThead %gt; 0 and E.debugDoYearEndOut
+   * 
+   * @return name of thread and seconds after start or blank
+   */
+  String printThread() {
+    if(startThread > 0 && E.debugDoYearEndOut) {
+      return " " + Thread.currentThread().getName() + "=" + eM.past(startThread);
+    }
+    return "";
+  }
+
+   
+/** return Assets newKnowledge if not dead
+ * 
+ * @return Assets.newKnowledge
+ */
   ARow getNewKnowledge() {
         if(dead)return new ARow(this);
     return as.getNewKnowledge();
@@ -792,6 +863,7 @@ public class Econ {
    * @param lightYears lightYearsTraveled for a ship
    */
   protected void yearStart(double lightYears) {
+    aYearEndTime = 0; // clear start of Assets.CashFlow.YearEnd
     if(dead) return;
     age++; // move -1 to 0 for the first year
     // age the hists file, move 4->5, 3->4, 2->3, 1->2, new 1
@@ -896,10 +968,12 @@ public class Econ {
    */
   protected void yearEnd() {
     if(dead)return;
+    startYearEndTime = (new Date()).getTime();
     visitedShipNext = -1; // ignore everything in the list
+    eM.printHere("-----EYss----", ec," starting Econ.yearEnd()");
     nowName = name;
     nowEc = this;
-    myYearEndTime = new Date().getTime();
+   // myYearEndTime = new Date().getTime();
     try {
       if (E.debugEconCnt){
       synchronized (A4Row.econLock) {
@@ -1429,9 +1503,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     if (visitedShipNext < 0 || visitedShipList[visitedShipNext] != otherEcon && term > eM.barterStart - 2) {
       E.sysmsg(" +++++++econ.barter term=" + term + ", visitor=" + otherEcon.name + ", this=" + this.name + " visitedShipNext=" + visitedShipNext);
       if (visitedShipNext < 0) {
-        myFirstBarterTime = new Date().getTime();
+    //    myFirstBarterTime = new Date().getTime();
       }
-      myBarterTime = new Date().getTime();
+ //     myBarterTime = new Date().getTime();
       visitedShipList[++visitedShipNext] = otherEcon;
     }
     Offer ret = as.barter(aOffer);
@@ -1679,7 +1753,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     }
       doEndYearCnt[0]++;
     };
-     System.err.print("----CI-----incrEndYearCnt" + doEndYearCnt[0] + " insert=" + name + " Econ Names=");
+     eM.printHere("----CI----",this," incrEndYearCnt" + doEndYearCnt[0] + " insert=" + name + " Econ Names=");
       boolean doComma=false;
       for(int ix=0; ix< maxEndYears-1;ix++){
         if(econNames[ix] != null){ System.err.print((doComma?", ":"")  + econNames[ix] ); doComma= true;}
@@ -1700,7 +1774,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           econNames[ix] = null;
         }
       }
-      System.err.print("----CD-----decrEndYearCnt" + doEndYearCnt[0] + " delete=" + name + " Econ Names=");
+      eM.printHere("----CD----",this," decrEndYearCnt" + doEndYearCnt[0] + " delete=" + name + " Econ Names=");
       boolean doComma=false;
       for(int ix=0; ix< maxEndYears-1;ix++){
         if(econNames[ix] != null){ System.err.print((doComma?", ":"")  + econNames[ix] ); doComma= true;}
@@ -1708,6 +1782,11 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     }; // end sync
   }
 
+  long startYearEndWait = 0;
+  int startYearEndWaitCnt = 100;
+  static int maxWaitCnt=10;
+  long startThread = 0;
+  long startYearEndTime = 0;
   /**
    * prepare to do yearEnd possibly as a separate thread
    *
@@ -1787,7 +1866,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       if (EM.maxThreads[0][0] >= 2.) {
         // now in the main thread, up the assigned thread count
         incrEndYearCnt();
-        long afterT = etTimes[2] = (new Date()).getTime();
+        long afterT = etTimes[2] = startYearEndWait = (new Date()).getTime();
         moreTimes[0] = etTimes[0] - EM.doYearTime; // DYEtime
         moreTimes[1] = etTimes[1] - etTimes[0]; // imWaiting time
         moreTimes[2] = etTimes[2] - etTimes[1]; //imCounted time
@@ -1818,7 +1897,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         int aabge = eM.curEcon.age;
         etTimes[5] = (new Date()).getTime(); // after start
       } else {  // skip threads, just yearEnd
-        etTimes[2] = etTimes[3] = etTimes[4] = etTimes[5] = (new Date()).getTime(); // after create
+        etTimes[2] = etTimes[3] = etTimes[4] = etTimes[5] = startYearEndTime = (new Date()).getTime(); // after create
         yearEnd();
         etTimes[6] = (new Date()).getTime();
         moreTimes[6] = etTimes[6] - etTimes[2];
@@ -1859,7 +1938,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       aage = ec.age;
       int tCnts = 0;
       int le = 10;
-      long etStart = etTimes[6] = (new Date()).getTime(); // thread run
+      long etStart = etTimes[6] = startThread = (new Date()).getTime(); // thread run
       etTimes[5] = etStart; // start of the new thread
       moreTimes[0] = etTimes[0] - EM.doYearTime; // DYEtime
       moreTimes[1] = etTimes[1] - etTimes[0]; // imWaiting time
@@ -1926,8 +2005,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         moreTimes[7] = etTimes[7] - etTimes[6];
         long b4ee = b4e - startEt;
         // msecs = startEt - EM.doYearTime;
-        etList[prevIx] = aL + " ended Year + " + moreTimes[7] + atList;
-        EM.isHere2(ec, etList[prevIx]);
+        eM.printHere("----IS2----", ec,etList[prevIx] = aL + " ended Year + " + moreTimes[7] + atList);
 
         if (E.debugThreadsOut1) {
           System.out.println(etList[prevIx]);
