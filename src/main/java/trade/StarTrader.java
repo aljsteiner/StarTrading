@@ -5406,10 +5406,11 @@ public class StarTrader extends javax.swing.JFrame {
     stateConst = STARTING;
     long myStart = new Date().getTime();
     if (E.debugStatsOut1) {
-      System.err.println("------MII------starting in runBackGroundYears4 thread=" + Thread.currentThread().getName() + "startTime" + (new Date().getTime() - startTime));
+      eM.printHere("----MII----", ec, " starting in runBackGroundYears4 for" + nYears);
+     // System.err.println("------MII------starting in runBackGroundYears4 for " + nyears +" + Thread.currentThread().getName() + "startTime" + (new Date().getTime() - startTime));
     }
     if (E.debugStatsOut1) {
-      System.err.println(EM.prevLine = "---------MI----- in runBackGroundYears4 nYears=" + nYears + " thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + "<<<<<<<<");
+     // System.err.println(EM.prevLine = "---------MI----- in runBackGroundYears4 nYears=" + nYears + " thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime) + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year + "<<<<<<<<");
     }
     // E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "is eventDispatchThread");
     EM.clearWH();
@@ -5470,10 +5471,13 @@ public class StarTrader extends javax.swing.JFrame {
     // EM.porsCnt[1] = EM.ships.size();
     double xpos = -9999.;
     Econ newEC = null;
+    int lEcons = EM.econs.size()-1;
     // now try to find a dead economy to use instead of recreating one
     int nCnt=0;
+    Econ n;
     if (pors == E.P) {
-      for (Econ n : eM.econs) {
+      for (int eIx=0;eIx <lEcons && !EM.dfe();eIx++ ) {
+        n = EM.econs[eIx];
         eM.printHere(" ----NEa----",n,"scan econ List"+ ++nCnt + " live=" + ( n.getDie()?" dead":" live")  );
         if (n.getDie() && n.getPors() == E.P && n.getDAge() > 0) {
           eM.setCurEcon(newEC = n);
@@ -5496,7 +5500,7 @@ public class StarTrader extends javax.swing.JFrame {
     }//E.S
     if (newEC == null) {  // no dead one found create one
       EM.wasHere = "-------MMa--------Init new Econ pors=" + pors + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
-       eM.printHere("-------MMa--------", newEC," Init new Econ" + EM.econCnt   + ") stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+       eM.printHere("-------MMa--------", newEC," pre Init new Econ" + EM.econCnt   + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
      // System.out.println(EM.wasHere);
       EM.setCurEcon(ec = curEc = newEC = new Econ());
       EM.econs.add(newEC); // add to the main list
@@ -7720,7 +7724,7 @@ public class StarTrader extends javax.swing.JFrame {
   } // gameValues
 
   /**
-   * change a whole gamePanel
+   * change the display of a whole gamePanel
    *
    * @param clan 0-4 a clan, 5 the game master use eM.gameClanStatus
    * @param action -2 restart display from the first enum, 0 redisplay page 1 go
