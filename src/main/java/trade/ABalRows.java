@@ -51,7 +51,8 @@ public class ABalRows extends A6Rowa {
   static final int NEWKNOWLEDGEIX = balz += LSUBS; //
   static final int MCOSTSIX = balz += LSUBS; // 6 mtcosts are travel costs of ship
   static final int TCOSTSIX = balz += LSUBS;  //10
-  static final int GROWTHSIX = balz += LSUBS; //14
+  static final int GROWTHSIX = balz += LSUBS; //
+  static final int PREVGROWTHSIX = balz += LSUBS; //
   static final int PREVWORTHSIX = balz += LSUBS; //
   static final int GROWTHWORTHSIX = balz += LSUBS; //
   static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
@@ -64,8 +65,8 @@ public class ABalRows extends A6Rowa {
   static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; //36 L4
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //40
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
-  static final int STARTZEROINGIX = balz; //
-  static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //44
+  static final int STARTZEROINGIX = balz; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
+  static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //aStartCashFlow zero fills 
   static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth 
   static final int COSTWORTHSIX = balz += LSUBS; //
   static final int YEARINCRWORTHSIX = balz += LSUBS; //
@@ -80,7 +81,7 @@ public class ABalRows extends A6Rowa {
   static int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
   static int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
   // end of index values for bals
-  static final String[] titls = {" bals rc ", " bals sg ", " bals r ", " bals c ", " bals s", " bals g ", "MTCOSTS r", "MTCOSTS s", "growths r ", " growths c ", " growths s ", " growths g ", " bonusYears r ", " bonusYears c ", " bonusYears s ", " bonusYears g ", " bonusUnits r ", " bonusUnits c ", " bonusUnits s ", " bonusUnits g", " limBUnits r", " limBUnits c", " limBUnits s", " limBUnits g", " cumDecay r ", " cumDecay c ", " cumDecay s ", " cumDecay g","rawUnitsGrowth r", "rawUnitsGrowth c", "rawUnitsGrowth s", "rawUnitsGrowth g","rawGrowth r","rawGrowth c","rawGrowth s","rawGrowth g","tradedGrowth r","tradedGrowth c","tradedGrowth s","tradedGrowthg", "swappedGrowth r", "swappedGrowth c", "swappedGrowth s", "swappedGrowth g","commonKnowledge","newKnowledge","manuals"};
+  static final String[] titls = {" bals rc ", " bals sg ", " bals r ", " bals c ", " bals s", " bals g ", "MTCOSTS r", "MTCOSTS s", "growths r ", " growths c ", " growths s ", " growths g ", " bonusYears r ", " bonusYears c ", " bonusYears s ", " bonusYears g ", " bonusUnits r ", " bonusUnits c ", " bonusUnits s ", " bonusUnits g", " limBUnits r", " limBUnits c", " limBUnits s", " limBUnits g", " cumDepreciation r ", " cumDepreciation c ", " cumDepreciation s ", " cumDepreciation g","rawUnitsGrowth r", "rawUnitsGrowth c", "rawUnitsGrowth s", "rawUnitsGrowth g","rawGrowth r","rawGrowth c","rawGrowth s","rawGrowth g","tradedGrowth r","tradedGrowth c","tradedGrowth s","tradedGrowthg", "swappedGrowth r", "swappedGrowth c", "swappedGrowth s", "swappedGrowth g","commonKnowledge","newKnowledge","manuals"};
 
   /**
    * principal constructor of ABalRows a set of rows that are balances
@@ -150,7 +151,6 @@ public class ABalRows extends A6Rowa {
    */
   public ABalRows copyValues(ABalRows prev) {
     for (int m = 0; m < BALSLENGTH; m++) {
-
       for (int n = 0; n < E.LSECS; n++) {
         A[m].set(n, prev.A[m].get(n));
       }
@@ -164,6 +164,23 @@ public class ABalRows extends A6Rowa {
       }
     }// end i
     return this;
+  }
+  /** fill any null rows with an empty new row
+   * 
+   */
+  void emptyFill(){
+    for(int rowIx=0; rowIx < BALSLENGTH-1; rowIx++){
+      if(A[rowIx] == null) A[rowIx] = new ARow(ec);
+    }
+  }
+  
+  /** null the rows that are not needed by Assets as long term memory
+   * 
+   */
+  void nullEndRows(){
+    for(int rowIx=STARTZEROINGIX; rowIx < BALSLENGTH-1; rowIx++){
+      A[rowIx] = null;
+    }
   }
 
   /** get the balances A6Row from bals, including copy grades
@@ -219,6 +236,18 @@ public class ABalRows extends A6Rowa {
     rtn.A[0] = new ARow(ec).setAdd(rtn.A[2] , rtn.A[3]);
     rtn.A[1] = new ARow(ec).setAdd(rtn.A[4] , rtn.A[5]);
     return rtn;
+  }
+  /** copy 4 rows of values from rows biasA to biasB
+   * 
+   * @param biasA the index of the first row of the sources
+   * @param biasB the index of the second row of targets
+   */
+  void copy4AtoB(int biasA,int biasB){
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        A[biasA+rowIx].set(secIx,A[biasB+rowIx].get(secIx));
+      }
+    }
   }
 
   /**
@@ -509,34 +538,34 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * get the A6 CumulativeUnitDecay references from bals
+   * get the A6 CumulativeUnitDepreciation references from bals
    *
    * @param lev level of the new A6Row
    * @param titl titl of the new A6Row
    * @return the selected bals references in an A6Row
    */
-  A6Row getCumDecay(int lev, String titl) {
+  A6Row getCumDepreciation(int lev, String titl) {
     return use4(CUMULATIVEUNITDEPRECIATIONIX, lev, titl);
   }
 
   /**
-   * list the CumulativeUnitDecay rows in bals
+   * list the CumulativeUnitDepreciation rows in bals
    *
    * @param blev highest level that will be listed
    * @param apre prefix of listed rows
    * @param alev level of listed rows
    */
-  void listCumDecay(int blev, String apre, int alev) {
+  void listCumDepreciation(int blev, String apre, int alev) {
     sendHist(CUMULATIVEUNITDEPRECIATIONIX, CUMULATIVEUNITDEPRECIATIONIX + 3, blev, apre, alev);
   }
   
   /**
-   * get reference to a single ARow of CumulativeUnitDecay corresponding to the index
+   * get reference to a single ARow of CumulativeUnitDepreciation corresponding to the index
    *
-   * @param m index of the CumulativeUnitDecay ARow s
+   * @param m index of the CumulativeUnitDepreciation ARow s
    * @return growth ARow for index m
    */
-  ARow getCumDecayRow(int m) {
+  ARow getCumDepreciationRow(int m) {
     return A[CUMULATIVEUNITDEPRECIATIONIX + m];
   }
 }

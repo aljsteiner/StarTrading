@@ -160,15 +160,16 @@ public class Econ {
   ) {
     this.pors = planetOrShip;
     ec = this;
-    eM = aeM;
+    this.eM = aeM;
     this.clan = clan;
     this.name = nowName = name;
-   initTime = new Date().getTime();
+   initTime = myStartTime =  new Date().getTime();
     nowEc = this;
-    Econ.st = ast;
+    Econ notEc = null;
+    this.st = ast;
     this.year = eM.year;
     this.myEconCnt = econCnt;
-    dead = false;
+    this.dead = false;
     dyear =-5;
 
     planetList = new ArrayList<TradeRecord>();
@@ -185,7 +186,8 @@ public class Econ {
     knowledge = Math.max(eM.initialKnowledge[pors], tworth * eM.initialCommonKnowledgeFrac[pors]);
     wealth = Math.max(tworth - sworth - rworth - knowledge * eM.nominalWealthPerCommonKnowledge[0], wworth); // wealth now remainder
 
-    System.out.println(new Date().toString() + "Pre Init year" + year + name + " clan" + clan + " econCnt=" + myEconCnt + " worth=" + EM.mf(tworth) + " wealth=" + EM.mf(wealth) + " resources=" + EM.mf(res) + " $$ " + EM.mf(rworth) + " colonists=" + EM.mf(colonists) + " $$ " + EM.mf(sworth) + " knowledge=" + EM.mf(knowledge));
+  //  System.out.println(new Date().toString() + "Pre Init year" + year + name + " clan" + clan + " econCnt=" + myEconCnt + " worth=" + EM.mf(tworth) + " wealth=" + EM.mf(wealth) + " resources=" + EM.mf(res) + " $$ " + EM.mf(rworth) + " colonists=" + EM.mf(colonists) + " $$ " + EM.mf(sworth) + " knowledge=" + EM.mf(knowledge));
+    eM.printHere("----EIaa----", notEc, " name=" + name + " clan " + E.clanNames[clan] + " econCnt=" + myEconCnt + " worth=" + EM.mf(tworth) + " wealth=" + EM.mf(wealth) + " resources=" + EM.mf(res) + " $$ " + EM.mf(rworth) + " colonists=" + EM.mf(colonists) + " $$ " + EM.mf(sworth) + " knowledge=" + EM.mf(knowledge));
     if (xpos > E.nzero) {
       this.xpos = xpos;
     }
@@ -200,7 +202,8 @@ public class Econ {
     colonists = (sworth = tworth * partsSumFrac * eM.initialColonistFrac[pors] * (1.0 + eM.initialReserve[pors])) / eM.nominalWealthPerStaff[pors];
     res = (rworth = tworth * partsSumFrac * eM.initialResourceFrac[pors] * (1.0 + eM.initialReserve[pors])) / eM.nominalWealthPerResource[pors];
 
-    System.out.println(new Date().toString() + "Init again year" + year + (pors == E.P ? " planet " : " ship ") + name + " clan" + clan + " econCnt=" + myEconCnt + " worth=" + EM.mf(tworth) + " wealth=" + EM.mf(wealth) + " resources=" + EM.mf(res) + " $$ " + EM.mf(rworth) + " colonists=" + EM.mf(colonists) + " $$ " + EM.mf(sworth) + " knowledge=" + EM.mf(knowledge));
+//    System.out.println(new Date().toString() + "Init again year" + year + (pors == E.P ? " planet " : " ship ") + name + " clan" + clan + " econCnt=" + myEconCnt + " worth=" + EM.mf(tworth) + " wealth=" + EM.mf(wealth) + " resources=" + EM.mf(res) + " $$ " + EM.mf(rworth) + " colonists=" + EM.mf(colonists) + " $$ " + EM.mf(sworth) + " knowledge=" + EM.mf(knowledge));
+    eM.printHere("----EIab----", notEc, " name=" + name + " clan " + E.clanNames[clan]  + " resources=" + EM.mf(res) + " $$ " + EM.mf(rworth) + " colonists=" + EM.mf(colonists) + " $$ " + EM.mf(sworth) + " knowledge=" + EM.mf(knowledge));
     // do not set a new position/change position if Assets was already instanted
     if (as == null) {
       //    System.out.println("137 start as == null");
@@ -218,10 +221,12 @@ public class Econ {
         this.ypos = E.newPlanetPosition[1] - 1.2 + Math.random() * 2.7;
       }
       this.zpos = (E.newPlanetPosition[2] += 2.7) - 1.2 + Math.random() * 2.7;
-    } else {
+    } else { // as present
       System.out.println(" Econ.init mid year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " as != null, using a previous location. xpos" + this.xpos + ", ypos" + this.ypos + ", zpos" + this.zpos);
+      eM.printHere("----EIab----", notEc, " name=" + name + " clan " + E.clanNames[clan] + "using a previous location. xpos" + this.xpos + ", ypos" + this.ypos + ", zpos" + this.zpos);
     }
-    System.out.println(" Econ.init mid year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " xpos=" + this.xpos + " ypos=" + this.ypos + " zpos=" + this.zpos);
+   // System.out.println(" Econ.init mid year" + eM.year + " " + (new Date().getTime() - EM.doYearTime) + " xpos=" + this.xpos + " ypos=" + this.ypos + " zpos=" + this.zpos);
+    eM.printHere("----EIad----", notEc, " name=" + name + " clan " + E.clanNames[clan] + " current position: xpos=" + this.xpos + " ypos=" + this.ypos + " zpos=" + this.zpos);
 
     hist.add(new History(20, "Start", "0Life", "1Struct", "2Energy", "3Propel", "4Defense", "5Gov", "6Col", "Min", "Sum", "Ave"));
     this.percentDifficulty = percentDifficulty;
@@ -539,11 +544,11 @@ public class Econ {
      */
     return true; //OK past all limits
   }
-  /** return Econ name with leading blank
+  /** return Econ name with leading blank include living possibly seconds since new and since startYear
    * 
    * @return Econ name
    */
-  String printName(){ return " " + name + printInit() + printYearStart();}
+  String printName(){ return  " " + name + (dead ? " dead" + " =" + getDAge() : " live")+ printInit() + printYearStart();}
 
    long initTime; // time of init for this Econ
    int initCnt = 100; // times since last init print
@@ -555,7 +560,7 @@ public class Econ {
    String printInit() {
      if( initCnt++ > initPrintCnt) {
        initCnt = 0;
-       return " nI" + eM.past(initTime);
+       return " Y" + EM.year + " nI" + eM.past(initTime);
      }
      return "";
    }
@@ -781,12 +786,12 @@ public class Econ {
   }
 
   /**
-   * get die flag from Assets
+   * get die if dead
    *
-   * @return die flag
+   * @return Econ.dead flag
    */
   protected boolean getDie() {
-    return !dead;
+    return dead;
   }
 
   /**
@@ -1765,8 +1770,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * remove name of the current econ name
    *
    */
-  void decrEndYearCnt() {
-    if(dead)return;
+  void decrEndYearCnt() { //Econ
+   
     synchronized (doEndYearCnt) {
       doEndYearCnt[0]--;
       for(int ix=0;ix < maxEndYears-1;ix++){
@@ -1780,7 +1785,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         if(econNames[ix] != null){ System.err.print((doComma?", ":"")  + econNames[ix] ); doComma= true;}
       }
     }; // end sync
-  }
+  } // Econ.decrEndYearCnt
 
   long startYearEndWait = 0;
   int startYearEndWaitCnt = 100;

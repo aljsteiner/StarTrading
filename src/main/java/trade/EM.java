@@ -343,32 +343,32 @@ class EM {
     int S = E.S;
     int P = E.P;
     // use .0001 to prevent divide by zero
-    double sFrac1a = (sFrac1 = (.0001 + eM.porsCnt[S]) / (.0001 + eM.econCnt));
-    double sFrac2a = (sFrac2 = (.0001 + eM.porsCnt[S]) / (.0001 + eM.econCnt));
-    double sFrac3a = (sFrac3 = (.0001 + eM.porsClanCnt[S][clan]) / (.0001 + eM.clanCnt[clan]));
-    int pors = (eM.clanCnt[clan] > 0
-                && eM.porsClanCnt[P][clan] > 0
-                && sFrac1 < eM.clanAllShipFrac[P][clan]
-                && sFrac2 < eM.gameShipFrac[P]
-                && sFrac3 < eM.clanShipFrac[P][clan]) ? E.S : E.P;
+    double sFrac1a = (sFrac1 = (.0001 + porsCnt[S]) / (.0001 + econCnt));
+    double sFrac2a = (sFrac2 = (.0001 + porsCnt[S]) / (.0001 + econCnt));
+    double sFrac3a = (sFrac3 = (.0001 + porsClanCnt[S][clan]) / (.0001 + clanCnt[clan]));
+    int pors = (clanCnt[clan] > 0
+                && porsClanCnt[P][clan] > 0
+                && sFrac1 < clanAllShipFrac[P][clan]
+                && sFrac2 < gameShipFrac[P]
+                && sFrac3 < clanShipFrac[P][clan]) ? E.S : E.P;
 
    
-     if(E.debugCreateOut)System.out.println("%%%%select newEcon pors lPlanets=" + eM.porsCnt[P]
-                         + " lShips=" + eM.porsCnt[S]
-                         + " lClanPlanets=" + eM.porsClanCnt[P][clan]
-                         + " lEconCnt=" + eM.econCnt
-                         + " lClanCnt[" + clan + "]=" + eM.clanCnt[clan]
-                         + " lClanShips=" + eM.porsClanCnt[S][clan]
-                         + " lCEcons=" + eM.clanCnt[clan]
-                         + " clanShipsFrac=" + eM.df(sFrac3)
-                         + " clanShipFrac[P][clan] =" + eM.clanShipFrac[P][clan]
-                         + " pors=" + pors
-                         + "+++"
-                         + (eM.clanCnt[clan] == 0 ? "P0000" : "S"
-                                                              + (eM.porsClanCnt[P][clan] == 0 ? "P000" : "S"
-                                                                                                         + (sFrac1 < eM.clanAllShipFrac[P][clan] ? "S" : "P")
-                                                                                                         + (sFrac2 < eM.gameShipFrac[P] ? "S" : "P")
-                                                                                                         + (sFrac3 < eM.clanShipFrac[P][clan] ? "S" : "P"))));
+     if(E.debugCreateOut)System.out.println("----PScc---- pors lPlanets=" + porsCnt[P]
+                         + " lEconCnt=" + econCnt
+                         + " lShips=" + porsCnt[S]
+                         + "\n lClanPlanets=" + porsClanCnt[P][clan]
+                         + " lClanCnt[" + clan + "]=" + clanCnt[clan]
+                         + " lClanShips=" + porsClanCnt[S][clan]
+                         + " lClanEcons=" + clanCnt[clan]
+                         + "\n clanShipsFrac=" + df(sFrac3)
+                         + " clanShipFrac[P][clan] =" + clanShipFrac[P][clan]
+                         + " pors=" + (pors == P?"planet":"ship")
+                         + "\n+++"
+                         + (clanCnt[clan] == 0 ? "P0000" : "S"
+                         + (porsClanCnt[P][clan] == 0 ? "P000" : "S"
+                         + (sFrac1 < clanAllShipFrac[P][clan] ? "S" : "P")
+                         + (sFrac2 < gameShipFrac[P] ? "S" : "P")
+                         + (sFrac3 < clanShipFrac[P][clan] ? "S" : "P"))));
     
     return pors;
   }
@@ -428,8 +428,8 @@ class EM {
   static final double[][] mCatastrophyBonusYearsBias = {{.5, 15.}, {.5, 15.}};
   static volatile double[][] catastrophyBonusGrowthValue = {{1.3}, {1.3}};  // frac balances
   static final double[][] mCatastrophyBonusGrowthValue = {{.2, 2.}, {.2, .7}};
-  static volatile double[][] catastrophyBonusDecayMultSumSectors = {{.00005}, {.00005}};
-  static final double[][] mCatastrophyBonusDecayMultSumSectors = {{.00002, .0002}, {.00005, .0002}};
+  static volatile double[][] catastrophyBonusDepreciationMultSumSectors = {{.00005}, {.00005}};
+  static final double[][] mCatastrophyBonusDepreciationMultSumSectors = {{.00002, .0002}, {.00005, .0002}};
   static volatile double[][] catastrophyManualsMultSumKnowledge = {{0.}, {25.}};//  .5 -10.
   static final double[][] mCatastrophyManualsMultSumKnowledge = {{0., .0}, {.5, 50.}};//  .5 -10
 
@@ -543,7 +543,7 @@ class EM {
       secondStack = sw.toString();
       ex.printStackTrace(System.err);
       flushes();
-      System.err.println("aInit Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
+      System.err.println("aInit Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
       System.exit(-17);
       fatalError = true;
 
@@ -741,7 +741,7 @@ class EM {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("Ignore " + eo + " pauses() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
+      System.err.println("Ignore " + eo + " pauses() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
     }
   }
 
@@ -771,7 +771,7 @@ class EM {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
+      System.err.println("Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
     }
   }
 
@@ -800,7 +800,7 @@ class EM {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("waitFlushes Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore());
+      System.err.println("waitFlushes Ignore " + eo + " flush() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
     }
   }
 
@@ -961,7 +961,7 @@ class EM {
     double tmem = (double) totMem * gmem, fmem = (double) freeMem * gmem, umem = (double) usedMem * gmem;
     double mmem = (double) maxMem * gmem;
     //System.out.println("");
-    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + eM.year + " Gigs total=" + EM.mf(tmem) + " max" + mf(mmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " used%max" + getPercentUsedMemory();
+    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + year + " Gigs total=" + EM.mf(tmem) + " max" + mf(mmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " used%max" + getPercentUsedMemory();
     System.out.println("----PM----" + since() + prGigMem + "<<<<<<\n");
   }
 
@@ -2088,8 +2088,8 @@ class EM {
             double x2 = mabc[ab][pors];
              */
             prevLine = " before rsac year=" + EM.year + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName();
-            if (eM.curEcon != null) {
-              wasHere += ", name=" + eM.curEcon.getName() + ", age=" + eM.curEcon.getAge();
+            if (curEcon != null) {
+              wasHere += ", name=" + curEcon.getName() + ", age=" + curEcon.getAge();
             }
             double rsaa[][] = rs[aa]; // test for null pointer??
             double rsab[] = rsaa[ab];
@@ -2261,17 +2261,17 @@ class EM {
   static final double[][] mFracPriorityInGrowth = {{.01, .9}, {.001, .9}};
   static double[] resourceGrowth = {3.7, .0002}; // growth per work
   static final double[][] mResourceGrowth = {{.01, 6.}, {0.00002, 2.9}};
-  // deterioration mining cumulative related to each years growth
-  static double[] resourceGrowthDecay = {.0006, .0006}; //per unit
-  // deterioration mining cumulative related to each years growth
-  static final double[][] mResourceGrowthDecay = {{.00003, .009}, {.00003, .009}};
+  // depreciation mining cumulative related to each years growth
+  static double[] resourceGrowthDepreciation = {.0006, .0006}; //per unit
+  // depreciation mining cumulative related to each years growth
+  static final double[][] mResourceGrowthDepreciation = {{.00003, .009}, {.00003, .009}};
   static double[] cargoGrowth = {0.000001, .00000001};
   static final double[][] mCargoGrowth = {{0.00000001, 0.00009}, {0.0000000001, 0.0000009}};
-  // cargo deterioration use resourceGrowthDecay
+  // cargo depreciation use resourceGrowthDepreciation
   static double[] staffGrowth = {3.7, .0002}; // growth per work
   static final double[][] mStaffGrowth = {{0.00002, 6.}, {0.00002, 2.9}};
-  static double[] staffGrowthDecay = {.0006, .0006}; //per unit
-  static final double[][] mStaffGrowthDecay = {{.00003, .009}, {.00003, .009}};
+  static double[] staffGrowthDepreciation = {.0006, .0006}; //per unit
+  static final double[][] mStaffGrowthDepreciation = {{.00003, .009}, {.00003, .009}};
   static double[] travelGrowth = {.0015, .0005}; // this multiplies against work
   static final double[][] mTravelGrowth = {{.0001, .001}, {.0001, .01}}; //
   static double[] guestsGrowth = {0.000001, .00000001};
@@ -2279,10 +2279,10 @@ class EM {
   static final double[][][] mRCSGGrowth = {mResourceGrowth, mCargoGrowth, mStaffGrowth, mGuestsGrowth};
   // growth is in terms of staff units, deterioration is in term of previous yr growth
   static double[][] assetsUnitGrowth = {resourceGrowth, cargoGrowth, staffGrowth, guestsGrowth};
-  static double[][] growthDecay = {resourceGrowthDecay, resourceGrowthDecay, staffGrowthDecay, staffGrowthDecay};
+  static double[][] growthDepreciation = {resourceGrowthDepreciation, resourceGrowthDepreciation, staffGrowthDepreciation, staffGrowthDepreciation};
   static final double[][] mfracBiasInGrowth = {{.1, .3}, {.1, .3}};
   static final double[][] mfracPriorityInGrowth = {{.3, .7}, {.3, .7}};  //mult priority in growth calc and percent to frac
-  static double maxFracBonusGrowth[] = {1.5, 1.5}; // limit size of bonus growth so rawUnitGrow - deterioration + bonus growth is less than assetsUnitGrowth * maxFracGonusGrowth
+  static double maxFracBonusGrowth[] = {1.5, 1.5}; // limit size of bonus growth so rawUnitGrow - depreciation + bonus growth is less than assetsUnitGrowth * maxFracGonusGrowth
   static final double[][] mMaxFracBonusGrowth = {{.5, 2.5}, {.5, 2.5}};
   static double[][] clanFutureFundEmerg2 = {{.15, .15, .15, .15, .15}, {.15, .15, .15, .15, .15}};
   static final double[][] mClanFutureFundEmerg = {{.01, .3}, {.01, .3}};
@@ -3281,7 +3281,7 @@ onceAgain:
       System.err.println("doReadKeepVals error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore());
       System.err.flush();
       // ex.printStackTrace(System.err);
-      System.err.println("doReadKeepVals Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + eM.addlErr + andMore());
+      System.err.println("doReadKeepVals Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + addlErr + andMore());
     }
     finally {
       return ret;
@@ -3715,7 +3715,7 @@ onceAgain:
     doVal("staffGrowth", staffGrowth, mStaffGrowth, "increase amount of staff growth per year, dependent on units of staff");
     doVal("guestGrowth", guestsGrowth, mGuestsGrowth, "increase amount of guest growth per year, dependent on units of guests");
     doVal("maxStaffGrowth", maxStaffGrowth, mMaxStaffGrowth, "increase the largest possible staffsize, staff growths will slow to prevent reaching this size");
-    doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the deteriorations of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
+    doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the depreciations of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
     doVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
     doVal("InitYrsTraveled", initTravelYears, mInitTravelYears, "Increase initial travel cost");
     doVal("favr", fav0, mfavs, "increase how much your clan favors clan red by giving a better barter discount, this increases the amount you help clan red ");
@@ -4066,6 +4066,7 @@ onceAgain:
   static final int WORTHIFRAC = ++e4;
   static final int WORTHINCR = ++e4; //DEPRECIATION
   static final int DEPRECIATION = ++e4; //DEPRECIATION
+  static final int PREVGROWTH = ++e4; //
   static final int TRADEWORTH = ++e4;
   static final int TRADEWORTHINCR = ++e4;
   static final int CATWORTHINCR = ++e4;
@@ -4454,8 +4455,8 @@ onceAgain:
   static final int sumCatEffSBen = ++e4;
   static final int sumCatEffManualsBen = ++e4;
   static final int sumCatEffKnowBen = ++e4;
-  static final int sumCatEffRDecayBen = ++e4;
-  static final int sumCatEffSDecayBen = ++e4;
+  static final int sumCatEffRDepreciationBen = ++e4;
+  static final int sumCatEffSDepreciationBen = ++e4;
   // static final int TESTWORTH4 = ++e4;
   /// static final int TESTWORTH5 = ++e4;
 //  static final int TESTWORTH6 = ++e4;
@@ -4484,7 +4485,8 @@ onceAgain:
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(DEPRECIATION, "Deterioration", "deterioration this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(DEPRECIATION, "Depreciation", "depreciation this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 |  THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
@@ -4856,8 +4858,8 @@ onceAgain:
     doRes(sumCatEffSBen, "EffCatSBen", "Catastrophy Effective staff growth benefits");
     doRes(sumCatEffManualsBen, "EffCatManBen", "Catastrophy Effective manuals benefits");
     doRes(sumCatEffKnowBen, "EffCatKnoBen", "Catastrophy effective knowledge benefits");
-    doRes(sumCatEffRDecayBen, "EffRDecayBen", "Catastrophy effective resource deterioration decrements");
-    doRes(sumCatEffSDecayBen, "EffSDecayBen", "Catastrp[ju effoctove staff decau decrements");
+    doRes(sumCatEffRDepreciationBen, "EffRDepreciationBen", "Catastrophy effective resource depreciation decrements");
+    doRes(sumCatEffSDepreciationBen, "EffSDepreciationBen", "Catastrp[ju effoctove staff decau decrements");
     // repeatlists at "W..." at a later point rn 
     doRes("WTRADEDINCRF5", "Fav5Trd%IncW", "% Years worth increase at Favor5/start year worth", 2, 3, 2, both | SKIPUNSET, ROWS1 | LIST41 | CURAVE | BOTH | SKIPUNSET, ROWS2 | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | THISYEARAVE | BOTH | SKIPUNSET);
     doRes("WTRADEDINCRF4", "Fav4Trd%IncW", "% Years worth increase at Favor4/start year worth", 2, 3, 2, DUP, 0, 0, 0);
@@ -4970,8 +4972,8 @@ onceAgain:
     doRes("sCatBonusY", "s Catast B Yr ", "staff catastrophy years added ave per catastrophy");
     doRes("rCatBonusVal", "r Catast B Val", "resource catastrophy bonus unit value added ave per catastrophy");
     doRes("sCatBonusVal", "s Catast B Yr ", "staff catastrophy bonus unit value added ave per catastrophy");
-    doRes("rCatNegDecay", "r Catast ReduceDecay", "resource catastrophy bonus neg unit value ave per catastrophy");
-    doRes("sCatNegDecay", "s Catast ReduceDecay", "staff catastrophy bonus neg unit value  ave per catastrophy");
+    doRes("rCatNegDepreciation", "r Catast ReduceDepreciation", "resource catastrophy bonus neg unit value ave per catastrophy");
+    doRes("sCatNegDepreciation", "s Catast ReduceDepreciation", "staff catastrophy bonus neg unit value  ave per catastrophy");
     doRes("sCatBonusManuals", "s Catast Bonus Manuals", "catastrophy bonus manuals add value ave per catastrophy");
     doRes("sCatBonusNewKnowledge", "s Catast Bonus New Knowledge", "catastrophy bonus newKnowledge add value ave per catastrophy");
     doRes("rCatBonusManuals", "r Catast Bonus Manuals", "catastrophy bonus manuals add value ave per catastrophy");
@@ -7281,7 +7283,7 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       flushes();
-      System.err.println(tError = ("Remember " + curEconName + " " + Econ.nowThread + "Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + eM.addlErr + andMore()));
+      System.err.println(tError = ("Remember " + curEconName + " " + Econ.nowThread + "Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore()));
       System.exit(-23);
       throw new WasFatalError(tError);
     }
@@ -7512,7 +7514,7 @@ onceAgain:
  * @param what the 
  */
   void printHere(String flag, Econ ec, String what){
-    if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " game" + eM.past(startTime) + atJava(2) + what);
+    if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " game" + past(startTime) + atJava(2) + what);
    else if(E.debugDoYearEndOut)System.out.println(flag  + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
   }
   

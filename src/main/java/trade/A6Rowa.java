@@ -1280,18 +1280,7 @@ public class A6Rowa {
     return this;
   }
   
-  /** copy 4 rows of values from rows biasA to biasB
-   * 
-   * @param biasA the index of the first row of the sources
-   * @param biasB the index of the second row of targets
-   */
-  void copy4AtoB(int biasA,int biasB){
-    for(int rowIx:A03){
-      for(int secIx:E.ASECS){
-        A[biasA+rowIx].set(secIx,A[biasB+rowIx].get(secIx));
-      }
-    }
-  }
+  
           
 
   /**

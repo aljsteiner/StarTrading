@@ -87,18 +87,20 @@ public class E {
   static final boolean debugfalse = false;
   static final boolean debugOutput = true; //distributable;
   static final boolean outputLess = true;  // reduce the output chars in mf2
+  static final boolean debugStuck = true; //error if stuck
   //static final boolean debugOutput = true;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   //static final boolean resetOut = debugOutput;  //change out, err to
   static final boolean resetOut = false;  //change out, err to
   static final boolean debugCreateOut = debugMaster; //output messages Assets
+  static final boolean debugCreateNullOut = debugMaster; //did not choose died Econ
   static final boolean debugAssetsOut = debugMaster; //output messages Assets
   static final boolean debugEconOut = debugMaster; //output messages in Econ
   static final boolean debugCashFlowOut = debugMaster; //output messages in CashFlow
   static final boolean debugTradesOut = debugMaster; //output messages in Trades
-  static final boolean debugCheckBalances = false; //check balances in loops
-  static final boolean debugEconCnt = false; // econCnt = porsCnt0 + porsCnt1
-  static final boolean debugChangeEconCnt = true; // protect changes of econCnt
+  static final boolean debugCheckBalances = debugMaster &&  false; //check balances in loops
+  static final boolean debugEconCnt = debugMaster &&  false; // econCnt = porsCnt0 + porsCnt1
+  static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt
   static final boolean debugNegGrowth = debugMaster; // neg Growth made negCosts
   static final boolean debugNegCosts = debugMaster; // checking for neg Costs
   static final boolean debugFutureFund = debugMaster; // checking for errors with future funds
@@ -106,8 +108,8 @@ public class E {
   static final boolean debugTNoLastGoods = debugMaster; //error open TradeRecord
   static final boolean debugOfferCargos = debugMaster; //cargos in offer == cargo.balance
   static final boolean debugSumGrades = debugMaster; //sum of grades = sum of staff/guests
-  static final boolean debugResum = false; //rc == r + c  sg == s + g
-  static final boolean debugResumP = false; //rc == r + c  sg == s + g add || set
+  static final boolean debugResum = debugMaster &&  false; //rc == r + c  sg == s + g
+  static final boolean debugResumP = debugMaster &&  false; //rc == r + c  sg == s + g add || set
   static final boolean debugCosts = debugMaster;  // check that cost processing ok
   static final boolean debugDouble = debugMaster; //doubleTrouble and infinity or NaN
   static final boolean debugTradeRecord = debugMaster; // or false
@@ -115,7 +117,7 @@ public class E {
   static final boolean debugTradeSetup = debugMaster; // distance, location etc
   static final boolean debugSwaps = debugMaster; // doloops other swap tests
   static final boolean debugDidEconYearEnd = debugMaster; // StarTrader.doYear() doYearEdn
-  static final boolean debugAssetsStats = false; // why stats aren't showing
+  static final boolean debugAssetsStats = debugMaster &&  false; // why stats aren't showing
   static final boolean debugStats = debugMaster; // why stats aren't showing
   static final boolean debugStatsOut = debugMaster; // stats output
   static final boolean debugScannerOut = debugMaster; // scanner output
@@ -134,35 +136,35 @@ public class E {
   static final boolean debugPutValue = debugMaster; //test putValue processing
   static final boolean debugPutValue1 = outputLess; //test putValue processing
   static final boolean debugPutValue2 = outputLess; //test putValue processing
-  static final boolean debugPutValue3 = false; //choose alternative for too big
-  static final boolean debugPutRowsOut6 = false;
-  static final boolean debugPutRows6aOut = false;
-  static final boolean debugPutRows6abOut = false;
-  static final boolean debugPutRows6acOut = false;
-  static final boolean debugPutRows6agOut = true;
-  static final boolean debugIsHere1Out = true;
-  static final boolean debugIsHere2Out = true;
-  static final boolean debugIsHere3Out = true;
-  static final boolean debugPutRows2 = false;
-  static final boolean DEBUGWAITTRACE = false;
+  static final boolean debugPutValue3 = debugMaster &&  false; //choose alternative for too big
+  static final boolean debugPutRowsOut6 = debugMaster &&  false;
+  static final boolean debugPutRows6aOut = debugMaster &&  false;
+  static final boolean debugPutRows6abOut = debugMaster &&  false;
+  static final boolean debugPutRows6acOut = debugMaster &&  false;
+  static final boolean debugPutRows6agOut = debugMaster;
+  static final boolean debugIsHere1Out = debugMaster;
+  static final boolean debugIsHere2Out = debugMaster ;
+  static final boolean debugIsHere3Out = debugMaster ;
+  static final boolean debugPutRows2 = debugMaster && false;
+  static final boolean DEBUGWAITTRACE = debugMaster &&  false;
   static final boolean debugLogsOut = debugMaster; // StarTrader logs output
-  static final boolean debugThreads = false;
-  static final boolean debugRsOut = false; // EM rs output
-  static final boolean debugFFOut = false; // EM Assets.CashFlow.calcForwardFund output
-  static final boolean debugStatsOut1 = false; // stats output1
-  static final boolean debugStatsOut2 = false; // stats output1
+  static final boolean debugThreads = debugMaster &&  false;
+  static final boolean debugRsOut = debugMaster &&  false; // EM rs output
+  static final boolean debugFFOut = debugMaster &&  false; // EM Assets.CashFlow.calcForwardFund output
+  static final boolean debugStatsOut1 = debugMaster &&  false; // stats output1
+  static final boolean debugStatsOut2 = debugMaster &&  false; // stats output1
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPriorityOut = debugMaster;
   static final boolean debugPutRowsOut = debugMaster;//test putValue processing
-  static final boolean debugPutRowsOutUnset = false; //put out warnings of unset stats
-  static final boolean debugStuck = true; //error if stuck
-  static final boolean debugDoStartYear = false; // output lines
+  static final boolean debugPutRowsOutUnset = debugMaster &&  false; //put out warnings of unset stats
+
+  static final boolean debugDoStartYear = debugMaster &&  false; // output lines
   static final int ssMax = 10; // max setStats printed;
   static final boolean debugThreadsOut = debugMaster; // threads output
   static final boolean debugThreadsOut1 = debugMaster; // threads output1
-  static final boolean errEconInit = true;
-  static final boolean debugDoYearEndOut = true || debugFFOut; //output messages re yearEnd
-  static final boolean debugAtJavaOut = false; // output at java locations
+  static final boolean errEconInit = debugMaster;
+  static final boolean debugDoYearEndOut = debugMaster || debugFFOut; //output messages re yearEnd
+  static final boolean debugAtJavaOut = debugMaster && false; // output at java locations
 
   /**
    * constructor for E the major repository of tables and values set by the game
@@ -363,13 +365,15 @@ public class E {
     }
   }
   static protected String[] groupNames = {"red", "orange", "yellow", "green", "blue"};
-  public static final String[] clanNames = {"rodalians", "organtics", "yankels", "groknes", "brogles"};
+ // public static final String[] clanNames = {"rodalians", "organtics", "yankels", "groknes", "brogles"};
+  public static final String[] clanNames = {"red","orange", "yellow","green","blue"};
   static final String[] clanLetter = {"r", "o", "y", "g", "b"};
   public static final int lclans = clanNames.length;
   public static final int LCLANS = lclans;
   Color ccc = new Color(255, 204, 204);
   public static int backGroundColors[] = {0xFF6666, 0xd9850e, 0xffdc23, 0xb0b332, 0x9eced7};
   public Enum clans[] = {clan.RED, clan.ORANGE, clan.YELLOW, clan.GREEN, clan.BLUE};
+
   /**
    * foreground colors for planet,ship clan 0-4, 5 = all clans
    */

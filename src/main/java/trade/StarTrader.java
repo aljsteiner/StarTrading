@@ -5471,10 +5471,11 @@ public class StarTrader extends javax.swing.JFrame {
     double xpos = -9999.;
     Econ newEC = null;
     // now try to find a dead economy to use instead of recreating one
+    int nCnt=0;
     if (pors == E.P) {
       for (Econ n : eM.econs) {
-        EM.wasHere = "n=" + n + " " + n.getDie() == null ? " null getDie()" : " found getDie()";
-        if (n.getDie() && n.getPors() == E.P && n.getDAge() > 2) {
+        eM.printHere(" ----NEa----",n,"scan econ List"+ ++nCnt + " live=" + ( n.getDie()?" dead":" live")  );
+        if (n.getDie() && n.getPors() == E.P && n.getDAge() > 0) {
           eM.setCurEcon(newEC = n);
           eM.printHere("-------MK--------",newEC,"found dead Planet cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
         //  System.out.println(EM.wasHere);
@@ -5484,7 +5485,7 @@ public class StarTrader extends javax.swing.JFrame {
     }// E.P
     else if ((eM.curEcon == null) && pors == E.S) {
       for (Econ n : eM.econs) {
-        if (n.getDie() && n.pors == E.S && n.getDAge() > 2) {
+        if (n.getDie() && n.pors == E.S && n.getDAge() > 0) {
           eM.setCurEcon(newEC = n);
           //    EM.econCnt++;
           eM.printHere( "-------ML--------",newEC," found dead Shipt=" + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
@@ -5494,8 +5495,9 @@ public class StarTrader extends javax.swing.JFrame {
       }// for
     }//E.S
     if (newEC == null) {  // no dead one found create one
-      EM.wasHere = "-------MMa--------Init new Econ" + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
-      System.out.println(EM.wasHere);
+      EM.wasHere = "-------MMa--------Init new Econ pors=" + pors + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
+       eM.printHere("-------MMa--------", newEC," Init new Econ" + EM.econCnt   + ") stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+     // System.out.println(EM.wasHere);
       EM.setCurEcon(ec = curEc = newEC = new Econ());
       EM.econs.add(newEC); // add to the main list
       // EM.econCnt++;
@@ -5511,7 +5513,8 @@ public class StarTrader extends javax.swing.JFrame {
     newEC.init(this, eM, name, clan, EM.econCnt, pors, xpos, eM.difficultyPercent[0], worth);
         eM.setCurEcon(newEC);
     startEconState = (new Date()).getTime();
-     eM.printHere( "-------MMb--------",newEC,"Inited new Econ" + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year + " Econ name=" + name);
+     eM.printHere( "-------MMb--------",newEC," Inited new Econ pre count" + EM.econCnt  + " stateCnt=" + stateCnt + " stateConst=" + stateConst + ":" + stateStringNames[stateConst] + (newEC.getDie()?" dead":" live") + (E.debugChangeEconCnt? " do Count":" skipCount")
+);
   //  eM.printHere( "-------MN--------",newEC,"Inited  Econ" + EM.econCnt + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year );
     // now update counts planets and ships
 
@@ -5524,7 +5527,7 @@ public class StarTrader extends javax.swing.JFrame {
           EM.porsCnt[t.pors]++;
           EM.econCnt = EM.porsCnt[0] + EM.porsCnt[1];
         }
-      }// end synchronized
+      }// end debugChangeEconCnt
       else {
         eM.porsClanCnt[t.pors][t.clan]++;
         eM.clanCnt[t.clan]++;
@@ -6501,8 +6504,8 @@ public class StarTrader extends javax.swing.JFrame {
         // yEcons is the max number of Econs we can create this year.
         int yEcons = (int) (eM.minEconsMult[0][0] * (eM.envsPerYear[tyear = (eM.year < eM.lEnvsPerYear ? eM.year : eM.lEnvsPerYear- 1)]));
         //dnow = new Date();
-   //     eM.printHere("----CRa----", ec," before game create tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
-        System.out.println("----CRa----" + since() + " tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
+        eM.printHere("----CRa----", ec," before game create tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
+       // System.out.println("----CRa----" + since() + " tyr=" + tyear + " curE=" + lEcons + " maxE=" + yEcons + " eCnt=" + eM.econCnt);
         printMem();
         lNamesList = namesList.getSize();
         lEcons = eM.econCnt;
