@@ -24,6 +24,7 @@ import static trade.StarTrader.fatalError;
 import static trade.StarTrader.mainStart;
 import static trade.StarTrader.startTime;
 
+
 /**
  *
  * @author albert steiner

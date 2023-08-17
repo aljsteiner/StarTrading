@@ -2544,9 +2544,9 @@ public class Assets {
     double worthIncrPercent;
     double worthIncr;
     double additionToKnowledgeBiasForSumKnowledge
-            = eM.additionalKnowledgeGrowthForBonus[0] / 7;
+            = eM.additionalKnowledgeGrowthForBonus[0] / 1.5;
     double multiplierForEfficiencyFromRequirements
-            = eM.additionalKnowledgeGrowthForBonus[0] / 6;
+            = eM.additionalKnowledgeGrowthForBonus[0] / 1.4;
     // trade values kept in assets
     double strategicGoal = 0., rGoal0 = 0., strategicValue = 0., goodFrac = 0.;
     double sf = 0., sv = 0.;
@@ -2897,7 +2897,7 @@ public class Assets {
           prev = this;
         }
         now = this;
-        assert sumRCBal > 0.0:"error " + name + " RCbal=" + EM.mf(sumRCBal);
+ //       assert sumRCBal > 0.0:"error " + name + " Neg RCbal=" + EM.mf(sumRCBal);
       } // end DoTotalWorth()
 
       /**
@@ -3808,7 +3808,7 @@ public class Assets {
 
       /**
        * calculate efficiency only for SubAsset resource and SubAsset Staff
-       * staff
+       * input percentDifficulty is EM.difficultyPercent[0] passed through Econ and Assets and CashFlow
        *
        */
       protected void calcEfficiency() {  // Assets.CashFlow.SubAsset

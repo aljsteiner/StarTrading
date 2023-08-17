@@ -1759,7 +1759,7 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = 0.035; // was 0.025,0.05,0.075
+  static double vdifMult = 0.05; // was 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   /**
@@ -2239,8 +2239,8 @@ class EM {
 
   static final double[][] mNominalKnowledgeForBonus = {{60000., 1900000.}, {60000., 1900000}};
   static double[] nominalKnowledgeForBonus = {900000.};
-  static double[] additionalKnowledgeGrowthForBonus = {.05}; // .2=>.05 reduce 200624
-  static double[] additionToKnowledgeBiasSqrt = {.6};
+  static double[] additionalKnowledgeGrowthForBonus = {.2}; // .0-5=>.2 reduce 230815
+  static double[] additionToKnowledgeBiasSqrt = {.8};
   static double[] nominalDistance = {7.};
   static double[] nominalStrategicDif = {3.};
   static double[] knowledgeGrowthPerResearcher = {25.};

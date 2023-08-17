@@ -15,6 +15,7 @@
                 <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"none"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.workingdir>C:\Users\aljst\Desktop\nebeans1f\OGST2</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -54,7 +55,9 @@
         <action>
             <actionName>CUSTOM-test</actionName>
             <displayName>test</displayName>
+            <preAction>build-with-dependencies</preAction>
             <packagings>
+              <scope>test</scope>
                 <packaging>jar</packaging>
             </packagings>
             <goals>
@@ -67,7 +70,7 @@
                 <exec.executable>java</exec.executable>
                 <exec.vmArgs>-ea -Xmx6g</exec.vmArgs>
                 <exec.appArgs>"test"</exec.appArgs>
-                <exec.mainClass>trade.StarTraderTest</exec.mainClass>
+                <exec.mainClass>TestStarTrader</exec.mainClass>
             </properties>
         </action>
          <action>
@@ -103,6 +106,7 @@
                 <exec.vmArgs>-ea -Xmx4g -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
                 <exec.appArgs>"none"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.workingdir>C:\Users\aljst\Desktop\nebeans1f\OGST2</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -120,6 +124,7 @@
                 <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
                 <exec.appArgs>"none"</exec.appArgs>
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.workingdir>C:\Users\aljst\Desktop\nebeans1f\OGST2</exec.workingdir>
             </properties>
         </action>
         <action>

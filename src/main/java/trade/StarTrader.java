@@ -5478,27 +5478,29 @@ public class StarTrader extends javax.swing.JFrame {
     for (int eIx=0;eIx <lEcons && !EM.dfe();eIx++ ) {
        n = EM.econs.get(eIx);
         eM.printHere(" ----NEa----",n,"scan econ List"+ eIx + " live=" + ( n.getDie()?" dead":" live")  );
-       if(!n.getDie())break;// loop til a dead entry
+       if(n.getDie() && n.getDAge() > 0){ // skip if live
     if (pors == E.P) {
-        if ( n.getPors() == E.P && n.getDAge() > 0) {
+        if ( n.getPors() == E.P) {
           eM.setCurEcon(newEC = n);
           eM.printHere("-------MK--------",newEC,"found dead Planet cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
         //  System.out.println(EM.wasHere);
           break;
         }
     }// E.P
-     else if ( n.pors == E.S && n.getDAge() > 0) {
+     else if ( n.pors == E.S) {
           eM.setCurEcon(newEC = n);
           //    EM.econCnt++;
           eM.printHere( "-------ML--------",newEC," found dead Ship=" + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
         //  System.out.println(EM.wasHere);
     }//E.S
-    }
+       }// end dead account
+    }// end for
     if (newEC == null) {  // no dead one found create one
       
       EM.wasHere = "-------MMa--------Init new Econ pors=" + pors + EM.econCnt + sinceA() + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year;
        eM.printHere("-------MMa--------", newEC," pre create and add new Econ" + EM.econCnt   + " stateCnt" + stateCnt + " " + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
      // System.out.println(EM.wasHere);
+     EM.setCurEcon(newEC = new Econ());
       EM.econs.add(newEC); // add to the main list
       // EM.econCnt++;
     }  //end create

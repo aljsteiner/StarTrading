@@ -24,15 +24,15 @@ import java.util.Date;
 import static trade.StarTrader.fatalError;
 import static trade.StarTrader.mainStart;
 import static trade.StarTrader.startTime;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
 import trade.E;
 import trade.EM;
 import trade.Econ;
 import trade.MyErr;
 import trade.StarTrader;
 
-import static org.junit.jupiter.api.Assertions.*;
+//import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -56,11 +56,12 @@ public class StarTraderTest {
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
     try {
-      E.sysmsg("starting out in test main " + Thread.currentThread().getName());
+      //E.sysmsg("starting out in test main " + Thread.currentThread().getName());
     StarTrader.mainStart(args);
     StarTrader.main3();
      if(StarTrader.fatalError) throw new MyErr("fatal error at new TestStarTraderTest");
-     E.sysmsg(" passed first test,  started");
+     
+ 
      System.exit(0);
       System.err.println("oops passed exit");
      } catch (Error | Exception ex) {
@@ -76,7 +77,7 @@ public class StarTraderTest {
       }
    System.exit(0);
     }
-    //</editor-fold>
+
 
   } // main
   
