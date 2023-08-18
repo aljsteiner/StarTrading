@@ -82,7 +82,7 @@ public class E {
   static final boolean noAsserts = false; // false expect -ea in call 
   static boolean ifassert = false; // preset for later test
 
-  static final boolean distributable = false;  //set true before making a jar fine available to public
+  static final boolean distributable = true;  //set true before making a jar fine available to public
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugfalse = false;
   static final boolean debugOutput = true; //distributable;
@@ -91,7 +91,7 @@ public class E {
   //static final boolean debugOutput = true;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   //static final boolean resetOut = debugOutput;  //change out, err to
-  static final boolean resetOut = false;  //change out, err to
+  static final boolean resetOut = false || distributable;  //change out, err to local files
   static final boolean debugCreateOut = debugMaster; //output messages Assets
   static final boolean debugCreateNullOut = debugMaster; //did not choose died Econ
   static final boolean debugAssetsOut = debugMaster; //output messages Assets

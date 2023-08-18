@@ -241,12 +241,14 @@ class EM {
   
   /** if E.debugEconCnt test that econCnt == the porsCnt s
    * 
+   *  use assert if it -ae enabled asserts, skip if test ifassert
+   * 
    */
   static void econCountsTest(){
     if (E.debugEconCnt) {
               synchronized (A4Row.econLock) {
                 assert econCnt == porsCnt[0] + porsCnt[1]: "Counts error, econCnt=" + econCnt + " != porsCnt0=" + porsCnt[0] + " +porsCnt1=" + porsCnt[1];
-                if (econCnt != (porsCnt[0] + porsCnt[1])) {
+                if (!E.ifassert && (econCnt != (porsCnt[0] + porsCnt[1]))) {
                   doMyErr("Counts error, econCnt=" + econCnt + " != porsCnt0=" + porsCnt[0] + " +porsCnt1=" + porsCnt[1]);
                 }
               }
