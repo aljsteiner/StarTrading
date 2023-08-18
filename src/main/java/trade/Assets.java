@@ -2182,13 +2182,7 @@ public class Assets {
       
     }
      if(!died)getTradeInit(true); // force creation of trade values and rawProspects2
-    if (E.debugEconCnt) {
-      synchronized (A4Row.econLock) {
-        if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-          EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-        }
-      }
-    }
+    EM.econCountsTest(); 
     endYearEnd = false;
     bals.nullEndRows(); // free unneeded rows
     
@@ -10063,13 +10057,7 @@ public class Assets {
         hist.add(new History(aPre, 1, "n" + n + ">>>>>> aDEAD=" + EM.mf(health), "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "<<<<<<"));
        EM.isHere("--EYEYdg--",ec,"end of dead stats");
       }// end of dead
-      if (E.debugEconCnt) {
-        synchronized (A4Row.econLock) {
-          if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-            EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-          }
-        }
-      }
+      EM.econCountsTest(); 
       if(eM.dfe()) return 0.;
       //Assets.CashFlow.yearEnd  final cleanup for starting the next year
        if(E.debugDoYearEndOut)System.err.println("-----YEDPg ---- " + ec.name + " near end " + (died ? "DEAD" : "LIVE") + " in Assets.CashFlow.yearEnd() ");
@@ -10100,13 +10088,7 @@ public class Assets {
 
 
       //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
-      if (E.debugEconCnt) {
-        synchronized (A4Row.econLock) {
-          if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
-            EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
-          }
-        }
-      }
+      EM.econCountsTest(); 
       EM.isHere("--EYEYaf--",ec,"end of yearEnd stats");
       if (E.debugMisc && syW != null) {
         throw new MyErr("in CF.yearEnd end, syW != null");

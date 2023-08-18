@@ -238,6 +238,20 @@ class EM {
     otherEconClan = x.getColor();
     return otherEconName = x.getName();
   }
+  
+  /** if E.debugEconCnt test that econCnt == the porsCnt s
+   * 
+   */
+  static void econCountsTest(){
+    if (E.debugEconCnt) {
+              synchronized (A4Row.econLock) {
+                assert econCnt == porsCnt[0] + porsCnt[1]: "Counts error, econCnt=" + econCnt + " != porsCnt0=" + porsCnt[0] + " +porsCnt1=" + porsCnt[1];
+                if (econCnt != (porsCnt[0] + porsCnt[1])) {
+                  doMyErr("Counts error, econCnt=" + econCnt + " != porsCnt0=" + porsCnt[0] + " +porsCnt1=" + porsCnt[1]);
+                }
+              }
+            }
+  }
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
   static double[] difficultyPercent = {30.};
