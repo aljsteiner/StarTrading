@@ -62,8 +62,13 @@ package trade;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  *
@@ -124,7 +129,64 @@ public class Assets {
   static final int[] ms = {0, 1};
   static final int[] mr = {0, E.lsecs};
   static final int aDl = 9;
+  
+   public enum SwpCmd {
+    NOT("nothing assigned"), NONE("no Cmd"), NOOP("no operation"), GROW("in grow section"), HEALTH("Health swapping"), UINCR("un Incr"), RSINCR("pre Incr"), SINCR("increase staff guest to staff"), SINCR1("second incr staff G to S"), SINCR2("3 incr staff G to S"), SINCR3("4 incr staff G to S"), RINCR("increase available from cargo"), RINCR1("another increase available C to A"), RINCR2("another increase available C to A"), RINCR3("another increase available C to A"), RSINCR1("seconPre Incr"), /* AXINCR("increase available by transmute from another resource Cargo or Avail"), */ UDECR("un Decr"), RSDECR("pre DECR"), SDECR("decrease a large staff to Guests to help another resource staff"), RDECR("decrease large resource to help another resource"), RDECR1, RDECR2, RDECR3, SDECR1, SDECR2, SDECR3, UNXDECR("un XDECR"), RFUTUREFUND, REMERGFUTUREFUND, SFUTUREFUND, SEMERGFUTUREFUND, RFUTUREFUND1, REMERGFUTUREFUND1, SFUTUREFUND1, SEMERGFUTUREFUND1, RFUTUREFUND2, REMERGFUTUREFUND2, SFUTUREFUND2, SEMERGFUTUREFUND2, RFUTUREFUND3, REMERGFUTUREFUND3, SFUTUREFUND3, SEMERGFUTUREFUND3, RSXDECR("pre XDECR"), RXDECR("swap resources/staff between sectors, high resource cost"), RXDECR1("Second RXDECR"), RXDECR2("Second RXDECR"), RXDECR3("Second RXDECR"), SXDECR("swap resource with high staff costs"), SXDECR1("Second SXDECR"), SXDECR2("Second SXDECR"), SXDECR3("Second SXDECR"), TXDECR("reverse charge r sector"), TXDECR1, TXDECR2, TXDECR3, UXDECR, UXDECR1, UXDECR2, UXDECR3, TRADE("prepare for Trade"), TRADEG("Trade Guests between Planet and Ship"), TRADEC("Trade cargo between Ship and Planeet");
+    private String desc;
+    private double val;
+    private double low, high;
+    private String desTip;
 
+    private SwpCmd() {
+      this.desc = "";
+    }
+
+    private SwpCmd(String desc) {
+      this.desc = desc;
+    }
+
+    private SwpCmd(String desc, double ival, double plow, String dtip, Consumer sav) {
+      sav.accept(ival);
+    }
+
+    public int n() {
+      return ordinal();
+    }
+
+  }
+
+  SwpCmd[][] tst = incrs;
+  static SwpCmd[][] incrs = {{SwpCmd.RINCR, SwpCmd.RINCR1, SwpCmd.RINCR2, SwpCmd.RINCR3}, {SwpCmd.SINCR, SwpCmd.SINCR1, SwpCmd.SINCR2, SwpCmd.GROW.SINCR3}};
+  static SwpCmd[][] decrs = {{SwpCmd.RDECR, SwpCmd.RDECR1, SwpCmd.RDECR2, SwpCmd.RDECR3}, {SwpCmd.SDECR, SwpCmd.SDECR1, SwpCmd.SDECR2, SwpCmd.SDECR3}};
+  static SwpCmd[][] futureFunds = {{SwpCmd.RFUTUREFUND, SwpCmd.REMERGFUTUREFUND, SwpCmd.RFUTUREFUND1, SwpCmd.REMERGFUTUREFUND1, SwpCmd.RFUTUREFUND2, SwpCmd.REMERGFUTUREFUND2, SwpCmd.RFUTUREFUND3, SwpCmd.REMERGFUTUREFUND3}, {SwpCmd.SFUTUREFUND, SwpCmd.SEMERGFUTUREFUND, SwpCmd.SFUTUREFUND1, SwpCmd.SEMERGFUTUREFUND1, SwpCmd.SFUTUREFUND2, SwpCmd.SEMERGFUTUREFUND2, SwpCmd.SFUTUREFUND3, SwpCmd.SEMERGFUTUREFUND3}};
+  static SwpCmd[][][] dlecrs = {decrs, futureFunds};
+  static SwpCmd[][] xdecrs = {{SwpCmd.RXDECR, SwpCmd.RXDECR1, SwpCmd.RXDECR2, SwpCmd.RXDECR3}, {SwpCmd.SXDECR, SwpCmd.SXDECR1, SwpCmd.SXDECR2, SwpCmd.SXDECR3}};
+  static SwpCmd[][] udecrs = {{SwpCmd.TXDECR, SwpCmd.TXDECR1, SwpCmd.TXDECR2, SwpCmd.TXDECR3}, {SwpCmd.UXDECR, SwpCmd.UXDECR1, SwpCmd.UXDECR2, SwpCmd.UXDECR3}};
+  static SwpCmd[][][] uxdecrs = {xdecrs, udecrs};
+
+  EnumSet<SwpCmd> setTst = setIncr;
+  static EnumSet<SwpCmd> setIncr = EnumSet.of(SwpCmd.RINCR, SwpCmd.SINCR, SwpCmd.RINCR1, SwpCmd.SINCR1, SwpCmd.RINCR2, SwpCmd.SINCR2, SwpCmd.RINCR3, SwpCmd.SINCR3);
+  static EnumSet<SwpCmd> setDecr = EnumSet.of(SwpCmd.SDECR, SwpCmd.SDECR1, SwpCmd.SDECR2, SwpCmd.SDECR3, SwpCmd.RDECR, SwpCmd.RDECR1, SwpCmd.RDECR2, SwpCmd.RDECR3);
+  static EnumSet<SwpCmd> setRDecr = EnumSet.of(SwpCmd.RDECR, SwpCmd.RDECR1);
+  static EnumSet<SwpCmd> setSDecr = EnumSet.of(SwpCmd.SDECR, SwpCmd.SDECR1);
+  static EnumSet<SwpCmd> setXXdecr = EnumSet.of(SwpCmd.RXDECR, SwpCmd.RXDECR1, SwpCmd.RXDECR2, SwpCmd.RXDECR3, SwpCmd.SXDECR, SwpCmd.SXDECR1, SwpCmd.SXDECR2, SwpCmd.SXDECR3, SwpCmd.TXDECR, SwpCmd.TXDECR1, SwpCmd.TXDECR2, SwpCmd.TXDECR3, SwpCmd.UXDECR, SwpCmd.UXDECR1, SwpCmd.UXDECR2, SwpCmd.UXDECR3);
+  static EnumSet<SwpCmd> setRXdecr = EnumSet.of(SwpCmd.RXDECR, SwpCmd.RXDECR1);
+  static EnumSet<SwpCmd> setSXdecr = EnumSet.of(SwpCmd.SXDECR, SwpCmd.SXDECR1);
+  public static final int swpIncrv[] = {SwpCmd.RINCR.n(), SwpCmd.SINCR.n(), SwpCmd.RINCR1.n(), SwpCmd.SINCR1.n()};
+  static final int swpXXdecr[] = {SwpCmd.RXDECR.n(), SwpCmd.RXDECR1.n(), SwpCmd.SXDECR.n(), SwpCmd.SXDECR1.n()};
+  static final int swpSXdecr[] = {SwpCmd.SXDECR.n(), SwpCmd.SXDECR1.n()};
+  static final int swpRXdecr[] = {SwpCmd.RXDECR.n(), SwpCmd.RXDECR1.n()};
+  public static final int swpSIncrv[] = {SwpCmd.SDECR.n()};
+  public static final int swpDecrv[] = {SwpCmd.SDECR.n()};
+  public static final int swpADecrv[] = {SwpCmd.RINCR.n(), SwpCmd.RINCR1.n()};
+  public static final int swpSDecrv[] = {SwpCmd.SDECR.n(), SwpCmd.SINCR.n(), SwpCmd.SINCR1.n()};
+  // !swpXXdecrs.contains(cmd.n())
+  static Set swpXXdecrs = new HashSet(Arrays.asList(swpXXdecr));
+  static Set swpSXdecrs = new HashSet(Arrays.asList(swpSXdecr));
+  static Set swpRXdecrs = new HashSet(Arrays.asList(swpRXdecr));
+  public static Set swpIncrs = new HashSet(Arrays.asList(swpIncrv));
+  public static Set swpDecrs = new HashSet(Arrays.asList(swpDecrv));
+  
   // Assets  range 0. - 1.
   static final double decrMostGapMult[] = {1 / (14 * 16), 1 / (14 * 15), 1 / (14 * 14), 1 / (14 * 13), 1 / 14 * 1 / 12, 1 / 14 * 1 / 11, 1 / 14 * 1 / 10, 1 / 14 * 1 / 9};
   boolean iCF = false; // did initCashFlow;
@@ -432,7 +494,7 @@ public class Assets {
     // move the definitions here so they can reference a defined Assets
     bals = new ABalRows(ec, ABalRows.BALSLENGTH, ABalRows.tbal, History.valuesMajor6, "bals");
     balances = new A6Row(ec, History.valuesMajor6, "balances");
-    if (true) { // I think unneeded
+   //. if (true) { // I think unneeded
       cashFlowSubAssetBalances = balances; // assume no recreate of each ARow
       growths = new A6Row(ec, History.valuesMajor6, "growths");
       cashFlowSubAssetsGrowths = growths;
@@ -440,7 +502,7 @@ public class Assets {
       cashFlowSubAssetUnitsNeededToSurvive = mtgNeeds6;
       mtgAvails6 = new A6Row(ec, lev, "mtgAvails6");
       cashFlowSubAssetUnitsAvailableToSwap = mtgAvails6;
-    }
+    //}
     bids = new A2Row(ec, History.valuesMajor6, "bids");
     commonKnowledge = new ARow(ec);
     newKnowledge = new ARow(ec);
@@ -2284,6 +2346,7 @@ public class Assets {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
     }
+    if(!didCashFlowInit)cur.aStartCashFlow(this);
     if (E.tradeInitOut) {
       System.out.println("Assets.barter " + name + "Y" + EM.year);
     }
@@ -2729,7 +2792,7 @@ public class Assets {
     ARow yRFuture2 = new ARow(ec);
     ARow ySFuture2 = new ARow(ec);
 
-    E.SwpCmd cmd = E.SwpCmd.NONE;
+    SwpCmd cmd = SwpCmd.NONE;
     boolean swapped = false;
     ARow rneed = new ARow(ec); // temp value for a given swap
     ARow sneed = new ARow(ec);  // temp value for a given swap
@@ -3521,18 +3584,13 @@ public class Assets {
       /**
        * constructor Assets.CashFlow.SubAsset
        *
-       * @param asIx an index counter used for fchar and other arrays
+       * @param asIx SubAsset index for SubAssets R C S G
        * @param areserve boolean true of a reserve not working SubAsset
        * @param apartner partner of this SubAsset
        *
        * requires a paired call by method setPartner
        */
-      public SubAsset(int asIx) {   // Assets.CashFlow.SubAsset
-        reserve = false;
-        sIx = asIx;
-        as1 = as3;
-      }
-
+      
       public SubAsset(int asIx, boolean areserve, SubAsset apartner) {
         // Assets.CashFlow.SubAsset
         reserve = areserve;
@@ -3541,6 +3599,16 @@ public class Assets {
         partner.partner = this;
         as1 = as3;
       }
+      /** another constructor for SubAsset
+       * 
+       * @param asIx SubAsset index for SubAssets R C S G
+       */
+      public SubAsset(int asIx) {   // Assets.CashFlow.SubAsset
+        reserve = false;
+        sIx = asIx;
+        as1 = as3;
+      }
+
 
       void initResource(int sIx, boolean reserve, SubAsset partner, double resources) {
         sstaff = false;
@@ -3683,18 +3751,7 @@ public class Assets {
         newKnowledge = bals.getRow(ABalRows.NEWKNOWLEDGEIX); // before SubAssets
         commonKnowledge = bals.getRow(ABalRows.COMMONKNOWLEDGEIX);
         manuals = bals.getRow(ABalRows.MANUALSIX);
-        /*
-          static final int CUMULATIVEUNITDEPRECIATIONIX = CUMUNITBONUSIX + 4; //24
-//  static int balsLength = CUMULATIVEDEPRECIATIONIX + 4; //24
-  static final int RAWUNITSGROWTHIX = CUMULATIVEUNITDEPRECIATIONIX + 4; //28
-  static final int RAWGROWTHIX = RAWUNITSGROWTHIX + 4; //32
-  static final int TRADEDGROWTHIX = RAWGROWTHIX + 4; //36
-  static final int SWAPPEDGROWTHIX = TRADEDGROWTHIX + 4; //40
-  static final int COMMONKNOWLEDGEIX = SWAPPEDGROWTHIX + 4; //44
-  static final int NEWKNOWLEDGEIX = COMMONKNOWLEDGEIX + 1; //45
-  static final int MANUALSIX = NEWKNOWLEDGEIX + 1; //46
-  static final int BALSLENGTH = MANUALSIX + 1; //47
-         */
+
         prevUnitGrowth = makeZero(prevUnitGrowth);
         prevWorth = makeZero(prevWorth);
         prevHealth = makeZero(prevHealth);
@@ -4144,33 +4201,33 @@ public class Assets {
         int ma = sIx,mm=1;
         int sourceMax = sourceIx > -1 ? sourceIx : LSECS; // debug 7 financialSectors
         if (debugSumGrades2) { // check grades against units
-          for (int n = 0; n < E.LSECS; n++) {
+          for (int secIx = 0; secIx < E.LSECS; secIx++) {
             if(false){
-             double bals1 = bals.gett(1,n);
-            double balss = bals.gett(4,n) + bals.gett(5,n); 
+             double bals1 = bals.gett(1,secIx);
+            double balss = bals.gett(4,secIx) + bals.gett(5,secIx); 
             
-            assert Math.abs(bals1 - balss) < E.PPZERO : "resum error, sector" + n + " bal1=" + EM.mf(bals1) + " balsSum" + EM.mf(balss) + " balsS" + EM.mf(bals.gett(4,n)) + " balsG" +  EM.mf(bals.gett(5,n)); 
+            assert Math.abs(bals1 - balss) < E.PPZERO : "resum error, sector" + secIx + " bal1=" + EM.mf(bals1) + " balsSum" + EM.mf(balss) + " balsS" + EM.mf(bals.gett(4,secIx)) + " balsG" +  EM.mf(bals.gett(5,secIx)); 
             }
-            for (int nn = 0; nn < E.LGRADES; nn++) {
-              sGSums[n] += doubleTrouble(grades[n][nn], "n=" + n + "nn=" + nn + ",");
+            for (int gradesIx = 0; gradesIx < E.LGRADES; gradesIx++) {
+              sGSums[secIx] += doubleTrouble(grades[secIx][gradesIx], "secIx=" + secIx + "gradesIx=" + gradesIx + ",");
             }
-            sGSums[8] += sGSums[n];     
+            sGSums[8] += sGSums[secIx];     
           }
           double sumDif = 0., dif = 0, sumg = 0., sumu = 0., difFracSum = .00001, difFrac = .001;
           //Prevalidate the existing grades and balance if debugSumGrades2
           for (int sourceIx2 = 0; sourceIx2 < E.LSECS; sourceIx2++) {
             preValues[sourceIx2] = balance.get(sourceIx2);
             sumg = 0.;
-            for (int nn = 0; nn < E.LGRADES; nn++) {
-              if (grades[sourceIx2][nn] < -0.0) {
-                throw (new MyErr(String.format(didTradeInitCF + "Illegal negative grade %7.3g at   ix%d, grade%d, term%d, i%d, j%d, m%d,n%d", grades[sourceIx2][nn], sourceIx2, nn, as3.term, as3.i, as3.j, as3.m, as3.n)));
+            for (int gradesIx = 0; gradesIx < E.LGRADES; gradesIx++) {
+              if (grades[sourceIx2][gradesIx] < -0.0) {
+                throw (new MyErr(String.format(didTradeInitCF + " checkGradesIllegal negative grade %7.3g at   sourceIx%d, gradesIx%d, term%d, i%d, j%d, m%d, n%d", grades[sourceIx2][gradesIx], sourceIx2, gradesIx, as3.term, as3.i, as3.j, as3.m, as3.n)));
               }
-              preGSums[sourceIx2] += grades[sourceIx2][nn];
-            } //for nn
+              preGSums[sourceIx2] += grades[sourceIx2][gradesIx];
+            } //for gradesIx
             preGSums[8] += preGSums[sourceIx2];
 
             double sectU = balance.get(sourceIx2);
-            double difMax = sectU * 0.001 + .0001;
+            double difMax = sectU * 0.001 + .0003;
             double sumBal = balance.sum();
             //check for more than a very small dif between sum of sector grades and  sector balance
             if (((dif = sectU - preGSums[sourceIx2]) < -difMax || dif > difMax)) {
@@ -4180,8 +4237,7 @@ public class Assets {
             }//dif
           }// for sourceIx2
         }// if debugSumGrades2
-
-      }
+      }// checkGrades
 
       /**
        * sum multiple ARow s from the grades of a SubAsset
@@ -5119,12 +5175,12 @@ public class Assets {
         lightYearsTraveled = ec.distanceMoved; // set in sStartTrade
         lightYearsTraveled = ((lightYearsTraveled < .2)) ? eM.initTravelYears[pors][0] : lightYearsTraveled;
         //initialize for the growth and efficiency
-        EM.wasHere = "initTrade... before calcEfficiency loop eeeh" + ++eeeh;
+        eM.printHere("----TINa----",ec, "initTrade... before calcEfficiency loop");
         if (!didCashFlowInit) {
           calcCatastrophy();
-          rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);
+          
         }
-        EM.wasHere = "initTrade... before calcEfficiency loop eeeh" + ++eeeh;
+        rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
         for (k = 0; k < 4; k++) {
           sys[k].calcEfficiency();
           sys[k].calcGrowth();
@@ -7784,9 +7840,9 @@ public class Assets {
       calcPriority(percentDifficulty); // calc this years piority into priorityYr and as.difficulty
       EM.wasHere = "CashFlow.init... before calcCatastrophy eeeg=" + ++eeeg;
       if (!didCashFlowInit || EM.AlwaysMakeRS) { // do init only, use rs the life of the Econ or not
-        rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);
         calcCatastrophy();
       }
+      rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
       EM.wasHere = "CashFlow.init... before calcEfficiency loop eeeh" + ++eeeh;
       for (k = 0; k < 4; k++) {
         sys[k].calcEfficiency();
@@ -8483,6 +8539,7 @@ public class Assets {
      */
     Offer barter(Offer inOffer) { //Assets.CashFlow.barter
       boolean firstVisit = false; // for counting unique planets visited 
+      try {
       aPre = "b&";
       hist.add(new History(aPre, 5, name + " Y Barter R", resource.balance));
       hist.add(new History(aPre, 5, name + " B T=" + inOffer.getTerm() + " S", staff.balance));
@@ -8599,8 +8656,10 @@ public class Assets {
         tWTotWorth = tW.getTotWorth();
         btWTotWorth = btW.getTotWorth();
         btWrcsgSum = btW.getSumRCSGBal();
+        double tWrcsgSum = tW.getSumRCSGBal();
         worthIncrPercent = btWTotWorth < E.PZERO ? 1. : 100. * (tWTotWorth - btWTotWorth) / startYrSumWorth;
         worthIncr =tWTotWorth - btWTotWorth;
+        double rcsgIncr = tWrcsgSum-btWrcsgSum;
         percentValuePerGoal = strategicGoal > E.PZERO ? 100. * strategicValue / strategicGoal : 1.;
         retOffer.set2Values(ec, btWTotWorth, btW.getSumRCSGBal(), tWTotWorth); // needed in TradeRecord SearchRecord
 
@@ -8623,8 +8682,8 @@ public class Assets {
           setStat(EM.TradeCriticalBidRequestsFirst, sumCriticalBidRequestsFirst, 1);
           setStat(EM.TradeBidRequests, sumBidRequests, 1);
           setStat(EM.TradeCriticalBidRequests, sumCriticalBidRequests, 1);
-          setStat(EM.TRADEFIRSTRECEIVE, calcPercent(btWrcsgSum, requestsFirst), 1);
-          setStat(EM.TRADELASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, requests), 1);
+          setStat(EM.TRADEFIRSTRECEIVE,pors, clan, requestsFirst, 1);
+          setStat(EM.TRADELASTRECEIVE, pors, clan, requests, 1);
           setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
           setStat(EM.TRADEFIRSTGAVE, pors, clan, calcPercent(btWrcsgSum, sendSumFirst), 1);
           setStat(EM.TRADELASTGAVE, pors, clan, calcPercent(btWrcsgSum, sendSum), 1);
@@ -8636,6 +8695,7 @@ public class Assets {
          // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
          // setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
           setStat(EM.TRADEWORTHINCR, pors, clan, worthIncr, 1);
+          setStat(EM.TRADERCSGINCR, pors, clan, rcsgIncr, 1);
           setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
           setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
           setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
@@ -8677,7 +8737,8 @@ public class Assets {
           setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
          // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
          // setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
-          setStat(EM.TRADEWORTHINCRPERCENT, pors, clan, worthIncrPercent, 1);
+          setStat(EM.TRADEWORTHINCR, pors, clan, worthIncr, 1);
+          setStat(EM.TRADERCSGINCR, pors, clan, rcsgIncr, 1);
           setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
           setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
           setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
@@ -8805,6 +8866,18 @@ public class Assets {
       }
       hist.add(new History(aPre, 5, "xit2 CF.barter", "o=" + oname, "newTerm=" + newTerm, "entryTerm=" + entryTerm, (myTrade == null ? "!myTrade" : "myTrade"), (eTrad == null ? "!eTrad" : "eTrad"), "lhist" + lhista, "ehist" + ehist, "$=" + EM.mf(sumTotWorth)));
       return retOffer;
+        } catch (Exception | Error ex) {
+      eM.firstStack = eM.secondStack + "";
+      ex.printStackTrace(eM.pw);
+      ex.printStackTrace(System.err);
+      eM.secondStack = eM.sw.toString();
+      System.out.flush();
+      System.err.flush();
+      System.err.println(eM.tError = ("----CFBa----CF Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      //     ex.printStackTrace(System.err);
+      st.setFatalError();
+      throw new WasFatalError(eM.tError);
+    }
     }
 
     /**
@@ -9068,7 +9141,7 @@ public class Assets {
       //  for (m = startYrs.length - 1; m > 0; m--) {
       //   startYrs[m] = hcopyy(cur);
       // }
-      cmd = E.SwpCmd.NOT;
+      cmd = SwpCmd.NOT;
 
       if(eM.dfe()) return 0.;
       rawProspects2 = makeZero(rawProspects2);
@@ -9488,7 +9561,7 @@ public class Assets {
             setStat(EM.MISCLOWDIEDPERCENT, pors, clan, 0., 1);
           }
         }
-        EM.wasHere2 = EM.isHere1(ec, "CashFlow.live yearEnd before many setStat ddddf=" + ++ddddf);
+         eM.printHere("----LYE----",ec, "CashFlow.live yearEnd before many setStat" );
         if (year == yearTradeAccepted && oclan >= 0) {
           //set of accepted trades
           double rawProspectsMin = rawProspects2.min();
@@ -10040,7 +10113,8 @@ public class Assets {
             EM.porsClanCnt[pors][clan]--;
             EM.porsCnt[pors]--;
             EM.econCnt--;
-            EM.econCnt = EM.porsCnt[0] + EM.porsCnt[1];
+       //     EM.econCnt = EM.porsCnt[0] + EM.porsCnt[1];
+            EM.deadCnt++;
             }
             if (E.debugEconCnt) {
               if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -10338,7 +10412,7 @@ public class Assets {
       /**
        * reset swap values to their initial value
        */
-      cmd = E.SwpCmd.NOT;
+      cmd = SwpCmd.NOT;
       n = 0;
       doNot.zero();
       done = false;
@@ -10410,7 +10484,7 @@ public class Assets {
      */
     synchronized void calcRawCosts(A6Row balances, A6Row rawUnitGrowths, A6Row rawGrowths, A6Row invMEfficiency, A6Row invGEfficiency, int ix, int tIx, A10Row consumerReqMaintCosts10, A10Row nReqMaint, A10Row consumerReqGrowthCosts10, A10Row nReqGrowth, A10Row consumerMaintCosts10, A10Row nMaint, A10Row mTravel1Yr, A10Row nTravel1Yr, A10Row travelYearsCosts, A10Row consumerGrowthCosts10, A10Row nGrowth, ARow swork, double yearsTraveled) {  // Assets.CashFlow.calcRawCosts
       int aage = eM.curEcon.age; // test for null
-      double t1, t2, t3, t4 = -999., t5, t6, t7, rawG, swork2 = 01.;
+      double t1, t2, t3, t4 = -999., t5, t6, t7, workG, swork2 = 01.;
       int rcsg = ix;
       // int ix2 = (int) ix / 2;
       Double d, d1, d2;
@@ -10439,33 +10513,34 @@ public class Assets {
       bals.resum(1);bals.resum(0);
       bbge = eM.curEcon.age;
       double rm = .6; // random multiplier
-      // i loops across the consumers, get rawGrowths and rawG here
+      // i loops across the consumers, get rawGrowths and workG here
       for (i = 0; i < E.lsecs; i++) {
         int aaage = eM.curEcon.age; // test for null
         aaage = ec.age;// test for null
         ARow kMaint = new ARow(ec);
-        // set same growth ARow twice
-        bals.set(ABalRows.GROWTHSIX+ix,i,rawG = s.work.get(i)
-       * bals.get(ABalRows.RAWUNITGROWTHSIX,i) * cRand(i + ix + 10));                                  //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
+        // growth is dependent on work
+        bals.set(ABalRows.GROWTHSIX + ix,i,workG = swork.get(i)
+       * bals.get(ABalRows.RAWUNITGROWTHSIX +ix,i) * cRand(i + ix + 10)); 
+      //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
 
         // j loops across services that as a sum are used by consumers
         for (j = 0; j < E.lsecs; j++) {
           assert rs[0][0][ix] > E.PZERO : "Error rs[0][0][ix] zero=" + EM.mf(rs[0][0][ix]) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
           assert invMEfficiency.get(ix + 2, i) > E.PZERO : "Error invMEfficiency.get(ix + 2, i) <= PZERO =" + EM.mf(invMEfficiency.get(ix + 2, i)) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
-          assert balances.get(2 + ix, i) >= E.NNZERO : "Error balances.get(2 + ix, i) <= NNZERO =" + EM.mf(balances.get(2 + ix, i)) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
+          assert bals.get(ABalRows.BALANCESIX + ix, i) >= E.NNZERO : "Error balances.get(2 + ix, i) <= NNZERO =" + EM.mf(balances.get(2 + ix, i)) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
 
           // calculate required maintenance, a requirement not a cost subtracted
           // the prospects calculate from this and must be positive for health
           // a negative required maintenance remainder bal -reqm means death
           // crand(31) applies the same random number to each calc for the year
-          t1 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + j, rm) * E.maintRequired[pors][i][j] * rs[0][0][ix]
+          t1 = bals.get(ABalRows.BALANCESIX + ix, i) * cRand(31) * cRand(i * E.lsecs + j, rm) * E.maintRequired[pors][i][j] * rs[0][0][ix]
                   * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i])
                   * invMEfficiency.get(ix + 2, i);
           // these values are all staff counts, converted from work counts by bal/swork
           d = swork.get(j);
           // convert illegal d to very very small positive
           swork2 = d = (d.isInfinite() || d.isNaN()) || d < E.PZERO ? E.UNZERO : d;
-          t2 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / swork2;
+          t2 = bals.get(ABalRows.BALANCESIX + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / swork2;
           // gather 7 service requests to i  (7 j values, service by i
           consumerReqMaintCosts10.add(2 + ix, i, t1);
           // consumerReqMaintCosts10.add(0, i, t1);  done by auto resum
@@ -10536,8 +10611,8 @@ public class Assets {
             hist.add(new History("#d", History.valuesMajor6, "lYT=" + EM.mf(lightYearsTraveled), nTravel1Yr.A[6]));
           }
 
-          t1 = rawG * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
-          t2 = rawG * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t1 = workG * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
+          t2 = workG * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
 
           consumerGrowthCosts10.add(ix + 2, i, t1);
           consumerGrowthCosts10.add(ix + 6, i, t2);
@@ -10587,7 +10662,7 @@ public class Assets {
       E.msgcnt = mcnt;
       rawGrowthCosts.unzero("rawGC", 2, 4);
       E.msgcnt = mcnt;
-      rawGrowths.unzero("rawG", 2, 4);
+      rawGrowths.unzero("rawGr", 2, 4);
       //do not count all messages in the unzero
       E.msgcnt = mcnt;
       yCalcRawCosts(lightYearsTraveled, aPre, curMaintGoal, curGrowthGoal);
@@ -11450,7 +11525,7 @@ public class Assets {
     class HSwaps {  // Assets.CashFlow.HSwaps
 
       // swap requests and activities
-      E.SwpCmd cmd;
+      SwpCmd cmd;
       // set values to illegal to catch unset values
       int srcIx, destIx, ixWRSrc, ixFor, forIx, sourceIx;
       int nSource, nDest, swapType = 10, n, rChrgIx, sChrgIx;
@@ -12108,7 +12183,7 @@ public class Assets {
           rcost = scost = mov = fmov = smov = 0;
 
           // set to a general incr, specific is later
-          cmd = E.SwpCmd.RSINCR;
+          cmd = SwpCmd.RSINCR;
           swapType = 0;
           aorder = rawFertilities2;
           if (rawProspects2.curMin() < .2) {
@@ -12176,7 +12251,7 @@ public class Assets {
           swapCosts.getRow(1).add(scost);
           prevsrc = source.balance.get(srcIx);
           prevdest = dest.balance.get(destIx);
-          cmd = E.incrs[ixWRSrc][swap4Step]; //revise to detail cmd
+          cmd = incrs[ixWRSrc][swap4Step]; //revise to detail cmd
 
           ec.aPre = aPre = "K@";
 
@@ -12273,7 +12348,7 @@ public class Assets {
         mov = mov1 > PZERO && PZERO < maxAvail ? mov1 : maxAvail;
         EM.addlErr = "";
         // if incr just transfered from reserve to working reduce transfer prevent cycle
-        cmd = E.decrs[ixWRSrc][swap4Step];
+        cmd = decrs[ixWRSrc][swap4Step];
         if (swapLoops < 3) {
           hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" skip" + swapLoops + " < 3 " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
         } else if (bals.get(2 + 2 * ixWRSrc, srcIx) < (bals.getRow(2 + 2 * ixWRSrc).ave() * 4)) {
@@ -12285,7 +12360,7 @@ public class Assets {
         } else {
 
           // but no more than is available from forIx
-          cmd = E.decrs[ixWRSrc][swap4Step];
+          cmd = decrs[ixWRSrc][swap4Step];
           hist.add(new History(aPre, History.loopMinorConditionals5, nTitle("check xDecr"), "forIx=" + rNs[ixWRFor] + forIx, "destIx=" + rNs[ixWRSrc] + destIx, "mov" + EM.mf(mov), "m1=" + EM.mf(mov1), "m2=" + EM.mf(mov2), " max=" + EM.mf(maxAvail), "<<<<<<<<<<<"));
           //       hist.add(new History("dec", History.loopMinorConditionals5, nTitle(" prev swap1"), "prv0=" + prevns[0].swapType, "prv1=" + prevns[1].swapType, "prv2=" + prevns[2].swapType, "prv3=" + prevns[3].swapType, "prv4=" + prevns[4].swapType, "prv5=" + prevns[5].swapType, "dm=" + EM.mf(decrMostMaxGap), "abcdefghijklmnopqrst"));
           //      hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" prev cmds="), "prev=", prevns[1].cmd.toString(), prevns[2].cmd.toString(), prevns[3].cmd.toString(), prevns[4].cmd.toString(), prevns[5].cmd.toString(), prevns[6].cmd.toString()));
@@ -12655,7 +12730,7 @@ public class Assets {
         rmov1 = ixWRSrc < 1 ? mov : 0.;
         smov1 = ixWRSrc < 1 ? 0. : mov;
         // source is from the same SubAsset as the dest
-        cmd = E.uxdecrs[rev][ixWRSrc][swap4Step];
+        cmd = uxdecrs[rev][ixWRSrc][swap4Step];
         if (E.debugDouble) {
           rcost = doubleTrouble(
                   doubleTrouble(mov)
@@ -12826,17 +12901,17 @@ public class Assets {
 
       //  double difrc = prevns[0].sumRCWorth - sumRCWorth;
       //    double difsg = prevns[0].sumSGWorth = sumSGWorth;
-      if (E.setIncr.contains(cmd)) {
+      if(setIncr.contains(cmd)) {
         //      EM.gameRes.SWAPINCRWRCOSTSCUM.wet(pors, clan, difrc);
         // setStat("SWAPINCRWRCOSTSCUM", pors, clan, difrc);
         //       EM.gameRes.SWAPINCRWSCOSTSCUM.wet(pors, clan, difsg);
         // setStat("SWAPINCRWSCOSTSCUM", pors, clan, difsg);
-      } else if (E.setDecr.contains(cmd)) {
+      } else if(setDecr.contains(cmd)) {
         //     EM.gameRes.SWAPDECRWRCOSTSCUM.wet(pors, clan, difrc);
         //  setStat("SWAPDECRWRCOSTSCUM", pors, clan, difrc);
         //     EM.gameRes.SWAPINCRWSCOSTSCUM.wet(pors, clan, difsg);
         // setStat("SWAPINCRWSCOSTSCUM", pors, clan, difsg);
-      } else if (E.setXXdecr.contains(cmd)) {
+      } else if(setXXdecr.contains(cmd)) {
         //   EM.gameRes.SWAPXCHGWRCOSTSCUM.wet(pors, clan, difrc);
         //setStat("SWAPXCHGWRCOSTSCUM", pors, clan, difrc);
         //   EM.gameRes.SWAPXCHGWSCOSTSCUM.wet(pors, clan, difsg);

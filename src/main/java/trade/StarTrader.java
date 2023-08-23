@@ -206,7 +206,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.48";
+  static final public String versionText = "19.52";
   static final public String storyText
           = "         StarTrader       Version " + versionText + "\n"
            +
@@ -329,7 +329,7 @@ public class StarTrader extends javax.swing.JFrame {
 "\n" +
 "Each planet and ship have seven financial sectors.  Each sector has resources, cargo(resource but in reserve not working), staff, guests(staff but in reserve not working), and knowledge of 3 kinds (common knowledge, new knowledge, and manuals(researchers work to get new knowledge or common knowledge from manuals), but trades can only trade manuals from ships).\n" +
 "\n" +
-"You need to first download java jre the java runtime environment so that the java game will run on your windows computer. Before you download the file Oracle the file owner will ask you to agree to a number of things such as this is only for personal use, you won’t try to steal it, etc. The game is available in a google folder at: game, when you download the folder to downloads, it is compressed into a zip file.  When you open the zip file it will ask where to expand the file.  You can expand it to a folder you call “stargame” in your desktop, so it will appear as a folder icon on your desktop.  Click on stargame to open the folder and then double left click on the starTraderMaven-19.49.jar.   This folder will have this README, starTraderMaven-19.?? and several other files.  The version number like 19.49 increases every time a new version is installed in the folder.  This may happen every couple of months.\n" +
+"You need to first download java jre the java runtime environment so that the java game will run on your windows computer. Before you download the file Oracle the file owner will ask you to agree to a number of things such as this is only for personal use, you won’t try to steal it, etc. The game is available in a google folder at: game, when you download the folder to downloads, it is compressed into a zip file.  When you open the zip file it will ask where to expand the file.  You can expand it to a folder you call “stargame” in your desktop, so it will appear as a folder icon on your desktop.  Click on stargame to open the folder and then double left click on the starTraderMaven-19.52.jar.   This folder will have this README, starTraderMaven-19.52 and several other files.  The version number like 19.49 increases every time a new version is installed in the folder.  This may happen every couple of months.\n" +
 "\n" +
 "You will encounter challenges from your virus protection software, and you must indicate that you trust the folder and that you trust the game you downloaded from the google folder.  My virus protector “AVG” sends the .jar file I clicked to be examined for viruses and it takes up to a minute for AVG to decide the game .jar file does not contain a virus and allows me to run the downloaded game file, I assume that other virus protectors will require a number of affirmations and give you various notifications. \n" +
 "\n" +
@@ -5961,7 +5961,9 @@ public class StarTrader extends javax.swing.JFrame {
       double a4 = a2 % -1.0;
       double a5 = 3.0000000001;
       double a6 = -5.0000000002;
-       EM.test5 = true;
+      
+      boolean test5p = true;
+       EM.test5 = test5p;
       System.err.printf("----ST2----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
       EM.test5 = false;
       this.eE = new E();
@@ -6034,9 +6036,10 @@ public class StarTrader extends javax.swing.JFrame {
       eM.aInit();
       this.pack();
  
-     //EM.test5 = true;
-      System.err.printf("----ST2b----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
 
+    EM.test5 = test5p;
+      System.err.printf("----ST2b----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n",a1,a01,a3,a6,a5);      
+   EM.test5 = false;
       Rectangle statsR = stats.getBounds();
       int ss1 = statsR.width;
       Rectangle spR = statsScrollPane2.getBounds();
@@ -6142,11 +6145,11 @@ public class StarTrader extends javax.swing.JFrame {
       //System.err.println(gchgdone);
       printMem3();
 
-       //EM.test5 = true;
-      Double a7 = -0.000041;
-      Double a8= -44.0005;
-       Double a9= 0.000011;
-      System.err.printf("----ST2d----a7=%15.7f,%s, a8=%15.7f,%s, a9=%10.7f,%s a6=%10.5f= %s, a2=%10.8f,%s\n",a7,EM.mf(a7),a8,EM.mf(a8),a9,EM.mf(a9),a6,EM.mf(a6),a2,EM.mf(a2));      
+       EM.test5 = test5p;
+      Double a7=  -0.000000000041;// 10 0s  =e
+      Double a8= -44.00000000005;// 10 0s =e
+       Double a9=  0.000000000000000011;// -15 0s =0
+      System.err.printf("----ST2d----a7=%15.7e,%s, a8=%15.7e,%s, a9=%10.7e,%s a6=%10.5e= %s, a2=%10.8e,%s\n",a7,EM.mf(a7),a8,EM.mf(a8),a9,EM.mf(a9),a6,EM.mf(a6),a2,EM.mf(a2));      
       EM.test5 = false;
       setEconState(CONSTRUCTED);
         System.err.println("---ST3---- a1 =" + EM.mf(a1));
@@ -6549,7 +6552,7 @@ public class StarTrader extends javax.swing.JFrame {
         EM.econCountsTest(); 
         // stop loop if too many econs, no clan has funds or 40 tries per clan
         for (finishedClans = 0, clansLoop=clanBias; clansLoop < 200 && finishedClans < 5 && eM.econCnt <= eM.econLimits3[0] && !eM.dfe(); clansLoop++) {
-          econClan = (int) (clansLoop) % 5;
+          econClan = (int)((clansLoop) % 5);
           startEconState = (new Date()).getTime();
           double limits3 = eM.econCnt - eM.econLimits3[0];// cnt over limits
           double mDif = limits3 > E.PZERO ? limits3 / 5 : 1.;
@@ -6567,8 +6570,8 @@ public class StarTrader extends javax.swing.JFrame {
            EM.econCountsTest(); 
             curWorth = ec.getWorth();
         //    curWorth = clanWorth; // what we put in
-            EM.curEcon.as.setStat(EM.FUTURECREATE, EM.curEcon.pors, eM.curEcon.clan, curWorth, 1);
-            EM.curEcon.as.setStat(EM.BOTHCREATE, EM.curEcon.pors, eM.curEcon.clan, curWorth, 1);
+            ec.as.setStat(EM.FUTURECREATE, EM.curEcon.pors, eM.curEcon.clan, curWorth, 1);
+            ec.as.setStat(EM.BOTHCREATE, EM.curEcon.pors, eM.curEcon.clan, curWorth, 1);
             //eM.clanFutureFunds[econClan] -= eM.initialWorth[eM.curEcon.pors];
             eM.clanFutureFunds[econClan] -= curWorth;
             eM.printHere("----FFCc----", ec," FFCreated " + E.clanLetter[ec.clan] + " clanCnt=" + EM.clanCnt[ec.clan] + " econCnt=" + EM.econCnt + " createWorth " + EM.mf(clanWorth) + " createdWorth=" + EM.mf(ec.getWorth()) + " clanFutureFunds=" + EM.mf(eM.clanFutureFunds[econClan]));

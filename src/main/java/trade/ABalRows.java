@@ -45,11 +45,11 @@ public class ABalRows extends A6Rowa {
   static final int A03[] = {0,1,2,3};
   static int balz = 0;
   //static String[] titls 
-  static final int BALANCESIX = balz += LSUMS;
-  static final int MANUALSIX = balz += 1;
-  static final int COMMONKNOWLEDGEIX = balz += LSUBS; //
-  static final int NEWKNOWLEDGEIX = balz += LSUBS; //
-  static final int MCOSTSIX = balz += LSUBS; // 6 mtcosts are travel costs of ship
+  static final int BALANCESIX = balz += LSUMS; //2
+  static final int MANUALSIX = balz += LSUBS; //6 space for balancesIx
+  static final int COMMONKNOWLEDGEIX = balz += 1; //
+  static final int NEWKNOWLEDGEIX = balz += 1; //
+  static final int MCOSTSIX = balz += 1; // space for NewKnowledge
   static final int TCOSTSIX = balz += LSUBS;  //10
   static final int GROWTHSIX = balz += LSUBS; //
   static final int PREVGROWTHSIX = balz += LSUBS; //

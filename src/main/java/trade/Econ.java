@@ -63,6 +63,7 @@ public class Econ {
   double xpos, ypos, zpos;
   double[] xyz = {xpos, ypos, zpos};
   double distanceMoved = 0;
+  double initDifficulty= .3;
   // neighbors from
   //Neighbor[] neighbors = new Neighbor[20];
   protected int pors;
@@ -352,7 +353,8 @@ public class Econ {
     //System.out.println(new Date().toString() + "Econ.init 211 before new Assets");
     // throw away any previous Assets, the new one will be alive not dead.
     //  as = new Assets(this, st, name, clan, planetOrShip, hist, wealth, resourcePri, res, colonists, knowledge, percentDifficulty, trand);
-    //   System.out.println("Econ.init 200 did new Assets");
+    initDifficulty = percentDifficulty;
+   //   System.out.println("Econ.init 200 did new Assets");
     as.assetsInit(myEconCnt, this, st, eM, name, clan, planetOrShip, hist, tworth, wealth, sectorPri, res, colonists, knowledge, percentDifficulty, trand);
     System.out.println(" Econ.init end year" + eM.year + " " + (new Date().getTime() - eM.doYearTime) + "did assetsInit, wealth=" + EM.mf(wealth) + ", tworth=" + EM.mf(tworth));
     //  as.calcEfficiency();
@@ -1444,10 +1446,11 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    */
   Offer barter(Offer aOffer, Econ otherEcon, int term) {
     if(dead) return aOffer;
+    try {
     // keep a list of all the visited ships, even if barter failed
     nowName = name;
     if (visitedShipNext < 0 || visitedShipList[visitedShipNext] != otherEcon && term > eM.barterStart - 2) {
-      E.sysmsg(" +++++++econ.barter term=" + term + ", visitor=" + otherEcon.name + ", this=" + this.name + " visitedShipNext=" + visitedShipNext);
+     eM.printHere("---EBa--=",this,"econ.barter term=" + term + ", visitor=" + otherEcon.name  + " visitedShipNext=" + visitedShipNext);
       if (visitedShipNext < 0) {
     //    myFirstBarterTime = new Date().getTime();
       }
@@ -1462,6 +1465,18 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       }
     }
     return ret;
+    } catch (Exception | Error ex) {
+      eM.firstStack = eM.secondStack + "";
+      ex.printStackTrace(eM.pw);
+      ex.printStackTrace(System.err);
+      eM.secondStack = eM.sw.toString();
+      System.out.flush();
+      System.err.flush();
+      System.err.println(eM.tError = ("----EBA---- Econ.Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      //     ex.printStackTrace(System.err);
+      st.setFatalError();
+      throw new WasFatalError(eM.tError);
+    }
   }
 
   /**

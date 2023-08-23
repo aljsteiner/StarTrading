@@ -247,16 +247,31 @@ class EM {
   static void econCountsTest(){
     if (E.debugEconCnt) {
               synchronized (A4Row.econLock) {
-                assert econCnt == porsCnt[0] + porsCnt[1]: "Counts error, econCnt=" + econCnt + " != porsCnt0=" + porsCnt[0] + " +porsCnt1=" + porsCnt[1];
+                int myPorsCnt = porsCnt[0] + porsCnt[1];
+                assert econCnt == myPorsCnt: "Counts error, econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt;
                 if (!E.ifassert && (econCnt != (porsCnt[0] + porsCnt[1]))) {
-                  doMyErr("Counts error, econCnt=" + econCnt + " != porsCnt0=" + porsCnt[0] + " +porsCnt1=" + porsCnt[1]);
+                  doMyErr("Counts error, econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt
+                  );
                 }
-              }
-            }
+                int myClanCnt = 0,myPorsClanCnt=0;
+                for(int clanIx=0;clanIx < E.LCLANS; clanIx++ ){
+                  myClanCnt += clanCnt[clanIx];
+                for(int psIx=0; psIx < 2;psIx++){
+                    myPorsClanCnt += porsClanCnt[psIx][clanIx];
+                  }
+                }
+                if(econCnt != myClanCnt){
+                  doMyErr("Counts error, econCnt=" + econCnt + " != myClanCnt=" + myClanCnt );
+                }
+                if(econCnt != myPorsClanCnt){
+                  doMyErr("Counts error, econCnt=" + econCnt + " != myPorsClanCnt=" + myPorsClanCnt );
+                }// if myPorsClanCnt
+              } //sync
+            } //if debug
   }
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {30.};
+  static double[] difficultyPercent = {.5};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
   static double[][] hiLoMult = {{1.3, 1.3, 1.3, .3, .3}, {1.3, 1.3, 1.3, .3, .3}};
   static final double[][] mHiLoMult = {{.2, 2.}, {.2, 2.}};
@@ -443,11 +458,11 @@ class EM {
   static volatile double[][] catastrophyBonusYearsBias = {{1.6}, {1.9}}; // adds to the divisor year into bonus units
   static final double[][] mCatastrophyBonusYearsBias = {{.5, 15.}, {.5, 15.}};
   static volatile double[][] catastrophyBonusGrowthValue = {{1.3}, {1.3}};  // frac balances
-  static final double[][] mCatastrophyBonusGrowthValue = {{.2, 2.}, {.2, .7}};
+  static final double[][] mCatastrophyBonusGrowthValue = {{.2, 2.}, {.2, 7.}};
   static volatile double[][] catastrophyBonusDepreciationMultSumSectors = {{.00005}, {.00005}};
-  static final double[][] mCatastrophyBonusDepreciationMultSumSectors = {{.00002, .0002}, {.00005, .0002}};
-  static volatile double[][] catastrophyManualsMultSumKnowledge = {{0.}, {25.}};//  .5 -10.
-  static final double[][] mCatastrophyManualsMultSumKnowledge = {{0., .0}, {.5, 50.}};//  .5 -10
+  static final double[][] mCatastrophyBonusDepreciationMultSumSectors = {{.000002, .0002}, {.000005, .0002}};
+  static volatile double[][] catastrophyManualsMultSumKnowledge = {{.4}, {25.}};//  .5 -50.
+  static final double[][] mCatastrophyManualsMultSumKnowledge = {{0., .9}, {.5, 50.}};//  .5 -50.
 
   Dimension screenSize;
   static volatile int screenHeight = -2, screenWidth = -2, myHeight = -2, myWidth = -2, myH2 = -2, myW2 = -2;
@@ -1053,7 +1068,7 @@ class EM {
   }
 
   static boolean mfShort = false;
-  static boolean test5 = false; // temp to test funcionss
+  static boolean test5 = true; // temp to test funcionss
   /**
    * format the Double value to a x char string if myWidth > 1800 make max 15
    * char string
@@ -1062,7 +1077,7 @@ class EM {
    * @return value as a string
    */
   static public String mf(Double v) {
-
+   double tmp = v < 0.0 ? (-v % 1.0) : v % 1.0; // remainder from 1.0
     if (v.isNaN()) {
       return "# " + v;
     }
@@ -1199,60 +1214,68 @@ class EM {
         return exp.format(v);
       }
   }
-    else if (myWidth > 1800) { // 15 characters
-      if(test5)System.err.printf("----MFT9--- v= %15.9f\n",v);
-        if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder    
-       dFrac.setMaximumFractionDigits(0);
-       if(test5)System.err.printf("----MFT9a--- v= %10.5f, " + dFrac.format(v) + " \n",v);
-       return dFrac.format(v);
+    else if (myWidth > 1500) { // 15 characters
+      if(test5)System.err.printf("----MFT9--- v= %15.9e\n",v);
+       if((v > -999999999999. && v < 0.0 && tmp < .000000001 && tmp > E.PPZERO ) || (v >= 0.0 && v < 9999999999999. && tmp < .000000001 && tmp > E.PPZERO)) {  //12 13 whole number with a remainder less than 9 digits after . more than 13 digits after . and less than a  number up to 12 digits, anything large goes to the exp format
+       if(test5)System.err.printf("----MFT9a--- v= %15.9e, %9.3e remainder %9.3e " + exp.format(v) +  " \n",v,tmp,v, E.PPZERO);
+       return exp.format(v);
       }
-         if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) {
+      
+       else if((v > -999999999999. && v < 0.0 && (tmp < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && (tmp < E.PPZERO))) {  //12 13 whole number iwith a remainder smaller than 13 digits after . and less than a very large number, anything large goes to the e format
+       dFrac.setMaximumFractionDigits(0);// whole numbers only
+       if(test5)System.err.printf("----MFT9b--- v= %15.9e, %9.3e zero %9.3e" + dFrac.format(v) +  " \n",v,tmp, E.PPZERO);
+       return dFrac.format(v);
+      } // next a slightly 
+       
+     else 
+         if ((v > -99. && v < -0.0) || (v < 999.0 && v >= 0.0)) {// 2 3
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(9);
-        if(test5)System.err.printf("----MFT9c--- v= %15.9f, " + dFrac.format(v) + " \n",v);
+        if(test5)System.err.printf("----MFT9c--- v= %15.9e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
          }
       else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 9999999.)) { // 6 7 
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(5);
-        if(test5)System.err.printf("----MFT9k--- v= %15.9f, " + dFrac.format(v) + " \n",v);
+        if(test5)System.err.printf("----MFT9k--- v= %15.9e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
     }
       else if ((v > -9999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 7 8 
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(4);
-        if(test5)System.err.printf("----MFT9d--- v= %15.8f, " + dFrac.format(v) + " \n",v);
+        if(test5)System.err.printf("----MFT9d--- v= %15.8e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
     }
       else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 8 9 
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
-        if(test5)System.err.printf("----MFT9d--- v= %10.5f, " + dFrac.format(v) + " \n",v);
+        if(test5)System.err.printf("----MFT9e--- v= %10.5e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
     }
       else if ((v > -9999999999. && v < -0.0) || (v >= 0.0&& v < 999999999.)) { // 9 9
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(2);
-        if(test5)System.err.printf("----MFT9e--- v= %10.3f, " + dFrac.format(v) + " \n",v);
+        if(test5)System.err.printf("----MFT9f--- v= %10.3e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
       }
       else if ((v > -9999999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 9 8
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-        if(test5)System.err.printf("----MFT9f--- v= %10.7f, " + dFrac.format(v) + " \n",v);
+        if(test5)System.err.printf("----MFT9g--- v= %10.7e, " + dFrac.format(v) + " \n",v);
         return "w" + dFrac.format(v);
       }
       else if ((v > -99999999999. && v < -0.00) || (v >= 0.0 && v < 99999999999.)) {//11 11
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
-        if(test5)System.err.printf("----MFT9d--- v= %10.7f, " + dFrac.format(v) + " \n",v);
+        if(test5)System.err.printf("----MFT9h--- v= %10.7e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
       }
     }
     else {
-      if(test5)System.err.printf("----MFT9g--- v= %10.5f, " + exp.format(v) + " \n",v);
+      if(test5)System.err.printf("----MFT9i--- v= %10.5e, " + exp.format(v) + " \n",v);
       return exp.format(v);
     }
+    if(test5)System.err.printf("----MFT9j--- v= %10.5e, " + exp.format(v) + " \n",v);
     return exp.format(v);
     
   }
@@ -2050,7 +2073,9 @@ class EM {
     int pors = ec.getPors();
     int clan = ec.getClan();
     double hiLoMult = ec.getHiLoMult();
+    double difficulty = ec.initDifficulty;
     try {
+      
       double vinit = 0., vlive = 0., vfrac = 0.;
       int aa, ab, ac, ac2;
 
@@ -2069,7 +2094,7 @@ class EM {
       // vfrac =  vinit > 0.?vlive/(vinit*3.0) : 1.0/3.;
       vfrac = 1.0; // lets ignore this
       vFracSum += vfrac;
-      String stss = ">>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
+      String stss = "\n------MRSa------";
       String strs = "", strs4 = "", stdif = "", stm5t = "", stmabc = "";
       String staa[] = {"M ", "G ", "m, ", "t, ", "gr, "};
       String stabrs4[] = {"rs4_r ", "rs4_s "};
@@ -2103,7 +2128,7 @@ class EM {
             double x1 = mult5Ctbl[aa][pors];
             double x2 = mabc[ab][pors];
              */
-            prevLine = " before rsac year=" + EM.year + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName();
+            prevLine = " before makeClanRS year=" + EM.year + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName();
             if (curEcon != null) {
               wasHere += ", name=" + curEcon.getName() + ", age=" + curEcon.getAge();
             }
@@ -2113,20 +2138,15 @@ class EM {
             // wasHere += " rsab[ac].length=" + rsab[ac].length;
             double rsac = rsab[ac];
             // vrs = rs[aa][ab][ac];
-            prevLine = " rsac=" + mf(rsac) + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName();
+            prevLine = " makeClanRS=" + mf(rsac) + ",  aa=" + aa + ", ab=" + ab + ", ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + "difficulty=" + mf(difficulty) +  "vdif=" + mf(difficulty * vdifMult) + " th=" + Thread.currentThread().getName();
             //vrs4a = rs4[aa][ab][pors][ac2];
             vrs = 0;
             vrs
                     = rs[aa][ab][ac]
-                    = // add difficultyPercent as a cost factor 50% = 1. mult
-                    //(vdif = difficultyPercent[0]) * .1 * hiLoMult
-                    //(vdif = difficultyPercent[0]) * .4 * hiLoMult
-                    //(vdif = difficultyPercent[0]) * .2 * hiLoMult
-                    //(vdif = difficultyPercent[0] * 0.0125)
-                    // (vdif = difficultyPercent[0] * 0.0990)
+                    = 
                     // (vdif = difficultyPercent[0] * 0.025)
                     //  (vdif = difficultyPercent[0] * 0.05)
-                    (vdif = difficultyPercent[0] * vdifMult)
+                    (vdif = difficulty * vdifMult)
                     // reduce costs so that final rcsg = 2*init rcsg
                     * (vrcsg = rcsgGrowFrac[pors])
                     * (vrs4 = rs4[aa][ab][pors][ac2])
@@ -2136,7 +2156,7 @@ class EM {
                     * //[pors][clan]
                     (vfrac);
             prevLine = " vrs=" + mf(vrs) + ",  aa=" + aa + " ab=" + ab + " ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + " th=" + Thread.currentThread().getName() + ", vdif=" + mf(vdif) + ", vrcsg=" + mf(vrcsg) + ", vrs4=" + mf(vrs4) + ", vm5t=" + mf(vm5t) + ", vmabc=" + mf(vmabc) + ", vfrac=" + mf(vfrac);
-            assert vrs > E.PZERO : "vrs zero=" + mf(vrs) + "\n" + wasHere3;
+            assert vrs > E.PZERO : "vrs zero=" + mf(vrs) + "\n" + prevLine + "\n";
             rs[aa][ab][ac] = vrs;
             if (E.debugLogsOut) {
               strs += mf(vrs) + " ";
@@ -4085,6 +4105,7 @@ onceAgain:
   static final int PREVGROWTH = ++e4; //
   static final int TRADEWORTH = ++e4;
   static final int TRADEWORTHINCR = ++e4;
+  static final int TRADERCSGINCR = ++e4;
   static final int CATWORTHINCR = ++e4;
   static final int CUMCATWORTH = ++e4;
   static final int GROWTHS = ++e4;
@@ -4815,35 +4836,36 @@ onceAgain:
     doRes(YearMinStrategicReceivePercentStrategicOffer, "YearMinStratReceive%StratGiven", "Year Min % of Strategic Received Per Strategic  Given");
     //   doRes(BEFORETRADEWORTH, "BeforeTradeWorth", "Worth before A trade");
     // doRes(AFTERTRADEWORTH, "AfterTradeWorth", "Worth after a trade");
-    doRes(TRADEWORTHINCRPERCENT, "%TradeWorthIncr", "% increase in Worth after trade", 2, 3, 2, LIST41 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 3, 2, LIST41 | THISYEAR | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST41 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST41 | CUMAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TRADEWORTHINCRPERCENT, "%TradeWorthIncr", "% increase in Worth after trade", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 2, 2, LIST41 | LIST8 | LIST15 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(TRADERCSGINCR, "TradeRCSGIncr", "this years increase in RCSG after trade", 2, 2, 2, LIST41 | LIST8 | LIST15 | LIST20 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeRejectValuePerGoal, "RejectValue%Goal", "Rejected percent value per goal");
     doRes(TradeLostValuePerGoal, "LostValue%Goal", "Lost percent value per goal");
-    doRes(TradeFirstStrategicGoal, "FirstStrategicGoal", "First Strategic Goal", 2, 3, 2, LIST41 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
+    doRes(TradeFirstStrategicGoal, "FirstStrategicGoal", "First Strategic Goal", 2, 3, 2, LIST21 | CURAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
     doRes(TradeLastStrategicGoal, "LastStrategicGoal", "Strategic Goal after trade");
-    doRes(TradeFirstStrategicValue, "FirstStrategicValue", "First Strategic Value", 2, 3, 2, LIST41 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
+    doRes(TradeFirstStrategicValue, "FirstStrategicValue", "First Strategic Value", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
     doRes(TradeLastStrategicValue, "StrategicValue", "Strategic-Value strategic receive/strategic gave at trade");
     doRes(TradeStrategicValueLastPercentFirst, "Last%FirstStrategicValue", "LastStrategic Value percent of First Strategic Value just before trade");
     doRes(AlsoTradeLastStrategicValue, "AlsoStrategicValue", "AlsoLast strategic Value strategic receive/strategic gave at trade");
     doRes(AlsoTradeStrategicValueLastPercentFirst, "Also%FirstStratVal", "LastStrategic Value percent of First Strategic Value just before trade");
-    doRes(TradeRejectedStrategicGoal, "RejectedStrategicGoal", " LiveTrade rejected Strategic Goal", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST5 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST5 | LIST15 | CUMAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TradeRejectedStrategicGoal, "RejectedStrategicGoal", " LiveTrade rejected Strategic Goal", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2  | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeLostStrategicGoal, "LostStrategicGoal", "Strategic Goal after trade lost");
     doRes(TradeRejectedStrategicValue, "RejStratValue", "Strategic Value after Trade rejected");
     doRes(TradeLostStrategicValue, "LostStrategicValue", "Strategic Value after trade lost");
     doRes(TradeMissedStrategicGoal, "MissedStrategicGoal", "Trade Missed no value");
-    doRes(TradeDeadMissedStrategicGoal, "DeadMissedStrategicGoal", "Dead No Strategic Goal no trade", 2, 3, 2, THISYEARAVE | LIST1 | LIST2 | LIST4 | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST10 | CURAVE | BOTH | SKIPUNSET, 0, ROWS3 | LIST10 | LIST4 | CUMUNITS | BOTH | SKIPUNSET);
+    doRes(TradeDeadMissedStrategicGoal, "DeadMissedStrategicGoal", "Dead No Strategic Goal no trade", 2, 3, 2, THISYEARAVE | LIST1 | LIST2 | LIST4 | BOTH | SKIPUNSET, ROWS1 | LIST21| CURAVE | BOTH | SKIPUNSET, 0, ROWS3 | LIST21 | CUMUNITS | BOTH | SKIPUNSET);
     doRes(TradeDeadLostStrategicGoal, "DeadLostStrategicGoal", "Strategic Goal after trade lost and dead");
     doRes(TradeDeadLostStrategicValue, "DeadLostStrategicValue", "Strategic Value after trade lost and dead");
     doRes(TradeDeadRejectedStrategicGoal, "DeadRejectedStrategicGoal", "Strategic Goal after trade rejected and dead");
     doRes(TradeDeadStrategicGoal, "DeadStrategicGoal", "Strategic Goal after trade then died");
     doRes(TradeDeadRejectedStrategicValue, "DeadRejectedStrategicValue", "Strategic Value after trade rejected then died");
     doRes(TradeDeadStrategicValue, "DeadStrategicValue", "Strategic Value after trade then died");
-    doRes(TRADESOS0, "SOS0trade%IncW", "Successful trade percent incr worth after starting with SOS0", 2, 3, 2, LIST41 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TRADESOS0, "SOS0trade%IncW", "Successful trade percent incr worth after starting with SOS0", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST21| CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(TRADESOS1, "SOS1trade%IncW", "Successful trade percent incr worth after starting with SOS1");
     doRes(TRADESOS2, "SOS2trade%IncW", "Successful trade percent incr worth after starting with SOS2");
     doRes(TRADESOS3, "SOS3trade%IncW", "Successful trade percent incr worth after starting with SOS3");
-    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST41 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LISTYRS | CUR | BOTH | SKIPUNSET, ROWS2 | LIST4 | LIST15 | CURAVE | CUM | BOTH | SKIPUNSET, 0L);
+    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LISTYRS | CUR | BOTH | SKIPUNSET, ROWS2 |  LIST21 | CURAVE | CUM | BOTH | SKIPUNSET, 0L);
     doRes(TRADEOSOS1, "HlptdS0Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS0");
     doRes(TRADEOSOS2, "HlptdS2Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS2");
     doRes(TRADEOSOS3, "HlptdS3Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS3");
@@ -4877,7 +4899,7 @@ onceAgain:
     doRes(sumCatEffRDepreciationBen, "EffRDepreciationBen", "Catastrophy effective resource depreciation decrements");
     doRes(sumCatEffSDepreciationBen, "EffSDepreciationBen", "Catastrp[ju effoctove staff decau decrements");
     // repeatlists at "W..." at a later point rn 
-    doRes("WTRADEDINCRF5", "Fav5Trd%IncW", "% Years worth increase at Favor5/start year worth", 2, 3, 2, both | SKIPUNSET, ROWS1 | LIST41 | CURAVE | BOTH | SKIPUNSET, ROWS2 | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | THISYEARAVE | BOTH | SKIPUNSET);
+    doRes("WTRADEDINCRF5", "Fav5Trd%IncW", "% Years worth increase at Favor5/start year worth", 2, 3, 2, both | SKIPUNSET, ROWS1 | LIST21 | CURAVE | BOTH | SKIPUNSET, ROWS2 | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | THISYEARAVE | BOTH | SKIPUNSET);
     doRes("WTRADEDINCRF4", "Fav4Trd%IncW", "% Years worth increase at Favor4/start year worth", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WTRADEDINCRF3", "Fav3Trd%IncW", "% Years worth increase at Favor3/start year worth", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WTRADEDINCRF2", "Fav2Trd%IncW", "% Years worth increase at Favor2/start year worth", 2, 3, 2, DUP, 0, 0, 0);

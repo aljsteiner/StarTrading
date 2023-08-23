@@ -82,7 +82,7 @@ public class E {
   static final boolean noAsserts = false; // false expect -ea in call 
   static boolean ifassert = false; // preset for later test
 
-  static final boolean distributable = true;  //set true before making a jar fine available to public
+  static final boolean distributable = false;  //set true before making a jar fine available to public
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugfalse = false;
   static final boolean debugOutput = true; //distributable;
@@ -236,8 +236,8 @@ public class E {
   public static final double PZERO = .000001; //for a >5  pzero
   public static final double PZERO1 = .0000000001;
   public static final double NZERO = -.000001; // for a < nzero
-  public static final double PPZERO = .0000000001; //for a > 9 pzero
-  public static final double NNZERO = -.0000000001;  // for a < nzero
+  public static final double PPZERO = 0.00000000000001; //for a > 13 zeros
+  public static final double NNZERO = -PPZERO;  // for a < 13 zeros
   static double pzero = PZERO, nzero = NZERO;
   public static final double UNZERO = .00000000000000001;//17 zereo
   public static final double INVZERO = 1. / UNZERO;
@@ -469,32 +469,33 @@ public class E {
    */
   static public double[][] cashMaxTradeFracCash = {{.7, .7, .7, .7, .7}, {.7, .7, .7, .7, .7}};
 
-  public enum SwpCmd {
-    NOT("nothing assigned"), NONE("no Cmd"), NOOP("no operation"), GROW("in grow section"), HEALTH("Health swapping"), UINCR("un Incr"), RSINCR("pre Incr"), SINCR("increase staff guest to staff"), SINCR1("second incr staff G to S"), SINCR2("3 incr staff G to S"), SINCR3("4 incr staff G to S"), RINCR("increase available from cargo"), RINCR1("another increase available C to A"), RINCR2("another increase available C to A"), RINCR3("another increase available C to A"), RSINCR1("seconPre Incr"), /* AXINCR("increase available by transmute from another resource Cargo or Avail"), */ UDECR("un Decr"), RSDECR("pre DECR"), SDECR("decrease a large staff to Guests to help another resource staff"), RDECR("decrease large resource to help another resource"), RDECR1, RDECR2, RDECR3, SDECR1, SDECR2, SDECR3, UNXDECR("un XDECR"), RFUTUREFUND, REMERGFUTUREFUND, SFUTUREFUND, SEMERGFUTUREFUND, RFUTUREFUND1, REMERGFUTUREFUND1, SFUTUREFUND1, SEMERGFUTUREFUND1, RFUTUREFUND2, REMERGFUTUREFUND2, SFUTUREFUND2, SEMERGFUTUREFUND2, RFUTUREFUND3, REMERGFUTUREFUND3, SFUTUREFUND3, SEMERGFUTUREFUND3, RSXDECR("pre XDECR"), RXDECR("swap resources/staff between sectors, high resource cost"), RXDECR1("Second RXDECR"), RXDECR2("Second RXDECR"), RXDECR3("Second RXDECR"), SXDECR("swap resource with high staff costs"), SXDECR1("Second SXDECR"), SXDECR2("Second SXDECR"), SXDECR3("Second SXDECR"), TXDECR("reverse charge r sector"), TXDECR1, TXDECR2, TXDECR3, UXDECR, UXDECR1, UXDECR2, UXDECR3, TRADE("prepare for Trade"), TRADEG("Trade Guests between Planet and Ship"), TRADEC("Trade cargo between Ship and Planeet");
-    private String desc;
-    private double val;
-    private double low, high;
-    private String desTip;
 
-    private SwpCmd() {
-      this.desc = "";
-    }
+ // public enum SwpCmd {
+ //   NOT("nothing assigned"), NONE("no Cmd"), NOOP("no operation"), GROW("in grow section"), HEALTH("Health swapping"), UINCR("un Incr"), RSINCR("pre Incr"), SINCR("increase staff guest to staff"), SINCR1("second incr staff G to S"), SINCR2("3 incr staff G to S"), SINCR3("4 incr staff G to S"), RINCR("increase available from cargo"), RINCR1("another increase available C to A"), RINCR2("another increase available C to A"), RINCR3("another increase available C to A"), RSINCR1("seconPre Incr"), /* AXINCR("increase available by transmute from another resource Cargo or Avail"), */ UDECR("un Decr"), RSDECR("pre DECR"), SDECR("decrease a large staff to Guests to help another resource staff"), RDECR("decrease large resource to help another resource"), RDECR1, RDECR2, RDECR3, SDECR1, SDECR2, SDECR3, UNXDECR("un XDECR"), RFUTUREFUND, REMERGFUTUREFUND, SFUTUREFUND, SEMERGFUTUREFUND, RFUTUREFUND1, REMERGFUTUREFUND1, SFUTUREFUND1, SEMERGFUTUREFUND1, RFUTUREFUND2, REMERGFUTUREFUND2, SFUTUREFUND2, SEMERGFUTUREFUND2, RFUTUREFUND3, REMERGFUTUREFUND3, SFUTUREFUND3, SEMERGFUTUREFUND3, RSXDECR("pre XDECR"), RXDECR("swap resources/staff between sectors, high resource cost"), RXDECR1("Second RXDECR"), RXDECR2("Second RXDECR"), RXDECR3("Second RXDECR"), SXDECR("swap resource with high staff costs"), SXDECR1("Second SXDECR"), SXDECR2("Second SXDECR"), SXDECR3("Second SXDECR"), TXDECR("reverse charge r sector"), TXDECR1, TXDECR2, TXDECR3, UXDECR, UXDECR1, UXDECR2, UXDECR3, TRADE("prepare for Trade"), TRADEG("Trade Guests between Planet and Ship"), TRADEC("Trade cargo between Ship and Planeet");
+//    private String desc;
+//    private double val;
+//    private double low, high;
+ //   private String desTip;
 
-    private SwpCmd(String desc) {
-      this.desc = desc;
-    }
+  //  private SwpCmd() {
+  //    this.desc = "";
+  //  }
 
-    private SwpCmd(String desc, double ival, double plow, String dtip, Consumer sav) {
-      sav.accept(ival);
-    }
+  //  private SwpCmd(String desc) {
+  //    this.desc = desc;
+   // }
 
-    public int n() {
-      return ordinal();
-    }
+   // private SwpCmd(String desc, double ival, double plow, String dtip, Consumer sav) {
+    //  sav.accept(ival);
+    //}
 
-  }
+  //  public int n() {
+   //   return ordinal();
+   // }
 
-  SwpCmd[][] tst = incrs;
+//  }
+
+/*  SwpCmd[][] tst = incrs;
   static SwpCmd[][] incrs = {{SwpCmd.RINCR, SwpCmd.RINCR1, SwpCmd.RINCR2, SwpCmd.RINCR3}, {SwpCmd.SINCR, SwpCmd.SINCR1, SwpCmd.SINCR2, SwpCmd.GROW.SINCR3}};
   static SwpCmd[][] decrs = {{SwpCmd.RDECR, SwpCmd.RDECR1, SwpCmd.RDECR2, SwpCmd.RDECR3}, {SwpCmd.SDECR, SwpCmd.SDECR1, SwpCmd.SDECR2, SwpCmd.SDECR3}};
   static SwpCmd[][] futureFunds = {{SwpCmd.RFUTUREFUND, SwpCmd.REMERGFUTUREFUND, SwpCmd.RFUTUREFUND1, SwpCmd.REMERGFUTUREFUND1, SwpCmd.RFUTUREFUND2, SwpCmd.REMERGFUTUREFUND2, SwpCmd.RFUTUREFUND3, SwpCmd.REMERGFUTUREFUND3}, {SwpCmd.SFUTUREFUND, SwpCmd.SEMERGFUTUREFUND, SwpCmd.SFUTUREFUND1, SwpCmd.SEMERGFUTUREFUND1, SwpCmd.SFUTUREFUND2, SwpCmd.SEMERGFUTUREFUND2, SwpCmd.SFUTUREFUND3, SwpCmd.SEMERGFUTUREFUND3}};
@@ -525,6 +526,7 @@ public class E {
   static Set swpRXdecrs = new HashSet(Arrays.asList(swpRXdecr));
   public static Set swpIncrs = new HashSet(Arrays.asList(swpIncrv));
   public static Set swpDecrs = new HashSet(Arrays.asList(swpDecrv));
+  */
   public static ArrayList<History> hist;
   public static final int[] forwardFundSwapNs = {0, 1, 2, 3, 4, 5, 11, 12, 15, 16, 20, 25, 30, 31, 35, 36, 37};
   static final Set ffSwapNs = new HashSet(Arrays.asList(forwardFundSwapNs));
