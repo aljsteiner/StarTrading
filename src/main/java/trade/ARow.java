@@ -158,7 +158,7 @@ public class ARow {
    * @return valid trouble
    */
   double dTrouble(Double trouble){
-     return E.doubleTrouble(trouble,"");
+     return ec.doubleTrouble(trouble,"");
   }
   
   /** test value for illegal double value using E.dTrouble
@@ -168,7 +168,7 @@ public class ARow {
    * @return valid trouble
    */
   double doubleTrouble(Double trouble){
- return E.doubleTrouble(trouble,"");
+ return ec.doubleTrouble(trouble,"");
     }
     
      /** test value for illegal double value using E.dTrouble
@@ -179,7 +179,7 @@ public class ARow {
    * @return valid trouble
    */
   double dTrouble(Double trouble,String cmt){
-     return E.doubleTrouble(trouble,cmt);
+     return ec.doubleTrouble(trouble,cmt);
   }
   
   /** test value for illegal double value using E.dTrouble
@@ -190,7 +190,7 @@ public class ARow {
    * @return valid trouble
    */
   double doubleTrouble(Double trouble,String cmt){
- return E.doubleTrouble(trouble,cmt);
+ return ec.doubleTrouble(trouble,cmt);
     }
 
   /**

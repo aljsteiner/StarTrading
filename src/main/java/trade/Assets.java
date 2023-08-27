@@ -708,7 +708,7 @@ public class Assets {
    * @return return only a good number
    */
   double doubleTrouble(Double trouble) {
-    return E.doubleTrouble(trouble, "");
+    return ec.doubleTrouble(trouble, "");
   }
 
   /**
@@ -719,7 +719,7 @@ public class Assets {
    * @return return only a good number
    */
   double doubleTrouble(Double trouble, String vs) {
-    return E.doubleTrouble(trouble, vs);
+    return ec.doubleTrouble(trouble, vs);
   }
 
   /**
@@ -4048,7 +4048,9 @@ public class Assets {
           growthFrac = fracGrowths.set(secIx, (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors]);
           double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
          // double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.add(secIx , (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.))));
-          double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx,rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]));
+          double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx,
+                                                                                          rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] * 
+                                                                                                        (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]));
        //   double dPotentialSumUnitGrowth = dYrPotentialUnitGrowth + dBonusYearUnitGrowth;
           double dRawEarlyUnitGrowth = dYrPotentialUnitGrowth - cumulativeUnitDepreciation.get(secIx);
           //dRawYearlyUnitGrowth must be positive
@@ -4554,11 +4556,11 @@ public class Assets {
         double canMov = (dp == sp.partner && sourceIx == destIx) ? canMovSp : canMovSO;
 
         assert move >= E.NNZERO : "ERROR negative move=" + EM.mf(move) + " n=" + n + ",term=" + term + ", i=" + i + ", j=" + j;
-        if (false && E.debugPutValue && move < -0.0) {
+        if (!E.ifassert && E.debugPutValue && move < -0.0) {
           E.myTest(true, "ERROR negative move=" + EM.mf(move) + " n=" + n + ",term=" + term + ", i=" + i + ", j=" + j, move);
         }
         assert balSp1 >= E.NZERO : "ERROR negative " + sp.aschar + sourceIx + "=" + EM.mf(balSp) + ", n=" + n + ", term=" + term + ", i=" + i + ", j=" + j;
-        if (false && E.debugPutValue && balSp1 < NZERO) {
+        if (!E.ifassert && E.debugPutValue && balSp1 < NZERO) {
           E.myTest(true, "ERROR negative %s%d = %7.4G, n=" + n + ",term=" + term + ", i=" + i + ", j=" + j, sp.aschar, sourceIx, balSp, n, term, i, j);
         }
         //This covers incr, decr, xfer and trade because of avail processing
@@ -4633,9 +4635,11 @@ public class Assets {
        */
       double move2(double move, int sourceIx, int destIx, SubAsset myDest, int downgrade) {//Assets.CashFlow.SubAsset
         double remMov = move;
-        double prevsbal = balance.get(sourceIx);
+        double prevSBal = balance.get(sourceIx);
+        double prevDBal = myDest.balance.get(destIx);
         double[] spPreVals = new double[10];
         double[] dpPreVals = new double[10];
+        double newSBal =0.,newDBal =0.;
         for (m = 0; m < E.LSECS; m++) {
           spPreVals[m] = balance.get(m);
           dpPreVals[m] = myDest.balance.get(m);
@@ -4643,7 +4647,7 @@ public class Assets {
         if (this.balance.get(sourceIx) < E.NZERO) {
           if (E.debugPutValue) {
             assert false : "Error" + aschar + sourceIx + " negative=" + EM.mf(this.balance.get(sourceIx));
-            if (E.noAsserts) {
+            if (!E.ifassert) {
               throw new MyErr(String.format("Error " + aschar + sourceIx + " negative=" + EM.mf(this.balance.get(sourceIx))));
             }
           } else {
@@ -4653,7 +4657,7 @@ public class Assets {
         if (move < -0.0 || spPreVals[sourceIx] - move < -0.0 || bals.get(this.sIx + 2, sourceIx) < -0.0 || this.balance.get(sourceIx) < -0.0) {
           if (E.debugPutValue) {
             assert false : String.format("ERROR negative source%s%d %7.3g - mov %7.3g rem=%7.3g,%7.3g", this.aschar, sourceIx, spPreVals[sourceIx], move, this.balance.get(sourceIx), bals.get(this.sIx + 2, sourceIx));
-            if (E.noAsserts) {
+            if (!E.ifassert) {
               throw new MyErr(String.format("ERROR negative source%s%d %7.3g - mov %7.3g rem=%7.3g,%7.3g", this.aschar, sourceIx, spPreVals[sourceIx], move, this.balance.get(sourceIx), bals.get(this.sIx + 2, sourceIx)));
             }
           } else {
@@ -4662,49 +4666,77 @@ public class Assets {
             }
           }
         }
-        this.balance.add(sourceIx, -move); //decrement for all SubAssets
-        myDest.balance.add(destIx, move);
+        // change balances for resources and staff
+         newSBal = this.balance.add(sourceIx, -move); //decrement for all SubAssets
+         newDBal = myDest.balance.add(destIx, move);
         if (!sstaff) {
           // see if source is enough for the move
           remMov -= move;
-        } else { // staff
+        } else { // balances done now do grades
           double mov1 = 0., mov2 = 0;
-          double gradeCost = move * E.LGRADES / (balance.get(sourceIx) * (E.LGRADES - 5)); // fraction of augmented move per staff
-          double avmov = move * E.LGRADES / (balance.get(sourceIx) * (E.LGRADES - 8)); // augmented a mov
-          Double gradeCost2 = 0., oldSGrade = 0., oldDGrade = 0.;
+          // get frac of mov/bal increase frac to only 11 grades
+          double gradeCost = (move /prevSBal) *(E.LGRADES /(E.LGRADES - 5)); // fraction of  move per staff
+          // frac of mov/bal for only 8 grades
+          double avmov = (move /prevSBal) *(E.LGRADES /(E.LGRADES - 8)); // augmented a mov mov *2 /bal
+          Double gradeCost2 = 0., oldSGrade = 0., oldDGrade = 0., gradeCost7 = 0.;
 
-          int k = 0, kt = 0, kmax = 32;
-          //start with intern3
-          for (int gradeIx = 3; gradeIx < kmax && (remMov > E.PZERO); gradeIx++) {
-            k = gradeIx % E.LGRADES; //E.LGRADES;
+          int k = 0, kt = 0, kmax = 64, gradeIx=0;
+          int kmin= downgrade + 2;
+          double srcSum=0.,destSum=0.;
+          //start with intern3 try up to 4 cycles
+          for (gradeIx = 3; gradeIx < kmax && (remMov > E.PPZERO); gradeIx++) {
+            k = gradeIx % E.LGRADES; // limit k value to E.LGRADES
+            kmin = (downgrade +2)- (int)(gradeIx/8);
+            kmin = kmin >= 0? kmin : 0;
+            if(k < kmin){
+              int kup = kmin - k;
+              k += kup;
+              gradeIx += kup;
+            }
             oldSGrade = grades[sourceIx][k];
-            if (E.debugPutValue && grades[sourceIx][k] < E.NZERO) {
-              throw new MyErr(String.format(" neg grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " loop index gradeIx=" + gradeIx + " move=" + EM.mf(move) + " remMov=" + EM.mf(remMov) + " prevsbal=" + EM.mf(prevsbal)));
+            if (E.debugPutValue && grades[sourceIx][k] < -0.0) {
+              throw new MyErr(String.format(" neg grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " loop index gradeIx=" + gradeIx + " move=" + EM.mf(move) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal)));
             }
-            gradeCost2 = gradeCost * grades[sourceIx][k];
-            gradeCost2 = Math.max(avmov, gradeCost2); // increase a small tail
-            gradeCost2 = Math.min(gradeCost2, grades[sourceIx][k]); // prevent neg
-            gradeCost2 = Math.min(gradeCost2, remMov);
-            gradeCost2 = Math.max(gradeCost2, 0.); // force not negative
-            gradeCost2 = gradeCost2.isInfinite() || gradeCost2.isNaN() ? 0. : gradeCost2;
-            if (gradeCost2 > remMov) {
-              gradeCost2 = remMov;
+            gradeCost2 = gradeCost * oldSGrade; // initial cost to this grade
+            double gradeCost3 = gradeIx > (int)(E.LGRADES*1.5)? avmov * oldSGrade: gradeCost2;
+            double gradeCost4 = Math.min(gradeCost3, grades[sourceIx][k]); // prevent neg
+            double gradeCost5 = Math.min(gradeCost4, remMov); // only rest of move
+            Double gradeCost6 = Math.max(gradeCost5, 0.); // force not negative
+            gradeCost7 = gradeCost6.isInfinite() || gradeCost6.isNaN() ? 0. : gradeCost6;
+            if (gradeCost7 > remMov) {  // again limit by remMov
+              gradeCost7 = remMov;
             }
-            if (E.debugPutValue && grades[sourceIx][k] - gradeCost2 < -0.0) {
-              throw new MyErr(String.format(" moveValue grades neg2 grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " - gradeCost2=" + EM.mf(gradeCost2) + " =" + EM.mf(grades[sourceIx][k] - gradeCost2) + " gradeIx=" + gradeIx + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevsbal=" + EM.mf(prevsbal)));
+            if (E.debugPutValue && grades[sourceIx][k] - gradeCost7 < -0.0) {
+              throw new MyErr(String.format(" moveValue grades neg2 grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " - gradeCost7=" + EM.mf(gradeCost7) + " =" + EM.mf(grades[sourceIx][k] - gradeCost7) + " gradeIx=" + gradeIx + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "gradeCost3=" + EM.mf(gradeCost3)+ "gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal)));
             }
-            grades[sourceIx][k] -= gradeCost2;
-            kt = k - downgrade > 0 ? k - downgrade : k;
-            if (E.debugPutValue && myDest.grades[destIx][kt] < NZERO) {
-              E.myTest(true, " moveValue grades neg myDest.grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " - " + "gradeCost2=" + EM.mf(gradeCost2) + " =" + EM.mf(myDest.grades[sourceIx][k]) + " gradeIx=" + gradeIx + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevsbal=" + EM.mf(prevsbal));
-            }
+            srcSum += grades[sourceIx][k] -= gradeCost7;
+            kt = k - downgrade >= 0 ? k - downgrade : k; // kt >= 0
             oldDGrade = myDest.grades[destIx][kt];
-            myDest.grades[destIx][kt] += gradeCost2;
-            if (E.debugPutValue && grades[destIx][kt] < -0.0) {
-              E.myTest(true, " moveValue grades neg2 grades[" + destIx + "][" + kt + "]" + " gradeIx=" + gradeIx + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevsbal=" + EM.mf(prevsbal));
+            destSum += myDest.grades[destIx][kt] += gradeCost7;
+            remMov -= gradeCost7;
+            if (E.debugPutValue && myDest.grades[destIx][kt] < NZERO) {
+              throw new MyErr(" moveValue grades neg myDest gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + " myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + " sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + " source=" + EM.mf(srcSum) + " myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "initial gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal));
             }
-            remMov -= gradeCost2;
+            
+            if (E.debugPutValue && grades[sourceIx][k] < -0.0) {
+              throw new MyErr(" moveValue grades neg2 gradesgradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + " myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + " sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + " source=" + EM.mf(srcSum) + " myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "initial gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal));
+            }
+
+          }// end of for on k
+          eM.printHere("---MVc---", ec.ec," gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + " myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + "\n sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + "\n source=" + EM.mf(srcSum) + "\n myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + " ninitial gradeCost=" + EM.mf(gradeCost) + "\nremMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
+ 
+          double difMax = balances.get(sourceIx) * 0.001 + .0001;
+          if(E.debugPutValue && remMov > E.PPZERO ) {
+            throw new MyErr("---MVE1---- move Error, difMax=" + EM.mf(difMax) + ", remMov left=" + EM.mf(remMov) + " gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + "\n myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + " sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + "\n source=" + EM.mf(srcSum) + " myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + ", initial gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
           }
+           if(E.debugPutValue && Math.abs(newSBal -srcSum) > difMax) {
+            throw new MyErr("---MVE1---- move Source Dif to large, difMax=" + EM.mf(difMax) + ", newSBal=" + EM.mf(newSBal) + " -srcSum=" + EM.mf(srcSum) +"=" + EM.mf(newSBal - srcSum)  + "\n, exceeds difMax=" + EM.mf(difMax)  + " myDest.sIx" + myDest.sIx + "\n source.six=" + sIx   + " move=" + EM.mf(move)  + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
+          }
+            if(E.debugPutValue && Math.abs(newDBal -destSum) > difMax) {
+            throw new MyErr("---MVE1---- move Error, difMax=" + EM.mf(difMax) + ", newDBal=" + EM.mf(newDBal) + " -destSum=" + EM.mf(destSum) +"=" + EM.mf(newDBal - destSum)  + "\n, exceeds difMax=" + EM.mf(difMax)  + " myDest.sIx" + myDest.sIx + "\n source.six=" + sIx   + " move=" + EM.mf(move)  + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
+          }
+        //  E.myTest(remMov > difMax,"move Error, difMax=%10.3g, remMov left=%10.3g",difMax,remMov);
+         
           myDest.checkSumGrades();  // myDest with added mov
           checkSumGrades();// with subtracted mov
           if (E.debugPutValue && this.balance.get(sourceIx) < NZERO) {
@@ -5223,6 +5255,7 @@ public class Assets {
         // set large values higher and small least reserve
         if (true) {
           histTitles("setReserves " + name);
+          balances.checkBalances(ar);
           ARow rcRow = bals.getRow(BALANCESIX + RCIX);
           ARow sgRow = bals.getRow(BALANCESIX + SGIX);
           ARow rcOld = rcRow;
@@ -7839,7 +7872,7 @@ public class Assets {
       EM.wasHere = "CashFlow.init... before calc Priority eeef=" + ++eeef;
       calcPriority(percentDifficulty); // calc this years piority into priorityYr and as.difficulty
       EM.wasHere = "CashFlow.init... before calcCatastrophy eeeg=" + ++eeeg;
-      if (!didCashFlowInit || EM.AlwaysMakeRS) { // do init only, use rs the life of the Econ or not
+      if (!didCashFlowInit ) { // do init only, use rs the life of the Econ or not
         calcCatastrophy();
       }
       rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
@@ -10145,6 +10178,7 @@ public class Assets {
       clanRisk = eM.clanRisk[pors][clan];
       tradedShipOrdinal = 0;  // reset for both planet and ship
       econVisited = 0; // total trades tried
+      // near end of Assets.CashFlow.yearEnd() live or died
       didTrade = false;
       lostTrade = false;
       newTradeYear2 = false;
@@ -10159,8 +10193,6 @@ public class Assets {
       getTradingGoods();
       didStart = false; // force start at next initCashFlow
       didDepreciation = false;  // second setting
-
-
       //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
       EM.econCountsTest(); 
       EM.isHere("--EYEYaf--",ec,"end of yearEnd stats");
@@ -10706,7 +10738,7 @@ public class Assets {
      *
      * @param lightYearsTraveled
      */
-    synchronized void yCalcRawCosts(double lightYearsTraveled, String aPre, double curMaintGoal, double curGrowthGoal) {  //CashFlow.yCalcRawCosts
+    void yCalcRawCosts(double lightYearsTraveled, String aPre, double curMaintGoal, double curGrowthGoal) {  //CashFlow.yCalcRawCosts
       int aage = eM.curEcon.age; // test curEcon null
       double t1, t2, t3, t4, t5, t6;
       // zero output objects
@@ -10845,7 +10877,7 @@ public class Assets {
       c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
       s.sumGrades(); // sets s worth
       g.sumGrades(); // sets g worth
-
+      balances.checkBalances(cur);
       histTitles("C%", "rtd yCalcRawCosts");
       growths.sendHist(hist, "C%");
       hist.add(new History((aPre = "C%"), History.valuesMajor6, "r.growth", r.growth));
@@ -10988,7 +11020,7 @@ public class Assets {
         }
         A2Row stratGNeeds = new A2Row(ec, lev, "stratGNeeds").strategicRecipValBbyLim("stratGNeeds", mtgNeeds6, nLimG[pors]);
         A2Row stratGGNeeds = new A2Row(ec, lev, "stratGGNeeds").strategicRecipValBbyLim("stratGGNeeds", mtggNeeds6, nLimGG[pors]);
-
+        balances.checkBalances(cur);
         if (E.debugYcalcCosts) {
           blev = 13;
           lev = History.loopMinorConditionals5;

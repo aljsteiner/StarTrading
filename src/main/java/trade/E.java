@@ -1708,13 +1708,13 @@ public class E {
   }
 
   /**
-   * test of double NaN or Infinite skip testing if not debugDouble
+   * moved to Econ test of double NaN or Infinite skip testing if not debugDouble
    *
    * @param trouble value to be tested
    * @param vs description of current situation
    * @return if debugDouble (if NaN 0, if Infinite 100.0) otherwise trouble
    */
-  static double doubleTrouble(Double trouble, String vs) {
+  static double doubleTroublemoved(Double trouble, String vs) {
     Econ ec = EM.curEcon;
     if (trouble.isNaN()) {
       if (E.debugDouble) {
@@ -1838,7 +1838,8 @@ public class E {
       System.err.flush();
       System.err.flush();
       System.err.flush();
-      System.err.format((EM.curEcon == null ? "" : EM.curEcon.name) + ":" + form + EM.andMore() + "%n", v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26], v[27], v[28], v[29], v[30], v[31], v[32], v[33], v[34], v[35], v[36], v[37], v[38], v[39]);
+      System.err.format((EM.curEcon == null ? "" : EM.curEcon.name) + ":" + form  + "%n", v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26], v[27], v[28], v[29], v[30], v[31], v[32], v[33], v[34], v[35], v[36], v[37], v[38], v[39]);
+      System.err.println(EM.andMore());
       new Throwable().printStackTrace(System.err);
       System.err.flush();
       System.out.flush();

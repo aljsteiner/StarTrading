@@ -556,12 +556,12 @@ public class A6Row extends A6Rowa {
     return this;
   }
 
-  /**
+  /** moved A6Rowa
    * check for some screwup that loses the connection to real balances and
    * grades
    *
    * @param cr
-   */
+
   public void checkBalances(Assets.CashFlow cr) {
     E.myTest(cr.r.balance != A[2], "r connection lost");
     E.myTest(cr.c.balance != A[3], "c connection lost");
@@ -590,7 +590,8 @@ public class A6Row extends A6Rowa {
       as.cur.g.checkSumGrades();
     }
   }
-
+   */
+  
   /**
    * copy A6Row object, copy each by each of calling A6Row use as A6Row b =
    * a.copy(); no change to a, b is a new object lev,titl,balances,costs,blev

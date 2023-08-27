@@ -584,9 +584,11 @@ public class StarTrader extends javax.swing.JFrame {
     statsButton20 = new javax.swing.JRadioButton();
     ybuttons = new javax.swing.JPanel();
     statsCtlButtonRun1Yr = new javax.swing.JButton();
-    statsCtlButtonRun10Yr = new javax.swing.JButton();
     statsCtlButtonRun5Yr = new javax.swing.JButton();
+    statsCtlButtonRun10Yr = new javax.swing.JButton();
     statsCtlButtonRun20Yr = new javax.swing.JButton();
+    statsCtlButtonRun50yr = new javax.swing.JButton();
+    statsCtlButtonRun100yr = new javax.swing.JButton();
     bigPanel = new javax.swing.JPanel();
     statsStop = new javax.swing.JButton();
     remember = new javax.swing.JButton();
@@ -3001,6 +3003,22 @@ public class StarTrader extends javax.swing.JFrame {
     });
     ybuttons.add(statsCtlButtonRun1Yr);
 
+    statsCtlButtonRun5Yr.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+    statsCtlButtonRun5Yr.setText("5 yr");
+    statsCtlButtonRun5Yr.setActionCommand("5");
+    statsCtlButtonRun5Yr.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.yellow, java.awt.Color.black, null, null));
+    statsCtlButtonRun5Yr.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    statsCtlButtonRun5Yr.setMaximumSize(new java.awt.Dimension(50, 40));
+    statsCtlButtonRun5Yr.setMinimumSize(new java.awt.Dimension(20, 20));
+    statsCtlButtonRun5Yr.setName("5 yr"); // NOI18N
+    statsCtlButtonRun5Yr.setPreferredSize(new java.awt.Dimension(45, 23));
+    statsCtlButtonRun5Yr.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        statsCtlButtonRun5YrMouseClicked(evt);
+      }
+    });
+    ybuttons.add(statsCtlButtonRun5Yr);
+
     statsCtlButtonRun10Yr.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
     statsCtlButtonRun10Yr.setText("10 yr");
     statsCtlButtonRun10Yr.setActionCommand("10 ");
@@ -3022,22 +3040,6 @@ public class StarTrader extends javax.swing.JFrame {
     });
     ybuttons.add(statsCtlButtonRun10Yr);
 
-    statsCtlButtonRun5Yr.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-    statsCtlButtonRun5Yr.setText("5 yr");
-    statsCtlButtonRun5Yr.setActionCommand("5");
-    statsCtlButtonRun5Yr.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.yellow, java.awt.Color.black, null, null));
-    statsCtlButtonRun5Yr.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    statsCtlButtonRun5Yr.setMaximumSize(new java.awt.Dimension(50, 40));
-    statsCtlButtonRun5Yr.setMinimumSize(new java.awt.Dimension(20, 20));
-    statsCtlButtonRun5Yr.setName("5 yr"); // NOI18N
-    statsCtlButtonRun5Yr.setPreferredSize(new java.awt.Dimension(45, 23));
-    statsCtlButtonRun5Yr.addMouseListener(new java.awt.event.MouseAdapter() {
-      public void mouseClicked(java.awt.event.MouseEvent evt) {
-        statsCtlButtonRun5YrMouseClicked(evt);
-      }
-    });
-    ybuttons.add(statsCtlButtonRun5Yr);
-
     statsCtlButtonRun20Yr.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
     statsCtlButtonRun20Yr.setText("20 yr");
     statsCtlButtonRun20Yr.setActionCommand("20");
@@ -3053,6 +3055,39 @@ public class StarTrader extends javax.swing.JFrame {
       }
     });
     ybuttons.add(statsCtlButtonRun20Yr);
+
+    statsCtlButtonRun50yr.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+    statsCtlButtonRun50yr.setText("50 yr");
+    statsCtlButtonRun50yr.setActionCommand("20");
+    statsCtlButtonRun50yr.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.cyan, java.awt.Color.black, java.awt.Color.red, null));
+    statsCtlButtonRun50yr.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+    statsCtlButtonRun50yr.setMargin(new java.awt.Insets(2, 0, 2, 0));
+    statsCtlButtonRun50yr.setMaximumSize(new java.awt.Dimension(25, 40));
+    statsCtlButtonRun50yr.setMinimumSize(new java.awt.Dimension(20, 20));
+    statsCtlButtonRun50yr.setName("20 yr"); // NOI18N
+    statsCtlButtonRun50yr.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        statsCtlButtonRun50yrMouseClicked(evt);
+      }
+    });
+    ybuttons.add(statsCtlButtonRun50yr);
+
+    statsCtlButtonRun100yr.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+    statsCtlButtonRun100yr.setText("100 yr");
+    statsCtlButtonRun100yr.setToolTipText("");
+    statsCtlButtonRun100yr.setActionCommand("20");
+    statsCtlButtonRun100yr.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.cyan, java.awt.Color.black, java.awt.Color.red, null));
+    statsCtlButtonRun100yr.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+    statsCtlButtonRun100yr.setMargin(new java.awt.Insets(2, 0, 2, 0));
+    statsCtlButtonRun100yr.setMaximumSize(new java.awt.Dimension(25, 40));
+    statsCtlButtonRun100yr.setMinimumSize(new java.awt.Dimension(20, 20));
+    statsCtlButtonRun100yr.setName("20 yr"); // NOI18N
+    statsCtlButtonRun100yr.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        statsCtlButtonRun100yrMouseClicked(evt);
+      }
+    });
+    ybuttons.add(statsCtlButtonRun100yr);
 
     bigPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 255), 2));
     bigPanel.setToolTipText("this is the big panel");
@@ -3121,7 +3156,7 @@ public class StarTrader extends javax.swing.JFrame {
     topPaneLayout.setHorizontalGroup(
       topPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(topPaneLayout.createSequentialGroup()
-        .addComponent(ybuttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(ybuttons, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(rbuttons12, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -3317,7 +3352,7 @@ public class StarTrader extends javax.swing.JFrame {
       statsTable1.getColumnModel().getColumn(8).setResizable(false);
       statsTable1.getColumnModel().getColumn(10).setResizable(false);
     }
-    statsTable1.getAccessibleContext().setAccessibleName("stats table");
+    statsTable1.getAccessibleContext().setAccessibleName("");
 
     stats.add(statsScrollPane2);
 
@@ -4749,6 +4784,28 @@ public class StarTrader extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_rememberActionPerformed
 
+  private void statsCtlButtonRun50yrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsCtlButtonRun50yrMouseClicked
+     System.out.println("in stats Run 20Year Mouse Clicked");
+    if (eM.fatalError) {
+      setFatalError();
+    }
+    else {
+      runYears(50);
+    }
+ // TODO add your handling code here:
+  }//GEN-LAST:event_statsCtlButtonRun50yrMouseClicked
+
+  private void statsCtlButtonRun100yrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statsCtlButtonRun100yrMouseClicked
+     System.out.println("in stats Run 20Year Mouse Clicked");
+    if (eM.fatalError) {
+      setFatalError();
+    }
+    else {
+      runYears(100);
+    }
+  // TODO add your handling code here:
+  }//GEN-LAST:event_statsCtlButtonRun100yrMouseClicked
+
   public void second() throws IOException {
     System.err.println("starting out in Second");
     if (!fatalError) { // whoo, stop now
@@ -4900,9 +4957,11 @@ public class StarTrader extends javax.swing.JFrame {
   protected javax.swing.ButtonGroup statsButtonGroupClans;
   protected javax.swing.ButtonGroup statsButtonGroupReportNumber;
   protected javax.swing.JScrollPane statsCommentPane;
+  protected javax.swing.JButton statsCtlButtonRun100yr;
   protected javax.swing.JButton statsCtlButtonRun10Yr;
   protected javax.swing.JButton statsCtlButtonRun1Yr;
   protected javax.swing.JButton statsCtlButtonRun20Yr;
+  protected javax.swing.JButton statsCtlButtonRun50yr;
   protected javax.swing.JButton statsCtlButtonRun5Yr;
   protected javax.swing.JTextField statsField;
   protected javax.swing.JTextField statsField2;

@@ -871,6 +871,40 @@ public class A6Rowa {
     return iix[0][n];
   }
 
+    /**
+   * check for some screwup that loses the connection to real balances and
+   * grades
+   *
+   * @param cr
+   */
+  public void checkBalances(Assets.CashFlow cr) {
+    E.myTest(cr.r.balance != A[2], "r connection lost");
+    E.myTest(cr.r.balance != cr.as.bals.A[2], "bals r connection lost");
+    E.myTest(cr.c.balance !=  cr.as.bals.A[3], "bals c connection lost");
+    E.myTest(cr.c.balance != A[3], "c connection lost");
+    E.myTest(cr.s.balance != A[4], "s connection lost");
+    E.myTest(cr.s.balance != cr.as.bals.A[4], "bals s connection lost");
+    E.myTest(cr.g.balance != A[5], "g connection lost");
+    E.myTest(cr.g.balance != cr.as.bals.A[5], "bals g connection lost");
+    E.myTest(cr.c.partner.balance != A[2], "c.partner connection lost");
+    E.myTest(cr.r.partner.balance != A[3], "r.partner connection lost");
+    E.myTest(cr.g.partner.balance != A[4], "g.partner connection lost");
+    E.myTest(cr.s.partner.balance != A[5], "s.partner connection lost");
+    // so a test for null pointer
+    double[][][] bb = as.bals.gradesA;
+    if (E.debugSumGrades) {
+      if (as.bals.gradesA[2]
+              != as.cur.s.grades) {
+        throw new MyErr(String.format("bals grades != s.grades, term%d, i%d, j%d, m%d, n%d", as.term, as.i, as.j, as.m, as.n));
+      }
+      if (as.bals.gradesA[3]
+              != as.cur.g.grades) {
+        throw new MyErr(String.format("bals grades != g.grades, term%d, i%d, j%d, m%d, n%d", as.term, as.i, as.j, as.m, as.n));
+      }
+      as.cur.s.checkSumGrades();
+      as.cur.g.checkSumGrades();
+    }
+  }
   /**
    * sum of rows 0,1
    *

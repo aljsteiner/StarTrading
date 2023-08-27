@@ -333,7 +333,7 @@ public class Econ {
     hiLoMult = cRand(38, EM.hiLoMult[pors][clan]);
     // set the last sec to what is left from 100.
     // resourcePri[(int) pris.toArray()[0]] = remainingPri;
-    as = new Assets(); //instantiacte new Assets even if we reused econ
+    as = new Assets(); //instantiact a new Assets even if we reused econ
     //  and before instantiating any ARow or A6Rowa
     sectorPri = new ARow(this);
 
@@ -419,6 +419,39 @@ public class Econ {
    if(dead) return EM.year - dyear;
    return -5;
   }
+  
+   /**
+   * test of double NaN or Infinite skip testing if not debugDouble
+   *
+   * @param trouble value to be tested
+   * @param vs description of current situation
+   * @return if debugDouble (if NaN 0, if Infinite 100.0) otherwise trouble
+   */
+  double doubleTrouble(Double trouble, String vs) {
+    if (trouble.isNaN()) {
+      if (E.debugDouble) {
+        int asTerm = as.term; // force possible null ec
+        throw new MyErr("Not a number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
+        //  eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
+      }
+      else {
+        return 0.0;
+      }
+    }
+    if (trouble.isInfinite()) {
+      if (E.debugDouble) {
+        int asTerm = as.term; // force possible null ec
+        throw new MyErr("Infinite number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
+        //  eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
+
+      }
+      else {
+        return 100.0;
+      }
+    }
+    return (double) trouble;
+  }
+
 
   /**
    * return reference to Goods, force calculation of a valid goods
