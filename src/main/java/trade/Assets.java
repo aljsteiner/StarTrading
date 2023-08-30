@@ -4049,8 +4049,7 @@ public class Assets {
           double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
          // double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.add(secIx , (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.))));
           double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx,
-                                                                                          rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] * 
-                                                                                                        (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]));
+       rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] *                (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]));
        //   double dPotentialSumUnitGrowth = dYrPotentialUnitGrowth + dBonusYearUnitGrowth;
           double dRawEarlyUnitGrowth = dYrPotentialUnitGrowth - cumulativeUnitDepreciation.get(secIx);
           //dRawYearlyUnitGrowth must be positive
@@ -4201,20 +4200,24 @@ public class Assets {
         double resGSums[] = {0., 0., 0., 0., 0., 0., 0., 0., 0.};
         debugSumGrades2 = E.debugSumGrades;
         int ma = sIx,mm=1;
-        int sourceMax = sourceIx > -1 ? sourceIx : LSECS; // debug 7 financialSectors
+        double sectUnits=0.;
+        double sectUnits1=0.;
+        double sectUnits2=0.;
+        double sectUnits3=0.;
+        double sectUnits4=0.;
+        double psectUnits1=0.;
+        double psectUnits=0.;
+        double ppsectUnits1=0.;
+        double ppsectUnits=0.;
+
+       // int sourceMax = sourceIx > -1 ? sourceIx : LSECS; // debug 7 financialSectors
         if (debugSumGrades2) { // check grades against units
           for (int secIx = 0; secIx < E.LSECS; secIx++) {
-            if(false){
-             double bals1 = bals.gett(1,secIx);
-            double balss = bals.gett(4,secIx) + bals.gett(5,secIx); 
-            
-            assert Math.abs(bals1 - balss) < E.PPZERO : "resum error, sector" + secIx + " bal1=" + EM.mf(bals1) + " balsSum" + EM.mf(balss) + " balsS" + EM.mf(bals.gett(4,secIx)) + " balsG" +  EM.mf(bals.gett(5,secIx)); 
-            }
             for (int gradesIx = 0; gradesIx < E.LGRADES; gradesIx++) {
               sGSums[secIx] += doubleTrouble(grades[secIx][gradesIx], "secIx=" + secIx + "gradesIx=" + gradesIx + ",");
-            }
+            }//gradesIx
             sGSums[8] += sGSums[secIx];     
-          }
+          }//secIx
           double sumDif = 0., dif = 0, sumg = 0., sumu = 0., difFracSum = .00001, difFrac = .001;
           //Prevalidate the existing grades and balance if debugSumGrades2
           for (int sourceIx2 = 0; sourceIx2 < E.LSECS; sourceIx2++) {
@@ -4228,12 +4231,40 @@ public class Assets {
             } //for gradesIx
             preGSums[8] += preGSums[sourceIx2];
 
-            double sectU = balance.get(sourceIx2);
-            double difMax = sectU * 0.001 + .0003;
+            ppsectUnits = psectUnits;
+            psectUnits = sectUnits;
+            ppsectUnits1 = psectUnits1;
+            psectUnits1 = sectUnits1;
+            sectUnits = balance.get(sourceIx2);
+            sectUnits2 = balance.get(sourceIx2);
+            sectUnits3 = balance.get(sourceIx2);
+            sectUnits4 = balance.get(sourceIx2);
+            if( sectUnits != balance.get(sourceIx2)){
+              throw (new MyErr("----CGA5----- " + ec.name + " " + didTradeInitCF + "sectorUnits balance[sourceIx2] missMatch=" + EM.mf(sectUnits)  + "!=, balance.get(" + sourceIx2 + ")=" + EM.mf(balance.get(sourceIx2)) + "\n, more units=" + EM.mf(ppsectUnits) + ", " + EM.mf(psectUnits) 
+         + ", 1=" + EM.mf(ppsectUnits1) + ", " + EM.mf(psectUnits1) + ", " + EM.mf(sectUnits1) + "\n, 2=" + EM.mf(sectUnits2) 
+         + ", 3=" + EM.mf(sectUnits3) + " for " + aschar + sourceIx2 + "\n grades sum=" + EM.mf(sGSums[sourceIx2]) + " pregradesSum]=" + EM.mf(preGSums[sourceIx2]) + "\n grades sGSums[8]=" + EM.mf(sGSums[8]) + ", grades preGSums[8]=" + EM.mf(preGSums[8]) + ", sourceIx2=" + sourceIx2 + ", term" + as3.term + ", i" + as3.i + ", j" + as3.j + ", m" + as3.m + ", n" + as3.n)); }
+            if( sectUnits2 != balance.get(sourceIx2)){
+              throw (new MyErr("----CGA6----- " + ec.name + " " + didTradeInitCF + "sectorUnits balance[sourceIx2] missMatch=" + EM.mf(sectUnits)  + "!=, balance.get(" + sourceIx2 + ")=" + EM.mf(balance.get(sourceIx2)) + "\n, more units=" + EM.mf(ppsectUnits) + ", " + EM.mf(psectUnits) 
+         + ", 1=" + EM.mf(ppsectUnits1) + ", " + EM.mf(psectUnits1) + ", " + EM.mf(sectUnits1) + "\n, 2=" + EM.mf(sectUnits2) 
+         + ", 3=" + EM.mf(sectUnits3) + " for " + aschar + sourceIx2 + "\n grades sum=" + EM.mf(sGSums[sourceIx2]) + " pregradesSum]=" + EM.mf(preGSums[sourceIx2]) + "\n grades sGSums[8]=" + EM.mf(sGSums[8]) + ", grades preGSums[8]=" + EM.mf(preGSums[8]) + ", sourceIx2=" + sourceIx2 + ", term" + as3.term + ", i" + as3.i + ", j" + as3.j + ", m" + as3.m + ", n" + as3.n)); }
+            if( sectUnits3 != balance.get(sourceIx2)){
+              throw (new MyErr("----CGA7----- " + ec.name + " " + didTradeInitCF + "sectorUnits balance[sourceIx2] missMatch=" + EM.mf(sectUnits)  + "!=, balance.get(" + sourceIx2 + ")=" + EM.mf(balance.get(sourceIx2)) + "\n, more units=" + EM.mf(ppsectUnits) + ", " + EM.mf(psectUnits) 
+         + ", 1=" + EM.mf(ppsectUnits1) + ", " + EM.mf(psectUnits1) + ", " + EM.mf(sectUnits1) + "\n, 2=" + EM.mf(sectUnits2) 
+         + ", 3=" + EM.mf(sectUnits3) + " for " + aschar + sourceIx2 + "\n grades sum=" + EM.mf(sGSums[sourceIx2]) + " pregradesSum]=" + EM.mf(preGSums[sourceIx2]) + "\n grades sGSums[8]=" + EM.mf(sGSums[8]) + ", grades preGSums[8]=" + EM.mf(preGSums[8]) + ", sourceIx2=" + sourceIx2 + ", term" + as3.term + ", i" + as3.i + ", j" + as3.j + ", m" + as3.m + ", n" + as3.n)); }
+            if( sectUnits4 != balance.get(sourceIx2)){
+              throw (new MyErr("----CGA8----- " + ec.name + " " + didTradeInitCF + "sectorUnits balance[sourceIx2] missMatch=" + EM.mf(sectUnits)  + "!=, balance.get(" + sourceIx2 + ")=" + EM.mf(balance.get(sourceIx2)) + "\n, more units=" + EM.mf(ppsectUnits) + ", " + EM.mf(psectUnits) 
+         + ", 1=" + EM.mf(ppsectUnits1) + ", " + EM.mf(psectUnits1) + ", " + EM.mf(sectUnits1) + "\n, 2=" + EM.mf(sectUnits2) 
+         + ", 3=" + EM.mf(sectUnits3) + " for " + aschar + sourceIx2 + "\n grades sum=" + EM.mf(sGSums[sourceIx2]) + " pregradesSum]=" + EM.mf(preGSums[sourceIx2]) + "\n grades sGSums[8]=" + EM.mf(sGSums[8]) + ", grades preGSums[8]=" + EM.mf(preGSums[8]) + ", sourceIx2=" + sourceIx2 + ", term" + as3.term + ", i" + as3.i + ", j" + as3.j + ", m" + as3.m + ", n" + as3.n)); }
+            double difMax = sectUnits * 0.001 + .0003;
+            dif = sectUnits - preGSums[sourceIx2];
+            dif = dif < 0.0? -dif : dif; // get abs value
+            boolean difOk = dif < difMax;
             double sumBal = balance.sum();
             //check for more than a very small dif between sum of sector grades and  sector balance
-            if (((dif = sectU - preGSums[sourceIx2]) < -difMax || dif > difMax)) {
-              throw (new MyErr(didTradeInitCF + "sector grade sum difference too large=" + EM.mf(dif) + " difMax=" + EM.mf(difMax) + ", balance.get(" + sourceIx2 + ")=" + EM.mf(balance.get(sourceIx2)) + " for " + aschar + sourceIx2 + " grades sum=" + EM.mf(preGSums[sourceIx2]) + " pregrades2[sourceIx2]=" + EM.mf(sGSums[sourceIx2]) + "\n less units" + EM.mf(sectU) + " units sumBal=" + EM.mf(sumBal) + " grades sGSums[8]=" + EM.mf(sGSums[8]) + ", grades preGSums[8]=" + EM.mf(preGSums[8]) + ", sourceIx2=" + sourceIx2 + ", term" + as3.term + ", i" + as3.i + ", j" + as3.j + ", m" + as3.m + ", n" + as3.n));
+            if (((dif = sectUnits - preGSums[sourceIx2]) < -difMax || dif > difMax) || preGSums[sourceIx2] !=  sGSums[sourceIx2] || sectUnits != balance.get(sourceIx2)) {
+              throw (new MyErr("----CGA1----- " + ec.name + " " + didTradeInitCF + "sector grade sum difference too large=" + EM.mf(dif) + " difMax=" + EM.mf(difMax) + ", balance.get(" + sourceIx2 + ")=" + EM.mf(balance.get(sourceIx2)) + " for " + aschar + sourceIx2 + " grades sum=" + EM.mf(sGSums[sourceIx2]) + " pregrades[sourceIx2]=" + EM.mf(preGSums[sourceIx2]) + "\n less units" + EM.mf(sectUnits) + "\n, more units=" + EM.mf(ppsectUnits) + ", " + EM.mf(psectUnits) 
+         + ", 1=" + EM.mf(ppsectUnits1) + ", " + EM.mf(psectUnits1) + ", " + EM.mf(sectUnits1) + "\n, 2=" + EM.mf(sectUnits2) 
+         + ", 3=" + EM.mf(sectUnits3) + "\n units sumBal=" + EM.mf(sumBal) + " grades sGSums[8]=" + EM.mf(sGSums[8]) + ", grades preGSums[8]=" + EM.mf(preGSums[8]) + ", sourceIx2=" + sourceIx2 + ", term" + as3.term + ", i" + as3.i + ", j" + as3.j + ", m" + as3.m + ", n" + as3.n));
 
               //   throw(new MyErr(String.format("difference[%d] %7.3g is greater than difMax %7.3g for pre balance %7.3g  less pre grade units %7.3g   sourceIx%d, term%d, i%d, j%d, m%d,n%d",sourceIx2, dif,difMax,sectU,preGSums[sourceIx2],sourceIx,as.term,as.i,as.j,as.m,as.n)));
             }//dif
@@ -4675,9 +4706,9 @@ public class Assets {
         } else { // balances done now do grades
           double mov1 = 0., mov2 = 0;
           // get frac of mov/bal increase frac to only 11 grades
-          double gradeCost = (move /prevSBal) *(E.LGRADES /(E.LGRADES - 5)); // fraction of  move per staff
+          double gradeCost = (move /prevSBal) *(E.LGRADES /(E.LGRADES - 5)); // 3 - 14fraction of  move per staff
           // frac of mov/bal for only 8 grades
-          double avmov = (move /prevSBal) *(E.LGRADES /(E.LGRADES - 8)); // augmented a mov mov *2 /bal
+          double avmov = gradeCost * 1.3; // raise the cost slightly
           Double gradeCost2 = 0., oldSGrade = 0., oldDGrade = 0., gradeCost7 = 0.;
 
           int k = 0, kt = 0, kmax = 64, gradeIx=0;
@@ -4709,10 +4740,10 @@ public class Assets {
             if (E.debugPutValue && grades[sourceIx][k] - gradeCost7 < -0.0) {
               throw new MyErr(String.format(" moveValue grades neg2 grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " - gradeCost7=" + EM.mf(gradeCost7) + " =" + EM.mf(grades[sourceIx][k] - gradeCost7) + " gradeIx=" + gradeIx + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "gradeCost3=" + EM.mf(gradeCost3)+ "gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal)));
             }
-            srcSum += grades[sourceIx][k] -= gradeCost7;
+            grades[sourceIx][k] -= gradeCost7;
             kt = k - downgrade >= 0 ? k - downgrade : k; // kt >= 0
             oldDGrade = myDest.grades[destIx][kt];
-            destSum += myDest.grades[destIx][kt] += gradeCost7;
+            myDest.grades[destIx][kt] += gradeCost7;
             remMov -= gradeCost7;
             if (E.debugPutValue && myDest.grades[destIx][kt] < NZERO) {
               throw new MyErr(" moveValue grades neg myDest gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + " myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + " sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + " source=" + EM.mf(srcSum) + " myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + "initial gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal));
@@ -4723,17 +4754,23 @@ public class Assets {
             }
 
           }// end of for on k
+          destSum = srcSum = 0.0;
+          for(int gIx=0;gIx < E.LGRADES; gIx++){
+            srcSum +=   grades[sourceIx][gIx];
+            destSum += myDest.grades[destIx][gIx];
+          }
           eM.printHere("---MVc---", ec.ec," gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + " myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + "\n sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + "\n source=" + EM.mf(srcSum) + "\n myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + " ninitial gradeCost=" + EM.mf(gradeCost) + "\nremMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
  
           double difMax = balances.get(sourceIx) * 0.001 + .0001;
-          if(E.debugPutValue && remMov > E.PPZERO ) {
-            throw new MyErr("---MVE1---- move Error, difMax=" + EM.mf(difMax) + ", remMov left=" + EM.mf(remMov) + " gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + "\n myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + " sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + "\n source=" + EM.mf(srcSum) + " myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + ", initial gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
+          double dif = 0.0;
+          if(E.debugPutValue && remMov > E.PZERO ) {
+            throw new MyErr("---MVE1---- move " + ec.name + " remMov" + EM.mf(remMov) + " Error, difMax=" + EM.mf(difMax)  + "\n gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + "\n myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + " sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + "\n source=" + EM.mf(srcSum) + " myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + ", initial gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
           }
-           if(E.debugPutValue && Math.abs(newSBal -srcSum) > difMax) {
-            throw new MyErr("---MVE1---- move Source Dif to large, difMax=" + EM.mf(difMax) + ", newSBal=" + EM.mf(newSBal) + " -srcSum=" + EM.mf(srcSum) +"=" + EM.mf(newSBal - srcSum)  + "\n, exceeds difMax=" + EM.mf(difMax)  + " myDest.sIx" + myDest.sIx + "\n source.six=" + sIx   + " move=" + EM.mf(move)  + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
+           if(E.debugPutValue &&(dif = Math.abs(newSBal -srcSum)) > difMax) {
+            throw new MyErr("---MVE2---- move " + ec.name + " Source Dif to large, difMax=" + EM.mf(difMax) + ", dif=" + EM.mf(dif)+ " remMov" + EM.mf(remMov) + " gradeIx=" + gradeIx  + "\n, newSBal=" + EM.mf(newSBal) + " -srcSum=" + EM.mf(srcSum) +"=" + EM.mf(newSBal - srcSum)  + "\n, exceeds difMax=" + EM.mf(difMax)  + " myDest.sIx" + myDest.sIx + "\n source.six=" + sIx   + " move=" + EM.mf(move)  + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
           }
-            if(E.debugPutValue && Math.abs(newDBal -destSum) > difMax) {
-            throw new MyErr("---MVE1---- move Error, difMax=" + EM.mf(difMax) + ", newDBal=" + EM.mf(newDBal) + " -destSum=" + EM.mf(destSum) +"=" + EM.mf(newDBal - destSum)  + "\n, exceeds difMax=" + EM.mf(difMax)  + " myDest.sIx" + myDest.sIx + "\n source.six=" + sIx   + " move=" + EM.mf(move)  + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
+            if(E.debugPutValue && (dif = Math.abs(newDBal -destSum)) > difMax) {
+            throw new MyErr("---MVE3---- move " + ec.name + " Error, difMax=" + EM.mf(difMax) + ", dif=" + EM.mf(dif)+ " remMov" + EM.mf(remMov) + "gradeIx=" + gradeIx  + "\n,   newDBal=" + EM.mf(newDBal) + " -destSum=" + EM.mf(destSum) +"=" + EM.mf(newDBal - destSum)  + "\n, exceeds difMax=" + EM.mf(difMax)  + " myDest.sIx" + myDest.sIx + "\n source.six=" + sIx   + " move=" + EM.mf(move)  + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
           }
         //  E.myTest(remMov > difMax,"move Error, difMax=%10.3g, remMov left=%10.3g",difMax,remMov);
          
@@ -5199,6 +5236,7 @@ public class Assets {
         didGood.zero(); // seet flags doneA2Row movedTrades = new A2Row(cMovedTrade, gMovedTrade);
         multF.zero(); //sum of stratF,normF, ?stratCF
         multV.zero(); //sum of stratV,normV ?stratC
+        if(ec.dead)return;
         inOffer.setC(ar.c.balance);  // check c == c
         if (oTradedEconsNext < lTradedEcons - 1) {
           oTradedEcons[oTradedEconsNext++] = oEcon;
@@ -5208,12 +5246,13 @@ public class Assets {
         lightYearsTraveled = ((lightYearsTraveled < .2)) ? eM.initTravelYears[pors][0] : lightYearsTraveled;
         //initialize for the growth and efficiency
         eM.printHere("----TINa----",ec, "initTrade... before calcEfficiency loop");
-        if (!didCashFlowInit) {
+        if (!didCashFlowInit && !ec.dead) {
           calcCatastrophy();
           
         }
+        if(ec.dead)return;
         rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
-        for (k = 0; k < 4; k++) {
+        for (k = 0; k < 4 && !ec.dead; k++) {
           sys[k].calcEfficiency();
           sys[k].calcGrowth();
         }
@@ -10565,14 +10604,14 @@ public class Assets {
           // the prospects calculate from this and must be positive for health
           // a negative required maintenance remainder bal -reqm means death
           // crand(31) applies the same random number to each calc for the year
-          t1 = bals.get(ABalRows.BALANCESIX + ix, i) * cRand(31) * cRand(i * E.lsecs + j, rm) * E.maintRequired[pors][i][j] * rs[0][0][ix]
+          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + j, rm) * E.maintRequired[pors][i][j] * rs[0][0][ix]
                   * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i])
                   * invMEfficiency.get(ix + 2, i);
           // these values are all staff counts, converted from work counts by bal/swork
           d = swork.get(j);
           // convert illegal d to very very small positive
           swork2 = d = (d.isInfinite() || d.isNaN()) || d < E.PZERO ? E.UNZERO : d;
-          t2 = bals.get(ABalRows.BALANCESIX + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / swork2;
+          t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / swork2;
           // gather 7 service requests to i  (7 j values, service by i
           consumerReqMaintCosts10.add(2 + ix, i, t1);
           // consumerReqMaintCosts10.add(0, i, t1);  done by auto resum
@@ -10585,9 +10624,9 @@ public class Assets {
 
           // calculate requried Growth resources, calculates growth fraction
           // is not part of yearly costs.
-          t1 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] * rs[1][0][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
+          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] * rs[1][0][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
           // these values are all staff costs, converted from work counts by bal/swork
-          t2 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + 8 + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j + E.lsecs] * rs[1][1][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + 8 + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j + E.lsecs] * rs[1][1][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
           consumerReqGrowthCosts10.add(ix + 2, i, t1); //subasset costs
           consumerReqGrowthCosts10.add(ix + 6, i, t2); // subasset costs
           nReqGrowth.add(ix + 2, j, t1);
@@ -10603,8 +10642,8 @@ public class Assets {
             hist.add(new History("#b", History.valuesMajor6, "nRGro6 i=" + i, nReqGrowth.A[6]));
           }
 
-          t1 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + j + 31, rm) * E.maintCost[pors][i][j] * rs[2][0][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
-          t4 = t2 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + j + 41, rm) * E.maintCost[pors][i][j + E.lsecs] * rs[2][1][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 31, rm) * E.maintCost[pors][i][j] * rs[2][0][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
+          t4 = t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 41, rm) * E.maintCost[pors][i][j + E.lsecs] * rs[2][1][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
 
           consumerMaintCosts10.add(ix + 2, i, t1); // the r set of subcosts
           consumerMaintCosts10.add(ix + 6, i, t2); // the s set of subcosts
@@ -10621,11 +10660,11 @@ public class Assets {
             hist.add(new History("#c", History.valuesMajor6, "kM i=" + i + " j=" + j, kMaint));
           }
 
-          t1 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + j + 46, rm) * tCosts[pors][i][j] * rs[3][0][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
+          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 46, rm) * tCosts[pors][i][j] * rs[3][0][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
           if ((t7 = swork.get(j)) < PZERO) {
             t2 = 0.0;
           } else {
-            t2 = balances.get(2 + ix, i) * cRand(31) * cRand(i * E.lsecs + ix + j + 55, rm) * tCosts[pors][i][j + E.lsecs] * rs[3][1][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+            t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 55, rm) * tCosts[pors][i][j + E.lsecs] * rs[3][1][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
             //    d = t2;
             //   E.myTestDouble(d,"t2","calcRawCosts process ix=%d, i=%d,j=%d,swork=%7.2f,t2=%7.5f, d string=%s",ix,i,j,t7,t2,String.valueOf(d));
           }
@@ -10643,8 +10682,8 @@ public class Assets {
             hist.add(new History("#d", History.valuesMajor6, "lYT=" + EM.mf(lightYearsTraveled), nTravel1Yr.A[6]));
           }
 
-          t1 = workG * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
-          t2 = workG * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
+          t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
 
           consumerGrowthCosts10.add(ix + 2, i, t1);
           consumerGrowthCosts10.add(ix + 6, i, t2);
@@ -12662,7 +12701,7 @@ public class Assets {
             }
             if (false && rRevAvail.get(1, destIx) != nFlag) {
               rRevAvail.sendHist(3, "!!");
-              throw new MyErr(String.format("Error3 xfer source==dest strt r, srcIx=%d,destIx=%d,rRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, rRevAvail.get(1, destIx), doNot.get(4 + 0, destIx)));
+              throw new MyErr(String.format("----SWPa---- xfer source==dest strt r, srcIx=%d,destIx=%d,rRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, rRevAvail.get(1, destIx), doNot.get(4 + 0, destIx)));
             }
             dest = source = r;
             rChrg = swaprs;
@@ -12818,10 +12857,10 @@ public class Assets {
 
           //now test balances before doing move
           if (bals.get(0, rmIx) < (rmov1 + rcost)) {
-            E.myTest(true, "ERR  %s, rcbal%d=%7.2g <  rmov1=%7.2g + rcost=%7.2g = rChrg=%7.5g * mov=%7.2g ,rshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), rmIx, bals.get(0, rmIx), rmov1, rcost, rChrg, mov, bals.get(0, rmIx) - rmov1 - rcost, ec.age, n, swap4Step, reDo);
+            throw new MyErr(String.format("---SWP3---- Err  %s, rcbal%d=%7.2g <  rmov1=%7.2g + rcost=%7.2g = rChrg=%7.5g * mov=%7.2g ,rshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), rmIx, bals.get(0, rmIx), rmov1, rcost, rChrg, mov, bals.get(0, rmIx) - rmov1 - rcost, ec.age, n, swap4Step, reDo));
           }
           if (bals.get(1, smIx) < (smov1 + scost)) {
-            E.myTest(true, "ERR  %s, scbal%d=%7.2g <  smov1=%7.2g + scost=%7.2g = sChrg%7.5g * mov=%7.2g ,sshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), smIx, bals.get(1, smIx), smov1, scost, sChrg, mov, bals.get(1, smIx) - smov1 - scost, ec.age, n, swap4Step, reDo);
+            E.myTest(true, "----SWP4---- %s, scbal%d=%7.2g <  smov1=%7.2g + scost=%7.2g = sChrg%7.5g * mov=%7.2g ,sshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), smIx, bals.get(1, smIx), smov1, scost, sChrg, mov, bals.get(1, smIx) - smov1 - scost, ec.age, n, swap4Step, reDo);
           }
           balances.checkBalances(this);
           r.cost3(rcost, rChrgIx, .00);

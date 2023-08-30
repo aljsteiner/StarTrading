@@ -5047,6 +5047,7 @@ public class StarTrader extends javax.swing.JFrame {
     EM.flushes();
   }
 
+  int cntSetFatalError=0;
   /**
    * stop all execution of interrupts and core program by setting the
    * eM.fatalError flag and eM.stopExe
@@ -5112,6 +5113,7 @@ public class StarTrader extends javax.swing.JFrame {
       histTrace += aa[i].getMethodName() + "." + aa[i].getFileName() + "." + aa[i].getLineNumber() + "\n";
     }
     System.err.println("================= setFatalError at" + histTrace + EM.andMore());
+    if(cntSetFatalError++ < 2) {
     controlPanels.getComponent(3);
     controlPanels.setSelectedIndex(3);
     displayPanel0Text.setRows(18);
@@ -5134,6 +5136,7 @@ public class StarTrader extends javax.swing.JFrame {
     // displayPanel1Operation.setText("fatalError");
     controlPanels.revalidate();
     controlPanels.repaint();
+    }
     stateConst = FATALERR;
 
     System.err.println("--------FE-----request rejected, due to a  fatal error at \n" + histTrace + EM.andMore());
@@ -5147,7 +5150,7 @@ public class StarTrader extends javax.swing.JFrame {
     }
     //System.exit(-18); be able to see the error
     EM.flushes();
-    throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
+   // throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
     //  controlPanels.setSelectedComponent(log);
   }
 

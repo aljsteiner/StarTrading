@@ -271,15 +271,17 @@ class EM {
   }
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {.5};
+  static double[] difficultyPercent = {.4};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
+  static double [][]balanceMult = {{1.3,1.3}};
+  static final double[][] mBalanceMult = {{.5,15.5},{.5,15.5}};
   static double[][] hiLoMult = {{1.3, 1.3, 1.3, .3, .3}, {1.3, 1.3, 1.3, .3, .3}};
   static final double[][] mHiLoMult = {{.2, 2.}, {.2, 2.}};
   static double[][] minEconsMult = {{1.1}}; // nultiplies values in envsPerYear
   static final double[][] mMinEconsMult = {{.5, 10.0}};
   static volatile double[][] minEcons = {{30.}}; // goes into last envsPerYear;
   static final double[][] mMinEcons = {{10., 100.}};
-  static volatile double[][] maxThreads = {{10.0}};
+  static volatile double[][] maxThreads = {{1.0}};
   static final double[][] mmaxThreads = {{1.0, 12.0}};
   static volatile int[] iMaxThreads = {1};
   static volatile double[][] haveColors = {{.3}};
