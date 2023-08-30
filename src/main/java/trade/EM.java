@@ -196,7 +196,7 @@ class EM {
   static final double mEconLimits1[][] = {{100., 500.}, {200., 500.}};
   static volatile double econLimits2[] = {150.}; // more limiting of econs
   static final double mEconLimits2[][] = {{35., 550.}};
-  static volatile double econLimits3[] = {110.}; // max of econs
+  static volatile double econLimits3[] = {210.}; // max of econs
   static volatile double mEconLimits3[][] = {{35., 600.}};
   //double[][] LimitEcons = {{140.}};
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
@@ -271,7 +271,7 @@ class EM {
   }
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {.4};
+  static double[] difficultyPercent = {.53};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
   static double [][]balanceMult = {{1.3,1.3}};
   static final double[][] mBalanceMult = {{.5,15.5},{.5,15.5}};
