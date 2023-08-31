@@ -120,7 +120,7 @@ class EM {
   // static volatile ArrayList<EM> ems = new ArrayList<EM>();
   static volatile TreeMap<String, Econ> names2ec = new TreeMap<String, Econ>();
   static volatile ArrayList<String> emNames = new ArrayList<String>();
-  static int[] envsPerYear = {40, 40, 50, 60, 20}; //see minEcons
+  static int[] envsPerYear = {40, 40, 50, 60, 60}; //see minEcons
   static int lEnvsPerYear = envsPerYear.length;
   // int porsClanCntd[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; // defaults
   static volatile int porsClanCnt[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
@@ -271,7 +271,7 @@ class EM {
   }
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {.53};
+  static double[] difficultyPercent = {.43};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
   static double [][]balanceMult = {{1.3,1.3}};
   static final double[][] mBalanceMult = {{.5,15.5},{.5,15.5}};

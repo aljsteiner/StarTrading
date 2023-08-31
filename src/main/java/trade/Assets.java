@@ -10593,7 +10593,7 @@ public class Assets {
         bals.set(ABalRows.GROWTHSIX + ix,i,workG = swork.get(i)
        * bals.get(ABalRows.RAWUNITGROWTHSIX +ix,i) * cRand(i + ix + 10)); 
       //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
-
+        double iBal = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]);
         // j loops across services that as a sum are used by consumers
         for (j = 0; j < E.lsecs; j++) {
           assert rs[0][0][ix] > E.PZERO : "Error rs[0][0][ix] zero=" + EM.mf(rs[0][0][ix]) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
@@ -10604,14 +10604,14 @@ public class Assets {
           // the prospects calculate from this and must be positive for health
           // a negative required maintenance remainder bal -reqm means death
           // crand(31) applies the same random number to each calc for the year
-          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + j, rm) * E.maintRequired[pors][i][j] * rs[0][0][ix]
+          t1 = iBal * cRand(31) * cRand(i * E.lsecs + j, rm) * E.maintRequired[pors][i][j] * rs[0][0][ix]
                   * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i])
                   * invMEfficiency.get(ix + 2, i);
           // these values are all staff counts, converted from work counts by bal/swork
           d = swork.get(j);
           // convert illegal d to very very small positive
           swork2 = d = (d.isInfinite() || d.isNaN()) || d < E.PZERO ? E.UNZERO : d;
-          t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / swork2;
+          t2 = iBal * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / swork2;
           // gather 7 service requests to i  (7 j values, service by i
           consumerReqMaintCosts10.add(2 + ix, i, t1);
           // consumerReqMaintCosts10.add(0, i, t1);  done by auto resum
@@ -10624,9 +10624,9 @@ public class Assets {
 
           // calculate requried Growth resources, calculates growth fraction
           // is not part of yearly costs.
-          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] * rs[1][0][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
+          t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] * rs[1][0][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
           // these values are all staff costs, converted from work counts by bal/swork
-          t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + 8 + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j + E.lsecs] * rs[1][1][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t2 = iBal * cRand(31) * cRand(i * E.lsecs + 8 + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j + E.lsecs] * rs[1][1][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
           consumerReqGrowthCosts10.add(ix + 2, i, t1); //subasset costs
           consumerReqGrowthCosts10.add(ix + 6, i, t2); // subasset costs
           nReqGrowth.add(ix + 2, j, t1);
@@ -10642,8 +10642,8 @@ public class Assets {
             hist.add(new History("#b", History.valuesMajor6, "nRGro6 i=" + i, nReqGrowth.A[6]));
           }
 
-          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 31, rm) * E.maintCost[pors][i][j] * rs[2][0][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
-          t4 = t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 41, rm) * E.maintCost[pors][i][j + E.lsecs] * rs[2][1][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 31, rm) * E.maintCost[pors][i][j] * rs[2][0][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
+          t4 = t2 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 41, rm) * E.maintCost[pors][i][j + E.lsecs] * rs[2][1][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
 
           consumerMaintCosts10.add(ix + 2, i, t1); // the r set of subcosts
           consumerMaintCosts10.add(ix + 6, i, t2); // the s set of subcosts
@@ -10660,11 +10660,11 @@ public class Assets {
             hist.add(new History("#c", History.valuesMajor6, "kM i=" + i + " j=" + j, kMaint));
           }
 
-          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 46, rm) * tCosts[pors][i][j] * rs[3][0][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
+          t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 46, rm) * tCosts[pors][i][j] * rs[3][0][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
           if ((t7 = swork.get(j)) < PZERO) {
             t2 = 0.0;
           } else {
-            t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * cRand(31) * cRand(i * E.lsecs + ix + j + 55, rm) * tCosts[pors][i][j + E.lsecs] * rs[3][1][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+            t2 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 55, rm) * tCosts[pors][i][j + E.lsecs] * rs[3][1][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
             //    d = t2;
             //   E.myTestDouble(d,"t2","calcRawCosts process ix=%d, i=%d,j=%d,swork=%7.2f,t2=%7.5f, d string=%s",ix,i,j,t7,t2,String.valueOf(d));
           }
@@ -10682,8 +10682,8 @@ public class Assets {
             hist.add(new History("#d", History.valuesMajor6, "lYT=" + EM.mf(lightYearsTraveled), nTravel1Yr.A[6]));
           }
 
-          t1 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
-          t2 = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i),EM.balanceMult[0][0]) * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t1 = iBal * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
+          t2 = iBal * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
 
           consumerGrowthCosts10.add(ix + 2, i, t1);
           consumerGrowthCosts10.add(ix + 6, i, t2);

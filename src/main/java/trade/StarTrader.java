@@ -162,6 +162,7 @@ public class StarTrader extends javax.swing.JFrame {
   static int theYear[] = new int[yearsL];
   static int yearSecs[] = new int[yearsL];
   static int yearEcons[] = new int[yearsL];
+  static int yearDied[] = new int[yearsL];
   static int yearPlanets[] = new int[yearsL];
   static int yearShips[] = new int[yearsL];
   static double yearTW[] = new double[yearsL]; // total worth max for a year
@@ -6036,6 +6037,7 @@ public class StarTrader extends javax.swing.JFrame {
         theYear[y] = -2;
         yearSecs[y] = 0;
         yearEcons[y] = 0;
+        yearDied[y] = 0;
         yearSecPerEcon[y] = 0;
         yearPlanets[y] = 0;
         yearShips[y] = 0;
@@ -6423,6 +6425,7 @@ public class StarTrader extends javax.swing.JFrame {
         theYear[y] = theYear[y - 1];
         yearSecs[y] = yearSecs[y - 1];
         yearEcons[y] = yearEcons[y - 1];
+        yearDied[y] = yearDied[y-1];
         yearPlanets[y] = yearPlanets[y - 1];
         yearShips[y] = yearShips[y - 1];
         gamePlanets[y] = gamePlanets[y - 1];
@@ -7113,6 +7116,7 @@ public class StarTrader extends javax.swing.JFrame {
         gameMinW = gameMinW < minWealth ? minWealth : gameMinW;
         yearEcons[0] = EM.econCnt;
         yearPlanets[0] = EM.porsCnt[E.P];
+        yearDied[0]    = EM.cntDead;
         yearShips[0] = EM.porsCnt[E.S];
         gameE = gameEcons[0] = gameEcons[0] < EM.econCnt ? EM.econCnt : gameEcons[0];
         gameP = gamePlanets[0] = gamePlanets[0] < EM.porsCnt[E.P] ? EM.porsCnt[E.P] : gamePlanets[0];
@@ -7245,14 +7249,15 @@ public class StarTrader extends javax.swing.JFrame {
           int yMax = y + entPerRow;
           for (; y < yMax && theYear[y] > -1; y++) {
             disp1 += "(" + theYear[y] + ")" + "T" + EM.mf(yearSecPerEcon[y])
-                     + " W" + EM.mf(yearTW[y]) + "/"
-                     + EM.mf(gameTW[y])
-                     + "  E" + yearEcons[y] + "/"
-                     + gameEcons[y] + "  P"
-                     + yearPlanets[y] + "/"
-                     + gamePlanets[y] + "  S"
-                     + yearShips[y] + "/"
-                     + gameShips[y]
+                     + " W" + EM.mf(yearTW[y]) 
+                     + "/" + EM.mf(gameTW[y])
+                     + " E" + yearEcons[y]
+                     + "/"+ gameEcons[y]
+                     + ":" + yearDied[y]
+                     + " P"+ yearPlanets[y]
+                     + "/"+ gamePlanets[y] 
+                     + " S"+ yearShips[y]
+                     + "/"+ gameShips[y]
                      + (y < yMax - 1 ? " === " : "");
 
           }
