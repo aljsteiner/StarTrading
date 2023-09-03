@@ -1,4 +1,4 @@
-
+/*
  Copyright (C) 2012 Albert Steiner
  Copyright (C) 2022 Albert Steiner
 
@@ -14,9 +14,15 @@
 
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+*/
+/*
 ******* sometimes new lines went to the end, recently they went to start.  no always done
 
+89/1/2023 I have had some very funny errors, I found recently there was a background java running that took space and most 
+of the CPUs  I couldn't tell what it was, and nothing bad when I killed it, but it might have been responsible for some 
+impossible kind of errors, index out of range, missing or null request.
+I am working now with setting difficulty at 50% and having perhaps 20% up to 40% deaths, currently only new ones are deaths, and year 2 only the ones that pere present earlier died, the new ones lived. it appears all the 0 year created econs are killed, 
+following years only the new ones are killed, but not new next year???
 2/19/2023 version 19.49 put paintCurDisplay in doYear, do one stats
 12/27/22 now have some kind of looping in testing rnd6 add more System.out lines
 12/24/22 Still have liveLock with threads, the Assets.CashFlow.yearEnd() has too
@@ -229,17 +235,17 @@ ideas for testing
   /**
    If <tt>aNumber</tt> is less than <tt>1</tt>, then throw an 
    <tt>IllegalArgumentException</tt>.
-  */
+ 
   public static void checkForPositive(int aNumber) {
     if (aNumber < 1) {
       throw new IllegalArgumentException(aNumber + " is less than 1");
     }
   }
-
+ */
   /**
    If {@link Util#matches} returns <tt>false</tt>, then 
    throw an <code>IllegalArgumentException</code>. 
-  */
+ 
   public static void checkForMatch(Pattern aPattern, String aText){
     if ( ! Util.matches(aPattern, aText) ){
       throw new IllegalArgumentException(
@@ -247,7 +253,7 @@ ideas for testing
       );
     }
   }
-  
+   */
   /**
    If <code>aObject</code> is null, then throw a <code>NullPointerException</code>.
   
@@ -272,7 +278,7 @@ ideas for testing
      fReferee.verify( aBall );
    }
    </pre>
-  */
+
   public static void checkForNull(Object aObject) {
     if ( aObject == null ) {
       throw new NullPointerException();
@@ -289,6 +295,7 @@ ideas for testing
  e.printStackTrace();
 
 new Throwable().getStackTrace();
+
 10/16/2012 test offline saving
 10/15/2012
 I am pursuing the problem that resource worth sums are off.  Other sums are off a little.
@@ -351,7 +358,7 @@ religion is not a separate sector, but it is part of
    * of all cost with health penalty at 80 percent difficulty
    * multipliers in E and EA set the various parameters to create these annual costs
    */
-
+/*
 4-7/8   continued to develop the annual cycle.
 developed the cycle, 
 Year start  TRADE
@@ -475,5 +482,4 @@ At the end of a year or 5year the gameMaster and the clanMasters can change
 some of the rule values to change the behavior of the game.  This limited
 strategic choices are the methods of input to the game.  The stats tab is 
 the useful output of the game, showing differences between clans.
-
-    }
+*/

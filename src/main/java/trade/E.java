@@ -44,19 +44,19 @@ public class E {
   static final public String statsButton0Tip = "0: Cum Game Worths,";
   static final public String statsButton1Tip = "1: cum Favors and trade effects";
   static final public String statsButton2Tip = "2: catastrophes, deaths, randoms, forwardfund";
-  static final public String statsButton3Tip = "3: deaths. trades acc";
-  static final public String statsButton4Tip = "4: deaths, Rej misd Trades";
-  static final public String statsButton5Tip = "5: trades accepted, rejected, missed ";
-  static final public String statsButton6Tip = "6: forwardFunds, deaths";
-  static final public String statsButton7Tip = "7: Resource, staff, knowledge values";
-  static final public String statsButton8Tip = "8: creates. growth, forwardFunds and costs details";
+  static final public String statsButton3Tip = "3: deaths. trades acc, gave, got";
+  static final public String statsButton4Tip = "4: deaths, Rej misd Trades, gave, got, growths swaps";
+  static final public String statsButton5Tip = "5: trades accepted, gave, got, growth swaps avail  ";
+  static final public String statsButton6Tip = "6: trades rejected, lost, missed growth, swaps , avail";
+  static final public String statsButton7Tip = "7: Resource, staff, forwardFunds knowledge values";
+  static final public String statsButton8Tip = "8: creates. growth,  swaps and costs details";
   static final public String statsButton9Tip = "9: Catastrophes, Fertility, health and effects";
   static final public String statsButton10Tip = "10: list by ages deaths with trades missed, rejected, lost";
   static final public String statsButton11Tip = "11: list by ages deaths with trades accepted ";
-  static final public String statsButton12Tip = "12: list by ages trades missed, rejected, lost";
-  static final public String statsButton13Tip = "13: list by ages affects with growths depreciation";
-  static final public String statsButton14Tip = "14: list by ages affects with catastrophies, forwardFunds ";
-  static final public String statsButton15Tip = "15: list by ages live trades";
+  static final public String statsButton12Tip = "12: list by ages  missed, rejected, lost, growth,avail";
+  static final public String statsButton13Tip = "13: list by ages accepted growth avail";
+  static final public String statsButton14Tip = "14: list by ages deaths catastrophies, forwardFunds ";
+  static final public String statsButton15Tip = "15: list by ages live catastrophies, forwardFunds";
   static final public String statsButton16Tip = "16: list by ages worths, work,faculty,research interns";
   static final public String statsButton17Tip = "17: list by ages helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
@@ -165,6 +165,7 @@ public class E {
   static final boolean errEconInit = debugMaster;
   static final boolean debugDoYearEndOut = debugMaster || debugFFOut; //output messages re yearEnd
   static final boolean debugAtJavaOut = debugMaster && false; // output at java locations
+  static boolean doCalcCatastrophy = false; //temp disable
 
   /**
    * constructor for E the major repository of tables and values set by the game

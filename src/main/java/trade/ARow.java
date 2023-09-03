@@ -444,10 +444,10 @@ public class ARow {
   }
 
   /**
-   * set ARow to A, copying  A 
+   * set ARow to A, copying  A  to itself
    *
    * @param A an ARow
-   * @return this
+   * @return the save ARow with values from A
    */
   ARow set(ARow A) {
     E.myTest(A == null, "input to set is null");

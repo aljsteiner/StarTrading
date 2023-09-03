@@ -5546,6 +5546,7 @@ public class StarTrader extends javax.swing.JFrame {
         if ( n.getPors() == E.P) {
           eM.setCurEcon(newEC = n);
           eM.printHere("-------MK--------",newEC,"found dead Planet cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+          eIx = lEcons;
         //  System.out.println(EM.wasHere);
           break;
         }
@@ -5555,6 +5556,7 @@ public class StarTrader extends javax.swing.JFrame {
           //    EM.econCnt++;
           eM.printHere( "-------ML--------",newEC," found dead Ship=" + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
         //  System.out.println(EM.wasHere);
+        eIx = lEcons;
     }//E.S
        }// end dead account
     }// end for
@@ -6415,7 +6417,9 @@ public class StarTrader extends javax.swing.JFrame {
 
     E.msgs = E.dmsgs;   // reset messages for each year
     E.msgcnt = 0;
-    System.out.println("-----Y0-----in runYear before doYear, year=" + (eM.year + 1) + " now doYear");
+    E.msgs = (int)EM.econLimits3[0]*500;
+    eM.printHere("----YD----", ec, "in runYear before doYear messages limit=" + E.msgs + (doStop? " doStop" : " !doStop" ) + (eM.stopExe? " EM.stopExe": " !EM.stopExe") + " " + EM.lfe());
+    //.System.out.println("-----Y0-----in runYear before doYear, year=" + (eM.year + 1) + " now doYear");
     // all restarts after user input go to doYear keeping yearly variables
     if (!doStop && !eM.stopExe && !EM.dfe()) {
       doYear();
@@ -7109,6 +7113,7 @@ public class StarTrader extends javax.swing.JFrame {
         totalWealth = wTot;
         maxWealth = wMax;
         minWealth = wMin;
+        int rNDied = EM.DIED;
         //  totalWealth = totalWealth < totalWealth? totalWealth:yearTW[0] ;
         yearTW[0] = wTot;
         gameTW[0] = gameTW[0] < totalWealth ? totalWealth : gameTW[0];
@@ -7116,7 +7121,7 @@ public class StarTrader extends javax.swing.JFrame {
         gameMinW = gameMinW < minWealth ? minWealth : gameMinW;
         yearEcons[0] = EM.econCnt;
         yearPlanets[0] = EM.porsCnt[E.P];
-        yearDied[0]    = EM.cntDead;
+        yearDied[0]  = eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS); //  = EM.cntDead; died this year
         yearShips[0] = EM.porsCnt[E.S];
         gameE = gameEcons[0] = gameEcons[0] < EM.econCnt ? EM.econCnt : gameEcons[0];
         gameP = gamePlanets[0] = gamePlanets[0] < EM.porsCnt[E.P] ? EM.porsCnt[E.P] : gamePlanets[0];

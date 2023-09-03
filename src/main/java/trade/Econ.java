@@ -1152,19 +1152,21 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     if(dead) return this;
     TradePriority[] tPriority = new TradePriority[wLen];
     String[] sPriority = new String[wLen];
+    String forOut= "";
     if (E.debugDisplayTrade) {
-      System.out.print("in econ.selectPlanet+" + name + ", wLen=" + wLen + ", planets=");
+      forOut = "in econ.selectPlanet+" + name + ", wLen=" + wLen + ", planets=";
       for (int ii = 0; ii < wLen; ii++) {
-        System.out.print(" " + wilda[ii].name);
+        forOut += " " + wilda[ii].name;
       }
-      System.out.println(" ");
+      eM.printHere("---ESP---", this, forOut);
     }
     Econ ret;
     A2Row tradeStrategicVars = as.getTradeStrategicVars();
+    int tsvMaxIx = tradeStrategicVars.curMaxIx(0);
     double sumTrade1YearTravelMaintCosts = as.getSumTrade1YearTravelMaintCosts();
     A2Row tradeGoodsNeeds = as.getTradeGoodsNeeds();
 
-    int[] topStratSectors = {tradeStrategicVars.curMaxIx(0), tradeStrategicVars.curMaxIx(0), tradeStrategicVars.curMaxIx(0)};
+    int[] topStratSectors = {tsvMaxIx, tsvMaxIx, tsvMaxIx};
     double lYears = 0.;
     String wildS = "----EW-----in selectPlanet for:" + name + " ";
     int n = 0, r = -5, pSize = -2;
@@ -1431,9 +1433,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         //send loop to both histories cn[0] planet
         cn[0].hist.add(new History(History.loopMinorConditionals5, "T" + aOffer.getTerm() + " " + cn[bb].getName() + " loop>>>>> ", "T=" + termLoop, "bb=" + bb1, "cur name=", cn[bb1].getName(), "ship=", ship.getName(), "planet=", planet.getName(), "<<<<<<"));
         cn[1].hist.add(new History(History.loopMinorConditionals5, "T=", wh(aOffer.getTerm()), "T=" + termLoop, "bb=" + bb1, "name=", cn[bb1].getName(), "ship=", ship.getName(), "planet=", planet.getName(), "<<<<<<<<<"));
-        eM.curEcon = cn[bb1];  // starts at planet
+        eM.setCurEcon(cn[bb1]);  // starts at planet
         if (termLoop > eM.barterStart - 2) {
-          E.sysmsg("in " + cn[bb1].name + ".sStartTrade , " + cn[bb].name + ".barter term=" + aOffer.getTerm() + "\n");
+          eM.printHere("----ESTa---", this," sStartTrade .barter term=" + termLoop );
         }
         aOffer = cn[bb1].barter(aOffer, cn[bb], termLoop); //bb1 starts at 0
         // aOffer = cn[bb1].as.barter(aOffer); // first barter with planet
@@ -1454,7 +1456,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       if (planet.pors == E.P && ((shipsCnt = planet.visitedShipNext)) > -1) {
         int startShips = Math.max(0, shipsCnt - 5); // do only the last 4 ships
         for (; startShips < shipsCnt; startShips++) {
-          eM.addlErr = "shipsCnt=" + shipsCnt + ", startShips=" + startShips + ", planet.visitedShipNext=" + planet.visitedShipNext;
+          eM.printHere("----ESTb----", this, "shipsCnt=" + shipsCnt + ", startShips=" + startShips + ", planet.visitedShipNext=" + planet.visitedShipNext);
+         // eM.addlErr = "shipsCnt=" + shipsCnt + ", startShips=" + startShips + ", planet.visitedShipNext=" + planet.visitedShipNext;
           if (planet.visitedShipList[startShips] != this) {
             sStartTrade(this, planet.visitedShipList[startShips]);
           }
@@ -1491,10 +1494,11 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       visitedShipList[++visitedShipNext] = otherEcon;
     }
     Offer ret = as.barter(aOffer);
-    if (ret.getTerm() == 0 || ret.getTerm() == -2) {
-      planetList = mergeLists(planetList, otherEcon.planetList, ret);
-      if(E.debugTradeBarter){
-      System.out.println(" --EB--econ.barter " + ret.getPlanetName() + " after mergeLists length=" + planetList.size());
+    int retTerm = ret.getTerm();
+    if(E.debugTradeBarter){ eM.printHere("----EB----",this," before mergeLists length=" + planetList.size() + " term =" + retTerm);
+    if (retTerm == 0 || retTerm == -2) {
+      planetList = mergeLists(planetList, otherEcon.planetList, ret);     
+    //  System.out.println(" --EB--econ.barter " + ret.getPlanetName() + " after mergeLists length=" + planetList.size());
       }
     }
     return ret;

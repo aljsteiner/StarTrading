@@ -271,7 +271,7 @@ class EM {
   }
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {.43};
+  static double[] difficultyPercent = {10.};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
   static double [][]balanceMult = {{1.3,1.3}};
   static final double[][] mBalanceMult = {{.5,15.5},{.5,15.5}};
@@ -1762,7 +1762,8 @@ class EM {
   int growthCostTabRow[] = {0, 0, 7, 7};
   int travelCostTabRow[] = {0, 0, 7, 7};
 
-  static double[] multReqMaintC = {1.5, .5}; // mult ReqM costs p,s
+  static double[] multReqMaintC = {.7, .2}; // mult ReqM costs p,s
+ // static double[] multReqMaintC = {1.5, .5}; // mult ReqM costs p,s
   static final double[][] mmult5Ctbl = {{.2, 2.2}, {.2, 2.2}}; // limits all 5
   static double[] multReqGrowthC = multReqMaintC;
   static double[] multMaintC = multReqMaintC;
@@ -1785,12 +1786,15 @@ class EM {
   }
   double[] rcsgGrowFrac = {1., 1.};
   double mult5Ctbl[][] = {multReqMaintC, multReqGrowthC, multMaintC, multTravC, multGrowthC};
-  //double mab1[] = {1.3, .23}; // resource costs planet,ship
+  //double mab1[] = {.6, .13}; // resource costs planet,ship
+  double mab1[] = {.2, .05}; // resource costs planet,ship
   //double mab1[] = {.6,.6}; // resource costs planet,ship
-  double mab1[] = {.6, .13}; // resource c planet ship
+  //double mab1[] = {.6, .13}; // resource c planet ship
   // double mac1[] = {.6,.6}; // staff costs planet ship 
-  //double mac1[] = {1.3, .23}; // staff costs planet ship 
-  double mac1[] = {.6, .13}; // staff costs, planet, ship
+ // double mac1[] = {1.3, .23}; // staff costs planet ship 
+  double mac1[] = {.2, .5}; // staff costs planet ship 
+  //double mac1[] = {.6, .13}; // staff costs planet ship 
+ // double mac1[] = {.6, .13}; // staff costs, planet, ship
   double mabc[][] = {mab1, mac1}; //r or s, p or s
   static double mmab1[][] = {{.01, 2.}, {.01, 2.1}}; // resource costs planet,ship
   static double[][] mmab2 = {{.05, 1.9}, {.05, 1.9}};
@@ -1800,262 +1804,14 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = 0.05; // was 0.035,0.05,0.075
+  static double vdifMult = 0.005; // was 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
-  /**
-   * OBSOLETE make a multiplyer for CashFlow.calcRawCosts, creates a table rs
-   * that modifies each cost uses EM variables: difficultyPercent rcsgGrow
-   * mult5Ctbl
-   *
-   *
-   * @param rs4 a sub tabel of cost multipliers, unused
-   * @param mult5Ctbl a table used for costs
-   * @param ps unused
-   * @return the rs[][][][][] table
-   */
-  double[][][][] badmakeRS(double[][][][] rs4, double[][] mult5Ctbl, double[][] ps) {
-    rs4a = new double[5][][][];//[5 reqM reqG m t g][2 r s][2 p s][4 rcsg][5 clan]
-    //make the table
-    for (int aa = 0; aa < 5; aa++) { //type
-      rs4a[aa] = new double[2][][];
-      for (int ab = 0; ab < 2; ab++) { //
-        rs4a[aa][ab] = new double[2][];
-        for (int ac = 0; ac < 2; ac++) {
-          rs4a[aa][ab][ac] = new double[4];
-        }
-      }
-    }
-    String stss = ">>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
-    String strs = "", strs4 = "", stdif = "", stm5t = "", stmabc = "";
-    String staa[] = {"reqMaint ", "reqGro ", "maint, ", "travel, ", "growth, "};
-    String stabrs4[] = {"rs4_r ", "rs4_s "};
-    String stabm5t[] = {"m5t_r ", "m5t_s "};
-    String stabdif[] = {"dif_r ", "difr_s "};
-    String stabmabc[] = {"mabc_r ", "mabc_s "};
-    String stabrs[] = {"rs_r  ", "rs_s "};
-    String stac[] = {"plnt ", "ship "};
-    String stad[] = {"r=", "c=", "s=", "q= "};
-    double vrs = 0., vrs4 = 0., vdif = 0., vm5t = 0., vmabc = 0., vrcsg = 0.;
-    //now set the table elements
-    for (int aa = 0; aa < 5; aa++) { // typegrReq
-      for (int ab = 0; ab < 2; ab++) { // res or staff
-        strs += staa[aa] + stabrs[ab];
-        strs4 += stabrs4[ab];
-        stdif += stabdif[ab];
-        stm5t += stabm5t[ab];
-        stmabc += stabmabc[ab];
-        for (int ac = 0; ac < 2; ac++) { // planet or ship
-          strs += stac[ac];
-          strs4 += stac[ac];
-          stdif += stac[ac];
-          stm5t += stac[ac];
-          stmabc += stac[ac];
-          for (int ad = 0; ad < 4; ad++) {  // rcsg
-            /*
-            rs[aa][ab][ac][ad] = 1.;  // finding out of range
-            double xx = rs4[aa][ab][ac][(int)ad/2];
-            double xy = ps[ac][ad];
-            double x1 = mult5Ctbl[aa][ac];
-            double x2 = mabc[ab][ac];
-             */
-            vrs = rs4a[aa][ab][ac][ad]
-                    = // add difficultyPercent as a cost factor 50% = 1. mult
-                    //(vdif = difficultyPercent[ac]) * .1  *
-                    (vdif = difficultyPercent[0] * 0.0125)
-                    // (vdif = difficultyPercent[0] * 0.0990)
-                    // reduce costs so that final rcsg = 2*init rcsg
-                    * (vrcsg = rcsgGrowFrac[ac])
-                    * (vrs4 = rs4[aa][ab][ac][(int) ad / 2])
-                    * (vm5t = mult5Ctbl[aa][ac])
-                    * //mabc[ab][ac] * ps[ac][ad];
-                    (vmabc = mabc[ab][ac]);
-            if (E.debugLogsOut) {
-              strs += mf(vrs) + " ";
-              strs4 += mf(vrs4) + " ";
-              stdif += mf(vdif) + " ";
-              stm5t += mf(vm5t) + " ";
-              stmabc += mf(vmabc) + " ";
-
-            }
-          } //ad
-          // stss += "\n"; // start another line
-        }//ac
-      }//ab
-      if (E.debugLogsOut) {
-        stss += strs + "\n";
-        stss += strs4 + "\n";
-        stss += stdif + "\n";
-        stss += stm5t + "\n";
-        stss += stmabc + "\n";
-
-        strs = " ";
-        strs4 = " ";
-        stdif = " ";
-        stm5t = " ";
-        stmabc = " ";
-      }
-    } // aa 
-    if (E.debugLogsOut) {
-      System.out.println(stss + "<<<<<<<<<<<<<<<<<"); // 12 lines
-    }
-    return rs4a;
-  }
-
+  
   double vFracSum = 0.;
   static boolean AlwaysMakeRS = true;
 
-  /**
-   * obsolete make a multiplyer for CashFlow.calcRawCosts, creates a table rs
-   * that modifies each cost uses EM variables: difficultyPercent rcsgGrow
-   * mult5Ctbl and uses getCurCumPorsClanAve(INITRCSG, ICUM, 1, pors, pors + 1,
-   * clan,clan+1);
-   *
-   * @param rs4 a sub tabel of cost multipliers, unused
-   * @param mult5Ctbl a table used for costs
-   * @param ps unused
-   * @return the rs[][][][][] table
-   */
-  double[][][][][] notmakeClanRS(double[][][][] rs4, double[][] mult5Ctbl, double[][] ps) {
-    double[][][][][] rs = new double[5][][][][];;// make [5 reqM reqG m t g][2 r s][2 p s][4 rcsg][5 clan]
-    try {
-      double vinit = 0., vlive = 0., vfrac = 0.;
-      int aa, ab, ac, ad, ae;
-
-      double clanSum[][] = new double[2][]; // { pors,clan}
-      for (aa = 0; aa < 5; aa++) { //type reqM reqG m t g
-        rs[aa] = new double[2][][][];
-        for (ab = 0; ab < 2; ab++) { // r s 
-          rs[aa][ab] = new double[2][][];
-          for (ac = 0; ac < 2; ac++) { // p s
-            rs[aa][ab][ac] = new double[4][];//rcsg
-            clanSum[ac] = new double[5];
-            for (ad = 0; ad < 4; ad++) {  //rcsg
-              rs[aa][ab][ac][ad] = new double[5];
-              for (ae = 0; ae < E.LCLANS; ae++) {
-                rs[aa][ab][ac][ad][ae] = 0.;
-              }
-            }
-          }
-        }
-      }
-      String stss = ">>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
-      String strs = "", strs4 = "", stdif = "", stm5t = "", stmabc = "";
-      String staa[] = {"reqMaint ", "reqGro ", "maint, ", "travel, ", "growth, "};
-      String stabrs4[] = {"rs4_r ", "rs4_s "};
-      String stabm5t[] = {"m5t_r ", "m5t_s "};
-      String stabdif[] = {"dif_r ", "difr_s "};
-      String stabmabc[] = {"mabc_r ", "mabc_s "};
-      String stabrs[] = {"rs_r  ", "rs_s "};
-      String stac[] = {"plnt ", "ship "};
-      String stad[] = {"r=", "c=", "s=", "q= "};
-      double vrs = 0., vrs4 = 0., vdif = 0., vm5t = 0., vmabc = 0., vrcsg = 0.;
-      //now set the table elements
-      for (aa = 0; aa < 5; aa++) { // typegrReq
-        for (ab = 0; ab < 2; ab++) { // res or staff
-          strs += staa[aa] + stabrs[ab];
-          strs4 += stabrs4[ab];
-          stdif += stabdif[ab];
-          stm5t += stabm5t[ab];
-          stmabc += stabmabc[ab];
-          for (ac = 0; ac < 2; ac++) { // planet or ship
-            strs += stac[ac];
-            strs4 += stac[ac];
-            stdif += stac[ac];
-            stm5t += stac[ac];
-            stmabc += stac[ac];
-            for (ad = 0; ad < 4; ad++) {  // rcsg
-              for (ae = 0; ae < E.LCLANS; ae++) { //clans
-                /*
-            rs[aa][ab][ac][ad] = 1.;  // finding out of range
-            double xx = rs4[aa][ab][ac][(int)ad/2];
-            double xy = ps[ac][ad];
-            double x1 = mult5Ctbl[aa][ac];
-            double x2 = mabc[ab][ac];
-                 */
-                vinit = getCurCumPorsClanAve(INITRCSG, ICUM, 1, ac, ac + 1, ae, ae + 1);
-                vlive = getCurCumPorsClanAve(LIVERCSG, ICUM, 1, ac, ac + 1, ae, ae + 1);
-                vfrac = vinit > 0. ? vlive / (vinit * 3.0) : 1.0;
-                vFracSum += vfrac;
-                prevLine = " before rsae aa=" + aa + " ab=" + ab + " ac=" + ac + " ad=" + ad + " ae=" + ae;
-
-                double rsaa[][][][] = rs[aa]; // test for null pointer??
-                double rsab[][][] = rsaa[ab];
-                // int irsab = rsab[ac].length;
-                prevLine += " rsab[ac].length=" + rsab[ac].length;
-                double rsac[][] = rsab[ac];
-                double rsad[] = rsac[ad];
-                double rsae = rsad[ae];
-                prevLine += "rsad[ae]=" + mf(rsad[ae]);
-                vrs = rs[aa][ab][ac][ad][ae]
-                        = // add difficultyPercent as a cost factor 50% = 1. mult
-                        //(vdif = difficultyPercent[ac]) * .1  *
-                        (vdif = difficultyPercent[0] * 0.0125)
-                        // (vdif = difficultyPercent[0] * 0.0990)
-                        // reduce costs so that final rcsg = 2*init rcsg
-                        * (vrcsg = rcsgGrowFrac[ac])
-                        * (vrs4 = rs4[aa][ab][ac][(int) ad / 2])
-                        * (vm5t = mult5Ctbl[aa][ac])
-                        * //mabc[ab][ac] * ps[ac][ad];
-                        (vmabc = mabc[ab][ac])
-                        * //[pors][clan]
-                        (vfrac);
-                if (E.debugLogsOut) {
-                  strs += mf(vrs) + " ";
-                  strs4 += mf(vrs4) + " ";
-                  stdif += mf(vdif) + " ";
-                  stm5t += mf(vm5t) + " ";
-                  stmabc += mf(vmabc) + " ";
-
-                } //logs out
-              } //ae
-              // stss += "\n"; // start another line
-            }//ad
-          }//ac
-        }// ab
-        if (E.debugRsOut) {
-          stss += strs + "\n";
-          stss += strs4 + "\n";
-          stss += stdif + "\n";
-          stss += stm5t + "\n";
-          stss += stmabc + "\n";
-
-          strs = " ";
-          strs4 = " ";
-          stdif = " ";
-          stm5t = " ";
-          stmabc = " ";
-        }
-      } // aa 
-      if (E.debugRsOut) {
-        System.out.println(stss + "<<<<<<<<<<<<<<<<<"); // 12 lines
-      }
-      return rs;
-
-    }
-    catch (trade.WasFatalError ex) {
-      ex.printStackTrace(pw);
-      thirdStack = sw.toString();
-      flushes();
-      System.err.println(curEconName + " " + Econ.nowThread + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());
-//      ex.printStackTrace(System.err);
-      System.exit(-5);
-    }
-    catch (Exception | Error ex) {
-      firstStack = secondStack + "";
-      ex.printStackTrace(pw);
-      secondStack = sw.toString();
-      newError = true;
-      System.err.println("makeClanRs" + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + Thread.currentThread().getName() + andMore());
-//      ex.printStackTrace(System.err);
-      st.setFatalError(); // throws WasFatalError
-      System.exit(-14);
-      throw new WasFatalError(curEconName + " " + Econ.nowThread + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());
-
-    }
-    return rs;
-  }
-
+  
   /**
    * make a multiplyer for CashFlow.calcRawCosts, creates a table rs that
    * modifies each cost by resource or staff, planet or ship, which SubAsset
@@ -3934,47 +3690,47 @@ onceAgain:
 
   static final long LMASK = lmask;
   static final long AGESMASK = LIST10 | LIST11 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17; // show available age vals
-  static final long LISTYRS = 0L;
-  static final long LIST1YRS = LIST1 | LISTYRS;
-  static final long LIST3YRS = LIST3 | LISTYRS;  // missed deaths
-  static final long LIST4YRS = list4 | LISTYRS;  // trades, accepted rej deaths
-  static final long LIST5YRS = list5 | LISTYRS;  // other deaths
-  static final long LIST41 = list4 | LIST1;
-  static final long LIST40 = list4 | LIST0;   // trades accepted, rej deaths
-  static final long LIST410 = list4 | LIST1 | LIST0;   // trades accepted, rej deaths
-  static final long LIST51 = LIST5 | LIST1;   // other deaths
-  static final long LIST52 = LIST5 | LIST2;
-  static final long LIST52YRS = LIST52 | LISTYRS;
-  static final long LIST41YRS = list4 | LIST1YRS;
-  static final long LIST431YRS = LIST3 | LIST41YRS;
-  static final long LIST2YRS = LIST2 | LISTYRS;
-  static final long LIST29YRS = LIST2 | LIST9 | LISTYRS;
-  static final long LIST29 = LIST2 | LIST9;
-  static final long LIST42YRS = list4 | LIST2YRS;
-  static final long LIST432YRS = LIST3 | LIST42YRS;
-  static final long LIST43YRS = LIST3 | LIST4YRS;
-  static final long LIST432 = LIST4 | LIST3 | LIST2;
-  static final long LIST4321 = LIST4 | LIST3 | LIST2 | LIST1;
-  static final long LIST43210 = LIST4 | LIST3 | LIST2 | LIST1 | LIST0;
-  static final long LIST94321 = LIST4 | LIST3 | LIST2 | LIST9 | LIST1;
-  static final long LIST4321YRS = LIST1 | LIST432YRS;
-  static final long LIST4320YRS = LIST0 | LIST432YRS;
-  static final long LIST43210YRS = LIST1 | LIST4320YRS;
-  static final long LIST32YRS = LIST2 | LIST3YRS;
-  static final long LIST320YRS = LIST0 | LIST32YRS;
-  static final long LTRADE = LIST1YRS | LIST4;
-  static final long LDEATHS = LIST2YRS | LIST3;
-  static final long LIST0YRS = LIST0 | LISTYRS;
-  static final long LCURWORTH = LIST0YRS;
-  static final long LTRADNFAVR = LIST1YRS;
-  static final long LCASTFFRAND = LIST2YRS;
-  static final long LRESOURSTAF = LIST0YRS | LIST7;
-  static final long LGRONCSTS = LIST0YRS | LIST8;
-  static final long LXFR = LIST2YRS | LIST14;
-  static final long LDECR = LIST2YRS | LIST13;
-  static final long LINCR = LIST2YRS | LIST12;
-  static final long LFORFUND = LIST2YRS | LIST19;
-  static final long LSWAPSA = LISTYRS | LIST17;
+  static final long LISTAGES = AGESMASK;
+ // static final long LIST1YRS = LIST1 | LISTYRS;
+  //static final long LIST3YRS = LIST3 | LISTYRS;  // missed deaths
+  //static final long LIST4YRS = list4 | LISTYRS;  // trades, accepted rej deaths
+  //static final long LIST5YRS = list5 | LISTYRS;  // other deaths
+  //static final long LIST41 = list4 | LIST1;
+  //static final long LIST40 = list4 | LIST0;   // trades accepted, rej deaths
+  //static final long LIST410 = list4 | LIST1 | LIST0;   // trades accepted, rej deaths
+  //static final long LIST51 = LIST5 | LIST1;   // other deaths
+ // static final long LIST52 = LIST5 | LIST2;
+  //static final long LIST52YRS = LIST52 | LISTYRS;
+  //static final long LIST41YRS = list4 | LIST1YRS;
+ // static final long LIST431YRS = LIST3 | LIST41YRS;
+ // static final long LIST2YRS = LIST2 | LISTYRS;
+  //static final long LIST29YRS = LIST2 | LIST9 | LISTYRS;
+  //static final long LIST29 = LIST2 | LIST9;
+  //static final long LIST42YRS = list4 | LIST2YRS;
+  //static final long LIST432YRS = LIST3 | LIST42YRS;
+ // static final long LIST43YRS = LIST3 | LIST4YRS;
+  //static final long LIST432 = LIST4 | LIST3 | LIST2;
+ // static final long LIST4321 = LIST4 | LIST3 | LIST2 | LIST1;
+  //static final long LIST43210 = LIST4 | LIST3 | LIST2 | LIST1 | LIST0;
+  //static final long LIST94321 = LIST4 | LIST3 | LIST2 | LIST9 | LIST1;
+ // static final long LIST4321YRS = LIST1 | LIST432YRS;
+ // static final long LIST4320YRS = LIST0 | LIST432YRS;
+  //static final long LIST43210YRS = LIST1 | LIST4320YRS;
+  //static final long LIST32YRS = LIST2 | LIST3YRS;
+ // static final long LIST320YRS = LIST0 | LIST32YRS;
+  //static final long LTRADE = LIST1YRS | LIST4;
+  //static final long LDEATHS = LIST2YRS | LIST3;
+  //static final long LIST0YRS = LIST0 | LISTYRS;
+ // static final long LCURWORTH = LIST0YRS;
+  //static final long LTRADNFAVR = LIST1YRS;
+  //static final long LCASTFFRAND = LIST2YRS;
+  //static final long LRESOURSTAF = LIST0YRS | LIST7;
+  //static final long LGRONCSTS = LIST0YRS | LIST8;
+ // static final long LXFR = LIST2YRS | LIST14;
+ // static final long LDECR = LIST2YRS | LIST13;
+  //static final long LINCR = LIST2YRS | LIST12;
+  //static final long LFORFUND = LIST2YRS | LIST19;
+  //static final long LSWAPSA = LISTYRS | LIST17;
   static final long CURSMASK = CUR | CURAVE | CURUNITS | THISYEAR | THISYEARAVE | THISYEARUNITS;
   static final long CUMSMASK = CUM | CUMAVE | CUMUNITS;
   static final long LISTALL = lmask;
@@ -4094,27 +3850,32 @@ onceAgain:
   private String myDetail = "";
   private String dds = description + myDetail;
   private String isPercent = "";
+  
   static int rende4;
+  // now star the list of numbered dores names
   static int e4 = -1;
   static final int SCORE = ++e4;
   static final int STARTWORTH = ++e4;
   static final int LIVEWORTH = ++e4;
+  static final int WORTHINCR = ++e4; //
   static final int COSTWORTHDECR = ++e4;
   static final int DIED = ++e4;
   static final int WORTHIFRAC = ++e4;
-  static final int WORTHINCR = ++e4; //DEPRECIATION
-  static final int DEPRECIATION = ++e4; //DEPRECIATION
   static final int PREVGROWTH = ++e4; //
-  static final int TRADEWORTH = ++e4;
-  static final int TRADEWORTHINCR = ++e4;
-  static final int TRADERCSGINCR = ++e4;
-  static final int CATWORTHINCR = ++e4;
-  static final int CUMCATWORTH = ++e4;
-  static final int GROWTHS = ++e4;
+  static final int DEPRECIATION = ++e4; //DEPRECIATION
   static final int RAWYEARLYUNITGROWTHS = ++e4;
   static final int RAWUNITGROWTHS = ++e4;
   static final int RAWGROWTHS = ++e4;
+  static final int POSTSWAP = ++e4;
+  static final int GROWTHS = ++e4;
+   static final int CATWORTHINCR = ++e4;
+  static final int CUMCATWORTH = ++e4; 
+  static final int TRADEWORTH = ++e4;
+  static final int TRADEWORTHINCR = ++e4;
+  static final int TRADERCSGINCR = ++e4;
   static final int GROWTHWORTHINCR = ++e4;
+  static final int POSTSWAPRCSG = ++e4;
+  static final int SWAPRINCRWORTH = ++e4;
   static final int RGROWTHV = ++e4;
   static final int CGROWTHV = ++e4;
   static final int SGROWTHV = ++e4;
@@ -4174,6 +3935,9 @@ onceAgain:
   static final int DRCSGINCRN0 = ++e4;
   static final int DWORTHINCRN1 = ++e4;
   static final int DGROWTHSN1 = ++e4;
+  static final int DPOSTSWAP = ++e4;
+  static final int DPOSTSWAPRCSG = ++e4;
+  static final int DSWAPRINCRWORTH = ++e4;
   static final int DFERTILITYSN1 = ++e4;
   static final int DRCSGINCRN1 = ++e4;
   static final int DWORTHINCRN2 = ++e4;
@@ -4257,6 +4021,7 @@ onceAgain:
   static final int rejectAtOne = ++e4;
   static final int rejectAtOneTerm = ++e4;
   //static final int DEADSWAPSNCOUNT = ++e4;
+  
   static final int SWAPRINCRCOST = ++e4;
   static final int SWAPSINCRCOST = ++e4;
   static final int SWAPRDECRCOST = ++e4;
@@ -4505,14 +4270,18 @@ onceAgain:
 
   void defRes() {
 
-    doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST7 | LIST8 | LIST9 | LIST43210YRS | THISYEAR | SUM, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | LIST9  | THISYEAR | SUM, LIST0 | LIST6 | LIST7 | LIST8 |  THISYEARUNITS | THISYEARAVE | BOTH, ROWS1  | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CURAVE | SKIPUNSET);
-    doRes(TRADELASTGAVE, "Trade given", "strategic worth of trade goods given ", 2, 2, 2, LIST40 | LIST15 |  THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 |LIST3 | LIST4| LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9  | THISYEAR | SUM, LIST0 | LIST6 | LIST7 | LIST8 |  THISYEARUNITS | THISYEARAVE | BOTH, ROWS1  | LIST6 | CUMUNITS | CUM | CUMAVE | BOTH | SKIPUNSET, LIST9 | LIST14 | CURAVE | SKIPUNSET);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year");
+    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge");
+    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 2, 2, LIST0 | LIST15 |  THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, LIST0 | CUM | CUMUNITS | BOTH | SKIPUNSET, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
+    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth of trade goods given");
     doRes(TRADESTRATLASTGAVE, "%trade Gaven", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing");
-    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
+   
     doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST14 | THISYEARUNITS | CUMUNITS | BOTH, 0, 0, 0);
-    doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
+   
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
@@ -4522,18 +4291,19 @@ onceAgain:
     doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
-    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(DEPRECIATION, "Depreciation", "depreciation this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9  | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 |  THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE  | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWYEARLYUNITGROWTHS, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+     doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 2, 3, 0,  LIST1 |LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(DEPRECIATION, "Depreciation", "depreciation this year");
+    doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction");
+    doRes(RAWYEARLYUNITGROWTHS, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
-    doRes(RAWGROWTHS, "rawGrowthS", "Raw growth after depreciation this year before growths");
-    doRes(GROWTHWORTHINCR, "GrthIncWorth", "worth increase this year from growth before cost reduction");
+    doRes(RAWGROWTHS, "rawGrowth", "Raw growth after depreciation this year before cost reduction");
+    doRes(POSTSWAP, "postSwap", "worth after swap");
+    doRes(POSTSWAPRCSG, "postSwapRCSG", "RCSG units after swap");
+    doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
+    doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
      doRes(RGROWTHV, "R growth", "R growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CGROWTHV, "C growth", "C growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(SGROWTHV, "S growth", "S growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
@@ -4585,7 +4355,9 @@ onceAgain:
     doRes(DWORTH, "DTworth", "died trade Econs average yearly worth", 2, 2, 0, LIST3 | LIST11 | LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(DHIGHWORTH, "DTHworth", "Died trade high Econs average yearly worth");
     doRes(DLOWWORTH, "DTL worth", "Died trade low Econs average yearly worth");
-
+     doRes(DPOSTSWAP, "dpostSwap", "dead worth after swap");
+     doRes(DPOSTSWAPRCSG, "dpostSwapRCSG", "dead RCSG units after swap");
+     doRes(DSWAPRINCRWORTH, "dswapIncWorth", "dead worth increase or decrease after Swaps");
     doRes(DMISCWORTH, " DNworth", "Died No trade Econs yearly worth", 2, 2, 0, LIST4 | LIST10 | LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(DMISCHIGHWORTH, "DNHworth", "Died No trade high Econs average yearly worth");
     doRes(DMISCLOWWORTH, "DNLworth", "Died No trade low  Econs average yearly worth");
@@ -4785,9 +4557,9 @@ onceAgain:
     doRes(RCfrac, "RC/yr Worth", "RC / yr Worth");
     doRes(SGfrac, "SG/yr Worth", "SG / yr Worth");
     //chgd KNOWLEDGEB MANUALSfrac NEWKNOWLEDGEfrac COMMONKNOWLEDGEfrac KNOWLEDGEINCR NEWKNOWLEDGEINCR MANUALSINCR COMMONKNOWLEDGEINCR
-    doRes(POORKNOWLEDGEEFFECT, "Dumb csts", "frac Increase in costs due to limited knowledge(ignorance)", 1, 1, 1, LIST14 | ROWS1 | THISYEARAVE | both | SKIPUNSET, LIST1 | LIST7 | LIST14 | ROWS1 | CUMUNITS | both | SKIPUNSET, 0, 0);
+    doRes(POORKNOWLEDGEEFFECT, "Dumb csts", "frac Increase in costs due to limited knowledge(ignorance)", 1, 3, 2, 0, ROWS1 | LIST1 | LIST5 | LIST7 | LIST8 | LIST9 | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(POORHEALTHEFFECT, "Poor Health Cost", "Increase in costs due to insufficient required resources and staff");
-    doRes(NEWKNOWLEDGEFRAC, "New%Old knowledge", "New knowledge / Knowledge ", 2, 3, 1, LIST7 | LIST0 | THISYEARAVE | both | SKIPUNSET, LIST7 | LIST14 | ROWS1 | THISYEARUNITS | BOTH | SKIPUNSET, 0, 0);
+    doRes(NEWKNOWLEDGEFRAC, "New%Old knowledge", "New knowledge / Knowledge ");
     doRes(KNOWLEDGEFRAC, "Knowledge Frac", "Knowledge worth / year worth");
     doRes(COMMONKNOWLEDGEFRAC, "Common Knowledge", "Common knowledge/knowledge");
     doRes(MANUALSFRAC, "Manualsfrac", "Manuals /knowledge, you get manuals in trades, faculty and researcher turn manuals into knowledge");
@@ -4797,7 +4569,7 @@ onceAgain:
     doRes(NEWKNOWLEDGEINCR, "incNewKnowledge", "Percent New Knowledge Incr/Year");
     doRes(COMMONKNOWLEDGEINCR, "incCommonKnowledge", "Percent Common Knowledge increase by year");
     doRes(MANUALSINCR, "PercIncrManuals", "Percent Manuals increase by years");
-    doRes(INCRAVAILFRAC5, "%+AvailFav5", "Percent increase in avail frac after trade at favor 5", 2, 3, 2, 0, ROWS1 | LIST41 | THISYEARAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(INCRAVAILFRAC5, "%+AvailFav5", "Percent increase in avail frac after trade at favor 5", 1, 3, 2, 0, ROWS1 | LIST1 | LIST5 | LIST7 | LIST8 | LIST9 | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(INCRAVAILFRAC4, "%+AvailFav4", "Percent increase in avail frac after trade at favor 4");
     doRes(INCRAVAILFRAC3, "%+AvailFav3", "Percent increase in avail frac after trade at favor 3");
     doRes(INCRAVAILFRAC2, "%+AvailFav2", "Percent increase in avail frac after trade at favor 2");
@@ -4815,8 +4587,8 @@ onceAgain:
 
     doRes(TRADELASTRECEIVE, "Last Received", "Final received goods%tot balance");
     doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade", 2, 2, 2, LIST7 | LIST15 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 2, 2, 2, LIST40 | THISYEAR | THISYEARAVE | THISYEARUNITS | CUM | CUMUNITS | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 2, 2, 2, LIST7 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST22 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 1, 3, 2,  ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET,  LIST11 | LIST13 | LIST15 | LIST16 | LIST17  | CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 1, 3, 2,  ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(TradeCriticalBidRequestsFirst, "BidFirstCriticalRequests", "First Critical requested bids");
     doRes(TradeAlsoBidRequestsFirst, "BidAlsoFirstRequests", "First requested bids");
     doRes(TradeAlsoCriticalBidRequestsFirst, "BidAlsoFirstCriticalRequests", "First Critical requested bids");
@@ -4839,8 +4611,8 @@ onceAgain:
     //   doRes(BEFORETRADEWORTH, "BeforeTradeWorth", "Worth before A trade");
     // doRes(AFTERTRADEWORTH, "AfterTradeWorth", "Worth after a trade");
     doRes(TRADEWORTHINCRPERCENT, "%TradeWorthIncr", "% increase in Worth after trade", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 2, 2, LIST41 | LIST8 | LIST15 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(TRADERCSGINCR, "TradeRCSGIncr", "this years increase in RCSG after trade", 2, 2, 2, LIST41 | LIST8 | LIST15 | LIST20 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(TRADERCSGINCR, "TradeRCSGIncr", "this years increase in RCSG after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 | LIST20 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeRejectValuePerGoal, "RejectValue%Goal", "Rejected percent value per goal");
     doRes(TradeLostValuePerGoal, "LostValue%Goal", "Lost percent value per goal");
@@ -4867,7 +4639,7 @@ onceAgain:
     doRes(TRADESOS1, "SOS1trade%IncW", "Successful trade percent incr worth after starting with SOS1");
     doRes(TRADESOS2, "SOS2trade%IncW", "Successful trade percent incr worth after starting with SOS2");
     doRes(TRADESOS3, "SOS3trade%IncW", "Successful trade percent incr worth after starting with SOS3");
-    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LISTYRS | CUR | BOTH | SKIPUNSET, ROWS2 |  LIST21 | CURAVE | CUM | BOTH | SKIPUNSET, 0L);
+    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST5 | LIST13 | THISYEARAVE | BOTH | SKIPUNSET,0L,0L,0L);
     doRes(TRADEOSOS1, "HlptdS0Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS0");
     doRes(TRADEOSOS2, "HlptdS2Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS2");
     doRes(TRADEOSOS3, "HlptdS3Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS3");
@@ -4907,7 +4679,7 @@ onceAgain:
     doRes("WTRADEDINCRF2", "Fav2Trd%IncW", "% Years worth increase at Favor2/start year worth", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WTRADEDINCRF1", "Fav1Trd%IncW", "Years worth increase at Favor1/start year worth", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WTRADEDINCRF0", "Fav0Trd%IncW", "% Years worth increase at Favor0/start year worth", 2, 3, 2, DUP, 0, 0, 0);
-    doRes(WTRADEDINCRSOS, "incrWSOSTrade", "% Years worth increase at an planet SOS flag trade this year/start year worth", 2, 3, 2, LIST41 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(WTRADEDINCRSOS, "incrWSOSTrade", "% Years worth increase at an planet SOS flag trade this year/start year worth", 2, 3, 2, LIST1 | LIST5 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes("WREJTRADEDPINCR", "incrWRejectedTrade", "% W incr if the other had notrejected the trade/start yr worth", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WLOSTTRADEDINCR", "incrWLostTrade", "% W incr if other rejected the trade/start yr worth", 2, 3, 2, DUP, 0, 0, 0);
     doRes("UNTRADEDWINCR", "DEAD no trade Incr", "% no trade offered yearly growth including working, reserve: resource, staff, knowledge", 2, 3, 2, DUP, 0, 0, 0);
@@ -4928,7 +4700,7 @@ onceAgain:
     doRes("CRITICALRECEIPTSFRACWORTHF3", "CritTradeFracF3", "% of critical receipts worth favor3 Trades/start totW  ", 2, 3, 2, DUP, 0, 0, 0);
     doRes("CRITICALRECEIPTSFRACWORTHF2", "CritTradeFracF2", "% of critical receipts worth favor2 Trades/start totW  ", 2, 3, 2, DUP, 0, 0, 0);
     doRes("CRITICALRECEIPTSFRACWORTHF1", "CritTradeFracF1", "% of critical receipts worth favor1 Trades/start totW  ", 2, 3, 2, DUP, 0, 0, 0);
-    doRes("WTRADEDINCR", "WTradedIncr", "% Years worth increase/start year worth", 2, 2, 1, LIST41 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes("WTRADEDINCR", "WTradedIncr", "% Years worth increase/start year worth", 2, 2, 1, LIST1 | LIST5 | LIST13| CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes("WORTHAYRNOTRADEINCR", "IncW aYr NoTrade", "% Year increase Worrth/worth if no trades this year", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WORTH2YRNOTRADEINCR", "IncW 2Yr No Trade", "% Year increase Worrth/worth if  2 years of no trades", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WORTH3YRNOTRADEINCR", "IncW 3Yrs No Trade", "% Year increase W/worth if 3 or more years of no trades", 2, 3, 2, DUP, 0, 0, 0);
@@ -7547,15 +7319,30 @@ onceAgain:
     }
     return "";
   }
-/**  print a System.err line if E.debugDoYearEndOut or other debugs
+/**  print a System.out line if E.debugDoYearEndOut or other debugs
  * 
  * @param flag a flag like ---FLAG---
  * @param ec  current Econ
  * @param what the 
  */
   void printHere(String flag, Econ ec, String what){
-    if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " game" + past(startTime) + atJava(2) + what);
-   else if(E.debugDoYearEndOut)System.out.println(flag  + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+    if (eE.msgcnt++ > eE.msgs) {
+      new Throwable().printStackTrace();
+      eE.sysmsgDone = true;
+      eM.doMyErr(">>>>>>>> ERR messages cnt=" + eE.msgcnt + " exceeds limit msgs" + eE.msgs);
+    }
+    if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + " game" + past(startTime) + atJava(2) + what);
+   else if(E.debugDoYearEndOut)System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+  }
+  /**  print a System.out line if E.debugDoYearEndOut or other debugs
+ * 
+ * @param test only print if test true, may be E.???
+ * @param flag a flag like ---FLAG---
+ * @param ec  current Econ
+ * @param what the 
+ */
+  void printHere(boolean test, String flag, Econ ec, String what){
+    if(test)printHere(flag,ec,what);
   }
   
   /**
