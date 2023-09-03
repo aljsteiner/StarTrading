@@ -67,7 +67,8 @@ public class ABalRows extends A6Rowa {
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
   static final int STARTZEROINGIX = balz; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
   static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //aStartCashFlow zero fills 
-  static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth 
+  static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth
+  static final int NEWUNITDEPRECIATIONIX = balz += LSUBS; //36 L4
   static final int COSTWORTHSIX = balz += LSUBS; //
   static final int YEARINCRWORTHSIX = balz += LSUBS; //
   static final int MTGCOSTSWORTHSIX = balz += LSUBS; //

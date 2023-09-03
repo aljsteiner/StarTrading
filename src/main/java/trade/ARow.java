@@ -66,9 +66,9 @@ public class ARow {
     hist = ec.getHist();
     values = new double[E.lsecs];
     ix = new int[E.lsecs];
-    if(E.debugNoTerm){
-      if((as != null )){
-      int tst = as.term;
+    if (E.debugNoTerm) {
+      if ((as != null)) {
+        int tst = as.term;
       }
     }
     for (int i = 0; i < E.lsecs; i++) {
@@ -120,13 +120,14 @@ public class ARow {
    * @return a string of a floating number
    */
   protected String df(double n) {
-   return eM.mf(n);
+    return eM.mf(n);
   }
 
-     String ef(double v){
-      NumberFormat exp = new DecimalFormat("0.###,###E0");
-      return exp.format(v);
-     }
+  String ef(double v) {
+    NumberFormat exp = new DecimalFormat("0.###,###E0");
+    return exp.format(v);
+  }
+
   /**
    * create a string of a whole number
    *
@@ -151,47 +152,52 @@ public class ARow {
       }
     }
   }
-  /** test value for illegal double value using E.dTrouble
-   * issue error if E.debugDouble
-   * 
-   * @param trouble  value to be tested if E.debugDouble
+
+  /**
+   * test value for illegal double value using E.dTrouble issue error if
+   * E.debugDouble
+   *
+   * @param trouble value to be tested if E.debugDouble
    * @return valid trouble
    */
-  double dTrouble(Double trouble){
-     return ec.doubleTrouble(trouble,"");
+  double dTrouble(Double trouble) {
+    return ec.doubleTrouble(trouble, "");
   }
-  
-  /** test value for illegal double value using E.dTrouble
-   * issue error if E.debugDouble
-   * 
-   * @param trouble  value to be tested if E.debugDouble
+
+  /**
+   * test value for illegal double value using E.dTrouble issue error if
+   * E.debugDouble
+   *
+   * @param trouble value to be tested if E.debugDouble
    * @return valid trouble
    */
-  double doubleTrouble(Double trouble){
- return ec.doubleTrouble(trouble,"");
-    }
-    
-     /** test value for illegal double value using E.dTrouble
-   * issue error if E.debugDouble
-   * 
-   * @param trouble  value to be tested if E.debugDouble
+  double doubleTrouble(Double trouble) {
+    return ec.doubleTrouble(trouble, "");
+  }
+
+  /**
+   * test value for illegal double value using E.dTrouble issue error if
+   * E.debugDouble
+   *
+   * @param trouble value to be tested if E.debugDouble
    * @param cmt comment with trouble
    * @return valid trouble
    */
-  double dTrouble(Double trouble,String cmt){
-     return ec.doubleTrouble(trouble,cmt);
+  double dTrouble(Double trouble, String cmt) {
+    return ec.doubleTrouble(trouble, cmt);
   }
-  
-  /** test value for illegal double value using E.dTrouble
-   * issue error if E.debugDouble
-   * 
-   * @param trouble  value to be tested if E.debugDouble
-   * 
+
+  /**
+   * test value for illegal double value using E.dTrouble issue error if
+   * E.debugDouble
+   *
+   * @param trouble value to be tested if E.debugDouble
+   *
    * @return valid trouble
    */
-  double doubleTrouble(Double trouble,String cmt){
- return ec.doubleTrouble(trouble,cmt);
-    }
+  double doubleTrouble(Double trouble, String cmt) {
+    return ec.doubleTrouble(trouble, cmt);
+  }
 
   /**
    * return value ix of this
@@ -204,24 +210,31 @@ public class ARow {
       fill();
     }
     assert ix > -1 && ix < E.LSECS : "ix value=" + ix + " out of range";
-    if(E.debugDouble){
-    return doubleTrouble(values[ix]);
-    } else {
-     return values[ix]; 
+    if (E.debugDouble) {
+      return doubleTrouble(values[ix]);
+    }
+    else {
+      return values[ix];
     }
   }
-  /** return the values array
-   * 
+
+  /**
+   * return the values array
+   *
    * @return values array
    */
-  double[] getValues(){ return values; }
-  
-  
-  /** increment setCnt by one
-   * 
+  double[] getValues() {
+    return values;
+  }
+
+  /**
+   * increment setCnt by one
+   *
    * @return setCnt++
    */
-  int addCnt() { return setCnt++; }
+  int addCnt() {
+    return setCnt++;
+  }
 
   /**
    * zero values of this
@@ -238,9 +251,10 @@ public class ARow {
     }
     return this;
   }
-  
-   /** get the count of positive sectors
-   * 
+
+  /**
+   * get the count of positive sectors
+   *
    * @return count of positive sectors
    */
   int getPlusCount() {
@@ -249,9 +263,10 @@ public class ARow {
     }
     return plusCnt;
   }
-  
-   /** get the count of negative sectors
-   * 
+
+  /**
+   * get the count of negative sectors
+   *
    * @return count of negative sectors
    */
   int getNegCount() {
@@ -260,10 +275,11 @@ public class ARow {
     }
     return negCnt;
   }
-  
-   /** get the sum of positive sectors
-   * 
-   * @return the positive sum 
+
+  /**
+   * get the sum of positive sectors
+   *
+   * @return the positive sum
    */
   double getPlusSum() {
     if (setCnt != savCnt) {
@@ -271,9 +287,10 @@ public class ARow {
     }
     return plusSum;
   }
-  
-   /** get the sum of negative sectors
-   * 
+
+  /**
+   * get the sum of negative sectors
+   *
    * @return the sum of negative sectors
    */
   double getNegSum() {
@@ -295,31 +312,33 @@ public class ARow {
       fill();
     }
     setCnt++;
-    if(E.debugDouble){
-    values[ix] = doubleTrouble(val);
-    } else {
+    if (E.debugDouble) {
+      values[ix] = doubleTrouble(val);
+    }
+    else {
       values[ix] = val;
     }
     return val;
   }
-  
-   /**
+
+  /**
    * second set a new value to ARow using double test
    *
    * @param ix index of value to set
    * @param val value to set
    * @param titl = unused titl of calling A6Rowa
-   * @param m = unused which row this is 
+   * @param m = unused which row this is
    * @return val
    */
-  public double set2(int ix, double val,String titl,int m) {
+  public double set2(int ix, double val, String titl, int m) {
     if (values == null) {
       fill();
     }
     setCnt++;
-    if(E.debugDouble){
-    values[ix] = doubleTrouble(val);
-    } else {
+    if (E.debugDouble) {
+      values[ix] = doubleTrouble(val);
+    }
+    else {
       values[ix] = val;
     }
     return val;
@@ -338,10 +357,11 @@ public class ARow {
       fill();
     }
     setCnt++;
-    if(E.debugDouble){
-    values[ix] = doubleTrouble(val);
-    } else {
-    values[ix] = val;
+    if (E.debugDouble) {
+      values[ix] = doubleTrouble(val);
+    }
+    else {
+      values[ix] = val;
     }
     return val;
   }
@@ -375,9 +395,10 @@ public class ARow {
   ARow set(ARow A, ARow B, ARow C, ARow D) {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
-      if(E.debugDouble){
-       set(i, doubleTrouble(A.get(i)) + doubleTrouble(B.get(i)) + doubleTrouble(C.get(i)) + doubleTrouble(D.get(i)));
-    } else {
+      if (E.debugDouble) {
+        set(i, doubleTrouble(A.get(i)) + doubleTrouble(B.get(i)) + doubleTrouble(C.get(i)) + doubleTrouble(D.get(i)));
+      }
+      else {
         set(i, A.get(i) + B.get(i) + C.get(i) + D.get(i));
       }
     }
@@ -396,15 +417,16 @@ public class ARow {
     double aa, bb, cc;
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
-      if(E.debugDouble){
-      aa = doubleTrouble(A.get(i));
-      bb = doubleTrouble(B.get(i));
-      cc = doubleTrouble(C.get(i));
-      }else {
-       aa = A.get(i);
-      bb = B.get(i);
-      cc = C.get(i);       
-              }
+      if (E.debugDouble) {
+        aa = doubleTrouble(A.get(i));
+        bb = doubleTrouble(B.get(i));
+        cc = doubleTrouble(C.get(i));
+      }
+      else {
+        aa = A.get(i);
+        bb = B.get(i);
+        cc = C.get(i);
+      }
       set(i, aa + bb + cc);
     }
     return this;
@@ -434,9 +456,10 @@ public class ARow {
   ARow set(ARow A, double v) {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
-      if(E.debugDouble){
-      set(i, doubleTrouble(A.get(i) + v));
-      } else {
+      if (E.debugDouble) {
+        set(i, doubleTrouble(A.get(i) + v));
+      }
+      else {
         set(i, A.get(i) + v);
       }
     }
@@ -444,7 +467,7 @@ public class ARow {
   }
 
   /**
-   * set ARow to A, copying  A  to itself
+   * set ARow to A, copying A to itself
    *
    * @param A an ARow
    * @return the save ARow with values from A
@@ -454,36 +477,38 @@ public class ARow {
     double d;
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
-      if(E.debugDouble){
-      d = doubleTrouble(A.get(i));
-      } else {
+      if (E.debugDouble) {
+        d = doubleTrouble(A.get(i));
+      }
+      else {
         d = A.get(i);
       }
       set(i, d);
     }
     return this;
   }
-  
+
   /**
-   * set ARow to A, copying  A testing a set in A6Rowa
+   * set ARow to A, copying A testing a set in A6Rowa
    *
    * @param A ARow to doubleTrouble copy into the calling object row
-   * @param titl  ignore title of the A6Rowa 
-   * @param m     ignore m row in A6Rowa used for this set 
+   * @param titl ignore title of the A6Rowa
+   * @param m ignore m row in A6Rowa used for this set
    * @return this
    */
-  ARow set2(ARow A,String titl,int m) {
+  ARow set2(ARow A, String titl, int m) {
     assert A != null : "row to set is null";
-   // E.myTest(A == null, "input to set is null");
+    // E.myTest(A == null, "input to set is null");
     double d;
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
-      if(E.debugDouble){
-      d = doubleTrouble(A.get(i));
-      } else {
+      if (E.debugDouble) {
+        d = doubleTrouble(A.get(i));
+      }
+      else {
         d = A.get(i);
       }
-      set(i, d,titl);
+      set(i, d, titl);
     }
     return this;
   }
@@ -505,13 +530,14 @@ public class ARow {
     }
     return ret;
   }
-  
-  /** make a new copy of ARow with new references and the old values
-   * 
+
+  /**
+   * make a new copy of ARow with new references and the old values
+   *
    * @param newEM the new EM for this copy
    * @return the new ARow with old values and new references
    */
-  ARow newCopy(EM newEM){
+  ARow newCopy(EM newEM) {
     ARow ret = new ARow(ec);
     double d;
     for (int i = 0; i < E.lsecs; i++) {
@@ -519,17 +545,17 @@ public class ARow {
       ret.set(i, d);
       ret.ix[i] = ix[i];
     }
-    
-  ret.sum = sum;
-  ret.setCnt = setCnt;
-  ret.savCnt = savCnt;
-  ret.eM = newEM;
-  ret.eE = EM.eE;
-  ret.ec = eM.curEcon;
-  ret.as = ec.as;
-  ret.aPre = ec.aPre;
-  ret.hist = ec.getHist(); // the owner will not change
-  return ret;
+
+    ret.sum = sum;
+    ret.setCnt = setCnt;
+    ret.savCnt = savCnt;
+    ret.eM = newEM;
+    ret.eE = EM.eE;
+    ret.ec = eM.curEcon;
+    ret.as = ec.as;
+    ret.aPre = ec.aPre;
+    ret.hist = ec.getHist(); // the owner will not change
+    return ret;
   }
 
   /**
@@ -543,7 +569,7 @@ public class ARow {
     }
     return this;
   }
-  
+
   /**
    * flip the signs of all the values in this ARow
    *
@@ -551,9 +577,10 @@ public class ARow {
    */
   ARow flip(ARow prev) {
     for (int n : E.alsecs) {
-      if(E.debugDouble){
-      set(n, doubleTrouble(-prev.get(n)));
-      }else {
+      if (E.debugDouble) {
+        set(n, doubleTrouble(-prev.get(n)));
+      }
+      else {
         set(n, -prev.get(n));
       }
     }
@@ -567,9 +594,10 @@ public class ARow {
    */
   ARow set(double[] A) {
     for (int i = 0; i < E.lsecs; i++) {
-      if(E.debugDouble){
-      set(i, doubleTrouble(A[i]));
-      }else{
+      if (E.debugDouble) {
+        set(i, doubleTrouble(A[i]));
+      }
+      else {
         set(i, A[i]);
       }
     }
@@ -600,71 +628,79 @@ public class ARow {
     }
     return this;
   }
-  
-  /**Get the difference between a and b for each sector
-   * check for possible infinite or nan not a number input
-   * 
+
+  /**
+   * Get the difference between a and b for each sector check for possible
+   * infinite or nan not a number input
+   *
    * @param ec reference to the Econ running this difference
-   * @param a  the initial values
-   * @param b  the subtracted values
+   * @param a the initial values
+   * @param b the subtracted values
    * @return The difference a-b for each sector of a and b
    */
-  ARow getAsubB(Econ ec,ARow a, ARow b) {
+  ARow getAsubB(Econ ec, ARow a, ARow b) {
     ARow ret = new ARow(ec);
-    for(int ix=0; ix < E.LSECS; ix++){
-      ret.set(ix,doubleTrouble(a.get(ix)) - doubleTrouble(b.get(ix)));
+    for (int ix = 0; ix < E.LSECS; ix++) {
+      ret.set(ix, doubleTrouble(a.get(ix)) - doubleTrouble(b.get(ix)));
     }
     return ret;
-    }
-  
-  /**Get the difference between a and b for each sector
-   * check for possible infinite or nan not a number input
-   * 
-   * @param a  the initial values
-   * @param b  the subtracted values
+  }
+
+  /**
+   * Get the difference between a and b for each sector check for possible
+   * infinite or nan not a number input
+   *
+   * @param a the initial values
+   * @param b the subtracted values
    * @return The difference a-b for each sector of a and b
    */
   ARow getAsubB(ARow a, ARow b) {
     ARow ret = new ARow(a.getEc());
-    for(int ix=0; ix < E.LSECS; ix++){
-      ret.set(ix,doubleTrouble(a.get(ix)) - doubleTrouble(b.get(ix)));
+    for (int ix = 0; ix < E.LSECS; ix++) {
+      ret.set(ix, doubleTrouble(a.get(ix)) - doubleTrouble(b.get(ix)));
     }
     return ret;
-    }
-  
-  /**Get the difference between a and v for each sector
-   * check for possible infinite or nan: not a number input
-   * 
-   * @param a  the initial values
-   * @param v  the subtracted value
-   * @return The difference a-v for each sector of a 
+  }
+
+  /**
+   * Get the difference between a and v for each sector check for possible
+   * infinite or nan: not a number input
+   *
+   * @param a the initial values
+   * @param v the subtracted value
+   * @return The difference a-v for each sector of a
    */
   ARow getAsubV(ARow a, double v) {
     ARow ret = new ARow(a.getEc());
     doubleTrouble(v);
-    for(int ix=0; ix < E.LSECS; ix++){
-      ret.set(ix,doubleTrouble(a.get(ix)) - v);
+    for (int ix = 0; ix < E.LSECS; ix++) {
+      ret.set(ix, doubleTrouble(a.get(ix)) - v);
     }
     return ret;
-    }
-  
-  /** get the recorded Econ reference
-   * 
+  }
+
+  /**
+   * get the recorded Econ reference
+   *
    * @return recorded Econ reference
    */
-  Econ getEc(){ return ec;}
-  
-  /** return the value of setCnt
-   * 
+  Econ getEc() {
+    return ec;
+  }
+
+  /**
+   * return the value of setCnt
+   *
    * @return setCnt
    */
-  int getSetCnt(){ return setCnt;}
-
+  int getSetCnt() {
+    return setCnt;
+  }
 
   /**
    * set to A subtract product of B times V use with remnants that are not
-   * directly SubAsset balances but a derived value
-   * check for possible infinite or nan: not a number input
+   * directly SubAsset balances but a derived value check for possible infinite
+   * or nan: not a number input
    *
    * @param A
    * @param B
@@ -679,8 +715,7 @@ public class ARow {
   }
 
   /**
-   * set (A-B)/C
-   * check for possible infinite or nan: not a number input
+   * set (A-B)/C check for possible infinite or nan: not a number input
    *
    * @param A
    * @param B
@@ -695,8 +730,7 @@ public class ARow {
   }
 
   /**
-   * set sum A + (B * V)
-   * check for possible infinite or nan: not a number input
+   * set sum A + (B * V) check for possible infinite or nan: not a number input
    *
    * @param A
    * @param B
@@ -711,8 +745,8 @@ public class ARow {
   }
 
   /**
-   * subtract each A*V from this
-   * check for possible infinite or nan: not a number input
+   * subtract each A*V from this check for possible infinite or nan: not a
+   * number input
    *
    * @param A
    * @param V
@@ -727,8 +761,7 @@ public class ARow {
   }
 
   /**
-   * set instance sub B
-   * check for possible infinite or nan: not a number input
+   * set instance sub B check for possible infinite or nan: not a number input
    *
    * @param B
    * @return each this-B
@@ -799,9 +832,8 @@ public class ARow {
   }
 
   /**
-   * Set A * B / C
-   *check for possible infinite or nan: not a number input
-   * 
+   * Set A * B / C check for possible infinite or nan: not a number input
+   *
    * @param A
    * @param B
    * @param C
@@ -855,7 +887,7 @@ public class ARow {
   ARow multBdivbyC(ARow B, ARow C) {
     ARow tmp = new ARow(ec);
     for (int m : E.alsecs) {
-      Double bt = doubleTrouble(C.get(m)) != 0.0? B.get(m) / C.get(m) : 0.0;
+      Double bt = doubleTrouble(C.get(m)) != 0.0 ? B.get(m) / C.get(m) : 0.0;
       double bc = bt.isInfinite() || bt.isNaN() ? 0 : bt;
       tmp.set(m, doubleTrouble(get(m)) * bc);
     }
@@ -883,7 +915,7 @@ public class ARow {
    * @param V double
    */
   ARow setAmultV(ARow A, double V) {
-    for (int secIx:E.ASECS) {
+    for (int secIx : E.ASECS) {
       set(secIx, A.get(secIx) * V);
     }
     return this;
@@ -977,20 +1009,23 @@ public class ARow {
     set(i, get(i) - V);
   }
 
-  
-  /** make sure all values are slightly more than zero
-   * set only values < UNZERO to UNZERO
-   * 
+  /**
+   * make sure all values are slightly more than zero set only values < UNZERO
+   * to UNZERO
+   *
    * @param tit row title for the E.sysmsg about unzeroing
    * @return the unzero'd ARow
    */
-  ARow unzero(String tit){
-    for(int n=0;n<E.LSECS;n++){
-      if(get(n) < E.UNZERO){set(n,E.UNZERO);
-      //E.sysmsg("unzeroed %s %d",tit,n);
-    }}
+  ARow unzero(String tit) {
+    for (int n = 0; n < E.LSECS; n++) {
+      if (get(n) < E.UNZERO) {
+        set(n, E.UNZERO);
+        //E.sysmsg("unzeroed %s %d",tit,n);
+      }
+    }
     return this;
   }
+
   /**
    * set to ARow A divided by corresponding entry in ARow B
    *
@@ -1001,15 +1036,14 @@ public class ARow {
   ARow setAdivbyB(ARow A, ARow B) {
     for (int m = 0; m < E.lsecs; m++) {
       Double at = A.get(m) / B.get(m);
-      double ab = at.isInfinite() || at.isNaN() ? 0 : at < E.UNZERO? E.INVZERO:at;
+      double ab = at.isInfinite() || at.isNaN() ? 0 : at < E.UNZERO ? E.INVZERO : at;
       set(m, ab);
     }
     return this;
   }
 
   /**
-   * make copy of this/B
-   * illegal numbers return a 0. value
+   * make copy of this/B illegal numbers return a 0. value
    *
    * @param B
    * @return tmp this unchanged
@@ -1018,31 +1052,32 @@ public class ARow {
     ARow tmp = new ARow(ec);
     for (int m = 0; m < E.lsecs; m++) {
       Double bt = get(m) / B.get(m);
-      double bb = bt.isInfinite() || bt.isNaN() ? 0 : bt < E.UNZERO? E.INVZERO:bt;
+      double bb = bt.isInfinite() || bt.isNaN() ? 0 : bt < E.UNZERO ? E.INVZERO : bt;
       tmp.set(bb);
     }
     return tmp;
   }
-/** make copy of A divided by double v
- *  illegal numbers return a 0. value
- * 
- * @param A  input ARow
- * @param v  double to divide A
- * @return each value of A divided by v
- */
+
+  /**
+   * make copy of A divided by double v illegal numbers return a 0. value
+   *
+   * @param A input ARow
+   * @param v double to divide A
+   * @return each value of A divided by v
+   */
   ARow setAdivbyV(ARow A, double v) {
     ARow tmp = new ARow(ec); // uses ec of this
     for (int m = 0; m < E.lsecs; m++) {
       Double at = A.get(m) / v;
-      double av = at.isInfinite() || at.isNaN() ? 0 :  at < E.UNZERO? E.INVZERO:at;
+      double av = at.isInfinite() || at.isNaN() ? 0 : at < E.UNZERO ? E.INVZERO : at;
       tmp.set(m, av);
     }
     return tmp;
   }
 
-  /** divide each value of this by double v
-   *  illegal numbers return a 0. value
-   * 
+  /**
+   * divide each value of this by double v illegal numbers return a 0. value
+   *
    * @param v divisor of this
    * @return copy of this / v
    */
@@ -1050,7 +1085,7 @@ public class ARow {
     ARow tmp = new ARow(ec);
     for (int m = 0; m < E.lsecs; m++) {
       Double at = get(m) / v;
-      double av = at.isInfinite() || at.isNaN() ? 0 :   at < E.UNZERO? E.INVZERO:at;
+      double av = at.isInfinite() || at.isNaN() ? 0 : at < E.UNZERO ? E.INVZERO : at;
       tmp.set(m, av);
     }
     return tmp;
@@ -1068,7 +1103,7 @@ public class ARow {
     if (T) {
       for (int m = 0; m < E.lsecs; m++) {
         Double at = A.get(m) / B.get(m);
-        double av = at.isInfinite() || at.isNaN() ? 0. :   at < E.UNZERO? E.INVZERO:at;
+        double av = at.isInfinite() || at.isNaN() ? 0. : at < E.UNZERO ? E.INVZERO : at;
         set(m, av);
       }
     }
@@ -1079,7 +1114,7 @@ public class ARow {
     if (T) {
       for (int m = 0; m < E.lsecs; m++) {
         Double at = get(m) / B.get(m);
-        double av = at.isInfinite() || at.isNaN() ? 0. :   at < E.UNZERO? E.INVZERO:at;
+        double av = at.isInfinite() || at.isNaN() ? 0. : at < E.UNZERO ? E.INVZERO : at;
         set(m, av);
       }
     }
@@ -1090,7 +1125,7 @@ public class ARow {
     if (T) {
       for (int m = 0; m < E.lsecs; m++) {
         Double at = get(m) / V;
-        double av = at.isInfinite() || at.isNaN() ? 0. :  at < E.UNZERO? E.INVZERO:at;
+        double av = at.isInfinite() || at.isNaN() ? 0. : at < E.UNZERO ? E.INVZERO : at;
         set(m, av);
       }
     }
@@ -1108,7 +1143,7 @@ public class ARow {
     double t;
     for (int m = 0; m < E.lsecs; m++) {
       Double at = B.get(m) / V;
-      double av = at.isInfinite() || at.isNaN() ? 0. :  at < E.UNZERO? E.INVZERO:at;
+      double av = at.isInfinite() || at.isNaN() ? 0. : at < E.UNZERO ? E.INVZERO : at;
       set(m, Math.min(A.get(m), av));
     }
     return this;
@@ -1130,7 +1165,7 @@ public class ARow {
    * @return amount available for swap, negative cannot swap
    */
   ARow setAvailableSwapxx(double srcFrac, double availFrac, double maxMove, ARow source, ARow resource, ARow staff, double adiv, double bdiv) {
-    double bal, res, stf, maxM,availSrc,resrv;
+    double bal, res, stf, maxM, availSrc, resrv;
     maxM = -maxMove;  // move * ..sum() up to caller
     int lev = History.aux5Info;// can change to .debuggingInformation
     if (lev < History.aux5Info) {
@@ -1141,7 +1176,7 @@ public class ARow {
     lev = History.debuggingMinor11;
     for (int n : E.alsecs) {
       bal = -source.get(n);
-      resrv= (-resource.get(n)  - staff.get(n))*srcFrac;
+      resrv = (-resource.get(n) - staff.get(n)) * srcFrac;
       availSrc = bal - resrv;
       res = resource.get(n) / adiv;
       stf = -staff.get(n) * availFrac / bdiv;
@@ -1153,7 +1188,7 @@ public class ARow {
     return this;
   }
 
-   /**
+  /**
    *  * derive an ARow of the amounts available to swap, using only resource and
    * staff subAsset and the corresponding swapCost for each SubAsset, used for
    * INCR and DECR swaps
@@ -1169,7 +1204,7 @@ public class ARow {
    * @return amount available for swap, negative cannot swap
    */
   ARow setAvailableSwap2(double srcFrac, double availFrac, double maxMove, ARow source, ARow resource, ARow staff, double adiv, double bdiv) {
-    double bal, res, stf, maxM,availSrc,resrv;
+    double bal, res, stf, maxM, availSrc, resrv;
     maxM = -maxMove;  // move * ..sum() up to caller
     int lev = History.aux5Info;// can change to .debuggingInformation
     if (lev < History.aux5Info) {
@@ -1180,8 +1215,8 @@ public class ARow {
     lev = History.debuggingMinor11;
     for (int n : E.alsecs) {
       bal = source.get(n);
-      availSrc = bal*srcFrac;
-      res = resource.get(n) *availFrac / adiv;
+      availSrc = bal * srcFrac;
+      res = resource.get(n) * availFrac / adiv;
       stf = staff.get(n) * availFrac / bdiv;
       set(n, Math.min(maxM, Math.min(availSrc, Math.min(res, stf))));
       if (n == 0 || n == 2) {
@@ -1190,14 +1225,13 @@ public class ARow {
     }
     return this;
   }
-  
+
   /**
    * derive an ARow of the amounts available to swap increment, This uses
-   * balances instead of needs
-   * aSrc,aStf,aRes are variables with the frac applied
-   * fStf,fRes are aStf,aRes divided by (1. +resDiv),(1.+stfDiv)
+   * balances instead of needs aSrc,aStf,aRes are variables with the frac
+   * applied fStf,fRes are aStf,aRes divided by (1. +resDiv),(1.+stfDiv)
    *
-   * @param srcFrac fraction of source  available for this swap
+   * @param srcFrac fraction of source available for this swap
    * @param otherFrac fraction of resource and of staff available for swapCost
    * @param maxMov max move allowed
    * @param source source for the swap alternately r or s to set a limit
@@ -1208,42 +1242,40 @@ public class ARow {
    * @return this: amount available for swap, costs and maxMove used
    */
   ARow setAvailableSwap(double srcFrac, double otherFrac, double maxMov, ARow source, ARow resource, ARow staff, double resDiv, double stfDiv) {
-    double src, res, stf, mMov,aRes,aStf,aSrc,fRes,fStf,val;
+    double src, res, stf, mMov, aRes, aStf, aSrc, fRes, fStf, val;
     int lev = History.aux5Info;// can change to .debuggingInformation
     if (lev < History.aux5Info) {
       hist.add(new History("s@", lev, "i source", source));
       hist.add(new History("s@", lev, "i resource", resource));
       hist.add(new History("s@", lev, "i staff", staff));
     }
-     for (int n : E.alsecs) {
-      double sBal = source.get(n)* srcFrac;
-      res = resource.get(n)*otherFrac;
-      stf = staff.get(n)* otherFrac;
-     
-    //  aSrc = src=sBal - srcResrv;
-     // aStf = oBal*otherFrac;
+    for (int n : E.alsecs) {
+      double sBal = source.get(n) * srcFrac;
+      res = resource.get(n) * otherFrac;
+      stf = staff.get(n) * otherFrac;
+
+      //  aSrc = src=sBal - srcResrv;
+      // aStf = oBal*otherFrac;
       // calculate amount of move possible with the given cost and frac
       //fRes = (aRes=(res=resource.get(n)) * otherFrac) /(1.+ resDiv); // r to r or s to s rcost
-      fRes = res /resDiv; // r to r or s to s rcost
-     // fStf = (aStf=(stf=staff.get(n)) * otherFrac) /(1. + stfDiv); //  s avail / s cost divisor
+      fRes = res / resDiv; // r to r or s to s rcost
+      // fStf = (aStf=(stf=staff.get(n)) * otherFrac) /(1. + stfDiv); //  s avail / s cost divisor
       fStf = stf / stfDiv; //  s avail / s cost divisor
-      set(n,(val= Math.min(maxMov, Math.min(sBal, Math.min(fRes, fStf)))));
+      set(n, (val = Math.min(maxMov, Math.min(sBal, Math.min(fRes, fStf)))));
       // list elements 0 and 2 to see how this worked
       if (n == 0 || n == 2) {
-        hist.add(new History("swp", History.debuggingMinor11, " incWork n=" + n, "sBal" + df(sBal), "bf" + df(srcFrac), "src*" + df(source.get(n)), "fRes" + df(fRes),  "rDiv=" + df(resDiv), "fStf" + df(fStf), "sDiv=" + df(stfDiv), "maxM=" + df(maxMov), "val=" + df(val),"<<<<<<<<<<<<"));
+        hist.add(new History("swp", History.debuggingMinor11, " incWork n=" + n, "sBal" + df(sBal), "bf" + df(srcFrac), "src*" + df(source.get(n)), "fRes" + df(fRes), "rDiv=" + df(resDiv), "fStf" + df(fStf), "sDiv=" + df(stfDiv), "maxM=" + df(maxMov), "val=" + df(val), "<<<<<<<<<<<<"));
       }
     }
     return this;
   }
- 
 
   /**
    * derive an ARow of the amounts available to swap increment, This uses
-   * balances instead of needs
-   * aSrc,aStf,aRes are variables with the frac applied
-   * fStf,fRes are aStf,aRes divided by (1. +resDiv),(1.+stfDiv)
+   * balances instead of needs aSrc,aStf,aRes are variables with the frac
+   * applied fStf,fRes are aStf,aRes divided by (1. +resDiv),(1.+stfDiv)
    *
-   * @param srcFrac fraction of source  available for this swap
+   * @param srcFrac fraction of source available for this swap
    * @param otherFrac fraction of resource and of staff available for swapCost
    * @param maxMov max move allowed
    * @param source source for the swap alternately r or s to set a limit
@@ -1254,7 +1286,7 @@ public class ARow {
    * @return this: amount available for swap, costs and maxMove used
    */
   ARow setAvailableSwapi(double srcFrac, double otherFrac, double maxMov, ARow source, ARow resource, ARow staff, double resDiv, double stfDiv) {
-    double src, res, stf, mMov,aRes,aStf,aSrc,fRes,fStf,val;
+    double src, res, stf, mMov, aRes, aStf, aSrc, fRes, fStf, val;
     int lev = History.aux5Info;// can change to .debuggingInformation
     if (lev < History.aux5Info) {
       hist.add(new History("s@", lev, "i source", source));
@@ -1263,33 +1295,33 @@ public class ARow {
     }
 
     for (int n : E.alsecs) {
-      double sBal = source.get(n)* srcFrac;
-      res = resource.get(n)*otherFrac;
-      stf = staff.get(n)* otherFrac;
-     
-    //  aSrc = src=sBal - srcResrv;
-     // aStf = oBal*otherFrac;
+      double sBal = source.get(n) * srcFrac;
+      res = resource.get(n) * otherFrac;
+      stf = staff.get(n) * otherFrac;
+
+      //  aSrc = src=sBal - srcResrv;
+      // aStf = oBal*otherFrac;
       // calculate amount of move possible with the given cost and frac
       //fRes = (aRes=(res=resource.get(n)) * otherFrac) /(1.+ resDiv); // r to r or s to s rcost
-      fRes = res /resDiv; // r to r or s to s rcost
-     // fStf = (aStf=(stf=staff.get(n)) * otherFrac) /(1. + stfDiv); //  s avail / s cost divisor
+      fRes = res / resDiv; // r to r or s to s rcost
+      // fStf = (aStf=(stf=staff.get(n)) * otherFrac) /(1. + stfDiv); //  s avail / s cost divisor
       fStf = stf / stfDiv; //  s avail / s cost divisor
-      set(n,(val= Math.min(maxMov, Math.min(sBal, Math.min(fRes, fStf)))));
+      set(n, (val = Math.min(maxMov, Math.min(sBal, Math.min(fRes, fStf)))));
       // list elements 0 and 2 to see how this worked
       if (n == 0 || n == 2) {
-        hist.add(new History("swp", History.debuggingMinor11, " incWork n=" + n, "sBal" + df(sBal), "bf" + df(srcFrac), "src*" + df(source.get(n)), "fRes" + df(fRes),  "rDiv=" + df(resDiv), "fStf" + df(fStf), "sDiv=" + df(stfDiv), "maxM=" + df(maxMov), "val=" + df(val),"<<<<<<<<<<<<"));
+        hist.add(new History("swp", History.debuggingMinor11, " incWork n=" + n, "sBal" + df(sBal), "bf" + df(srcFrac), "src*" + df(source.get(n)), "fRes" + df(fRes), "rDiv=" + df(resDiv), "fStf" + df(fStf), "sDiv=" + df(stfDiv), "maxM=" + df(maxMov), "val=" + df(val), "<<<<<<<<<<<<"));
       }
     }
     return this;
   }
- 
+
   /**
    * OBSOLETE derive an ARow of the amounts available to swap, This uses
-   * balances, mtgNeeds6 and mtggNeeds6 are extra limits, 
-   * dependent on whether the minimum balance in rawProspects2 is too low.
-   * 
-   * aSrc,aStf,aRes are variables with the frac applied
-   * fStf,fRes are aStf,aRes divided by (1. +resDiv),(1.+stfDiv)
+   * balances, mtgNeeds6 and mtggNeeds6 are extra limits, dependent on whether
+   * the minimum balance in rawProspects2 is too low.
+   *
+   * aSrc,aStf,aRes are variables with the frac applied fStf,fRes are aStf,aRes
+   * divided by (1. +resDiv),(1.+stfDiv)
    *
    * @param srcFrac fraction of source source available for this swap
    * @param otherFrac fraction of resource and staff available for swapCost
@@ -1300,39 +1332,38 @@ public class ARow {
    * @param resDiv divides resource to find a max for swap
    * @param stfDiv divides staff to find a max for swap
    * @param emergMode if true, only mtgNeeds supply a max filter
-   * @param mtggNeed the goal need 
+   * @param mtggNeed the goal need
    * @param mtgNeed the need without goals for the partner as destination
-   * 
-   * @return  max amount available for swap, costs and move used
+   *
+   * @return max amount available for swap, costs and move used
    */
-  ARow setAvailableSwapi(double srcFrac, double otherFrac, double maxMov, ARow source, ARow resource, ARow staff, double resDiv, double stfDiv, boolean emergMode, ARow mtggNeed,ARow mtgNeed) {
-    double src, res, stf, mMov,aMov,aRes,aStf,aSrc,fRes,fStf,val,gNeed=0.,ggNeed=0.,aNeed;
+  ARow setAvailableSwapi(double srcFrac, double otherFrac, double maxMov, ARow source, ARow resource, ARow staff, double resDiv, double stfDiv, boolean emergMode, ARow mtggNeed, ARow mtgNeed) {
+    double src, res, stf, mMov, aMov, aRes, aStf, aSrc, fRes, fStf, val, gNeed = 0., ggNeed = 0., aNeed;
     mMov = maxMov;  // max Move
     int lev = History.aux5Info;// can change to .debuggingInformation
     if (lev < History.aux5Info) {
       hist.add(new History("s@", lev, "i source", source));
       hist.add(new History("s@", lev, "i resource", resource));
       hist.add(new History("s@", lev, "i staff", staff));
-      hist.add(new History("s@",lev,"imtggNeed",mtggNeed));
-      hist.add(new History("s@",lev,"imtgNeed",mtgNeed));
+      hist.add(new History("s@", lev, "imtggNeed", mtggNeed));
+      hist.add(new History("s@", lev, "imtgNeed", mtgNeed));
     }
 
     for (int n : E.alsecs) {
-      aSrc = (src=source.get(n)) * srcFrac;
+      aSrc = (src = source.get(n)) * srcFrac;
       // calculate amount of move possible with the given cost and frac
-      fRes = (aRes=(res=resource.get(n)) * otherFrac) /(1.+ resDiv); // r to r or s to s rcost
-      fStf = (aStf=(stf=staff.get(n)) * otherFrac) /(1. + stfDiv); //  s avail / s cost divisor
+      fRes = (aRes = (res = resource.get(n)) * otherFrac) / (1. + resDiv); // r to r or s to s rcost
+      fStf = (aStf = (stf = staff.get(n)) * otherFrac) / (1. + stfDiv); //  s avail / s cost divisor
       // make mtgNeed and mtggNeed current and goal need the partner destination
-      aMov = Math.max(0.,Math.min(mMov,(aNeed=emergMode?(gNeed=mtgNeed.get(n)):(ggNeed =mtggNeed.get(n)))));
-      set(n,(val= Math.min(aMov, Math.min(aSrc, Math.min(fRes, fStf)))));
+      aMov = Math.max(0., Math.min(mMov, (aNeed = emergMode ? (gNeed = mtgNeed.get(n)) : (ggNeed = mtggNeed.get(n)))));
+      set(n, (val = Math.min(aMov, Math.min(aSrc, Math.min(fRes, fStf)))));
       // list elements 0 and 2 to see how this worked
       if (n == 0 || n == 2) {
-        hist.add(new History("h@", History.valuesMinor7 , "avail n=" + n+ "aSrc=" + df(aSrc), "val=" + df(val), "bf" + df(srcFrac), "src*" + df(src), "aRes" + df(aRes),  "rDiv=" + df(resDiv), "aStf" + df(aStf), "sDiv=" + df(stfDiv), "mxm=" + df(mMov),"gnd" + df(gNeed),"ggnd"+df(ggNeed)));
+        hist.add(new History("h@", History.valuesMinor7, "avail n=" + n + "aSrc=" + df(aSrc), "val=" + df(val), "bf" + df(srcFrac), "src*" + df(src), "aRes" + df(aRes), "rDiv=" + df(resDiv), "aStf" + df(aStf), "sDiv=" + df(stfDiv), "mxm=" + df(mMov), "gnd" + df(gNeed), "ggnd" + df(ggNeed)));
       }
     }
     return this;
   }
-
 
   /**
    * derive an ARow of the amounts available to swap, using only a single
@@ -1340,7 +1371,8 @@ public class ARow {
    * used once for resource and once for staff using the higher swapCost for
    * each subAsset
    *
-   * @param srcFrac fraction of source+reserve=balwr source available for this swap
+   * @param srcFrac fraction of source+reserve=balwr source available for this
+   * swap
    * @param availFrac fraction of resource and of staff available for swapCost
    * @param maxMove max move allowed, a fraction * sum above
    * @param source source for the swap alternately rc or sg to set a limit
@@ -1348,25 +1380,25 @@ public class ARow {
    * @param adiv divides subBal to find a max for swap or swap+mov
    * @return positive amount available for swap
    */
-  ARow xsetAvailableSwap(String titl,double srcFrac, double availFrac, double maxMove, ARow source, ARow negAvail, double adiv) {
-    double bal, avail, bAvail, avlF, sumF, v, v2 = -99, av2 = -99, av3 = -99, bal2 = -99, max = -999999.,bal3;
-    double bAvail2=-9999.,avail2= -9999.;
+  ARow xsetAvailableSwap(String titl, double srcFrac, double availFrac, double maxMove, ARow source, ARow negAvail, double adiv) {
+    double bal, avail, bAvail, avlF, sumF, v, v2 = -99, av2 = -99, av3 = -99, bal2 = -99, max = -999999., bal3;
+    double bAvail2 = -9999., avail2 = -9999.;
     int maxIx = -1;
 
-    int lev = History.dl+5;// can change to .debuggingInformation
+    int lev = History.dl + 5;// can change to .debuggingInformation
     if (lev < History.dl) {
-      hist.add(new History("S^", lev, titl+"src", source));
-      hist.add(new History("S^", lev, titl+"-avil", negAvail));
+      hist.add(new History("S^", lev, titl + "src", source));
+      hist.add(new History("S^", lev, titl + "-avil", negAvail));
       //   hist.add(new History("sAv", lev, "e staff", staff));
     }
     lev = History.loopMinorConditionals5;  // print a sample each time
-    for (int n=0;n<E.LSECS;n++) {
+    for (int n = 0; n < E.LSECS; n++) {
       double balS = source.get(n) * srcFrac; // max possible units source of move
       bal2 = source.get(n) * availFrac; // max possible units swap cost
-      bal = Math.min(balS,bal2); // min of both aource availables
+      bal = Math.min(balS, bal2); // min of both aource availables
       bAvail = bal / adiv;  // mov by the balances
       avail = (av3 = -negAvail.get(n) * availFrac) / adiv;  // available to mov
-      set(n, Math.max(0.,v = Math.min(maxMove, Math.min(avail, bAvail))));
+      set(n, Math.max(0., v = Math.min(maxMove, Math.min(avail, bAvail))));
       if (v > max) { // save the max move for this row
         maxIx = n;
         max = v;
@@ -1376,14 +1408,12 @@ public class ARow {
         bal2 = bal;
         bAvail2 = bAvail;
         avail2 = avail;
-        }
+      }
     }
- if (History.dl > lev) {
-      hist.add(new History("#*", lev,titl + " v=" , df(v2), "src" + df(source.get(2)), "*srF" + df(srcFrac), "=" + df(bal2), "sAvl" + df(bAvail2),"av2" + df(-negAvail.get(2)), "*af" + df(availFrac), "=" + df(-negAvail.get(2)*availFrac), "div=" + df(adiv),"=" + df(avail2), "maxM=" + df(maxMove), "maxV" + maxIx + "=" + df(max), "<<<<<<<<<<<<<<<"));
+    if (History.dl > lev) {
+      hist.add(new History("#*", lev, titl + " v=", df(v2), "src" + df(source.get(2)), "*srF" + df(srcFrac), "=" + df(bal2), "sAvl" + df(bAvail2), "av2" + df(-negAvail.get(2)), "*af" + df(availFrac), "=" + df(-negAvail.get(2) * availFrac), "div=" + df(adiv), "=" + df(avail2), "maxM=" + df(maxMove), "maxV" + maxIx + "=" + df(max), "<<<<<<<<<<<<<<<"));
     }
-   
- 
-   
+
     return this;
   }
 
@@ -1695,22 +1725,24 @@ public class ARow {
     }
     double r;
     setCnt++;
-    if(E.debugDouble){
-    r = 
-    values[ix] = 
-    doubleTrouble(
-            doubleTrouble(v)+ 
-                    doubleTrouble(values[ix]));
-    }else {
-    r = values[ix] += v;
+    if (E.debugDouble) {
+      r
+              = values[ix]
+              = doubleTrouble(
+                      doubleTrouble(v)
+                      + doubleTrouble(values[ix]));
+    }
+    else {
+      r = values[ix] += v;
     }
     return r;
   }
 
   /**
-   * add A to ARow first zero ARow
+   * add A to ARow
    *
    * @param A an ARow
+   * @return revised this ARow
    */
   ARow add(ARow A) {
     for (int i = 0; i < E.lsecs; i++) {
@@ -1735,7 +1767,7 @@ public class ARow {
 
   ARow setAdd(ARow A, ARow B) {
     for (int i = 0; i < E.lsecs; i++) {
-      set(i,A.get(i) + B.get(i));
+      set(i, A.get(i) + B.get(i));
     }
     return this;
   }
@@ -1905,13 +1937,11 @@ public class ARow {
     }
     return this;
   }
-  
-  
 
   /**
    * set each sector of this between min and max inclusive
    *
-   * @param min  mins for each financial sector
+   * @param min mins for each financial sector
    * @param max max for all financial sectors
    * @return each min <= a <= max
    */
@@ -1930,8 +1960,8 @@ public class ARow {
    * tmp = min <= tmp <= max @
    *
    *
-   * @param min 
-   * @param max 
+   * @param min
+   * @param max
    * @return tmp
    *
    */
@@ -1973,42 +2003,46 @@ public class ARow {
    */
   ARow makeOrderIx() {
     if (setCnt != savCnt) {
-    if (values == null) {
-      fill();
-    }
-    double[] min = new double[E.lsecs];
-    // int[] maxIx = new int[4];
-    int[] minIx = new int[E.lsecs];
-    double minC, minO;
-    int minOIx, minCIx;
-    negSum = plusSum = sum = 0.;
-    negCnt = plusCnt = 0;
-    negMin = 9999999999.;
-    plusMax = -9999999999.;
-    // sort entries min to max, set minIx points to entry in original array
-    for (int g = 0; g < E.lsecs; g++) {
-      sum += minC = values[g];
-      if(minC < -0.0){
-        negSum += minC; negCnt++;
-      } else {
-        plusSum += minC; plusCnt++;
+      if (values == null) {
+        fill();
       }
-      minCIx = g;
-      for (int k = 0; k < g; k++) { 
-        if (minC < min[k]) { // currentMin < new entry in min list
-          minO = min[k];
-          minOIx = ix[k];
-          ix[k] = minCIx;
-          minCIx = minOIx;
-          min[k] = minC;
-          minC = minO;
+      double[] min = new double[E.lsecs];
+      // int[] maxIx = new int[4];
+      int[] minIx = new int[E.lsecs];
+      double minC, minO;
+      int minOIx, minCIx;
+      negSum = plusSum = sum = 0.;
+      negCnt = plusCnt = 0;
+      negMin = 9999999999.;
+      plusMax = -9999999999.;
+      // sort entries min to max, set minIx points to entry in original array
+      for (int g = 0; g < E.lsecs; g++) {
+        sum += minC = values[g];
+        if (minC < -0.0) {
+          negSum += minC;
+          negCnt++;
         }
+        else {
+          plusSum += minC;
+          plusCnt++;
+        }
+        minCIx = g;
+        for (int k = 0; k < g; k++) {
+          if (minC < min[k]) { // currentMin < new entry in min list
+            minO = min[k];
+            minOIx = ix[k];
+            ix[k] = minCIx;
+            minCIx = minOIx;
+            min[k] = minC;
+            minC = minO;
+          }
+        }
+        min[g] = minC;
+        ix[g] = minCIx;
       }
-      min[g] = minC;
-      ix[g] = minCIx;
-    }
-    negMin = min[0]; plusMax = min[E.LSECS-1];
-    savCnt = setCnt;
+      negMin = min[0];
+      plusMax = min[E.LSECS - 1];
+      savCnt = setCnt;
     }
     return this;
   }
@@ -2147,10 +2181,11 @@ public class ARow {
     return this;
   }
 
-  /** set ARow instance to the min of two ARows
-   * 
-   * @param A  the first ARow for mins
-   * @param B  the secon Arow for mins
+  /**
+   * set ARow instance to the min of two ARows
+   *
+   * @param A the first ARow for mins
+   * @param B the secon Arow for mins
    * @return this an ARow each element the min of that in the 2 ARows
    */
   public ARow setMin(ARow A, ARow B) {
@@ -2389,8 +2424,9 @@ public class ARow {
     return values[ix[2]];
   }
 
-  /** get the max of this row
-   * 
+  /**
+   * get the max of this row
+   *
    * @return the max value
    */
   double max() {
@@ -2399,17 +2435,18 @@ public class ARow {
     }
     return values[ix[E.lsecs - 1]];
   }
-  
-  /** get the n'th max of this row
-   * 
-   * @param n  the number below the max
+
+  /**
+   * get the n'th max of this row
+   *
+   * @param n the number below the max
    * @return the n'th max value
    */
   double max(int n) {
     if (setCnt != savCnt) {
       makeOrderIx();
     }
-    return values[ix[E.lsecs - 1-n]];
+    return values[ix[E.lsecs - 1 - n]];
   }
 
   /**
@@ -2722,16 +2759,15 @@ public class ARow {
   }
 
   /**
-   * derive a strategic trade value for each of the 7 values in B
-   * turn aLinLow %lt; .5 into 1.0 + aLimLow
-   * turn alimLow %lt; 1.0 into the low limit, aHighLim = 1/aLowLim
-   * The median  min(3)  separates hHlf above med and lHlf at or below
-   * The largest value in B becomes the smallest result
-   * The smailest value in B becomes the largest result
-   * if the initial alimLow was negative, then the results are reversed:
-   * the largest value in B becomes the largest result %lt; aHighLim
-   * the smallest value in B becomes the smallest result %gt; aLowLim
-   * 
+   * derive a strategic trade value for each of the 7 values in B turn aLinLow
+   * %lt; .5 into 1.0 + aLimLow turn alimLow %lt; 1.0 into the low limit,
+   * aHighLim = 1/aLowLim The median min(3) separates hHlf above med and lHlf at
+   * or below The largest value in B becomes the smallest result The smailest
+   * value in B becomes the largest result if the initial alimLow was negative,
+   * then the results are reversed: the largest value in B becomes the largest
+   * result %lt; aHighLim the smallest value in B becomes the smallest result
+   * %gt; aLowLim
+   *
    * @param titla The title for the ARow results
    * @param B the A2Row used as input
    * @param aLimLow either the highest result or its reciprical, negative
@@ -2750,7 +2786,7 @@ public class ARow {
     aLimLow = aLimLow < 0. ? -aLimLow : aLimLow;
     // force the limit > 1.
     aLimLow = aLimLow < .5 ? 1. + aLimLow : aLimLow; // aLimLow > .5
-    double aLimHigh =  (aLimLow < 1.0  ? 1/aLimLow: aLimLow);
+    double aLimHigh = (aLimLow < 1.0 ? 1 / aLimLow : aLimLow);
     aLimLow = aLimLow < 1.0 ? aLimLow : 1.0 / aLimLow; // now aLimLow < 1.
     // results will be in terms of difference from 1.
     double hLimDif = aLimHigh - 1.0;  // upper limit  1.0 + hLimDif
@@ -2758,43 +2794,43 @@ public class ARow {
     // select lower median for recip, higher median for straight from B 
     double median = B.min(3); //median value of B
     double lHlf = median - amin; // size of lower half usually > 0, could be 0
-  // straight if aSign < 0.0
-    double lMult = lHlf < E.PZERO && lHlf > E.NZERO ? 0.0000001 :
-        straight ? lLimDif / lHlf : -hLimDif/ lHlf; // frac of differences
+    // straight if aSign < 0.0
+    double lMult = lHlf < E.PZERO && lHlf > E.NZERO ? 0.0000001
+            : straight ? lLimDif / lHlf : -hLimDif / lHlf; // frac of differences
     // lower limit 1.0 - lLimDif
     double hHlf = amax - median;  //  size  of high half should be >= 0
-    double hMult = hHlf < E.PZERO && hHlf > E.NZERO ? 0.000001: 
-        straight ? hLimDif / hHlf : -lLimDif / hHlf;
+    double hMult = hHlf < E.PZERO && hHlf > E.NZERO ? 0.000001
+            : straight ? hLimDif / hHlf : -lLimDif / hHlf;
     // high limit is 1.0 + hLimDif
-    double tVal = 1., tVal1 = 1., tVal2 = 1., tVal3 = 1.,mult;
+    double tVal = 1., tVal1 = 1., tVal2 = 1., tVal3 = 1., mult;
 
-    ec.hist.add(new History(History.debuggingMinor11, titla + (amax == amin ? " all 1": (!straight  ? "recipricals" : "straight") ),  "Hv" + EM.mf(amax) ,"med=" + EM.mf(median), "Lv" + EM.mf(amin),"hHlf=" + EM.mf(hHlf), "lHlf=" + EM.mf(lHlf), "lMlt=" + EM.mf(lMult), "hMlt=" + EM.mf(hMult), "lims=" + EM.mf(aLimHigh)  ,EM.mf(aLimLow), "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"));
+    ec.hist.add(new History(History.debuggingMinor11, titla + (amax == amin ? " all 1" : (!straight ? "recipricals" : "straight")), "Hv" + EM.mf(amax), "med=" + EM.mf(median), "Lv" + EM.mf(amin), "hHlf=" + EM.mf(hHlf), "lHlf=" + EM.mf(lHlf), "lMlt=" + EM.mf(lMult), "hMlt=" + EM.mf(hMult), "lims=" + EM.mf(aLimHigh), EM.mf(aLimLow), "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"));
 
     // process both Resource & Staff  or cargo & guests
     for (int n : E.ASECS) {
       tVal3 = B.get(n);
       // get dVal distance from average, sign is for reciprical or straight
       tVal2 = (tVal3 - median);
-     // tVal2 = aaSign * tVal3;
+      // tVal2 = aaSign * tVal3;
       //     mVal = aMult * dVal;  // modified distance from center
-     
-        mult = tVal2 <= E.PZERO ? lMult  : hMult;  
-        tVal1 = (tVal2 *mult);  // tVal2 < 0.0 lHlf straight => tVal1 < 0.0, lMult > 0.0
-                                          // tVal2 < 0.0  lHlf !straight => tVal1 > 0.0 ,  lMult < 0.0
-                                          // tval2 > 0.0 hHlf straight => tVal1 > 0.0 , hMult > 0.0
-                                          // tval2 > 0.0 hHlf !straight => tVal1 < 0.0, hMult < 0.0
-       tVal = 1.0 + tVal1; // for lHlf tVal1 < 0.0
-       set(n, tVal);
-        if (History.dl > 4 || hist.size() < 2000) {  // do the one at the bottom
-          // list action for each calculation
-          ec.hist.add(new History(History.debuggingMinor11, "n=" + ec.as.n + " " + titla + n, 
-              "v=" + EM.mf(tVal3), "-med=" + EM.mf(median),"->" + eM.mf(tVal2), "mlt=" + df(mult), 
-              "=" + df(tVal1), "+1=" + df(tVal), (tVal > 1.0? "< " +eM.mf(aLimHigh) : ">" + eM.mf(aLimLow)),  "<<<<<<<<<<<<<<<<<<<<"));
-        }
+
+      mult = tVal2 <= E.PZERO ? lMult : hMult;
+      tVal1 = (tVal2 * mult);  // tVal2 < 0.0 lHlf straight => tVal1 < 0.0, lMult > 0.0
+      // tVal2 < 0.0  lHlf !straight => tVal1 > 0.0 ,  lMult < 0.0
+      // tval2 > 0.0 hHlf straight => tVal1 > 0.0 , hMult > 0.0
+      // tval2 > 0.0 hHlf !straight => tVal1 < 0.0, hMult < 0.0
+      tVal = 1.0 + tVal1; // for lHlf tVal1 < 0.0
+      set(n, tVal);
+      if (History.dl > 4 || hist.size() < 2000) {  // do the one at the bottom
+        // list action for each calculation
+        ec.hist.add(new History(History.debuggingMinor11, "n=" + ec.as.n + " " + titla + n,
+                                "v=" + EM.mf(tVal3), "-med=" + EM.mf(median), "->" + eM.mf(tVal2), "mlt=" + df(mult),
+                                "=" + df(tVal1), "+1=" + df(tVal), (tVal > 1.0 ? "< " + eM.mf(aLimHigh) : ">" + eM.mf(aLimLow)), "<<<<<<<<<<<<<<<<<<<<"));
+      }
     }// for
     return this;
   }
-  
+
   /**
    * softens the call to revalueAtoMinMax by possibly making the distance
    * between max and min smaller. When maxNew &gt minNew than min and max
@@ -2961,18 +2997,20 @@ public class ARow {
     }
     return this;
   }
-/** add value to ix sector of this instance of cargos from ix sector of source
- * 
- * @param ix      index to the sector to be added from source
- * @param mov     the amount to be added
- * @param source  the other cargos as source
- * @return a reference to this instance of cargos
- */
+
+  /**
+   * add value to ix sector of this instance of cargos from ix sector of source
+   *
+   * @param ix index to the sector to be added from source
+   * @param mov the amount to be added
+   * @param source the other cargos as source
+   * @return a reference to this instance of cargos
+   */
   ARow addCargoValue(int ix, double mov, ARow source
   ) {
-    E.myTest(source.get(ix) - mov < E.NZERO,"Error negative sourc resulte%1d %7.2f after source%1d %7.2f -mov %7.2f",ix,source.get(ix)-mov,ix,source.get(ix),mov);
-    
-    E.myTest(this.get(ix) + mov < E.nzero,"error negative result after add mov = %7.2f + this%1d  %7.2f= result%1d %7.2f",mov,ix,get(ix),ix,get(ix)+mov);
+    E.myTest(source.get(ix) - mov < E.NZERO, "Error negative sourc resulte%1d %7.2f after source%1d %7.2f -mov %7.2f", ix, source.get(ix) - mov, ix, source.get(ix), mov);
+
+    E.myTest(this.get(ix) + mov < E.nzero, "error negative result after add mov = %7.2f + this%1d  %7.2f= result%1d %7.2f", mov, ix, get(ix), ix, get(ix) + mov);
     source.add(ix, -mov);
     add(ix, mov);
     return this;
@@ -2987,25 +3025,25 @@ public class ARow {
       double avmov = mov * E.lgrades / (source.get(ix) * (E.lgrades - 5)); // augmented a mov
       double amov = 0;
 
-      int ii,k = 0, kt = 0, kmax = 4 * E.lgrades;
+      int ii, k = 0, kt = 0, kmax = 4 * E.lgrades;
       for (ii = 0; ii < kmax && (remMov > E.pzero); ii++) {
         k = ii % E.lgrades;
-        E.myTest(sGrade[k] < E.NZERO,"Error round %2d, guests grade%2d %7.2f negative",ii,k,sGrade[k]); 
-        
+        E.myTest(sGrade[k] < E.NZERO, "Error round %2d, guests grade%2d %7.2f negative", ii, k, sGrade[k]);
+
         amov = tmov * sGrade[k];
         amov = Math.max(avmov, amov); // increase a small tail
         amov = Math.min(amov, sGrade[k]); // prevent neg
         amov = Math.min(amov, remMov);
         amov = Math.max(amov, 0.); // force not negative
-     //   if (amov > remMov) {
-     ///     amov = remMov;
-     //   }
-        E.myTest(sGrade[k] - amov < E.NZERO,"Error round%2d source guest%1d %7.2f grade%2d %7.2f will be neg after subtract amov %7.2f giving %7.2f, mov=%7.2f, remnant=%7.2f, ",ii,ix,source.get(ix),k,sGrade[k],amov,sGrade[k]-amov,mov,remMov);
- 
+        //   if (amov > remMov) {
+        ///     amov = remMov;
+        //   }
+        E.myTest(sGrade[k] - amov < E.NZERO, "Error round%2d source guest%1d %7.2f grade%2d %7.2f will be neg after subtract amov %7.2f giving %7.2f, mov=%7.2f, remnant=%7.2f, ", ii, ix, source.get(ix), k, sGrade[k], amov, sGrade[k] - amov, mov, remMov);
+
         sGrade[k] -= amov;
         kt = k - downGrade > 0 ? k - downGrade : k;
-        E.myTest(myGrade[kt] < E.NZERO ,"Error round%2d source this%1d %7.2f negative grade%2d %7.2f, mov %7.2f remMov %7.2f",ii,ix,this.get(ix),k,myGrade[kt],mov,remMov);
-        E.myTest(myGrade[kt] + amov < E.NZERO ,"Error round%2d source this%1d %7.2f negative grade%2d %7.2f + amov %7.2f = %7.2f, mov %7.2f remMov %7.2f",ii,ix,this.get(ix),k,myGrade[kt],amov,myGrade[kt]+amov,mov,remMov);
+        E.myTest(myGrade[kt] < E.NZERO, "Error round%2d source this%1d %7.2f negative grade%2d %7.2f, mov %7.2f remMov %7.2f", ii, ix, this.get(ix), k, myGrade[kt], mov, remMov);
+        E.myTest(myGrade[kt] + amov < E.NZERO, "Error round%2d source this%1d %7.2f negative grade%2d %7.2f + amov %7.2f = %7.2f, mov %7.2f remMov %7.2f", ii, ix, this.get(ix), k, myGrade[kt], amov, myGrade[kt] + amov, mov, remMov);
         myGrade[kt] += amov;
         remMov -= amov;
       }
@@ -3017,8 +3055,8 @@ public class ARow {
       set(ix, mySum);
       source.set(ix, sSum);
       // finally test for error
-      E.myTest(remMov < E.NZERO || remMov > E.PZERO,"Error remMov %7.2f not 0.0 at this.get(%1d) %7.2f, mov %7.2f",remMov,ix,this.get(ix),mov);
-    
+      E.myTest(remMov < E.NZERO || remMov > E.PZERO, "Error remMov %7.2f not 0.0 at this.get(%1d) %7.2f, mov %7.2f", remMov, ix, this.get(ix), mov);
+
     } // end not zero source or mov
     return this;
   } // end addGuestValue
@@ -3036,16 +3074,16 @@ public class ARow {
    */
   void send(ArrayList<History> hist, int bLev, String aPre, int lev, String... www) {
     if (bLev <= History.dl && lev <= bLev) {
-       if (aPre == null) {
-      aPre = this.aPre;
-    }
-    else {
-      this.aPre = aPre;
-      ec.aPre = aPre;
-      if (as != null) {
-        as.aPre = aPre;
+      if (aPre == null) {
+        aPre = this.aPre;
       }
-    }
+      else {
+        this.aPre = aPre;
+        ec.aPre = aPre;
+        if (as != null) {
+          as.aPre = aPre;
+        }
+      }
       hist.add(new History(aPre, lev, www));
     }
   }

@@ -3862,6 +3862,7 @@ onceAgain:
   static final int DIED = ++e4;
   static final int WORTHIFRAC = ++e4;
   static final int PREVGROWTH = ++e4; //
+  static final int NEWDEPRECIATION = ++e4; //NEWDEPRECIATION
   static final int DEPRECIATION = ++e4; //DEPRECIATION
   static final int RAWYEARLYUNITGROWTHS = ++e4;
   static final int RAWUNITGROWTHS = ++e4;
@@ -4294,8 +4295,9 @@ onceAgain:
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 |  THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
      doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 2, 3, 0,  LIST1 |LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(DEPRECIATION, "Depreciation", "depreciation this year");
+    doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | SKIPUNSET | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(NEWDEPRECIATION, "NewDepreciation", "new depreciation this year");
+    doRes(DEPRECIATION, "Depreciation", "Cumulative depreciation this year");
     doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction");
     doRes(RAWYEARLYUNITGROWTHS, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
@@ -6455,6 +6457,7 @@ onceAgain:
     myRow = row;
     myAop = aop;
     myAgeIx = ageIx;
+    prevListMatch = 0L; // one use only
     if (E.debugPutRowsOut) {
       if (putRowsPrint3Count++ < 12) {
         System.out.println(">>>>>>putRows3 count=" + putRowsPrint3Count + " rn=" + rn + " row=" + row + ", rende4=" + rende4 + "," + rendae4 + " <<<<<<");
@@ -6498,7 +6501,7 @@ onceAgain:
       for (lockIx = 0; lockIx < 4; lockIx++) {
         myLock = lockIx;
         // check for a LISTx match put in prevListMatch
-        //  prevListMatch = (long) (aop & curRes[ICUM][CCONTROLD][LOCKS0 + lockIx]) & lmask;
+       //  prevListMatch = (long) (aop & curRes[ICUM][CCONTROLD][LOCKS0 + lockIx]) & lmask;
         //look for ROWS1 ROWS2 ROWS3
         haveRows = aop & ROWSMASK;  //StarTrader rows key
         // any ROWSx in this lock
