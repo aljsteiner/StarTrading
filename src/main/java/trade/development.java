@@ -17,8 +17,8 @@
 */
 /*
 ******* sometimes new lines went to the end, recently they went to start.  no always done
-
-89/1/2023 I have had some very funny errors, I found recently there was a background java running that took space and most 
+9/4/2023 I have been struggleing to get growth up, but costs are based  in part on balance, then getNeeds finds the health by requirements the health modifies the costs, then it determins available units after travel and maintenance costs the remaining goes for growth and growth costs.
+8/1/2023 I have had some very funny errors, I found recently there was a background java running that took space and most 
 of the CPUs  I couldn't tell what it was, and nothing bad when I killed it, but it might have been responsible for some 
 impossible kind of errors, index out of range, missing or null request.
 I am working now with setting difficulty at 50% and having perhaps 20% up to 40% deaths, currently only new ones are deaths, and year 2 only the ones that pere present earlier died, the new ones lived. it appears all the 0 year created econs are killed, 

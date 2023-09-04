@@ -5537,24 +5537,24 @@ public class StarTrader extends javax.swing.JFrame {
     int lEcons = EM.econs.size()-1;
     // now try to find a dead economy to use instead of recreating one
     int nCnt=0;
-    Econ n;
+    Econ curEC;
     for (int eIx=0;eIx <lEcons && !EM.dfe();eIx++ ) {
-       n = EM.econs.get(eIx);
-        eM.printHere(" ----NEa----",n,"scan econ List"+ eIx + " live=" + ( n.getDie()?" dead":" live")  );
-       if(n.getDie() && n.getDAge() > 0){ // skip if live
+      curEC = EM.econs.get(eIx);
+      eM.printHere(E.debugListNewE, " ----NEa----", curEC, "scan econ List" + eIx + " live=" + (curEC.getDie() ? " dead" : " live"));
+      if (curEC.getDie() && curEC.getDAge() > 0) { // skip if live
     if (pors == E.P) {
-        if ( n.getPors() == E.P) {
-          eM.setCurEcon(newEC = n);
-          eM.printHere("-------MK--------",newEC,"found dead Planet cnt=" + n + " " + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+      if (curEC.getPors() == E.P) {
+        eM.setCurEcon(newEC = curEC);
+        eM.printHere("-------MK--------", newEC, "found dead Planet cnt=" + curEC + " " + curEC.name + sinceA() + " dage=" + curEC.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
           eIx = lEcons;
         //  System.out.println(EM.wasHere);
           break;
         }
     }// E.P
-     else if ( n.pors == E.S) {
-          eM.setCurEcon(newEC = n);
+     else if (curEC.pors == E.S) {
+      eM.setCurEcon(newEC = curEC);
           //    EM.econCnt++;
-          eM.printHere( "-------ML--------",newEC," found dead Ship=" + n.name + sinceA() + " dage=" + n.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
+          eM.printHere("-------ML--------", newEC, " found dead Ship=" + curEC.name + sinceA() + " dage=" + curEC.getDAge() + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + stateConst + "Y" + eM.year);
         //  System.out.println(EM.wasHere);
         eIx = lEcons;
     }//E.S

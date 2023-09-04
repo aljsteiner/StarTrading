@@ -3960,13 +3960,13 @@ public class Assets {
       }
 
       /**
-       * calculate growth of each SubAsset staff are limited by cumulative unit
-       * deterioration, maxStaffGrowth with efficiency, random values and
+       * calculate rawGrowth of each SubAsset staff are limited by cumulative
+       * unit       * deterioration, maxStaffGrowth with efficiency, random values and
        * priority resources are limited by cumulative unit deterioration,
        * efficiency, priority and random values, cumulative unit deterioration
        * grows from the previous years growth again random factors are applied
-       * rawUnitGrowth is passed on to the calcRawCosts and getNeeds and they
-       * calculate the final growth
+       * rawGrowth is passed on to the calcRawCosts and getNeeds which
+       * calculates the final growth, growthCost and available units
        */
       void calcGrowth() { // Assets.CashFlow.SubAsset.calcGrowth
         splus = spluss[sIx];
@@ -4013,6 +4013,8 @@ public class Assets {
           newDepreciation.set(prevGrowth);
           newDepreciation.mult(eM.growthDepreciation[sIx][pors]);
           cumulativeUnitDepreciation.add(newDepreciation);
+          int[] depreciations = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
+          setStat(depreciations[sIx], pors, clan, cumulativeUnitDepreciation.sum(), 1);
           //  bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx).add(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx), yearlyDepreciation.setAmultV(bals.getRow(ABalRows.PREVGROWTHSIX + sIx), eM.growthDepreciation[sIx][pors]));
           // later    handle bonuses  didDepreciation = true;
         }
@@ -4068,7 +4070,7 @@ public class Assets {
                 && bonusUnitGrowth.get(secIx) > 0.) {
               bonusUnitGrowth.add(secIx, -bonusUnitGrowth.get(secIx) / (bonusYears.get(secIx) + EM.catastrophyBonusYearsBias[pors][0]));
             }
-            didDepreciation = true;
+            //        didDepreciation = true; only after all 4 in aStartCashFlow
           }
 
           if (rawValue < -0.0) {
@@ -4084,9 +4086,11 @@ public class Assets {
           }
 
         }//end for on secIx
+        if (sIx == 3) { // only after the last SubAsset
         setStat(EM.NEWDEPRECIATION, pors, clan, bals.sum4(ABalRows.NEWUNITDEPRECIATIONIX), 1);
         setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
-        setStat(EM.PREVGROWTH, pors, clan, bals.sum4(ABalRows.PREVGROWTHSIX), 1);
+          setStat(EM.PREVGROWTH, pors, clan, bals.sum4(ABalRows.PREVGROWTHSIX), 1);
+        }
         // bals.set2(ABalRows.RAWUNITGROWTHSIX + sIx,rawUnitGrowth);
         String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
         String[] bonusYearlyUnitGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
@@ -4100,9 +4104,7 @@ public class Assets {
         if (tt > 0.0) {
           setStat(bonusYearlyUnitGrowthStats[sIx], calcPercent(eM.assetsUnitGrowth[sIx][pors], rawUnitGrowth.sum()), 1);
         }
-        if (ttt > 0.0 && sIx % 2 == 0) {
-          setStat(depreciations[sIx], pors, clan, ttt, 1);
-        }
+
         if (rawUnitGrowth.getNegCount() == 1 && rawUnitGrowth.getNegSum() > 0.) {
           String[] negRawUnitGrowths = {"rNeg1RawUnitGrowth", "cNeg1RawUnitGrowth", "sNeg1RawUnitGrowth", "gNeg1RawUnitGrowth"};
           setStat(negRawUnitGrowths[sIx], rawUnitGrowth.getNegSum(), 1);
@@ -7954,8 +7956,8 @@ public class Assets {
       //balances.setUseBalances(History.informationMinor9, "balances", r.balance, c.balance, s.balance, g.balance);
       // Assets.CashFlows.aStartCashFlow reset x.growth and growths rows to the entering bals rows references.
       for (i = 0; i < 4; i++) {
-        sys[i].growth = growths.A[2 + i] = bals.A[GROWTHSIX + i];
-        growths.aCnt[2 + i]++;
+        sys[i].growth = growths.A[2 + i] = bals.getRow(ABalRows.GROWTHSIX + i);
+        // growths.aCnt[2 + i]++;
       }
       r.worth = bals.getRow(ABalRows.CURWORTHSIX);//set SubAssets worths instance
       c.worth = bals.getRow(ABalRows.CURWORTHSIX + 1);
@@ -9603,7 +9605,7 @@ public class Assets {
         }
         setStat(EM.WORTHIFRAC, iyW.sumTotWorth == 0.0 ? 0.0 : 100. * (fyW.sumTotWorth - (tprev = iyW.sumTotWorth)) / tprev, 1);
         worthIncrPercent = startYrSumWorth == 0 ? 0. : 100. * (sumTotWorth - doubleTrouble(startYrSumWorth)) / doubleTrouble(startYrSumWorth);
-        setStat(EM.WORTHINCR, worthIncrPercent, 1);
+        // setStat(EM.WORTHINCR, worthIncrPercent, 1);
         // (final - start)*100/start get RC worth % increase
         double rcPercentInc = (tprev = syW.getSumRCBal()) == 0.0 ? 0.0 : 100. * (fyW.getSumRCBal() - tprev) / tprev;
         double sgPercentInc = (tprev = syW.getSumSGBal()) == 0.0 ? 0.0 : 100. * (fyW.getSumSGBal() - (tprev)) / tprev;
@@ -9736,7 +9738,7 @@ public class Assets {
         }
 
         //double worthIncrPercent = (sumTotWorth - startYrSumWorth)*100 / startYrSumWorth;
-        setStat(EM.WORTHINCR, pors, clan, worthIncrPercent, 1);
+       // setStat(EM.WORTHINCR, pors, clan, worthIncrPercent, 1);
         // gameRes.RCTBAL.wet(pors, clan, fyW.sumRCBal, 1);
         setStat(EM.RCfrac, pors, clan, 100. * fyW.sumRCWorth / fyW.sumTotWorth, 1);
         // gameRes.SGTBAL.wet(pors, clan, fyW.sumSG, 1);
@@ -10788,7 +10790,7 @@ public class Assets {
      * @param swork unit staff work
      * @param yearsTraveled input years traveled
      */
-    synchronized void calcRawCosts(A6Row balances, A6Row rawUnitGrowths, A6Row rawGrowths, A6Row invMEfficiency, A6Row invGEfficiency, int ix, int tIx, A10Row consumerReqMaintCosts10, A10Row nReqMaint, A10Row consumerReqGrowthCosts10, A10Row nReqGrowth, A10Row consumerMaintCosts10, A10Row nMaint, A10Row mTravel1Yr, A10Row nTravel1Yr, A10Row travelYearsCosts, A10Row consumerGrowthCosts10, A10Row nGrowth, ARow swork, double yearsTraveled) {  // Assets.CashFlow.calcRawCosts
+    void calcRawCosts(A6Row balances, A6Row rawUnitGrowths, A6Row rawGrowths, A6Row invMEfficiency, A6Row invGEfficiency, int ix, int tIx, A10Row consumerReqMaintCosts10, A10Row nReqMaint, A10Row consumerReqGrowthCosts10, A10Row nReqGrowth, A10Row consumerMaintCosts10, A10Row nMaint, A10Row mTravel1Yr, A10Row nTravel1Yr, A10Row travelYearsCosts, A10Row consumerGrowthCosts10, A10Row nGrowth, ARow swork, double yearsTraveled) {  // Assets.CashFlow.calcRawCosts
       int aage = eM.curEcon.age; // test for null
       double t1, t2, t3, t4 = -999., t5, t6, t7, workG, swork2 = 01.;
       int rcsg = ix;
@@ -10829,12 +10831,13 @@ public class Assets {
         aaage = ec.age;// test for null
         ARow kMaint = new ARow(ec);
 
-        //reset growth with current swork values
+        //reset growth with current swork values  but getNeeds uses rawUnitGrowth
         bals.set(ABalRows.GROWTHSIX + ix, i, (workG = swork.get(i)
                                                       * bals.get(ABalRows.RAWGROWTHSIX + ix, i)));
         //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
-        double iBal = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i), EM.balanceMult[0][0]);
-        //  double iBal = Math.sqrt(bals.get(ABalRows.BALANCESIX + ix, i) *(bals.get(ABalRows.BALANCESIX + ix, i) +  5.) * 1.15);
+        //double iBal = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i), EM.balanceMult[0][0]);
+        double iBal = Math.sqrt(bals.get(ABalRows.BALANCESIX + ix, i) * (bals.get(ABalRows.BALANCESIX + ix, i) + 5.) * 0.1);
+        double sBal = Math.sqrt(bals.get(ABalRows.BALANCESIX + ix, i) * (bals.get(ABalRows.BALANCESIX + ix, i) + 5.) * 0.1);
         //  double iBal = bals.get(ABalRows.BALANCESIX + ix, i) *1.89;
         // j loops across services that as a sum are used by consumers
         for (j = 0; j < E.lsecs; j++) {
@@ -10853,7 +10856,7 @@ public class Assets {
           d = swork.get(j);
           // convert illegal d to very very small positive
           swork2 = d = (d.isInfinite() || d.isNaN()) || d < E.PZERO ? E.UNZERO : d;
-          t2 = iBal * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / swork2;
+          t2 = sBal * cRand(31) * cRand(i * E.lsecs + ix + 8 + j, rm) * E.maintRequired[pors][i][j + E.LSECS] * rs[0][1][ix] * (tIx == 0 ? 1. : E.maintRequired[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i);
           // gather 7 service requests to i  (7 j values, service by i
           consumerReqMaintCosts10.add(2 + ix, i, t1);
           // consumerReqMaintCosts10.add(0, i, t1);  done by auto resum
@@ -10866,9 +10869,9 @@ public class Assets {
 
           // calculate requried Growth resources, calculates growth fraction
           // is not part of yearly costs.
-          t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] * rs[1][0][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
+          t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] * rs[1][0][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
           // these values are all staff costs, converted from work counts by bal/swork
-          t2 = iBal * cRand(31) * cRand(i * E.lsecs + 8 + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j + E.lsecs] * rs[1][1][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t2 = sBal * cRand(31) * cRand(i * E.lsecs + 8 + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j + E.lsecs] * rs[1][1][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i);
           consumerReqGrowthCosts10.add(ix + 2, i, t1); //subasset costs
           consumerReqGrowthCosts10.add(ix + 6, i, t2); // subasset costs
           nReqGrowth.add(ix + 2, j, t1);
@@ -10884,8 +10887,9 @@ public class Assets {
             hist.add(new History("#b", History.valuesMajor6, "nRGro6 i=" + i, nReqGrowth.A[6]));
           }
 
+          // maintenance costs
           t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 31, rm) * E.maintCost[pors][i][j] * rs[2][0][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
-          t4 = t2 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 41, rm) * E.maintCost[pors][i][j + E.lsecs] * rs[2][1][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t4 = t2 = sBal * cRand(31) * cRand(i * E.lsecs + ix + j + 41, rm) * E.maintCost[pors][i][j + E.lsecs] * rs[2][1][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i);
 
           consumerMaintCosts10.add(ix + 2, i, t1); // the r set of subcosts
           consumerMaintCosts10.add(ix + 6, i, t2); // the s set of subcosts
@@ -10902,15 +10906,12 @@ public class Assets {
             hist.add(new History("#c", History.valuesMajor6, "kM i=" + i + " j=" + j, kMaint));
           }
 
+          //travel costs
           t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 46, rm) * tCosts[pors][i][j] * rs[3][0][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
-          if ((t7 = swork.get(j)) < PZERO) {
-            t2 = 0.0;
-          }
-          else {
-            t2 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 55, rm) * tCosts[pors][i][j + E.lsecs] * rs[3][1][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
-            //    d = t2;
-            //   E.myTestDouble(d,"t2","calcRawCosts process ix=%d, i=%d,j=%d,swork=%7.2f,t2=%7.5f, d string=%s",ix,i,j,t7,t2,String.valueOf(d));
-          }
+
+          t2 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 55, rm) * tCosts[pors][i][j + E.lsecs] * rs[3][1][ix] * (tIx == 0 ? 1. : tCosts[pors][tIx][i + E.lsecs]) * invMEfficiency.get(ix + 2, i);
+
+          //   E.myTestDouble(d,"t2","calcRawCosts process ix=%d, i=%d,j=%d,swork=%7.2f,t2=%7.5f, d string=%s",ix,i,j,t7,t2,String.valueOf(d));
           mTravel1Yr.add(ix + 2, i, t1);
           mTravel1Yr.add(ix + 6, i, t2);
           nTravel1Yr.add(ix + 2, j, t1);
@@ -10925,8 +10926,9 @@ public class Assets {
             hist.add(new History("#d", History.valuesMajor6, "lYT=" + EM.mf(lightYearsTraveled), nTravel1Yr.A[6]));
           }
 
+          // growth costs
           t1 = iBal * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
-          t2 = iBal * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i) * balances.get(4, j) / d;
+          t2 = sBal * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i);
 
           consumerGrowthCosts10.add(ix + 2, i, t1);
           consumerGrowthCosts10.add(ix + 6, i, t2);
@@ -11397,10 +11399,12 @@ public class Assets {
      * .5 is poor health with a cost penalty, &gt; 1 means super health with a
      * bonus against costs
      * <p>
-     * The effective growth in units is calculated for each sector, the costs
-     * for that growth is also calculated.
+     * The effective growth and growth cost in units are calculated after the
+     * maintenance and travel costs for each sector, the costs then the growth
+     * is also calculated.
      * <p>
-     * The costs are calculated separately
+     * Finally the available units are calculated, if negative the economy will
+     * die at yearEnd
      *
      * @param title title of the returned file
      * @param description description of the purpose of the invocation

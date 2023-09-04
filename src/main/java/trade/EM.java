@@ -4306,18 +4306,22 @@ onceAgain:
     doRes(POSTSWAPRCSG, "postSwapRCSG", "RCSG units after swap");
     doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
     doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
-     doRes(RGROWTHV, "R growth", "R growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CGROWTHV, "C growth", "C growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(SGROWTHV, "S growth", "S growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(GGROWTHV, "G growth", "G growth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST1 | LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWRGROWTH, "R growth", "R rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWCGROWTH, "C growth", "C rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWSGROWTH, "S growth", "S rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWGGROWTH, "G growth", "G rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET,  LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-     doRes(RAWRUGROWTH, "R growth", "R rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWCUGROWTH, "C growth", "C rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWSUGROWTH, "S growth", "S rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET, LIST8  | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(RAWGUGROWTH, "G growth", "G rawgrowth before cost reduction", 2, 2, 0, LIST1 | LIST8 | THISYEAR | CUMAVE | BOTH | SKIPUNSET,  LIST8 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RDEPRECIATIONP, "r Depreciation%", "Depreciation in R as the % of unitGrowth", 1, 2, 1, LIST8 | LIST13 | CURAVE, 0, 0, 0);
+    doRes(CDEPRECIATIONP, "c Depreciation%", "Depreciation in C as the % of unitGrowth");
+    doRes(SDEPRECIATIONP, "s Depreciation%", "Depreciation in S as the % of unitGrowth");
+    doRes(GDEPRECIATIONP, "g Depreciation%", "Depreciation in G as the % of unitGrowth");
+    doRes(RGROWTHV, "R growth", "R growth before cost reduction");
+    doRes(CGROWTHV, "C growth", "C growth before cost reduction");
+    doRes(SGROWTHV, "S growth", "S growth before cost reduction");
+    doRes(GGROWTHV, "G growth", "G growth before cost reduction");
+    doRes(RAWRGROWTH, "R growth", "R rawgrowth before cost reduction");
+    doRes(RAWCGROWTH, "C growth", "C rawgrowth before cost reduction");
+    doRes(RAWSGROWTH, "S growth", "S rawgrowth before cost reduction");
+    doRes(RAWGGROWTH, "G growth", "G rawgrowth before cost reduction");
+    doRes(RAWRUGROWTH, "R growth", "R rawgrowth before cost reduction");
+    doRes(RAWCUGROWTH, "C growth", "C rawgrowth before cost reduction");
+    doRes(RAWSUGROWTH, "S growth", "S rawgrowth before cost reduction");
+    doRes(RAWGUGROWTH, "G growth", "G rawgrowth before cost reduction");
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 2, 2, 2, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     /*
   static final int TRADEWORTH = ++e4;
@@ -4530,10 +4534,7 @@ onceAgain:
     doRes(DEADSWAPSMOVED, "diedSwapMoves", "died,average Swap Moves at death");
     doRes(DEADSWAPSCOSTS, "diedSwapCosts", "died,average SwapCosts at death");
     doRes(DEADTRADED, "diedTraded", "died,even after trading");
-    doRes(RDEPRECIATIONP, "r Depreciation%", "Depreciation in R as the % of unitGrowth", 1, 1, 1, LIST13 | CURAVE, 0, 0, 0);
-    doRes(CDEPRECIATIONP, "c Depreciation%", "Depreciation in C as the % of unitGrowth");
-    doRes(SDEPRECIATIONP, "s Depreciation%", "Depreciation in S as the % of unitGrowth");
-    doRes(GDEPRECIATIONP, "g Depreciation%", "Depreciation in G as the % of unitGrowth");
+
     doRes(RDDEPRECIATIONP, "r DDepreciation%", "Died Depreciation in R as the % of unitGrowth");
     doRes(CDDEPRECIATIONP, "c DDepreciation%", "Died Depreciation in C as the % of unitGrowth");
     doRes(SDDEPRECIATIONP, "s DDepreciation%", "Died Depreciation in S as the % of unitGrowth");
@@ -7335,7 +7336,9 @@ onceAgain:
       eM.doMyErr(">>>>>>>> ERR messages cnt=" + eE.msgcnt + " exceeds limit msgs" + eE.msgs);
     }
     if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + " game" + past(startTime) + atJava(2) + what);
-   else if(E.debugDoYearEndOut)System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+    else if (E.debugDoYearEndOut) {
+      System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ((int) EM.econLimits3[0]) + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+    }
   }
   /**  print a System.out line if E.debugDoYearEndOut or other debugs
  * 

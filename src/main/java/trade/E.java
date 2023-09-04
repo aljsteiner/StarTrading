@@ -58,7 +58,7 @@ public class E {
   static final public String statsButton14Tip = "14: list by ages deaths catastrophies, forwardFunds ";
   static final public String statsButton15Tip = "15: list by ages live catastrophies, forwardFunds";
   static final public String statsButton16Tip = "16: list by ages worths, work,faculty,research interns";
-  static final public String statsButton17Tip = "17: list by ages helps, creations ";
+  static final public String statsButton17Tip = "17: list by ages growths, helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
   static final public String statsButton20Tip = "20: rcsg";
@@ -88,6 +88,7 @@ public class E {
   static final boolean debugOutput = true; //distributable;
   static final boolean outputLess = true;  // reduce the output chars in mf2
   static final boolean debugStuck = true; //error if stuck
+  static final boolean debugListNewE = false && debugMaster; //list known econs
   //static final boolean debugOutput = true;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   //static final boolean resetOut = debugOutput;  //change out, err to
@@ -1858,7 +1859,7 @@ public class E {
   static public int msgcnt = 0;
 
   static void resetMsgs() {
-    msgs = dmsgs;
+    msgs = (int) (eM.econLimits3[0] * 500);
     msgcnt = 0;
   }
 
