@@ -3926,7 +3926,12 @@ onceAgain:
   static final int GROWTHSN2 = ++e4;
   static final int FERTILITYSN2 = ++e4;
   static final int RCSGINCRN2 = ++e4;
-
+  static final int DPOSTSWAP = ++e4;
+  static final int DPOSTSWAPRCSG = ++e4;
+  static final int DSWAPRINCRWORTH = ++e4;
+  static final int DNPOSTSWAP = ++e4;
+  static final int DNPOSTSWAPRCSG = ++e4;
+  static final int DNSWAPRINCRWORTH = ++e4;
   static final int GROWTHSN3 = ++e4;
   static final int FERTILITYSN3 = ++e4;
   static final int RCSGINCRN3 = ++e4;
@@ -3936,9 +3941,7 @@ onceAgain:
   static final int DRCSGINCRN0 = ++e4;
   static final int DWORTHINCRN1 = ++e4;
   static final int DGROWTHSN1 = ++e4;
-  static final int DPOSTSWAP = ++e4;
-  static final int DPOSTSWAPRCSG = ++e4;
-  static final int DSWAPRINCRWORTH = ++e4;
+
   static final int DFERTILITYSN1 = ++e4;
   static final int DRCSGINCRN1 = ++e4;
   static final int DWORTHINCRN2 = ++e4;
@@ -4361,9 +4364,12 @@ onceAgain:
     doRes(DWORTH, "DTworth", "died trade Econs average yearly worth", 2, 2, 0, LIST3 | LIST11 | LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(DHIGHWORTH, "DTHworth", "Died trade high Econs average yearly worth");
     doRes(DLOWWORTH, "DTL worth", "Died trade low Econs average yearly worth");
-     doRes(DPOSTSWAP, "dpostSwap", "dead worth after swap");
-     doRes(DPOSTSWAPRCSG, "dpostSwapRCSG", "dead RCSG units after swap");
-     doRes(DSWAPRINCRWORTH, "dswapIncWorth", "dead worth increase or decrease after Swaps");
+    doRes(DPOSTSWAP, "dpostSwap", "accepted dead worth after swap");
+    doRes(DPOSTSWAPRCSG, "dpostSwapRCSG", "accepted dead RCSG units after swap");
+    doRes(DSWAPRINCRWORTH, "dswapIncWorth", "accepted dead worth increase or decrease after Swaps");
+    doRes(DNPOSTSWAP, "dnpostSwap", "not accepted dead worth after swap");
+    doRes(DNPOSTSWAPRCSG, "dnpostSwapRCSG", "not accepted dead RCSG units after swap");
+    doRes(DNSWAPRINCRWORTH, "dnswapIncWorth", "not accepted dead worth increase or decrease after Swaps");
     doRes(DMISCWORTH, " DNworth", "Died No trade Econs yearly worth", 2, 2, 0, LIST4 | LIST10 | LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(DMISCHIGHWORTH, "DNHworth", "Died No trade high Econs average yearly worth");
     doRes(DMISCLOWWORTH, "DNLworth", "Died No trade low  Econs average yearly worth");
@@ -4535,10 +4541,10 @@ onceAgain:
     doRes(DEADSWAPSCOSTS, "diedSwapCosts", "died,average SwapCosts at death");
     doRes(DEADTRADED, "diedTraded", "died,even after trading");
 
-    doRes(RDDEPRECIATIONP, "r DDepreciation%", "Died Depreciation in R as the % of unitGrowth");
-    doRes(CDDEPRECIATIONP, "c DDepreciation%", "Died Depreciation in C as the % of unitGrowth");
-    doRes(SDDEPRECIATIONP, "s DDepreciation%", "Died Depreciation in S as the % of unitGrowth");
-    doRes(GDDEPRECIATIONP, "g DDepreciation%", "Died Depreciation in G as the % of unitGrowth");
+    doRes(RDDEPRECIATIONP, "r DDepreciation%", "Notaccepted Died Depreciation in R as the % of unitGrowth");
+    doRes(CDDEPRECIATIONP, "c DDepreciation%", "Notaccepted Died Depreciation in C as the % of unitGrowth");
+    doRes(SDDEPRECIATIONP, "s DDepreciation%", "Notaccepted Died Depreciation in S as the % of unitGrowth");
+    doRes(GDDEPRECIATIONP, "g DDepreciation%", "Notaccepted Died Depreciation in G as the % of unitGrowth");
     doRes(RDADEPRECIATIONP, "r DADepreciation%", "Accepted Died Depreciation in R as the % of unitGrowth");
     doRes(CDADEPRECIATIONP, "c DADepreciation%", "Accepted Died Depreciation in C as the % of unitGrowth");
     doRes(SDADEPRECIATIONP, "s DADepreciation%", "Accepted Died Depreciation in S as the % of unitGrowth");

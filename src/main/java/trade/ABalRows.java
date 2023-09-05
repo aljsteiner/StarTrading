@@ -73,8 +73,10 @@ public class ABalRows extends A6Rowa {
   static final int YEARINCRWORTHSIX = balz += LSUBS; //
   static final int MTGCOSTSWORTHSIX = balz += LSUBS; //
   static final int MTGCOSTSIX = balz += LSUBS; //
-  static final int TRADEDGROWTHSIX = balz += LSUBS; //52
-  static final int SWAPPEDGROWTHSIX = balz += LSUBS; //
+  static final int TRADEDGROWTHSIX = balz += LSUBS; //
+  static final int MTCOSTS2IX = balz += LSUBS; //
+  static final int MTECCOSTS2IX = balz += LSUMS; //
+  static final int SWAPPEDGROWTHSIX = balz += LSUMS; //
   static final int endOfArrays = balz += LSUBS; //
   static final int BALSLENGTH = balz += 2; //64
   static int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
@@ -217,25 +219,37 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * create an A6Row using references to 4 rows starting at iX this is used
-   * primarily by other methods
+   * create a new A10Row using references to 2 rows starting at bias
    *
-   * @param iX index of the start of rows in bals
+   * @param bias index of the start of rows in bals
    * @param lev level of the new A6Row
    * @param titl title of the new A6Row
-   * @return A6Row row0 = add rows iX,iX+1, row1=add rows iX+2,ix+3 followed by
+   * @return A10Row row0 ref[bias+0],row1 ref[bias+1] references to the rows iX
+   * thru iX+3
+   */
+  public A10Row use2(int bias, int lev, String titl) {
+    A10Row rtn = new A10Row(ec, lev, titl);
+    for (int rowIx : I01) {
+      rtn.A[rowIx] = A[bias + rowIx];
+      rtn.aCnt[rowIx]++;
+    }
+    return rtn;
+  }
+  /**
+   * create an new A6Row using references to 4 rows starting at bias
+     *
+   * @param bias index of the start of rows in bals
+   * @param lev level of the new A6Row
+   * @param titl title of the new A6Row
+   * @return A6Row references in rows2thru5, row0 =sumRows(2,3),row1=sum(4,5)
    * references to the rows iX thru iX+3
    */
-  public A6Row use4(int iX, int lev, String titl) {
-    A6Row rtn = new A6Row(ec,lev, titl);
-    resum(0);
-    resum(1);
-    for (int m : I03) {
-      rtn.A[m + BALANCESIX] = A[iX + m].copy();
-      rtn.aCnt[m+BALANCESIX]++;
+  public A6Row use4(int bias, int lev, String titl) {
+    A6Row rtn = new A6Row(ec, lev, titl);
+    for (int rowIx : I03) {
+      rtn.A[(int) rowIx / 2].add(rtn.A[rowIx + BALANCESIX] = A[bias + rowIx]);
+      rtn.aCnt[rowIx + BALANCESIX]++;
     }
-    rtn.A[0] = new ARow(ec).setAdd(rtn.A[2] , rtn.A[3]);
-    rtn.A[1] = new ARow(ec).setAdd(rtn.A[4] , rtn.A[5]);
     return rtn;
   }
   /** copy 4 rows of values from rows biasA to biasB

@@ -90,7 +90,7 @@ public class Assets {
   int oClan = -5, oPors = -6;  //in Assets preInstantiation
   int year;  // copy of eM.year
   int myEconCnt;
-  boolean died = false;
+  boolean dead = false;
   boolean sos = false;
   double health = 2.;
   double sumTotWorth = 0.; // sum of SubAsset worth + cash + knowledge
@@ -114,7 +114,7 @@ public class Assets {
   static int[] rorss = E.rorss; //{0, 0, 2, 2};  // resorce or staff, also place or costs see
   static int[] d01 = E.d01; //{0, 1};
   static int[] balsIxA = E.balsIxA; //{0, 1, 2, 3};
-  static final int[] IA01 = d01;
+  static final int[] IA01 = {0, 1};
   static final int[] A01 = {0, 1};
   static final int[] MR = {0, LSECS};
   static int[] dlsecs = E.alsecs;
@@ -2088,7 +2088,7 @@ public class Assets {
   }
 
   boolean getDie() {
-    return died;
+    return dead;
   }
 
   int getAge() {    // Assets.getAge
@@ -2136,10 +2136,10 @@ public class Assets {
       }
     }
     cur.yearEnd();
-    eM.printHere("-----YEDPm ----", ec, " near end " + (died ? "DEAD" : "LIVE") + " in Assets.yearEnd() ");
+    eM.printHere("-----YEDPm ----", ec, " near end " + (dead ? "DEAD" : "LIVE") + " in Assets.yearEnd() ");
 
     assert cur.c.balance == bals.A[2 + 1] : getName() + " c != bals.A[3], c=" + EM.mf(cur.c.balance.sum()) + " != bals c=" + EM.mf(bals.A[1 + 2].sum());
-    if (E.debugMisc && !died && !EM.dfe() && syW != null) {
+    if (E.debugMisc && !dead && !EM.dfe() && syW != null) {
       EM.newError = true;
       throw new MyErr("Assets.yearEnd says CashFlow.yearEnd did not null syW, probably skipped some code");
     }
@@ -2156,7 +2156,7 @@ public class Assets {
         EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
       }
     }
-    if (!died) {
+    if (!dead) {
       getTradeInit(true); // force creation of trade values and rawProspects2
     }
     doNullCur(" yearEnd");
@@ -2480,7 +2480,7 @@ public class Assets {
     int costsComp = -10;
     int costsUse = -10;  // recompute costs of costsUse > costsComp;
     double yearStartHealth = 2.0;
-    double fertility = 2., minH = -.5, minFert = -.3;
+    double fertility = 2., minH = -.5, minFert = -.3, phe = -1, poorHealthEffect = -1;
     int ixArow;
     int srcIx = -2, destIx = -2, forIx = -2, ixWRFor = -2, chrgIx = -2, needIx = -2, need4Ix = -2, need3Ix = -2, sourceIx = -2;
     int rChrgIx = -2, sChrgIx = -2;
@@ -2594,7 +2594,7 @@ public class Assets {
     double firstStrategicGoal = 0., firstStrategicValue = 0.;
     // required for  Assets.CashFlow.getNeeds
     int bLev = History.dl;
-    double poorHealthEffect = 0., PHE = 0., totNeeds = -999999.;
+    double totNeeds = -999999.;
     int swapType = 7;
     double[] redoFrac = {1., 1., .85, .75, .5, .3, .1, .05562};
     double mov = -1., mov1 = -1., mov2 = -2., mov3 = -1., mov4 = -1.;
@@ -9333,7 +9333,7 @@ public class Assets {
       // }
       cmd = SwpCmd.NOT;
 
-      if (eM.dfe() || ec.dead || died) {
+      if (eM.dfe() || ec.dead || dead) {
         return 0.;
       }
       rawProspects2 = makeZero(rawProspects2);
@@ -9346,7 +9346,7 @@ public class Assets {
         prevns[m] = abc.copyn(cur);
       }
       eM.printHere("----AEYab---", ec, "CashFlow.yearEnd before swap loops after setting prevns array ");
-      if (!died && (pors == E.S) && newTradeYear2) {
+      if (!dead && (pors == E.S) && newTradeYear2) {
         maintCosts10 = tradeTravelMaintCosts10.copy10();
         travelCosts10 = tradeTravelCosts10.copy10();
         lightYearsTraveled = 0.;
@@ -9406,11 +9406,9 @@ public class Assets {
       // find number of years without trade accepted 3 max
       int ixAccYears = prevAccYears > 3 || prevAccYears < 0 ? 0 : prevAccYears;
       ///  gSwapW = new DoTotalWorths(); // did before
-
-      // enter here for live results each prospect > PZERO
       if (rawProspects2.curMin() > PZERO) { //proceed  if live,skip if dead
+        //========================LIVE LIVE LIVE ========================
         n = 0;
-
         if (History.dl > History.informationMinor9) {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
           hist.add(new History(aPre, History.informationMinor9, "n" + n + "preCosts", ">>>", a0.getMethodName(), "at", a0.getFileName(), wh(a0.getLineNumber()), (swapped ? "swapped" : "!swapped"), "n=" + wh(n), "<<<<<<"));
@@ -9959,14 +9957,12 @@ public class Assets {
           }
         }
         EM.isHere("--EYEYf--", ec, "end of live stats");
-// ---------------------- end of live stats ---------------------------------
+// -----------ENDLIVE---ENDLIVE---ENDLIVE---------------------------------
       }
-      else //now dead stats
-      {
-        ec.dead = true; // set econ to dead
-      }
+      else {//=========================DEAD DEAD  DEAD ===========================
+        //      ec.dead = true; // set econ to dead
       ec.dyear = EM.year; // set year of death
-      { // dead, be sure died is set
+       // dead, be sure dead is set
         if (eM.dfe()) {
           return 0.;
         }
@@ -9975,30 +9971,26 @@ public class Assets {
         double totalYearWorthIncr = fyW.sumTotWorth - syW.sumTotWorth;
         double percentYearWorthIncr = (totalYearWorthIncr * 100.) / syW.sumTotWorth;
         double sumGrowth = bals.sum4(ABalRows.GROWTHSIX);
+        double startYearRCSGBal = syW.sumRCSGBal;
         double sumYearRCSGincr = (fyW.sumRCSGBal - syW.sumRCSGBal);
-        double percentYearRCSGincr = sumYearRCSGincr * 100 / syW.sumRCSGBal;
+        double percentYearRCSGincr = sumYearRCSGincr * 100 / startYearRCSGBal;
         if (E.debugEconCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
         }
         fyW = new DoTotalWorths();  // never tried growth
-        if (E.debugDoYearEndOut) {
-          System.err.println("-----YEDP---- " + ec.name + " dead in Assets.CashFlow.yearEnd() ");
-        }
-        if (!died) {  // list only once
+        eM.printHere(E.debugDoYearEndOut, "-----YEDP---- ", ec, " start dead in Assets.CashFlow.yearEnd() min rawProspects =" + EM.mf(rawProspects2.curMin()));
+        if (!dead) {  //not yet flaged, do only once
           // DoTotalWorths iyW, syW, tW, gSwapW, gGrowW, gCostW, fyW;
-          ec.dead = died = true;
+          ec.dead = dead = true; //set deat in Econ and Assets
           double tt3 = 0;
-          setStat(EM.DSWAPRINCRWORTH, pors, clan, gSwapIncr, 1);
-          setStat(EM.DPOSTSWAP, pors, clan, gSwapWTotWorth, 1);
-          setStat(EM.DPOSTSWAPRCSG, pors, clan, gSwapW.getSumRCSGBal(), 1);
+
           //100. * (final worth - start year worth)/start year worth is percent increase
           double worthincr1 = 100. * (fyW.sumTotWorth - syW.sumTotWorth) / syW.sumTotWorth;
-          setStat(EM.DIED, pors, clan, worthincr1, 1);
-          if (E.debugDoYearEndOut) {
-            System.err.println("-----YEDPa---- " + ec.name + " stats dead in Assets.CashFlow.yearEnd() ");
-          }
+          setStat(EM.DIED, pors, clan, rawProspects2.curMin(), 1);
+
+          eM.printHere(E.debugDoYearEndOut, "-----YEDPa---- ", ec, " start dead stats in Assets.CashFlow.yearEnd() ");
           setStat(EM.DIEDPERCENT, pors, clan, 100., 1);
           int[] worthIncrA = {EM.DWORTHINCRN0, EM.DWORTHINCRN1, EM.DWORTHINCRN2, EM.DWORTHINCRN3};
           int[] growthsA = {EM.DGROWTHSN0, EM.DGROWTHSN1, EM.DGROWTHSN2, EM.DGROWTHSN3};
@@ -10032,6 +10024,9 @@ public class Assets {
           }
           //    setStat("TRADES%", pors, clan, fav > NZERO ? 100. : 0., 1);
           if (tradeAccepted && oclan >= 0) {
+            setStat(EM.DSWAPRINCRWORTH, pors, clan, gSwapIncr, 1);
+            setStat(EM.DPOSTSWAP, pors, clan, gSwapWTotWorth, 1);
+            setStat(EM.DPOSTSWAPRCSG, pors, clan, gSwapW.getSumRCSGBal(), 1);
             setStat("DEADWTRADEDINCR", pors, clan, worthincr1, 1);
 
             String[] potentialGrowthStats = {"DApotentialResGrowthPercent", "DApotentialCargoGrowthPercent", "DApotentialStaffGrowthPercent", "DApotentialGuestGrowthPercent"};
@@ -10068,24 +10063,27 @@ public class Assets {
               setStat(eM.DTRADEOSOSR2, opors, oclan, worthIncrPercent, 1);
             }
             else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS1[0][0]) {
-              // Help that was given but still died
+              // Help that was given but still dead
               setStat(eM.DTRADEOSOSR1, opors, oclan, worthIncrPercent, 1); // HELPER
               setStat(eM.DTRADESOSR1, pors, clan, worthIncrPercent, 1); // me
             }
             else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS0[0][0]) {
-              // Help that was given but still died
+              // Help that was given but still dead
               setStat(eM.DTRADEOSOSR0, opors, oclan, worthIncrPercent, 1); // HELPER
               setStat(eM.DTRADESOSR0, pors, clan, worthIncrPercent, 1); // me
             }
 
           }
           else { // rejected, lost, missed, not Accepted
+            setStat(EM.DNSWAPRINCRWORTH, pors, clan, gSwapIncr, 1);
+            setStat(EM.DNPOSTSWAP, pors, clan, gSwapWTotWorth, 1);
+            setStat(EM.DNPOSTSWAPRCSG, pors, clan, gSwapW.getSumRCSGBal(), 1);
             String[] potentialGrowthStats = {"DpotentialResGrowthPercent", "DpotentialCargoGrowthPercent", "DpotentialStaffGrowthPercent", "DpotentialGuestGrowthPercent"};
             String[] negRawUnitGrowths = {"rDNeg1RawUnitGrowth", "cDNeg1RawUnitGrowth", "sDNeg1RawUnitGrowth", "gDNeg1RawUnitGrowth"};
             String[] neg2RawUnitGrowths = {"rDNeg2RawUnitGrowth", "cDNeg2RawUnitGrowth", "sDNeg2RawUnitGrowth", "gDNeg2RawUnitGrowth"};
             int[] depreciations = {EM.RDDEPRECIATIONP, EM.CDDEPRECIATIONP, EM.SDDEPRECIATIONP, EM.GDDEPRECIATIONP};
             for (int sIx = 0; sIx < 4; sIx += 2) {
-              double tt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawUnitGrowth.sum());
+              double tt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawGrowth.sum());
               double ttt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].cumulativeUnitDepreciation.sum());
               if (tt > 0.0) {
                 setStat(potentialGrowthStats[sIx], calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawUnitGrowth.sum()), 1);
@@ -10110,7 +10108,7 @@ public class Assets {
           }
           if (tradeLost && oclan >= 0) {
             if (tradedFirstNegProspectsSum < eM.rawHealthsSOS1[0][0]) {
-              // Help that was given but still died
+              // Help that was given but still dead
               setStat(EM.DLOSTOSOSR1, opors, oclan, worthIncrPercent, 1); // HELPER
             }
           }
@@ -10314,7 +10312,7 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
-          EM.wasHere = " CashFlow.yearEnd into deac, and died ccch=" + ++ccch;
+          EM.wasHere = " CashFlow.yearEnd into deac, and dead ccch=" + ++ccch;
           if (swapsN < 0) {
             setStat(EM.DeadNegN, pors, clan, worthincr1, 1);
           }
@@ -10339,14 +10337,14 @@ public class Assets {
     doRes("DeadNegProsp", "DeadNegProsp", "Died either R or S had a negative",  2,2,3,  ROWS1 | LIST3 | LIST20 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 |  LIST3 | LIST20  | LIST0YRS |  CUMUNITS | BOTH | SKIPUNSET,0L, 0L);
     doRes("DeadRatioS", "DeadRatioS", "Resource  S values simply too small",  2,2,3,  ROWS1 | LIST3 | LIST20 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 |  LIST3 | LIST20  | LIST0YRS |  CUMUNITS | BOTH | SKIPUNSET,0L, 0L);
     doRes("DeadRatioR", "DeadRatioR", "R values simply too small", 2,2,3,  ROWS1 | LIST3 | LIST20 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 |  LIST3 | LIST20  | LIST0YRS |  CUMUNITS | BOTH | SKIPUNSET,0L, 0L);
-    doRes(EM.DIED, "died", "died from any set of causes", 2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
+    doRes(EM.DIED, "dead", "dead from any set of causes", 2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
     doRes(MISSINGNAME, "missing name", "tried an unknown name", 6, 0, list0 | cumUnits | curUnits | curAve | cumAve | both, 0, 0, 0);
-    doRes(DEADRATIO, "diedRatio", "died,average mult year last/initial worth death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
-    doRes(DEADHEALTH, "died health", "died,average negative minimum health at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
-    doRes(DEADFERTILITY, "died fertility", "died,average negative minimum fertility at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
-    doRes(DEADSWAPSMOVED, "diedSwapMoves", "died,average Swap Moves at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
-    doRes(DEADSWAPSCOSTS, "diedSwapCosts", "died,average SwapCosts at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
-    doRes(DEADTRADED, "diedTraded", "died,even after trading",2, 2, 3,  ROWS1 | LIST0 | LIST3 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 | LIST3 | LIST0 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
+    doRes(DEADRATIO, "diedRatio", "dead,average mult year last/initial worth death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
+    doRes(DEADHEALTH, "dead health", "dead,average negative minimum health at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
+    doRes(DEADFERTILITY, "dead fertility", "dead,average negative minimum fertility at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
+    doRes(DEADSWAPSMOVED, "diedSwapMoves", "dead,average Swap Moves at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
+    doRes(DEADSWAPSCOSTS, "diedSwapCosts", "dead,average SwapCosts at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
+    doRes(DEADTRADED, "diedTraded", "dead,even after trading",2, 2, 3,  ROWS1 | LIST0 | LIST3 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 | LIST3 | LIST0 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
            */
           if (rawProspects2.curMin() < E.NZERO) {
             setStat(EM.DeadNegProsp, pors, clan, worthincr1, 1);
@@ -10415,19 +10413,19 @@ public class Assets {
           }
 
         } // end of first time dead
-        ec.dead = died = true;
+        ec.dead = dead = true;
         EM.wasHere = "CashFlow.yearEnd before many setStat ddddi=" + ++ddddi;
         eM.clanFutureFunds[clan] += yearsFutureFund;
         yearsFutureFund = 0.;
         yearsFutureFundTimes = 0;
         hist.add(new History(aPre, 1, "n" + n + ">>>>>> aDEAD=" + EM.mf(health), "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "*dead*", "<<<<<<"));
         EM.isHere("--EYEYdg--", ec, "end of dead stats");
-      }// Join rest of yearEnd end of died
+      }// Join rest of yearEnd end of dead
       EM.econCountsTest();
       //     if(eM.dfe()) return 0.;
       //Assets.CashFlow.yearEnd  final cleanup for starting the next year
       if (E.debugDoYearEndOut) {
-        System.err.println("-----YEDPg ---- " + ec.name + " near end " + (died ? "DEAD" : "LIVE") + " in Assets.CashFlow.yearEnd() ");
+        System.err.println("-----YEDPg ---- " + ec.name + " near end " + (dead ? "DEAD" : "LIVE") + " in Assets.CashFlow.yearEnd() ");
       }
       didGoods = false;
       // sLoops[0] = 
@@ -10439,7 +10437,7 @@ public class Assets {
       clanRisk = eM.clanRisk[pors][clan];
       tradedShipOrdinal = 0;  // reset for both planet and ship
       econVisited = 0; // total trades tried
-      // near end of Assets.CashFlow.yearEnd() live or died
+      // near end of Assets.CashFlow.yearEnd() live or dead
       didTrade = false;
       lostTrade = false;
       newTradeYear2 = false;
@@ -10450,7 +10448,7 @@ public class Assets {
       oTradedEconsNext = 0;
       syW = null; // get rid of hanging DoTotalWorths
       didDepreciation = false;  // second setting
-      if (!died) {
+      if (!dead) {
         didStart = true;
         getTradingGoods();
         didStart = false; // force start at next initCashFlow
@@ -10462,7 +10460,7 @@ public class Assets {
           throw new MyErr("in CF.yearEnd end, syW != null");
         }
         return health = rawProspects2.curMin();
-      } // end not died
+      } // end not dead
       return 0.;
     }
 
@@ -11430,7 +11428,7 @@ public class Assets {
      * proportional measure of availability against sum of balances. so size
      * independent
      * @param rawHealths output SubAssets ??? mostly not used
-     * @param mtNegs output costs of maint and travel with PHE
+     * @param mtNegs output costs of maint and travel with phe
      * @param growthNegs output cost of growths
      * @param mtgNegs output SubAssets: the sum of maint,travel,growth costs
      * including needGoal output<br>
@@ -11488,6 +11486,7 @@ public class Assets {
         mtgMult = growYears;
       }
       goalmtgNeeds.zero();
+      // a 0 goal is treated as an unset goal, just with regular costs
       double gGoal = growthGoal > .01 ? growthGoal : .01;
       double mGoal = maintGoal > .01 ? maintGoal : .01;
       int pors = ec.getPors();
@@ -11535,72 +11534,80 @@ public class Assets {
       // use the sum of resouce and staff costs to derive the 
       // health or fertility fraction (balance -cost)/cost s
       // divid the r,s balance in proportion to the costs being subtracted
-      // calculate req Growth and Maint costs using growthGoal and MaintGo
+      // calculate req Growth and Maint costs using growthGoal and MaintGoAL
       //    A10Row dmores = new A10Row(6,"dmores");
       double subMoreBals = 0.; // each SubAsset excess needs by maint or growth goal
       double submBalsSum = 0.; // each SubAsset sum of real bals
       // double subCostSum=0.; // each SubAsset sum of real costs;
-      // if there are no goals, still use m... which holds the original values
+      // if there are no goals, still use sumIx... which holds the original values
       Double t2, t3, t4;
-      for (int n : E.ASECS) {
-        for (int m : IA01) {  // for rc and sg (bals-mcosts) - (bals-cost)
-          // A6Row below
-          rqGCRem.set(2 + 2 * m, n, bals.get(2 + 2 * m, n));  //r,s 
-          rqMCRem.set(2 + 2 * m, n, bals.get(2 + 2 * m, n));
-          rqGCRem.set(3 + 2 * m, n, bals.get(3 + 2 * m, n));// c,g
-          rqMCRem.set(3 + 2 * m, n, bals.get(3 + 2 * m, n));
-          rqGCRem.set(m, n, bals.get(2 + 2 * m, n) + bals.get(3 + 2 * m, n));// rc
-          rqMCRem.set(m, n, bals.get(2 + 2 * m, n) + bals.get(3 + 2 * m, n)); //sg
-          //calculate needs, the negative of available balances
-          rqNeedGG.set(2 + 2 * m, n, -bals.get(2 + 2 * m, n)); // r, s
-          rqNeedGM.set(2 + 2 * m, n, -bals.get(2 + 2 * m, n)); //r,s
-          rqNeedGG.set(3 + 2 * m, n, -bals.get(3 + 2 * m, n)); // c,g
-          rqNeedGM.set(3 + 2 * m, n, -bals.get(3 + 2 * m, n));
+      for (int secIx : E.ASECS) {
+        for (int sumIx : IA01) {  // for rc and sg (bals-mcosts) - (bals-cost)
+          // initial balances int remaindersA6Row below
+          rqGCRem.set(2 + 2 * sumIx, secIx, bals.get(2 + 2 * sumIx, secIx));  //r,s
+          rqMCRem.set(2 + 2 * sumIx, secIx, bals.get(2 + 2 * sumIx, secIx)); //rem after maint
+          rqGCRem.set(3 + 2 * sumIx, secIx, bals.get(3 + 2 * sumIx, secIx));// c,g
+          rqMCRem.set(3 + 2 * sumIx, secIx, bals.get(3 + 2 * sumIx, secIx));
+          rqGCRem.set(sumIx, secIx, bals.get(2 + 2 * sumIx, secIx) + bals.get(3 + 2 * sumIx, secIx));// rc = r + c
+          rqMCRem.set(sumIx, secIx, bals.get(2 + 2 * sumIx, secIx) + bals.get(3 + 2 * sumIx, secIx)); //sg = s + g
+          //initialize needs (cost-bal), the negative of available balances
+          rqNeedGG.set(2 + 2 * sumIx, secIx, -bals.get(2 + 2 * sumIx, secIx)); // r, s
+          rqNeedGM.set(2 + 2 * sumIx, secIx, -bals.get(2 + 2 * sumIx, secIx)); //r,s
+          rqNeedGG.set(3 + 2 * sumIx, secIx, -bals.get(3 + 2 * sumIx, secIx)); // c,g
+          rqNeedGM.set(3 + 2 * sumIx, secIx, -bals.get(3 + 2 * sumIx, secIx));
 
           // calculate remainders bal-required cost to find % cost 
-          for (int mm : IA03) {
+          for (int subsIx : IA03) {
             // Remainders after subtrace units costs type A10Row
             // Note A10row subtracts from SG && RC
-            rqGCRem.add(2 + 2 * m, n, -(rqGC.get(2 + 4 * m + mm, n))); //-sum r,s costs
-            rqMCRem.add(2 + 2 * m, n, -(rqMC.get(2 + 4 * m + mm, n)));
-            //rqGCRem.add(m, n, -(rqGC.get(2 + 4 * m + mm, n))); //-sum rc,sg costs
-            //rqMCRem.add(m, n, -(rqMC.get(2 + 4 * m + mm, n)));
-            // needs -bal + costs all units
-            rqNeedGG.add(2 + 2 * m, n, (1. + mGrowthGoal) * rqGC.get(2 + 4 * m + mm, n));
-            rqNeedGM.add(2 + 2 * m, n, (1. + mMaintGoal) * rqMC.get(2 + 4 * m + mm, n));
-            //rqNeedGG.add(m, n, (1. + mGrowthGoal) * rqGC.get(2 + 4 * m + mm, n));
-            //rqNeedGM.add(m, n, (1. + mMaintGoal) * rqMC.get(2 + 4 * m + mm, n));
-          } // xit mm
-          // set 0,1 rows
-          rqGCRem.set(m, n, rqGCRem.get(2 + 2 * m, n) + rqGCRem.get(3 + 2 * m, n));// rc,sg
-          rqMCRem.set(m, n, rqMCRem.get(2 + 2 * m, n) + rqMCRem.get(3 + 2 * m, n));
-          rqNeedGG.set(m, n, rqNeedGG.get(2 + 2 * m, n) + rqNeedGG.get(3 + 2 * m, n));// rc,sg
-          rqNeedGM.set(m, n, rqNeedGM.get(2 + 2 * m, n) + rqNeedGM.get(3 + 2 * m, n));
-          // fracs just the 0,1 rows units/units
-          //         E.myTest((t2=rqGC.get(m,n)) == 0.0 ||t2 == -0. ,"rqGC[%d][%d]=%7.2f zero",m,n,t2); 
-          //       E.myTest((t2=rqMC.get(m,n)) == 0.0 ||t2 == -0.,"rqMC[%d][%d]=%7.2f zero",m,n,t2); 
-          // decide that zero cost is legal, so just make results a very large Frac
-          t4 = ((t3 = rqGC.get(m, n)) < E.PZERO) || t3.isInfinite() || t3.isNaN() ? E.UNZERO : t3; //r,s
+            rqGCRem.add(2 + 2 * sumIx, secIx, -(reqGrowthCosts.get(2 + 4 * sumIx + subsIx, secIx))); //-sum r,s costs
+            rqMCRem.add(2 + 2 * sumIx, secIx, -(reqMaintCosts.get(2 + 4 * sumIx + subsIx, secIx)));
+            //rqGCRem.add(sumIx, secIx, -(reqGrowthCosts.get(2 + 4 * sumIx + subsIx, secIx))); //-sum rc,sg costs
+            //rqMCRem.add(sumIx, secIx, -(reqGrowthCosts.get(2 + 4 * sumIx + subsIx, secIx)));
 
-          rqGFrac.set(m, n, rqGCRem.get(2 + 2 * m, n) / t4); //r,s
-          t4 = (t3 = rqMC.get(m, n)) < E.PZERO || t3.isInfinite() || t3.isNaN() ? E.UNZERO : t3; //r,s
-          rqMFrac.set(m, n, rqMCRem.get(2 + 2 * m, n) / t4);
-        } // xit m
-      } // xit n
+            // needs -bal + costs all units using goals
+            rqNeedGG.add(2 + 2 * sumIx, secIx, (1. + mGrowthGoal) * reqGrowthCosts.get(2 + 4 * sumIx + subsIx, secIx)); // R,S
+            rqNeedGM.add(2 + 2 * sumIx, secIx, (1. + mMaintGoal) * reqMaintCosts.get(2 + 4 * sumIx + subsIx, secIx)); // R,S not C G but took all costs
+            //rqNeedGG.add(sumIx, secIx, (1. + mGrowthGoal) * reqGrowthCosts.get(2 + 4 * sumIx + subsIx, secIx));
+            //rqNeedGM.add(sumIx, secIx, (1. + mMaintGoal) * reqMaintCosts.get(2 + 4 * sumIx + subsIx, secIx));
+          } // xit subsIx
+          // set 0,1 rows
+          rqGCRem.set(sumIx, secIx, rqGCRem.get(2 + 2 * sumIx, secIx) + rqGCRem.get(3 + 2 * sumIx, secIx));// rc,sg
+          rqMCRem.set(sumIx, secIx, rqMCRem.get(2 + 2 * sumIx, secIx) + rqMCRem.get(3 + 2 * sumIx, secIx));
+          rqNeedGG.set(sumIx, secIx, rqNeedGG.get(2 + 2 * sumIx, secIx) + rqNeedGG.get(3 + 2 * sumIx, secIx));// rc,sg
+          rqNeedGM.set(sumIx, secIx, rqNeedGM.get(2 + 2 * sumIx, secIx) + rqNeedGM.get(3 + 2 * sumIx, secIx));
+          // fracs just the 0,1 rows units/units
+          //         E.myTest((t2=reqGrowthCosts.get(sumIx,secIx)) == 0.0 ||t2 == -0. ,"reqGrowthCosts[%d][%d]=%7.2f zero",sumIx,secIx,t2);
+          //       E.myTest((t2=reqGrowthCosts.get(sumIx,secIx)) == 0.0 ||t2 == -0.,"reqGrowthCosts[%d][%d]=%7.2f zero",sumIx,secIx,t2);
+          //calculate the req growth and maint costs
+          // decide that zero cost is legal, so just make results a very large Frac
+          t4 = ((t3 = reqGrowthCosts.get(sumIx, secIx)) < E.PZERO) || t3.isInfinite() || t3.isNaN() ? E.UNZERO : t3; //r,s
+          // take the positive rem / calc reqCosts for reqgrowth and reqmaint  = a frac
+          rqGFrac.set(sumIx, secIx, rqGCRem.get(2 + 2 * sumIx, secIx) / t4); //r,s
+          t4 = (t3 = reqMaintCosts.get(sumIx, secIx)) < E.PZERO || t3.isInfinite() || t3.isNaN() ? E.UNZERO : t3; //r,s
+          rqMFrac.set(sumIx, secIx, rqMCRem.get(2 + 2 * sumIx, secIx) / t4);
+        } // xit sumIx
+      } // xit secIx
       /*
         A10Row consumerHealthMTGCosts10, consumerTrav1YrCosts10, consumerMaintCosts10;
     A10Row consumerReqGrowthCosts10, consumerReqMaintCosts10, consumerTravelCosts10, consumerFertilityMTGCosts10;
     A10Row consumerHealthEMTGCosts10, consumerFertilityEMTGCosts10;
     A10Row consumerRawGrowthCosts10;
        */
-      double minH = rqMFrac.min();
-      //  poorHealthAveEffect = poorHealthEffect = PHE = eM.poorHealthPenalty[pors]
-      // minH < 0 increases to -.5 == 2.5
-      // minH < -.5 == 2.5, minH < 0. 2 + minH, minH == .5  to 1.3, 1. = 1.
-      // minH ==2.= .7 
-      // minH > 2 top benifit
-      poorHealthAveEffect = poorHealthEffect
-              = PHE = minH < 0. ? 2 - minH : minH < .5 ? 2. - minH * 2 * .7 : minH < 1. ? 1.7 + (minH - .5) * 2. * .3 : minH <= 2. ? 1. - (minH - 1.) * .3 : 7.;
+      //now the point of required growth and maint is an input to the poorHealthEffect
+      // phe is muoltiplied against costs, the smaller min the higher the effect
+      // calculation. start with min of the 2 fracs
+       minH = Math.min(rqGFrac.min(), rqMFrac.min());
+      //  poorHealthAveEffect = poorHealthEffect = phe = eM.poorHealthPenalty[pors]
+      // phe goals
+      // minH < 0 increases 2 - minh  result > 2.--3.
+      // minH < 0.5 ? 2 - minH ==  2. -- 1.5
+      // minH < 1.? 2,- minH  = 1.5 --1.0.
+      // minH < 1.5? 2 - minH 1.0  -- ,.5
+      // minH > 1.5  ? .5 -- .5
+      phe = poorHealthEffect = minH < 1.5 ? 2. - minH : .5;
+      // = phe = minH < 0. ? 2. - minH : minH < .5 ? (2. - minH * .2) * .7
+      //  : minH < 1. ? 1.7 + (minH - .5) * 2. * .3 : minH <= 2. ? 1. - (minH - 1.) * .3 : .7;
 
       ec.blev2 = bLev = Math.min(History.debuggingMinor11, aDl);
       // now compute the effective reqhealth and reqfertility
@@ -11615,11 +11622,11 @@ public class Assets {
       if (alev <= bLev) {
         hist.add(new History(aPre, History.loopMinorConditionals5, " values", "minMFrac", EM.mf(minH), "mGoal", EM.mf(mMaintGoal), "mGrowthGoal", EM.mf(growthGoal), "growthYrs", "" + growYears, "growthMult", EM.mf(growMult)));
         bals.sendHist(alev, aPre);
-        rawGC.sendHist(blev, alev, aPre, "rawGC");
+        rawGrowthCosts.sendHist(blev, alev, aPre, "rawGrowthCosts");
         rawG.sendHist(blev, aPre, alev, "rawG");
         //   mbals.sendHist24(bLev, aPre, alev, "r mbal", "s mbal");
-        rqGC.sendHist(blev, alev, aPre, "rqGC");
-        rqMC.sendHist(blev, alev, aPre, "rqMC");
+        reqGrowthCosts.sendHist(blev, alev, aPre, "reqGrowthCosts");
+        reqGrowthCosts.sendHist(blev, alev, aPre, "reqGrowthCosts");
         rqGCRem.sendHist(alev, aPre);
         rqMCRem.sendHist(alev, aPre);
         rqGFrac.sendHist(alev, aPre);
@@ -11630,27 +11637,29 @@ public class Assets {
         rawGrowthCosts.sendHist(alev, aPre);//rawGCosts10
       }
 
-      A10Row mtCosts10 = new A10Row(ec, alev, "mtCosts10").setAdd(maintCosts, travelCosts);
+      A10Row mtCosts10 = bals.use2(ABalRows.MTCOSTS2IX, alev, "mtCosts10").setAdd(maintCosts, travelCosts);
+      //   A10Row mtCosts10 = new A10Row(ec, alev, "mtCosts10").setAdd(maintCosts, travelCosts);
       consumerMTC6 = new A6Row(ec, alev, "ConMTC6").setAdd(make6(consumerMaintCosts10, "CMC6"), make6(consumerTravelCosts10, "CTC6"));
       checkNegCosts(mtCosts10, "mtCosts10");
       checkNegCosts(maintCosts, "maintCosts");
       checkNegCosts(travelCosts, "travelCosts");
-      //  mtNegs.setAmultV(mtCosts10, PHE);  // output
+      //  mtNegs.setAmultV(mtCosts10, phe);  // output
       // apply the poor health penalty to mt costs
-      A10Row mtEC = new A10Row(ec, alev, "mtEC").setAmultV(mtCosts10, PHE);
-      consumerEMTC6 = new A6Row(ec, alev, "ConEMTC6").setAmultV(consumerMTC6, PHE);
-      checkNegCosts(mtEC, "mtEC" + " P=" + EM.mf(PHE));
-      pmNegs.setAmultV(maintCosts, PHE);
-      ptNegs.setAmultV(travelCosts, PHE);
-      mtNegs.set(mtEC);
-      A10Row rawEGC = new A10Row(ec, alev, "rawEGC").setAmultV(rawGC, PHE);
-      checkNegCosts(rawGC, "rawGC");
-      checkNegCosts(rawEGC, "rawEGC" + " P=" + EM.mf(PHE));
+      A10Row mtEC10 = bals.use2(ABalRows.MTECCOSTS2IX, alev, "mtEC10").setAmultV(mtCosts10, phe);
+      // A10Row mtEC = new A10Row(ec, alev, "mtEC").setAmultV(mtCosts10, phe);
+      consumerEMTC6 = new A6Row(ec, alev, "ConEMTC6").setAmultV(consumerMTC6, phe);
+      checkNegCosts(mtEC10, "mtEC" + " P=" + EM.mf(phe));
+      pmNegs.setAmultV(maintCosts, phe);
+      ptNegs.setAmultV(travelCosts, phe);
+      mtNegs.set(mtEC10);
+      A10Row rawEGC = new A10Row(ec, alev, "rawEGC").setAmultV(rawGrowthCosts, phe);
+      checkNegCosts(rawGrowthCosts, "rawGrowthCosts");
+      checkNegCosts(rawEGC, "rawEGC" + " P=" + EM.mf(phe));
 
       A6Row pRemMT = new A6Row(ec, alev, "pRemMt");
       // (bals-mt) = remMt amount left for growth cost
       // remMt/gCost = mtgFraqc possible growth frac
-      A2Row mtgFrac = new A2Row(ec, alev, "mtgFrac").setFracAsubBdivByCnRem(balances, mtEC, rawEGC, pRemMT);
+      A2Row mtgFrac = new A2Row(ec, alev, "mtgFrac").setFracAsubBdivByCnRem(balances, mtEC10, rawEGC, pRemMT);
       // rawFertilities2 is the frac min of mtg frac, the the required fracs
       A2Row minFracs = rawFertilities2.setMin(mtgFrac, rqGFrac);
       // set limits on fertility
@@ -11662,7 +11671,7 @@ public class Assets {
       growthNegs = growthNegs.setAmultF(rawEGC, minLFrac);
       checkNegCosts(growthNegs, "growthNegs");
       // now get total costs mt and growth
-      mtgNegs.setAdd(mtEC, growthNegs);
+      mtgNegs.setAdd(mtEC10, growthNegs);
       checkNegCosts(mtgNegs, "mtgNegs");
       // finish the return value
       // now start needs6 calculation for C and G & R and S
@@ -11670,15 +11679,15 @@ public class Assets {
       // save the least remnant of bal - mtgNegs: rqMCRem:rqGCrem
       double balSum = bals.curSum();
       double tt1 = 0., tt2 = 0., tt3 = 0.;
-      for (int n = 0; n < LSECS; n++) {
-        for (int m = 0; m < 2; m++) {
-          tt1 = rqMCRem.get(m, n);
-          tt2 = rqGCRem.get(m, n);
-          tt3 = bals.get(2 + 2 * m, n) + growths.get(m, n) - mtgNegs.get(m, n); // +2 r, +4 s
-          rtn.set(3 + 2 * m, n, -mtgAvails6.set(3 + 2 * m, n, bals.get(3 + 2 * m, n))); // +3 c, +5 g
+      for (int secIx = 0; secIx < LSECS; secIx++) {
+        for (int sumIx = 0; sumIx < 2; sumIx++) {
+          tt1 = rqMCRem.get(sumIx, secIx);
+          tt2 = rqGCRem.get(sumIx, secIx);
+          tt3 = bals.get(2 + 2 * sumIx, secIx) + growths.get(sumIx, secIx) - mtgNegs.get(sumIx, secIx); // +2 r, +4 s
+          rtn.set(3 + 2 * sumIx, secIx, -mtgAvails6.set(3 + 2 * sumIx, secIx, bals.get(3 + 2 * sumIx, secIx))); // +3 c, +5 g
           //now needs are -bal + negs(costs) - any additional growth
           // avails is the least remnant
-          rtn.set(2 + 2 * m, n, -mtgAvails6.set(2 + 2 * m, n, tt1 < tt2 ? tt1 < tt3 ? tt1 : tt3 : tt2 < tt3 ? tt2 : tt3));
+          rtn.set(2 + 2 * sumIx, secIx, -mtgAvails6.set(2 + 2 * sumIx, secIx, tt1 < tt2 ? tt1 < tt3 ? tt1 : tt3 : tt2 < tt3 ? tt2 : tt3));
         }
       }
       /*
@@ -11689,9 +11698,9 @@ public class Assets {
     A6Row consumerMTC6,consumerEMTC6m=,,consumerEMTGC6;
        */
       // rawProspects, one way of predicting future need based on current availability over ave balance
-      for (int n = 0; n < LSECS; n++) {
-        for (int m = 0; m < 2; m++) {
-          rawProspects2.set(m, n, (mtgAvails6.get(m, n)) * 14 / balSum);
+      for (int secIx = 0; secIx < LSECS; secIx++) {
+        for (int sumIx = 0; sumIx < 2; sumIx++) {
+          rawProspects2.set(sumIx, secIx, (mtgAvails6.get(sumIx, secIx)) * 14 / balSum);
         }
       }
       /*
@@ -11711,26 +11720,26 @@ public class Assets {
       // now calculate goalmtNeeds and goalmtgNeeds
       // mGG = (gYear* (bal - (pMt + gmult*gGC))/gmult*gGC
       double na, nb, nc, nd;
-      for (int n = 0; n < LSECS; n++) {
-        for (int m = 0; m < 2; m++) {
-          nb = rqNeedGG.get(2 + 2 * m, n); // required Growth Need
-          nc = rqNeedGM.get(2 + 2 * m, n);  // required Maint Need
+      for (int secIx = 0; secIx < LSECS; secIx++) {
+        for (int sumIx = 0; sumIx < 2; sumIx++) {
+          nb = rqNeedGG.get(2 + 2 * sumIx, secIx); // required Growth Need
+          nc = rqNeedGM.get(2 + 2 * sumIx, secIx);  // required Maint Need
           //r,s needs total g costs - r,s g growths
-          mtgGNeeds.set(2 + 2 * m, n, na = -bals.get(2 + 2 * m, n) + gYears * (mtEC.get(m, n) + (mGrowthGoal * gMult * (rawEGC.get(m, n) - rawG.get(2 + 2 * m, n)))));
-          goalmtNeeds.set(2 + 2 * m, n, -bals.get(2 + 2 * m, n) + gYears * (mtEC.get(m, n)));
-          goalmtNeeds.set(3 + 2 * m, n, -bals.get(3 + 2 * m, n) + gYears * (mtEC.get(m, n)));
-          mtg1GNeeds.set(2 + 2 * m, n, nd = -bals.get(2 + 2 * m, n) + (mtEC.get(m, n) + (mGrowthGoal * gMult * (rawEGC.get(m, n) - rawG.get(2 + 2 * m, n)))));
-          goalmtg1Negs.set(2 + 2 * m, n, -bals.get(2 + 2 * m, n) + (mtEC.get(m, n) + mGrowthGoal * rawEGC.get(m, n)));
-          goalmtgNeeds.set(2 + 2 * m, n, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
-          goalmtg1Needs.set(2 + 2 * m, n, nd > nb ? nd > nc ? nd : nc : nb > nc ? nb : nc);
-          nd = -bals.get(3 + 2 * m, n);
-          goalmtg1Needs.set(3 + 2 * m, n, -bals.get(3 + 2 * m, n) - (mGrowthGoal * gMult * rawG.get(3 + 2 * m, n)));
-          mtgGNeeds.set(3 + 2 * m, n, na = -bals.get(3 + 2 * m, n) - (gYears * mGrowthGoal * gMult * rawG.get(3 + 2 * m, n)));
-          goalmtgNeeds.set(3 + 2 * m, n, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
-          na = -bals.get(2 + 2 * m, n) + gYears * (mtEC.get(m, n));
-          goalmtNeeds.set(2 + 2 * m, n, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
-          na = -bals.get(3 + 2 * m, n);
-          goalmtNeeds.set(3 + 2 * m, n, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
+          mtgGNeeds.set(2 + 2 * sumIx, secIx, na = -bals.get(2 + 2 * sumIx, secIx) + gYears * (mtEC10.get(sumIx, secIx) + (mGrowthGoal * gMult * (rawEGC.get(sumIx, secIx) - rawG.get(2 + 2 * sumIx, secIx)))));
+          goalmtNeeds.set(2 + 2 * sumIx, secIx, -bals.get(2 + 2 * sumIx, secIx) + gYears * (mtEC10.get(sumIx, secIx)));
+          goalmtNeeds.set(3 + 2 * sumIx, secIx, -bals.get(3 + 2 * sumIx, secIx) + gYears * (mtEC10.get(sumIx, secIx)));
+          mtg1GNeeds.set(2 + 2 * sumIx, secIx, nd = -bals.get(2 + 2 * sumIx, secIx) + (mtEC10.get(sumIx, secIx) + (mGrowthGoal * gMult * (rawEGC.get(sumIx, secIx) - rawG.get(2 + 2 * sumIx, secIx)))));
+          goalmtg1Negs.set(2 + 2 * sumIx, secIx, -bals.get(2 + 2 * sumIx, secIx) + (mtEC10.get(sumIx, secIx) + mGrowthGoal * rawEGC.get(sumIx, secIx)));
+          goalmtgNeeds.set(2 + 2 * sumIx, secIx, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
+          goalmtg1Needs.set(2 + 2 * sumIx, secIx, nd > nb ? nd > nc ? nd : nc : nb > nc ? nb : nc);
+          nd = -bals.get(3 + 2 * sumIx, secIx);
+          goalmtg1Needs.set(3 + 2 * sumIx, secIx, -bals.get(3 + 2 * sumIx, secIx) - (mGrowthGoal * gMult * rawG.get(3 + 2 * sumIx, secIx)));
+          mtgGNeeds.set(3 + 2 * sumIx, secIx, na = -bals.get(3 + 2 * sumIx, secIx) - (gYears * mGrowthGoal * gMult * rawG.get(3 + 2 * sumIx, secIx)));
+          goalmtgNeeds.set(3 + 2 * sumIx, secIx, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
+          na = -bals.get(2 + 2 * sumIx, secIx) + gYears * (mtEC10.get(sumIx, secIx));
+          goalmtNeeds.set(2 + 2 * sumIx, secIx, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
+          na = -bals.get(3 + 2 * sumIx, secIx);
+          goalmtNeeds.set(3 + 2 * sumIx, secIx, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
         }
       }
       A6Row goalGG = new A6Row(ec, alev, "goalGG").setAmultV(rawGrowths, mGrowthGoal);
@@ -11741,7 +11750,7 @@ public class Assets {
       // - growth*growMult*growYears
       ec.aPre = aPre = "#d";
       if (alev <= bLev) {
-        mtEC.sendHist(hist, blev, aPre, alev, "mtEC");
+        mtEC10.sendHist(hist, blev, aPre, alev, "mtEC");
         rawEGC.sendHist(blev, aPre, alev, "rawEGC");
         pRemMT.sendHist(blev, aPre, alev, "pRemMT");
         mtgFrac.sendHist(alev, aPre);
@@ -11762,7 +11771,7 @@ public class Assets {
       lev = alev = History.valuesMajor6;
       //    lev = alev = 5;
 
-      hist.add(new History(aPre, History.valuesMajor6, " PHE=" + EM.mf(poorHealthEffect), "gy=" + EM.mf(gYears), "gm=" + EM.mf(growMult), "maintGoal=", EM.mf(maintGoal), "mGrowthGoal=", EM.mf(mGrowthGoal), "<<<<<<<<<<"));
+      hist.add(new History(aPre, History.valuesMajor6, " phe=" + EM.mf(poorHealthEffect), "gy=" + EM.mf(gYears), "gm=" + EM.mf(growMult), "maintGoal=", EM.mf(maintGoal), "mGrowthGoal=", EM.mf(mGrowthGoal), "<<<<<<<<<<"));
 
       growths.sendHist(hist, aPre);
       growthNegs.sendHist(hist, bLev, aPre, alev, "growthNegs");
@@ -11775,7 +11784,7 @@ public class Assets {
       // now set the result = needs,  needed>0, available = -this;
       alev = History.loopMinorConditionals5;
       rtn.blev = aDl;   // set this blev
-      aPre = "n#";
+      aPre = "secIx#";
 
       lev = alev;  // set this level
       if (aDl > 3 || true) {
@@ -12098,7 +12107,7 @@ public class Assets {
         }
         if (rt > -20) {
           prevns[1].listRes("&g", 5);
-          prev.listRes("&m", 5);
+          prev.listRes("&sumIx", 5);
           this.listRes("&n", 4);
         }
         if (n > 1 && (srcIx < 0 || srcIx > 6)) {
