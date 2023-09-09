@@ -46,9 +46,13 @@ public class ABalRows extends A6Rowa {
   static int balz = 0;
   //static String[] titls 
   static final int BALANCESIX = balz += LSUMS; //2
-  static final int MANUALSIX = balz += LSUBS; //6 space for balancesIx
-  static final int COMMONKNOWLEDGEIX = balz += 1; //
-  static final int NEWKNOWLEDGEIX = balz += 1; //
+  static final int INITIALASSETSBALANCESIX = balz += LSUBS; //6
+  static final int STARTYEARBALANCESIX = balz += LSUBS; //10
+  static final int MANUALSIX = balz += LSUBS; //14 space for balancesIx
+  static final int COMMONKNOWLEDGEIX = balz += 1; //15
+  static final int NEWKNOWLEDGEIX = balz += 1; //16
+  static final int INITIALCOMMONKNOWLEDGEIX = balz += 1; //15
+  static final int INITIALNEWKNOWLEDGEIX = balz += 1; //16
   static final int MCOSTSIX = balz += 1; // space for NewKnowledge
   static final int TCOSTSIX = balz += LSUBS;  //10
   static final int GROWTHSIX = balz += LSUBS; //
@@ -56,6 +60,8 @@ public class ABalRows extends A6Rowa {
   static final int PREVWORTHSIX = balz += LSUBS; //
   static final int GROWTHWORTHSIX = balz += LSUBS; //
   static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
+  static final int INITIALASSETSWORTHSIX = balz += LSUBS; //16  WORTH VALUES
+
   static final int BONUSWHORTHIX = balz += LSUBS; //16 L4
   static final int BONUSYEARSIX = balz += LSUBS; //16 L4
   static final int BONUSUNITSIX = balz += LSUBS;//24 L4
@@ -64,7 +70,7 @@ public class ABalRows extends A6Rowa {
   static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
   static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; //36 L4
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //40
-  static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS; //40
+  static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTZEROINGIX = balz; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
   static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //aStartCashFlow zero fills 
   static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth
@@ -75,10 +81,11 @@ public class ABalRows extends A6Rowa {
   static final int MTGCOSTSIX = balz += LSUBS; //
   static final int TRADEDGROWTHSIX = balz += LSUBS; //
   static final int MTCOSTS2IX = balz += LSUBS; //
-  static final int MTECCOSTS2IX = balz += LSUMS; //
-  static final int SWAPPEDGROWTHSIX = balz += LSUMS; //
+  static final int MTECCOSTS2IX = balz += LSUBS; //
+  static final int STARETYEARWORTHSIX = balz += LSUBS; //16 WORTH VALUES
+  static final int SWAPPEDGROWTHSIX = balz += LSUBS; //
   static final int endOfArrays = balz += LSUBS; //
-  static final int BALSLENGTH = balz += 2; //64
+  static final int BALSLENGTH = balz += 2; //
   static int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
   static int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
   static int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
@@ -121,8 +128,8 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * copy first 6 rows of ABalRows object to an A6Row object , b is a new object
-   * lev,titl,balances,costs,blev are all copied as well as A[] values
+   * copy first 6 rows of ABalRows object to an new A6Row object , b is a new
+   * object   * lev,titl,balances,costs,blev are all copied as well as A[] values
    *
    * @param level for this A6Row
    *
@@ -146,11 +153,11 @@ public class ABalRows extends A6Rowa {
 
   /**
    * copy the values from one ABalRows to another but do not change any
-   * references. This is used for swap redo and must not change the ar
-   * references
+   * references. This is used for swap redo and must not change the references
+   * of this
    *
-   * @param prev a new value for HSwaps a previous value from HSwaps
-   * @return the revised values of this with no references changed
+   * @param prev new values from a HSwaps previous value
+   * @return the revised values for this with no this references changed
    */
   public ABalRows copyValues(ABalRows prev) {
     for (int m = 0; m < BALSLENGTH; m++) {
@@ -168,8 +175,9 @@ public class ABalRows extends A6Rowa {
     }// end i
     return this;
   }
-  /** fill any null rows with an empty new row
-   * 
+  /**
+   * fill any null rows with an zeroed new row
+     * 
    */
   void emptyFill(){
     for(int rowIx=0; rowIx < BALSLENGTH-1; rowIx++){
@@ -186,9 +194,10 @@ public class ABalRows extends A6Rowa {
     }
   }
 
-  /** get the balances A6Row from bals, including copy grades
-   * only move reverence for the A[2] thru A[4]
-   * 
+  /**
+   * get the balances A6Row from bals, only move references from the A[0] thru
+   * A[5]
+     * 
    * @param lev  level of the copied A6Row
    * @param atitl title of the A6Row
    * @return the A6Row
@@ -197,13 +206,13 @@ public class ABalRows extends A6Rowa {
     A6Row rtn = new A6Row(ec,tbal, lev, atitl);
     for (int i = 0; i < 6; i++) {
       rtn.A[i] = A[i];
-      rtn.A[i].addCnt();
+      // rtn.A[i].addCnt();
     }
     return rtn;
   }
   
-  /** copy the balances A6Row from bals,
-   * grades must be copied separately
+  /**
+   * copy the balance references to A6Row return from bals,   * grades must be copied separately
    * 
    * @param lev  level of the copied A6Row
    * @param atitl title of the A6Row
@@ -252,18 +261,52 @@ public class ABalRows extends A6Rowa {
     }
     return rtn;
   }
-  /** copy 4 rows of values from rows biasA to biasB
-   * 
+  /**
+   * set 4 rows of values from rows biasA to biasB
+     * 
    * @param biasA the index of the first row of the sources
    * @param biasB the index of the second row of targets
    */
-  void copy4AtoB(int biasA,int biasB){
+  void set4AtoB(int biasA, int biasB) {
     for(int rowIx:A03){
       for(int secIx:E.ASECS){
-        A[biasA+rowIx].set(secIx,A[biasB+rowIx].get(secIx));
+        A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
       }
     }
   }
+  /** get the percent of sum of row biasA over sum of row biasB
+   * 
+   * @param biasA divisor row
+   * @param biasB dividend row
+   * @return sumA * 100/sumB
+   */
+  double getPercentSumsAofB(int biasA, int biasB){
+    double sumA=0.,sumB=0.;
+    for(int secIx:E.ASECS){
+      sumA += A[biasA].get(secIx);
+      sumB += A[biasB].get(secIx);
+    }
+    return sumB * 100. / sumA;
+  }
+  /**
+   * get the percent of sum4 of sum of rows biasA over sum4 of sum of rows biasB
+   *
+   * @param biasA divisor row
+   * @param biasB dividend row
+   * @return sumB * 100/sumA
+   */
+  double getPercentSum4SumAofB(int biasA, int biasB) {
+    double sumA=0.,sumB=0.;
+    for(int rowIx:A03){
+      for(int secIx:E.ASECS){
+        sumA += A[biasA+rowIx].get(secIx);
+        sumB += A[biasB+rowIx].get(secIx);
+      }
+    }
+    return sumB * 100. / sumA;
+  }
+       
+  
 
   /**
    * zero m & t costs internally

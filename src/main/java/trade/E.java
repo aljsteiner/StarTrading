@@ -132,6 +132,7 @@ public class E {
   static boolean debugDoRes = debugMaster; //errors from settings doValx
   static final boolean SWAPTRADESYSTEMOUT = debugMaster;  //Swap outputs
   static final boolean PAINTDISPLAYOUT = debugMaster; //outputs from StarTrader displays
+  static final boolean DEBUGCALCGROWTH = debugMaster;
   static final boolean tradeInitOut = debugMaster;
   static final boolean DEBUGASSETSOUT = debugMaster;
   static final boolean debugPutValue = debugMaster; //test putValue processing
@@ -1854,7 +1855,7 @@ public class E {
   }
 
   public static boolean sysmsgDone = false;
-  static public int dmsgs = 1900;
+  static public int dmsgs = 5900;
   static public int msgs = dmsgs;
   static public int msgcnt = 0;
 

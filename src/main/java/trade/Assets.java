@@ -193,7 +193,7 @@ public class Assets {
   boolean iCF = false; // did initCashFlow;
   static final boolean subAssetsIsStaff[] = {false, false, true, true};
   static final boolean subAssetsIsReserve[] = {false, true, false, true};
-  boolean assetsInitialized = false;
+
   // The following Ix are 2 to 18 are starting indexs for the 4 SubAsset Ix
   // A6Row[] needsArray;
   ARow aSectorPriority;
@@ -321,8 +321,10 @@ public class Assets {
   ABalRows bals;
   boolean didGoods = false;
   //Assets do deterioration in calcGrowth only first time each year, set false in endYear
-  boolean didStart = false, didDepreciation = false, didCashFlowInit = false;
+  boolean didStart = false, didDepreciation = false, didCashFlowStart = false;
+  boolean didCashFlowInit = false; //true after first time through CashFlow
   boolean endYearEnd = false;
+  boolean assetsInitialized = false;
   A6Row balances; // balances
   A6Row cashFlowSubAssetBalances; // assume no recreate of each ARow
   A6Row growths;  // Subset of ABalRows
@@ -366,7 +368,7 @@ public class Assets {
   String[][] resS; //space for desc, comment
   double[][][][] resV;
   long[][][][] resI;
-  int rende3 = 700;  // Assets for setStats
+  // int rende3 = 700;  // Assets for setStats
   int lStatsWaitList = 10;
   String[] statsWaitList;
   int ISSET, ICUR0, MAXDEPTH, ICUM, CCONTROLD;
@@ -462,6 +464,9 @@ public class Assets {
    * @param aaknowledge units of common knowledge
    * @param aapercentDifficulty difficult percent
    * @param aatranda points to an array of random values between 0. - 2.
+   *
+   * Terminate with bals set to balances and other things set in assets, null
+   * cur leave assetsInitialized
    */
   public void assetsInit(int aeconCnt, Econ aaec, StarTrader stx, EM aeM, String aaname, int aaclan, int aapors, ArrayList<History> aahist, double iwealth, double aawealth, ARow aasectorPri, double aares, double aacolonists, double aaknowledge, double aapercentDifficulty, double[] aatranda) {
     System.out.println("AssetsInit 357 start=" + aaname);
@@ -512,7 +517,7 @@ public class Assets {
     manuals = new ARow(ec);
     moreK = new ARow(ec); // in doGrow incr knowledge
     lessM = new ARow(ec); // in doGrow The manual made commonKnowledge
-    rende3 = eM.rende3;
+    // rende3 = eM.rende3;
     resS = eM.resS; //space for desc, comment
     resV = eM.resV;
     resI = eM.resI;
@@ -534,6 +539,8 @@ public class Assets {
     cur = new CashFlow(this);
     cur.aStartCashFlow(this);
     assetsInitialized = true;
+    bals.set4AtoB(ABalRows.BALANCESIX, ABalRows.INITIALASSETSBALANCESIX);
+    cur = null;
   } // end Assets.assetsInit
 
   /**
@@ -1167,15 +1174,15 @@ public class Assets {
    *
    * @param forceInit set true if a desired trade value is unset
    */
-  String didTradeInitCF = "noTradeInitCF";
+  String didTradeInitCF = "not Init CF";
 
   void getTradeInit(boolean forceInit) {
-    didTradeInitCF = "notTICF";
+    didTradeInitCF = "not Init CF ";
     boolean startedCF = false;
     yphase = yrphase.TRADE;
     if (forceInit) {
-      if (cur == null) {
-        eM.wasHere = "Assets.getTradeInit before new CashFlow";
+      if (cur == null || !didCashFlowStart) {
+        eM.printHere("----AITA----", ec, "Assets.getTradeInit befpre start cashflow" + (didCashFlowInit ? " didCashFlowInit" : " !didCashFlowInit") + (didCashFlowStart ? " didCashFlowStart" : " !didCashFlowStart"));
         cur = new CashFlow(this);
         eM.wasHere = "Assets.getTradeInit before aStartCashFlow";
         cur.aStartCashFlow(this);
@@ -1183,14 +1190,14 @@ public class Assets {
         didTradeInitCF = "yesTICF";
         eM.wasHere = "Assets.getTradeInit after aStartCashFlow";
       }
-      eM.wasHere = "Assets.getTradeInit after start cashflow";
+      eM.printHere("----AITG----", ec, "Assets.getTradeInit after start cashflow" + (didCashFlowInit ? " didCashFlowInit" : " !didCashFlowInit") + (didCashFlowStart ? " didCashFlowStart" : " !didCashFlowStart"));
       cur.getTradeInit(forceInit); // pass to cur CashFlow
       eM.printHere("----AGTI----", ec, " after Assets.getTradeInit " + (tradeStrategicVars == null ? " getTradeInit" : " !getTradeInit"));
       if (startedCF) {
         doNullCur(" from getTradeInit");
       }
     } // forceInit
-    eM.wasHere = "Assets.getTradeInit after cur = null";
+    eM.printHere("----ATIc----", ec, " Assets.getTradeInit after doNullCur");
   }
 
   /**
@@ -1218,8 +1225,31 @@ public class Assets {
    * @return v
    */
   double setStat(int rn, int pors, int clan, double v, int cnt) {
-    int age = ec.age;
-    return setStat(rn, pors, clan, v, cnt, age);
+    return setStat(rn, pors, clan, v, cnt, ec.age);
+  }
+
+  /**
+   * set a statistic value
+   *
+   * @param rn the name of this statistic
+   * @param v the value to be set
+   * @return v
+   */
+  double setStat(int rn, double v) {
+    return setStat(rn, pors, clan, v, 1, ec.age);
+  }
+
+  /**
+   * set a statistic percent value
+   *
+   * @param rn the name of this statistic
+   * @param divisor divisor value
+   * @param dividend dividend value
+   * @return v
+   */
+  double setPercentStat(int rn, double divisor, double dividend) {
+    double v = divisor > E.PPZERO ? 100 * dividend / divisor : 0.0;
+    return setStat(rn, pors, clan, v, 1, ec.age);
   }
 
   int cntStatsPrints = 0;
@@ -1229,11 +1259,9 @@ public class Assets {
    * set a statistic value and a count
    *
    * @param rn the name of this statistic
-   * @param pors planet=0 ship=1
-   * @param clan clan of the request
    * @param v the value to be set
    * @param cnt greater than 0 if this set is to be counted
-   * @param age years since creation of the Econ for this stat
+   *
    * @return v
    */
   double setStat(int rn, int pors, int clan, double v, int cnt, int age
@@ -2067,7 +2095,9 @@ public class Assets {
     tradedManualsWorths = 0.; // worth of manuals received in trades
     //   lightYearsTraveled = lYears;
     if (E.tradeInitOut) {
-      System.out.println("Assets.yearStart " + name + "Y" + EM.year + " thread=" + Thread.currentThread().getName());
+
+      eM.printHere("---ASYa----", ec, " yearStart");
+      //   System.out.println("Assets.yearStart " + name + "Y" + EM.year + " thread=" + Thread.currentThread().getName());
     }
     if (cur == null) {
       cur = new CashFlow(this);
@@ -2156,9 +2186,6 @@ public class Assets {
         EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
       }
     }
-    if (!dead) {
-      getTradeInit(true); // force creation of trade values and rawProspects2
-    }
     doNullCur(" yearEnd");
     if (E.debugEconCnt) {
       if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
@@ -2227,13 +2254,10 @@ public class Assets {
       if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
         EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
       }
-
     }
-
     EM.econCountsTest();
     //   endYearEnd = false;
-    bals.nullEndRows(); // free unneeded rows
-
+    // bals.nullEndRows(); // free unneeded rows
     if (E.debugEconCnt) {
       if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
         EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -2324,7 +2348,7 @@ public class Assets {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
     }
-    if (!didCashFlowInit) {
+    if (!didCashFlowStart) {
       cur.aStartCashFlow(this);
     }
     eM.printHere(E.tradeInitOut, "----ABR2-----", ec, " Assets.barter tradeInitOut term=" + inOffer.getTerm());
@@ -3632,6 +3656,7 @@ public class Assets {
       void initStaff(int asIx, boolean reserve, SubAsset partner, double initCol) {
         aName = "staff";
         worth = bals.getRow(ABalRows.CURWORTHSIX + 2);
+        // sets balance and growth for the asIx SubAsset
         initSubAsset(asIx, reserve, partner);
         sstaff = true;
         other = resource;
@@ -3641,17 +3666,17 @@ public class Assets {
 
         grades = bals.getStaffGrades(); // reset ref grades from bals
         // only init grades at the start of econ, but with tests below
-        boolean initedGrades = didCashFlowInit || grades[0][0] > 0. || grades[0][1] > 0 || grades[0][5] > 0.;
-        if (!initedGrades) {
+        // boolean initedGrades = assetsInited || grades[0][0] > 0. || grades[0][1] > 0 || grades[0][5] > 0.;
+        if (! !assetsInitialized) {
           double sumAssignments = 0.;
-          // first get sum total of grade assignments same all sectors
-          for (int j = 0; j < E.lgrades; j++) {
+          // first get sum total of grade assignments sum of all sectors
+          for (int j = 0; j < E.lgrades; j++) { // cycle grades
             sumAssignments += E.initStaffAssignmentPerEcon[pors][j];
           }
-          for (int i = 0; i < E.lsecs; i++) {
+          for (int i = 0; i < E.lsecs; i++) { // cycle sectors
+            // set s.balance and balances.A[4] as well as bals.A[4]
             bals.set(4, i, (initCol * ySectorPriorityYr.get(i) / ySectorPriorityYr.sum()), "total value for staff per sector");
-
-            for (int j = 0; j < E.lgrades; j++) {
+            for (int j = 0; j < E.lgrades; j++) { // cycle grades
               staff.grades[i][j] = balance.get(i) * E.initStaffAssignmentPerEcon[pors][j] / sumAssignments;
             }// j
           }// i
@@ -3660,7 +3685,7 @@ public class Assets {
 
         } // inited grades
         hist.add(new History("&a", History.valuesMajor6, "staff", balance));
-        staff.checkSumGrades();
+        staff.checkSumGrades();// grades are checked ok
         hist.add(new History("&&", 6, "initstaff=" + EM.mf(initCol), balance));
 
       }//initStaff
@@ -3961,7 +3986,7 @@ public class Assets {
 
       /**
        * calculate rawGrowth of each SubAsset staff are limited by cumulative
-       * unit       * deterioration, maxStaffGrowth with efficiency, random values and
+       * unit * deterioration, maxStaffGrowth with efficiency, random values and
        * priority resources are limited by cumulative unit deterioration,
        * efficiency, priority and random values, cumulative unit deterioration
        * grows from the previous years growth again random factors are applied
@@ -3970,13 +3995,16 @@ public class Assets {
        */
       void calcGrowth() { // Assets.CashFlow.SubAsset.calcGrowth
         splus = spluss[sIx];
+        if (sstaff) {
+          sumGrades();//do recompute includes work
+        }
         //  aschar = aChar[sIx];  alllready set
         //   deteriorationIncSum = cumDepreciationSum = bonusUnitGrowthSum = 0.;
         //ARow rawBiasedUnitGrowth = new ARow(ec);
         // ARow rawSectorPriorityUnitGrowth = new ARow(ec);
         // ARow rawUnitGrowth1 = new ARow(ec);
         //ARow rawUnitGrowth = new ARow(ec);
-        ARow newDepreciation = bals.getRow(ABalRows.NEWUNITDEPRECIATIONIX + sIx);
+        ARow newUnitDepreciation = bals.getRow(ABalRows.NEWUNITDEPRECIATIONIX + sIx);
         ARow rg1 = new ARow(ec);
         //ARow rg2 = new ARow(ec);
         ARow rg3 = new ARow(ec);
@@ -3996,36 +4024,36 @@ public class Assets {
         prevWorth.set(worth = make(worth));
         prevHealth.set(health = make(health));
         growth = bals.getRow(ABalRows.GROWTHSIX + sIx);
+        cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx);
         prevGrowth.set(growth);
         // growthsix includes the catstrophy benefits from last year
         //bals.getRow(ABalRows.PREVGROWTHSIX + sIx).set(bals.getRow(ABalRows.GROWTHSIX + sIx).copy());
 
         // prevFertility = make(fertility);
         // prevNeed = make(need).copy();
-        //   ARow newDepreciation;
+        //   ARow newUnitDepreciation;
         if (sIx == 2) {
           aChar[sIx] = "s";  // sometimes got lost
         }
         if (!didDepreciation) { // no more cumulative deterioration if already done this year 
-          cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx);
-          newDepreciation = bals.getRow(ABalRows.NEWUNITDEPRECIATIONIX + sIx);
           // prevGrowth includes the catstrophy benefits from last year
-          newDepreciation.set(prevGrowth);
-          newDepreciation.mult(eM.growthDepreciation[sIx][pors]);
-          cumulativeUnitDepreciation.add(newDepreciation);
+          // newUnitDepreciation.setAmultV(prevGrowth, eM.yearsDepreciation[sIx] * .5);
+          // newUnitDepreciation.setAdivbyB(newUnitDepreciation, balance); // change to units depreciation
+          newUnitDepreciation.set(prevGrowth);
+          newUnitDepreciation.mult(eM.growthDepreciation[sIx][pors]);
+          cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
           int[] depreciations = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
-          setStat(depreciations[sIx], pors, clan, cumulativeUnitDepreciation.sum(), 1);
+          setStat(depreciations[sIx], cumulativeUnitDepreciation.sum());
+
+          setStat(EM.NEWDEPRECIATIONPs[sIx], newUnitDepreciation.sum());
           //  bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx).add(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx), yearlyDepreciation.setAmultV(bals.getRow(ABalRows.PREVGROWTHSIX + sIx), eM.growthDepreciation[sIx][pors]));
           // later    handle bonuses  didDepreciation = true;
-        }
+        }// !didDepreciation
 
         double bonusLeft = 0;
-        if (sstaff) {
-          sumGrades();//do recompute includes work
-        }
+
         // calculate raw growth for this year.  A function of game growth value,
         // economy priorities, and groEfficiency
-
         // find growth fraction, less as the balance sum increases until large maxStaffGrowth
         //    double yuGrow[] = {0.,0.,0.,0.,0.,0.,0.,0.};
         // calculate each sector raw unit growth
@@ -4033,12 +4061,14 @@ public class Assets {
           // double a1 = balance.get(n);
           // double a2 = partner.balance.get(n);
           // yearlyUnitGrowth1 will go negative if deterioration is larger
-          //limit staff growth by eM.maxStaffGrowth[pors]
-          growthFrac = fracGrowths.set(secIx, (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors]);
+          //limit staff growth by eM.maxStaffGrowth[pors] less growth as larger
+          growthFrac = fracGrowths.set(secIx, sstaff ? (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors] : 1.0);
           double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
           // double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.add(secIx , (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.))));
-          double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx,
-                                                   rawYearlyUnitGrowth.set(secIx, EM.assetsUnitGrowth[sIx][pors] * (sstaff ? growthFrac : 1.0) * EM.fracBiasInGrowth[pors]));
+          double dRawYearlyUnitGrowth = EM.assetsUnitGrowth[sIx][pors] * growthFrac * EM.fracBiasInGrowth[pors];
+          double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx, rawYearlyUnitGrowth.set(secIx, dRawYearlyUnitGrowth));
+          setStat(EM.RAWYEARLYUNITGROWTHs[sIx], dRawYearlyUnitGrowth);
+          // RRAWYEARLYUNITGROWTH
           //   double dPotentialSumUnitGrowth = dYrPotentialUnitGrowth + dBonusYearUnitGrowth;
           double dRawEarlyUnitGrowth = dYrPotentialUnitGrowth - cumulativeUnitDepreciation.get(secIx);
           //dRawYearlyUnitGrowth must be positive
@@ -4050,8 +4080,13 @@ public class Assets {
           // limitedBonusYearlyUnitGrowth.set(secIx,dLimitedBonusYearUnitGrowth);
           double drawUnitGrowth = rawUnitGrowth.set(secIx, dRawEarlyUnitGrowth + dLimitedBonusYearUnitGrowth);
           // now find the frac of Bonus left in rawUnitGrowth
-          double dYearlyBonusGrowthFrac = bals.set(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx, secIx, dLimitedBonusYearUnitGrowth / drawUnitGrowth);
-
+          ARow yearlyBonusSumGrowthFrac = bals.getRow(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx);
+          //if rawUnitGrowth > 0, than than divid otherwise only a small result
+          double dYearlyBonusGrowthFrac = (drawUnitGrowth > E.PZERO ? ec.doubleTrouble(dLimitedBonusYearUnitGrowth, "dLimitedBonusYearUnitGrowth") / ec.doubleTrouble(drawUnitGrowth, "drawUnitGrowth") : .0001);
+          eM.printHere(E.DEBUGCALCGROWTH, "----CGk----", ec, " chec4 val=" + EM.mf(dYearlyBonusGrowthFrac) + ", " + EM.mf(drawUnitGrowth) + ", " + EM.mf(dLimitedBonusYearUnitGrowth));
+          //try setting the ARow yearlyBonusSumGrowthFrac instance twice
+          yearlyBonusSumGrowthFrac.set(secIx, dYearlyBonusGrowthFrac);
+          bals.set(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx, secIx, dYearlyBonusGrowthFrac);
           // now the second factor calc priority and growthEfficiency(from knowledge)
           rawSectorPriorityUnitGrowth.set(secIx, (rawUnitGrowth.get(secIx) * eM.fracPriorityInGrowth[pors] * ySectorPriorityYr.get(secIx)) * groEfficiency.get(secIx) * cRand(3 * sIx + secIx + 30));
 
@@ -4087,8 +4122,8 @@ public class Assets {
 
         }//end for on secIx
         if (sIx == 3) { // only after the last SubAsset
-        setStat(EM.NEWDEPRECIATION, pors, clan, bals.sum4(ABalRows.NEWUNITDEPRECIATIONIX), 1);
-        setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
+          setStat(EM.NEWDEPRECIATION, pors, clan, bals.sum4(ABalRows.NEWUNITDEPRECIATIONIX), 1);
+          setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
           setStat(EM.PREVGROWTH, pors, clan, bals.sum4(ABalRows.PREVGROWTHSIX), 1);
         }
         // bals.set2(ABalRows.RAWUNITGROWTHSIX + sIx,rawUnitGrowth);
@@ -4356,10 +4391,10 @@ public class Assets {
         researchers = makeZero(researchers);
         knowledge.set(commonKnowledge, newKnowledge);
          */
-        if (didCashFlowInit && sIx == SIX && work.sum() < E.NZERO) {
+        if (didCashFlowStart && sIx == SIX && work.sum() < E.NZERO) {
           EM.doMyErr(didTradeInitCF + " work has no value");
         }
-        if (didCashFlowInit && sIx == SIX && worth.sum() < E.NZERO) {
+        if (didCashFlowStart && sIx == SIX && worth.sum() < E.NZERO) {
           EM.doMyErr(didTradeInitCF + " worth has no value");
         }
         if (debugSumGrades2) {
@@ -5271,7 +5306,7 @@ public class Assets {
         lightYearsTraveled = ((lightYearsTraveled < .2)) ? eM.initTravelYears[pors][0] : lightYearsTraveled;
         //initialize for the growth and efficiency
         eM.printHere("----TINa----", ec, "initTrade... before calcEfficiency loop");
-        if (!didCashFlowInit && !ec.dead) {
+        if (!didCashFlowStart && !ec.dead) {
           if (E.doCalcCatastrophy) {
             calcCatastrophy();
           }
@@ -5444,10 +5479,10 @@ public class Assets {
         preTradeMtgAvails6 = mtgAvails6.copy(History.valuesMajor6, "preTMAvails6");
         preTradeBalances = balances.copy(History.valuesMajor6, "preTBalances");
         //save how bad the entry Prospects were: level of SOS
-        if (!didCashFlowInit) {
+        if (!didCashFlowStart) {
           tradedFirstNegProspectsSum = rawProspects2.negSum();
         }
-        didCashFlowInit = true;
+        didCashFlowStart = true;
         // record the start of next year
         if (as.endYearEnd) {
           syW = new DoTotalWorths();
@@ -7913,8 +7948,8 @@ public class Assets {
       calcPriority(percentDifficulty);// get yprorityYr
       // now initialize knowledge subs from bals references
       EM.wasHere = "CashFlow.aStartCashFlow before for loop eeeb=" + ++eeeb;
-      // only initialize if not didCashFlowInit first call
-      for (int i = (didCashFlowInit ? E.LSECS : 0); i < E.lsecs; i++) { //first time 
+      // only initialize if not didCashFlowStart first call
+      for (int i = (didCashFlowStart ? E.LSECS : 0); i < E.lsecs; i++) { //first time
         commonKnowledge.set(i, E.knowledgeForPriority * aknowledge * ySectorPriorityYr.get(i) / ySectorPriorityYr.sum() + E.knowledgeByDefault * aknowledge, "set initial knowledge per econ sector");
       }
       //Assets.CashFlow.aStartCashFlow
@@ -7956,41 +7991,65 @@ public class Assets {
       //balances.setUseBalances(History.informationMinor9, "balances", r.balance, c.balance, s.balance, g.balance);
       // Assets.CashFlows.aStartCashFlow reset x.growth and growths rows to the entering bals rows references.
       for (i = 0; i < 4; i++) {
-        sys[i].growth = growths.A[2 + i] = bals.getRow(ABalRows.GROWTHSIX + i);
+        //   sys[i].growth = growths.A[2 + i] = bals.getRow(ABalRows.GROWTHSIX + i);
         // growths.aCnt[2 + i]++;
       }
+      // set the worth reference
       r.worth = bals.getRow(ABalRows.CURWORTHSIX);//set SubAssets worths instance
       c.worth = bals.getRow(ABalRows.CURWORTHSIX + 1);
       s.worth = bals.getRow(ABalRows.CURWORTHSIX + 2);
       g.worth = bals.getRow(ABalRows.CURWORTHSIX + 3);
-      EM.wasHere = "CashFlow.init... after growths for eeee=" + ++eeee;
+      // now set the worth values based on exisiting balances
+      r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
+      c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+      s.sumGrades(); // sets s worth
+      g.sumGrades(); // sets g worth
+      eM.printHere("----ACFg----", ec, " CashFlow.init after growths and worths ");
       rawGrowths.setUseBalances(History.informationMinor9, "rawGrowth", r.rawGrowth, c.rawGrowth, s.rawGrowth, g.rawGrowth);// meaning unknown see calcGrowth
       invMEff.setUseBalances(History.valuesMinor7, "invMEff", r.invMaintEfficiency, c.invMaintEfficiency, s.invMaintEfficiency, g.invMaintEfficiency);
       invGEff.setUseBalances(History.valuesMinor7, "invGEff", r.invGroEfficiency, c.invGroEfficiency, s.invGroEfficiency, g.invGroEfficiency);
       //   calcPriority(percentDifficulty);
       clanRisk = eM.clanRisk[pors][clan];
       doFailed = false;
-      EM.wasHere = "CashFlow.init... before calc Priority eeef=" + ++eeef;
-      calcPriority(percentDifficulty); // calc this years piority into priorityYr and as.difficulty
-      EM.wasHere = "CashFlow.init... before calcCatastrophy eeeg=" + ++eeeg;
-      if (!didCashFlowInit) { // do init only, use rs the life of the Econ or not
-        if (E.doCalcCatastrophy) {
+      // EM.wasHere = "CashFlow.init... before calc Priority eeef=" + ++eeef;
+      //  calcPriority(percentDifficulty); // calc this years piority into priorityYr and as.difficulty
+      //  EM.wasHere = "CashFlow.init... before calcCatastrophy eeeg=" + ++eeeg;
+      if (!didCashFlowStart) { // do yearStart only, use rs the life of the Econ or not
+        bals.set4AtoB(ABalRows.BALANCESIX, ABalRows.STARTYEARBALANCESIX);
+        r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
+        c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+        s.sumGrades(); // sets s worth
+        g.sumGrades(); // sets g worth
+        bals.set2(ABalRows.STARETYEARWORTHSIX, r.worth);
+        bals.set2(ABalRows.STARETYEARWORTHSIX + 1, c.worth);
+        bals.set2(ABalRows.STARETYEARWORTHSIX + 2, s.worth);
+        bals.set2(ABalRows.STARETYEARWORTHSIX + 3, g.worth);
+        if (!assetsInitialized) {
+          bals.set4AtoB(ABalRows.BALANCESIX, ABalRows.INITIALASSETSBALANCESIX);
+          bals.set2(ABalRows.INITIALASSETSWORTHSIX, r.worth);
+          bals.set2(ABalRows.INITIALASSETSWORTHSIX + 1, c.worth);
+          bals.set2(ABalRows.INITIALASSETSWORTHSIX + 2, s.worth);
+          bals.set2(ABalRows.INITIALASSETSWORTHSIX + 3, g.worth);
+        }
+        if (!didCashFlowStart && !ec.dead || E.doCalcCatastrophy) {
           calcCatastrophy();
         }
       }
-      rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
-      EM.wasHere = "CashFlow.init... before calcEfficiency loop eeeh" + ++eeeh;
-      for (k = 0; k < 4; k++) {
-        sys[k].calcEfficiency();
-        sys[k].calcGrowth();
+      if (!didCashFlowStart && !ec.dead) {
+        rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
+        EM.wasHere = "CashFlow.init... before calcEfficiency loop eeeh" + ++eeeh;
+        for (k = 0; k < 4; k++) {
+          sys[k].calcEfficiency();
+          sys[k].calcGrowth();
+        }
+        didDepreciation = true; // did both calcEfficiency and calcGrowth
       }
-      didDepreciation = true; // did both calcEfficiency and calcGrowth
       rawFertilities2 = new A2Row(ec); //for DoTotalWorths
       EM.wasHere = "CashFlow.init... after calcGrowth loop eeei" + ++eeei;
       //  System.out.println("5631 near end CashFlow.initCashFlow");
-      didStart = (ec.age < 1 ? false : didStart);// probably age = -1 before year
+      didStart = (ec.age < 1 ? false : didStart);// probably age = -1 not y0
       String pStarted = (didStart ? " doCFStart " : " wasStarted ");
-      String pInited = (didCashFlowInit ? " initCF  " : " cfWasInited ");
+      String pInited = (didCashFlowStart ? " initCF  " : " cfWasInited ");
       if (!didStart) {
         lTitle = "strtCashFlow";
         histTitles(lTitle);
@@ -8002,6 +8061,8 @@ public class Assets {
       s.sumGrades();
       g.sumGrades();
       //    started = traded = growed = endyr = copyy(cur);
+      // in Assets.CashFlow.aStartCashFlow
+      didCashFlowStart = true;
       didCashFlowInit = true;
 
       //EM.wasHere = " " + ec.name + " CF at end " + pStarted + pInited + " eeej" + ++eeej;
@@ -9436,7 +9497,7 @@ public class Assets {
         double tm = 1.;
         //  tm = 100000.0;
         setStat(EM.GROWTHS, pors, clan, tm * bals.sum4(ABalRows.GROWTHSIX), 1);
-        setStat(EM.RAWYEARLYUNITGROWTHS, pors, clan, tm * bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX), 1);
+        setStat(EM.RAWYEARLYUNITGROWTH, pors, clan, tm * bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX), 1);
         setStat(EM.RAWUNITGROWTHS, pors, clan, tm * bals.sum4(ABalRows.RAWUNITGROWTHSIX), 1);
         setStat(EM.RAWGROWTHS, pors, clan, bals.sum4(ABalRows.RAWGROWTHSIX), 1);;
         setStat(EM.RGROWTH, pors, clan, tm * bals.rowSum(ABalRows.GROWTHSIX), 1);
@@ -9457,7 +9518,7 @@ public class Assets {
         c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
         s.sumGrades(); // sets s worth
         g.sumGrades(); // sets g worth
-        bals.copy4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
+        bals.set4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
         doGrowth(aPre);
         r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
         c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
@@ -9492,7 +9553,7 @@ public class Assets {
           return 0.;
         }
         // live accounts
-        bals.copy4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
+        bals.set4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
         doMaintCost(aPre);
         EM.wasHere = "CashFlow yearEnd live after doMaintCost cccaf=" + ++cccaf;
         doTravCost(aPre);
@@ -9736,7 +9797,7 @@ public class Assets {
         }
 
         //double worthIncrPercent = (sumTotWorth - startYrSumWorth)*100 / startYrSumWorth;
-       // setStat(EM.WORTHINCR, pors, clan, worthIncrPercent, 1);
+        // setStat(EM.WORTHINCR, pors, clan, worthIncrPercent, 1);
         // gameRes.RCTBAL.wet(pors, clan, fyW.sumRCBal, 1);
         setStat(EM.RCfrac, pors, clan, 100. * fyW.sumRCWorth / fyW.sumTotWorth, 1);
         // gameRes.SGTBAL.wet(pors, clan, fyW.sumSG, 1);
@@ -9961,8 +10022,8 @@ public class Assets {
       }
       else {//=========================DEAD DEAD  DEAD ===========================
         //      ec.dead = true; // set econ to dead
-      ec.dyear = EM.year; // set year of death
-       // dead, be sure dead is set
+        ec.dyear = EM.year; // set year of death
+        // dead, be sure dead is set
         if (eM.dfe()) {
           return 0.;
         }
@@ -10427,6 +10488,15 @@ public class Assets {
       if (E.debugDoYearEndOut) {
         System.err.println("-----YEDPg ---- " + ec.name + " near end " + (dead ? "DEAD" : "LIVE") + " in Assets.CashFlow.yearEnd() ");
       }
+      if (!dead) {
+        didStart = true;
+        getTradingGoods(); // pick up new trading goods
+        didStart = false; // force start at next initCashFlow
+
+        //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
+        EM.econCountsTest();
+      }
+      EM.isHere("--EYEYaf--", ec, "end of yearEnd stats");
       didGoods = false;
       // sLoops[0] = 
       n = 0;
@@ -10442,20 +10512,15 @@ public class Assets {
       lostTrade = false;
       newTradeYear2 = false;
       newTradeYear1 = false;
-      didCashFlowInit = false; // set true at aStartCashFlow
+      didCashFlowStart = false; // set true at aStartCashFlow
       fav = -4;
       oTradedEcons = new Econ[20];
       oTradedEconsNext = 0;
       syW = null; // get rid of hanging DoTotalWorths
       didDepreciation = false;  // second setting
       if (!dead) {
-        didStart = true;
-        getTradingGoods();
-        didStart = false; // force start at next initCashFlow
-
-        //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
         EM.econCountsTest();
-        EM.isHere("--EYEYaf--", ec, "end of yearEnd stats");
+        EM.isHere("--EYEYag--", ec, "end of yearEnd stats");
         if (E.debugMisc && syW != null) {
           throw new MyErr("in CF.yearEnd end, syW != null");
         }
@@ -11597,7 +11662,7 @@ public class Assets {
       //now the point of required growth and maint is an input to the poorHealthEffect
       // phe is muoltiplied against costs, the smaller min the higher the effect
       // calculation. start with min of the 2 fracs
-       minH = Math.min(rqGFrac.min(), rqMFrac.min());
+      minH = Math.min(rqGFrac.min(), rqMFrac.min());
       //  poorHealthAveEffect = poorHealthEffect = phe = eM.poorHealthPenalty[pors]
       // phe goals
       // minH < 0 increases 2 - minh  result > 2.--3.

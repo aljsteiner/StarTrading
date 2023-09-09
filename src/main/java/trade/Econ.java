@@ -430,9 +430,9 @@ public class Econ {
   double doubleTrouble(Double trouble, String vs) {
     if (trouble.isNaN()) {
       if (E.debugDouble) {
-        int asTerm = as.term; // force possible null ec
-        throw new MyErr("Not a number found" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
-        //  eM.doMyErr(String.format(" Not a number found, %s term%d, i%d, j%d, m%d, n%d", vs, as.term, as.i, as.j, as.m, as.n));
+        int asTerm = as.term; // force err on possible null ec
+        throw new MyErr("Not a number found=" + trouble + " vs=" + vs + " term" + as.term + " i" + as.i + " j" + as.j + " m" + as.m + " n" + as.n);
+        //  eM.doMyErr(String.format(" Not a number found =%s, by%s term%d, i%d, j%d, m%d, n%d", vs, trouble,as.term, as.i, as.j, as.m, as.n));
       }
       else {
         return 0.0;
@@ -1226,9 +1226,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         }
         if (E.debugDisplayTrade) {
           if (nPri > -1) {
-            System.out.println(": select " + wilda[nPri].getName());
+            eM.printHere("----ESe----", this, " selectPlanet=" + wilda[nPri].getName());
           } else {
-            System.out.println("?????? select nothing??????");
+            eM.printHere("--f----", this, "?????? selectPlanet nothing??????");
           }
         }
         r = nPri;
@@ -1236,16 +1236,17 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         Random random = new Random();
         r = random.nextInt(wLen);
         n = wLen; // exit n for loop
+        eM.printHere("----ESg----", this, " randomselectPlanet=" + wilda[n].getName());
       } else { // some wlen but no TradeRecords
 
       }
     } // n>0
     if (r >= 0) {
       wildS += " selected:" + r + " :" + wilda[r].name;
-      E.sysmsg(wildS);
+      eM.printHere("----ESh----", this, " startTrade in selectPlanet=" + wilda[n].getName());
       sStartTrade(this, ret = wilda[r]);
     } else { // no Econs
-      E.sysmsg("no planet available to trade r=" + r);
+     eM.printHere("----ESi----", this, " no planet found in selectPlanet");
       ret = null;
     }
     return ret;

@@ -271,7 +271,7 @@ class EM {
   }
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {10.};
+  static double[] difficultyPercent = {50.};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
   static double [][]balanceMult = {{1.3,1.3}};
   static final double[][] mBalanceMult = {{.5,15.5},{.5,15.5}};
@@ -1804,7 +1804,7 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = 0.005; // was 0.035,0.05,0.075
+  static double vdifMult = 2.25; // was 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   
@@ -2055,7 +2055,7 @@ class EM {
   static final double[][] mFracPriorityInGrowth = {{.01, .9}, {.001, .9}};
   static double[] resourceGrowth = {3.7, .0002}; // growth per work
   static final double[][] mResourceGrowth = {{.01, 6.}, {0.00002, 2.9}};
-  // depreciation mining cumulative related to each years growth
+  // depreciation mining cumulative related to each years growth balance related
   static double[] resourceGrowthDepreciation = {.0006, .0006}; //per unit
   // depreciation mining cumulative related to each years growth
   static final double[][] mResourceGrowthDepreciation = {{.00003, .009}, {.00003, .009}};
@@ -2066,6 +2066,8 @@ class EM {
   static final double[][] mStaffGrowth = {{0.00002, 6.}, {0.00002, 2.9}};
   static double[] staffGrowthDepreciation = {.0006, .0006}; //per unit
   static final double[][] mStaffGrowthDepreciation = {{.00003, .009}, {.00003, .009}};
+  static double[] yearsDepreciation = {20., 20.};
+  static final double[][] mYearsDepreciation = {{1, 51}, {1, 51}};
   static double[] travelGrowth = {.0015, .0005}; // this multiplies against work
   static final double[][] mTravelGrowth = {{.0001, .001}, {.0001, .01}}; //
   static double[] guestsGrowth = {0.000001, .00000001};
@@ -3508,6 +3510,7 @@ onceAgain:
     doVal("cargoGrowth", cargoGrowth, mCargoGrowth, "increase amount of cargo growth per year dependent of units of staff");
     doVal("staffGrowth", staffGrowth, mStaffGrowth, "increase amount of staff growth per year, dependent on units of staff");
     doVal("guestGrowth", guestsGrowth, mGuestsGrowth, "increase amount of guest growth per year, dependent on units of guests");
+    doVal("yearsDepreciation", yearsDepreciation, mYearsDepreciation, "increase year until resource,staff,cargo or guests is depreciated");// per unit use .5? value *rawUnitGrowth for depreciation
     doVal("maxStaffGrowth", maxStaffGrowth, mMaxStaffGrowth, "increase the largest possible staffsize, staff growths will slow to prevent reaching this size");
     doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the depreciations of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
     doVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
@@ -3864,7 +3867,12 @@ onceAgain:
   static final int PREVGROWTH = ++e4; //
   static final int NEWDEPRECIATION = ++e4; //NEWDEPRECIATION
   static final int DEPRECIATION = ++e4; //DEPRECIATION
-  static final int RAWYEARLYUNITGROWTHS = ++e4;
+  static final int RAWYEARLYUNITGROWTH = ++e4;
+  static final int RRAWYEARLYUNITGROWTH = ++e4;
+  static final int CRAWYEARLYUNITGROWTH = ++e4;
+  static final int SRAWYEARLYUNITGROWTH = ++e4;
+  static final int GRAWYEARLYUNITGROWTH = ++e4;
+  static final int RAWYEARLYUNITGROWTHs[] = {RRAWYEARLYUNITGROWTH, CRAWYEARLYUNITGROWTH, SRAWYEARLYUNITGROWTH, GRAWYEARLYUNITGROWTH};
   static final int RAWUNITGROWTHS = ++e4;
   static final int RAWGROWTHS = ++e4;
   static final int POSTSWAP = ++e4;
@@ -3881,10 +3889,17 @@ onceAgain:
   static final int CGROWTHV = ++e4;
   static final int SGROWTHV = ++e4;
   static final int GGROWTHV = ++e4;
-  static final int RGROWTH = ++e4;
+  static final int GROWTHSVs[] = {RGROWTHV, CGROWTHV, SGROWTHV, GGROWTHV};
+  static final int RNEWGROWTH = ++e4;// percent of growth/yearStartBal
+  static final int CNEWGROWTH = ++e4;
+  static final int SNEWGROWTH = ++e4;
+  static final int GNEWGROWTH = ++e4;
+  static final int NEWGROWTHSs[] = {RNEWGROWTH, CNEWGROWTH, SNEWGROWTH, GNEWGROWTH};
+  static final int RGROWTH = ++e4;// percent of growth/yearStartBal
   static final int CGROWTH = ++e4;
   static final int SGROWTH = ++e4;
   static final int GGROWTH = ++e4;
+  static final int GROWTHs[] = {RGROWTH, CGROWTH, SGROWTH, GGROWTH};
   static final int RAWRGROWTH = ++e4;
   static final int RAWCGROWTH = ++e4;
   static final int RAWSGROWTH = ++e4;
@@ -4041,7 +4056,13 @@ onceAgain:
   static final int INCRAVAILFRAC = ++e4;  // sll svvrpyrf
   static final int INCRAVAILFRACa = ++e4;
   static final int INCRAVAILFRACb = ++e4;
-  static final int RDEPRECIATIONP = ++e4;
+
+  static final int RNEWDEPRECIATIONP = ++e4;// percent NewDepreciation/newGrowth
+  static final int CNEWDEPRECIATIONP = ++e4;  //
+  static final int SNEWDEPRECIATIONP = ++e4;
+  static final int GNEWDEPRECIATIONP = ++e4;
+  static final int[] NEWDEPRECIATIONPs = {RNEWDEPRECIATIONP, CNEWDEPRECIATIONP, CNEWDEPRECIATIONP, GNEWDEPRECIATIONP};
+  static final int RDEPRECIATIONP = ++e4;  //percent depreciation over newGrowth
   static final int CDEPRECIATIONP = ++e4;  // sll svvrpyrf
   static final int SDEPRECIATIONP = ++e4;
   static final int GDEPRECIATIONP = ++e4;
@@ -4302,29 +4323,48 @@ onceAgain:
     doRes(NEWDEPRECIATION, "NewDepreciation", "new depreciation this year");
     doRes(DEPRECIATION, "Depreciation", "Cumulative depreciation this year");
     doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction");
-    doRes(RAWYEARLYUNITGROWTHS, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
+    doRes(RAWYEARLYUNITGROWTH, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
     doRes(RAWGROWTHS, "rawGrowth", "Raw growth after depreciation this year before cost reduction");
     doRes(POSTSWAP, "postSwap", "worth after swap");
     doRes(POSTSWAPRCSG, "postSwapRCSG", "RCSG units after swap");
     doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
     doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
-    doRes(RDEPRECIATIONP, "r Depreciation%", "Depreciation in R as the % of unitGrowth", 1, 2, 1, LIST8 | LIST13 | CURAVE, 0, 0, 0);
-    doRes(CDEPRECIATIONP, "c Depreciation%", "Depreciation in C as the % of unitGrowth");
+    doRes(RDEPRECIATIONP, "r Depreciation%", "Depreciation in R as the % of unitGrowth", 1, 2, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RNEWDEPRECIATIONP, "r newDepreciation%", "new Depreciation in R as the % of unitGrowth", 1, 2, 1, LIST13 | CURAVE, 0, 0, 0);
+    doRes(RRAWYEARLYUNITGROWTH, "RrawYrUnitGrowth", "R Raw year unit growth  before rawUnitGrowth this year before cost reduction");
+    doRes(RNEWGROWTH, "R newGrowth", "R newGrowth before cost reduction", 1, 2, 1, LIST13 | CURAVE, 0, 0, 0);
+    doRes(RAWRGROWTH, "R growth", "R rawgrowth before cost reduction");
+    doRes(RGROWTH, "r growth", "resource gowth as perscent of start year balance", 1, 2, 3, LIST13 | CURAVE | CUMAVE | SKIPUNSET, 0, 0, 0);
+    doRes(RGROWTHV, "R growth", "R growth before cost reduction");
+
+    doRes(CDEPRECIATIONP, "c Depreciation%", "Depreciation in C as the % of unitGrowth", 1, 2, 1, LIST22 | CURAVE, 0, 0, 0); //never reached
     doRes(SDEPRECIATIONP, "s Depreciation%", "Depreciation in S as the % of unitGrowth");
     doRes(GDEPRECIATIONP, "g Depreciation%", "Depreciation in G as the % of unitGrowth");
-    doRes(RGROWTHV, "R growth", "R growth before cost reduction");
+
+    doRes(CNEWDEPRECIATIONP, "c newDepreciation%", "new Depreciation in C as the % of unitGrowth");
+    doRes(SNEWDEPRECIATIONP, "s newDepreciation%", "new Depreciation in S as the % of unitGrowth");
+    doRes(GNEWDEPRECIATIONP, "g newDepreciation%", "new Depreciation in G as the % of unitGrowth");
+
+    doRes(CRAWYEARLYUNITGROWTH, "CrawYrUnitGrowth", "C Raw year unit growth  before rawUnitGrowth this year before cost reduction");
+    doRes(SRAWYEARLYUNITGROWTH, "SrawYrUnitGrowth", "S Raw year unit growth  before rawUnitGrowth this year before cost reduction");
+    doRes(GRAWYEARLYUNITGROWTH, "GrawYrUnitGrowth", "G Raw year unit growth  before rawUnitGrowth this year before cost reduction");
+
+    doRes(CNEWGROWTH, "C newGrowth", "C newGrowth before cost reduction");
+    doRes(SNEWGROWTH, "S newGrowth", "S newGrowth before cost reduction");
+    doRes(GNEWGROWTH, "G newGrowth", "G newGrowth before cost reduction");
+
     doRes(CGROWTHV, "C growth", "C growth before cost reduction");
     doRes(SGROWTHV, "S growth", "S growth before cost reduction");
     doRes(GGROWTHV, "G growth", "G growth before cost reduction");
-    doRes(RAWRGROWTH, "R growth", "R rawgrowth before cost reduction");
+
     doRes(RAWCGROWTH, "C growth", "C rawgrowth before cost reduction");
     doRes(RAWSGROWTH, "S growth", "S rawgrowth before cost reduction");
     doRes(RAWGGROWTH, "G growth", "G rawgrowth before cost reduction");
-    doRes(RAWRUGROWTH, "R growth", "R rawgrowth before cost reduction");
-    doRes(RAWCUGROWTH, "C growth", "C rawgrowth before cost reduction");
-    doRes(RAWSUGROWTH, "S growth", "S rawgrowth before cost reduction");
-    doRes(RAWGUGROWTH, "G growth", "G rawgrowth before cost reduction");
+    doRes(RAWRUGROWTH, "R growth", "R rawUnitGrowth before cost reduction");
+    doRes(RAWCUGROWTH, "C growth", "C rawUnitGrowth before cost reduction");
+    doRes(RAWSUGROWTH, "S growth", "S rawUnitGrowth before cost reduction");
+    doRes(RAWGUGROWTH, "G growth", "G rawUnitGrowth before cost reduction");
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 2, 2, 2, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     /*
   static final int TRADEWORTH = ++e4;
@@ -4382,7 +4422,7 @@ onceAgain:
     doRes(MISCDIEDPERCENT, "NT DIED %", "Percent planets or ships died no trade accepted", 2, 2, 3, LIST0 | LIST2 | LIST3 | LIST4 | LIST10 | THISYEARAVE | BOTH, ROWS2 | LIST3 | LIST4 | CUMAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(MISCHIGHDIEDPERCENT, "MHIDIED %", "HI worth Percent planets or ships died no trade accepted", 2, 2, 3, ROWS1 | LIST2 | LIST3 | LIST4 | LIST10 | THISYEARAVE | BOTH, ROWS2 | LIST3 | LIST4 | LIST10 | CUMAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(MISCLOWDIEDPERCENT, "MLODIED %", "LO worth Percent planets or ships died no trade accepted", 2, 2, 3, ROWS1 | LIST2 | LIST3 | LIST4 | LIST10 | THISYEARAVE | BOTH, ROWS2 | LIST3 | LIST4 | LIST10 | CUMAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(RGROWTH, "r growth", "resource gowth as perscent of balance", 1, 2, 3, LIST13 | CURAVE | CUMAVE | SKIPUNSET, 0, 0, 0);
+
     doRes(CGROWTH, "c growth", "cargo gowth as perscent of balance");
     doRes(SGROWTH, "s growth", "staff gowth as perscent of balance");
     doRes(GGROWTH, "g growth", "guest gowth as perscent of balance");

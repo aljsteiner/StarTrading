@@ -1386,19 +1386,18 @@ public class A6Rowa {
   }
 
   /**
-   * set internal ARow m, sector n to val if balances && m <%lt; 6 then assert m
-   * %gt; 1 and do resum @param m selector of row numbe
+   * set internal ARow bias, sector n to val if balances && m <%lt; 6 then
+   * assert m   * %gt; 1 and do resum @param m selector of row numbe
    *
    * r
-   * @param n selector of entry in row
-   * @param val value to be tested as a Double then stored
+   * @param bias selector of entry in row   * @param val value to be tested as a Double then stored
    * @return val
    */
-  public double set(int m, int n, Double val) {
-    E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+  public double set(int bias, int n, Double val) {
+    ec.doubleTrouble(val, "in A6Rowa title=" + this.titl + "A[" + bias + "][" + n + "]");
     int al = A.length;
-    int mm = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
-    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances && costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
+    int mm = bias < 2 ? bias : (bias - lsums) / lsubs; // find proper rc or sg
+    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances && costs10) || bias < 0 || costs10 ? bias > 9 : balances ? bias > 5 : false;
     double bal1 = 0.;
     double both = 0.;
     if (E.debugResumP && !ignoreIf && !noChecking) {
@@ -1411,10 +1410,10 @@ public class A6Rowa {
       double dif = bal1 - both;
       boolean badDif = E.PZERO < dif || E.NZERO > -dif; // trouble if true
       // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
-      assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
+      assert !badDif : "resum error sector" + n + " length" + al + " bias" + bias + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
     }
     // change the actual value, set updates that row setCnt
-    double ret = A[m].set(n, val);
+    double ret = A[bias].set(n, val);
 
     if (noChecking) {
       noChecking = true;

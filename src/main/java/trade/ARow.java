@@ -161,7 +161,7 @@ public class ARow {
    * @return valid trouble
    */
   double dTrouble(Double trouble) {
-    return ec.doubleTrouble(trouble, "");
+    return ec.doubleTrouble(trouble, "yes");
   }
 
   /**
@@ -172,12 +172,12 @@ public class ARow {
    * @return valid trouble
    */
   double doubleTrouble(Double trouble) {
-    return ec.doubleTrouble(trouble, "");
+    return ec.doubleTrouble(trouble, "yes");
   }
 
   /**
    * test value for illegal double value using E.dTrouble issue error if
-   * E.debugDouble
+   * ec.debugDouble
    *
    * @param trouble value to be tested if E.debugDouble
    * @param cmt comment with trouble
@@ -503,7 +503,7 @@ public class ARow {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        d = doubleTrouble(A.get(i));
+        d = ec.doubleTrouble(A.get(i), titl);
       }
       else {
         d = A.get(i);
@@ -541,7 +541,7 @@ public class ARow {
     ARow ret = new ARow(ec);
     double d;
     for (int i = 0; i < E.lsecs; i++) {
-      d = doubleTrouble(get(i));
+      d = ec.doubleTrouble(get(i), "newCopy");
       ret.set(i, d);
       ret.ix[i] = ix[i];
     }
@@ -578,7 +578,7 @@ public class ARow {
   ARow flip(ARow prev) {
     for (int n : E.alsecs) {
       if (E.debugDouble) {
-        set(n, doubleTrouble(-prev.get(n)));
+        set(n, ec.doubleTrouble(-prev.get(n), "flip"));
       }
       else {
         set(n, -prev.get(n));
@@ -595,7 +595,7 @@ public class ARow {
   ARow set(double[] A) {
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        set(i, doubleTrouble(A[i]));
+        set(i, ec.doubleTrouble(A[i], "set"));
       }
       else {
         set(i, A[i]);
@@ -611,7 +611,7 @@ public class ARow {
    */
   ARow set(double A) {
     for (int i = 0; i < E.lsecs; i++) {
-      set(i, doubleTrouble(A));
+      set(i, ec.doubleTrouble(A, "set"));
     }
     return this;
   }
@@ -1728,9 +1728,9 @@ public class ARow {
     if (E.debugDouble) {
       r
               = values[ix]
-              = doubleTrouble(
-                      doubleTrouble(v)
-                      + doubleTrouble(values[ix]));
+              = ec.doubleTrouble(
+                      doubleTrouble(v, "add#V")
+                      + doubleTrouble(values[ix], "addVal"), "sum");
     }
     else {
       r = values[ix] += v;

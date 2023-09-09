@@ -392,7 +392,7 @@ public class StarTrader extends javax.swing.JFrame {
   static final String[] stateStringNames = {sn0, sn1, sn2, sn3, sn4, sn5, sn6, sn7, sn8, sn9, sn10, sn11, sn12, sn13, sn14, sn15, sn16};
   static volatile int stateConst = CONSTRUCTING;  // constant set to stated
   static volatile int prevState = CONSTRUCTING;
-  static volatile Econ curEc = EM.curEcon;
+  volatile Econ curEc = eM.curEcon;
   static volatile String curStateName = stateStringNames[0];
   static volatile String prevEconName = "no name";
   static volatile String curEconName = "no econ";
@@ -6365,8 +6365,10 @@ public class StarTrader extends javax.swing.JFrame {
                 if (rtns < lTradablePlanets - 1) {
                   tradablePlanets[++rtns] = planet;
 
+                  eM.printHere("----ST----",planet,"  add #" + rtns + " to selection list for " + curShip.name + " distance=" + EM.mf(lsel) + " max=" + EM.mf( eM.maxLY[0] + eM.addLY[0] * majorLoops) );
+
                   //    System.out.println(eM.curEcon.getName() + " build select list=" + planet.getName());
-                  System.out.printf("-----ST-----ST build planets list #%d for %s, dist=%5.2f < max=%5.2f planet %s\n", rtns, eM.curEcon.getName(), lsel, eM.maxLY[0] + eM.addLY[0] * majorLoops, planet.getName());
+                  //System.out.printf("-----ST-----ST build planets list #%d for %s, dist=%5.2f < max=%5.2f planet %s\n", rtns, eM.curEcon.getName(), lsel, eM.maxLY[0] + eM.addLY[0] * majorLoops, planet.getName());
                 }
               }
             }
@@ -6415,7 +6417,7 @@ public class StarTrader extends javax.swing.JFrame {
     shipsLoop = eM.ships.size() - 1;
     envsLoop2 = 0;
 
-    E.msgs = E.dmsgs;   // reset messages for each year
+    //E.msgs = E.dmsgs;   // reset messages for each year
     E.msgcnt = 0;
     E.msgs = (int)EM.econLimits3[0]*500;
     eM.printHere("----YD----", ec, "in runYear before doYear messages limit=" + E.msgs + (doStop? " doStop" : " !doStop" ) + (eM.stopExe? " EM.stopExe": " !EM.stopExe") + " " + EM.lfe());
@@ -7377,10 +7379,9 @@ public class StarTrader extends javax.swing.JFrame {
         if (true || curDisplayPrints < E.ssMax * 5) {
           curDisplayPrints++;
           long nTime = new Date().getTime();
-          String aLine = "------DA-----paintCurDisplay " + (nTime - startTime) + " " + stateStringNames[stateConst] + "Y" + EM.year + " eCnt=" + EM.econCnt + ":" + EM.econs.size() + ":"
-                         + EM.curEconName + "::" + Econ.nowName + " curDisplayPrints" + curDisplayPrints + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4;
+          eM.printHere("-----DA----", curEc, " paintCurDisplay " + stateStringNames[stateConst] + " eCnt=" + EM.econCnt + ":" + EM.econs.size() + " curDisplayPrints" + curDisplayPrints + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4);
+          //  String aLine = "------DA-----paintCurDisplay " + (nTime - startTime) + " " + stateStringNames[stateConst] + " eCnt=" + EM.econCnt + ":" + EM.econs.size() +  " curDisplayPrints" + curDisplayPrints + " controlPanelIx=" + cpIx1 + ":" + cpIx2 + ":" + cpIx3 + ":" + cpIx4);
 
-          System.out.println(aLine);
         }
       }
     }
