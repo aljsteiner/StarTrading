@@ -29,7 +29,7 @@ public class A2Row {
   Econ ec;
   static final int ASECS[] = E.alsecs;
   static final int A2SECS[] = E.a2lsecs;
-  static int d01[] = {0, 1};
+  static final int I01[] = {0, 1};
   String titl = "unset";
   volatile private int[] ix;    // array min to max
   volatile ARow A[] = new ARow[2];
@@ -1818,7 +1818,7 @@ public class A2Row {
     A.addJointBalances();
     A2Row rtn = new A2Row(ec,5,"frac");
     //resum does B
-    for (int m : d01) {
+    for (int m : I01) {
       for (int n : ASECS) {
           // separate each operation to localize null object errors
           double ag = A.get(m *  2 + 2,n);
@@ -1842,7 +1842,7 @@ public class A2Row {
    * @param C divisor costs using 0,1 rc,sg
    */
   public void setBalanceAsubBdivByC(A6Row A, A10Row B, A10Row C) {
-    for (int m : d01) {
+    for (int m : I01) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         set(m, n,
@@ -1864,7 +1864,7 @@ public class A2Row {
   public A2Row setFracAsubBdivByC(ABalRows a, A10Row b, A10Row c) {
     Double cc;
     double c2;
-    for (int m : d01) {
+    for (int m : I01) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         cc = c.get(m, n);
@@ -1889,22 +1889,21 @@ public class A2Row {
    */
   public A2Row setFracAsubBdivByCnRem(A6Row A, A10Row B, A10Row C, A6Row rem) {
     double t, s;
-    for (int m : d01) {
+    for (int m : I01) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         t = C.get(m, n);
         s = rem.set(2 + 2 * m, n, A.get(m * 2 + 2, n) - B.get(m, n));// r,s - rc,sg
         rem.set(3 + 2 * m, n, A.get(3 + 2 * m, n)); //c,g wo costs
-        set(m, n, t < E.PZERO ? 0.
-                : s
-                / C.get(m, n));
+        set(m, n, t < E.PPZERO ? 0.                : s
+              / C.get(m, n)); // rc sg
       }
     }
     return this;
   }
 
   public A2Row setFracAsubBnRemdivByCsubDnDif(ABalRows a, A10Row b, A6Row rem, A10Row c, A6Row d, A2Row dif) {
-    for (int m : d01) {
+    for (int m : I01) {
       for (int n : ASECS) {
         // separate each operation to localize null object errors
         set(m, n,

@@ -48,7 +48,8 @@ public class A6Rowa {
   static int d01[] = {0, 1};
   static final int[] I01 = d01;
   static final int[] A01 = d01;
-  static int d02[] = {0, 2};
+  static final int d02[] = {0, 2};
+  static final int I29[] = {2, 3, 4, 5, 6, 7, 8, 9};
   static final int[] ASECS = E.ASECS;
   static final int[] A2SECS = E.A2SECS;
   static final int[] IA2SECS = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 10, 11, 12, 13};
@@ -72,7 +73,6 @@ public class A6Rowa {
   volatile int lA = 6; // A10Row sets to 10
   volatile int dA[] = {0, 1, 2, 3, 4, 5};
   static int d29[] = {2, 3, 4, 5, 6, 7, 8, 9};
-  static final int[] I29 = d29;
   static int BALANCESIX = 2;
   static final int lsums = 2;
   int lsubs = 2;
@@ -984,7 +984,7 @@ public class A6Rowa {
   }
   
    /**
-   * sum the unit balances r s all sectors returns the same value as curSum,
+   * sum the unit balances rc sg all sectors returns the same value as curSum,
    * but always sums the individual SubAsset balances
    *
    * @param bias the bias to the first element
@@ -993,7 +993,7 @@ public class A6Rowa {
    */
   double sum2(int bias) {
     double sum = 0;
-    for (int m : d02) {
+    for (int m : d01) {
       for (int n : ASECS) {
         sum += get(bias + m, n);
       }
