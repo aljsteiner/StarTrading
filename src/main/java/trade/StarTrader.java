@@ -5573,8 +5573,9 @@ public class StarTrader extends javax.swing.JFrame {
     nameF.setMinimumIntegerDigits(4);
     nameF.setGroupingUsed(false);
     String name = (pors == 0 ? "P" : "S") + nameF.format(eM.nameCnt++);
-    newEC.init(this, eM, name, clan, EM.econCnt, pors, xpos, eM.difficultyPercent[0], worth);
     eM.setCurEcon(ec =newEC);
+    newEC.init(this, eM, name, clan, EM.econCnt, pors, xpos, eM.difficultyPercent[0], worth);
+
     startEconState = (new Date()).getTime();
      eM.printHere( "-------MMb--------",newEC," Inited new Econ pre count" + EM.econCnt  + " stateCnt=" + stateCnt + " stateConst=" + stateConst + ":" + stateStringNames[stateConst] + (newEC.getDie()?" dead":" live") + (E.debugChangeEconCnt? " do Count":" skipCount")
 );

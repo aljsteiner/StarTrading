@@ -72,7 +72,7 @@ public class ARow {
       }
     }
     for (int i = 0; i < E.lsecs; i++) {
-      values[i] = E.PZERO;
+      values[i] = 0.0;
       ix[i] = i;
     }
     sum = 0.;
@@ -104,7 +104,7 @@ public class ARow {
     values = new double[E.lsecs];
     ix = new int[E.lsecs];
     for (int i = 0; i < E.lsecs; i++) {
-      values[i] = E.PZERO;
+      values[i] = 0.0;
       ix[i] = i;
     }
     sum = 0.;
@@ -467,21 +467,21 @@ public class ARow {
   }
 
   /**
-   * set ARow to A, copying A to itself
+   * set ARow to b, copying A to itself
    *
-   * @param A an ARow
+   * @param b an ARow
    * @return the save ARow with values from A
    */
-  ARow set(ARow A) {
-    E.myTest(A == null, "input to set is null");
+  ARow set(ARow b) {
+    E.myTest(b == null, "input to set is null");
     double d;
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        d = doubleTrouble(A.get(i));
+        d = doubleTrouble(b.get(i));
       }
       else {
-        d = A.get(i);
+        d = b.get(i);
       }
       set(i, d);
     }
@@ -1726,10 +1726,7 @@ public class ARow {
     double r;
     setCnt++;
     if (E.debugDouble) {
-      r
-              = values[ix]
-              = ec.doubleTrouble(
-                      doubleTrouble(v, "add#V")
+      r = values[ix] = ec.doubleTrouble(                      doubleTrouble(v, "add#V")
                       + doubleTrouble(values[ix], "addVal"), "sum");
     }
     else {

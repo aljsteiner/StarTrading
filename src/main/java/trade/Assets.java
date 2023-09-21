@@ -342,7 +342,8 @@ public class Assets {
   A6Row cashFlowSubAssetUnitsAvailableToSwap;
   A2Row rawFertilities2;
   A2Row rawProspects2;
-
+  A6Row invMEfficiency;
+  A6Row invGEfficiency;
   //more Assets definitions
   ARow commonKnowledge;
   ARow newKnowledge;
@@ -390,28 +391,24 @@ public class Assets {
   int ixWRSrc = -2;  // 0,1 source balances, bals Working and Reserved, rc sg
   int ixWSrc; // 2,4 source Working ARows index ixWRSrc *2 + 2
   int ixRSrc; // 3,5 source Reserved ARows index, ixWRSrc*2 + 3
-  // Assets these are copys of indexes for rows in bal
-  static final int TCOST = A6Rowa.tcost;
-  static final int TBAL = A6Rowa.tbal;
-  static final int RIX = ABalRows.RIX, CIX = ABalRows.CIX, SIX = ABalRows.SIX;
-  static final int GIX = ABalRows.GIX, SGIX = ABalRows.SGIX, RCIX = ABalRows.RCIX;
+  // warning the following duplicates A6Rowa or ABalRows and must not be changed
+  private static final int TCOST = A6Rowa.tcost;
+  private static final int TBAL = A6Rowa.tbal;
+  private static final int RIX = ABalRows.RIX, CIX = ABalRows.CIX, SIX = ABalRows.SIX;
+  private static final int GIX = ABalRows.GIX, SGIX = ABalRows.SGIX, RCIX = ABalRows.RCIX;
   // warning the following duplicates ABalRows and must not be changed
-  // static int rcIx = -2;
-  static final int RCIX2 = ABalRows.RCIX2;
-//  static int sgIx = -1;
-  static int BALANCESIX = ABalRows.BALANCESIX;
-  // static final int balancesIx=2;
-  // static int GROWTHSIX = BALANCESIX + 4; //6
-  static final int GROWTHSIX = ABalRows.GROWTHSIX;
-  static final int BONUSUNITSIX = ABalRows.BONUSUNITSIX;
-  //static int cumulativeUnitDepreciationIx = bonusUnitsIx + 4; //18
-  //static int balsLength = cumulativeUnitDepreciationIx + 4; //22
-  static final int CUMULATIVEUNITDEPRECIATIONIX = ABalRows.CUMULATIVEUNITDEPRECIATIONIX;
-  static final int BALSLENGTH = ABalRows.BALSLENGTH;
-  static final int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
-  static final int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
-  static final int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
-  static final int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
+  private static final int RCIX2 = ABalRows.RCIX2, LSUMS = ABalRows.LSUMS;
+  ;
+  private static final int BALANCESIX = ABalRows.BALANCESIX, LSUBS = ABalRows.LSUBS;
+  private static final int GROWTHSIX = ABalRows.GROWTHSIX;
+  private static final int BONUSUNITSIX = ABalRows.BONUSUNITSIX;
+
+  private static final int CUMULATIVEUNITDEPRECIATIONIX = ABalRows.CUMULATIVEUNITDEPRECIATIONIX;
+  private static final int BALSLENGTH = ABalRows.BALSLENGTH;
+  private static final int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
+  private static final int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
+  private static final int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
+  private static final int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
   Assets.CashFlow.DoTotalWorths syW, iyW; //predefine references to worths
 
   /**
@@ -511,6 +508,8 @@ public class Assets {
     growths = new A6Row(ec, History.valuesMajor6, "growths");
     cashFlowSubAssetsGrowths = growths;
     mtgNeeds6 = new A6Row(ec, lev, "mtgNeeds6");
+    invMEfficiency = new A6Row(ec, lev, "invMEfficiency");
+    invGEfficiency = new A6Row(ec, lev, "invMEfficiency");
     cashFlowSubAssetUnitsNeededToSurvive = mtgNeeds6;
     mtgAvails6 = new A6Row(ec, lev, "mtgAvails6");
     cashFlowSubAssetUnitsAvailableToSwap = mtgAvails6;
@@ -2314,20 +2313,6 @@ public class Assets {
   }
 
   /**
-   * select a planet to do the trade with
-   *
-   * @param wilda list of tradable planets
-   * @return Econ of the selected planet
-   */
-  Econ SelectPlanetNot(Econ[] wilda) {
-    if (cur == null) {
-      cur = new CashFlow(this);
-      cur.aStartCashFlow(this);
-    }
-    return cur.selectPlanetNot(wilda);
-  }
-
-  /**
    * pass on request to barter to CashFlow to Assets.CashFlow.Trades instantiate
    * CashFlow if needed
    *
@@ -2461,10 +2446,10 @@ public class Assets {
     SubAsset r = resource, s = staff;
     SubAsset guests = new SubAsset(3, true, staff); //reserves set partner.partner to themself
     SubAsset cargo = new SubAsset(1, true, resource);
+    SubAsset c = cargo, g = guests;
     SubAsset[] sys = {resource, cargo, staff, guests};
     SubAsset[] partners = {cargo, resource, guests, staff};
     SubAsset[] others = {staff, guests, resource, cargo};
-    SubAsset c = cargo, g = guests;
     SubAsset[] workers = {resource, staff};
     String[] subStrs = {"r", "c", "s", "g"};
 
@@ -2478,7 +2463,8 @@ public class Assets {
     double catEffRDepreciationBen = 0.;
     double catEffSDepreciationBen = 0.;
     ARow ySectorPriorityYr = new ARow(ec);
-
+    A6Row invMEfficiency = new A6Row(ec, lev, "invMEfficiency");// in bals
+    A6Row invGEfficiency = new A6Row(ec, lev, "invMEfficiency");
     // start CashFlow Swap loop variables
     boolean debugSumGrades2 = false;
     boolean flagg, flagh, flagf, flagm, prevFlagg, prevFlagh, prevFlagf, prevFlagm;
@@ -2724,8 +2710,7 @@ public class Assets {
     //Assets.CashFlow for getNeeds(
     A6Row growths10;
     A6Row mtggNeeds6, mtGNeeds6;
-    A6Row invMEfficiency = new A6Row(ec, lev, "invMEfficiency");
-    A6Row invGEfficiency = new A6Row(ec, lev, "invMEfficiency");
+
     double maxAvail = 0.; // max available for a given swap
     double maxavail1, maxavail2, maxavail3, maxavail4;
 
@@ -3371,6 +3356,7 @@ public class Assets {
       //   ARow travelCost = new ARow(ec);
       //  ARow requiredForMaint = new ARow(ec);
       //  ARow requiredForGrowth = new ARow(ec);
+      //Assets.CashFlow.SubAsset  sectors
       ARow maintEfficiency = new ARow(ec);
       ARow groEfficiency = new ARow(ec);
       ARow invMaintEfficiency = new ARow(ec);
@@ -3736,7 +3722,7 @@ public class Assets {
        * @param areserve true if this is a reserve not a working subAsset
        * @param apartner The partner working for reserve, reserve for working
        */
-      // Assets.CashFlow.SubAsset
+      // Assets.CashFlow.SubAsset.initSubAsset
       // called by each subassit init process
       void initSubAsset(int asIx, boolean areserve, SubAsset apartner) {
         reserve = areserve;
@@ -3745,27 +3731,20 @@ public class Assets {
         this.partner = apartner;
 
         // make sure balance
+        // move ARow references from bals, they will remain when SubAsset instance is freed
         balances.A[asIx + ABalRows.BALANCESIX] = sys[asIx].balance = bals.getRow(ABalRows.BALANCESIX + asIx);
         balances.aCnt[asIx + ABalRows.BALANCESIX]++;
-        sys[asIx].growth = growth = growths.A[ABalRows.BALANCESIX + asIx] = bals.getRow(GROWTHSIX + asIx);
-        growths.aCnt[ABalRows.BALANCESIX + asIx]++;
-        //  growth = bals.getRow(ABalRows.GROWTHSIX + asIx);
-        //         growth = growths.A[2 + asIx];
-        //     fertility = makeZero(fertility);
-        // move ARow references from bals, they will remain when SubAsset instance is freed
-        cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + asIx);
-        cumUnitBonus = bals.getRow(ABalRows.CUMUNITBONUSIX + asIx);
-        bonusUnitGrowth = bals.getRow(ABalRows.BONUSUNITSIX + asIx);
-        bonusYears = bals.getRow(ABalRows.BONUSYEARSIX + asIx);
-        rawYearlyUnitGrowth = bals.getRow(ABalRows.RAWYEARLYUNITGROWTHSIX + asIx);
-        yearlyBonusGrowthFrac = bals.getRow(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + asIx);
-        rawGrowth = bals.getRow(ABalRows.RAWGROWTHSIX + asIx);
+        sys[asIx].growth = growth = growths.A[BALANCESIX + asIx] = bals.getRow(GROWTHSIX + asIx);
+        growths.aCnt[BALANCESIX + asIx]++;
+        sys[asIx].cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + asIx);
+        sys[asIx].cumUnitBonus = bals.getRow(ABalRows.CUMUNITBONUSIX + asIx);
+        sys[asIx].bonusUnitGrowth = bals.getRow(ABalRows.BONUSUNITSIX + asIx);
+        sys[asIx].bonusYears = bals.getRow(ABalRows.BONUSYEARSIX + asIx);
+        sys[asIx].rawYearlyUnitGrowth = bals.getRow(ABalRows.RAWYEARLYUNITGROWTHSIX + asIx);
+        sys[asIx].yearlyBonusGrowthFrac = bals.getRow(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + asIx);
+        sys[asIx].rawGrowth = bals.getRow(ABalRows.RAWGROWTHSIX + asIx);
         tradedGrowth = bals.getRow(ABalRows.TRADEDGROWTHSIX + asIx);
         swappedGrowth = bals.getRow(ABalRows.SWAPPEDGROWTHSIX + asIx);
-        newKnowledge = bals.getRow(ABalRows.NEWKNOWLEDGEIX); // before SubAssets
-        commonKnowledge = bals.getRow(ABalRows.COMMONKNOWLEDGEIX);
-        manuals = bals.getRow(ABalRows.MANUALSIX);
-
         prevUnitGrowth = makeZero(prevUnitGrowth);
         prevWorth = makeZero(prevWorth);
         prevHealth = makeZero(prevHealth);
@@ -3776,11 +3755,14 @@ public class Assets {
         yearlyUnitGrowth = new ARow(ec);
         rawUnitGrowth = new ARow(ec);
         rawUnitGrowthAfterDepreciation = makeZero(rawUnitGrowthAfterDepreciation);
-        rawGrowth = new ARow(ec);
+        //rawGrowth = new ARow(ec);
         //      nominalGrowth = new ARow(ec);
         //     growFull = new ARow(ec);
-        invMaintEfficiency = new ARow(ec);
-        invGroEfficiency = new ARow(ec);
+        //      A6Row invMEfficiency = new A6Row(ec, lev, "invMEfficiency");
+        //A6Row invGEfficiency = new A6Row(ec, lev, "invMEfficiency");
+        // set to any prev instance reference
+        invMaintEfficiency = invMEfficiency.A[ABalRows.BALANCESIX + asIx] = bals.getRow(ABalRows.INVMEFFICIENCYIX + asIx);
+        invGroEfficiency = invGEfficiency.A[ABalRows.BALANCESIX + asIx] = bals.getRow(ABalRows.INVGEFFICIENCYIX + asIx);
         groEfficiency = new ARow(ec);
         maintEfficiency = new ARow(ec);
       }
@@ -3881,7 +3863,7 @@ public class Assets {
         // never less than .5 E.effBias[pors] or more tnan 1.5 E.effBias
         // larger workEffBias make for more efficiency
         // larger percentDifficulty reduces workEffBias
-        double workEffBias = eM.effBias[pors] * .5 + eM.effBias[pors] * (100 - percentDifficulty) * .01;
+        double workEffBias = eM.effBias[pors] * .5 + eM.effBias[pors] * (148 - percentDifficulty) * .1;
 // define temporary internal variables
         ARow GroReqSum = new ARow(ec);
         ARow GroReqMultiplier = new ARow(ec);
@@ -3910,18 +3892,17 @@ public class Assets {
           for (int j = 0; j < E.lsecs; j++) {
             GroReqSum.add(i, gReqs[pors][i][j + splus] * E.gReqEffMult * E.gReqMult[pors][0] * knowledge.get(j));
             MaintReqSum.add(i, maintRequired[pors][i][j + splus] * E.mReqEffMult * E.mReqMult[pors][0] * knowledge.get(j));
-          } // go through j to get the sums
+          } // end go through j to get the sums
           GroReqMultiplier.add(i, GroReqSum.get(i) * multiplierForEfficiencyFromRequirements);
           MaintReqMultiplier.add(i, MaintReqSum.get(i) * multiplierForEfficiencyFromRequirements);
-          KnowledgeGroMultiplier.add(i, Math.sqrt((GroReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : 0.) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
-          KnowledgeMaintMultiplier.add(i, Math.sqrt((MaintReqMultiplier.get(i) + knowledge.sum()
-                                                                                 * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : 0.) * eM.manualEfficiencyMult[pors][0]
-                                                     + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
+          KnowledgeGroMultiplier.add(i, Math.sqrt((GroReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : manuals.sum() * 0.4) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
+          KnowledgeMaintMultiplier.add(i, Math.sqrt((MaintReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : 0.) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
           // the higher difficulty the lower the efficiency
           // workEffBias lower if difficulty is higher
           // ydifficulty set in calcPriority called in aStartCashFlow before this
-          maintEfficiency.add(i, Math.sqrt(workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? 0. : KnowledgeMaintMultiplier.get(i)) / ydifficulty.get(i)));
-          groEfficiency.add(i, Math.sqrt(eM.effBias[pors] + (1. - eM.effBias[pors]) * (ydifficulty.get(i) < PZERO ? 0. : KnowledgeGroMultiplier.get(i)) / ydifficulty.get(i)));
+         // maintEfficiency.add(i, Math.sqrt(workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? 0. : KnowledgeMaintMultiplier.get(i)) / ydifficulty.get(i)));
+          maintEfficiency.add(i, Math.sqrt(workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? KnowledgeMaintMultiplier.get(i) / 0.8 : KnowledgeMaintMultiplier.get(i)) / ydifficulty.get(i)));
+          groEfficiency.add(i, Math.sqrt(eM.effBias[pors] + (1. - eM.effBias[pors]) * (ydifficulty.get(i) < PZERO ? KnowledgeGroMultiplier.get(i) / 0.8 : KnowledgeGroMultiplier.get(i)) / ydifficulty.get(i)));
           //(z-99)*y = ,15  (x-25)*y=.3  x=148, y=0.002439 
           // decrease the efficiency min as difficulty increases
           rsefficiencyGMin.set(i, eM.rsefficiencyGMin[pors][0] * (148 - percentDifficulty) * .001739);
@@ -3934,7 +3915,7 @@ public class Assets {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
           StackTraceElement aa = Thread.currentThread().getStackTrace()[2];
           StackTraceElement ab = Thread.currentThread().getStackTrace()[3];
-          hist.add(new History(History.debuggingMajor10, ">>>", a0.getMethodName(), "at", a0.getFileName(), wh(a0.getLineNumber()), "from=", aa.getFileName(), wh(aa.getLineNumber()), "ffrom", ab.getFileName(), wh(ab.getLineNumber())));
+          // hist.add(new History(History.debuggingMajor10, ">>>", a0.getMethodName(), "at", a0.getFileName(), wh(a0.getLineNumber()), "from=", aa.getFileName(), wh(aa.getLineNumber()), "ffrom", ab.getFileName(), wh(ab.getLineNumber())));
 
         }
 
@@ -3956,6 +3937,9 @@ public class Assets {
         partner.invMaintEfficiency.set(invMaintEfficiency);
         partner.groEfficiency.set(groEfficiency);
         partner.maintEfficiency.set(maintEfficiency);
+        eM.printHere("----SCEa---", ec, " age=" + ec.age + " invGroEfficiency[0]= " + EM.mf(invGroEfficiency.get(0)) + " rsefficencyGMin=" + EM.mf(rsefficiencyGMin.get(0)) + " groEfficiency=" + EM.mf(groEfficiency.get(0)) + " invMEfficiency=" + EM.mf(invMEfficiency.get(0)));//groEfficiency
+        assert invGroEfficiency.get(0) > 0.0 : "invGroEfficiency.get(0) <= 0.0 =" + EM.mf(invGroEfficiency.get(0));
+        assert invMEfficiency.get(0) > 0.0 : "invMEfficiency.get(0) <= 0.0 =" + EM.mf(invMEfficiency.get(0));
 
         if (History.dl > 2) {
           hist.add(new History(History.headers20, aschar + " efficiency " + ec.name, "0LifeSup", "1Struct", "2Energy", "3Propel", "4Defense", "5Gov", "6Col", "Min", "Sum", "Ave"));
@@ -4028,15 +4012,22 @@ public class Assets {
         //   prevRawUnitGrowth = rawUnitGrowth.copy();
         prevWorth.set(worth = make(worth));
         prevHealth.set(health = make(health));
-        growth = bals.getRow(ABalRows.GROWTHSIX + sIx);
-        cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx);
-        prevGrowth.set(growth);
         // growthsix includes the catstrophy benefits from last year
-        //bals.getRow(ABalRows.PREVGROWTHSIX + sIx).set(bals.getRow(ABalRows.GROWTHSIX + sIx).copy());
+        //3 references to the same growth instance
+        growths.A[2 + sIx] = growth = bals.getRow(ABalRows.GROWTHSIX + sIx);
+        bals.set1(ABalRows.GROWTHS2IX, sIx, growth);
+        if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with growth
+          assert growth.get(0) > 0.0 : " growth.get(0) <= 0.0=" + EM.mf(growth.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+        }
+        prevGrowth.set(growth);
+        bals.set1(ABalRows.GROWTHS1IX, sIx, growth);
+        bals.set1(ABalRows.PREVGROWTHSIX, sIx, prevGrowth);
+        cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx);
 
-        // prevFertility = make(fertility);
-        // prevNeed = make(need).copy();
-        //   ARow newUnitDepreciation;
+        if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+          assert prevGrowth.get(0) > 0.0 : " prevGrowth.get(0) <= 0.0=" + EM.mf(prevGrowth.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+        }
+        // growthsix includes the catstrophy benefits from last year
         if (sIx == 2) {
           aChar[sIx] = "s";  // sometimes got lost
         }
@@ -4046,7 +4037,15 @@ public class Assets {
           // newUnitDepreciation.setAdivbyB(newUnitDepreciation, balance); // change to units depreciation
           newUnitDepreciation.set(prevGrowth);
           newUnitDepreciation.mult(eM.growthDepreciation[sIx][pors]);
-          cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
+          bals.set1(ABalRows.NEWUNITDEPRECIATIONIX, sIx, newUnitDepreciation);
+          if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+            assert newUnitDepreciation.get(0) > 0.0 : " newUnitDepreciation.get(0) <= 0.0=" + EM.mf(newUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+          }
+            cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
+            if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+              assert cumulativeUnitDepreciation.get(0) > 0.0 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+          }
+          bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
           int[] depreciations = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
           setStat(depreciations[sIx], cumulativeUnitDepreciation.sum());
 
@@ -4419,6 +4418,7 @@ public class Assets {
        */
       void doGrow(String aPre) { // Assets.CashFlow.SubAsset.doGrow(...)
         ARow agro = bals.getRow(ABalRows.GROWTHSIX + sIx);
+        //  bals.set1(ABalRows.GROWTHS4IX, sIx, agro); .. move to Assets.CashFlow.doGrowth
         if (agro != growth) {
           EM.doMyErr("Err subasset growth not match bals growth");
         }
@@ -7942,14 +7942,16 @@ public class Assets {
      */
     void aStartCashFlow(Assets aas) { //Assets.CashFlow.initCashFlow
       histTitles("aStartCashFlow");
-      bals.emptyFill();
+      if (!didCashFlowStart) {
+        ec.age++; // increase age each first aStartCashFlow
+      }      bals.emptyFill();
       EM.wasHere = "aStartCashFlow... before HSwaps eeea=" + ++eeea;
       prevns = new HSwaps[lPrevns];
       // set balances sub ARows to reference in bals// they should get calculated
       balances = bals.makeA6();
-      //   balances.A[BALANCESIX + RCIX] = bals.A[BALANCESIX + RCIX];
-      // balances.A[BALANCESIX + SGIX] = bals.A[BALANCESIX + SGIX];
-      //    System.out.println(name + " " + new Date().toString() + "start initCashFlow");
+      newKnowledge = bals.getRow(ABalRows.NEWKNOWLEDGEIX); // before SubAssets
+      commonKnowledge = bals.getRow(ABalRows.COMMONKNOWLEDGEIX);
+      manuals = bals.getRow(ABalRows.MANUALSIX);
       calcPriority(percentDifficulty);// get yprorityYr
       // now initialize knowledge subs from bals references
       EM.wasHere = "CashFlow.aStartCashFlow before for loop eeeb=" + ++eeeb;
@@ -7991,14 +7993,6 @@ public class Assets {
       whole.setMaximumFractionDigits(0);
       EM.wasHere = "CashFlow.init... after initGuests eeed=" + ++eeed;
       E.myTest(!(r.balance == bals.getRow(BALANCESIX + RIX)), "r.balance.get(0)=%6.2f not equal bals.getRow(BALANCESIX+RIX).get(0)=%6.2f\n", r.balance.get(0), bals.getRow(BALANCESIX + RIX).get(0));
-      //     E.myTest(!(r.growth == bals.getRow(GROWTHSIX + RIX)), "r.growth.get(0)=%6.2f not equal bals.getRow(GROWTHSIX+RIX).get(0)=%6.2f\n", r.growth.get(0), bals.getRow(GROWTHSIX + RIX).get(0));
-
-      //balances.setUseBalances(History.informationMinor9, "balances", r.balance, c.balance, s.balance, g.balance);
-      // Assets.CashFlows.aStartCashFlow reset x.growth and growths rows to the entering bals rows references.
-      for (i = 0; i < 4; i++) {
-        //   sys[i].growth = growths.A[2 + i] = bals.getRow(ABalRows.GROWTHSIX + i);
-        // growths.aCnt[2 + i]++;
-      }
       // set the worth reference
       r.worth = bals.getRow(ABalRows.CURWORTHSIX);//set SubAssets worths instance
       c.worth = bals.getRow(ABalRows.CURWORTHSIX + 1);
@@ -8009,7 +8003,7 @@ public class Assets {
       c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
       s.sumGrades(); // sets s worth
       g.sumGrades(); // sets g worth
-      eM.printHere("----ACFg----", ec, " CashFlow.init after growths and worths ");
+      eM.printHere("----ACFg----", ec, " CashFlow.init after worths age=" + ec.age);
       rawGrowths.setUseBalances(History.informationMinor9, "rawGrowth", r.rawGrowth, c.rawGrowth, s.rawGrowth, g.rawGrowth);// meaning unknown see calcGrowth
       invMEff.setUseBalances(History.valuesMinor7, "invMEff", r.invMaintEfficiency, c.invMaintEfficiency, s.invMaintEfficiency, g.invMaintEfficiency);
       invGEff.setUseBalances(History.valuesMinor7, "invGEff", r.invGroEfficiency, c.invGroEfficiency, s.invGroEfficiency, g.invGroEfficiency);
@@ -8025,6 +8019,7 @@ public class Assets {
         c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
         s.sumGrades(); // sets s worth
         g.sumGrades(); // sets g worth
+        // in aStartCashFlow set values not references
         bals.set2(ABalRows.STARETYEARWORTHSIX, r.worth);
         bals.set2(ABalRows.STARETYEARWORTHSIX + 1, c.worth);
         bals.set2(ABalRows.STARETYEARWORTHSIX + 2, s.worth);
@@ -8045,14 +8040,18 @@ public class Assets {
         EM.wasHere = "CashFlow.init... before calcEfficiency loop eeeh" + ++eeeh;
         for (k = 0; k < 4; k++) {
           sys[k].calcEfficiency();
+          bals.setRef(ABalRows.INVMEFFICIENCYIX + k, sys[k].invMaintEfficiency);
+          sys[k].invMaintEfficiency = invMEfficiency.A[ABalRows.BALANCESIX + k] = bals.getRow(ABalRows.INVMEFFICIENCYIX + k);
+          sys[k].invGroEfficiency = invGEfficiency.A[ABalRows.BALANCESIX + k] = bals.getRow(ABalRows.INVGEFFICIENCYIX + k);
           sys[k].calcGrowth();
         }
         didDepreciation = true; // did both calcEfficiency and calcGrowth
+        eM.printHere("---ASCF---", ec, "did calcEfficiency, calcGrowth growths.sum4=" + EM.mf(growths.sum4()));
       }
       rawFertilities2 = new A2Row(ec); //for DoTotalWorths
       EM.wasHere = "CashFlow.init... after calcGrowth loop eeei" + ++eeei;
       //  System.out.println("5631 near end CashFlow.initCashFlow");
-      didStart = (ec.age < 1 ? false : didStart);// probably age = -1 not y0
+      //didStart = (ec.age < 1 ? false : didStart);// probably age = -1 not y0
       String pStarted = (didStart ? " doCFStart " : " wasStarted ");
       String pInited = (didCashFlowStart ? " initCF  " : " cfWasInited ");
       if (!didStart) {
@@ -8075,21 +8074,6 @@ public class Assets {
 
     }  //Assets.CashFlow.aStartCashFlow
 
-    /**
-     * select a planet to trade obsolete
-     *
-     * @param wilda list of tradeable planets from StarTrader
-     * @return the Econ of the selected planet
-     */
-    Econ selectPlanetNot(Econ[] wilda) {
-      yphase = yrphase.SEARCH;
-      if (myTrade == null) {
-        Offer myOffer = new Offer(ec);
-        myTrade = new Trades();
-        myTrade.initTrade(myOffer, this);
-      }
-      return myTrade.selectPlanet(wilda);
-    }
 
     /**
      * return the current value of loop n
@@ -9501,19 +9485,25 @@ public class Assets {
         // do growths of knowledge and each SubAsset
         double tm = 1.;
         //  tm = 100000.0;
-        setStat(EM.GROWTHS, pors, clan, tm * bals.sum4(ABalRows.GROWTHSIX), 1);
-        setStat(EM.RAWYEARLYUNITGROWTH, pors, clan, tm * bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX), 1);
+        setStat(EM.GROWTHS, tm * bals.sum4(ABalRows.GROWTHSIX));
+        setStat(EM.RGROWTH1, tm * bals.sum(ABalRows.GROWTHS1IX));
+        setStat(EM.RGROWTH2, tm * bals.sum(ABalRows.GROWTHS2IX));
+        setStat(EM.RGROWTH3, tm * bals.sum(ABalRows.GROWTHS3IX));
+        setStat(EM.RGROWTH4, tm * bals.sum(ABalRows.GROWTHS4IX));
+        setStat(EM.RAWYEARLYUNITGROWTH, pors, clan, tm * bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX));
         setStat(EM.RAWUNITGROWTHS, tm * bals.sum4(ABalRows.RAWUNITGROWTHSIX));
         setStat(EM.NEWDEPRECIATION, bals.sum4(ABalRows.NEWUNITDEPRECIATIONIX));
         setStat(EM.DEPRECIATION, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX));
         setStat(EM.GROWTHCOSTS, bals.sum4(ABalRows.GROWTHCOSTSIX));
+        setStat(EM.GROWTHCOSTSY, bals.sum4(ABalRows.GROWTHCOSTSYIX));
+        setStat(EM.GROWTHCOSTSYY, bals.sum4(ABalRows.GROWTHCOSTSYYIX));
         setStat(EM.FERTILITYGROWTHCOSTS, bals.sum4(ABalRows.FERTILITYGROWTHCOSTSIX));
         setStat(EM.FERTILITYGROWTHS, bals.sum4(ABalRows.FERTILITYGROWTHSIX));
         setStat(EM.PREVGROWTH, bals.sum4(ABalRows.PREVGROWTHSIX));
         setStat(EM.RAWGROWTHS, bals.sum4(ABalRows.RAWGROWTHSIX));
         setStat(EM.REQMINFRAC2S, bals.sum2(ABalRows.REQFERTMINFRAC2IX));
-        setStat(EM.REQGFRAC2S, bals.sum2(ABalRows.REQGFERTFRAC2IX));
-        setStat(EM.REQMFRAC2S, bals.sum2(ABalRows.REQNFERTFRAC2IX));
+        setStat(EM.REQGFRAC2S, bals.sum2(ABalRows.RQGFERTFRAC2IX));
+        setStat(EM.REQMFRAC2S, bals.sum2(ABalRows.RQMFERTFRAC2IX));
 
         // setStat(EM.RAWGROWTHS, bals.sum4(ABalRows.RAWGROWTHSIX));
         setStat(EM.RAWPROSPECTS, bals.sum2(ABalRows.RAWPROSPECTS2IX));
@@ -10065,6 +10055,8 @@ public class Assets {
         if (!dead) {  //not yet flaged, do only once
           // DoTotalWorths iyW, syW, tW, gSwapW, gGrowW, gCostW, fyW;
           ec.dead = dead = true; //set deat in Econ and Assets
+          ec.age = -1; // reset the age if used again
+          ec.dage = -1;// ec.yearEnd will increase to 0
           double tt3 = 0;
 
           //100. * (final worth - start year worth)/start year worth is percent increase
@@ -10915,8 +10907,7 @@ public class Assets {
         ARow kMaint = new ARow(ec);
 
         //reset growth with current swork values  but getNeeds uses rawUnitGrowth
-        bals.set(ABalRows.GROWTHSIX + ix, i, (workG = swork.get(i)
-                                                      * bals.get(ABalRows.RAWGROWTHSIX + ix, i)));
+        //bals.set(ABalRows.GROWTHSIX + ix, i, (workG = swork.get(i)* bals.get(ABalRows.RAWGROWTHSIX + ix, i)));
         //  * sys[ix].rawUnitGrowth.get * cRand(i + ix + 10)));
         //double iBal = Math.pow(bals.get(ABalRows.BALANCESIX + ix, i), EM.balanceMult[0][0]);
         double iBal = Math.sqrt(bals.get(ABalRows.BALANCESIX + ix, i) * (bals.get(ABalRows.BALANCESIX + ix, i) + 5.) * 0.1);
@@ -10924,9 +10915,9 @@ public class Assets {
         //  double iBal = bals.get(ABalRows.BALANCESIX + ix, i) *1.89;
         // j loops across services that as a sum are used by consumers
         for (j = 0; j < E.lsecs; j++) {
-          assert rs[0][0][ix] > E.PZERO : "Error rs[0][0][ix] zero=" + EM.mf(rs[0][0][ix]) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
-          assert invMEfficiency.get(ix + 2, i) > E.PZERO : "Error invMEfficiency.get(ix + 2, i) <= PZERO =" + EM.mf(invMEfficiency.get(ix + 2, i)) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
-          assert bals.get(ABalRows.BALANCESIX + ix, i) >= E.NNZERO : "Error balances.get(2 + ix, i) <= NNZERO =" + EM.mf(balances.get(2 + ix, i)) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
+          assert rs[0][0][ix] > 0.0 : "Error rs[0][0][ix] zero=" + EM.mf(rs[0][0][ix]) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
+          assert invMEfficiency.get(ix + 2, i) > 0.0 : "Error invMEfficiency.get(ix + 2, i) <= PZERO =" + EM.mf(invMEfficiency.get(ix + 2, i)) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
+          assert bals.get(ABalRows.BALANCESIX + ix, i) >= 0.0 : "Error balances.get(2 + ix, i) < 0.0 =" + EM.mf(balances.get(2 + ix, i)) + ", ix=" + ix + ", name=" + getName() + ", i=" + i + ", j=" + j;
 
           // calculate required maintenance, a requirement not a cost subtracted
           // the prospects calculate from this and must be positive for health
@@ -10957,18 +10948,35 @@ public class Assets {
           t2 = sBal * cRand(31) * cRand(i * E.lsecs + 8 + j, rm) * E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j + E.lsecs] * rs[1][1][ix] * (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i);
           consumerReqGrowthCosts10.add(ix + 2, i, t1); //subasset costs
           consumerReqGrowthCosts10.add(ix + 6, i, t2); // subasset costs
-          nReqGrowth.add(ix + 2, j, t1);
+          nReqGrowth.add(ix + 2, j, t1); // the correct subasset
           nReqGrowth.add(ix + 6, j, t2);
           consumerReqGrowthCosts10.add(0, i, t1);
           consumerReqGrowthCosts10.add(1, i, t2);
-          nReqGrowth.add(0, j, t1);
-          nReqGrowth.add(1, j, t2);
-
+          nReqGrowth.add(0, j, t1); //rc
+          nReqGrowth.add(1, j, t2); //sg
+          if (i == 6 && j == 6) {
+            if (ix == 0) {
+              assert iBal > 0.0 : "iBal <= 0.0 iBal=" + EM.mf(iBal);
+              assert cRand(31) * cRand(i * E.lsecs + ix + j, rm) > 0.0 : "cRand(31) * cRand(i * E.lsecs + ix + j, rm) <= 0.0 =" + EM.mf(cRand(31) * cRand(i * E.lsecs + ix + j, rm));
+              assert E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] > 0.0 : "E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] <= 0.0 =" + EM.mf(E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j]);
+              assert rs[1][0][ix] > 0.0 : "rs[1][0][ix] <= 0.0 =" + EM.mf(rs[1][0][ix]);
+              assert (tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) > 0.0 :
+                      "(tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]) <= 0.0 =" + EM.mf((tIx == 0 ? 1. : E.resourceGrowthRequirementBySourcePerConsumer[pors][tIx][i]));
+              assert invGEfficiency.get(ix + 2, i) > 0.0 : "invGEfficiency.get(ix + 2, i) <= 0.0 =" + EM.mf(invGEfficiency.get(ix + 2, i));
+              assert nReqGrowth.get(2, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(2, j));
+              assert nReqGrowth.get(6, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(6, j));
+            }
+            else {
+              assert nReqGrowth.get(2 + ix, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(2 + ix, j));
+              assert nReqGrowth.get(6 + ix, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(6 + ix, j));
+            }
+          }
           if (n < 5 && i == 6 && j == 6 && ix == 2) {
             hist.add(new History("#b", History.valuesMajor6, "s bal ij" + i + j, balances.A[4]));
             hist.add(new History("#b", History.valuesMajor6, "mRGroC6 ij" + i + j + " ix" + ix + " n" + n, consumerReqGrowthCosts10.A[6]));
             hist.add(new History("#b", History.valuesMajor6, "nRGro6 i=" + i, nReqGrowth.A[6]));
           }
+
 
           // maintenance costs
           t1 = iBal * cRand(31) * cRand(i * E.lsecs + ix + j + 31, rm) * E.maintCost[pors][i][j] * rs[2][0][ix] * (tIx == 0 ? 1. : E.maintCost[pors][tIx][i]) * invMEfficiency.get(ix + 2, i);
@@ -11013,19 +11021,44 @@ public class Assets {
           t1 = iBal * gCosts[pors][i][j] * cRand(31) * rs[4][0][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i]) * invGEfficiency.get(ix + 2, i);
           t2 = sBal * gCosts[pors][i][j + E.lsecs] * cRand(31) * rs[4][1][ix] * (tIx == 0 ? 1. : gCosts[pors][tIx][i + E.lsecs]) * invGEfficiency.get(ix + 2, i);
           if (E.debugCosts && ix == 0) {
-            assert iBal > E.PZERO : " iaBal !> E.PZERO =" + EM.mf(iBal);
-            assert sBal > E.PZERO : " sBal !> E.PZERO =" + EM.mf(sBal);
-            assert rs[4][1][ix] > E.PZERO : " rs[4][1][ix] !> E.PZERO =" + EM.mf(rs[4][1][ix]);
-            assert invGEfficiency.get(ix + 2, i) > E.PZERO : " invGEfficiency.get(ix + 2, i) !> E.PZERO =" + EM.mf(rs[4][1][ix]);
-            assert invGEfficiency.get(ix + 2, i) > E.PZERO : " invGEfficiency.get(ix + 2, i) !> E.PZERO =" + EM.mf(rs[4][1][ix]);
-            assert t1 > E.PZERO : " t1 !> E.PZERO =" + EM.mf(t1);
-            assert t2 > E.PZERO : " t2 !> E.PZERO =" + EM.mf(t2);
+            assert iBal > 0.0 : " iaBal !> 0.0 =" + EM.mf(iBal);
+            assert sBal > 0.0 : " sBal !> 0.0 =" + EM.mf(sBal);
+            assert rs[4][1][ix] > 0.0 : " rs[4][1][ix] !> 0.0 =" + EM.mf(rs[4][1][ix]);
+            assert invGEfficiency.get(ix + 2, i) > 0.0 : " invGEfficiency.get(ix + 2, i) !> 0.0 =" + EM.mf(rs[4][1][ix]);
+            assert invGEfficiency.get(ix + 2, i) > 0.0 : " invGEfficiency.get(ix + 2, i) !>0.0 =" + EM.mf(rs[4][1][ix]);
+            assert t1 > 0.0 : " t1 !> 0.0 =" + EM.mf(t1);
+            assert t2 > 0.0 : " t2 !> 0.0 =" + EM.mf(t2);
           }
 
           consumerGrowthCosts10.add(ix + 2, i, t1);
           consumerGrowthCosts10.add(ix + 6, i, t2);
           nGrowth.add(ix + 2, j, t1);
           nGrowth.add(ix + 6, j, t2);
+          if (i == 6 && j == 6) {
+            if (ix == 0) {
+              assert iBal > 0.0 : "iBal <= 0.0 iBal=" + EM.mf(iBal);
+              assert cRand(31) > 0.0 : "cRand(31) <= 0.0 =" + EM.mf(cRand(31));
+              assert E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] > 0.0 : "E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j] <= 0.0 =" + EM.mf(E.resourceGrowthRequirementBySourcePerConsumer[pors][i][j]);
+              assert rs[4][0][ix] > 0.0 : "rs[4][0][ix] <= 0.0 =" + EM.mf(rs[4][0][ix]);
+              assert (tIx == 0 ? 1. : gCosts[pors][tIx][i]) > 0.0 :
+                      "(tIx == 0 ? 1. : gCosts[pors][tIx][i]) <= 0.0 =" + EM.mf((tIx == 0 ? 1. : gCosts[pors][tIx][i]));
+              assert invGEfficiency.get(ix + 2, i) > 0.0 : "invGEfficiency.get(ix + 2, i) <= 0.0 =" + EM.mf(invGEfficiency.get(ix + 2, i));
+              assert t1 > 0.0 : "t1 <= 0.0 =" + eM.mf(t1);
+              assert t2 > 0.0 : "t2 <= 0.0 =" + eM.mf(t2);
+              assert nGrowth.get(ix + 2, j) > 0.0 : " nGrowth.get(ix + 2, j) <= 0.0 =" + EM.mf(nGrowth.get(ix + 2, j));
+              assert nGrowth.get(ix + 6, j) > 0.0 : "nGrowth.get(ix + 6, j) <= 0.0 =" + EM.mf(nGrowth.get(ix + 6, j));
+              bals.set4(ABalRows.GROWTHCOSTSYYIX, nGrowth);
+              assert bals.sum1(ABalRows.GROWTHCOSTSYYIX, 0) > 0.0 : "ABalRows.GROWTHCOSTSYYIX <= 0.0 =" + EM.mf(bals.sum1(ABalRows.GROWTHCOSTSYYIX, 1));
+              eM.printHere("----CRC----", ec, "bals.sum4(ABalRows.GROWTHCOSTSYYIX)=" + EM.mf(bals.sum4(ABalRows.GROWTHCOSTSYYIX)) + " bal=" + eM.mf(bals.sum1(0, 2)) + " ibal" + eM.mf(iBal) + " sbal" + eM.mf(sBal) + " rs" + eM.mf(rs[4][0][ix]) + " invGEfficiency.get(ix + 2, i)=" + eM.mf(invGEfficiency.get(ix + 2, i)));
+            }
+            else {
+              assert nReqGrowth.get(2 + ix, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(2 + ix, j));
+              assert nReqGrowth.get(6 + ix, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(6 + ix, j));
+              assert nGrowth.get(ix + 2, j) > 0.0 : " nGrowth.get(ix + 2, j) <= 0.0 =" + EM.mf(nGrowth.get(ix + 2, j));
+              assert nGrowth.get(ix + 6, j) > 0.0 : "nGrowth.get(ix + 6, j) <= 0.0 =" + EM.mf(nGrowth.get(ix + 6, j));
+              eM.printHere("----CRC2----", ec, "bals.sum4(ABalRows.GROWTHCOSTSYYIX)=" + EM.mf(bals.sum4(ABalRows.GROWTHCOSTSYYIX)) + " bal=" + eM.mf(bals.sum1(0, 2)) + " ibal" + eM.mf(iBal) + " sbal" + eM.mf(sBal) + " rs" + eM.mf(rs[4][0][ix]) + " invGEfficiency.get(ix + 2, i)=" + eM.mf(invGEfficiency.get(ix + 2, i)));
+            }
+          }
           //       consumerGrowthCosts10.add(0, i, t1);
           //      consumerGrowthCosts10.add(1, i, t2);
           //      nGrowth.add(0, j, t1);
@@ -11034,6 +11067,7 @@ public class Assets {
         } // end j
 
       } // end i  in SubAsset
+      bals.set1(ABalRows.GROWTHCOSTSYIX, ix, nGrowth.A[ix + 2]);
       //disable historys
       if (false && n < 999 && (ix == 0 || ix == 2)) {  //r & s
         hist.add(new History("#a", History.valuesMajor6, "sWork", swork));
@@ -11140,9 +11174,9 @@ public class Assets {
       mtgCosts10 = makeZero(mtgCosts10, "mtgCosts10");
       mtCosts10 = makeZero(mtCosts10, "mtCosts10");
       mtggCosts10 = makeZero(mtggCosts10, " mtggCosts10");
-      //growthCosts10 = makeZero(growthCosts10, "growthCosts10");
-      //growths10 = makeZero(growths10, "growths10");
-      mtggGrowths6 = makeZero(mtggGrowths6, "mtggGrowths6");
+      growthCosts10 = makeZero(growthCosts10, "growthCosts10");
+      // growths10 = makeZero(growths10, "growths10");
+      // mtggGrowths6 = makeZero(mtggGrowths6, "mtggGrowths6");
       mtgNeeds6 = makeZero(mtgNeeds6, "mtgNeeds6");
       goalmtg1Needs6 = makeZero(goalmtg1Needs6, "goalmtg1Needs6");
       goalmtg1Neg10 = makeZero(goalmtg1Neg10, "goalmtg1Neg10");
@@ -11174,7 +11208,9 @@ public class Assets {
       hist.add(new History("#g", History.valuesMajor6, "gwork", guests.work));
 
       travelCosts.zero();
-
+      if (ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+        assert bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) > 0.0 : " bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       // instantiate other objects we may want to list
       //    A10Row nTrav1Yr = new A10Row(ec,History.valuesMinor7, "nTrav1Yr");
       int defeat789 = 1; // 1 to not defeat
@@ -11248,7 +11284,17 @@ public class Assets {
 
       double mtgResults10[] = new double[40];
       histTitles("D$", "get needs process");
+      bals.set4(ABalRows.GROWTHS3IX, growths); //in Assets.CashFlow.yCalcRawCosts
+      if (ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+        assert bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) > 0.0 : " bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+      if (ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       mtgNeeds6 = getNeeds("mtgNeeds6", "goals and  nyear,fracGrowth", yphase, n, n < 2 && !ec.clearHist() ? History.debuggingMinor11 : History.loopMinorConditionals5, bals, maintCosts10, travelCosts10, rawGrowthCosts10, rawGrowths, reqMaintCosts10, reqGrowthCosts10, rawFertilities2, rawProspects2, mtCosts10, growthCosts10, mtgCosts10, growths, curMaintGoal, curGrowthGoal, eM.futGrowthFrac[pors][clan], eM.futGrowthYrMult[pors][clan], mtggNeeds6, mtNeeds6, mtgAvails6, mtGNeeds6, goalmtg1Needs6, goalmtg1Neg10);
+      if (ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.GROWTHSIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.GROWTHSIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
       c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
       s.sumGrades(); // sets s worth
@@ -11266,6 +11312,9 @@ public class Assets {
       mNeeds.setMax(mtgNeeds6, mtggNeeds6); // largest need, smallest available
       growths.sendHist(hist, aPre);
       hist.add(new History(aPre, History.valuesMajor6, "r.growth", r.growth));
+      if (ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+        assert bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) > 0.0 : " bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       if (r.growth != growths.A[2]) {
         E.myTest(true, "r.growth not the same as growths.A[2]");
       }
@@ -11524,8 +11573,8 @@ public class Assets {
      * @param rawHealths output SubAssets ??? mostly not used
      * @param mtNegs output costs of maint and travel with phe
      * @param growthNegs output cost of growths
-     * @param mtgNegs output SubAssets: the sum of maint,travel,growth costs
-     * including needGoal output<br>
+     * @param mtgNegs output costs SubAssets: the sum of maint,travel,growth
+     * costs     * including needGoal output<br>
      * @param growths output amount of growths (also part of bals)
      * @param maintGoal input if &gt; 0 force health and maint calc costs
      * 1+maint goal
@@ -11773,17 +11822,48 @@ public class Assets {
       //    ABalRows.REQFERTMINFRAC2IX   ABalRows.POORHEALTHEFFECTIX  ABalRows.RAWFERTILITIES2IX  ABalRows.MTCOSTS2IX, ABalRows.RQFERTMINS2IX, ABalRows.MTGFERTFRAC2IX, ABalRows.MTGCOSTS2IX, ABalRows.MTGCOSTS2IX,
       consumerEMTGC6 = new A6Row(ec, alev, "conEMTGC6").setAmultF(consumerEMTC6, rawFertilities2);
       // now apply limited fertility to get fertility growths
-      A6Row fertilityGrowths = new A6Row(ec, alev, "fertilityGrowth").setAmultF(rawGrowths, rawFertilities2);
-      bals.set2(ABalRows.FERTILITYGROWTHSIX, fertilityGrowths);
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert rawFertilities2.get(0, 0) > 0.0 : " rawFertilities2.get(0,0) <= 0.0=" + EM.mf(rawFertilities2.get(0, 0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert rawGrowths.get(0, 0) > 0.0 : " rawGrowths.get(0,0) <= 0.0=" + EM.mf(rawGrowths.get(0, 0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+      //   A6Rowa1(EM.eM, newEc, nRows, t, alev, atitl);
+      A6Row fertilityGrowths = new A6Row(ec, alev, "fertilityGrowth").setAmultFminM(rawGrowths, rawFertilities2, .002);
+      growths = fertilityGrowths;
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert growths.get(0, 0) > 0.0 : " growths.get(0,0) <= 0.0=" + EM.mf(growths.get(0, 0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert growths.get(0) > 0.0 : " growths.get(0) <= 0.0=" + EM.mf(growths.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+      bals.setRef4(ABalRows.GROWTHSIX, growths);
+      bals.set4(ABalRows.GROWTHS1IX, growths);
+      bals.setRef4(ABalRows.FERTILITYGROWTHSIX, fertilityGrowths);
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert growths.get(0) > 0.0 : " growths.get(0) <= 0.0=" + EM.mf(growths.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert fertilityGrowths.get(0) > 0.0 : " fertilityGrowths.get(0) <= 0.0=" + EM.mf(fertilityGrowths.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.GROWTHSIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.GROWTHSIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
+
 
 // for the fertilityGrowths s get growthNegs (costs)
       growthNegs = growthNegs.setAmultF(rawEGC, rawFertilities2);
       checkNegCosts(growthNegs, "growthNegs");
       bals.set2(ABalRows.FERTILITYGROWTHCOSTSIX, growthNegs);
+      bals.set2(ABalRows.GROWTHCOSTSIX, growthNegs);
+
       // now get total costs mt and growth
       mtgNegs.setAdd(mtEC10, growthNegs);
       checkNegCosts(mtgNegs, "mtgNegs");
-      bals.set2(ABalRows.MTGCOSTS2IX, growthNegs);
+      bals.set2(ABalRows.MTGCOSTS2IX, mtgNegs);
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.GROWTHSIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.GROWTHSIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       // finish the return value
       // now start needs6 calculation for C and G & R and S
       // recalc rawProspects using only working R & S
@@ -11814,6 +11894,9 @@ public class Assets {
           rawProspects2.set(sumIx, secIx, (mtgAvails6.get(sumIx, secIx)) * 14 / balSum);
         }
       }
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.GROWTHSIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.GROWTHSIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       bals.set2(ABalRows.RAWPROSPECTS2IX, rawProspects2);
       /*
          double maintGoal, double growthGoal, double growMult, double growYears, A6Row goalmtgNeeds, A6Row mtNeeds, A6Row goalmtNeeds) {     
@@ -11828,6 +11911,9 @@ public class Assets {
       A6Row mtg1GNeeds = new A6Row(ec, alev, "mtg1GNeeds");
       A2Row mRG = new A2Row(ec, alev, "mRg");
       A2Row pRawGGC = new A2Row(ec, alev, "pRawGGC");
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.GROWTHSIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.GROWTHSIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       //  A6Row goalmtgNeed = goalNeeds;
       // now calculate goalmtNeeds and goalmtgNeeds
       // mGG = (gYear* (bal - (pMt + gmult*gGC))/gmult*gGC
@@ -11853,6 +11939,9 @@ public class Assets {
           na = -bals.get(3 + 2 * sumIx, secIx);
           goalmtNeeds.set(3 + 2 * sumIx, secIx, na > nb ? na > nc ? na : nc : nb > nc ? nb : nc);
         }
+      }
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.GROWTHSIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.GROWTHSIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
       }
       A6Row goalGG = new A6Row(ec, alev, "goalGG").setAmultV(rawGrowths, mGrowthGoal);
       bals.set2(ABalRows.FERTILITYGROWTHCOSTSIX, growthNegs);
@@ -11885,7 +11974,9 @@ public class Assets {
       //    lev = alev = 5;
 
       hist.add(new History(aPre, History.valuesMajor6, " phe=" + EM.mf(poorHealthEffect), "gy=" + EM.mf(gYears), "gm=" + EM.mf(growMult), "maintGoal=", EM.mf(maintGoal), "mGrowthGoal=", EM.mf(mGrowthGoal), "<<<<<<<<<<"));
-
+      if (ec.getAge() > 1) { // late in getNeeds
+        assert bals.getRow(ABalRows.GROWTHSIX).get(0) > 0.0 : " bals.getRow(ABalRows.GROWTHSIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.GROWTHSIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+      }
       growths.sendHist(hist, aPre);
       growthNegs.sendHist(hist, bLev, aPre, alev, "growthNegs");
       //   rawFRem.sendHist01(bLev, aPre, lev, " rc rawFRem", " sg rawFRem");
@@ -13477,6 +13568,7 @@ public class Assets {
       //  bals.getRow(GROWTHSIX + SIX).set(s.growth);
       //  bals.getRow(GROWTHSIX + GIX).set(g.growth);
       double preGrow = sumTotWorth;
+      bals.copy4BtoC(ABalRows.GROWTHSIX, ABalRows.GROWTHS4IX);
       resource.doGrow(aPre);
       cargo.doGrow(aPre);
       guests.doGrow(aPre);

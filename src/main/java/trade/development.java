@@ -17,6 +17,9 @@
 */
 /*
 ******* sometimes new lines went to the end, recently they went to start.  no always done
+
+9/15/2023 I found a problem, maybe a solution,  when I cleaned up so all the Assets methods that created a CashFlow nulled that CashFlow at their exit.  The problem is that I want most of the CashFlow variables to disappear at the end of CashFlow, but a few need to survive throubout the year but not into the next year.  I am starting to make most of the Assets ARpw variable instances to live in bals a ABalRows array of ARows
+Some but not all can be nulled at the end of CashFlow the problem invGrowEfficiency are an example of created in yearStart but needed in barter and yeaEnd by getNeeds.
 9/4/2023 I have been struggleing to get growth up, but costs are based  in part on balance, then getNeeds finds the health by requirements the health modifies the costs, then it determins available units after travel and maintenance costs the remaining goes for growth and growth costs.
 8/1/2023 I have had some very funny errors, I found recently there was a background java running that took space and most 
 of the CPUs  I couldn't tell what it was, and nothing bad when I killed it, but it might have been responsible for some 

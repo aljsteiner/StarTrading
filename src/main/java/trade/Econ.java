@@ -68,7 +68,7 @@ public class Econ {
   //Neighbor[] neighbors = new Neighbor[20];
   protected int pors;
   protected int year;  // EM.year of StarTrader
-  protected int age = -1;   // age of this economy, increased by year start
+  protected int age = -1;   // age of this economy, first year is age 0 after aStartCashFlow
   int dage = -1;          // years dead
   protected Assets as;
   protected int myEconCnt = 0;
@@ -171,6 +171,7 @@ public class Econ {
     this.year = eM.year;
     this.myEconCnt = econCnt;
     this.dead = false;
+    this.age = -1; // reset age if using a dead econ
     dyear =-5;
 
     planetList = new ArrayList<TradeRecord>();
@@ -905,7 +906,7 @@ public class Econ {
   protected void yearStart(double lightYears) {
     aYearEndTime = 0; // clear start of Assets.CashFlow.YearEnd
     if(dead) return;
-    age++; // move -1 to 0 for the first year
+    // age++; // move aging to Assets.CashFlow.aStartCashFlow
     // age the hists file, move 4->5, 3->4, 2->3, 1->2, new 1
     // except for the first year, or if the env is dead
     year = eM.year;
@@ -917,6 +918,7 @@ public class Econ {
     if (!as.getDie()) {
       if (clearHist()) {
         hist.clear();
+        // age is at 0 from assertInit during trade.StarTrader.newEcon
       } else if (age > 0) { // keep the initialization hist
         // move hists up, keep a few
         for (int i = hists.length - 1; i > 0; i--) {
@@ -1020,8 +1022,9 @@ public class Econ {
       EM.wasHere3 = "after as.yearEnd " + name + "Y"+ EM.year + " yyyee1=" + yyyee1++;
       EM.econCountsTest(); 
       EM.wasHere3 = "after as.yearEnd " + name + "Y"+ EM.year + " yyyee2=" + yyyee2++;
-      if (as.getDie()) {
+      if (getDie()) {
         dage++;
+        age = -1;
  EM.econCountsTest(); 
       }// getDie
       EM.wasHere3 = "after as.getDie() " + name + "Y"+ EM.year + " yyyee3=" + yyyee3++;
@@ -1839,8 +1842,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
 
     public void run() {
       try {
-      int aage = eM.curEcon.age; 
-      aage = ec.age;
+        int aage = eM.curEcon.age; // may e wrong
+        aage = ec.age; // ec set with new
       int tCnts = 0;
       int le = 10;
       long etStart = etTimes[6] = startThread = (new Date()).getTime(); // thread run

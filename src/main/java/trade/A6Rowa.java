@@ -1390,7 +1390,11 @@ public class A6Rowa {
    * assert m   * %gt; 1 and do resum @param m selector of row numbe
    *
    * r
-   * @param bias selector of entry in row   * @param val value to be tested as a Double then stored
+   * @param bias selector of entry in row * @param val value to be tested as a
+   * Double then
+   *
+   * stored
+   * @param n sector to set
    * @return val
    */
   public double set(int bias, int n, Double val) {
@@ -1502,7 +1506,6 @@ public class A6Rowa {
     return ret;
 
   }
-
   /**
    * multiply raw growth by a fertility
    *

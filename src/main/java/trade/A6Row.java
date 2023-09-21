@@ -758,14 +758,14 @@ public class A6Row extends A6Rowa {
   }
 
   /**
-   * set this to joint balances, and references of SubAsset balances
-   *
+   * set this to joint rows references of SubAsset
+     *
    * @param alev used by sendHist as send if History.dl &gt alev, lev = alev
    * @param atitl title for all sendHist rows
-   * @param rb r.balance
-   * @param cb c.balance
-   * @param sb s.balance
-   * @param gb g.balance
+   * @param rb r SubAsset reference
+   * @param cb c SubAsset reference
+   * @param sb s SubAsset reference
+   * @param gb g SubAsset reference
    * @return 0=rc sum(rb,cb),1=sg sum(sb,gb),2-5=pointers to SubAssets r,c,s,g
    */
   public A6Row setUseBalances(int alev, String atitl, ARow rb, ARow cb, ARow sb, ARow gb) {
@@ -1064,6 +1064,37 @@ public class A6Row extends A6Rowa {
       }
     }
     noChecking=false;resum(0);resum(1);
+    return this;
+  }
+
+  /**
+   * multiply raw growth by a fertility but set a min
+   *
+   * @param a raw growth
+   * @param f a 2 row r s fertility
+   * @param min the growth always has a min
+   * @return return the A6Row with r,c,s,g multiplied, a resum needed
+   */
+  public A6Row setAmultFminM(A6Row a, A2Row f, double min) {
+    noChecking = true;
+    double t = 0., mined = 0.;
+    for (int secIx : ASECS) {
+      for (int sumIx : A01) {
+        this.A[sumIx].values[secIx] = 0.0;
+        for (int rowIx : A01) {
+          // sett(2 + 2 * m + mm, n, a.get(2 + 2 * m + mm, n) * f.get(m, n));
+          t = a.A[2 + sumIx + sumIx + rowIx].values[secIx]
+              * f.A[sumIx].values[secIx];
+          mined = t < min ? min : t;
+          this.A[sumIx].values[secIx]
+                  += this.A[2 + sumIx + sumIx + rowIx].values[secIx] = mined;
+          this.A[2 + sumIx + sumIx + rowIx].setCnt++; //flag a change made
+        }
+      }
+    }
+    noChecking = false;
+    // resum(0);
+    //  resum(1);
     return this;
   }
 
