@@ -80,7 +80,7 @@ public class A6Rowa {
   // reqCosts for r,c,s,g   or rHealth sHealth rFertility sFertility
   volatile double sum[] = {0., 0., 0., 0., 0.}, plusSum[] = {0., 0., 0., 0., 0.}, negSum[] = {0., 0., 0., 0., 0.};
   volatile double minSum[] = {0., 0., 0., 0., 0.}, minSum2[] = {0., 0., 0., 0., 0.};
-  volatile int[] aCnt = {-11, -11, -11, -11, -11, -11};
+  volatile int[] aCnt = {-11, -11, -11, -11, -11, -11};// count when last reprocessed
   volatile int[] aResum = {-11, -11, -11, -11, -11, -11};
   volatile int[] dResums = {0, 1};
   int[] mResum1 = {2, 3};

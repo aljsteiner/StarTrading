@@ -3733,9 +3733,9 @@ public class Assets {
         // make sure balance
         // move ARow references from bals, they will remain when SubAsset instance is freed
         balances.A[asIx + ABalRows.BALANCESIX] = sys[asIx].balance = bals.getRow(ABalRows.BALANCESIX + asIx);
-        balances.aCnt[asIx + ABalRows.BALANCESIX]++;
+        balances.A[asIx + ABalRows.BALANCESIX].setCnt++;
         sys[asIx].growth = growth = growths.A[BALANCESIX + asIx] = bals.getRow(GROWTHSIX + asIx);
-        growths.aCnt[BALANCESIX + asIx]++;
+        growths.A[BALANCESIX + asIx].setCnt++;
         sys[asIx].cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + asIx);
         sys[asIx].cumUnitBonus = bals.getRow(ABalRows.CUMUNITBONUSIX + asIx);
         sys[asIx].bonusUnitGrowth = bals.getRow(ABalRows.BONUSUNITSIX + asIx);
@@ -4020,7 +4020,7 @@ public class Assets {
           assert growth.get(0) > 0.0 : " growth.get(0) <= 0.0=" + EM.mf(growth.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
         }
         prevGrowth.set(growth);
-        bals.set1(ABalRows.GROWTHS1IX, sIx, growth);
+        bals.set1(ABalRows.GROWTHS1IX, sIx, prevGrowth);
         bals.set1(ABalRows.PREVGROWTHSIX, sIx, prevGrowth);
         cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx);
 
@@ -9348,7 +9348,7 @@ public class Assets {
       //    sys[i].bonusYears = bals.getRow(BONUSYEARSIX + i);
       //   sys[i].cumulativeUnitDepreciation = bals.getRow(CUMULATIVEDEPRECIATIONIX + i);
       //    growths.A[i+2] = sys[i].growth = growths.A[2+i] = bals.getRow(GROWTHSIX + i);
-      //   growths.aCnt[2+i]++;
+      //   growths.A[2+i].setCnt++;
       //   }
       //     ec.saveHist = true;
       didStart = false;
@@ -9402,10 +9402,11 @@ public class Assets {
         lightYearsTraveled = 0.;
       }
       EM.addlErr = ""; // clear addlErr
+
       yphase = yrphase.DOLOOPS;
       doLoop("G@", yrphase.DOLOOPS, prevns[0]);
       eM.printHere("----AEYac---", ec, " CashFlow.yearEnd just after swap doLoop");
-
+      bals.set4(ABalRows.GROWTHS3IX, growths); //in Assets.CashFlow.yCalcRawCosts
       // sLoops[0] = 0;
       gSwapW = new DoTotalWorths();
       sumTotWorth = gSwapWTotWorth = gSwapW.getTotWorth();
@@ -9470,7 +9471,7 @@ public class Assets {
         setStat(EM.SWAPRINCRWORTH, pors, clan, gSwapIncr, 1);
         setStat(EM.POSTSWAP, pors, clan, gSwapWTotWorth, 1);
         setStat(EM.POSTSWAPRCSG, pors, clan, gSwapW.getSumRCSGBal(), 1);
-
+        bals.copy4BtoC(ABalRows.GROWTHSIX, ABalRows.GROWTHS4IX);
 //      EM.gameRes.PREGROWTH.wet(pors, clan, preGrowLoop - preGWorth);
         //     EM.gameRes.CUMPREGROWTH.wet(pors, clan, preGrowLoop - preGWorth);
         growths.sendHist(hist, "G@");
@@ -11284,7 +11285,7 @@ public class Assets {
 
       double mtgResults10[] = new double[40];
       histTitles("D$", "get needs process");
-      bals.set4(ABalRows.GROWTHS3IX, growths); //in Assets.CashFlow.yCalcRawCosts
+
       if (ec.getAge() > 1) { // after one yeaEnd with prevGrowth
         assert bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) > 0.0 : " bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0) <= 0.0=" + EM.mf(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX).get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
       }
@@ -11822,15 +11823,13 @@ public class Assets {
       //    ABalRows.REQFERTMINFRAC2IX   ABalRows.POORHEALTHEFFECTIX  ABalRows.RAWFERTILITIES2IX  ABalRows.MTCOSTS2IX, ABalRows.RQFERTMINS2IX, ABalRows.MTGFERTFRAC2IX, ABalRows.MTGCOSTS2IX, ABalRows.MTGCOSTS2IX,
       consumerEMTGC6 = new A6Row(ec, alev, "conEMTGC6").setAmultF(consumerEMTC6, rawFertilities2);
       // now apply limited fertility to get fertility growths
-      if (ec.getAge() > 1) { // late in getNeeds
-        assert rawFertilities2.get(0, 0) > 0.0 : " rawFertilities2.get(0,0) <= 0.0=" + EM.mf(rawFertilities2.get(0, 0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
-      }
+    // fertilities can be less than zero, so apply the min for growths
       if (ec.getAge() > 1) { // late in getNeeds
         assert rawGrowths.get(0, 0) > 0.0 : " rawGrowths.get(0,0) <= 0.0=" + EM.mf(rawGrowths.get(0, 0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
       }
       //   A6Rowa1(EM.eM, newEc, nRows, t, alev, atitl);
-      A6Row fertilityGrowths = new A6Row(ec, alev, "fertilityGrowth").setAmultFminM(rawGrowths, rawFertilities2, .002);
-      growths = fertilityGrowths;
+     // A6Row fertilityGrowths = new A6Row(ec, alev, "fertilityGrowth").setAmultFminM(rawGrowths, rawFertilities2, .002);
+      A6Row fertilityGrowths = growths.setAmultFminM(rawGrowths, rawFertilities2, .002);
       if (ec.getAge() > 1) { // late in getNeeds
         assert growths.get(0, 0) > 0.0 : " growths.get(0,0) <= 0.0=" + EM.mf(growths.get(0, 0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
       }
@@ -13568,7 +13567,7 @@ public class Assets {
       //  bals.getRow(GROWTHSIX + SIX).set(s.growth);
       //  bals.getRow(GROWTHSIX + GIX).set(g.growth);
       double preGrow = sumTotWorth;
-      bals.copy4BtoC(ABalRows.GROWTHSIX, ABalRows.GROWTHS4IX);
+
       resource.doGrow(aPre);
       cargo.doGrow(aPre);
       guests.doGrow(aPre);
