@@ -977,7 +977,7 @@ class EM {
     double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
     double mmem = (double) maxMem / gigMem;
     double gmax = (double) maxMem * gmem;
-    String ret = " Gmem " + " max" + mf(mmem) + " gmax" + mf(gmax) + " tot" + mf(tmem) + " used" + mf(umem) + " free" + mf(fmem);
+    String ret = " Gmem " + " max" + mf2(mmem) + " gmax" + mf2(gmax) + " tot" + mf2(tmem) + " used" + mf2(umem) + " free" + mf2(fmem);
     return ret;
   }
 
@@ -994,7 +994,7 @@ class EM {
     double tmem = (double) totMem * gmem, fmem = (double) freeMem * gmem, umem = (double) usedMem * gmem;
     double mmem = (double) maxMem * gmem;
     //System.out.println("");
-    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + year + " Gigs total=" + EM.mf(tmem) + " max" + mf(mmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem) + " used%max" + getPercentUsedMemory();
+    prGigMem = " Game Memory " + StarTrader.stateStringNames[StarTrader.stateConst] + " year=" + year + " Gigs total=" + mf2(tmem) + " max" + mf2(mmem) + " used=" + mf2(umem) + " free=" + mf2(fmem) + " used%max" + mf2(getPercentUsedMemory());
     System.out.println("----PM----" + since() + prGigMem + "<<<<<<\n");
   }
 
@@ -1069,6 +1069,21 @@ class EM {
     return rt;
   }
 
+  /**
+   * format the Double value to a 7 char String
+   *
+   *
+   * @param v value to format
+   * @return mf(v)
+   */
+  static public String mf2(Double v) {
+    boolean t = mfShort;
+    mfShort = true;
+    String rt = mf(v);
+    mfShort = t;
+    return rt;
+  }
+
   static boolean mfShort = false;
   static boolean test5 = true; // temp to test funcionss
   /**
@@ -1104,7 +1119,7 @@ class EM {
         dFrac.setMaximumFractionDigits(5);
         return dFrac.format(v);
       } else
-     if ((v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
+ if (!mfShort && (v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         return dFrac.format(v);
@@ -1282,19 +1297,6 @@ class EM {
     
   }
 
-  /**
-   * format the value to a 7 character string
-   *
-   * @param v input value
-   * @return value as a string
-   */
-  static public String mf2(Double v) {
-    boolean t = mfShort;
-    mfShort = true;
-    String rt = mf(v);
-    mfShort = t;
-    return rt;
-  }
 
   /**
    * format the value to a 5 character string and a sign
@@ -3202,7 +3204,7 @@ onceAgain:
       if ((gc == vone && pors == E.P) || gc == vtwo) {
         if (slider == (va  = valI[vv][sliderC][vFill][pors])) {
           if (E.debugPutValue2 && E.debugDoRes) {
-            System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", Thread=" + Thread.currentThread().getName() + ", Ty=" + ((new Date().getTime() - st.startYear)) + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + " no change");
+            System.out.println("----PVL----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", Thread=" + Thread.currentThread().getName() + ", Ty=" + ((new Date().getTime() - st.startYear)) + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + " no change");
           }
           return 0; // no change
         }
@@ -3235,7 +3237,7 @@ onceAgain:
         int prevSlider = valI[vv][prevSliderC][pors][vFill] = valI[vv][sliderC][pors][vFill];
         valI[vv][sliderC][pors][vFill] = slider; // a new value for slider
         if (E.debugPutValue && E.debugDoRes) {
-          System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
+          System.out.println("----PV3----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
         }
         doWriteKeepVals(vv, pors, vFill, val1, val0, slider, prevSlider, prev2Slider);
         return 1;
@@ -3862,6 +3864,7 @@ onceAgain:
   static final int LIVEWORTH = ++e4;
   static final int WORTHINCR = ++e4; //
   static final int GROWTHS = ++e4;
+  static final int GROWTHSP = ++e4;
   static final int GROWTHCOSTS = ++e4;
   static final int GROWTHCOSTSY = ++e4;
   static final int GROWTHCOSTSYY = ++e4;
@@ -3880,9 +3883,17 @@ onceAgain:
   static final int RGROWTH2 = ++e4;
   static final int RGROWTH3 = ++e4;
   static final int RGROWTH4 = ++e4;
+  static final int RGROWTH5 = ++e4;
+  static final int RGROWTH6 = ++e4;
+  static final int RGROWTH7 = ++e4;
+  static final int RGROWTH8 = ++e4;
+
   static final int PREVGROWTH = ++e4; //
   static final int NEWDEPRECIATION = ++e4; //NEWDEPRECIATION
   static final int DEPRECIATION = ++e4; //DEPRECIATION
+  static final int PREVGROWTHP = ++e4; //
+  static final int NEWDEPRECIATIONP = ++e4; //NEWDEPRECIATION
+  static final int DEPRECIATIONP = ++e4; //DEPRECIATION
   static final int RAWYEARLYUNITGROWTH = ++e4;
   static final int RRAWYEARLYUNITGROWTH = ++e4;
   static final int CRAWYEARLYUNITGROWTH = ++e4;
@@ -3891,6 +3902,7 @@ onceAgain:
   static final int RAWYEARLYUNITGROWTHs[] = {RRAWYEARLYUNITGROWTH, CRAWYEARLYUNITGROWTH, SRAWYEARLYUNITGROWTH, GRAWYEARLYUNITGROWTH};
   static final int RAWUNITGROWTHS = ++e4;
   static final int RAWGROWTHS = ++e4;
+  static final int RAWGROWTHSP = ++e4;
   static final int RDEPRECIATIONP = ++e4;  //r depreciation
   static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
   static final int POSTSWAP = ++e4;
@@ -4338,18 +4350,26 @@ onceAgain:
     doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 |  THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
+    doRes(GROWTHSP, "%growths", "growth percwent o start year balance for this year after depreciation before cost reduction", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
     doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(PREVGROWTHP, "%prevgrowth", "growth percent of year start balance at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(RGROWTH1, "rgrowt1h", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(RGROWTH2, "rgrowth2", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(RGROWTH3, "rgrowth3", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(RGROWTH4, "rgrowth4", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(RGROWTH5, "rgrowth5", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(RGROWTH6, "rgrowth6", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(RGROWTH7, "rgrowth7", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(RGROWTH8, "rgrowth8", "growth at the start of this year", 1, 2, 2, LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 1, 1, 2, LIST8 | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(NEWDEPRECIATION, "NewDepreciation", "new depreciation this year");
     doRes(DEPRECIATION, "Depreciation", "Cumulative depreciation this year");
-
+    doRes(NEWDEPRECIATIONP, "%NewDepreciation", "%new depreciation of growth this year");
+    doRes(DEPRECIATIONP, "%Depreciation", "%Cumulative depreciation of growth this year");
     doRes(RAWYEARLYUNITGROWTH, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
     doRes(RAWGROWTHS, "rawGrowth", "Raw growth after depreciation this year before cost reduction");
+    doRes(RAWGROWTHSP, "%rawGrowth", "Raw growth percent of start year balance after depreciation this year before cost reduction");
     doRes(RAWPROSPECTS, "rawProspects", "Raw prospects after depreciation this year after cost reduction");
     doRes(GROWTHCOSTS, "growthCst3", "growth costs also fertility growth costs inside getNeeds");
     doRes(GROWTHCOSTSY, "growthCst1", "growth costs at end of calcRawCosts");
@@ -6797,7 +6817,7 @@ onceAgain:
    * @return string with possible % and shorter
    */
   private String valForTable(double val) {
-    return (yesPercent ? mf(val) + "%" : mf(val));
+    return (yesPercent ? mf2(val) + "%" : mf(val));
   }
 
   /**
@@ -6845,7 +6865,7 @@ onceAgain:
 
       if (E.debugPutRowsOut6) {
         if (resS[rn][rDesc].contains("Score")) {
-          System.out.println("in putRowInTable. do Score " + Thread.currentThread().getName() + " .putRowInTable" + (doSum ? " doSum" : doBoth ? " doBoth" : "") + ", suffix=" + suffix + " myCmd=" + Long.toOctalString(myCmd) + " lStart=" + lStart + " lEnd=" + lEnd + ", valid=" + valid + (myUnset ? " myUnset" : "") + (myCumUnset ? " myCumUnset" : ""));
+          System.out.println("----DSC----in putRowInTable. do Score " + Thread.currentThread().getName() + " .putRowInTable" + (doSum ? " doSum" : doBoth ? " doBoth" : "") + ", suffix=" + suffix + " myCmd=" + Long.toOctalString(myCmd) + " lStart=" + lStart + " lEnd=" + lEnd + ", valid=" + valid + (myUnset ? " myUnset" : "") + (myCumUnset ? " myCumUnset" : ""));
         }
         //   System.out.println("in EM.gameRes." + toString() + ".putRowInTable" + dFrac.format(values[0][0]) + " " + dFrac.format(values[0][6]));
       }

@@ -69,6 +69,8 @@ public class ABalRows extends A6Rowa {
   static final int CUMBONUSWORTHIX = balz += LSUBS;//32 L4
   static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
   static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; //36 L4
+  static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //36 L4
+  static final int CUMULATIVEUNITDEPRECIATIONI3X = balz += LSUBS; //36 L4
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //40
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTYEARENDNULLIX = balz + LSUBS; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
@@ -77,7 +79,9 @@ public class ABalRows extends A6Rowa {
   static final int INVMEFFICIENCYIX = balz += LSUBS;
   static final int INVGEFFICIENCYIX = balz += LSUBS;
   static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth
-  static final int NEWUNITDEPRECIATIONIX = balz += LSUBS; //36 L4
+  static final int NEWUNITDEPRECIATIONIX = balz += LSUBS; //
+  static final int NEWUNITDEPRECIATION2IX = balz += LSUBS; //
+  static final int NEWUNITDEPRECIATION3IX = balz += LSUBS; //
   static final int SWAPPEDGROWTHSIX = balz += LSUBS; //
   static final int POORHEALTHEFFECTIX = balz += LSUBS; //FIRST SEC OF ROW ONLY
   static final int POORKNOWLEDGEEFFECTIX = balz += 1; //FIRST SED OF ROW ONLY
@@ -108,7 +112,10 @@ public class ABalRows extends A6Rowa {
   static final int GROWTHS2IX = balz += LSUBS; //
   static final int GROWTHS3IX = balz += LSUBS; //
   static final int GROWTHS4IX = balz += LSUBS; //
-
+  static final int GROWTHS5IX = balz += LSUBS; //
+  static final int GROWTHS6IX = balz += LSUBS; //
+  static final int GROWTHS7IX = balz += LSUBS; //
+  static final int GROWTHS8IX = balz += LSUBS; //
   static final int endOfArrays = balz += LSUBS; //
   static final int BALSLENGTH = balz += 2; //
   static int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
@@ -116,7 +123,7 @@ public class ABalRows extends A6Rowa {
   static int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
   static int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
   // end of index values for bals
-  static final String[] titls = {" bals rc ", " bals sg ", " bals r ", " bals c ", " bals s", " bals g ", "MTCOSTS r", "MTCOSTS s", "growths r ", " growths c ", " growths s ", " growths g ", " bonusYears r ", " bonusYears c ", " bonusYears s ", " bonusYears g ", " bonusUnits r ", " bonusUnits c ", " bonusUnits s ", " bonusUnits g", " limBUnits r", " limBUnits c", " limBUnits s", " limBUnits g", " cumDepreciation r ", " cumDepreciation c ", " cumDepreciation s ", " cumDepreciation g", "rawUnitsGrowth r", "rawUnitsGrowth c", "rawUnitsGrowth s", "rawUnitsGrowth g", "rawGrowth r", "rawGrowth c", "rawGrowth s", "rawGrowth g", "tradedGrowth r", "tradedGrowth c", "tradedGrowth s", "tradedGrowthg", "swappedGrowth r", "swappedGrowth c", "swappedGrowth s", "swappedGrowth g", "commonKnowledge", "newKnowledge", "manuals"};
+  static final String[] titls = {" bals rc ", " bals sg ", " bals r ", " bals c ", " bals s", " bals g "};
 
   /**
    * principal constructor of ABalRows a set of rows that are balances

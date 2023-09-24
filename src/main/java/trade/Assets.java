@@ -3994,6 +3994,7 @@ public class Assets {
         // ARow rawUnitGrowth1 = new ARow(ec);
         //ARow rawUnitGrowth = new ARow(ec);
         ARow newUnitDepreciation = bals.getRow(ABalRows.NEWUNITDEPRECIATIONIX + sIx);
+        double dUnitGrowth7 = EM.assetsUnitGrowth[sIx][pors] * 7.0;
         ARow rg1 = new ARow(ec);
         //ARow rg2 = new ARow(ec);
         ARow rg3 = new ARow(ec);
@@ -4015,11 +4016,13 @@ public class Assets {
         // growthsix includes the catstrophy benefits from last year
         //3 references to the same growth instance
         growths.A[2 + sIx] = growth = bals.getRow(ABalRows.GROWTHSIX + sIx);
+        bals.set4AtoB(ABalRows.GROWTHSIX, ABalRows.GROWTHS8IX);
         bals.set1(ABalRows.GROWTHS2IX, sIx, growth);
         if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with growth
           assert growth.get(0) > 0.0 : " growth.get(0) <= 0.0=" + EM.mf(growth.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
         }
         prevGrowth.set(growth);
+
         bals.set1(ABalRows.GROWTHS1IX, sIx, prevGrowth);
         bals.set1(ABalRows.PREVGROWTHSIX, sIx, prevGrowth);
         cumulativeUnitDepreciation = bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx);
@@ -4038,6 +4041,7 @@ public class Assets {
           newUnitDepreciation.set(prevGrowth);
           newUnitDepreciation.mult(eM.growthDepreciation[sIx][pors]);
           bals.set1(ABalRows.NEWUNITDEPRECIATIONIX, sIx, newUnitDepreciation);
+
           if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
             assert newUnitDepreciation.get(0) > 0.0 : " newUnitDepreciation.get(0) <= 0.0=" + EM.mf(newUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
           }
@@ -4046,16 +4050,16 @@ public class Assets {
               assert cumulativeUnitDepreciation.get(0) > 0.0 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
           }
           bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
-          int[] depreciations = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
-          setStat(depreciations[sIx], cumulativeUnitDepreciation.sum());
+          int[] depreciationps = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
+          setStat(depreciationps[sIx], 100. * cumulativeUnitDepreciation.sum() / dUnitGrowth7);
 
-          setStat(EM.NEWDEPRECIATIONPs[sIx], newUnitDepreciation.sum());
+          setStat(EM.NEWDEPRECIATIONPs[sIx], 100. * newUnitDepreciation.sum() / dUnitGrowth7);
           //  bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx).add(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx), yearlyDepreciation.setAmultV(bals.getRow(ABalRows.PREVGROWTHSIX + sIx), eM.growthDepreciation[sIx][pors]));
           // later    handle bonuses  didDepreciation = true;
         }// !didDepreciation
 
         double bonusLeft = 0;
-
+        double dUnitGrowth = EM.assetsUnitGrowth[sIx][pors];
         // calculate raw growth for this year.  A function of game growth value,
         // economy priorities, and groEfficiency
         // find growth fraction, less as the balance sum increases until large maxStaffGrowth
@@ -4069,6 +4073,8 @@ public class Assets {
           growthFrac = fracGrowths.set(secIx, sstaff ? (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors] : 1.0);
           double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
           // double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.add(secIx , (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.))));
+
+          double dnewUnitDepreciationByUnitGrowth = newUnitDepreciation.get(secIx) * 100. / dUnitGrowth;
           double dRawYearlyUnitGrowth = EM.assetsUnitGrowth[sIx][pors] * growthFrac * EM.fracBiasInGrowth[pors];
           double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx, rawYearlyUnitGrowth.set(secIx, dRawYearlyUnitGrowth));
           setStat(EM.RAWYEARLYUNITGROWTHs[sIx], dRawYearlyUnitGrowth);
@@ -9440,7 +9446,7 @@ public class Assets {
         didInitRawProspects = true;
       }
       sos = rawProspects2.min() < eM.rawHealthsSOS3[0][0];
-
+      bals.set4(ABalRows.GROWTHS5IX, growths);
       // choose only the living for these results/ deaths stats are later
       eM.printHere("----AEYag---", ec,
                    " joint live&dead before live test rawProspects2="
@@ -9472,6 +9478,7 @@ public class Assets {
         setStat(EM.POSTSWAP, pors, clan, gSwapWTotWorth, 1);
         setStat(EM.POSTSWAPRCSG, pors, clan, gSwapW.getSumRCSGBal(), 1);
         bals.copy4BtoC(ABalRows.GROWTHSIX, ABalRows.GROWTHS4IX);
+        bals.set4(ABalRows.GROWTHS6IX, growths);
 //      EM.gameRes.PREGROWTH.wet(pors, clan, preGrowLoop - preGWorth);
         //     EM.gameRes.CUMPREGROWTH.wet(pors, clan, preGrowLoop - preGWorth);
         growths.sendHist(hist, "G@");
@@ -9491,6 +9498,7 @@ public class Assets {
         setStat(EM.RGROWTH2, tm * bals.sum(ABalRows.GROWTHS2IX));
         setStat(EM.RGROWTH3, tm * bals.sum(ABalRows.GROWTHS3IX));
         setStat(EM.RGROWTH4, tm * bals.sum(ABalRows.GROWTHS4IX));
+
         setStat(EM.RAWYEARLYUNITGROWTH, pors, clan, tm * bals.sum4(ABalRows.RAWYEARLYUNITGROWTHSIX));
         setStat(EM.RAWUNITGROWTHS, tm * bals.sum4(ABalRows.RAWUNITGROWTHSIX));
         setStat(EM.NEWDEPRECIATION, bals.sum4(ABalRows.NEWUNITDEPRECIATIONIX));
@@ -9526,7 +9534,12 @@ public class Assets {
         c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
         s.sumGrades(); // sets s worth
         g.sumGrades(); // sets g worth
+        bals.set4AtoB(ABalRows.GROWTHSIX, ABalRows.GROWTHS7IX);
         bals.set4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
+        setStat(EM.RGROWTH5, tm * bals.sum(ABalRows.GROWTHS5IX));
+        setStat(EM.RGROWTH6, tm * bals.sum(ABalRows.GROWTHS6IX));
+        setStat(EM.RGROWTH7, tm * bals.sum(ABalRows.GROWTHS7IX));
+        setStat(EM.RGROWTH8, tm * bals.sum(ABalRows.GROWTHS8IX));
         doGrowth(aPre);
         r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
         c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
