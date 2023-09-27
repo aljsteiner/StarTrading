@@ -1726,8 +1726,9 @@ public class ARow {
     double r;
     setCnt++;
     if (E.debugDouble) {
-      r = values[ix] = ec.doubleTrouble(                      doubleTrouble(v, "add#V")
-                      + doubleTrouble(values[ix], "addVal"), "sum");
+      r = values[ix] = ec.doubleTrouble(
+              ec.doubleTrouble(v, "add#V")
+              + ec.doubleTrouble(values[ix], "addVal"), "sum");
     }
     else {
       r = values[ix] += v;

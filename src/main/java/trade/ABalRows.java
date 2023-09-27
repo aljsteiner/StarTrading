@@ -19,12 +19,19 @@ package trade;
 
 /**
  *
- * @author Albert Steiner This class holds references to files in Assets which
- * are processed by Assets.CashFlow.SubAsset When aStartCashFlow initializes
- * CashFlow it creates the 4 subassets and puts copies of the references in
- * ABalRows bal back into each SubAsset where they are used When the instance of
- * CashFlow is destroyed, the SubAssets are destroyed but the files remain as
- * part of ABalRows bal
+ * @author Albert Steiner
+ *
+ * ABalRows is the between year holder of assets that will be needed for
+ * processing each year. This is an array of ARow's and many of the named
+ * memories have separate ARow's for each of the 4 SubAssets. Memory is saved
+ * during each year process by mulling the CashFlow, SubAsset and Trqde
+ * subClasse. The essential ARow's are kept and organized in ABalRows. Many of
+ * the processes in A6Row class also appear in a similar for here. There are a
+ * number of naming conventions: "setRef..." implies that ARow references are
+ * preserved "set..." implies new reference but the values are saved "use..."
+ * implies using ABalRow ARow instances in a new A6Row or A10Row
+ *
+ *
  */
 public class ABalRows extends A6Rowa {
 
@@ -68,10 +75,12 @@ public class ABalRows extends A6Rowa {
   static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
   static final int CUMBONUSWORTHIX = balz += LSUBS;//32 L4
   static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
-  static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; //36 L4
-  static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //36 L4
-  static final int CUMULATIVEUNITDEPRECIATIONI3X = balz += LSUBS; //36 L4
-  static final int RAWUNITGROWTHSIX = balz += LSUBS; //40
+  static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS;
+  static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
+  static final int CUMULATIVEUNITDEPRECIATIONI3X = balz += LSUBS; //
+  static final int CUMULATIVEUNITDEPRECIATIONSURPLUSSIX = balz += LSUBS; //
+  static final int CUMULATIVEUNITDEPRECIATIONSURPLUSS2IX = balz += LSUBS; //
+  static final int RAWUNITGROWTHSIX = balz += LSUBS; //
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTYEARENDNULLIX = balz + LSUBS; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
   // the following rows can be nulled after yearEnd. but kept between yearStart and yearEnd
@@ -690,8 +699,57 @@ public class ABalRows extends A6Rowa {
   void setA4toBaddC(int biasA, int biasB, int biasC) {
     for (int rowIx : A03) {
       for (int secIx : E.ASECS) {
-        A[rowIx + biasA].set(secIx, A[rowIx + biasB].get(secIx) + A[rowIx + biasC].get(secIx));
+        //doubleTrouble upgrade the val from double to Double
+        if (E.debugDouble) {
+          A[rowIx + biasA].values[secIx] = ec.doubleTrouble(
+                  ec.doubleTrouble(A[rowIx + biasB].values[secIx], "to B")
+                  + ec.doubleTrouble(A[rowIx + biasC].get(secIx), "addC"), "saveA");
+        }
+        else {
+          A[rowIx + biasA].values[secIx] = A[rowIx + biasB].values[secIx] + A[rowIx + biasC].values[secIx];
+        }
+        // A[rowIx + biasA].set(secIx, A[rowIx + biasB].get(secIx) + A[rowIx + biasC].get(secIx));
       }
+    }
+  }
+
+  /**
+   * set 1 result rows at biasA from rows at biasB to add to rows at biasC
+   *
+   * @param rowIx the index of which row in each bias
+   * @param biasA The start row number of rows to be set
+   * @param biasB The start row number of values to be multiplied
+   * @param biasC The start row number of values of the multiplier
+   */
+  void setA1toBaddC(int rowIx, int biasA, int biasB, int biasC) {
+    for (int secIx : E.ASECS) {
+      //doubleTrouble upgrade the val from double to Double
+      if (E.debugDouble) {
+        A[rowIx + biasA].values[secIx] = ec.doubleTrouble(
+                ec.doubleTrouble(A[rowIx + biasB].values[secIx], "to B")
+                + ec.doubleTrouble(A[rowIx + biasC].get(secIx), "addC"), "saveA");
+      }
+      else {
+        A[rowIx + biasA].values[secIx] = A[rowIx + biasB].values[secIx] + A[rowIx + biasC].values[secIx];
+      }
+      // A[rowIx + biasA].set(secIx, A[rowIx + biasB].get(secIx) + A[rowIx + biasC].get(secIx));
+    }
+
+  }
+
+  /**
+   * Move the each sector surplus above max in A to B
+   *
+   * @param max the max values for all sectors
+   * @param rowIx the index of which SubAsset row in each bias
+   * @param biasA The start of a 4row set of rows to be trimed to max
+   * @param biasB the start of a 4row set of ARows of surplussed   * A
+   */
+  void moveMaxSurplusWithIxA4ToB(double max, int rowIx, int biasA, int biasB) {
+    for (int secIx : E.ASECS) {
+      double tt = A[rowIx + biasA].values[secIx] - max;
+      A[rowIx + biasA].values[secIx] = tt > 0.0 ? max : A[rowIx + biasA].values[secIx];
+      A[rowIx + biasB].values[secIx] = tt > 0.0 ? tt : 0.0;
     }
   }
 
@@ -705,7 +763,16 @@ public class ABalRows extends A6Rowa {
   void setA4toCdividB(int biasA, int biasB, int biasC) {
     for (int rowIx : A03) {
       for (int secIx : E.ASECS) {
-        A[rowIx + biasA].set(secIx, A[rowIx + biasB].get(secIx) / A[rowIx + biasC].get(secIx));
+        if (E.debugDouble) {
+          A[rowIx + biasA].values[secIx] = ec.doubleTrouble(
+                  ec.doubleTrouble(A[rowIx + biasB].values[secIx], "biasB")
+                  / ec.doubleTrouble(A[rowIx + biasC].values[secIx], "biasC"),
+                  "biasA");
+
+        }
+        else {
+          A[rowIx + biasA].set(secIx, A[rowIx + biasB].get(secIx) / A[rowIx + biasC].get(secIx));
+        }
       }
     }
   }

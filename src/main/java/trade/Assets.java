@@ -3895,13 +3895,26 @@ public class Assets {
           } // end go through j to get the sums
           GroReqMultiplier.add(i, GroReqSum.get(i) * multiplierForEfficiencyFromRequirements);
           MaintReqMultiplier.add(i, MaintReqSum.get(i) * multiplierForEfficiencyFromRequirements);
-          KnowledgeGroMultiplier.add(i, Math.sqrt((GroReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : manuals.sum() * 0.4) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
-          KnowledgeMaintMultiplier.add(i, Math.sqrt((MaintReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : 0.) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
+          KnowledgeGroMultiplier.add(i, Math.sqrt((GroReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : manuals.sum()) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
+          KnowledgeMaintMultiplier.add(i, Math.sqrt((MaintReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : manuals.sum()) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
           // the higher difficulty the lower the efficiency
           // workEffBias lower if difficulty is higher
           // ydifficulty set in calcPriority called in aStartCashFlow before this
          // maintEfficiency.add(i, Math.sqrt(workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? 0. : KnowledgeMaintMultiplier.get(i)) / ydifficulty.get(i)));
-          maintEfficiency.add(i, Math.sqrt(workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? KnowledgeMaintMultiplier.get(i) / 0.8 : KnowledgeMaintMultiplier.get(i)) / ydifficulty.get(i)));
+
+          EM.wasHere6 = " i=" + subStrs[sIx] + i + " Y" + EM.year + " ydifficulty=" + eM.mf2(ydifficulty.values[i]) + " wokEffBias=" + eM.mf(workEffBias) + "KnowledgeMaintMultiplier.values=" + eM.mf(KnowledgeMaintMultiplier.values[i]);
+
+          double sqrtVal = workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? KnowledgeMaintMultiplier.get(i) / 80. : KnowledgeMaintMultiplier.get(i));
+          EM.wasHere6 += " sqrtVal=" + EM.mf(sqrtVal);
+          Double sqrtv = Math.sqrt(sqrtVal);
+          EM.wasHere6 += " sqrtv=" + EM.mf(sqrtv);
+          if (E.debugEfficiency && sqrtv.isNaN()) {
+            eM.printHere("----CEF----", ec, EM.wasHere6);
+            ec.doubleTrouble(KnowledgeMaintMultiplier.values[i], "kMMultiplier");
+            ec.doubleTrouble(sqrtVal,
+                             "sqrtVal");
+          }
+          maintEfficiency.add(i, sqrtVal);
           groEfficiency.add(i, Math.sqrt(eM.effBias[pors] + (1. - eM.effBias[pors]) * (ydifficulty.get(i) < PZERO ? KnowledgeGroMultiplier.get(i) / 0.8 : KnowledgeGroMultiplier.get(i)) / ydifficulty.get(i)));
           //(z-99)*y = ,15  (x-25)*y=.3  x=148, y=0.002439 
           // decrease the efficiency min as difficulty increases
@@ -3995,6 +4008,7 @@ public class Assets {
         //ARow rawUnitGrowth = new ARow(ec);
         ARow newUnitDepreciation = bals.getRow(ABalRows.NEWUNITDEPRECIATIONIX + sIx);
         double dUnitGrowth7 = EM.assetsUnitGrowth[sIx][pors] * 7.0;
+        double dUnitGrowth = EM.assetsUnitGrowth[sIx][pors];
         ARow rg1 = new ARow(ec);
         //ARow rg2 = new ARow(ec);
         ARow rg3 = new ARow(ec);
@@ -4041,15 +4055,36 @@ public class Assets {
           newUnitDepreciation.set(prevGrowth);
           newUnitDepreciation.mult(eM.growthDepreciation[sIx][pors]);
           bals.set1(ABalRows.NEWUNITDEPRECIATIONIX, sIx, newUnitDepreciation);
-
+          EM.wasHere6 = "testing CUMULATIVEUNITDEPRECIATION ";
+          double s0NewUnitDepreciation = newUnitDepreciation.get(0);
+          EM.wasHere6 += " s0NewUnitDepreciation" + EM.mf(s0NewUnitDepreciation);
           if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
             assert newUnitDepreciation.get(0) > 0.0 : " newUnitDepreciation.get(0) <= 0.0=" + EM.mf(newUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
           }
-            cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
+          //before add in NewDepreciation
+          double s0CumulativeUnitDepreciation = cumulativeUnitDepreciation.get(0);
+          EM.wasHere6 += " s0CumulativeUnitDepreciation" + EM.mf(s0CumulativeUnitDepreciation);
+          // use ABalRows add into ABalRows.CUMULATIVEUNITDEPRECIATION2IX
+          bals.setA1toBaddC(sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.CUMULATIVEUNITDEPRECIATIONIX, ABalRows.NEWUNITDEPRECIATIONIX);//
+          // use SubAsset.add
+          cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
+          double a0CumulativeUnitDepreciation = cumulativeUnitDepreciation.get(0);
+          EM.wasHere6 += " a0CumulativeUnitDepreciation" + EM.mf(a0CumulativeUnitDepreciation);
+          double aa0CumulativeUnitDepreciation = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, 0);
+          EM.wasHere6 += " aa0CumulativeUnitDepreciation" + EM.mf(aa0CumulativeUnitDepreciation);
+          double tt1 = s0NewUnitDepreciation + s0CumulativeUnitDepreciation;
+          //was add reflected in ABalRows by common references
+          boolean bb1 = tt1 == a0CumulativeUnitDepreciation; // direct sums match
+          EM.wasHere6 += (bb1 ? " the sum outside bals worked find" : " the sum outside bals failed");
+          boolean bb2 = a0CumulativeUnitDepreciation == aa0CumulativeUnitDepreciation; //compared to bals copy
+          EM.wasHere6 += (bb2 ? " the sum with bals worked find" : " the sum failed bals failed wo=" + EM.mf(a0CumulativeUnitDepreciation) + " with=" + EM.mf(aa0CumulativeUnitDepreciation));
             if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
-              assert cumulativeUnitDepreciation.get(0) > 0.0 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+              assert cumulativeUnitDepreciation.get(0) > 0.0 && bb1 && bb2 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
           }
-          bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
+          // bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
+          // trim original ABalRows.CUMULATIVEUNITDEPRECIATIONIX
+          bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATIONIX, ABalRows.CUMULATIVEUNITDEPRECIATIONSURPLUSSIX);
+          bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.CUMULATIVEUNITDEPRECIATIONSURPLUSS2IX);
           int[] depreciationps = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
           setStat(depreciationps[sIx], 100. * cumulativeUnitDepreciation.sum() / dUnitGrowth7);
 
@@ -4059,7 +4094,6 @@ public class Assets {
         }// !didDepreciation
 
         double bonusLeft = 0;
-        double dUnitGrowth = EM.assetsUnitGrowth[sIx][pors];
         // calculate raw growth for this year.  A function of game growth value,
         // economy priorities, and groEfficiency
         // find growth fraction, less as the balance sum increases until large maxStaffGrowth
@@ -5327,13 +5361,13 @@ public class Assets {
           return;
         }
         rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
-        if (!didDepreciation) {
+        if (false && !didDepreciation) { //only in aStartCashFlow
           for (k = 0; k < 4 && !ec.dead; k++) {
             sys[k].calcEfficiency();
             sys[k].calcGrowth();
           }
         }
-        //  didDepreciation = true;
+        didDepreciation = true;
         for (int i = 0; i < E.L2SECS; i++) {
           valueChangesTried[i] = 0;
           oraisedBid[i] = 0;

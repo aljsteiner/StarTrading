@@ -1806,7 +1806,7 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = 2.0; // was 0.035,0.05,0.075
+  static double vdifMult = 1.0; // was 2.0 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   
@@ -3905,6 +3905,8 @@ onceAgain:
   static final int RAWGROWTHSP = ++e4;
   static final int RDEPRECIATIONP = ++e4;  //r depreciation
   static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
+  static final int RDEPRECIATION2P = ++e4;  //r depreciation2
+  static final int RNEWDEPRECIATION2P = ++e4;// RNewDepreciation2
   static final int POSTSWAP = ++e4;
 
    static final int CATWORTHINCR = ++e4;
@@ -4385,8 +4387,10 @@ onceAgain:
     doRes(POSTSWAPRCSG, "postSwapRCSG", "RCSG units after swap");
     doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
     doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
-    doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 1, 2, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(RNEWDEPRECIATIONP, "r newDepreciation%", "new Depreciation in R as the % of unitGrowth", 1, 2, 1, LIST8 | LIST13 | CURAVE, 0, 0, 0);
+    doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 1, 2, 1, LIST8 | LIST13 | CURAVE | BOTH, 0, 0, 0);
+    doRes(RNEWDEPRECIATIONP, "r newDepreciation%", "new Depreciation in R as the % of unitGrowth");
+    doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation in R ", 1, 2, 1, LIST8 | LIST13 | CURAVE | BOTH, 0, 0, 0);
+    doRes(RNEWDEPRECIATION2P, "r newDepreciation2%", "new Depreciation in R as the % of unitGrowth");
     doRes(RRAWYEARLYUNITGROWTH, "RrawYrUnitGrowth", "R Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RNEWGROWTH, "R newGrowth", "R newGrowth before cost reduction", 1, 2, 1, LIST13 | CURAVE, 0, 0, 0);
     doRes(RAWRGROWTH, "R growth", "R rawgrowth before cost reduction");

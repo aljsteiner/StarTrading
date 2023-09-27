@@ -103,6 +103,7 @@ public class E {
   static final boolean debugEconCnt = debugMaster &&  false; // econCnt = porsCnt0 + porsCnt1
   static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt
   static final boolean debugNegGrowth = debugMaster; // neg Growth made negCosts
+  static final boolean debugEfficiency = debugMaster; // efficiency has double trouble
   static final boolean debugNegCosts = debugMaster; // checking for neg Costs
   static final boolean debugFutureFund = debugMaster; // checking for errors with future funds
   static final boolean debugNoTerm = debugMaster; // term undefined in assets, find whyu
