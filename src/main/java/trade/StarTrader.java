@@ -8194,7 +8194,7 @@ public class StarTrader extends javax.swing.JFrame {
           @Override
           public void run() {
             st.setVisible(true);
-            st.runYears(3);
+            st.runYears(5);
             if (args.length > 0 && (args[0].contains("run5"))) {
               st.runYears(5);
             }

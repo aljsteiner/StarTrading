@@ -168,7 +168,7 @@ public class E {
   static final boolean errEconInit = debugMaster;
   static final boolean debugDoYearEndOut = debugMaster || debugFFOut; //output messages re yearEnd
   static final boolean debugAtJavaOut = debugMaster && false; // output at java locations
-  static boolean doCalcCatastrophy = false; //temp disable
+  static boolean doCalcCatastrophy = true; //temp disable
 
   /**
    * constructor for E the major repository of tables and values set by the game
