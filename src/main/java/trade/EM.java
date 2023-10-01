@@ -3794,7 +3794,7 @@ onceAgain:
   static final int minDepth = 1; // set min number of output for allYears
   static final int maxDepth = MAXDEPTH; // 0 1 2 3 4 5 6 separation betwen age groups
   static final int minYDepth = 1; // min number of output in year groups
-  static final int maxYDepth = 2;
+  static final int maxYDepth = 5;
   // vector 4 is LCLANS
   //static volatile double[][][][] resV;
   /**
@@ -3863,6 +3863,12 @@ onceAgain:
   static final int STARTWORTH = ++e4;
   static final int LIVEWORTH = ++e4;
   static final int WORTHINCR = ++e4; //
+  static final int RDEPRECIATIONP = ++e4;  //r depreciation
+  static final int RDEPRECIATION2P = ++e4;  //r depreciation before add
+  static final int RDEPRECIATION3P = ++e4;  //r max depreciation
+  static final int RSURPLUSDEPRECIATIONP = ++e4;  //r surplusdepreciation
+  static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
+  static final int RNEWDEPRECIATION2P = ++e4;// RNewDepreciation2
   static final int GROWTHS = ++e4;
   static final int GROWTHSP = ++e4;
   static final int GROWTHCOSTS = ++e4;
@@ -3895,10 +3901,7 @@ onceAgain:
   static final int NEWDEPRECIATIONP = ++e4; //NEWDEPRECIATION
   static final int DEPRECIATIONP = ++e4; //DEPRECIATION
   static final int RAWYEARLYUNITGROWTH = ++e4;
-  static final int RDEPRECIATIONP = ++e4;  //r depreciation
-  static final int RDEPRECIATION2P = ++e4;  //r depreciation
-  static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
-  static final int RNEWDEPRECIATION2P = ++e4;// RNewDepreciation2
+
   static final int RRAWYEARLYUNITGROWTH = ++e4;
   static final int CRAWYEARLYUNITGROWTH = ++e4;
   static final int SRAWYEARLYUNITGROWTH = ++e4;
@@ -4092,14 +4095,16 @@ onceAgain:
   static final int CNEWDEPRECIATIONP = ++e4;  //
   static final int SNEWDEPRECIATIONP = ++e4;
   static final int GNEWDEPRECIATIONP = ++e4;
-  static final int[] NEWDEPRECIATIONPs = {RNEWDEPRECIATIONP, CNEWDEPRECIATIONP, CNEWDEPRECIATIONP, GNEWDEPRECIATIONP};
-
+  static final int[] NEWDEPRECIATIONPs = {RNEWDEPRECIATIONP, CNEWDEPRECIATIONP, SNEWDEPRECIATIONP, GNEWDEPRECIATIONP};
   static final int CDEPRECIATIONP = ++e4;  // sll svvrpyrf
   static final int SDEPRECIATIONP = ++e4;
   static final int GDEPRECIATIONP = ++e4;
   static final int CDEPRECIATION2P = ++e4;  // sll svvrpyrf
   static final int SDEPRECIATION2P = ++e4;
   static final int GDEPRECIATION2P = ++e4;
+  static final int CDEPRECIATION3P = ++e4;  // sll svvrpyrf
+  static final int SDEPRECIATION3P = ++e4;
+  static final int GDEPRECIATION3P = ++e4;
   static final int RDADEPRECIATIONP = ++e4;
   static final int CDADEPRECIATIONP = ++e4;  // sll svvrpyrf
   static final int SDADEPRECIATIONP = ++e4;
@@ -4108,6 +4113,8 @@ onceAgain:
   static final int CDDEPRECIATIONP = ++e4;  // sll svvrpyrf
   static final int SDDEPRECIATIONP = ++e4;
   static final int GDDEPRECIATIONP = ++e4;
+  static final int[] DEPRECIATIONPs = {RDEPRECIATIONP, CDEPRECIATIONP, SDEPRECIATIONP, GDEPRECIATIONP};
+  static final int[] DEPRECIATION3Ps = {RDEPRECIATION3P, CDEPRECIATION3P, SDEPRECIATION3P, GDEPRECIATION3P};
   static final int DeadNegN = ++e4;
   static final int DeadLt5 = ++e4;
   static final int DeadLt10 = ++e4;
@@ -4332,7 +4339,7 @@ onceAgain:
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 |LIST3 | LIST4| LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST13 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge");
     doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST15 | LIST8 | CURAVE | CURUNITS | BOTH | SKIPUNSET, 0, 0, 0L);
 
@@ -4369,8 +4376,8 @@ onceAgain:
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year");
     doRes(NEWDEPRECIATION, "NewDepreciation", "new depreciation this year");
     doRes(DEPRECIATION, "Depreciation", "Cumulative depreciation this year");
-    doRes(NEWDEPRECIATIONP, "%NewDepreciation", "%new depreciation of growth this year");
-    doRes(DEPRECIATIONP, "%Depreciation", "%Cumulative depreciation of growth this year");
+    doRes(NEWDEPRECIATIONP, "%NewDepreciation", "%new depreciation of growth this year", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
+    doRes(DEPRECIATIONP, "%Depreciation", "%Cumulative depreciation of growth this year", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
     doRes(RAWYEARLYUNITGROWTH, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
     doRes(RAWGROWTHS, "rawGrowth", "Raw growth after depreciation this year before cost reduction");
@@ -4390,10 +4397,13 @@ onceAgain:
     doRes(POSTSWAPRCSG, "postSwapRCSG", "RCSG units after swap");
     doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
     doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
-    doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 3, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 2, 3, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RDEPRECIATION3P, "rMaxDepreciation3%", "MaxDepreciation in R ");
+    doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation before newDepreciation added in R ", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RSURPLUSDEPRECIATIONP, "rSurplusDepreciation%", "surplus depreciation removed because too largein R ", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RNEWDEPRECIATIONP, "r newDepreciation%", "new Depreciation in R as the % of unitGrowth");
-    doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation in R ", 3, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(RNEWDEPRECIATION2P, "r newDepreciation2%", "new Depreciation in R as the % of unitGrowth", 3, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+
+    doRes(RNEWDEPRECIATION2P, "r newMaxDepreciation2%", "new MaxDepreciation in R as the % of unitGrowth");
     doRes(RRAWYEARLYUNITGROWTH, "RrawYrUnitGrowth", "R Raw year unit growth  before rawUnitGrowth this year before cost reduction", 1, 3, 2, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(RNEWGROWTH, "R newGrowth", "R newGrowth before cost reduction", 1, 2, 1, LIST13 | CURAVE, 0, 0, 0);
     doRes(RAWRGROWTH, "R growth", "R rawgrowth before cost reduction");
@@ -4406,6 +4416,9 @@ onceAgain:
     doRes(CDEPRECIATION2P, "c Depreciation2%", "Depreciation2 in C as the % of unitGrowth", 1, 2, 1, LIST22 | CURAVE, 0, 0, 0); //never reached
     doRes(SDEPRECIATION2P, "s Depreciation2%", "Depreciation2 in S as the % of unitGrowth");
     doRes(GDEPRECIATION2P, "g Depreciation2%", "Depreciation2 in G as the % of unitGrowth");
+    doRes(CDEPRECIATION3P, "c Depreciation3%", "Depreciation3 in C as the % of unitGrowth", 1, 2, 1, LIST22 | CURAVE, 0, 0, 0); //never reached
+    doRes(SDEPRECIATION3P, "s Depreciation3%", "Depreciation3 in S as the % of unitGrowth");
+    doRes(GDEPRECIATION3P, "g Depreciation3%", "Depreciation3 in G as the % of unitGrowth");
     doRes(CNEWDEPRECIATIONP, "c newDepreciation%", "new Depreciation in C as the % of unitGrowth");
     doRes(SNEWDEPRECIATIONP, "s newDepreciation%", "new Depreciation in S as the % of unitGrowth");
     doRes(GNEWDEPRECIATIONP, "g newDepreciation%", "new Depreciation in G as the % of unitGrowth");
@@ -6489,7 +6502,7 @@ onceAgain:
   private static int lockIx = -2, ageIx = -2, yearsIx = -2, nineIx = -5;
   private static String suffix = "";
   private static String extSuffix = "";
-  private boolean isAgeList = false, myIsSet = false, isAAge0;
+  private boolean isAgeList = false, myIsSet = false, isAAge0, isList13 = false;
   private static final long NEVER = 0000000L; //  unused
   private static final long[] NINECMDS = {CUR, CURUNITS, CURAVE, THISYEAR, THISYEARUNITS, THISYEARAVE, CUM, CUMUNITS, CUMAVE};
   private static final long[] NINENOTS = {NEVER, NEVER, NEVER, CUR, CURUNITS, CURAVE, NEVER, NEVER, NEVER};
@@ -6556,7 +6569,7 @@ onceAgain:
    * @param row next row in the display table
    * @param aop the key to fit the locks in resI
    * @param allLocks the or of all the locks
-   * @param ageIx the age category of the item must be recalculated
+   * @param ageIx3 ignore: the age category of the item must be recalculated
    * @return next row
    */
   private int putRows2(JTable table, String[] resExt, int rn, int row, long aop, long allLocks, int ageIx3) {
@@ -6620,6 +6633,7 @@ onceAgain:
         listMatch = (listMatch == 0L ? prevListMatch : listMatch);
         prevListMatch = 0L; // one use only
         isAgeList = (aop & AGESMASK) > 0L; // The LISTx that do againg
+        isList13 = (aop & LIST13) > 0L;
         // is there a command match
         haveCmdMatch = (aop & curRes[ICUM][CCONTROLD][LOCKS0 + lockIx]) & CMDSMASK;
         cmd = opr = haveCmdMatch;  //commands in this lock
@@ -6663,6 +6677,8 @@ onceAgain:
                 isAgeMore = ageIx > 0 && isAges;
                 int unsetCnt = 0;
                 int yrsMax = MAXDEPTH; //CURAVEAgesYrs[ageIx];
+                //find the number of valid rows
+                valid = 0;
                 for (int ageYrsIx = 0; ageYrsIx < yrsMax; ageYrsIx++) {
                   prevLine = "rN" + myRn + " " + resS[myRn][0] + ", length" + resI[rn].length + ", nineIx" + nineIx + ", extSuffix=" + extSuffix + (isAges ? ", isAges " : " notAges ") + ", ageIx" + ageIx + ", ageYrsIx" + ageYrsIx + ", extSuffix=" + ninesExtSuffix[nineIx];
                   if (resI[rn].length < ICUR0 + ageIx * MAXDEPTH + ageYrsIx) {
@@ -6677,24 +6693,30 @@ onceAgain:
                   else {
                     if (resI[rn][ICUR0 + ageIx * MAXDEPTH + ageYrsIx].length > 0) {
                       unsetCnt += resI[rn][ICUR0 + ageIx * MAXDEPTH + ageYrsIx][CCONTROLD][ISSET];
-                      // go up the ageYrsIx even if not set, only set valid if year isset
-                      valid = resI[rn][ICUR0 + ageIx * MAXDEPTH + ageYrsIx][CCONTROLD][ISSET] > 0 ? ageYrsIx + 1 : valid;
+                      // go up the ageYrsIx only set another valid if year isset
+                      valid = resI[rn][ICUR0 + ageIx * MAXDEPTH + ageYrsIx][CCONTROLD][ISSET] > 0 ? ageYrsIx + 1 : valid; //1=>valid2, unset don't change
+                      //save valid for the next loop
                       resI[rn][ICUR0 + ageIx * MAXDEPTH][CCONTROLD][IVALID] = valid;
-
+                      if (E.debugPutRows6abOut && isAgeList && isList13) {
+                        printHere("---PR2L13---", null, " " + resS[rn][0] + " ageIx" + ageIx + " ageLim" + ageLim + " depth" + depth + " ydepth" + ydepth + " yrsMax" + yrsMax + " ageYrsIx" + ageYrsIx + " valid" + valid);
+                      }
                       if (E.debugPutRows6abOut) {
+
                         if (isAgeList || ((putRowsPrint6aCount++ < 400) && (putRowsPrint6aCount % 25) == 0)) {
                           System.out.flush();
-                          System.out.printf("EM.putrow6ab rn=%d %s,lockIx%d ageIx%d ageLim%d, nineIx%d ageYrsIx%d yrsMax%d, depth%d, valid%d,%s, %s, aop%o, opr%o, cmd%o, list%d,cum%d, rende4=%d,%d putRowsPrint6aCount= " + putRowsPrint6aCount + " \n", rn, resS[rn][0], lockIx, myAgeIx, ageLim, nineIx, ageYrsIx, yrsMax, depth, valid, extSuffix, (unset ? "UNSET" : "ISSET") + " = " + resI[myRn][ICUM][CCONTROLD][ISSET] + ":" + resI[myRn][ICUR0 + myAgeIx * MAXDEPTH][CCONTROLD][ISSET], aop, opr, cmd, ((aop & LIST14) > 0 ? 14 : (aop & LIST1) > 0 ? 1 : (aop & LIST3) > 0 ? 3 : (aop & LIST8) > 0 ? 8 : aop), resI[rn][ICUM][0][0], rende4, rendae4);
+
+                          System.out.printf("---PR2d---EM.putrow6ab rn=%d %s,lockIx%d ageIx%d ageLim%d, nineIx%d ageYrsIx%d yrsMax%d, depth%d, valid%d,\n%s, %s, aop%o, opr%o, cmd%o, list%d,cum%d, rende4=%d,%d putRowsPrint6aCount= " + putRowsPrint6aCount + " \n", rn, resS[rn][0], lockIx, myAgeIx, ageLim, nineIx, ageYrsIx, yrsMax, depth, valid, extSuffix, (unset ? "UNSET" : "ISSET") + " = " + resI[myRn][ICUM][CCONTROLD][ISSET] + ":" + resI[myRn][ICUR0 + myAgeIx * MAXDEPTH][CCONTROLD][ISSET], aop, opr, cmd, ((aop & LIST14) > 0 ? 14 : (aop & LIST1) > 0 ? 1 : (aop & LIST3) > 0 ? 3 : (aop & LIST8) > 0 ? 8 : aop), resI[rn][ICUM][0][0], rende4, rendae4);
                         }
                       }
                     }
                   }
-                }  // for
+                }  // for ageYrsIx
                 myUnset = unset = unsetCnt < 1; // flag for age
                 myCumUnset = myUnset && resI[rn][ICUM][CCONTROLD][ISSET] < 1;
                 myUnset = unset = isACum ? myCumUnset | unset : unset;
                 myValid = valid = resI[rn][ICUR0 + ageIx * MAXDEPTH][CCONTROLD][IVALID];
                 depth = resI[rn][ICUM][CCONTROLD][IDEPTH];
+                ydepth = resI[rn][ICUM][CCONTROLD][IYDEPTH];
 
                 doUnits = isThisYearUnits || isCurUnits || isCumUnits;
                 // set didSum if ever doSum and not both
@@ -6714,6 +6736,7 @@ onceAgain:
 
                 //String[] agesStr = {"", "0-3", "4-7", "8-15", "16-31", "32+"};
                 boolean isYears = isACur;
+                depth = isAges ? ydepth : depth; //all more ages
                 int yearsMax = isAge0 && isACur ? (int) Math.min(depth, valid) : 1;
                 for (yearsIx = 0; yearsIx < yearsMax; yearsIx++) {
                   boolean isYear0 = yearsIx == 0;

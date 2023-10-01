@@ -77,9 +77,9 @@ public class ABalRows extends A6Rowa {
   static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
   static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS;
   static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
-  static final int CUMULATIVEUNITDEPRECIATIONI3X = balz += LSUBS; //
-  static final int CUMULATIVEUNITDEPRECIATIONSURPLUSSIX = balz += LSUBS; //
-  static final int CUMULATIVEUNITDEPRECIATIONSURPLUSS2IX = balz += LSUBS; //
+  static final int CUMULATIVEUNITDEPRECIATION3IX = balz += LSUBS; //
+  static final int SURPLUSCUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; //
+  static final int SURPLUSCUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTYEARENDNULLIX = balz + LSUBS; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
@@ -540,8 +540,22 @@ public class ABalRows extends A6Rowa {
   void set4AtoB(int biasA, int biasB) {
     for (int rowIx : A03) {
       for (int secIx : E.ASECS) {
-        A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
+        // A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
+        A[biasB + rowIx].values[secIx] = A[biasA + rowIx].values[secIx];
       }
+    }
+  }
+
+  /**
+   * set 4 rows of values from rows biasA to biasB
+   *
+   * @param biasA the index of the row of the sources
+   * @param biasB the index of the row of targets
+   */
+  void set1AtoB(int biasA, int biasB) {
+    for (int secIx : E.ASECS) {
+      // A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
+      A[biasB].values[secIx] = A[biasA].values[secIx];
     }
   }
 

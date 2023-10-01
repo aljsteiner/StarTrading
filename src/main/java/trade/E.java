@@ -142,7 +142,7 @@ public class E {
   static final boolean debugPutValue3 = debugMaster &&  false; //choose alternative for too big
   static final boolean debugPutRowsOut6 = debugMaster &&  false;
   static final boolean debugPutRows6aOut = debugMaster &&  false;
-  static final boolean debugPutRows6abOut = debugMaster &&  false;
+  static final boolean debugPutRows6abOut = debugMaster && true;
   static final boolean debugPutRows6acOut = debugMaster &&  false;
   static final boolean debugPutRows6agOut = debugMaster;
   static final boolean debugIsHere1Out = debugMaster;

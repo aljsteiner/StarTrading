@@ -69,6 +69,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
+import static trade.EM.RDEPRECIATIONP;
 
 /**
  *
@@ -1420,6 +1421,7 @@ public class Assets {
     }
   }
 
+
   /**
    * set a maxStatistic value and a count
    *
@@ -1579,7 +1581,18 @@ public class Assets {
       throw new WasFatalError(eM.tError);
     }
   }
-
+  /**
+   * set a maxStatistic value and a count
+   *
+   * @param rn the name of this statistic
+   * @param v the value to be set
+   * @return v
+   */
+  // int cntStatsPrints = 0;
+  double setMaxStat(int rn, double v) {
+    return setMaxStat(rn, pors, clan, v, 1, ec.age);
+  }
+  // int cntStatsPrints = 0;
   /**
    * set a min Statistic value and a count
    *
@@ -1591,7 +1604,6 @@ public class Assets {
    * @param age years since creation of the Econ for this stat
    * @return v
    */
-  // int cntStatsPrints = 0;
   double setMinStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
@@ -1739,7 +1751,27 @@ public class Assets {
       throw new WasFatalError(eM.tError);
     }
   }
+  /**
+   * set a min Statistic value and a count
+   *
+   * @param rn the name of this statistic
+   * @param v the value to be set
+   * @return v
+   */
+  double setMin(int rn, double v) {
+    return setMinStat(rn, pors, clan, v, 1, ec.age);
+  }
 
+  /**
+   * set a min Statistic value and a count
+   *
+   * @param rn the name of this statistic
+   * @param v the value to be set
+   * @return v
+   */
+  double setMinStat(int rn, double v) {
+    return setMinStat(rn, pors, clan, v, 1, ec.age);
+  }
   /**
    * set a statistic value and possibly a count
    *
@@ -1867,18 +1899,16 @@ public class Assets {
    * set a max result statistical value for later viewing
    *
    * @param rN number of the stat
-   * @param pors planet or ship of the stat
-   * @param clan clan of the stat
    * @param val value of the stat
    * @param cnt count 1 or 0 if another setStat will set cnt ec.age age of this
    * economy
    */
-  void setMax(int rN, int pors, int clan, double val, int cnt) {
+  void setMax(int rN, double val) {
     if (rN < NZERO) {
       eM.bErr("unknown result Name");
       return;
     }
-    setMaxStat(rN, pors, clan, val, cnt, ec.age);
+    setMaxStat(rN, pors, clan, val, 1, ec.age);
   }
 
   /**
@@ -4064,10 +4094,14 @@ public class Assets {
           //before add in NewDepreciation
           double s0CumulativeUnitDepreciation = cumulativeUnitDepreciation.get(0);
           EM.wasHere6 += " s0CumulativeUnitDepreciation" + EM.mf(s0CumulativeUnitDepreciation);
+          //save the  row to its backup
+          bals.set1AtoB(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX + sIx);
           // use ABalRows add into ABalRows.CUMULATIVEUNITDEPRECIATION2IX
-          bals.setA1toBaddC(sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.NEWUNITDEPRECIATIONIX);//
+         // bals.setA1toBaddC(sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.NEWUNITDEPRECIATIONIX);//
           // use SubAsset.add
           cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
+          //save the changed value
+          bals.set1AtoB(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx);
           double a0CumulativeUnitDepreciation = cumulativeUnitDepreciation.get(0);
           double a20CumulativeUnitDepreciation = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATION2IX, 0);
           EM.wasHere6 += "\n a0CumulativeUnitDepreciation" + EM.mf(a0CumulativeUnitDepreciation);
@@ -4086,14 +4120,18 @@ public class Assets {
           }
           // bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
           // trim original ABalRows.CUMULATIVEUNITDEPRECIATIONIX
-          bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATIONIX, ABalRows.CUMULATIVEUNITDEPRECIATIONSURPLUSSIX);
-          bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.CUMULATIVEUNITDEPRECIATIONSURPLUSS2IX);
+          bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATIONIX, ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX);
+          // bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATION2IX);
           if (sIx == 0) {
             int[] depreciationps = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
             int[] depreciation2ps = {EM.RDEPRECIATION2P, EM.CDEPRECIATION2P, EM.SDEPRECIATION2P, EM.GDEPRECIATION2P};
-          setStat(depreciationps[sIx], 100. * cumulativeUnitDepreciation.sum() / dUnitGrowth7);
-            setStat(depreciation2ps[sIx], 100. * bals.sum1(ABalRows.CUMULATIVEUNITDEPRECIATION2IX, sIx) / dUnitGrowth7);
+            setStat(EM.RDEPRECIATIONP + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx) / dUnitGrowth7);
+            setMax(EM.RDEPRECIATION3P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx) / dUnitGrowth7);//max of depreciation af sum bef surplus
+            setStat(EM.RDEPRECIATION2P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION2IX + sIx) / dUnitGrowth7);// before sum
+            setStat(EM.RDEPRECIATION3P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx) / dUnitGrowth7);// after limit
+            setStat(EM.RSURPLUSDEPRECIATIONP + sIx, 100. * bals.sum(ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX + sIx) / dUnitGrowth7);// SURPLUS
             setStat(EM.NEWDEPRECIATIONPs[sIx], 100. * newUnitDepreciation.sum() / dUnitGrowth7);
+            setStat(EM.NEWDEPRECIATION2Ps[sIx], 100. * newUnitDepreciation.sum() / dUnitGrowth7);
           }
           //  bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx).add(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx), yearlyDepreciation.setAmultV(bals.getRow(ABalRows.PREVGROWTHSIX + sIx), eM.growthDepreciation[sIx][pors]));
           // later    handle bonuses  didDepreciation = true;
@@ -8958,16 +8996,16 @@ public class Assets {
             //      calcPercent(firstStrategicValue, strategicValue), 1);
             setStat(EM.TradeNominalReceivePercentNominalOffer, pors, clan,
                     calcPercent(nominalOffers, nominalRequests), 1);  // nominal got/gives
-            setMax(EM.MaxNominalReceivePercentNominalOffer, pors, clan,
-                   calcPercent(nominalOffers, nominalRequests), 1);  //max nominal got/gives
-            setMin(EM.MinNominalReceivePercentNominalOffer, pors, clan,
-                   calcPercent(nominalOffers, nominalRequests), 1); // min nominal got/gives
-            setStat(EM.TradeStrategicReceivePercentStrategicOffer, pors, clan,
-                    calcPercent(strategicOffers, strategicRequests), 1);// strategic got/gives
-            setMax(EM.MaxStrategicReceivePercentStrategicOffer, pors, clan,
-                   calcPercent(strategicOffers, strategicRequests), 1);// max strat got/gives
-            setMin(EM.MinStrategicReceivePercentStrategicOffer, pors, clan,
-                   calcPercent(strategicOffers, strategicRequests), 1);// min strat got/gives
+            setMax(EM.MaxNominalReceivePercentNominalOffer,
+                   calcPercent(nominalOffers, nominalRequests));  //max nominal got/gives
+            setMin(EM.MinNominalReceivePercentNominalOffer,
+                   calcPercent(nominalOffers, nominalRequests)); // min nominal got/gives
+            setStat(EM.TradeStrategicReceivePercentStrategicOffer,
+                    calcPercent(strategicOffers, strategicRequests));// strategic got/gives
+            setMax(EM.MaxStrategicReceivePercentStrategicOffer,
+                   calcPercent(strategicOffers, strategicRequests));// max strat got/gives
+            setMin(EM.MinStrategicReceivePercentStrategicOffer,
+                   calcPercent(strategicOffers, strategicRequests));// min strat got/gives
             if (entryTerm == 0 || newTerm == 0) {
               retOffer.setTerm(-2); // other so no more return
             }            // else leave retOffer.term 0 for the other cn
@@ -9010,10 +9048,10 @@ public class Assets {
             setStat(EM.AlsoTradeLastStrategicValue, pors, clan, strategicValue, 1);
             setStat(EM.AlsoTradeStrategicValueLastPercentFirst, pors, clan, calcPercent(firstStrategicValue, strategicValue), 1);
             setStat(EM.TradeNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
-            setMax(EM.MaxNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
+            setMax(EM.MaxNominalReceivePercentNominalOffer, calcPercent(nominalOffers, nominalRequests));
             setMin(EM.MinNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
             setStat(EM.TradeStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
-            setMax(EM.MaxStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
+            setMax(EM.MaxStrategicReceivePercentStrategicOffer, calcPercent(strategicOffers, strategicRequests));
             setMin(EM.MinStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
             retOffer.setTerm(-4);
 
@@ -9689,10 +9727,10 @@ public class Assets {
         setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
         setStat(EM.PREVGROWTH, pors, clan, bals.sum4(ABalRows.PREVGROWTHSIX), 1);
         //  setStat(EM.RCSG, pors, clan, syW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
-        setStat(EM.INCRRCSG, pors, clan, sumYearRCSGincr, 1);
-        setStat(EM.LIVERCSG, pors, clan, fyW.getSumRCSGBal(), 1);
-        setStat(EM.INITRCSG, pors, clan, iyW.getSumRCSGBal(), 1);
-        setMax(EM.MAXRCSG, pors, clan, fyW.getSumRCSGBal(), 1);
+        setStat(EM.INCRRCSG, sumYearRCSGincr);
+        setStat(EM.LIVERCSG, fyW.getSumRCSGBal());
+        setStat(EM.INITRCSG, iyW.getSumRCSGBal());
+        setMax(EM.MAXRCSG, fyW.getSumRCSGBal());
         setMin(EM.MINRCSG, pors, clan, fyW.getSumRCSGBal(), 1);
         if (ec.getHiLo()) {
           setStat(EM.HIGHRCSG, pors, clan, fyW.getSumRCSGBal(), 1);
