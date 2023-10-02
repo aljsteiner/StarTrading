@@ -4100,27 +4100,40 @@ public class Assets {
          // bals.setA1toBaddC(sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.NEWUNITDEPRECIATIONIX);//
           // use SubAsset.add
           cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
-          //save the changed value
+          //save the added  value
           bals.set1AtoB(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx);
           double a0CumulativeUnitDepreciation = cumulativeUnitDepreciation.get(0);
-          double a20CumulativeUnitDepreciation = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATION2IX, 0);
-          EM.wasHere6 += "\n a0CumulativeUnitDepreciation" + EM.mf(a0CumulativeUnitDepreciation);
-          double aa0CumulativeUnitDepreciation = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, 0);
-          EM.wasHere6 += " aa0CumulativeUnitDepreciation" + EM.mf(aa0CumulativeUnitDepreciation);
+          double a30CumulativeUnitDepreciation = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATION3IX, 0);  // bals sum saved value
+          EM.wasHere6 += "\n a0CumulativeUnitDepreciation sum value" + EM.mf(a0CumulativeUnitDepreciation);
+          double aa0CumulativeUnitDepreciation = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, 0); // bals sumed savlue
+          EM.wasHere6 += " aa0CumulativeUnitDepreciation bals summed val" + EM.mf(aa0CumulativeUnitDepreciation);
+          // tt1 = new + cum double sumed
           double tt1 = s0NewUnitDepreciation + s0CumulativeUnitDepreciation;
+          EM.wasHere6 += " sum new cum tt1=" + EM.mf(tt1);
           //was add reflected in ABalRows by common references
-          boolean bb1 = tt1 == a0CumulativeUnitDepreciation; // direct sums match
-          EM.wasHere6 += (bb1 ? " the sum outside bals worked find" : " the sum outside bals failed");
-          boolean bb2 = a0CumulativeUnitDepreciation == aa0CumulativeUnitDepreciation; //compared to bals copy
-          EM.wasHere6 += "\n" + (bb2 ? " the sum with bals0 worked find" : " the sum failed bals failed wo=" + EM.mf(a0CumulativeUnitDepreciation) + " with=" + EM.mf(aa0CumulativeUnitDepreciation));
-          boolean bb3 = a20CumulativeUnitDepreciation == aa0CumulativeUnitDepreciation; //compared to bals copy
-          EM.wasHere6 += (bb3 ? " the sum with bals20 worked find" : " the sum failed bals failed wo=" + EM.mf(a20CumulativeUnitDepreciation) + " with=" + EM.mf(aa0CumulativeUnitDepreciation));
-            if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
-              assert cumulativeUnitDepreciation.get(0) > 0.0 && bb1 && bb2 && bb3 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
-          }
-          // bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
+          double dif1 = tt1 - a0CumulativeUnitDepreciation; // direct sums match
+          boolean bb1 = dif1 > E.NNZERO && dif1 < E.PPZERO;
+          //  boolean bb1 = tt1 == a0CumulativeUnitDepreciation; // direct sums match
+          EM.wasHere6 += " dif1=" + EM.mf(dif1) + (bb1 ? " the A6Row.sum matchea tt1 new+cum" : " the A6Row.sum match failed tt1 new+cum");
           // trim original ABalRows.CUMULATIVEUNITDEPRECIATIONIX
           bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATIONIX, ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX);
+          double sp0 = bals.get(ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX, 0);  // bals surplus moved value
+          EM.wasHere6 += "\nsurplus depreciation=" + EM.mf(sp0);
+          double asp0 = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, 0);  // bals max moved value
+          EM.wasHere6 += " after surplus depreciation removed=" + EM.mf(asp0);
+          double prvAsp = sp0 + asp0; // before move
+          EM.wasHere6 += " after surplus depreciation readded=" + EM.mf(prvAsp);
+          double dif2 = prvAsp - a0CumulativeUnitDepreciation;
+
+          boolean bb2 = dif2 > E.NNZERO && dif2 < E.PPZERO;
+          EM.wasHere6 += " dif =" + EM.mf(dif2) + (bb2 ? " surplus+remainder == original value" : " surplus+remainder != original value");
+          //  boolean bb3 = a20CumulativeUnitDepreciation == aa0CumulativeUnitDepreciation; //compared to bals copy
+          //   EM.wasHere6 += (bb3 ? " the sum with bals a20 worked find" : " the sum failed bals a20 failed wo=" + EM.mf(a20CumulativeUnitDepreciation) + " with=" + EM.mf(aa0CumulativeUnitDepreciation));
+            if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with prevGrowth
+              assert cumulativeUnitDepreciation.get(0) > 0.0 && bb1 && bb2 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
+          }
+          // bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
+
           // bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATION2IX);
           if (sIx == 0) {
             int[] depreciationps = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
@@ -4130,8 +4143,8 @@ public class Assets {
             setStat(EM.RDEPRECIATION2P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION2IX + sIx) / dUnitGrowth7);// before sum
             setStat(EM.RDEPRECIATION3P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx) / dUnitGrowth7);// after limit
             setStat(EM.RSURPLUSDEPRECIATIONP + sIx, 100. * bals.sum(ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX + sIx) / dUnitGrowth7);// SURPLUS
-            setStat(EM.NEWDEPRECIATIONPs[sIx], 100. * newUnitDepreciation.sum() / dUnitGrowth7);
-            setStat(EM.NEWDEPRECIATION2Ps[sIx], 100. * newUnitDepreciation.sum() / dUnitGrowth7);
+            setStat(EM.RNEWDEPRECIATIONP + sIx, 100. * newUnitDepreciation.sum() / dUnitGrowth7);
+            setStat(EM.RNEWDEPRECIATION2P + sIx, 100. * newUnitDepreciation.sum() / dUnitGrowth7);
           }
           //  bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx).add(bals.getRow(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx), yearlyDepreciation.setAmultV(bals.getRow(ABalRows.PREVGROWTHSIX + sIx), eM.growthDepreciation[sIx][pors]));
           // later    handle bonuses  didDepreciation = true;

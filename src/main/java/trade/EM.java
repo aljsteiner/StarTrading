@@ -1806,7 +1806,7 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = .3; // was 2.0 0.035,0.05,0.075
+  static double vdifMult = .15; // was 2.0 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   
