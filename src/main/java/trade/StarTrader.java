@@ -177,7 +177,7 @@ public class StarTrader extends javax.swing.JFrame {
    * StarTrader E EM contain the used set of stats descriptors
    *
    */
- static final public String statsButton0Tip = "0: Cum Game Worths,";
+  static final public String statsButton0Tip = "0: Cum Game Worths,";
   static final public String statsButton1Tip = "1: cum Favors and trade effects";
   static final public String statsButton2Tip = "2: catastrophes, deaths, randoms, forwardfund";
   static final public String statsButton3Tip = "3: deaths. trades acc";
@@ -197,9 +197,9 @@ public class StarTrader extends javax.swing.JFrame {
   static final public String statsButton17Tip = "17: list by ages helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
-  static final public String statsButton20Tip = "20: rcsg";
-    static final public String statsButton21Tip = "21: TB assigned";
-  static final public String statsButton22Tip = "22: TB assigned";
+  static final public String statsButton20Tip = "20: cost, cost calculations";
+  static final public String statsButton21Tip = "21: no display";
+  static final public String statsButton22Tip = "22: no display";
   static final public String statsButton23Tip = "23: display table";
 
   static final public String gameTextFieldText = "This is to be filled with descriptions of the field over which the mouse hovers";

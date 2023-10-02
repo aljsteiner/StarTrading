@@ -96,9 +96,9 @@ class EM {
   static final public String statsButton17Tip = "17: list by ages helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
-  static final public String statsButton20Tip = "20: rcsg";
-  static final public String statsButton21Tip = "21: TB assigned";
-  static final public String statsButton22Tip = "22: TB assigned";
+  static final public String statsButton20Tip = "20: cost, cost calculations";
+  static final public String statsButton21Tip = "21: no display";
+  static final public String statsButton22Tip = "22: no display";
   static final public String statsButton23Tip = "23: display table";
 
   volatile long[][][][] resI;
