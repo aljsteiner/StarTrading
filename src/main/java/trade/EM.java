@@ -317,10 +317,11 @@ class EM {
 
   // double[][] tradeRSWealth = {tradeWealthPerResource, tradeWealthPerStaff};
   static volatile double[][] tradeRSWealth = {nominalWealthPerResource, nominalWealthPerStaff};
+  static volatile double[][] rawHealthsLow = {{.3}};  // rawProspects2.min() cn
   static volatile double[][] rawHealthsSOS0 = {{.15}};  // rawHealths , rawProspects2 max rawProspects2.min() cnt
-  static volatile double[][] rawHealthsSOS1 = {{.05}};  // rawHealths , rawProspects2 below this cause sos
-  static volatile double[][] rawHealthsSOS2 = {{.02}};
-  static volatile double[][] rawHealthsSOS3 = {{-.02}};
+  static volatile double[][] rawHealthsSOS1 = {{.02}};  // rawHealths , rawProspects2 below this cause sos
+  static volatile double[][] rawHealthsSOS2 = {{-.01}};
+  static volatile double[][] rawHealthsSOS3 = {{-.05}};
 
   // [rors][pors]
   static volatile double[] maxFertility = {2.0, 2.0};
@@ -502,7 +503,7 @@ class EM {
   static volatile String wasHere7 = "";
   static volatile String wasHere8 = "";
   static volatile long twh = 0, twh1 = 0, twh2 = 0, twh3 = 0, twh4 = 0, twh5 = 0, twh6 = 0, twh7 = 0, twh8 = 0;
-  static volatile int year = -1;  // year of StarTrader, updated in StarTrader runYear;
+  static volatile int year = 0;  // year of StarTrader, updated in StarTrader runYear;
   static volatile int keepHistsByYear[] = {99, 4, 2};
 
   /**
@@ -1806,7 +1807,7 @@ class EM {
   double mac2[] = {.5, 1.8}; //planet or ship costs
   double mad[] = {1., 1.}; //rc costs, sg costs
   // multiplier of difPercent in makClanRS
-  static double vdifMult = .15; // was 2.0 0.035,0.05,0.075
+  static double vdifMult = .005; // was 2.0 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
   
@@ -2055,7 +2056,7 @@ class EM {
   static double[][] mFracBiasInGrowth = {{.02, .9}, {.0002, .9}};
   static double[] fracPriorityInGrowth = {.6, .1};  //mult priority in growth calc and percent to frac
   static final double[][] mFracPriorityInGrowth = {{.01, .9}, {.001, .9}};
-  static double[] resourceGrowth = {3.7, .0002}; // growth per work
+  static double[] resourceGrowth = {3.7, .0002}; // unit growth per work
   static final double[][] mResourceGrowth = {{.01, 6.}, {0.00002, 2.9}};
   // depreciation mining cumulative related to each years growth balance related
   static double[] resourceGrowthDepreciation = {.0006, .0006}; //per unit
@@ -3559,7 +3560,7 @@ onceAgain:
     doVal("poorHealthEffectHighLim", poorHealthEffectLimitsH, mPoorHealthEffectLimitsH, "increase the higher limit of poorHealthEffect higher is higher costs");
     /* double futGrowthFrac[][] = {{.7, .8, .7, .8, .7}, {.8, .8, .7, .4, .3}};
   static double mFutGrowthFrac[][] = {{.2,2.2},{.2,2.2}};
-  double futGrowthYrMult[][] = {{5., 5., 5., 4., 5.}, {8., 5., 3., 5., 5.}};
+  double futGrowthYrMult[][] = {{5., 5., 5., 4., 5.}, {8., 5., 3., 5.,1.}};
   static double[][] mFutGrowthYrMult = {{1.5,11.5},{1.5,11.5}};*/
     doVal("futureGrowthFrac", futGrowthFrac, mFutGrowthFrac, "increase years of costs lookahead");
     doVal("futureGrowthYears", futGrowthYrMult, mFutGrowthYrMult, "increase the growth multiplier");
@@ -3869,8 +3870,10 @@ onceAgain:
   static final int RSURPLUSDEPRECIATIONP = ++e4;  //r surplusdepreciation
   static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
   static final int RNEWDEPRECIATION2P = ++e4;// RNewDepreciation2
+  static final int BONUSGROWTH = ++e4;// %of raw yearly growth
   static final int GROWTHS = ++e4;
   static final int GROWTHSP = ++e4;
+  static final int GRADESUP = ++e4;
   static final int GROWTHCOSTS = ++e4;
   static final int GROWTHCOSTSY = ++e4;
   static final int GROWTHCOSTSYY = ++e4;
@@ -3883,6 +3886,11 @@ onceAgain:
   static final int MTGCOSTS = ++e4;
   static final int COSTWORTHDECR = ++e4;
   static final int POORHEALTHEFFECT = ++e4;
+  static final int ISLOW = ++e4;
+  static final int ISSOS0 = ++e4;
+  static final int ISSOS1 = ++e4;
+  static final int ISSOS2 = ++e4;
+  static final int ISSOS3 = ++e4;
   static final int DIED = ++e4;
   static final int WORTHIFRAC = ++e4;
   static final int RGROWTH1 = ++e4;
@@ -3948,7 +3956,11 @@ onceAgain:
   static final int TRADENOMINALGAVE = ++e4;
   static final int TRADESTRATLASTGAVE = ++e4;
   static final int WTRADEDINCRMULT = ++e4;
-
+  static final int TRADELOW = ++e4;
+  static final int TRADESOS0 = ++e4;
+  static final int TRADESOS1 = ++e4;
+  static final int TRADESOS2 = ++e4;
+  static final int TRADESOS3 = ++e4;
   static final int BOTHCREATE = ++e4;
   static final int LIVERCSG = ++e4;
   static final int INCRRCSG = ++e4;
@@ -4260,10 +4272,7 @@ onceAgain:
   static final int YearTradeStrategicReceivePercentStrategicOffer = ++e4;
   static final int YearMaxStrategicReceivePercentStrategicOffer = ++e4;
   static final int YearMinStrategicReceivePercentStrategicOffer = ++e4;
-  static final int TRADESOS0 = ++e4;
-  static final int TRADESOS1 = ++e4;
-  static final int TRADESOS2 = ++e4;
-  static final int TRADESOS3 = ++e4;
+
   static final int TRADEOSOS0 = ++e4;
   static final int TRADEOSOS1 = ++e4;
   static final int TRADEOSOS2 = ++e4;
@@ -4299,6 +4308,11 @@ onceAgain:
   static final int RCWORTH = ++e4;
   static final int RCTBAL = ++e4;
   static final int RCBAL = ++e4;
+    static final int SGTBAL = ++e4;
+      static final int SBAL = ++e4;
+  static final int GBAL = ++e4;
+  static final int RBAL = ++e4;
+  static final int CBAL = ++e4;
   static final int RCTGROWTHPERCENT = ++e4;
   static final int RCWORTHGROWTHPERCENT = ++e4;
   static final int RCGLT10PERCENT = ++e4;
@@ -4360,12 +4374,13 @@ onceAgain:
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 2, 2, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 1, 1, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
     doRes(GROWTHSP, "%growths", "growth percwent o start year balance for this year after depreciation before cost reduction", 2, 3, 0, ROWS3 | LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
-    doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 2, 6, 2, ROWS3 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(GRADESUP, "gradesUp", "number of times some grades up done", 1, 1, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
+    doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 1, 1, 2, ROWS3 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | CUMAVE | BOTH, 0L, 0L, 0L);
     doRes(PREVGROWTHP, "%prevgrowth", "growth percent of year start balance at the start of this year", 2, 6, 2, ROWS1 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
-    doRes(RGROWTH1, "rgrowt1h", "growth at the start of this year", 2, 2, 2, ROWS1 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(RGROWTH1, "rgrowt1h", "growth at the start of this year", 1, 1, 2, ROWS1 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(RGROWTH2, "rgrowth2", "growth at the start of this year");
     doRes(RGROWTH3, "rgrowth3", "growth at the start of this year");
     doRes(RGROWTH4, "rgrowth4", "growth at the start of this year");
@@ -4376,8 +4391,8 @@ onceAgain:
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year");
     doRes(NEWDEPRECIATION, "NewDepreciation", "new depreciation this year");
     doRes(DEPRECIATION, "Depreciation", "Cumulative depreciation this year");
-    doRes(NEWDEPRECIATIONP, "%NewDepreciation", "%new depreciation of growth this year", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
-    doRes(DEPRECIATIONP, "%Depreciation", "%Cumulative depreciation of growth this year", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
+    doRes(NEWDEPRECIATIONP, "%NewDepreciation", "%new depreciation of growth this year", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
+    doRes(DEPRECIATIONP, "%Depreciation", "%Cumulative depreciation of growth this year", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
     doRes(RAWYEARLYUNITGROWTH, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
     doRes(RAWGROWTHS, "rawGrowth", "Raw growth after depreciation this year before cost reduction");
@@ -4386,21 +4401,22 @@ onceAgain:
     doRes(GROWTHCOSTS, "growthCst3", "growth costs also fertility growth costs inside getNeeds");
     doRes(GROWTHCOSTSY, "growthCst1", "growth costs at end of calcRawCosts");
     doRes(GROWTHCOSTSYY, "growthCst2", "growth costs before getNeeds");
-    doRes(FERTILITYGROWTHCOSTS, "fertGrowthCosts", "fertility growth costs this year", 2, 6, 2, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(FERTILITYGROWTHCOSTS, "fertGrowthCosts", "fertility growth costs this year", 1, 1, 2, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(FERTILITYGROWTHS, "fertGrowth", "fertility growth costs this year");
-    doRes(REQMINFRAC2S, "reqMinFrac", "the minimum fracs of req fracs this year", 2, 6, 2, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0L, 0L, 0L);
+    doRes(REQMINFRAC2S, "reqMinFrac", "the minimum fracs of req fracs this year", 1, 1, 2, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0L, 0L, 0L);
     doRes(REQGFRAC2S, "reqGFrac", "the fracs of reqGfracs remG/bal");
     doRes(REQMFRAC2S, "reqMFrac", "the minimum fracs of reqMfracs remM/bal");
-    doRes(MTGCOSTS, "mtgCosts", "mtg costs this year", 2, 2, 1, LIST8 | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(MTGCOSTS, "mtgCosts", "mtg costs this year", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
 
     doRes(POSTSWAP, "postSwap", "worth after swap");
     doRes(POSTSWAPRCSG, "postSwapRCSG", "RCSG units after swap");
     doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
     doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
-    doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 2, 3, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RDEPRECIATION3P, "rMaxDepreciation3%", "MaxDepreciation in R ");
-    doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation before newDepreciation added in R ", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(RSURPLUSDEPRECIATIONP, "rSurplusDepreciation%", "surplus depreciation removed because too largein R ", 5, 6, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation before newDepreciation added in R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(BONUSGROWTH, "%bonusGrowth", "Yearly catastrophy Growth % of rawUnitGrowth ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RSURPLUSDEPRECIATIONP, "rSurplusDepreciation%", "surplus depreciation removed because too largein R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RNEWDEPRECIATIONP, "r newDepreciation%", "new Depreciation in R as the % of unitGrowth");
 
     doRes(RNEWDEPRECIATION2P, "r newMaxDepreciation2%", "new MaxDepreciation in R as the % of unitGrowth");
@@ -4661,23 +4677,23 @@ onceAgain:
     doRes(SDADEPRECIATIONP, "s DADepreciation%", "Accepted Died Depreciation in S as the % of unitGrowth");
     doRes(GDADEPRECIATIONP, "g DADepreciation%", "Accepted Died Depreciation in G as the % of unitGrowth");
 
-    doRes(RCMTGC, "RCmtgCosts", "RC Maintenance,Travel,Growth Costs / RCSGBal", 1, 1, 1, LIST8 | CURAVE | both | SKIPUNSET, 0, 0, 0);
-    doRes(RRAWMC, "RMaintCosts", "R Maintenance Costs/ RCSGBal");
+    doRes(RCMTGC, "%RCmtgCosts", "RC Maintenance,Travel,Growth Costs / RCSGBal", 1, 1, 1, LIST8 | LIST20| CURAVE | both | SKIPUNSET, 0, 0, 0);
+    doRes(RRAWMC, "%RMaintCosts", "R Maintenance Costs/ RCSGBal");
 
-    doRes(SGREQGC, "SGREQGCosts", "SG REQ G Costs / RCSGBal", 1, 1, 1, LIST22 | CURAVE | both | SKIPUNSET, 0, 0, 0);
-    doRes(RCREQGC, "RCREQGCosts", "RC REQ M Costs / RCSGBal");
-    doRes(SGREQMC, "SGREQMCosts", "SG REQ M Costs / RCSGBal");
-    doRes(RCREQMC, "RCREQMCosts", "RC REQ G Costs / RCSGBal");
-    doRes(SGMTGC, "SGmtgCosts", "SG Maintenance,Travel,Growth Costs / RCSGBal");
+    doRes(SGREQGC, "%SGREQGCosts", "SG REQ G Costs / RCSGBal", 1, 1, 1, LIST22 | CURAVE | both | SKIPUNSET, 0, 0, 0);
+    doRes(RCREQGC, "%RCREQGCosts", "RC REQ M Costs / RCSGBal");
+    doRes(SGREQMC, "%SGREQMCosts", "SG REQ M Costs / RCSGBal");
+    doRes(RCREQMC, "%RCREQMCosts", "RC REQ G Costs / RCSGBal");
+    doRes(SGMTGC, "%SGmtgCosts", "SG Maintenance,Travel,Growth Costs / RCSGBal");
 
-    doRes(CRAWMC, "CMaintCosts", "C Maintenance Costs/ RCSGbal");
-    doRes(RCRAWMC, "RCMaintCosts", "RC Maintenance Costs/ RCSGBal");
-    doRes(SRAWMC, "SMaintCosts", "S Maintenance Costs/ RCSGBal");
-    doRes(GRAWMC, "GMaintCosts", "G Maintenance Costs/ RCSGBal");
-    doRes(SGRAWMC, "SGMaintCosts", "SG Maintenance Costs/ RCSGBal");
+    doRes(CRAWMC, "%CMaintCosts", "C Maintenance Costs/ RCSGbal", 1, 1, 1, LIST8 | LIST20| CURAVE | both | SKIPUNSET, 0, 0, 0);
+    doRes(RCRAWMC, "%RCMaintCosts", "RC Maintenance Costs/ RCSGBal");
+    doRes(SRAWMC, "%SMaintCosts", "S Maintenance Costs/ RCSGBal");
+    doRes(GRAWMC, "%GMaintCosts", "G Maintenance Costs/ RCSGBal");
+    doRes(SGRAWMC, "%SGMaintCosts", "SG Maintenance Costs/ RCSGBal", 1, 1, 1, LIST22 | CURAVE | both | SKIPUNSET, 0, 0, 0);
     //   doRes(RCRAWMC, "RCRawMaintCosts", "RC Maintenance Costs/ RCSGBal");
-    doRes(RCfrac, "RC/yr Worth", "RC / yr Worth");
-    doRes(SGfrac, "SG/yr Worth", "SG / yr Worth");
+    doRes(RCfrac, "%RC/yr Worth", "RC / yr Worth");
+    doRes(SGfrac, "%SG/yr Worth", "SG / yr Worth");
     //chgd KNOWLEDGEB MANUALSfrac NEWKNOWLEDGEfrac COMMONKNOWLEDGEfrac KNOWLEDGEINCR NEWKNOWLEDGEINCR MANUALSINCR COMMONKNOWLEDGEINCR
     doRes(POORKNOWLEDGEEFFECT, "Dumb csts", "frac Increase in costs due to limited knowledge(ignorance)", 1, 3, 2, 0, ROWS1 | LIST1 | LIST5 | LIST7 | LIST8 | LIST9 | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(POORHEALTHEFFECT, "Poor Health Cost", "Increase in costs due to insufficient required resources and staff");
@@ -4757,10 +4773,16 @@ onceAgain:
     doRes(TradeDeadStrategicGoal, "DeadStrategicGoal", "Strategic Goal after trade then died");
     doRes(TradeDeadRejectedStrategicValue, "DeadRejectedStrategicValue", "Strategic Value after trade rejected then died");
     doRes(TradeDeadStrategicValue, "DeadStrategicValue", "Strategic Value after trade then died");
-    doRes(TRADESOS0, "SOS0trade%IncW", "Successful trade percent incr worth after starting with SOS0", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST21| CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(TRADESOS1, "SOS1trade%IncW", "Successful trade percent incr worth after starting with SOS1");
-    doRes(TRADESOS2, "SOS2trade%IncW", "Successful trade percent incr worth after starting with SOS2");
-    doRes(TRADESOS3, "SOS3trade%IncW", "Successful trade percent incr worth after starting with SOS3");
+    doRes(ISLOW, "lowProspects", "Low result value", 1, 2, 2, LIST0 | LIST1 | LIST13 | CURUNITS | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(ISSOS0, "SOS0", "starting with SOS0");
+    doRes(ISSOS1, "SOS1", "starting with SOS1");
+    doRes(ISSOS2, "SOS2", " starting with SOS2");
+    doRes(ISSOS3, "SOS3", " starting with SOS3");
+    doRes(TRADELOW, "lowProspects", "Low result value", 1, 2, 2, LIST0 | LIST1 | LIST13 | CURUNITS | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(TRADESOS0, "SOS0", "starting with SOS0");
+    doRes(TRADESOS1, "SOS1", "starting with SOS1");
+    doRes(TRADESOS2, "SOS2", " starting with SOS2");
+    doRes(TRADESOS3, "SOS3", " starting with SOS3");
     doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST5 | LIST13 | THISYEARAVE | BOTH | SKIPUNSET,0L,0L,0L);
     doRes(TRADEOSOS1, "HlptdS0Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS0");
     doRes(TRADEOSOS2, "HlptdS2Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS2");
@@ -4988,11 +5010,11 @@ onceAgain:
     doRes("DEADTRADES%", "Dead Trades %", "Percent of trades per dead economy", 2, 2, 2, (LIST1 | THISYEARAVE | BOTH | SKIPUNSET), (LIST1 | CURAVE | CUMAVE | BOTH | SKIPUNSET), LIST0 | SKIPUNSET | CUMAVE | BOTH, 0);
     doRes(RCTBAL, "RCBal/TBal", "Percent RC balance/tbal", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
     doRes(RCBAL, "RCBal", "RC balance", 1, 1, 0, (LIST7 | CURAVE), 0, 0, 0);
-    doRes("SGTBAL", "SG Balance", "Percent SG balance/worth", 1, 1, 0, (LIST7 | CURAVE), 0, 0, 0);
-    doRes("RBAL", "RBal", "Percent R balance/ worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
-    doRes("SBAL", "S Balance", "Percent S balance/worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
-    doRes("CBAL", "CBal", "Percent C balance/worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
-    doRes("GBAL", "G Balance", "G balance/worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
+    doRes(SGTBAL, "SG Balance", "Percent SG balance/worth", 1, 1, 0, (LIST7 | CURAVE), 0, 0, 0);
+    doRes(RBAL, "RBal", "Percent R balance/ worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
+    doRes(SBAL, "S Balance", "Percent S balance/worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
+    doRes(CBAL, "CBal", "Percent C balance/worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
+    doRes(GBAL, "G Balance", "G balance/worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
     doRes(RCTWORTH, "RCWorth", "RC Worth/TWorth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);
     doRes(RCWORTH, "RCWorth", "RC Worth", 1, 1, 0, (LIST7 | CURAVE), 0, 0, 0);
     doRes("SGTWORTH", "SGWorth", "SG Worth", 1, 1, 0, (LIST7 | skipUnset | CURAVE), 0, 0, 0);

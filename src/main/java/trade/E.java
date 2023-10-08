@@ -81,8 +81,8 @@ public class E {
   //static final boolean noAsserts = true; // true expect not -ea in program call
   static final boolean noAsserts = false; // false expect -ea in call 
   static boolean ifassert = false; // preset for later test
-
-  static final boolean distributable = false;  //set true before making a jar fine available to public
+  static int PREYEARS = 0; // number of years run as part of run
+  static final boolean distributable = true;  //set true before making a jar fine available to public
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugfalse = false;
   static final boolean debugOutput = true; //distributable;
@@ -704,7 +704,7 @@ public class E {
    * depending on the effective faculty before the upgrade.
    */
   // static double[] fractionStaffUpgrade = {2.3, 2.4, 1., .6, 3.3, 2.5, 1., .25, 3.25, 2.5, 1.5, .25, 2.25, 1.5, 1., 0.};
-  // all0w more upgrades between types
+  // allow more upgrades between grades
   static double[] fractionStaffUpgrade = {2.3, 2.4, 2.0, .6, 3.3, 2.5, 2.3, 2.25, 3.25, 2.5, 2.5, 2.25, 2.25, 1.5, 1., 0.};
 //  static protected int[][] limitJumpsPerFaculty = {{15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}, {15, 12, 10, 8}};
 //  static protected double[] knowledgeRequiredPerFacultyForJumping = {75., 75., 75., 75., 100., 100., 100., 100., 125., 125., 125., 125., 150., 150., 150., 150.};
@@ -2090,6 +2090,7 @@ public class E {
   static final double[] sumWorkerMults = {.2, .3, .5, .9, 1.6, 3.8, 5.6, 10., 7.0, 7.0, 6.0, 5., 4., 4., 3., 3.};
   // for facultyEqv,  used to promote staff to next position
   static final double[] sumFacultyMults = {0., 0., 0., 0., 0., 0., 0.1, 0.2, .3, .4, .7, 1., .7, .5, .5, .5, .3};
+  // multiplier to staffEquivalent to permit a skip grade
   static final double[] staffPromotePerFaculty = {20., 15., 13., 12., 10., 9., 8., 7., 1., .6, .5, .3, .3, .3, .2, .2};
   // 4 trainee, 4 engineer, 4 faculty, 4 researcher
   static final double[] staffPromotePerResearcher = {0., 0., 0., 0., 0., 0., 0., 0., 1.8, 1.7, 1.6, 1.5, 1.4, 1., .8, .6};

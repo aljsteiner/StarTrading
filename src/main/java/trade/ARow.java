@@ -313,7 +313,7 @@ public class ARow {
     }
     setCnt++;
     if (E.debugDouble) {
-      values[ix] = doubleTrouble(val);
+      values[ix] = ec.doubleTrouble(val, " ix=" + ix);
     }
     else {
       values[ix] = val;
@@ -336,7 +336,7 @@ public class ARow {
     }
     setCnt++;
     if (E.debugDouble) {
-      values[ix] = doubleTrouble(val);
+      values[ix] = ec.doubleTrouble(val," ix" + ix);
     }
     else {
       values[ix] = val;
@@ -358,7 +358,7 @@ public class ARow {
     }
     setCnt++;
     if (E.debugDouble) {
-      values[ix] = doubleTrouble(val);
+      values[ix] = ec.doubleTrouble(val," ix" + ix);
     }
     else {
       values[ix] = val;
@@ -384,7 +384,7 @@ public class ARow {
   }
 
   /**
-   * return A + B + C + D
+   * set to A + B + C + D
    *
    * @param A ARow
    * @param B ARow
@@ -396,7 +396,10 @@ public class ARow {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        set(i, doubleTrouble(A.get(i)) + doubleTrouble(B.get(i)) + doubleTrouble(C.get(i)) + doubleTrouble(D.get(i)));
+        set(i, ec.doubleTrouble(A.get(i)," A[" + i +"]") 
+               + ec.doubleTrouble(B.get(i),"B[" + i +"]") 
+               + doubleTrouble(C.get(i)," C[" + i +"]")
+               + doubleTrouble(D.get(i)," D[" + i +"]"));
       }
       else {
         set(i, A.get(i) + B.get(i) + C.get(i) + D.get(i));
@@ -406,7 +409,7 @@ public class ARow {
   }
 
   /**
-   * return A + B + C
+   * set to A + B + C
    *
    * @param A
    * @param B
@@ -418,9 +421,9 @@ public class ARow {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        aa = doubleTrouble(A.get(i));
-        bb = doubleTrouble(B.get(i));
-        cc = doubleTrouble(C.get(i));
+        aa = ec.doubleTrouble(A.get(i)," A[" + i + "]");
+        bb = ec.doubleTrouble(B.get(i)," B[" + i + "]");
+        cc = ec.doubleTrouble(C.get(i)," C[" + i + "]");
       }
       else {
         aa = A.get(i);
@@ -441,7 +444,8 @@ public class ARow {
   ARow set(ARow A, ARow B) {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
-      set(i, doubleTrouble(A.get(i)) + doubleTrouble(B.get(i)));
+      set(i, ec.doubleTrouble(A.get(i)," A[" + i + "]") 
+             + ec.doubleTrouble(B.get(i)," B[" + i + "]"));
     }
     return this;
   }
@@ -457,7 +461,8 @@ public class ARow {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        set(i, doubleTrouble(A.get(i) + v));
+        set(i, ec.doubleTrouble(A.get(i)," A[" + i + "]") 
+               + ec.doubleTrouble(v," v"));
       }
       else {
         set(i, A.get(i) + v);
@@ -478,7 +483,7 @@ public class ARow {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        d = doubleTrouble(b.get(i));
+        d = ec.doubleTrouble(b.get(i)," b[" + i + "]");
       }
       else {
         d = b.get(i);
@@ -503,7 +508,7 @@ public class ARow {
     setCnt++;
     for (int i = 0; i < E.lsecs; i++) {
       if (E.debugDouble) {
-        d = ec.doubleTrouble(A.get(i), titl);
+        d = ec.doubleTrouble(A.get(i), " A[" + i + "] " + titl);
       }
       else {
         d = A.get(i);
@@ -525,7 +530,7 @@ public class ARow {
     double d;
     ret.setCnt = setCnt + 1;
     for (int i = 0; i < E.lsecs; i++) {
-      d = doubleTrouble(get(i));
+      d = ec.doubleTrouble(get(i), " self[" + i + "]");
       ret.set(i, d);
     }
     return ret;
@@ -565,7 +570,7 @@ public class ARow {
    */
   ARow flip() {
     for (int n : E.alsecs) {
-      set(n, doubleTrouble(-get(n)));
+      set(n, doubleTrouble(-get(n), " self[" + n + "]"));
     }
     return this;
   }
@@ -624,7 +629,8 @@ public class ARow {
    */
   ARow setAsubB(ARow A, ARow B) {
     for (int m = 0; m < E.lsecs; m++) {
-      set(m, doubleTrouble(A.get(m)) - doubleTrouble(B.get(m)));
+      set(m, ec.doubleTrouble(A.get(m), " A[" + m + "]")
+             - doubleTrouble(B.get(m), " B[" + m + "]"));
     }
     return this;
   }
@@ -641,7 +647,8 @@ public class ARow {
   ARow getAsubB(Econ ec, ARow a, ARow b) {
     ARow ret = new ARow(ec);
     for (int ix = 0; ix < E.LSECS; ix++) {
-      ret.set(ix, doubleTrouble(a.get(ix)) - doubleTrouble(b.get(ix)));
+      ret.set(ix, ec.doubleTrouble(a.get(ix), " a[" + ix + "]")
+                  - ec.doubleTrouble(b.get(ix), " b" + ix + "]"));
     }
     return ret;
   }
@@ -655,12 +662,9 @@ public class ARow {
    * @return The difference a-b for each sector of a and b
    */
   ARow getAsubB(ARow a, ARow b) {
-    ARow ret = new ARow(a.getEc());
-    for (int ix = 0; ix < E.LSECS; ix++) {
-      ret.set(ix, doubleTrouble(a.get(ix)) - doubleTrouble(b.get(ix)));
-    }
-    return ret;
+    return getAsubB(ec, a, b);
   }
+
 
   /**
    * Get the difference between a and v for each sector check for possible
@@ -672,9 +676,9 @@ public class ARow {
    */
   ARow getAsubV(ARow a, double v) {
     ARow ret = new ARow(a.getEc());
-    doubleTrouble(v);
+    ec.doubleTrouble(v, " v");
     for (int ix = 0; ix < E.LSECS; ix++) {
-      ret.set(ix, doubleTrouble(a.get(ix)) - v);
+      ret.set(ix, ec.doubleTrouble(a.get(ix), " a[" + ix + "]") - v);
     }
     return ret;
   }
@@ -708,8 +712,10 @@ public class ARow {
    * @return A - (B*V)
    */
   ARow setAsubBmultV(ARow A, ARow B, double V) {
+    doubleTrouble(V, " V");
     for (int m : E.alsecs) {
-      set(m, doubleTrouble(A.get(m)) - (doubleTrouble(B.get(m)) * doubleTrouble(V)));
+      set(m, ec.doubleTrouble(A.get(m), " A[" + m + "]")
+             - (doubleTrouble(B.get(m), " B[" + m + "]") * V));
     }
     return this;
   }
@@ -723,8 +729,12 @@ public class ARow {
    * @return each (A-B)/C
    */
   ARow setAsubBdivbyC(ARow A, ARow B, ARow C) {
+    Double ss;
     for (int m : E.alsecs) {
-      set(m, doubleTrouble(doubleTrouble(A.get(m)) - doubleTrouble(B.get(m))) / doubleTrouble(C.get(m)));
+      ss = (ec.doubleTrouble(A.get(m), " A[" + m + "]")
+            - ec.doubleTrouble(B.get(m), " B[" + m + "]"))
+           / ec.doubleTrouble(C.get(m), " C[" + m + "]");
+      set(m, ec.doubleTrouble(ss, " sum/C" + EM.mf(C.get(m))));
     }
     return this;
   }
@@ -738,8 +748,13 @@ public class ARow {
    * @return each (B * V) + A
    */
   ARow setAaddBmultV(ARow A, ARow B, double V) {
+    Double ss;
+    ec.doubleTrouble(V, " V");
     for (int m : E.alsecs) {
-      set(m, doubleTrouble(A.get(m)) + (doubleTrouble(B.get(m)) * doubleTrouble(V)));
+      ss = ec.doubleTrouble(A.get(m), "A[" + m + "]")
+           + (ec.doubleTrouble(B.get(m), "B[" + m + "]")
+              * V);
+      set(m, ss);
     }
     return this;
   }
@@ -754,8 +769,11 @@ public class ARow {
    */
   ARow subAmultV(ARow A, double V) {
     ARow result = new ARow(ec);
+    ec.doubleTrouble(V, " V");
     for (int m : E.alsecs) {
-      result.set(m, doubleTrouble(this.get(m)) - (doubleTrouble(A.get(m) * V)));
+      result.set(m, ec.doubleTrouble(this.get(m), " this[" + m + "]")
+                    - (ec.doubleTrouble(A.get(m), " A[" + m + "]")
+                       * V));
     }
     return result;
   }
@@ -768,7 +786,9 @@ public class ARow {
    */
   ARow setSubB(ARow B) {
     for (int m : E.alsecs) {
-      set(m, doubleTrouble(this.get(m)) - doubleTrouble(B.get(m)));
+      Double ss = ec.doubleTrouble(this.get(m), " this[" + m + "]")
+                  - ec.doubleTrouble(B.get(m), " B[" + m + "]");
+      set(m, ss);
     }
     return this;
   }
@@ -841,9 +861,10 @@ public class ARow {
    */
   ARow setAmultBdivbyC(ARow A, ARow B, ARow C) {
     for (int m : E.alsecs) {
-      Double atest = C.get(m) != 0 ? doubleTrouble(B.get(m)) / doubleTrouble(C.get(m)) : 0.0;
-      double bc = atest.isInfinite() || atest.isNaN() ? 0 : atest;
-      set(m, doubleTrouble(A.get(m)) * bc);
+      Double ss = ec.doubleTrouble(A.get(m), " A[" + m + "]")
+                  * ec.doubleTrouble(B.get(m), " B]" + m + "]")
+                  / ec.doubleTrouble(C.get(m), " C[" + m + "}");
+      set(m, ec.doubleTrouble(ss, " sum"));
     }
     return this;
   }
@@ -856,12 +877,8 @@ public class ARow {
    * @return tmp
    */
   ARow setMultBdivbyC(ARow B, ARow C) {
-    for (int m : E.alsecs) {
-      Double atest = doubleTrouble(B.get(m)) / doubleTrouble(C.get(m));
-      double bc = atest.isInfinite() || atest.isNaN() ? 0 : atest;
-      set(m, doubleTrouble(get(m)) * bc);
-    }
-    return this;
+    return setAmultBdivbyC(this, B, C);
+
   }
 
   /**
@@ -871,42 +888,32 @@ public class ARow {
    * @return this * B
    */
   ARow setMultB(ARow B) {
-    for (int m : E.alsecs) {
-      set(m, doubleTrouble(get(m)) * doubleTrouble(B.get(m)));
-    }
-    return this;
+    return setAmultB(this, B);
   }
 
+
   /**
-   * tmp = this*B/C
+   * set this*B/C
    *
    * @param B
    * @param C
    * @return this*B/C no change to this
    */
   ARow multBdivbyC(ARow B, ARow C) {
-    ARow tmp = new ARow(ec);
-    for (int m : E.alsecs) {
-      Double bt = doubleTrouble(C.get(m)) != 0.0 ? B.get(m) / C.get(m) : 0.0;
-      double bc = bt.isInfinite() || bt.isNaN() ? 0 : bt;
-      tmp.set(m, doubleTrouble(get(m)) * bc);
-    }
-    return tmp;
+    return setAmultBdivbyC(this, B, C);
   }
 
+
   /**
-   * calc this * B without changing this
-   *
+   * multiply this by B
+     *
    * @param B
    * @return this mult B
    */
   ARow mult(ARow B) {
-    ARow r = new ARow(ec);
-    for (int m = 0; m < E.lsecs; m++) {
-      r.set(m, get(m) * B.get(m));
-    }
-    return r;
+    return setAmultB(this, B);
   }
+
 
   /**
    * set to ARow A by value V

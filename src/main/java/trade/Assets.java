@@ -271,6 +271,7 @@ public class Assets {
   boolean newTradeYear2 = false; // set after maint  & travel saved
 
   // in Assets
+  int sumGradesUp = 0;
   double iyWTotWorth = 0., syWTotWorth = 0., btWTotWorth = 0., tWTotWorth = 0.;
   double preSwapWorth = 0.;
   // save by yearEnd for years and increment by years
@@ -3930,7 +3931,7 @@ public class Assets {
           // the higher difficulty the lower the efficiency
           // workEffBias lower if difficulty is higher
           // ydifficulty set in calcPriority called in aStartCashFlow before this
-         // maintEfficiency.add(i, Math.sqrt(workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? 0. : KnowledgeMaintMultiplier.get(i)) / ydifficulty.get(i)));
+         // maintEfficiency.add(i, Math.sqrt(workEffBias + (1. - workEffBias) * (ydifficulty.get(i) < PZERO ? KnowledgeMaintMultiplier.get(i))* .05: KnowledgeMaintMultiplier.get(i)) / ydifficulty.get(i)));
 
           EM.wasHere6 = " i=" + subStrs[sIx] + i + " Y" + EM.year + " ydifficulty=" + eM.mf2(ydifficulty.values[i]) + " wokEffBias=" + eM.mf(workEffBias) + "KnowledgeMaintMultiplier.values=" + eM.mf(KnowledgeMaintMultiplier.values[i]);
 
@@ -3945,7 +3946,7 @@ public class Assets {
                              "sqrtVal");
           }
           maintEfficiency.add(i, sqrtVal);
-          groEfficiency.add(i, Math.sqrt(eM.effBias[pors] + (1. - eM.effBias[pors]) * (ydifficulty.get(i) < PZERO ? KnowledgeGroMultiplier.get(i) / 0.8 : KnowledgeGroMultiplier.get(i)) / ydifficulty.get(i)));
+          groEfficiency.add(i, Math.sqrt(eM.effBias[pors] + (1. - eM.effBias[pors]) * (ydifficulty.get(i) < PZERO ? KnowledgeGroMultiplier.get(i) * .05 : KnowledgeGroMultiplier.get(i)) / ydifficulty.get(i)));
           //(z-99)*y = ,15  (x-25)*y=.3  x=148, y=0.002439 
           // decrease the efficiency min as difficulty increases
           rsefficiencyGMin.set(i, eM.rsefficiencyGMin[pors][0] * (148 - percentDifficulty) * .001739);
@@ -4038,7 +4039,9 @@ public class Assets {
         //ARow rawUnitGrowth = new ARow(ec);
         ARow newUnitDepreciation = bals.getRow(ABalRows.NEWUNITDEPRECIATIONIX + sIx);
         double dUnitGrowth7 = EM.assetsUnitGrowth[sIx][pors] * 7.0;
+        double invUnitGrowth7 = 1. / dUnitGrowth7;// /by 0
         double dUnitGrowth = EM.assetsUnitGrowth[sIx][pors];
+        double invUnitGrowth = 1. / dUnitGrowth;
         ARow rg1 = new ARow(ec);
         //ARow rg2 = new ARow(ec);
         ARow rg3 = new ARow(ec);
@@ -4133,16 +4136,14 @@ public class Assets {
               assert cumulativeUnitDepreciation.get(0) > 0.0 && bb1 && bb2 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
           }
           // bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
-
-          // bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATION2IX);
           if (sIx == 0) {
             int[] depreciationps = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
             int[] depreciation2ps = {EM.RDEPRECIATION2P, EM.CDEPRECIATION2P, EM.SDEPRECIATION2P, EM.GDEPRECIATION2P};
-            setStat(EM.RDEPRECIATIONP + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx) / dUnitGrowth7);
-            setMax(EM.RDEPRECIATION3P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx) / dUnitGrowth7);//max of depreciation af sum bef surplus
-            setStat(EM.RDEPRECIATION2P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION2IX + sIx) / dUnitGrowth7);// before sum
-            setStat(EM.RDEPRECIATION3P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx) / dUnitGrowth7);// after limit
-            setStat(EM.RSURPLUSDEPRECIATIONP + sIx, 100. * bals.sum(ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX + sIx) / dUnitGrowth7);// SURPLUS
+            // setStat(EM. + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx)* invUnitGrowth7);
+            setMax(EM.RDEPRECIATION3P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx) * invUnitGrowth7);//max of depreciation af sum bef surplus
+            setStat(EM.RDEPRECIATION2P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION2IX + sIx) * invUnitGrowth7);// before sum
+            setStat(EM.RDEPRECIATION3P + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx) * invUnitGrowth7);// after limit
+            setStat(EM.RSURPLUSDEPRECIATIONP + sIx, 100. * bals.sum(ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX + sIx) * invUnitGrowth7);// SURPLUS
             setStat(EM.RNEWDEPRECIATIONP + sIx, 100. * newUnitDepreciation.sum() / dUnitGrowth7);
             setStat(EM.RNEWDEPRECIATION2P + sIx, 100. * newUnitDepreciation.sum() / dUnitGrowth7);
           }
@@ -4161,32 +4162,33 @@ public class Assets {
           // double a2 = partner.balance.get(n);
           // yearlyUnitGrowth1 will go negative if deterioration is larger
           //limit staff growth by eM.maxStaffGrowth[pors] less growth as larger
+          // apply size limit to staff
           growthFrac = fracGrowths.set(secIx, sstaff ? (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors] : 1.0);
           double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.)));
-          // double dBonusYearUnitGrowth = bonusYearlyUnitGrowth.set(secIx, cumUnitBonus.add(secIx , (bonusLeft = (bonusYears.get(secIx) > PZERO ? bonusUnitGrowth.get(secIx) : 0.))));
 
-          double dnewUnitDepreciationByUnitGrowth = newUnitDepreciation.get(secIx) * 100. / dUnitGrowth;
+          double dnewUnitDepreciationByUnitGrowth = newUnitDepreciation.get(secIx) * 100. * invUnitGrowth;
           double dRawYearlyUnitGrowth = EM.assetsUnitGrowth[sIx][pors] * growthFrac * EM.fracBiasInGrowth[pors];
           double dYrPotentialUnitGrowth = bals.set(ABalRows.RAWYEARLYUNITGROWTHSIX + sIx, secIx, rawYearlyUnitGrowth.set(secIx, dRawYearlyUnitGrowth));
-          setStat(EM.RAWYEARLYUNITGROWTHs[sIx], dRawYearlyUnitGrowth);
+          //   setStat(EM.RAWYEARLYUNITGROWTHs[sIx], dRawYearlyUnitGrowth);
           // RRAWYEARLYUNITGROWTH
           //   double dPotentialSumUnitGrowth = dYrPotentialUnitGrowth + dBonusYearUnitGrowth;
-          double dRawEarlyUnitGrowth = dYrPotentialUnitGrowth - cumulativeUnitDepreciation.get(secIx);
+          double dRawdepreciatedUnitGrowth = dYrPotentialUnitGrowth - cumulativeUnitDepreciation.get(secIx);
           //dRawYearlyUnitGrowth must be positive
-          dRawEarlyUnitGrowth = dRawEarlyUnitGrowth > 0 ? dRawEarlyUnitGrowth : 0.0;
-          double dPotentialSumUnitGrowth = dRawEarlyUnitGrowth + dBonusYearUnitGrowth;
-          double dExcessSumUnitGrowth = dPotentialSumUnitGrowth - dYrPotentialUnitGrowth * EM.maxFracBonusGrowth[pors];
+          dRawdepreciatedUnitGrowth = dRawdepreciatedUnitGrowth > 0 ? dRawdepreciatedUnitGrowth : 0.0;
+          double dPotentialSumUnitGrowth = dRawdepreciatedUnitGrowth + dBonusYearUnitGrowth;
+          double dExcessSumUnitGrowth = Math.min(0.0, dPotentialSumUnitGrowth - dRawYearlyUnitGrowth * EM.maxFracBonusGrowth[pors]); // >0 and> regular growth * theextra fraction
           // only subtrace dExcess if it is positive, otherwise the dPotentialSumUnitGrowth is good
-          double dLimitedBonusYearUnitGrowth = limitedBonusYearlyUnitGrowth.set(secIx, dBonusYearUnitGrowth - (dExcessSumUnitGrowth > 0.0 ? dExcessSumUnitGrowth : 0.0));
-          // limitedBonusYearlyUnitGrowth.set(secIx,dLimitedBonusYearUnitGrowth);
-          double drawUnitGrowth = rawUnitGrowth.set(secIx, dRawEarlyUnitGrowth + dLimitedBonusYearUnitGrowth);
+          double dLimitedRawYearUnitGrowth = dPotentialSumUnitGrowth - dExcessSumUnitGrowth;
+          double dLimitedBonusYearlyUnitGrowth = limitedBonusYearlyUnitGrowth.set(secIx, dBonusYearUnitGrowth - dExcessSumUnitGrowth);
+          double drawUnitGrowth = rawUnitGrowth.set(secIx, dLimitedRawYearUnitGrowth);
           // now find the frac of Bonus left in rawUnitGrowth
           ARow yearlyBonusSumGrowthFrac = bals.getRow(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx);
           //if rawUnitGrowth > 0, than than divid otherwise only a small result
-          double dYearlyBonusGrowthFrac = (drawUnitGrowth > E.PZERO ? ec.doubleTrouble(dLimitedBonusYearUnitGrowth, "dLimitedBonusYearUnitGrowth") / ec.doubleTrouble(drawUnitGrowth, "drawUnitGrowth") : .0001);
-          eM.printHere(E.DEBUGCALCGROWTH, "----CGk----", ec, " chec4 val=" + EM.mf(dYearlyBonusGrowthFrac) + ", " + EM.mf(drawUnitGrowth) + ", " + EM.mf(dLimitedBonusYearUnitGrowth));
-          //try setting the ARow yearlyBonusSumGrowthFrac instance twice
-          yearlyBonusSumGrowthFrac.set(secIx, dYearlyBonusGrowthFrac);
+          double dYearlyBonusGrowthFrac = dLimitedBonusYearlyUnitGrowth * invUnitGrowth;
+          if (E.DEBUGCALCGROWTH) {
+            eM.printHere("----CGk----", ec, " chec4 val=" + EM.mf(dYearlyBonusGrowthFrac) + ", " + EM.mf(drawUnitGrowth) + ", " + EM.mf(dYearlyBonusGrowthFrac));
+          }
+          //try setting the ARow yearlyBonusSumGrowthFrac 
           bals.set(ABalRows.YEARLYBONUSSUMGROWTHFRACIX + sIx, secIx, dYearlyBonusGrowthFrac);
           // now the second factor calc priority and growthEfficiency(from knowledge)
           rawSectorPriorityUnitGrowth.set(secIx, (rawUnitGrowth.get(secIx) * eM.fracPriorityInGrowth[pors] * ySectorPriorityYr.get(secIx)) * groEfficiency.get(secIx) * cRand(3 * sIx + secIx + 30));
@@ -4529,7 +4531,7 @@ public class Assets {
         hist.add(new History(aPre, History.valuesMajor6, aschar + " balance", balance));
         hist.add(new History(aPre, History.valuesMajor6, subStrs[sIx] + "worth", worth));
         hist.add(new History(aPre, 3, "grow " + aschar, growth));
-        if (!sstaff) {
+        if (!sstaff) {  // resource and cargo
           balance.add(growth);  // ARow adds all sectors
           if (sIx == E.R) {
             r.worth.setAmultV(balance, eM.nominalWealthPerResource[pors]);
@@ -4546,8 +4548,9 @@ public class Assets {
           moreK = makeZero(moreK);
           lessM = makeZero(lessM);
 
-          double orig1s, skipGrades, yesSkipGrades, sUp, kIncr, mDecr;
+          double orig1s, effctiveUpgradePower, yesSkipGrades, sUp, kIncr, mDecr;
           int gradesUp;
+          sumGradesUp = sIx == 0 ? 0 : sumGradesUp; // add all subassets
           for (int ix = 0; ix < E.lsecs; ix++) {;
             for (int k = 14; k > 0; k--) {
               assert grades[ix][k] >= 0.0 : "in doGrow negative grade[" + ix + "][" + k + "]=" + EM.mf(grades[ix][k]);
@@ -4555,19 +4558,23 @@ public class Assets {
                 E.myTest(grades[ix][k] < NZERO, "doGrow a neg grade %7.3f=grades[%1.0f][%2.0f]  ", grades[ix][k], ix + 0., k + 0.);
               }
               orig1s = grades[ix][k];
-              skipGrades = Math.min(s.facultyEquiv.get(ix), cRand(4 + ix + k) * knowledge.get(ix) / E.knowledgeRequiredPerFacultyForJumping[k]);
+              // lower limit effective faculty equiv depending on random*sector knowledge
+              effctiveUpgradePower = Math.min(s.facultyEquiv.get(ix), cRand(4 + ix + k) * knowledge.get(ix) / E.knowledgeRequiredPerFacultyForJumping[k]);
               // only allow skiping grades as a function of
+              // fractionStaffUpgrade is what needed to advancde a grade
               // facultyEquiv
-              double yesSkipGrades2 = E.fractionStaffUpgrade[k] > 1. ? (skipGrades * E.staffPromotePerFaculty[k] * s.facultyEquiv.get(ix)) : 0;
-              // limit to count in that grade
-              yesSkipGrades = Math.min(yesSkipGrades2, grades[ix][k]);
-              yesSkipGrades = Math.max(0., yesSkipGrades);
+              double skipGradesValue = effctiveUpgradePower * E.staffPromotePerFaculty[k];
+              // limit number of skippers
+              yesSkipGrades = Math.min(skipGradesValue, grades[ix][k]);
+              yesSkipGrades = Math.max(0., yesSkipGrades); // number to skip a grade
               /**
-               * calculate if moving up 2 or 3 grades
+               * calculate if moving up 1,2 or 3 grades
                */
-              gradesUp = (int) Math.ceil(E.fractionStaffUpgrade[k]);
+              gradesUp = (int) Math.min(3., E.fractionStaffUpgrade[k] * effctiveUpgradePower * .5 * cRand(5 + 3 * k));
+              gradesUp = (k + gradesUp) < E.LGRADES ? gradesUp : E.LGRADES - 1 - k;//only LGRADES in array
+              sumGradesUp += gradesUp; // sum number of grades skipped some mult of 48??
               /* increasse higher grade, reduce min1s */
-              if (gradesUp > 0) {
+              if (gradesUp > 0) { // not no change
                 // add jumped staff to higher grades
                 double AMval = grades[ix][k + gradesUp] += yesSkipGrades;
                 // remove jumped staff if any from grades[ix][k]
@@ -4576,24 +4583,23 @@ public class Assets {
               assert grades[ix][k] >= NZERO : "in doGrow negative grade[" + ix + "][" + k + "]=" + EM.mf(grades[ix][k]) + " gradesUp" + gradesUp + " yesSkipGrades" + EM.mf3(yesSkipGrades) + " grades[" + ix + "][" + k + gradesUp + "]=" + EM.mf(grades[ix][k + gradesUp]) + "\n";
               E.myTest(grades[ix][k] < NZERO, "doGrow1 neg grade %7.3f=grades[%1.0f][%2.0f] %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k], ix + 0., k + 0., gradesUp + 0., yesSkipGrades, grades[ix][k + gradesUp], ix + 0., k + gradesUp + 0.);
               /**
-               * constrain fraction of upgrades for Full Staff by the fraction
-               * in E.fractionStaffUpgrade[k] or if less than 1 allow all of
+               * not kept constrain fraction of upgrades for Full Staff by the
+               * fraction               * in E.fractionStaffUpgrade[k] or if less than 1 allow all of
                * min1s the members of that grade to move up 1 grade.
-               */
-              sUp = E.fractionStaffUpgrade[k] % 1. > PZERO ? (E.fractionStaffUpgrade[k] % 1. * grades[ix][k]) : grades[ix][k];
+           
+                 sUp = E.fractionStaffUpgrade[k] % 1. > PZERO ? (E.fractionStaffUpgrade[k] % 1. * grades[ix][k]) : grades[ix][k];
               sUp = Math.min(sUp, grades[ix][k]);
               sUp = Math.max(sUp, 0.);
               grades[ix][k] -= sUp;
-              grades[ix][k + 1] += sUp;
+              grades[ix][k + 1] +=
+               * sUp;
+               */
               if (grades[ix][k] < NZERO) {
-                E.myTest(true, "doGrow2 neg grade %7.3f=grades[%1.0f][%2.0f],%7.3f=sUp, %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k], ix + 0., k + 0., sUp, gradesUp + 0., yesSkipGrades, grades[ix][k + 1], ix, k + 1);
+                E.myTest(true, "doGrow2 neg grade %7.3f=grades[%1.0f][%2.0f], %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k], ix + 0., k + 0., gradesUp + 0., yesSkipGrades, grades[ix][k + 1], ix, k + 1);
               }
 
               if (grades[ix][k + 1] < NZERO) {
-                E.myTest(true, "doGrow3 neg grade %7.3f=grades[%1.0f][%2.0f],%7.3f=sUp, %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k + 1], ix + 0., k + 1., sUp, gradesUp + 0., yesSkipGrades, grades[ix][k], ix, k + 0.);
-              }
-              if (grades[ix][k] < NZERO) {
-                E.myTest(true, "negative %9.5f = grades[%1.0f=ix][%2.0f=k] %9.5f=yesSkipGrades,%1.0f=gradesUp,%9.5f=sUp,%9.5f=orig value", grades[ix][k], ix + 0., k + 0., yesSkipGrades, gradesUp + 0., sUp, orig1s);
+                E.myTest(true, "doGrow3 neg grade %7.3f=grades[%1.0f][%2.0f], %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k + 1], ix + 0., k + 1., gradesUp + 0., yesSkipGrades, grades[ix][k], ix, k + 0.);
               }
             } // end loop on k
             // now add in growth at the lowest grade
@@ -8242,7 +8248,7 @@ public class Assets {
         // higher difficultyByPriorityMult[ means higher costs  divided by priority
         // increase as difficulty increases
         // sector difficulty is a function of economy difficulty and priority
-        ydifficulty.set(i, percentDifficulty * (eM.difficultyByPriorityMin[pors] + (ySectorPriorityYr.get(i) < PZERO ? 0. : (eM.difficultyByPriorityMult[pors]) / ySectorPriorityYr.get(i))), "difficulty for each sector");
+        ydifficulty.set(i, percentDifficulty * (eM.difficultyByPriorityMin[pors] + (ySectorPriorityYr.get(i) < PZERO ? eM.difficultyByPriorityMult[pors] * .05 : (eM.difficultyByPriorityMult[pors]) / ySectorPriorityYr.get(i))), "difficulty for each sector");
         // or just ignore the ySectorPriorityYr, just use percentDifficulty
         //  ydifficulty.set(i, percentDifficulty, "difficulty for each sector");
       }
@@ -9551,6 +9557,24 @@ public class Assets {
       yearsFutureFund = 0.;
       excessFutureFund = emergeFutureFund = 0.;
       int prevAccYears = EM.year - lastAcceptedYear;
+
+      double rawProspectsMin = rawProspects2.min();
+      //count only the smallest available prospect for any sector
+      if (rawProspectsMin < eM.rawHealthsSOS3[0][0]) {
+        setStat(eM.ISSOS3, worthIncrPercent);
+      }
+      else if (rawProspectsMin < eM.rawHealthsSOS2[0][0]) {
+        setStat(eM.ISSOS2, worthIncrPercent);
+      }
+      else      if (rawProspectsMin < eM.rawHealthsSOS1[0][0]) {
+        setStat(eM.ISSOS1, worthIncrPercent);
+      }
+      else      if (rawProspectsMin < eM.rawHealthsSOS0[0][0]) {
+        setStat(eM.ISSOS0, worthIncrPercent);
+      }
+      else      if (rawProspectsMin < eM.rawHealthsLow[0][0]) {
+        setStat(eM.ISLOW, worthIncrPercent);
+      }
       // find number of years without trade accepted 3 max
       int ixAccYears = prevAccYears > 3 || prevAccYears < 0 ? 0 : prevAccYears;
       ///  gSwapW = new DoTotalWorths(); // did before
@@ -9584,6 +9608,7 @@ public class Assets {
         // do growths of knowledge and each SubAsset
         double tm = 1.;
         //  tm = 100000.0;
+        setStat(EM.GRADESUP, sumGradesUp);
         setStat(EM.GROWTHS, tm * bals.sum4(ABalRows.GROWTHSIX));
         setStat(EM.RGROWTH1, tm * bals.sum(ABalRows.GROWTHS1IX));
         setStat(EM.RGROWTH2, tm * bals.sum(ABalRows.GROWTHS2IX));
@@ -9866,8 +9891,8 @@ public class Assets {
         }
         setStat("RCWGPERCENT", pors, clan, rcWorthPercentInc, 1);
 
-        double bcurSum = bals.curSum();
-        double totWorth = fyW.getTotWorth();
+        double bcurSum = bals.curSum(); //rcsg sum
+        double totWorth = syW.getTotWorth();
         setStat(EM.RCMTGC, pors, clan, calcPercent(bcurSum, mtgCosts10.getRow(0).sum()), 1);
         setStat(EM.SGMTGC, pors, clan, calcPercent(bcurSum, mtgCosts10.getRow(1).sum()), 1);
         setStat(EM.RRAWMC, pors, clan, calcPercent(bcurSum, maintCosts10.getRow(0).sum()), 1);
@@ -9879,11 +9904,11 @@ public class Assets {
         EM.isHere1(ec, "CashFlow.yearEnd before many setStat ddddc=" + ++ddddc);
         setStat(EM.RCTBAL, pors, clan, calcPercent(totWorth, fyW.getSumRCBal()), 1);
 
-        setStat("SGTBAL", pors, clan, calcPercent(totWorth, fyW.getSumSGBal()), 1);
-        setStat("SBAL", pors, clan, calcPercent(totWorth, fyW.getSumSBal()), 1);
-        setStat("GBAL", pors, clan, calcPercent(totWorth, fyW.getSumGBal()), 1);
-        setStat("RBAL", pors, clan, calcPercent(totWorth, fyW.getSumRBal()), 1);
-        setStat("CBAL", pors, clan, calcPercent(totWorth, fyW.getSumCBal()), 1);
+        setStat(EM.SGTBAL, pors, clan, calcPercent(totWorth, fyW.getSumSGBal()), 1);
+        setStat(EM.SBAL, pors, clan, calcPercent(totWorth, fyW.getSumSBal()), 1);
+        setStat(EM.GBAL, pors, clan, calcPercent(totWorth, fyW.getSumGBal()), 1);
+        setStat(EM.RBAL, pors, clan, calcPercent(totWorth, fyW.getSumRBal()), 1);
+        setStat(EM.CBAL, pors, clan, calcPercent(totWorth, fyW.getSumCBal()), 1);
         //      DoTotalWorths iyW,syW, tW, gSwapW, gGrowW, gCostW, fyW;
         setStat(EM.POORKNOWLEDGEEFFECT, poorKnowledgeAveEffect, 1);
         setStat(EM.POORHEALTHEFFECT, poorHealthAveEffect, 1);
@@ -9949,6 +9974,29 @@ public class Assets {
           }
         }
         if (tradeAccepted && oclan >= 0) {
+
+          //double rawProspectsMin = rawProspects2.min();
+          if (rawProspectsMin < eM.rawHealthsSOS3[0][0]) {
+            setStat(eM.TRADESOS3, pors, clan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOS3, opors, oclan, worthIncrPercent, 1);
+          }
+          else if (rawProspectsMin < eM.rawHealthsSOS2[0][0]) {
+            setStat(eM.TRADESOS2, pors, clan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOS2, opors, oclan, worthIncrPercent, 1);
+          }
+          if (rawProspectsMin < eM.rawHealthsSOS1[0][0]) {
+            setStat(eM.TRADESOS1, pors, clan, worthIncrPercent, 1);
+            // percent worth incr given by other,
+            // higer value, more charatible
+            setStat(eM.TRADEOSOS1, opors, oclan, worthIncrPercent, 1); // HELPER
+          }
+          if (rawProspectsMin < eM.rawHealthsSOS0[0][0]) {
+            setStat(eM.TRADESOS0, pors, clan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOS0, opors, oclan, worthIncrPercent, 1);
+          }
+          if (rawProspectsMin < eM.rawHealthsLow[0][0]) {
+            setStat(eM.TRADELOW, pors, clan, worthIncrPercent, 1);
+          }
           // setStat(EM.DIEDPERCENT, pors, clan, 0., 1);
           if (ec.getHiLo()) {
             setStat(EM.HIGHDIEDPERCENT, pors, clan, 0., 1);
@@ -9967,27 +10015,9 @@ public class Assets {
           }
         }
         eM.printHere("----LYE----", ec, "CashFlow.live yearEnd before many setStat");
+
         if (year == yearTradeAccepted && oclan >= 0) {
           //set of accepted trades
-          double rawProspectsMin = rawProspects2.min();
-          if (rawProspectsMin < eM.rawHealthsSOS3[0][0]) {
-            setStat(eM.TRADESOS3, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOS3, opors, oclan, worthIncrPercent, 1);
-          }
-          else if (rawProspectsMin < eM.rawHealthsSOS2[0][0]) {
-            setStat(eM.TRADESOS2, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOS2, opors, oclan, worthIncrPercent, 1);
-          }
-          else if (rawProspectsMin < eM.rawHealthsSOS1[0][0]) {
-            setStat(eM.TRADESOS1, pors, clan, worthIncrPercent, 1);
-            // percent worth incr given by other,
-            // higer value, more charatible
-            setStat(eM.TRADEOSOS1, opors, oclan, worthIncrPercent, 1); // HELPER
-          }
-          else if (rawProspectsMin < eM.rawHealthsSOS0[0][0]) {
-            setStat(eM.TRADESOS0, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOS0, opors, oclan, worthIncrPercent, 1);
-          }
           String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
           String[] negRawUnitGrowths = {"rNeg1RawUnitGrowth", "cNeg1RawUnitGrowth", "sNeg1RawUnitGrowth", "gNeg1RawUnitGrowth"};
           String[] neg2RawUnitGrowths = {"rNeg2RawUnitGrowth", "cNeg2RawUnitGrowth", "sNeg2RawUnitGrowth", "gNeg2RawUnitGrowth"};
@@ -10125,11 +10155,12 @@ public class Assets {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
           }
         }
+        setStat(EM.BONUSGROWTH, 100. * bals.sum4(ABalRows.YEARLYBONUSSUMGROWTHFRACIX));
         String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
         for (int sIx = 0; sIx < 4; sIx += 1) {
           double tt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawUnitGrowth.sum());
           if (tt > 0.0) {
-            setStat(potentialGrowthStats[sIx], tt, 1);
+            setStat(potentialGrowthStats[sIx], tt);
           }
         }
         EM.isHere("--EYEYf--", ec, "end of live stats");
