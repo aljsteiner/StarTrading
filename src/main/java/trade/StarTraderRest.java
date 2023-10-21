@@ -40,7 +40,7 @@ import trade.StarTrader;
  * This is a class to test the program StarTrader in a number of ways
  * Only when the tests are ok may the github be updated
  */
-public class StarTraderTest {
+public class StarTraderRest {
   static protected E eE;
   static EM eM;
   static StarTrader st;
@@ -56,6 +56,7 @@ public class StarTraderTest {
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
     try {
+      System.exit(-31);
       //E.sysmsg("starting out in test main " + Thread.currentThread().getName());
     StarTrader.mainStart(args);
     StarTrader.main3();
@@ -81,7 +82,7 @@ public class StarTraderTest {
 
   } // main
   
-  public StarTraderTest(){
+  public StarTraderRest(){
     System.exit(-10);
   }
   

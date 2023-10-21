@@ -110,6 +110,19 @@ class EM {
   static final int lStatsWaitList = 10;
   static String[] statsWaitList = new String[lStatsWaitList];
   static volatile int ixStatsWaitList = 0;
+
+  /**
+   * synchronize the adding of an entry to the statsWaitList avoid an error
+   * incrementing ixStatsWaitList
+   *
+   * @param ss The line to be added to the list
+   */
+  static synchronized void addStatsWaitList(String ss) {
+    ixStatsWaitList++;
+    // ixStatsWaitList = ixStatsWaitList % lStatsWaitList;
+    //ixStatsWaitList = ixStatsWaitList < lStatsWaitList ? ixStatsWaitList :lStatsWaitList-1;
+    statsWaitList[ixStatsWaitList < lStatsWaitList ? ixStatsWaitList : lStatsWaitList - 1] = ss;
+  }
   static String description = "";
 //  Econ ec;
   static volatile ArrayList<Econ> ships = new ArrayList<Econ>();
@@ -188,9 +201,11 @@ class EM {
   static volatile double[] gameShipFrac = {.70};  // 2.3 ships / econs .75 means 3ships/1 planet, .8 = 4ships/1planet
   static final double[][] mGameShipFrac = {{.25, 1.20}, {.25, 1.20}};
 // double[][] clanShipFrac = {{.70, .70, .70, .501, .6}, {.70, .70, .70, .501, .6}}; // .3->5. clan choice of clan ships / clan econs %ships of your clan
-  static volatile double[][] clanShipFrac = {{.501, .501, .501, .501, .6}};
+ // static volatile double[][] clanShipFrac = {{.4, .45, .46, .47, .5}};
+  static volatile double[][] clanShipFrac = {{.56, .55, .67, .57, .56}};
   static final double[][] mClanShipFrac = {{.25, .81}, {.20, 1.20}};
-  static volatile double[][] clanAllShipFrac = {{.501, .501, .501, .501, .501}}; // clan (ships/econs)
+  // static volatile double[][] clanAllShipFrac = {{.44, .45, .46, .4, .42}}; // clan (ships/econs)
+  static volatile double[][] clanAllShipFrac = {{.54, .55, .56, .6, .52}}; // clan (ships/econs)
   static final double[][] mClanAllShipFrac = {{.25, 1.20}, {.2, 1.20}};
   static volatile double econLimits1[] = {150.}; // start limiting econs
   static final double mEconLimits1[][] = {{100., 500.}, {200., 500.}};
@@ -384,19 +399,19 @@ class EM {
                 && porsClanCnt[P][clan] > 0
                 && sFrac1 < clanAllShipFrac[P][clan]
                 && sFrac2 < gameShipFrac[P]
-                && sFrac3 < clanShipFrac[P][clan]) ? E.S : E.P;
+                  && sFrac3 < clanShipFrac[P][clan])
+                      ? E.S : E.P;
 
    
      if(E.debugCreateOut)System.out.println("----PScc---- pors lPlanets=" + porsCnt[P]
                          + " lEconCnt=" + econCnt
-                         + " lShips=" + porsCnt[S]
-                         + "\n lClanPlanets=" + porsClanCnt[P][clan]
+                        + " lShips=" + porsCnt[S]
+                        + " lPlanets=" + porsCnt[P]                         + "\n lClanPlanets=" + porsClanCnt[P][clan]
                          + " lClanCnt[" + clan + "]=" + clanCnt[clan]
                          + " lClanShips=" + porsClanCnt[S][clan]
                          + " lClanEcons=" + clanCnt[clan]
-                         + "\n clanShipsFrac=" + df(sFrac3)
-                         + " clanShipFrac[P][clan] =" + clanShipFrac[P][clan]
-                         + " pors=" + (pors == P?"planet":"ship")
+                        + "\n clanShipsFrac=" + mf(sFrac3)
+                        + " gameShipFrac[P][clan] =" + mf(sFrac2)                         + " pors=" + (pors == P?"planet":"ship")
                          + "\n+++"
                          + (clanCnt[clan] == 0 ? "P0000" : "S"
                          + (porsClanCnt[P][clan] == 0 ? "P000" : "S"
@@ -728,7 +743,9 @@ class EM {
   static String andStats() {
     String rtn = "";
     for (int ii = 0; ii < lStatsWaitList; ii++) {
-      rtn += (statsWaitList[ii] == null || statsWaitList[ii].isEmpty() ? "+" : statsWaitList[ii].length() < 5 ? ">>" + statsWaitList[ii] + "<< " : " :>>" + statsWaitList[ii] + "<<<\n");
+      // rtn += (statsWaitList[ii] == null || statsWaitList[ii].isEmpty() ? "+" : statsWaitList[ii].//length() < 5 ? ">>" + statsWaitList[ii] + "<< " : " :>>" + statsWaitList[ii] + "<<<\n");
+      rtn += (statsWaitList[ii] == null || statsWaitList[ii].isEmpty() ? "+"
+              : " :>>" + statsWaitList[ii] + "<<<\n");
     }
     return rtn;
   } // andStats
@@ -6531,7 +6548,7 @@ onceAgain:
   private static final long[] NINEAGECMDS = {CUR, CURUNITS, CURAVE, NEVER, NEVER, NEVER, NEVER, NEVER, NEVER};
   private static final String[] NINESTRS = {"CUR", "CURUNITS", "CURAVE", "THISYEAR", "THISYEARUNITS", "THISYEARAVE", "CUM", "CUMUNITS", "CUMAVE"};
   private static final String[] ninesSuffix = {" cur$", " curU", " curAv$", " thisYr", " thisYrU", " thisYrAv", " cum", " cumU", " cumAv"};
-  private static final String[] ninesExtSuffix = {" current years sums", " current year units", " currrent year ave", " this  year sum", " this year units", " this year ave", " cumulative sum", " cumulative units", " cumulative ave"};
+  private static final String[] ninesExtSuffix = {" current years sums", " current year units", " currrent year ave", " thisyear sum", " thisyear units", " thisyear ave", " cumulative sum", " cumulative units", " cumulative ave"};
   private static final int[] CURAVEAgesYrs = {MAXDEPTH, 4, 4, 6, 6, 6}; //yrs to scan for ageIx
 
   private String getOpsNames(Long ops) {
@@ -6702,7 +6719,7 @@ onceAgain:
                 //find the number of valid rows
                 valid = 0;
                 for (int ageYrsIx = 0; ageYrsIx < yrsMax; ageYrsIx++) {
-                  prevLine = "rN" + myRn + " " + resS[myRn][0] + ", length" + resI[rn].length + ", nineIx" + nineIx + ", extSuffix=" + extSuffix + (isAges ? ", isAges " : " notAges ") + ", ageIx" + ageIx + ", ageYrsIx" + ageYrsIx + ", extSuffix=" + ninesExtSuffix[nineIx];
+                  prevLine = "rN" + myRn + " " + resS[myRn][0] + ", length" + resI[rn].length + ", nineIx" + nineIx + ", extSuffix=" + extSuffix + (isAges ? ", isAges " : " notAges ") + ", ageIx" + ageIx + ", ageYrsIx" + ageYrsIx + ", 9extSuffix=" + ninesExtSuffix[nineIx];
                   if (resI[rn].length < ICUR0 + ageIx * MAXDEPTH + ageYrsIx) {
                     if (E.debugPutRows2) {
                       doMyErr("Null in putRows2 rn=" + rn + ", desc=" + resS[rn][0] + (isAges ? ", isAges " : ", not Ages ") + " ageIx" + ageIx + ", ageYrsIx" + ageYrsIx + ", len" + ICUR0 + ageIx * MAXDEPTH + ageYrsIx + ":" + resI[rn].length);
@@ -6808,7 +6825,7 @@ onceAgain:
                       || (((putRowsPrint6Count % 25) == 0)) && (putRowsPrint6Count < 200)) {
 
                     System.out.flush();
-                    System.out.printf("EM.putrow6Start rn=" + rn + ", " + resS[rn][0] + ", row=" + row
+                    System.out.printf("---PRA---EM.putrow6Start rn=" + rn + ", " + resS[rn][0] + ", row=" + row
                                       + ", isset=" + (myUnset ? myCumUnset ? "CumUnset" : "unset" : "isSet")
                                       + ", lock#" + lockIx + ", list" + ((haveListsMatch & LIST0) > 0 ? 0 : (haveListsMatch & LIST1) > 0 ? 1 : (haveListsMatch & LIST2) > 0 ? 2 : (haveListsMatch & LIST6) > 0 ? 6 : "??")
                                       + ", ops=" + getOpsNames(haveCmdMatch)
@@ -6823,7 +6840,7 @@ onceAgain:
                   if (putRowsPrint6Count < 20
                       || (((putRowsPrint6Count % 25) == 0)) && (putRowsPrint6Count < 200)) {
                     System.out.flush();
-                    System.out.printf("EM.putrow6Start rn=" + rn + ", " + resS[rn][0] + ", row=" + row
+                    System.out.printf("---PRB---EM.putrow6Start rn=" + rn + ", " + resS[rn][0] + ", row=" + row
                                       + ", isset=" + (myUnset ? myCumUnset ? "CumUnset" : "unset" : "isSet")
                                       + ", lock#" + lockIx + ", list" + ((haveListsMatch & LIST0) > 0 ? 0 : (haveListsMatch & LIST1) > 0 ? 1 : (haveListsMatch & LIST2) > 0 ? 2 : (haveListsMatch & LIST6) > 0 ? 6 : "??")
                                       + ", ops=" + getOpsNames(haveCmdMatch)
@@ -6841,7 +6858,7 @@ onceAgain:
       } // end of loop on doRes locks0-3
       if (E.debugPutRowsOut) {
         if (putRowsPrint9Count < 12) {
-          System.out.println("xit rn=" + rn + " row=" + row + ", desc=" + resS[rn][0] + " suffix=" + suffix + " putRowsPrint9Count" + putRowsPrint9Count++);
+          System.out.println("---PRC---xit rn=" + rn + " row=" + row + ", desc=" + resS[rn][0] + " suffix=" + suffix + " putRowsPrint9Count" + putRowsPrint9Count++);
         }
       }
       return row;
@@ -6887,6 +6904,8 @@ onceAgain:
    * @return the row
    */
   private int putRowInTable(JTable table, int rn, int row, int ageIx9, long myCmd, String suffix9, String resExt[], String extSuffix9) {
+    // class variables ageIx=ages level,suffix added to description in column 0,
+    // extSuffix= details you get clicking the description in col 0
     // String s[] = {"planets ", "ships ", "sum "};
     String ss[] = {"999999.", "ave of the", "P and S", "sums", ">>>>>>>>>>"};
     String ww[] = {"color", "Winner", "999999", "99.0%", ">>>>>>>>>>"};
@@ -6905,7 +6924,7 @@ onceAgain:
     dd[1] = doSum ? sum : getS; // force D1 request to sum for second round
     detail += ":: " + extSuffix;
     if (doPower > 0 && ((myCmd & (THISYEARAVE | CURAVE | CUMAVE | THISYEAR | CUR | CUM)) > 0L)) {
-      detail += " add " + doPower + " 0 digits added before the period for each number";
+      detail += " add " + doPower + " '0' digits added before the period for each number";
     }
     if ((myCumUnset || unset || myUnset) && E.debugPutRowsOutUnset && !doSkipUnset) {
       suffix = ">>>UNSET<<<<";
@@ -7480,7 +7499,8 @@ onceAgain:
  * @param ec  current Econ
  * @param what the 
  */
-  void printHere(String flag, Econ ec, String what){
+  void printHere(String flag, Econ ec, String what) {
+    if (E.debugOutput) {
     if (eE.msgcnt++ > eE.msgs) {
       new Throwable().printStackTrace();
       eE.sysmsgDone = true;
@@ -7489,6 +7509,7 @@ onceAgain:
     if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + " game" + past(startTime) + atJava(2) + what);
     else if (E.debugDoYearEndOut) {
       System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ((int) EM.econLimits3[0]) + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+      }
     }
   }
   /**  print a System.out line if E.debugDoYearEndOut or other debugs

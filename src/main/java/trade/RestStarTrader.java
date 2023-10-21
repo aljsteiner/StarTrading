@@ -31,7 +31,7 @@ import static trade.StarTrader.startTime;
  * This is a class to test the program StarTrader in a number of ways
  * Only when the tests are ok may the github be updated
  */
-public class TestStarTrader {
+public class RestStarTrader {
   static protected E eE;
   static EM eM;
   static StarTrader st;
@@ -98,7 +98,7 @@ public class TestStarTrader {
 
   } // main
   
-  public TestStarTrader(){
+  public RestStarTrader(){
     
   }
   

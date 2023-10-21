@@ -45,6 +45,7 @@ public class StarTraderTest {
   static EM eM;
   static StarTrader st;
 
+
    /**
    * @param args the command line arguments
    */
@@ -55,6 +56,7 @@ public class StarTraderTest {
     /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
+    System.exit(-22);
     try {
       E.sysmsg("starting out in test main " + Thread.currentThread().getName());
     StarTrader.mainStart(args);
@@ -80,7 +82,7 @@ public class StarTraderTest {
 
   } // main
   
-  public StarTraderTest(){
+  public StarTraderTest() {
     System.exit(-10);
   }
   

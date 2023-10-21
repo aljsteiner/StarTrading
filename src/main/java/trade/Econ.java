@@ -90,7 +90,7 @@ public class Econ {
   static final int lImWaitingList = 10;
   // try to have the previous and the current string
   static String imWaitingList[] = new String[lImWaitingList];
-  static int ixImWaitingList;
+  static volatile int ixImWaitingList;
   int prev2ImwIx = 0, prevImwIx = 0;
   volatile boolean okEconCnt = false;
 //  protected E D
@@ -1579,14 +1579,15 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     
   
   EM.econCountsTest(); 
-    ixImWaitingList = ++ixImWaitingList % lImWaitingList;
-    imWaitingList[prevImwIx] = EM.wasHere2 = "imWaiting in thread " + Thread.currentThread().getName() + " name=" + name + " Since doYear" + eM.year + "=" + imMore + " doEndYearCnt" + doEndYearCnt[0] + " econNames=" ;
+    //.  ixImWaitingList = ++ixImWaitingList % lImWaitingList;
+    ++ixImWaitingList;
+    String sss = EM.wasHere2 = "---IMWa---imWaiting in thread " + Thread.currentThread().getName() + " name=" + name + " Since doYear" + eM.year + "=" + imMore + " doEndYearCnt" + doEndYearCnt[0] + " econNames=";
     boolean doComma=false;
       for(int ix=0; ix< maxEndYears-1;ix++){
-        if(econNames[ix] != null){imWaitingList[prevImwIx] += ( doComma?", " : "") + econNames[ix] ; 
+        if (econNames[ix] != null) {
+          sss += (doComma ? ", " : "") + econNames[ix];
         doComma = true;};
-      }
-    
+    }
     StackTraceElement[] prevCalls = new StackTraceElement[le];
     StackTraceElement[] curStack = Thread.currentThread().getStackTrace();
     int lstk = curStack.length - 1;
@@ -1594,12 +1595,13 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       prevCalls[ste] = curStack[ste + 1];
 
       if (atCnt == 0) {
-        imWaitingList[prevImwIx] += " from " + prevCalls[ste].getMethodName() + " ";
+        sss += " from " + prevCalls[ste].getMethodName() + " ";
       }
-      imWaitingList[prevImwIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+      sss += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
       atCnt++;
     }//for
-    EM.wasHere2 = imWaitingList[prevImwIx] += " for " + name + "Y" + EM.year + " " + why + " haveing " + what[0] + " with limit=" + limit;
+    EM.wasHere2 = sss += " for " + name + "Y" + EM.year + " " + why + " haveing " + what[0] + " with limit=" + limit;
+    imWaitingList[ixImWaitingList < lImWaitingList ? ixImWaitingList : lImWaitingList] = sss;
     // }//if
 
     //now start loop to do waiting if count is above limit
@@ -1672,10 +1674,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
 
   } // doMoreThreads
 
-  int prevEtIx = 0, prev2EtIx = 0; // in Econ
-  static int ixETList = 0;
+  // int prevEtIx = 0, prev2EtIx = 0; // in Econ
+  static volatile int ixETList = 0;
   static final int lETList = 10;
-  static String sETList[] = new String[10];
+  static volatile String sETList[] = new String[lETList];
   boolean doImw = false;
   String ecThreadName = Thread.currentThread().getName();
   int ecThreadPriority = Thread.currentThread().getPriority();
@@ -1687,19 +1689,18 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
   String iWaited = " imWaited ";
 
   /**
-   * a siynchronized increment of the doEndYearCnt
-   * save a names of counted econs in a list
+   * a synchronized increment of the doEndYearCnt   * save a names of counted econs in a list
    *
    */
-  void incrEndYearCnt() {
-    if(dead)return;
-    synchronized (doEndYearCnt) {
+  synchronized void incrEndYearCnt() {
+    if (dead) {
+      return;
+    }
       for(int ix=0;ix < maxEndYears-1;ix++){
        if(econNames[ix] == null){
          econNames[ix] = name;
          break;
-       }
-    }
+        }
       doEndYearCnt[0]++;
     };
      eM.printHere("----CI----",this," incrEndYearCnt" + doEndYearCnt[0] + " insert=" + name + " Econ Names=");
@@ -1710,13 +1711,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
   }
 
   /**
-   * a siynchronized decrement of the doEndYearCnt
-   * remove name of the current econ name
+   * a synchronized decrement of the doEndYearCnt   * remove name of the current econ name
    *
    */
-  void decrEndYearCnt() { //Econ
-   
-    synchronized (doEndYearCnt) {
+  synchronized void decrEndYearCnt() { //Econ
       doEndYearCnt[0]--;
       for(int ix=0;ix < maxEndYears-1;ix++){
         if(econNames[ix] != null && econNames[ix].equals(name)){
@@ -1727,8 +1725,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       boolean doComma=false;
       for(int ix=0; ix< maxEndYears-1;ix++){
         if(econNames[ix] != null){ System.err.print((doComma?", ":"")  + econNames[ix] ); doComma= true;}
-      }
-    }; // end sync
+    }
   } // Econ.decrEndYearCnt
 
   long startYearEndWait = 0;
@@ -1754,9 +1751,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       long etStart = (new Date()).getTime();
       long etMore = etStart - EM.doYearTime;
       // long etTimes[] = new long[letTimes];
-      etTimes[0] = etStart;
-      prev2EtIx = prevEtIx;
-      prevEtIx = ixETList;
+     // etTimes[0] = etStart;
       int atCnt = 0;
       nowName = name;
      EM.econCountsTest(); 
@@ -1766,10 +1761,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       }
       iWaited = (doImw ? " notImWaited + " : "  + ");
 //    ixETList = ((ixETList+ eM.maxThreads[0][0] >= 2.0) ? 1: 0)%lETList;
-      String atList = "";
+      String[] atList = {"---ETLa----"};
       etTimes[1] = (new Date()).getTime(); // after imWaiting
 
-      if (E.DEBUGWAITTRACE) {
+      if (E.DEBUGWAITTRACE && E.debugStatsOut1) {
         StackTraceElement[] prevCalls = new StackTraceElement[le];
         StackTraceElement[] curStack = Thread.currentThread().getStackTrace();
         //set the length of the trace
@@ -1777,13 +1772,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         for (int ste = 0; ste < le && atCnt < 5 && ste < lstk; ste++) {
           // start with stackTrace[1]
           prevCalls[ste] = curStack[ste + 1];
-          atList = (ste == 0 ? " " + prevCalls[ste].getMethodName() + " " : "");
-          atList += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+          atList[0] += (ste == 0 ? " " + prevCalls[ste].getMethodName() + " " : "");
+          atList[0] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
           atCnt++;
         }//for
-        if (E.debugStatsOut1) {
-          sETList[prevEtIx] += atList;
-        }
       }//DEBUGWAITTRACE
       EM.econCountsTest(); 
       if (EM.maxThreads[0][0] >= 2.) {
@@ -1794,9 +1786,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         moreTimes[1] = etTimes[1] - etTimes[0]; // imWaiting time
         moreTimes[2] = etTimes[2] - etTimes[1]; //imCounted time
         //long msecs = EM.doYearTime - etTimes[1];
-        sETList[prevEtIx] = atList = "ecTh=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " imCounted +" + moreTimes[2];
+        atList[0] = "\n---ECTH---" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " imCounted +" + moreTimes[2];
        EM.econCountsTest(); 
-        EconThread emm = new EconThread(this,etTimes, atList, sETList, prevEtIx);
+        EconThread emm = new EconThread(this, etTimes, atList, sETList, ixETList);
    
         emm.setPriority(Thread.MIN_PRIORITY);
         etTimes[3] = (new Date()).getTime(); // after create
@@ -1813,7 +1805,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         moreTimes[1] = etTimes[1] - etTimes[0]; // imWaiting time
         moreTimes[2] = etTimes[2] - etTimes[1]; //imCounted time
         //long msecs = EM.doYearTime - etTimes[1];
-        EM.wasHere2 = sETList[prevEtIx] = atList = "ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6];
+        EM.wasHere2 = atList[0] = "\n---ETLb---ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6] + "\n";
+        sETList[++ixETList < lETList ? ixETList : lETList - 1] = atList[0];
       }
 
     }  // dead didYearEnd
@@ -1823,7 +1816,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
   public class EconThread extends Thread {
     // now Econ.EconThread
 
-    String atList = "none";
+    String[] atList = {"---ETLm----"};
     Econ ec;
     long startEt;
     String etList[];
@@ -1831,12 +1824,22 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     long[] etTimes;
     long[] moreTimes = new long[letTimes];
 
-    EconThread(Econ aaec,long[] setTimes, String aList, String[] sETList, int prevEtIx) {
+    /**
+     * run the independent thread for this yearEnd
+     *
+     * @param aaec points to econ
+     * @param setTimes array of times
+     * @param aList array to aList[0] == atList return atList
+     * @param sETList points to sETList array
+     * @param ixETList pointer to sETList entry
+     */
+    EconThread(Econ aaec, long[] setTimes, String[] aList, String[] sETList, int ixETList) {
       ec = aaec;
+      atList = aList;
       etTimes = setTimes;
-      atList = aList;  //list of previous at locations
-      etList = sETList;  // list of previous econ ttimings
-      prevIx = prevEtIx;
+      // atList = aList;  //list of previous at locations
+      //  etList = sETList;  // list of previous econ ttimings
+      //   prevIx = prevEtIx;
       etTimes[2] = (new Date()).getTime();
     }
 
@@ -1862,12 +1865,12 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       nowName = ec.name;
       nowThread = Thread.currentThread().getName();
       int doEndYearCnts = doEndYearCnt[0];
-      ixETList = ++ixETList % lETList;
-      String aL = "";
+        // ixETList = ++ixETList % lETList;
+        //  String aL = "";
       long b4 = (new Date()).getTime();
       long msecs = EM.doYearTime - b4;
 
-      etList[prevIx] = aL = atList + " DYafterCreate + " + moreTimes[3] + " threadCrtd + " + moreTimes[4] + " DYafterStart + " + moreTimes[5] + " thread run +" + moreTimes[6];
+        atList[0] = "\n---ETLC---DYafterCreate + " + moreTimes[3] + " threadCrtd + " + moreTimes[4] + " DYafterStart + " + moreTimes[5] + " thread run +" + moreTimes[6];
 
       if (E.debugThreadsOut) {
 
@@ -1876,11 +1879,11 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           int lstk = Thread.currentThread().getStackTrace().length - 1;
           for (int ste = 0; ste < le && atCnt < 5 && ste < lstk; ste++) {
             prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
-            atList = (ste == 0 ? " " + prevCalls[ste].getMethodName() + " " : "");
-            atList += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+            atList[0] += (ste == 0 ? " \n---ETLd--- " + prevCalls[ste].getMethodName() + " " : "");
+            atList[0] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
             atCnt++;
           }//for
-          etList[prevIx] += atList;
+    //      etList[prevIx] += atList;
         }//DEBUGWAITTRACE
       }
 
@@ -1895,11 +1898,7 @@ EM.econCountsTest();
         moreTimes[7] = etTimes[7] - etTimes[6];
         long b4ee = b4e - startEt;
         // msecs = startEt - EM.doYearTime;
-        eM.printHere("----IS2----", ec,etList[prevIx] = aL + " ended Year + " + moreTimes[7] + atList);
-
-        if (E.debugThreadsOut1) {
-          System.out.println(etList[prevIx]);
-        }
+        eM.printHere("----IS2----", ec, etList[0] += " ended Year + " + moreTimes[7] + atList);
       }
     } catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";

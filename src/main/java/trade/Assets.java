@@ -377,8 +377,8 @@ public class Assets {
   double[][][][] resV;
   long[][][][] resI;
   // int rende3 = 700;  // Assets for setStats
-  int lStatsWaitList = 10;
-  String[] statsWaitList;
+  //int lStatsWaitList = 10;
+  // String[] statsWaitList;
   int ISSET, ICUR0, MAXDEPTH, ICUM, CCONTROLD;
 
   long doYearTime;
@@ -527,8 +527,8 @@ public class Assets {
     resS = eM.resS; //space for desc, comment
     resV = eM.resV;
     resI = eM.resI;
-    lStatsWaitList = eM.lStatsWaitList;
-    statsWaitList = eM.statsWaitList;
+    // lStatsWaitList = eM.lStatsWaitList;
+    // statsWaitList = eM.statsWaitList;
     ISSET = eM.ISSET;
     doYearTime = eM.doYearTime;
     ICUR0 = eM.ICUR0;
@@ -1334,7 +1334,7 @@ public class Assets {
       //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
       synchronized (resL) {
         if (E.debugStatsOut) {
-          statsWaitList[prevIx] = "setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          String sList = "----SSLa----setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           StackTraceElement[] stks = Thread.currentThread().getStackTrace();
           lstk = stks.length - 1;
@@ -1346,18 +1346,18 @@ public class Assets {
                   && prevCalls[ste].getLineNumber() != 0
                   && !prevCalls[ste].getMethodName().contentEquals("setStat")) {
                 if (atCnt == 0) {
-                  statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+                  sList += prevCalls[ste].getMethodName() + " ";
                 }
                 String pcs = prevCalls[ste].getFileName();
                 int pci = prevCalls[ste].getLineNumber();
-                statsWaitList[prevIx] += " "
-                                         + " at "
+                sList += " "                                         + " at "
                                          + pcs
                                          + "." + pci;
               } // parts !null
             } // !null
             atCnt++;
           }//for
+          EM.addStatsWaitList(sList);
         }//if debugStatsOut
         resVCum[clan] += v;
         resICum[clan] += ycnt;
@@ -1372,7 +1372,6 @@ public class Assets {
           resICurmCC[ISSET] += 1;
         }
 
-        statsWaitList[prevIx] = "";
         if (E.debugStatsOut && cntStatsPrints++ > E.ssMax) {
           cntStatsPrints = 0;
           if (rn > 0) {
@@ -1416,7 +1415,7 @@ public class Assets {
       System.err.flush();
       System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
-      //     ex.printStackTrace(System.err);
+      ex.printStackTrace(System.err);
       st.setFatalError();
       throw new WasFatalError(eM.tError);
     }
@@ -1441,24 +1440,25 @@ public class Assets {
 
       int le = 10;
       int prevIx = eM.ixStatsWaitList;
-      eM.ixStatsWaitList = (++eM.ixStatsWaitList) % lStatsWaitList;
+
       int atCnt = 0;
       long nTime = (new Date()).getTime();
       long moreT = nTime - doYearTime;
       if (E.debugStatsOut) {
-        statsWaitList[prevIx] = "setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+        String sList = "----SSLb----setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
         StackTraceElement[] prevCalls = new StackTraceElement[le];
         int lstk = Thread.currentThread().getStackTrace().length - 1;
         for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
           prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
           if (!prevCalls[ste].getMethodName().contentEquals("setMaxStat")) {
             if (atCnt == 0) {
-              statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+              sList += prevCalls[ste].getMethodName() + " ";
             }
-            statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+            sList += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
           }
           atCnt++;
         }//for
+        EM.addStatsWaitList(sList);
       }//if out
 
       //  int sClan = curEcon.clan;
@@ -1535,7 +1535,6 @@ public class Assets {
           resICurmCC[ISSET] = 1;
         }
 
-        statsWaitList[prevIx] = "";
         if (E.debugStatsOut) {
           if (rn > 0) {
             long endSt = (new Date()).getTime();
@@ -1577,7 +1576,7 @@ public class Assets {
       System.err.flush();
       System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
-      //     ex.printStackTrace(System.err);
+      ex.printStackTrace(System.err);
       st.setFatalError();
       throw new WasFatalError(eM.tError);
     }
@@ -1611,24 +1610,24 @@ public class Assets {
       //synchronized (syncRes) {
       int le = 10;
       int prevIx = eM.ixStatsWaitList;
-      eM.ixStatsWaitList = (++eM.ixStatsWaitList) % lStatsWaitList;
       int atCnt = 0;
       long nTime = (new Date()).getTime();
       long moreT = nTime - doYearTime;
       if (E.debugStatsOut) {
-        statsWaitList[prevIx] = "setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+        String sList = "----SSLc----setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
         StackTraceElement[] prevCalls = new StackTraceElement[le];
         int lstk = Thread.currentThread().getStackTrace().length - 1;
         for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
           prevCalls[ste] = Thread.currentThread().getStackTrace()[ste + 1];
           if (!prevCalls[ste].getMethodName().contentEquals("setMinStat")) {
             if (atCnt == 0) {
-              statsWaitList[prevIx] += prevCalls[ste].getMethodName() + " ";
+              sList += prevCalls[ste].getMethodName() + " ";
             }
-            statsWaitList[prevIx] += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
+            sList += " at " + prevCalls[ste].getFileName() + "." + prevCalls[ste].getLineNumber();
           }
           atCnt++;
         }//for
+        EM.addStatsWaitList(sList);
       }//if out
 
       //  int sClan = curEcon.clan;
@@ -1705,7 +1704,6 @@ public class Assets {
           resICurmCC[ISSET] = 1;
         }
 
-        statsWaitList[prevIx] = "";
         if (E.debugStatsOut) {
           if (rn > 0) {
             long endSt = (new Date()).getTime();
@@ -1747,7 +1745,7 @@ public class Assets {
       System.err.flush();
       System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
-      //     ex.printStackTrace(System.err);
+      ex.printStackTrace(System.err);
       st.setFatalError();
       throw new WasFatalError(eM.tError);
     }
