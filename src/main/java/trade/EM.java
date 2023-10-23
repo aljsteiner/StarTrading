@@ -118,10 +118,10 @@ class EM {
    * @param ss The line to be added to the list
    */
   static synchronized void addStatsWaitList(String ss) {
-    ixStatsWaitList++;
+    //ixStatsWaitList++;
     // ixStatsWaitList = ixStatsWaitList % lStatsWaitList;
     //ixStatsWaitList = ixStatsWaitList < lStatsWaitList ? ixStatsWaitList :lStatsWaitList-1;
-    statsWaitList[ixStatsWaitList < lStatsWaitList ? ixStatsWaitList : lStatsWaitList - 1] = ss;
+    statsWaitList[ixStatsWaitList = ++ixStatsWaitList < lStatsWaitList ? ixStatsWaitList : 0] = ss;
   }
   static String description = "";
 //  Econ ec;
@@ -283,7 +283,7 @@ class EM {
                 }// if myPorsClanCnt
               } //sync
             } //if debug
-  }
+  } //econCountsTest
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
   static double[] difficultyPercent = {50.};
@@ -3460,6 +3460,7 @@ onceAgain:
   void runVals() throws IOException {
     doVal("difficulty", difficultyPercent, mDifficultyPercent, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the difficulty for ships as well as  Planets ,more difficulty increases costs of  resources and staff each year, increases the probability of ship and planet deaths.  More difficulty probably requires more clan-master expertise.");
     doVal("maxEcons", econLimits3, mEconLimits3, "Increase the max number of econs (planets+ships) in this game, it maxEcons too large the game will blow up out of memory, depending on your available memory");
+    doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year by about 30%.");
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
     doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
     doVal("clanRisks", clanRisk, mClanRisk, "increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
@@ -3488,7 +3489,7 @@ onceAgain:
     doVal("years To Win", winDif, mwinDif, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the years before a winner is declared");
     doVal("resourceCosts", mab1, mmab1, "raise the cost of resources planet and ship, makes game harder");
     doVal("staffCosts", mac1, mmac1, "raise the costs of staff for planets and ships, makes planets and ships die more often");
-    doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year.");
+
     doVal("haveColors", haveColors, mHaveColors, "Above slider 50 the tab display will show the color of the current economy. The changing of colors helps understand how fast the game is going.  Some persons have trouble with blinking colors, so setting this slider below 50 will stop the color changes.");
     doVal("haveCash", haveCash, mHaveCash, "Above slider 50 the tab display Economies will start with some cash, cash is just another resource that can be traded, think of it as bars of gold, not as paper money");
     doVal("minEconomies ", minEcons, mMinEcons, "iincrease the minimum number of economies after the startup numbers, the game creates new economies, new economies start to be added at a random clan, rotating to other clans next");

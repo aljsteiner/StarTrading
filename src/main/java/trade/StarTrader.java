@@ -303,11 +303,13 @@ public class StarTrader extends javax.swing.JFrame {
             + "\n"
             + "Planets and ships start trading with a support goal.  The profit goals for a clan's ships and planets can be changed by the clan-master.  These goals are later changed by the “favor” of the trading partner, and the history of trades, rejects and lost trades experienced by the clan.\n"
             + "\n"
-            + "After all the ships had an opportunity to trade, the next state is “endYear”.  Since endYear’s do not involve any other economy, multiple endYears can run at once.  Initially multiple cpus can run multiple threads to do endYears.  The number of threads can be changed by one of the settings.  If this option is turned on, it saves a limited amount of time but it  may introduce bugs from multiple cpu interference, although synchronized  code is supposed to prevent such interference.\n"
+            + "After all the ships had an opportunity to trade, the next state is “endYear”.  Since endYear’s do not involve any other economy, multiple endYears can run at once.  Initially multiple cpus can run multiple threads to do endYears.  The number of threads can be changed by one of the settings.  If this option is turned on, it saves a around 30% of time but it  may introduce bugs from multiple cpu interference, although synchronized  code is supposed to prevent such interference.\n"
             + "\n"
-            + "During the endYear swapping function, resources and staff may be moved between working and reserved, moving reserved units cost less, but do not provide any work.  In addition resources and staff may be repurposed, that is they are moved to a different financial sector.  However this is a very costly operation that is only used if trading did not supply some of the critically needed resources or staff.  After each swap the change in costs and the resulting available units is recalculated, a test is done to see if it generated an overall benefit, if not the swap may be redone several times in ways different than done before.  Early in the swaps, an action will donate to the “future funds” some resources or staff from one of the high cost sectors reducing the costs for all of the other sectors.  In particular this reduces the costs for the sectors with few units.\n"
+            + "During the endYear swapping function, resources and staff may be moved between working and reserved, moving units to reserved units costs less, but reserved units do not provide any work.  In addition resources and staff may be repurposed, that is they are moved to a different financial sector.  However this is a very costly operation that is only used if trading did not supply some of the critically needed resources or staff.  After each swap the change in costs and the resulting available units is recalculated, a test is done to see if it generated an overall benefit, if not the swap may be redone several times in ways different than done before.  \n"
             + "\n"
-            + "Each financial sector incurs costs from each of the other sectors.  If at the end of the swaps, one or more of the sectors cannot pay the yearly costs or has insufficient infrastructure to survive the whole year then the economy of a ship or planet dies.  All of its staff and resources are lost.  Otherwise at the end of the year, when enough resources and staff are available, growth is applied to resources, staff and knowledge.  \n"
+            + "Early in the swaps, an action will donate to the “future funds” some resources or staff from one of the high cost sectors reducing the costs for all of the other sectors.  In particular this reduces the sum of costs for all sectors which helps the sectors with few units.\n"
+            + "\n"
+            + "Each financial sector incurs costs from each of the other sectors.  If at the end of  swaps, one or more of the sectors cannot pay the yearly costs or has insufficient infrastructure to survive the whole year then the economy of a ship or planet dies.  All of its staff and resources are lost.  Otherwise at the end of the year, when enough resources and staff are available, growth is applied to resources, staff and knowledge.  \n"
             + "\n"
             + "As knowledge increases, years become more efficient and costs decrease.  Each year the research staff find new knowledge, they also convert manuals received in trades into more common knowledge.  After a year, some of the new knowledge becomes common knowledge.\n"
             + "\n"
@@ -340,7 +342,10 @@ public class StarTrader extends javax.swing.JFrame {
             + "\n"
             + "After players have set clan priorities and other levels, the game-master can run the game for 1,5,10, or 20 years.  When the years are finished, results are available, there are 21 different pages showing different results and showing some of the same results in different ways.  Pages 0,1,2 list the most important results.  Any page with the score at the top will be set to the background color of the clan with the highest score, the winner when the score gets good enough to win.\n"
             + "\n"
-            + "Each planet and ship have seven financial sectors.  Each sector has resources, cargo(resource but in reserve not working), staff, guests(staff but in reserve not working), and knowledge of 3 kinds (common knowledge, new knowledge, and manuals(researchers work to get new knowledge or common knowledge from manuals), but trades can only trade manuals from ships)."
+            + "Each planet and ship have seven financial sectors.  Each sector has resources, cargo(resource but in reserve not working), staff, guests(staff but in reserve not working), and knowledge of 3 kinds (common knowledge, new knowledge, and manuals(researchers work to get new knowledge or common knowledge from manuals), but trades can only trade manuals from ships).\n"
+            + "\n"
+            + "Install this game.  “Star Trader”; “Save the Planets”; “Trade, trade, trade”;  “Strategic trader mini economics”: by any name, this is a game to help other clans to survive, not harm each other.  It is a mini strategic economics game emphasizing cooperation over competition.  Each planet or ship is an economy having assets of resources, staff and knowledge in 7 sectors.  Each year random factors change costs and growth.  Each financial sector experiences yearly costs using up some resources and some staff.  Each year ships try to select a planet to trade with.  The trade is to benefit both the ship and planet and make them more likely to survive the year.  Planets or ships with insufficient staff or resources in any sector at the end of the year, do not survive.  Planets or ships with surplus resources and staff find more resources and grow more staff at the end of that year.  \n"
+            + "\n"
             + "";
 
   static int iii = 0;
@@ -5247,7 +5252,7 @@ public class StarTrader extends javax.swing.JFrame {
     if (sameState && sameName && sameWh
         && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
       sameEconState++;
-      assert  sameEconState < 91 : "STUCK at runYears2.checkEconState Y" + eM.year + " EconTime" + myNow + sinceRY2() + sinceRY3() + " " + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
+      assert  sameEconState < 191 : "STUCK at runYears2.checkEconState Y" + eM.year + " EconTime" + myNow + sinceRY2() + sinceRY3() + " state=" + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 90) {
         EM.doMyErr("STUCK at:doYear" + EM.year + myNow + " " + stateStringNames[stateConst] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
@@ -5412,7 +5417,7 @@ public class StarTrader extends javax.swing.JFrame {
             if (E.debugStatsOut1) {
               System.out.println("----------MD-------runYears2;" + since() + sinceAA() + " " + stateStringNames[stateConst] + "Y" + eM.year + (did ? " DID" : " !!DID") + (done ? " DONE" : " !!DONE"));
             }
-            listRes(fullRes); //done in runBackgroundYears4
+            if(!EM.dfe())listRes(fullRes); //done in runBackgroundYears4
             break;
 
           case RUNSDONE:
@@ -5495,7 +5500,9 @@ public class StarTrader extends javax.swing.JFrame {
       controlPanels.setSelectedIndex(4);
       cpIx2 = controlPanels.getSelectedIndex();
       stats.setVisible(true);
-      listRes(0, resLoops, fullRes);
+      if (!EM.dfe()) {
+        listRes(0, resLoops, fullRes);
+      }
       //controlPanels.setSelectedIndex(4);
       cpIx3 = controlPanels.getSelectedIndex();
       stats.setVisible(true);
@@ -6245,7 +6252,7 @@ public class StarTrader extends javax.swing.JFrame {
     double tmem = (double) totMem / gigMem, fmem = (double) freeMem / gigMem, umem = (double) usedMem / gigMem;
     //System.out.println("");
     prGigMem = " Game Memory " + stateStringNames[stateConst] + " year=" + eM.year + " Gigs total=" + EM.mf(tmem) + " used=" + EM.mf(umem) + " free=" + EM.mf(fmem);
-    System.out.printf("----PM----" + since() + prGigMem + "<<<<<<" + "\n");
+    System.out.printf("----PMo----" + since() + prGigMem + "<<<<<<" + "\n");
   }
 
   void printMem() {
@@ -6396,7 +6403,7 @@ public class StarTrader extends javax.swing.JFrame {
    * trade, then run a year than a startShipTrade is done to the ship from
    * runBackgroundYears4 years
    */
-  public void runYear() {
+  public synchronized void runYear() {
     if (eM.fatalError) {
       setFatalError();
       return;
@@ -7167,7 +7174,7 @@ public class StarTrader extends javax.swing.JFrame {
       //   controlPanels.setSelectedIndex(3);
       int blip = 5;
 
-      if (curEc == null) {
+      if (curEc == null || EM.dfe()) {
 
       }
       else { // curEc != null
@@ -7232,23 +7239,23 @@ public class StarTrader extends javax.swing.JFrame {
         }
         rnsos = EM.ISLOW;
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "LOW " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
+          disp1 += "wrnLOW " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
         rnsos = EM.ISSOS0;
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "SOS0 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
+          disp1 += "wrnSOS0 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
         rnsos = EM.ISSOS1;
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "SOS1 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
+          disp1 += "wrnSOS1 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
         rnsos = EM.ISSOS2;
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "SOS2 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
+          disp1 += "dieSOS2 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
         rnsos = EM.ISSOS3;
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "SOS3 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
+          disp1 += "dieSOS3 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
 
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNHlpdSos1, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
@@ -7261,7 +7268,7 @@ public class StarTrader extends javax.swing.JFrame {
           disp1 += "HelpdSOS1 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNHlpdSos3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNHlpdSos3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "DiedRSOS1 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
+          disp1 += "WrnRSOS1 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS1, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
         else if ((tmp1 = eM.getCurCumPorsClanUnitSum(rNDS2, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS2 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS2, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS2, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
@@ -7377,7 +7384,9 @@ public class StarTrader extends javax.swing.JFrame {
         controlPanels.setSelectedIndex(4);
         display.setVisible(false);
         cpIx2 = controlPanels.getSelectedIndex();
-        if(!statsDone)listRes(0, resLoops, fullRes);
+        if (!statsDone && !EM.dfe()) {
+          listRes(0, resLoops, fullRes);
+        }
         controlPanels.setSelectedIndex(4);
         stats.setVisible(true);
         stats.revalidate();

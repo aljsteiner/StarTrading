@@ -84,7 +84,26 @@
                 <exec.mainClass>trade.StarTrader</exec.mainClass>
               <vertx.timeout>9999</vertx.timeout> 
             </properties>
-        </action>
+         </action>
+         <action>
+           <actionName>CUSTOM-starTraderTest</actionName>
+           <displayName>starTraderTest</displayName>
+           <goals>
+             <goal>test-compile</goal>
+             <goal>surefire:test</goal>
+           </goals>
+           <properties>
+             <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+             <exec.executable>java</exec.executable>
+             <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+             <exec.appArgs>"test"</exec.appArgs>
+             <exec.mainClass>trade.StarTrader</exec.mainClass>
+             <vertx.timeout>9999</vertx.timeout>
+           </properties>
+           <activatedProfiles>
+             <activatedProfile>starTraderTest</activatedProfile>
+           </activatedProfiles>
+         </action>
         <action>
             <actionName>debug</actionName>
             <packagings>

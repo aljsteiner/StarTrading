@@ -91,7 +91,7 @@ public class Econ {
   // try to have the previous and the current string
   static String imWaitingList[] = new String[lImWaitingList];
   static volatile int ixImWaitingList;
-  int prev2ImwIx = 0, prevImwIx = 0;
+  //int prev2ImwIx = 0, prevImwIx = 0;
   volatile boolean okEconCnt = false;
 //  protected E D
   // sum of guest, trainees, workers, faculty, researchers with biases
@@ -1571,8 +1571,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     int tCnts = 0;
     int le = 10;
     long imStart = (new Date()).getTime();
-    prev2ImwIx = prevImwIx;
-    prevImwIx = ixImWaitingList;
+    //  prev2ImwIx = prevImwIx;
+    //  prevImwIx = ixImWaitingList;
     int atCnt = 0;
     int prevCnt = what[0];
     long imMore = imStart - EM.doYearTime;
@@ -1580,7 +1580,6 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
   
   EM.econCountsTest(); 
     //.  ixImWaitingList = ++ixImWaitingList % lImWaitingList;
-    ++ixImWaitingList;
     String sss = EM.wasHere2 = "---IMWa---imWaiting in thread " + Thread.currentThread().getName() + " name=" + name + " Since doYear" + eM.year + "=" + imMore + " doEndYearCnt" + doEndYearCnt[0] + " econNames=";
     boolean doComma=false;
       for(int ix=0; ix< maxEndYears-1;ix++){
@@ -1601,7 +1600,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       atCnt++;
     }//for
     EM.wasHere2 = sss += " for " + name + "Y" + EM.year + " " + why + " haveing " + what[0] + " with limit=" + limit;
-    imWaitingList[ixImWaitingList < lImWaitingList ? ixImWaitingList : lImWaitingList] = sss;
+    // ixImWaitingList = ++ixImWaitingList < lImWaitingList ? ixImWaitingList : 0;
+    imWaitingList[ixImWaitingList = ++ixImWaitingList < lImWaitingList ? ixImWaitingList : 0] = sss;
     // }//if
 
     //now start loop to do waiting if count is above limit
@@ -1653,7 +1653,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       } //else
     } // timeLoop
     long imDoneT = (new Date()).getTime() - eM.doYearTime;
-    EM.wasHere2 = imWaitingList[prevImwIx] = "  im " + name + "Y" + EM.year + " done waiting " + imDoneT + " " + nowName + " " + Thread.currentThread().getName() + " from " + imWaitingList[prevImwIx];
+    EM.wasHere2 = imWaitingList[ixImWaitingList = ++ixImWaitingList < lImWaitingList ? ixImWaitingList : 0] = "----IMWf----  im " + name + "Y" + EM.year + " done waiting " + imDoneT + " " + nowName + " " + Thread.currentThread().getName() + " from " + imWaitingList[ixImWaitingList];
   } // imWaiting  stop waiting
 
   /**
@@ -1806,7 +1806,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         moreTimes[2] = etTimes[2] - etTimes[1]; //imCounted time
         //long msecs = EM.doYearTime - etTimes[1];
         EM.wasHere2 = atList[0] = "\n---ETLb---ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6] + "\n";
-        sETList[++ixETList < lETList ? ixETList : lETList - 1] = atList[0];
+        sETList[ixETList = ++ixETList < lETList ? ixETList : 0] = atList[0];
       }
 
     }  // dead didYearEnd
@@ -1820,7 +1820,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     Econ ec;
     long startEt;
     String etList[];
-    int prevIx;
+    //   int prevIx;
     long[] etTimes;
     long[] moreTimes = new long[letTimes];
 
@@ -1898,7 +1898,7 @@ EM.econCountsTest();
         moreTimes[7] = etTimes[7] - etTimes[6];
         long b4ee = b4e - startEt;
         // msecs = startEt - EM.doYearTime;
-        eM.printHere("----IS2----", ec, etList[0] += " ended Year + " + moreTimes[7] + atList);
+        eM.printHere("----IS2----", ec, atList[0] += " ended Year + " + moreTimes[7] + atList);
       }
     } catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";

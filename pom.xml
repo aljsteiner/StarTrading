@@ -52,6 +52,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
+                <configuration>
+                  <includes>
+                    <include>**/*Test*.java</include>
+                  </includes>
+                </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -67,7 +72,7 @@
                 <configuration>
                   <skipTests>false</skipTests>
                   <includes>
-                    <include>**/*TestIT.java</include>
+                    <include>**/*TestIT*.java</include>
                   </includes>
                 </configuration>
               </execution>

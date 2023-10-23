@@ -81,7 +81,7 @@ public class E {
   //static final boolean noAsserts = true; // true expect not -ea in program call
   static final boolean noAsserts = false; // false expect -ea in call 
   static boolean ifassert = false; // preset for later test
-  static int PREYEARS = 7; // number of years run as part of run
+  static int PREYEARS = 0; // number of years run as part of run
   static final boolean debugfalse = false;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   //static final boolean resetOut = debugOutput;  //change out, err to
