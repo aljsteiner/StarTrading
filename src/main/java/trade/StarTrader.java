@@ -5483,7 +5483,7 @@ public class StarTrader extends javax.swing.JFrame {
         System.err.println(EM.errLine);
       }
       aaTime = (new Date()).getTime();      // this goes in error
-      runYear();
+      runAYear();
     } // nn end loop
     setEconState(STATS);
     paintCurDisplay(EM.curEcon);
@@ -5583,7 +5583,9 @@ public class StarTrader extends javax.swing.JFrame {
     Econ t = newEC;
     if (!newEC.getDie()) {
       if (E.debugChangeEconCnt) {
+        EM.wasHere7 = "---ELd---StarTrader seek econLock";
         synchronized (A4Row.econLock) { // protect the increment of econCnt
+          EM.wasHere8 = "---ELda---StarTrder got econLock";
           EM.porsClanCnt[newEC.pors][newEC.clan]++;
           EM.clanCnt[newEC.clan]++;
           EM.porsCnt[newEC.pors]++;
@@ -6393,7 +6395,7 @@ public class StarTrader extends javax.swing.JFrame {
 
   void runYearsInBackgroundNot(int years) {
     for (int yy = 0; yy < years; yy++) {
-      runYear();
+      runAYear();
     }
     //stateConst = STATS;
   }
@@ -6403,7 +6405,7 @@ public class StarTrader extends javax.swing.JFrame {
    * trade, then run a year than a startShipTrade is done to the ship from
    * runBackgroundYears4 years
    */
-  public synchronized void runYear() {
+  public void runAYear() {
     if (eM.fatalError) {
       setFatalError();
       return;
@@ -6890,7 +6892,9 @@ public class StarTrader extends javax.swing.JFrame {
         }// m
 
         // now set the counts and planets and ships
+        EM.wasHere7 = "---Ele---StarTrader 6895 seek econLock";
         synchronized (A4Row.econLock) {
+          EM.wasHere8 = "---ELeb---StarTrader 6897 got econLock";
           for (Econ t : EM.econs) {
             if (!t.getDie()) {
               EM.porsClanCnt[t.pors][t.clan]++;

@@ -1610,12 +1610,12 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     for (int timeLoop = 0; timeLoop < secs && dowait; timeLoop++) {
      EM.econCountsTest(); 
       if (E.debugThreads) {
-        if (timeLoop % 5 == 0) {
+        if (timeLoop % 2 == 0) {
           System.out.println("------KKK-----imWaiting in thread " + Thread.currentThread().getName() + name + "Y" + EM.year + " " + why + " have cnt " + what[0] + " limit=" + limit + " seconds=" + timeLoop);
         }
       } // debug threads
 
-      if (prevCnt > doEndYearCnt[0]) {
+      if (false && prevCnt > doEndYearCnt[0]) {
         prevCnt = what[0];
         secs += timeLoop; // update the limit
       }
@@ -1635,7 +1635,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         } else {
           try {
            EM.econCountsTest(); 
-            Thread.sleep(1000L);
+            Thread.sleep(100L);
  EM.econCountsTest(); 
           } catch (Exception | Error ex) {
   EM.firstStack = EM.secondStack+"";

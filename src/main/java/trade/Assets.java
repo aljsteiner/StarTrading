@@ -1334,7 +1334,7 @@ public class Assets {
       //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
       synchronized (resL) {
         if (E.debugStatsOut) {
-          String sList = "----SSLa----setStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          String sList = "----SSLa----setStat " + name + "Y" + EM.year + " in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           StackTraceElement[] stks = Thread.currentThread().getStackTrace();
           lstk = stks.length - 1;
@@ -1445,7 +1445,7 @@ public class Assets {
       long nTime = (new Date()).getTime();
       long moreT = nTime - doYearTime;
       if (E.debugStatsOut) {
-        String sList = "----SSLb----setMaxStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+        String sList = "----SSLb----setMaxStat " + name + "Y" + EM.year + " in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
         StackTraceElement[] prevCalls = new StackTraceElement[le];
         int lstk = Thread.currentThread().getStackTrace().length - 1;
         for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
@@ -1555,8 +1555,8 @@ public class Assets {
             if (E.debugStatsOut1) {
               if (cntStatsPrints < E.ssMax) {
                 cntStatsPrints += 1;
-                System.out.println(
-                        "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                System.out.println("---SMXb---"
+                                   + "EM.setMaxStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
                 System.out.flush();
               } //ssMax
             }
@@ -1614,7 +1614,7 @@ public class Assets {
       long nTime = (new Date()).getTime();
       long moreT = nTime - doYearTime;
       if (E.debugStatsOut) {
-        String sList = "----SSLc----setMinStat in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+        String sList = "----SSLc----setMinStat " + name + " in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
         StackTraceElement[] prevCalls = new StackTraceElement[le];
         int lstk = Thread.currentThread().getStackTrace().length - 1;
         for (int ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
@@ -1724,8 +1724,8 @@ public class Assets {
             if (E.debugStatsOut1) {
               if (cntStatsPrints < E.ssMax) {
                 cntStatsPrints += 1;
-                System.out.println(
-                        "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                System.out.println("---SMINLc---"
+                                   + "EM.setMinStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
                 System.out.flush();
               } //ssMax
             }
@@ -1743,7 +1743,7 @@ public class Assets {
       eM.secondStack = eM.sw.toString();
       System.out.flush();
       System.err.flush();
-      System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      System.err.println(eM.tError = ("Caught in setMinStat " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       ex.printStackTrace(System.err);
       st.setFatalError();
@@ -10604,8 +10604,9 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
-
+          EM.wasHere7 = "---ELa---Assets.10607 seek lock";
           synchronized (A4Row.econLock) {
+            EM.wasHere8 = "---ELa2--- Assets has lock";
             EM.clanCnt[clan]--;
             EM.porsClanCnt[pors][clan]--;
             EM.porsCnt[pors]--;

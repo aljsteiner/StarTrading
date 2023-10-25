@@ -261,9 +261,11 @@ class EM {
    */
   static void econCountsTest(){
     if (E.debugEconCnt) {
-              synchronized (A4Row.econLock) {
+      wasHere7 = "---ELb---econCounts seek econLock ";
+      synchronized (A4Row.econLock) {
+        wasHere8 = "---ELba--- econCounts got econLock";
                 int myPorsCnt = porsCnt[0] + porsCnt[1];
-                assert econCnt == myPorsCnt: "Counts error, econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt;
+        assert econCnt == myPorsCnt : "Counts error " + curEconName + "Y" + year + ", econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt;
                 if (!E.ifassert && (econCnt != (porsCnt[0] + porsCnt[1]))) {
                   doMyErr("Counts error, econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt
                   );

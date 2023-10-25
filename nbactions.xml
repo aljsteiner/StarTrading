@@ -104,6 +104,21 @@
              <activatedProfile>starTraderTest</activatedProfile>
            </activatedProfiles>
          </action>
+         <action>
+           <actionName>integration-test.single</actionName>
+           <packagings>
+             <packaging>*</packaging>
+           </packagings>
+           <goals>
+             <goal>maven-compiler-plugin:3.1:compile (default-compile) @ starTraderMaven</goal>
+             <goal>integration-test</goal>
+           </goals>
+           <properties>
+             <test>true</test>
+             <failIfNoTests>true</failIfNoTests>
+             <it.test>StarTraderTestIT</it.test>
+           </properties>
+         </action>
         <action>
             <actionName>debug</actionName>
             <packagings>
