@@ -31,7 +31,7 @@ import static trade.StarTrader.startTime;
  * This is a class to test the program StarTrader in a number of ways
  * Only when the tests are ok may the github be updated
  */
-public class RestStarTrader {
+public class TestStarTrader {
   static protected E eE;
   static EM eM;
   static StarTrader st;
@@ -50,7 +50,10 @@ public class RestStarTrader {
       System.err.println("starting out in test main " + Thread.currentThread().getName());
     mainStart(args);
     StarTrader.main3();
-     if(st.fatalError) throw new MyErr("fatal error at new StarTrader");
+      if (st.fatalError) {
+        throw new MyErr("fatal error at new StarTrader");
+      }
+      System.exit(0);
      System.err.println(" passed first test, StarTrader started");
       /* Create and display the form */
        /* Create and display the form */
@@ -98,7 +101,7 @@ public class RestStarTrader {
 
   } // main
   
-  public RestStarTrader(){
+  public TestStarTrader() {
     
   }
   

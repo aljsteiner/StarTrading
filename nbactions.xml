@@ -97,7 +97,7 @@
              <exec.executable>java</exec.executable>
              <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
              <exec.appArgs>"test"</exec.appArgs>
-             <exec.mainClass>trade.StarTrader</exec.mainClass>
+             <exec.mainClass>trade.StarTraderTest</exec.mainClass>
              <vertx.timeout>9999</vertx.timeout>
            </properties>
            <activatedProfiles>
@@ -105,9 +105,9 @@
            </activatedProfiles>
          </action>
          <action>
-           <actionName>integration-test.single</actionName>
+           <actionName>integration-tests.single</actionName>
            <packagings>
-             <packaging>*</packaging>
+             <packaging>jar</packaging>
            </packagings>
            <goals>
              <goal>maven-compiler-plugin:3.1:compile (default-compile) @ starTraderMaven</goal>
@@ -173,7 +173,8 @@
             </properties>
         </action>
         <action>
-            <actionName>integration-test.single</actionName>
+          <actionName>integration-test.single</actionName>
+          <displayName>integration-test</displayName>
             <preAction>build-with-dependencies</preAction>
             <packagings>
                 <packaging>*</packaging>
@@ -182,14 +183,14 @@
                 <goal>integration-test</goal>
             </goals>
             <properties>
-                <test>DummyToSkipUnitTests</test>
-                <failIfNoTests>false</failIfNoTests>
-                <it.test>${packageClassName}#trade.StarTrader</it.test>
+              <test>true</test>
+              <failIfNoTests>true</failIfNoTests>
+              <it.test>${packageClassName}#trade.StarTraderTestIT</it.test>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.vmArgs>-ea -Xmx4g -ae</exec.vmArgs>
                 <exec.appArgs>"test"</exec.appArgs>
-                <exec.mainClass>trade.StarTrader</exec.mainClass>
+                <exec.mainClass>trade.StarTraderTestIT</exec.mainClass>
             </properties>
         </action>
         <action>

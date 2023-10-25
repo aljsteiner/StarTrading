@@ -40,7 +40,7 @@ import trade.StarTrader;
  * This is a class to test the program StarTrader in a number of ways
  * Only when the tests are ok may the github be updated
  */
-public class StarTraderRest {
+public class StarTraderTest {
   static protected E eE;
   static EM eM;
   static StarTrader st;
@@ -82,7 +82,7 @@ public class StarTraderRest {
 
   } // main
   
-  public StarTraderRest(){
+  public StarTraderTest(){
     System.exit(-10);
   }
   
