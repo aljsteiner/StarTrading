@@ -56,13 +56,12 @@ public class StarTraderTest {
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
     try {
-      System.exit(-31);
       //E.sysmsg("starting out in test main " + Thread.currentThread().getName());
     StarTrader.mainStart(args);
     StarTrader.main3();
-     if(StarTrader.fatalError) throw new MyErr("fatal error at new TestStarTraderTest");
-     
- 
+      if (StarTrader.fatalError) {
+        throw new MyErr("fatal error at new TestStarTraderTest");
+      }
      System.exit(0);
       System.err.println("oops passed exit");
      } catch (Error | Exception ex) {
