@@ -86,8 +86,8 @@ public class Assets {
   CashFlow cur;
   int clan;
   int pors;
-  int oclan;
-  int opors;
+  // int oclan;
+  //int opors;
   int oClan = -5, oPors = -6;  //in Assets preInstantiation
   int year;  // copy of eM.year
   int myEconCnt;
@@ -5852,10 +5852,10 @@ public class Assets {
        *
        * strategicGoal = tradeFrac[pors][clan] *
        * ((tm1=cRand(15,clanMult[pors][clan])< 1./randMax?1./randMax:tm1>randMax:randMax:tm1)
-       * *(1. - ((3. - fav[myclan][oClan])/3.)
-       * *((3.-oclanFavMult[myclan]*fav[oClan][myclan])/3.)
-       * *((fav[myclan][pclan]>3. && fav[oClan][myclan] .gt 3.?sosFrac:1.)) *(1
-       * - barterTimes*barterMult)
+       * *(1. - ((3. - fav[myclan][pors][oClan])/3.)
+       * *((3.-oclanFavMult[myclan]*fav[oClan][pors][myclan])/3.)
+       * *((fav[myclan][pors][pclan]>3. && fav[oClan][pors][myclan] .gt
+       * 3.?sosFrac:1.)) *(1       * - barterTimes*barterMult)
        *
        * Each offer is processed by its strategic value and several rules
        *
@@ -5927,8 +5927,8 @@ public class Assets {
         aPre3 = "#D";
         ec.blev = History.dl;
         ec.lev = mRes;
-        fav = eM.fav[clan][oClan];
-        oFav = eM.fav[oClan][clan];
+        fav = eM.fav[clan][pors][oClan];
+        oFav = eM.fav[oClan][pors][clan];
         xof1 = excessOffers;
         if (term == EM.barterStart) {
           maxReqs.zero();
@@ -6588,7 +6588,7 @@ public class Assets {
         // calculate the mult against both request and some based on requests
         // if 0 bids.negSum() set 1;
         goodFrac = bids.negSum() > NZERO || -goodC.negSum() * 2 > -bids.negSum() ? 1. : -goodC.negSum() * 2 / -bids.negSum();
-        offeredManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[opors][oclan]);
+        offeredManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[oPors][oClan]);
         requestedManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[pors][clan]);
         offers = tradedTotalStrategicOffers = totalStrategicOffers = multV.plusSum() + offeredManualsValue + plusCash;
         nominalOffers = nominalV.plusSum();
@@ -7725,18 +7725,19 @@ public class Assets {
         tmpRand = cRand(15, eM.randMult);
         randFrac = tmpRand < 1. / eM.randMax ? 1. / eM.randMax : tmpRand > eM.randMax ? eM.randMax : tmpRand;
         oClan = myOffer.getOClan();
+        oPors = myOffer.getOPors();
         boolean oSOS = myOffer.getOtherSOS();
         //reduce FavFrac as favor goes higher
         //set V from my clan favor of other clan
-        myFavV = (eM.favMult * eM.fav[clan][oClan] - eM.favMult * 3.);
+        myFavV = (eM.favMult * eM.fav[clan][pors][oClan] - eM.favMult * 3.);
         myFavFrac = 1. / (1. + myFavV); // higher favor makes lower goal
         // 
         // and the others favor of my clan above 3
-        oFavV = (eM.favMult * (eM.fav[oClan][clan] - 3.)) * eM.oClanMult;
+        oFavV = (eM.favMult * (eM.fav[oClan][oPors][clan] - 3.)) * eM.oClanMult;
         oFavFrac = 1. / (1. + oFavV);
         // reduce goal if you accept an SOS from the other
         //double sosFrac = 1. / (1. + (sos ? (eM.fav[clan][oClan] > 3. && eM.fav[oClan][clan] > 3.) ? eM.sosfrac[pors] : 0. : 0.));
-        double sosMore = (oSOS ? (eM.fav[clan][oClan] > 3. && eM.fav[oClan][clan] > 3.) ? eM.sosfrac[pors] : 0. : 0.);
+        double sosMore = (oSOS ? (eM.fav[clan][pors][oClan] > 3. && eM.fav[oClan][oPors][clan] > 3.) ? eM.sosfrac[pors] : 0. : 0.);
         // assert sosMore > E.PPZERO : "ILLEGAL sosMore=" + EM.mf(sosMore) + " ," + (oSOS?" oSOS": "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac)       ;
         double sosFrac1 = 1. / (1. + sosMore);
         assert sosFrac1 > E.PPZERO : " ILLEGAL sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac);
@@ -7758,12 +7759,12 @@ public class Assets {
         sf = strategicGoal = frac = rGoalFrac * termFrac;
         rGoal0 = rGoalFrac * termFrac0;  // the goal after doing all the barters
         EM.wasHere = "before History clan=" + clan + " oClan=" + oClan + " term=" + term;
-        EM.wasHere2 = " (eM.fav[clan][oClan])=" + EM.mf(eM.fav[clan][oClan]);
+        EM.wasHere2 = " (eM.fav[clan][pors][oClan])=" + EM.mf(eM.fav[clan][pors][oClan]);
         assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + ", oFavFrac=" + EM.mf(oFavFrac) + ", myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac) + ", tFrac=" + EM.mf(tfrac);
         hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF"
-                                                                                                                           + EM.mf(eM.fav[clan][oClan]), "=>" + EM.mf(myFavFrac), "*oFc"
-                                                                                                                                                                                  + EM.mf(eM.fav[oClan][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF ="
-                                                                                                                                                                                                                                                                   + EM.mf(eM.tradeFrac[pors][clan]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
+                                                                                                                           + EM.mf(eM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc"
+                                                                                                                                                                                        + EM.mf(eM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF ="
+                                                                                                                                                                                                                                                                                + EM.mf(eM.tradeFrac[pors][clan]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
         hist.add(new History(aPre, 5, "2T" + term, "*rnd=" + EM.mf(tfrac), "*tF=" + EM.mf(termFrac), "goal=", EM.mf(frac), "gtb", EM.mf(gtBias), "<<<<<<<"));
         return strategicGoal = frac;
       }// Assets.CashFlow.Trades.calcStrategicGoal
@@ -8906,9 +8907,9 @@ public class Assets {
           retOffer = myTrade.barter(inOffer); // get entryTerm-1, 0, -1
 
           newTerm = retOffer.getTerm();
-          oclan = oClan = retOffer.getOClan();
+          oClan = retOffer.getOClan();
           Econ oEcon = retOffer.getOEcon();
-          opors = oPors = oEcon.pors;
+          oPors = oEcon.pors;
           hist.add(new History(aPre, 5, name + " inCF" + newTerm, "newTerm=" + newTerm, "entryTerm=" + entryTerm, "copy to other", "history"));
           ehist = hist.size();
           ArrayList<History> ohist = retOffer.getOtherHist();
@@ -8930,7 +8931,7 @@ public class Assets {
           } // end printing other
         } // end entryTerm > 0
         // check for ending this trade //Assets.CashFlow.barter
-        fav = (eM.fav[oClan][clan]);
+        fav = (eM.fav[oClan][oPors][clan]);
         eM.printHere("----CBt----", ec, " newTerm" + newTerm + " entryTerm" + entryTerm + " tradedShipOrdinal" + tradedShipOrdinal);
         // may enter barter terminating process
         if (newTerm < 1) {
@@ -9971,26 +9972,26 @@ public class Assets {
             setStat(EM.DMISCLOWWORTH, pors, clan, fyW.getTotWorth(), 1);
           }
         }
-        if (tradeAccepted && oclan >= 0) {
+        if (tradeAccepted && oClan >= 0) {
 
           //double rawProspectsMin = rawProspects2.min();
           if (rawProspectsMin < eM.rawHealthsSOS3[0][0]) {
             setStat(eM.TRADESOS3, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOS3, opors, oclan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOS3, oPors, oClan, worthIncrPercent, 1);
           }
           else if (rawProspectsMin < eM.rawHealthsSOS2[0][0]) {
             setStat(eM.TRADESOS2, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOS2, opors, oclan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOS2, oPors, oClan, worthIncrPercent, 1);
           }
           if (rawProspectsMin < eM.rawHealthsSOS1[0][0]) {
             setStat(eM.TRADESOS1, pors, clan, worthIncrPercent, 1);
             // percent worth incr given by other,
             // higer value, more charatible
-            setStat(eM.TRADEOSOS1, opors, oclan, worthIncrPercent, 1); // HELPER
+            setStat(eM.TRADEOSOS1, oPors, oClan, worthIncrPercent, 1); // HELPER
           }
           if (rawProspectsMin < eM.rawHealthsSOS0[0][0]) {
             setStat(eM.TRADESOS0, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOS0, opors, oclan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOS0, oPors, oClan, worthIncrPercent, 1);
           }
           if (rawProspectsMin < eM.rawHealthsLow[0][0]) {
             setStat(eM.TRADELOW, pors, clan, worthIncrPercent, 1);
@@ -10014,7 +10015,7 @@ public class Assets {
         }
         eM.printHere("----LYE----", ec, "CashFlow.live yearEnd before many setStat");
 
-        if (year == yearTradeAccepted && oclan >= 0) {
+        if (year == yearTradeAccepted && oClan >= 0) {
           //set of accepted trades
           String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
           String[] negRawUnitGrowths = {"rNeg1RawUnitGrowth", "cNeg1RawUnitGrowth", "sNeg1RawUnitGrowth", "gNeg1RawUnitGrowth"};
@@ -10044,18 +10045,18 @@ public class Assets {
         }
         //smallest to largest
         //  if (year == yearTradeLost && oclan >= 0) {
-        if (tradeLost && oclan >= 0) {
+        if (tradeLost && oClan >= 0) {
           if (tradedFirstNegProspectsSum < eM.rawHealthsSOS3[0][0]) {
             setStat(eM.TRADESOSR3, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOSR3, opors, oclan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOSR3, oPors, oClan, worthIncrPercent, 1);
           }
           else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS2[0][0]) {
             setStat(eM.TRADESOSR2, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOSR2, opors, oclan, worthIncrPercent, 1);
+            setStat(eM.TRADEOSOSR2, oPors, oClan, worthIncrPercent, 1);
           }
           else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS1[0][0]) {
             setStat(eM.TRADESOSR1, pors, clan, worthIncrPercent, 1);
-            setStat(eM.TRADEOSOSR1, opors, oclan, worthIncrPercent, 1); // HELPER
+            setStat(eM.TRADEOSOSR1, oPors, oClan, worthIncrPercent, 1); // HELPER
           }
           else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS0[0][0]) {
             //       setStat(eM.TRADESOSR0, pors, clan, worthIncrPercent, 1);
@@ -10207,7 +10208,7 @@ public class Assets {
           setStat(growthsA[ixAccYears], pors, clan, sumGrowth, 1);
           setStat(rcsgIncrA[ixAccYears], pors, clan, sumYearRCSGincr, 1);
           setStat(fertilitiesA[ixAccYears], pors, clan, gSwapW.aveFertility, 1);
-          if (tradeAccepted && oclan >= 0) {
+          if (tradeAccepted && oClan >= 0) {
             setStat(EM.DTRADEACC, pors, clan, worthIncrPercent, 1); // me
             if (ec.getHiLo()) {
               setStat(EM.HIGHDIEDPERCENT, pors, clan, 100., 1);
@@ -10230,7 +10231,7 @@ public class Assets {
             setStat(EM.DIEDCATASTROPHY, pors, clan, worthincr1, 1);
           }
           //    setStat("TRADES%", pors, clan, fav > NZERO ? 100. : 0., 1);
-          if (tradeAccepted && oclan >= 0) {
+          if (tradeAccepted && oClan >= 0) {
             setStat(EM.DSWAPRINCRWORTH, pors, clan, gSwapIncr, 1);
             setStat(EM.DPOSTSWAP, pors, clan, gSwapWTotWorth, 1);
             setStat(EM.DPOSTSWAPRCSG, pors, clan, gSwapW.getSumRCSGBal(), 1);
@@ -10263,20 +10264,20 @@ public class Assets {
             }
             if (tradedFirstNegProspectsSum < eM.rawHealthsSOS3[0][0]) {
               // setStat(eM.TRADESOSR3, pors, clan, worthIncrPercent, 1);
-              setStat(eM.DTRADEOSOSR3, opors, oclan, worthIncrPercent, 1);
+              setStat(eM.DTRADEOSOSR3, oPors, oClan, worthIncrPercent, 1);
             }
             else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS2[0][0]) {
               //setStat(eM.TRADESOSR2, pors, clan, worthIncrPercent, 1);
-              setStat(eM.DTRADEOSOSR2, opors, oclan, worthIncrPercent, 1);
+              setStat(eM.DTRADEOSOSR2, oPors, oClan, worthIncrPercent, 1);
             }
             else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS1[0][0]) {
               // Help that was given but still dead
-              setStat(eM.DTRADEOSOSR1, opors, oclan, worthIncrPercent, 1); // HELPER
+              setStat(eM.DTRADEOSOSR1, oPors, oClan, worthIncrPercent, 1); // HELPER
               setStat(eM.DTRADESOSR1, pors, clan, worthIncrPercent, 1); // me
             }
             else if (tradedFirstNegProspectsSum < eM.rawHealthsSOS0[0][0]) {
               // Help that was given but still dead
-              setStat(eM.DTRADEOSOSR0, opors, oclan, worthIncrPercent, 1); // HELPER
+              setStat(eM.DTRADEOSOSR0, oPors, oClan, worthIncrPercent, 1); // HELPER
               setStat(eM.DTRADESOSR0, pors, clan, worthIncrPercent, 1); // me
             }
 
@@ -10313,10 +10314,10 @@ public class Assets {
           if (tradeLost) {
             setStat(EM.TradeDeadLostStrategicValue, pors, clan, strategicValue, 1);
           }
-          if (tradeLost && oclan >= 0) {
+          if (tradeLost && oClan >= 0) {
             if (tradedFirstNegProspectsSum < eM.rawHealthsSOS1[0][0]) {
               // Help that was given but still dead
-              setStat(EM.DLOSTOSOSR1, opors, oclan, worthIncrPercent, 1); // HELPER
+              setStat(EM.DLOSTOSOSR1, oPors, oClan, worthIncrPercent, 1); // HELPER
             }
           }
           if (tradeRejected) {
@@ -10328,11 +10329,11 @@ public class Assets {
           }
           if (tradedFirstNegProspectsSum < eM.rawHealthsSOS2[0][0]) {
             //setStat(eM.TRADESOSR2, pors, clan, worthIncrPercent, 1);
-            setStat(eM.DLOSTOSOSR2, opors, oclan, worthIncrPercent, 1);
+            setStat(eM.DLOSTOSOSR2, oPors, oClan, worthIncrPercent, 1);
           }
           if (tradedFirstNegProspectsSum < eM.rawHealthsSOS3[0][0]) {
             // setStat(eM.TRADESOSR3, pors, clan, worthIncrPercent, 1);
-            setStat(eM.DLOSTOSOSR3, opors, oclan, yearTradeRejected, 1);
+            setStat(eM.DLOSTOSOSR3, oPors, oClan, yearTradeRejected, 1);
           }
           // trade rejected/lost
           // fav was set in Assets.CashFlow.barter

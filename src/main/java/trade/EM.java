@@ -2221,13 +2221,13 @@ class EM {
   static final double[][] mYearsToKeepTradeRecord = {{6., 20.}, {6., 20.}};
 
   //double fava[][] = {{3., 3., 3., 3., 3.}, {2., 2., 2., 2., 2.}, {1., 1., 1., 1., 1.}, {4., 4., 4., 4., 4.}, {5., 5., 5., 5., 5.}};
-  static double fav0[] = {3., 3., 3., 3., 3.};
-  static double fav1[] = {2., 2., 2., 2., 2.};
-  static double fav2[] = {1., 1., 1., 1., 1.};
-  static double fav3[] = {4., 4., 4., 4., 4.};
-  static double fav4[] = {5., 5., 5., 5., 5.};
-  static double fav[][] = {fav0, fav1, fav2, fav3, fav4};
-  static final double mfavs[][] = {{0.5, 5.5}};
+  static double fav0[][] = {{5., 3., 3., 3., 3.}, {5., 3., 3., 3., 3.}};
+  static double fav1[][] = {{2., 5., 2., 2., 2.}, {2., 5., 2., 2., 2.}};
+  static double fav2[][] = {{1., 1., 5., 1., 1.}, {1., 1., 5., 1., 1.}};
+  static double fav3[][] = {{4., 4., 4., 5., 4.}, {4., 4., 4., 5., 4.}};
+  static double fav4[][] = {{5., 5., 5., 5., 5.}, {5., 5., 5., 5., 5.}};
+  static double fav[][][] = {fav0, fav1, fav2, fav3, fav4};
+  static final double mfavs[][] = {{0.5, 5.5}, {0.5, 5.5}};
   // decrease required strategicFrac for fav > 3, increase if < 3
   // ,28 - FavMult*5 == -.2
   // .28 - FavMult*1 == .2
@@ -3016,13 +3016,13 @@ onceAgain:
               sname = s.useDelimiter("\\S*").next(); //stop at non space
               fname = s.useDelimiter("#\\s*").next();
               pound = s.useDelimiter("\\s*").next(); // to a space
-              Object vo = valMap.get(fname);
+              Object vo = valMap.get(fname); // look up fname in valMap
               double prevVal = -100.;
               if (vo != null) {
-                vv = (int) vo;
+                vv = (int) vo; // convert object to int
                 s.useDelimiter("\\s");
-                ps = s.nextInt();
-                klan = s.nextInt();
+                ps = s.nextInt();  //pors
+                klan = s.nextInt(); // clan
                 clan = klan = klan % 5;
                 //if(s.hasNext("\\s*-")) {s.useDelimiter("\\s*-").next(); isNeg=true;}
                 if (s.hasNextDouble()) {
@@ -3503,6 +3503,12 @@ onceAgain:
     doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
     doVal("healthGoal", goalHealth, mRegGoals, "set normal, non-emergency health goal, may increase health and reduce costs");
     doVal("emergHealthGoal", emergHealth, mAllGoals, "set emergency health goals for when economies are weak more might help or might may make them worse");
+    doVal("favr", fav0, mfavs, "increase how much your clan favors clan red by giving a better barter discount, this increases the amount you help clan red ");
+    doVal("favo", fav1, mfavs, "increase how much your clan favors clan orange by giving  clan orange a better barter discount");
+    doVal("favy", fav2, mfavs, "increase how much your clan favors clan yellow by giving clan yellow a better barter discount");
+    doVal("favg", fav3, mfavs, "increase how much your clan favors clan green by giving clan green a better barter discount");
+    doVal("favb", fav4, mfavs, "increasehow much your clan favors clan blue by giving clan blue a better barter discount");
+
     doVal("tradeHealthGoal", tradeHealth, mAllGoals, "adjust health goals while trading, increases the level of requests to meet goals");
     doVal("tradeStrtAvail", startAvail, mStartAvail, "increase the number of staff&resource sectors available for trade");
     doVal("tradeAvailFrac", availFrac, mAvailFrac, "increase the amount of staff&resource available for trade");
@@ -3538,11 +3544,6 @@ onceAgain:
     doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the depreciations of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
     doVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
     doVal("InitYrsTraveled", initTravelYears, mInitTravelYears, "Increase initial travel cost");
-    doVal("favr", fav0, mfavs, "increase how much your clan favors clan red by giving a better barter discount, this increases the amount you help clan red ");
-    doVal("favo", fav1, mfavs, "increase how much your clan favors clan orange by giving  clan orange a better barter discount");
-    doVal("favy", fav2, mfavs, "increase how much your clan favors clan yellow by giving clan yellow a better barter discount");
-    doVal("favg", fav3, mfavs, "increase how much your clan favors clan green by giving clan green a better barter discount");
-    doVal("favb", fav4, mfavs, "increasehow much your clan favors clan blue by giving clan blue a better barter discount");
     doVal("ClanFutureFundDues", clanStartFutureFundDues, mClanStartFutureFundDues, "increase the economy worth at which staff and resources are converted to cash used to create new planets or ships.  Balances from the biggest financial sectors are reduce and turned into future fund dues");
     doVal("futureFundTransferFrac", futureFundTransferFrac, mFutureFundTransferFrac, "increase the amount transfered to futureFund per year at emergencies and dues. This increases building new economies, decreases growth which may increase deaths.");
     doVal("FutureFundFrac", futureFundFrac, mFutureFundFrac, "also increase the amount transfered to futureFund  at emergencies and dues. increases building new economies, decreases growth may increase deaths, inrease growth, decrease new economies");

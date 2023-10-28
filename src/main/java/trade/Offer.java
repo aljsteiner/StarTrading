@@ -748,6 +748,15 @@ public class Offer {
   int getOClan() {
     return clans[oIx];
   }
+
+  /**
+   * get the pors of the other clan
+   *
+   * @return clan number of the other
+   */
+  int getOPors() {
+    return cn[oIx].pors;
+  }
   /** get the Econ of the other
    * 
    * @return other Econ
