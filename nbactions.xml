@@ -173,8 +173,8 @@
             </properties>
         </action>
         <action>
-          <actionName>integration-test.single</actionName>
-          <displayName>integration-test</displayName>
+          <actionName>integration-tests.single</actionName>
+          <displayName>integration-tests</displayName>
             <preAction>build-with-dependencies</preAction>
             <packagings>
                 <packaging>*</packaging>
@@ -192,6 +192,27 @@
                 <exec.appArgs>"test"</exec.appArgs>
                 <exec.mainClass>trade.StarTraderTestIT</exec.mainClass>
             </properties>
+        </action>
+        <action>
+          <actionName>CUSTOM-integration-tests</actionName>
+          <displayName>integration-testr</displayName>
+          <preAction>build-with-dependencies</preAction>
+          <packagings>
+            <packaging>*</packaging>
+          </packagings>
+          <goals>
+            <goal>integration-test</goal>
+          </goals>
+          <properties>
+            <test>true</test>
+            <failIfNoTests>true</failIfNoTests>
+            <it.test>${packageClassName}#trade.StarTraderTestIT</it.test>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.executable>java</exec.executable>
+            <exec.vmArgs>-ea -Xmx4g -ae</exec.vmArgs>
+            <exec.appArgs>"test"</exec.appArgs>
+            <exec.mainClass>trade.StarTraderTestIT</exec.mainClass>
+          </properties>
         </action>
         <action>
             <actionName>CUSTOM-runtestandsee</actionName>

@@ -532,12 +532,12 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * set 4 rows of values from rows biasA to biasB
+   * put 4 rows of values from rows biasA to biasB
    *
    * @param biasA the index of the first row of the sources
    * @param biasB the index of the second row of targets
    */
-  void set4AtoB(int biasA, int biasB) {
+  void put4AtoB(int biasA, int biasB) {
     for (int rowIx : A03) {
       for (int secIx : E.ASECS) {
         // A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
@@ -547,12 +547,12 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * set 4 rows of values from rows biasA to biasB
+   * put 1 row of values from rows biasA to biasB
    *
    * @param biasA the index of the row of the sources
    * @param biasB the index of the row of targets
    */
-  void set1AtoB(int biasA, int biasB) {
+  void put1AtoB(int biasA, int biasB) {
     for (int secIx : E.ASECS) {
       // A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
       A[biasB].values[secIx] = A[biasA].values[secIx];
@@ -674,7 +674,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * set 4 result rows at biasA from rows at biasB multby rows at biasC
+   * set 4 result rows at biasA from rows at biasB mult by rows at biasC
    *
    * @param biasA The start row number of rows to be set
    * @param biasB The start row number of values to be multiplied
@@ -704,7 +704,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * set 4 result rows at biasA from rows at biasB to add to rows at biasC
+   * set 4 result rows at biasA from rows at biasB added to rows at biasC
    *
    * @param biasA The start row number of rows to be set
    * @param biasB The start row number of values to be multiplied
@@ -728,7 +728,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * set 1 result rows at biasA from rows at biasB to add to rows at biasC
+   * set 1 result rows at biasA from rows at biasB added to rows at biasC
    *
    * @param rowIx the index of which row in each bias
    * @param biasA The start row number of rows to be set

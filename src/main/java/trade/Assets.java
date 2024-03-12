@@ -15,8 +15,8 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
- Assets holds the assets for each economy.  The economies are divided into 7
- sectors, E.lsecs,  The log displays only hold 7 sectors width.  Assets hold the values that continue from one year to the next, it also hold temporary values between the multiple times that CashFlow is instantiated for bartering with different ecconomies, and finally to swap or repurposing values from one financial sector to another and determining the possible survival and possible growth of an economy.  Year temporary values are deleted at the end of year in method Assets.yearEnd, preparing Assets for starting the next year.
+ Assets holds the goodies for each economy.  The economies are divided into 7
+ sectors, E.lsecs,  The log displays only hold 7 sectors width.  Assets hold the values that continue from one year to the next, it also hold temporary values between the multiple times that CashFlow is instantiated for bartering with different ecconomies, and finally to swap or repurposing values from one financial sector to another and determining the possible survival and possible growth of an economy.  Year temporary values are deleted at the end of year in method Assets.yearEnd in particular the CashFlow instance and all inner class instances are deleted, any remembered values must be kept in Assets, preparing Assets for starting the next year.
 
  Assets contains a subClass  CashFlow  which contains the yearly processing of assets.  CashFlow instances are also used to contain values for previous years and previous "n" in the swap or rearrange asset sectors process.
 
@@ -545,7 +545,7 @@ public class Assets {
     cur = new CashFlow(this);
     cur.aStartCashFlow(this);
     assetsInitialized = true;
-    bals.set4AtoB(ABalRows.BALANCESIX, ABalRows.INITIALASSETSBALANCESIX);
+    bals.put4AtoB(ABalRows.BALANCESIX, ABalRows.INITIALASSETSBALANCESIX);
     cur = null;
   } // end Assets.assetsInit
 
@@ -4061,7 +4061,7 @@ public class Assets {
         // growthsix includes the catstrophy benefits from last year
         //3 references to the same growth instance
         growths.A[2 + sIx] = growth = bals.getRow(ABalRows.GROWTHSIX + sIx);
-        bals.set4AtoB(ABalRows.GROWTHSIX, ABalRows.GROWTHS8IX);
+        bals.put4AtoB(ABalRows.GROWTHSIX, ABalRows.GROWTHS8IX);
         bals.set1(ABalRows.GROWTHS2IX, sIx, growth);
         if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with growth
           assert growth.get(0) > 0.0 : " growth.get(0) <= 0.0=" + EM.mf(growth.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
@@ -4083,7 +4083,7 @@ public class Assets {
           // prevGrowth includes the catstrophy benefits from last year
           // newUnitDepreciation.setAmultV(prevGrowth, eM.yearsDepreciation[sIx] * .5);
           // newUnitDepreciation.setAdivbyB(newUnitDepreciation, balance); // change to units depreciation
-          newUnitDepreciation.set(prevGrowth);
+          newUnitDepreciation.set(prevGrowth); // for this SubAsset
           newUnitDepreciation.mult(eM.growthDepreciation[sIx][pors]);
           bals.set1(ABalRows.NEWUNITDEPRECIATIONIX, sIx, newUnitDepreciation);
           EM.wasHere6 = "testing CUMULATIVEUNITDEPRECIATION ";
@@ -4096,13 +4096,13 @@ public class Assets {
           double s0CumulativeUnitDepreciation = cumulativeUnitDepreciation.get(0);
           EM.wasHere6 += " s0CumulativeUnitDepreciation" + EM.mf(s0CumulativeUnitDepreciation);
           //save the  row to its backup
-          bals.set1AtoB(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX + sIx);
+          bals.put1AtoB(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX + sIx);
           // use ABalRows add into ABalRows.CUMULATIVEUNITDEPRECIATION2IX
          // bals.setA1toBaddC(sIx, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.CUMULATIVEUNITDEPRECIATION2IX, ABalRows.NEWUNITDEPRECIATIONIX);//
           // use SubAsset.add
           cumulativeUnitDepreciation.add(newUnitDepreciation); // units value for this SubAsset
           //save the added  value
-          bals.set1AtoB(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx);
+          bals.put1AtoB(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx, ABalRows.CUMULATIVEUNITDEPRECIATION3IX + sIx);
           double a0CumulativeUnitDepreciation = cumulativeUnitDepreciation.get(0);
           double a30CumulativeUnitDepreciation = bals.get(ABalRows.CUMULATIVEUNITDEPRECIATION3IX, 0);  // bals sum saved value
           EM.wasHere6 += "\n a0CumulativeUnitDepreciation sum value" + EM.mf(a0CumulativeUnitDepreciation);
@@ -4134,7 +4134,7 @@ public class Assets {
               assert cumulativeUnitDepreciation.get(0) > 0.0 && bb1 && bb2 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
           }
           // bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
-          if (sIx == 0) {
+          if (sIx == 0) {// do depreciation only once per year resource only??
             int[] depreciationps = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
             int[] depreciation2ps = {EM.RDEPRECIATION2P, EM.CDEPRECIATION2P, EM.SDEPRECIATION2P, EM.GDEPRECIATION2P};
             // setStat(EM. + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx)* invUnitGrowth7);
@@ -8116,7 +8116,7 @@ public class Assets {
       //  calcPriority(percentDifficulty); // calc this years piority into priorityYr and as.difficulty
       //  EM.wasHere = "CashFlow.init... before calcCatastrophy eeeg=" + ++eeeg;
       if (!didCashFlowStart) { // do yearStart only, use rs the life of the Econ or not
-        bals.set4AtoB(ABalRows.BALANCESIX, ABalRows.STARTYEARBALANCESIX);
+        bals.put4AtoB(ABalRows.BALANCESIX, ABalRows.STARTYEARBALANCESIX);
         r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
         c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
         s.sumGrades(); // sets s worth
@@ -8127,7 +8127,7 @@ public class Assets {
         bals.set2(ABalRows.STARETYEARWORTHSIX + 2, s.worth);
         bals.set2(ABalRows.STARETYEARWORTHSIX + 3, g.worth);
         if (!assetsInitialized) {
-          bals.set4AtoB(ABalRows.BALANCESIX, ABalRows.INITIALASSETSBALANCESIX);
+          bals.put4AtoB(ABalRows.BALANCESIX, ABalRows.INITIALASSETSBALANCESIX);
           bals.set2(ABalRows.INITIALASSETSWORTHSIX, r.worth);
           bals.set2(ABalRows.INITIALASSETSWORTHSIX + 1, c.worth);
           bals.set2(ABalRows.INITIALASSETSWORTHSIX + 2, s.worth);
@@ -9649,8 +9649,8 @@ public class Assets {
         c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
         s.sumGrades(); // sets s worth
         g.sumGrades(); // sets g worth
-        bals.set4AtoB(ABalRows.GROWTHSIX, ABalRows.GROWTHS7IX);
-        bals.set4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
+        bals.put4AtoB(ABalRows.GROWTHSIX, ABalRows.GROWTHS7IX);
+        bals.put4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
         setStat(EM.RGROWTH5, tm * bals.sum(ABalRows.GROWTHS5IX));
         setStat(EM.RGROWTH6, tm * bals.sum(ABalRows.GROWTHS6IX));
         setStat(EM.RGROWTH7, tm * bals.sum(ABalRows.GROWTHS7IX));
@@ -9689,7 +9689,7 @@ public class Assets {
           return 0.;
         }
         // live accounts
-        bals.set4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
+        bals.put4AtoB(ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
         doMaintCost(aPre);
         EM.wasHere = "CashFlow yearEnd live after doMaintCost cccaf=" + ++cccaf;
         doTravCost(aPre);

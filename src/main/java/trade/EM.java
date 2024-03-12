@@ -3316,7 +3316,7 @@ onceAgain:
       doMyErr(verr);
     }
     return 1;
-  }
+  }// putval
 
   /**
    * convert val to slider int using the value low and high limits find the

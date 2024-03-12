@@ -78,8 +78,8 @@ public class E {
    * enclosed by an if on this flag will never be compiled. In any case
    * execution speeds up if the debugging code is not reached
    */
-  //static final boolean noAsserts = true; // true expect not -ea in program call
-  static final boolean noAsserts = false; // false expect -ea in call 
+  static final boolean noAsserts = true; // true expect not -ea in program call
+  // static final boolean noAsserts = false; // false expect -ea in call
   static boolean ifassert = false; // preset for later test
   static int PREYEARS = 0; // number of years run as part of run
   static final boolean debugfalse = false;
