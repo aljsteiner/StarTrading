@@ -3159,6 +3159,44 @@ onceAgain:
   }//doWriteKeepVals
 
   /**
+   * get the current settings value
+   *
+   * @param settingsNum number of the setting
+   * @param ec the economy
+   * @return
+   */
+  double getSettingsValueForAi(int settingsNum, Econ ec) {
+    double res = 0;
+    try {
+      // char []ac = {'a','b','c','d'};
+      // string st1 = ac.toString();
+      if (gc <= 4) {
+        res = valI[settingsNum][sliderC][ec.pors][0];
+      }
+      else {
+        res = valI[settingsNum][sliderC][ec.pors][ec.clan];
+      }
+      return res;
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      newError = true;
+      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name
+                         + since() + " "
+                         + curEcon.nowThread + "Exception "
+                         + ex.toString() + " message="
+                         + ex.getMessage() + " " + andMore());
+
+      ex.printStackTrace(System.err);
+      flushes();
+      flushes();
+      st.setFatalError();
+    }
+    return res;
+  }
+  /**
    * get value from valD and turn it into a slider int between 0-100 This is
    * used to generate the slider window
    *

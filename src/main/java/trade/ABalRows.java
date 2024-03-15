@@ -752,7 +752,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * Move the each sector surplus above max in A to B
+   * Trim each sector in A by max and move any surplus above max in A to B
    *
    * @param max the max values for all sectors
    * @param rowIx the index of which SubAsset row in each bias

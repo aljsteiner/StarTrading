@@ -4116,7 +4116,7 @@ public class Assets {
           boolean bb1 = dif1 > E.NNZERO && dif1 < E.PPZERO;
           //  boolean bb1 = tt1 == a0CumulativeUnitDepreciation; // direct sums match
           EM.wasHere6 += " dif1=" + EM.mf(dif1) + (bb1 ? " the A6Row.sum matchea tt1 new+cum" : " the A6Row.sum match failed tt1 new+cum");
-          // trim original ABalRows.CUMULATIVEUNITDEPRECIATIONIX
+          // trim original ABalRows.CUMULATIVEUNITDEPRECIATIONIX depreciation to max growth
           bals.moveMaxSurplusWithIxA4ToB(dUnitGrowth, sIx, ABalRows.CUMULATIVEUNITDEPRECIATIONIX, ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX);
           double sp0 = bals.get(ABalRows.SURPLUSCUMULATIVEUNITDEPRECIATIONIX, 0);  // bals surplus moved value
           EM.wasHere6 += "\nsurplus depreciation=" + EM.mf(sp0);
@@ -4134,7 +4134,7 @@ public class Assets {
               assert cumulativeUnitDepreciation.get(0) > 0.0 && bb1 && bb2 : " cumulativeUnitDepreciation.get(0) <= 0.0=" + EM.mf(cumulativeUnitDepreciation.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
           }
           // bals.set1(ABalRows.CUMULATIVEUNITDEPRECIATIONIX, sIx, cumulativeUnitDepreciation);
-          if (sIx == 0) {// do depreciation only once per year resource only??
+          if (sIx == 0) {// do stats only once per year resource only??
             int[] depreciationps = {EM.RDEPRECIATIONP, EM.CDEPRECIATIONP, EM.SDEPRECIATIONP, EM.GDEPRECIATIONP};
             int[] depreciation2ps = {EM.RDEPRECIATION2P, EM.CDEPRECIATION2P, EM.SDEPRECIATION2P, EM.GDEPRECIATION2P};
             // setStat(EM. + sIx, 100. * bals.sum(ABalRows.CUMULATIVEUNITDEPRECIATIONIX + sIx)* invUnitGrowth7);

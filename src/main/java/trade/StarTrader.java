@@ -7710,6 +7710,9 @@ public class StarTrader extends javax.swing.JFrame {
     }
   } // gameValues
 
+
+
+
   /**
    * change the display of a whole gamePanel
    *
