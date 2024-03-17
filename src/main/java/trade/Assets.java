@@ -412,6 +412,14 @@ public class Assets {
   private static final int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
   private static final int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
   Assets.CashFlow.DoTotalWorths syW, iyW; //predefine references to worths
+  /* now add some AI variables for this economy */
+  String myAIvalC = "soon";
+  String myAIbalances = "1234567";
+  String myAIprosperity = "1234567";
+  String myAIjoys = "1234567";
+  String myAICvals = "c";
+  double[] myAIsavedVals = {1., 2., 3., 4., 5., 6., 7.};
+  int[] AIprioritys = {1, 2, 3, 4, 5, 6, 7};
 
   /**
    * The history versions of CashFlow are always copied to involving a new

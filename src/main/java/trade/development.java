@@ -17,7 +17,7 @@
 */
 /*
 ******* sometimes new lines went to the end, recently they went to start.  not always done
-
+3/15/2024 started some AI coding, stuck at conversion from settings value with the start and end of values
 3/12/2024 Continued AI plalnning.  I need to first generate a smaller map, decide how to use the map to pick better alternatives for an economy year.  Perhaps I will treat diffeent clans differently to see how well it served the clan.  I need to see how many different pots I need for making good decisions.  What do I divid the relative values by 20 or 10 or 5 or 7.3?  Another question is how do I populate the options for AI. Some things are save in the Assets as memory for CashFlow and SubAssets.  And there is an ordering of SubAssets by priority.
 3/5/2024  Thinking about AI or a learning system remembering results incrementing map values from multiple runs of StarTrader using keys from the effective set of settings from the previous round, and the new score with the current effective settings and the change in score, there will be multiple keys for each setting that is part of the learned response system, there may also be keys as combinations of economy values in various ways.
 The goal for each economy is to learn how to increase the changed score/pevious score, and then to record the result in 1 of 7 keys, increasing the count for the key. possible saved scores where "m"=(val-min)/5) A:dead B:<=val-3*m C:=val-2*m D:=val-m.99 E:=val F:=val+m G:=val+2*m H:>=val+3*m  keys for 5 unit settings are 65+val/5.0

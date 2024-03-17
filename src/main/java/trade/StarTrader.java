@@ -7855,7 +7855,7 @@ public class StarTrader extends javax.swing.JFrame {
         int vfive = eM.vfive;
         int vten = eM.vten;
         if (E.debugSettingsTab) {
-          System.out.println("----GPLN----line nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0] + " clan=" + eM.gameClanStatus + " ??displaying?? ww=" + eM.vv + " = " + eM.valS[eM.vv][0]);
+          System.out.println("----GPLN----line nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0] + " clan=" + eM.gameClanStatus + " ??displaying?? vv=" + eM.vv + " = " + eM.valS[eM.vv][0]);
           // System.out.print(nn);
           // System.out.print("nn=" + nn + " gc=" + eM.valI[eM.vv][eM.modeC][0][0]);
           // System.out.print(eM.gameClanStatus);

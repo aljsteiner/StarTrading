@@ -1547,6 +1547,8 @@ class EM {
    */
   static volatile double valD[][][][] = new double[lvals][][][];
   // eventually column = modeC,p
+  static int myAIcstart = 65; // start of ascii A
+  static int myAIdiv = 5; //divid the values by 5
 
   /**
    * references of Environments being logged
@@ -3161,20 +3163,31 @@ onceAgain:
   /**
    * get the current settings value
    *
-   * @param settingsNum number of the setting
+   * @param setingsNum number of the setting
    * @param ec the economy
    * @return
    */
-  double getSettingsValueForAi(int settingsNum, Econ ec) {
+  double getSettingsValueForAi(int setingsNum, Econ ec) {
     double res = 0;
+
     try {
       // char []ac = {'a','b','c','d'};
       // string st1 = ac.toString();
-      if (gc <= 4) {
-        res = valI[settingsNum][sliderC][ec.pors][0];
+      gc = valI[setingsNum][modeC][0][0];
+      if (gc == vone) {
+        res = valD[setingsNum][sliderC][0][0];
+      }
+      else if (gc == vtwo) {
+        res = valD[setingsNum][sliderC][1][0];
+      }
+      else if (gc == vthree) {
+        res = valD[setingsNum][sliderC][0][0];
+      }
+      else if (gc == vfour) {
+        res = valD[setingsNum][sliderC][0][1];
       }
       else {
-        res = valI[settingsNum][sliderC][ec.pors][ec.clan];
+        res = valD[setingsNum][sliderC][ec.pors][ec.clan];
       }
       return res;
     }
@@ -3183,18 +3196,88 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name
-                         + since() + " "
-                         + curEcon.nowThread + "Exception "
-                         + ex.toString() + " message="
-                         + ex.getMessage() + " " + andMore());
-
+      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
       ex.printStackTrace(System.err);
       flushes();
       flushes();
       st.setFatalError();
     }
     return res;
+  }
+
+  /**
+   * put the current settings value thru valD its setting
+   *
+   * @param setingsNum number of the setting
+   * @param ec the economy
+   * @param val = value to be placed into valD according to gc
+   * @return
+   */
+  double putSettingsValueForAi(int setingsNum, Econ ec, double val) {
+    // svalp = valToSlider(vR = valD[vv][gameAddrC][clan % 5][pors], lL = valD[vv][gameLim][pors][vLowLim], lH = valD[vv][gameLim][pors][vHighLim]);
+    try {
+      gc = valI[setingsNum][modeC][0][0];
+      if (gc == vone) {
+        valD[setingsNum][sliderC][0][0] = val;
+      }
+      else if (gc == vtwo) {
+        valD[setingsNum][sliderC][1][0] = val;
+      }
+      else if (gc == vthree) {
+        valD[setingsNum][sliderC][0][0] = val;
+      }
+      else if (gc == vfour) {
+        valD[setingsNum][sliderC][0][1] = val;
+      }
+      else {
+        valD[setingsNum][sliderC][ec.pors][ec.clan] = val;
+      }
+      return res;
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      newError = true;
+      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      ex.printStackTrace(System.err);
+      flushes();
+      flushes();
+      st.setFatalError();
+    }
+    return res;
+  }
+  /**
+   * build AICvals in Assets.myAICvals from myAIvals as sliderVals
+   *
+   * @param ec current Econ
+   * @param vvend The count of the last doVal
+   * @return
+   */
+  char[] buildAICvals(Econ ec, int vvend) {
+    char[] valCr = new char[vvend];
+    int sliderVal = 0;
+    // static int myAIcstart  = 65; // start of ascii A
+    // static int myAIdiv  = 5; //divid the values by 5
+    try {
+      for (int ix = 0; ix < vvend; ix++) {
+        sliderVal = getVal(ix, ec.pors, ec.clan);
+        valCr[ix] = (char) ((sliderVal + myAIcstart) / myAIdiv);
+      }
+      ec.as.myAICvals = valCr.toString();
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      newError = true;
+      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      ex.printStackTrace(System.err);
+      flushes();
+      flushes();
+      st.setFatalError();
+    }
+    return valCr;
   }
   /**
    * get value from valD and turn it into a slider int between 0-100 This is
