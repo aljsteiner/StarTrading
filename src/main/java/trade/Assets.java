@@ -418,9 +418,11 @@ public class Assets {
   String myAIprosperity = "1234567";
   String myAIjoys = "1234567";
   String myAICvals = "c";
-  double[] myAIsavedVals = {1., 2., 3., 4., 5., 6., 7.};
-  int[] AIprioritys = {1, 2, 3, 4, 5, 6, 7};
-
+  // choose lt values
+  double myAiPHELimits[] = {E.PZERO, 0.05, 0.3, 1.7};// 5 choice other
+  double[] myAIrawProspectsMinLimits = {E.PZERO, 0.1, 0.7, 3.0};
+  double[] myAIWorthGrowthLimits = {-.5, -.1, 0.5, 2.0};
+  char[] myAIjoy = {'a', 'b', 'c', 'd', 'e'};// PHE, rawProspectsMins, worthGrowth
   /**
    * The history versions of CashFlow are always copied to involving a new
    * HAssets(), than copy of the cur values that are of interest. The history
@@ -6598,10 +6600,11 @@ public class Assets {
         goodFrac = bids.negSum() > NZERO || -goodC.negSum() * 2 > -bids.negSum() ? 1. : -goodC.negSum() * 2 / -bids.negSum();
         offeredManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[oPors][oClan]);
         requestedManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[pors][clan]);
-        offers = tradedTotalStrategicOffers = totalStrategicOffers = multV.plusSum() + offeredManualsValue + plusCash;
+        offers = multV.plusSum() + offeredManualsValue + plusCash;
+        tradedTotalStrategicOffers = totalStrategicOffers = sumStrategicOffers + offeredManualsValue + plusCash;
         nominalOffers = nominalV.plusSum();
         tradedTotalNominalOffers = totalNominalOffers = nominalOffers + offeredManualsValue + plusCash;
-        //   sendSum = bids.plusSum() + offeredManuals + plusCash;
+        sendSum = bids.plusSum() + offeredManuals + plusCash;
         totalSend = unitOffers = multV.plusSum() + plusCash;
         requests = totalStrategicRequests = -multV.negSum() + requestedManualsValue + negCash;
         unitRequests = -multV.negSum() + negCash;
@@ -8960,7 +8963,7 @@ public class Assets {
           fracPostTrade = 100. * postTradeAvail / postTradeSum4;
           // see if/how much frac avail increases
           tradeAvailIncrPercent = preTradeAvail < E.PZERO ? 1. : 100. * (postTradeAvail - preTradeAvail) / preTradeAvail;
-          // btW = tW;
+
           tW = new DoTotalWorths();  // in Assets.CashFlow.Trade.initTrade after trade barter
           tWTotWorth = tW.getTotWorth();
           btWTotWorth = btW.getTotWorth();
@@ -9000,38 +9003,34 @@ public class Assets {
               setStat(EM.TradeAlsoBidRequests, sumBidRequests, 1);
               setStat(EM.TradeAlsoCriticalBidRequests, sumCriticalBidRequests, 1);
             }
-            //  setStat(EM.TRADEFIRSTRECEIVE,pors, clan, requestsFirst, 1);
+            setStat(EM.TRADEFIRSTRECEIVE, pors, clan, requestsFirst, 1);
             setStat(EM.TRADELASTRECEIVE, pors, clan, requests, 1);
-            // setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
-            //  setStat(EM.TRADEFIRSTGAVE, pors, clan, calcPercent(btWrcsgSum, sendSumFirst), 1);
-            setStat(EM.TRADELASTGAVE, pors, clan, calcPercent(btWrcsgSum, sendSum), 1);
+            setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
+
+            setStat(EM.TRADELASTDIVFGAVE, oPors, oClan, calcPercent(offersFirst, offers), 1);
+            setStat(EM.TRADELASTDIVRCSG, oPors, oClan, calcPercent(btWTotWorth, offers), 1);
+            setStat(EM.TRADEFIRSTGAVE, pors, clan, calcPercent(btWTotWorth, offersFirst), 1);
+            setStat(EM.TRADELASTGAVE, pors, clan, offers, 1);
             setStat(EM.TRADENOMINALGAVE, pors, clan, nominalOffers, 1);
-            //  setStat(EM.TRADESTRATFIRSTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequestsFirst), 1);
-            setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
-            //setStat(EM.TRADESTRATFIRSTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequestsFirst), 1);
-            setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
+            setStat(EM.TRADESTRATFIRSTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicOffersFirst), 1);
+            setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, totalStrategicOffers, 1);
+            setStat(EM.TRADESTRATFIRSTRECEIVE, pors, clan, totalStrategicRequestsFirst, 1);
+            setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, totalStrategicRequests, 1);
             // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
             // setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
             setStat(EM.TRADEWORTHINCR, pors, clan, worthIncr, 1);
             setStat(EM.TRADERCSGINCR, pors, clan, rcsgIncr, 1);
-            // setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
+            setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
             setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
-            //  setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
-            setStat(EM.TradeLastStrategicValue, pors, clan, strategicValue, 1);
-            // setStat(EM.TradeStrategicValueLastPercentFirst, pors, clan,
-            //      calcPercent(firstStrategicValue, strategicValue), 1);
-            setStat(EM.TradeNominalReceivePercentNominalOffer, pors, clan,
-                    calcPercent(nominalOffers, nominalRequests), 1);  // nominal got/gives
-            setMax(EM.MaxNominalReceivePercentNominalOffer,
-                   calcPercent(nominalOffers, nominalRequests));  //max nominal got/gives
-            setMin(EM.MinNominalReceivePercentNominalOffer,
-                   calcPercent(nominalOffers, nominalRequests)); // min nominal got/gives
-            setStat(EM.TradeStrategicReceivePercentStrategicOffer,
-                    calcPercent(strategicOffers, strategicRequests));// strategic got/gives
-            setMax(EM.MaxStrategicReceivePercentStrategicOffer,
-                   calcPercent(strategicOffers, strategicRequests));// max strat got/gives
-            setMin(EM.MinStrategicReceivePercentStrategicOffer,
-                   calcPercent(strategicOffers, strategicRequests));// min strat got/gives
+            setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
+            setStat(EM.AlsoTradeLastStrategicValue, pors, clan, strategicValue, 1);
+            setStat(EM.AlsoTradeStrategicValueLastPercentFirst, pors, clan, calcPercent(firstStrategicValue, strategicValue), 1);
+            setStat(EM.TradeNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
+            setMax(EM.MaxNominalReceivePercentNominalOffer, calcPercent(nominalOffers, nominalRequests));
+            setMin(EM.MinNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
+            setStat(EM.TradeStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
+            setMax(EM.MaxStrategicReceivePercentStrategicOffer, calcPercent(strategicOffers, strategicRequests));
+            setMin(EM.MinStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
             if (entryTerm == 0 || newTerm == 0) {
               retOffer.setTerm(-2); // other so no more return
             }            // else leave retOffer.term 0 for the other cn
@@ -9057,28 +9056,7 @@ public class Assets {
             setStat(EM.TRADEFIRSTRECEIVE, calcPercent(btWrcsgSum, requestsFirst), 1);
             setStat(EM.TRADELASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, requests), 1);
             setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
-            setStat(EM.TRADEFIRSTGAVE, pors, clan, calcPercent(btWrcsgSum, sendSumFirst), 1);
-            setStat(EM.TRADELASTGAVE, pors, clan, offers, 1);
-            setStat(EM.TRADENOMINALGAVE, pors, clan, nominalOffers, 1);
-            setStat(EM.TRADESTRATFIRSTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequestsFirst), 1);
-            setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
-            setStat(EM.TRADESTRATFIRSTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequestsFirst), 1);
-            setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, totalStrategicRequests), 1);
-            // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
-            // setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
-            setStat(EM.TRADEWORTHINCR, pors, clan, worthIncr, 1);
-            setStat(EM.TRADERCSGINCR, pors, clan, rcsgIncr, 1);
-            setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
-            setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
-            setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
-            setStat(EM.AlsoTradeLastStrategicValue, pors, clan, strategicValue, 1);
-            setStat(EM.AlsoTradeStrategicValueLastPercentFirst, pors, clan, calcPercent(firstStrategicValue, strategicValue), 1);
-            setStat(EM.TradeNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
-            setMax(EM.MaxNominalReceivePercentNominalOffer, calcPercent(nominalOffers, nominalRequests));
-            setMin(EM.MinNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
-            setStat(EM.TradeStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
-            setMax(EM.MaxStrategicReceivePercentStrategicOffer, calcPercent(strategicOffers, strategicRequests));
-            setMin(EM.MinStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
+
             retOffer.setTerm(-4);
 
           }
@@ -9565,7 +9543,11 @@ public class Assets {
       excessFutureFund = emergeFutureFund = 0.;
       int prevAccYears = EM.year - lastAcceptedYear;
 
+      double rawProspectsMax = rawProspects2.max();
       double rawProspectsMin = rawProspects2.min();
+      double rawRProspectsMin = rawProspects2.getARow(0).min();
+      double rawSProspectsMin = rawProspects2.getRow(1).min();
+
       //count only the smallest available prospect for any sector
       if (rawProspectsMin < eM.rawHealthsSOS3[0][0]) {
         setStat(eM.ISSOS3, worthIncrPercent);
@@ -11688,8 +11670,9 @@ public class Assets {
      * maintenance and travel costs for each sector, the costs then the growth
      * is also calculated.
      * <p>
-     * Finally the available units are calculated, if negative the economy will
-     * die at yearEnd
+     * Finally param rawProspects2 the available units are calculated, if
+     * negative the economy will die at yearEnd In addition PHE (Poor Health
+     * Effect) is increases costs, larger PHE woorse health
      *
      * @param title title of the returned file
      * @param description description of the purpose of the invocation

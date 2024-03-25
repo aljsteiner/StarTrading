@@ -201,9 +201,10 @@ class EM {
   static volatile double[] gameShipFrac = {.70};  // 2.3 ships / econs .75 means 3ships/1 planet, .8 = 4ships/1planet
   static final double[][] mGameShipFrac = {{.25, 1.20}, {.25, 1.20}};
 // double[][] clanShipFrac = {{.70, .70, .70, .501, .6}, {.70, .70, .70, .501, .6}}; // .3->5. clan choice of clan ships / clan econs %ships of your clan
- // static volatile double[][] clanShipFrac = {{.4, .45, .46, .47, .5}};
-  static volatile double[][] clanShipFrac = {{.56, .55, .67, .57, .56}};
-  static final double[][] mClanShipFrac = {{.25, .81}, {.20, 1.20}};
+  static volatile double[][] clanShipFrac = {{.4, .45, .46, .47, .5}};
+  // static volatile double[][] clanShipFrac = {{.50, .50, .57, .50, .50}};
+  // static volatile double[][] clanShipFrac = {{.56, .55, .67, .57, .56}};
+  static final double[][] mClanShipFrac = {{.20, .81}, {.20, .81}};
   // static volatile double[][] clanAllShipFrac = {{.44, .45, .46, .4, .42}}; // clan (ships/econs)
   static volatile double[][] clanAllShipFrac = {{.54, .55, .56, .6, .52}}; // clan (ships/econs)
   static final double[][] mClanAllShipFrac = {{.25, 1.20}, {.2, 1.20}};
@@ -298,7 +299,7 @@ class EM {
   static final double[][] mMinEconsMult = {{.5, 10.0}};
   static volatile double[][] minEcons = {{30.}}; // goes into last envsPerYear;
   static final double[][] mMinEcons = {{10., 100.}};
-  static volatile double[][] maxThreads = {{1.0}};
+  static volatile double[][] maxThreads = {{9.0}};
   static final double[][] mmaxThreads = {{1.0, 12.0}};
   static volatile int[] iMaxThreads = {1};
   static volatile double[][] haveColors = {{.3}};
@@ -1121,7 +1122,7 @@ class EM {
     // infinite returns inf sign
     NumberFormat dFrac = NumberFormat.getNumberInstance();
     NumberFormat whole = NumberFormat.getNumberInstance();
-    NumberFormat exp = new DecimalFormat("0.###E0");
+    NumberFormat exp = new DecimalFormat("0.######E0");
  
     if (mfShort || myWidth < 1190) { // 7 characters
       if (v == .0 || v == -0) {  // actual zero
@@ -1166,7 +1167,8 @@ class EM {
       dFrac.setMaximumFractionDigits(1);
       return dFrac.format(v);
     }
-     else {
+ else {
+   exp = new DecimalFormat("0.###E0");
         return exp.format(v);
     }
     } // end v< 1190
@@ -1206,7 +1208,8 @@ class EM {
         return dFrac.format(v);
 
       }
-      else {
+     else {
+       exp = new DecimalFormat("0.#####E0");
         return exp.format(v);
       }
 
@@ -1312,7 +1315,10 @@ class EM {
       if(test5)System.err.printf("----MFT9i--- v= %10.5e, " + exp.format(v) + " \n",v);
       return exp.format(v);
     }
-    if(test5)System.err.printf("----MFT9j--- v= %10.5e, " + exp.format(v) + " \n",v);
+    if (test5) {
+      System.err.printf("----MFT9j--- v= %10.5e, " + exp.format(v) + " \n", v);
+    }
+    exp = new DecimalFormat("0.######E0");
     return exp.format(v);
     
   }
@@ -3239,7 +3245,7 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      System.err.println("-----EXG----end putSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
       ex.printStackTrace(System.err);
       flushes();
       flushes();
@@ -3262,7 +3268,7 @@ onceAgain:
     try {
       for (int ix = 0; ix < vvend; ix++) {
         sliderVal = getVal(ix, ec.pors, ec.clan);
-        valCr[ix] = (char) ((sliderVal + myAIcstart) / myAIdiv);
+        valCr[ix] = (char) ((sliderVal / myAIdiv) + myAIcstart);
       }
       ec.as.myAICvals = valCr.toString();
     }
@@ -3271,13 +3277,41 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      System.err.println("-----EXG4----end buildAICvals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
       ex.printStackTrace(System.err);
       flushes();
       flushes();
       st.setFatalError();
     }
     return valCr;
+  }
+
+  char[] buildAICbals(Econ ec, int vvend) {
+    char[] valCb = new char[vvend];
+    int sliderVal = 0;
+    double[] abals = new double[E.LSECS];
+    int[] secsBals = new int[7];
+    // static int myAIcstart  = 65; // start of ascii A
+    // static int myAIdiv  = 5; //divid the values by 5
+    try {
+      for (int ix = 0; ix < E.LSECS; ix++) {
+        sliderVal = getVal(ix, ec.pors, ec.clan);
+        valCb[ix] = (char) ((sliderVal / myAIdiv) + myAIcstart);
+      }
+      ec.as.myAICvals = valCb.toString();
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      newError = true;
+      System.err.println("-----EXG5----end buildAICbals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      ex.printStackTrace(System.err);
+      flushes();
+      flushes();
+      st.setFatalError();
+    }
+    return valCb;
   }
   /**
    * get value from valD and turn it into a slider int between 0-100 This is
@@ -4043,7 +4077,10 @@ onceAgain:
   static final int RGROWTH6 = ++e4;
   static final int RGROWTH7 = ++e4;
   static final int RGROWTH8 = ++e4;
-
+  static final int TRADELASTDIVFGAVE = ++e4;
+  static final int TRADELASTDIVRCSG = ++e4;
+  static final int TRADELASTGAVE = ++e4;
+  static final int TRADENOMINALGAVE = ++e4;
   static final int PREVGROWTH = ++e4; //
   static final int NEWDEPRECIATION = ++e4; //NEWDEPRECIATION
   static final int DEPRECIATION = ++e4; //DEPRECIATION
@@ -4094,9 +4131,9 @@ onceAgain:
   static final int RAWSUGROWTH = ++e4;
   static final int RAWGUGROWTH = ++e4;
 
-  static final int TRADELASTGAVE = ++e4;
-  static final int TRADENOMINALGAVE = ++e4;
   static final int TRADESTRATLASTGAVE = ++e4;
+
+
   static final int WTRADEDINCRMULT = ++e4;
   static final int TRADELOW = ++e4;
   static final int TRADESOS0 = ++e4;
@@ -4493,18 +4530,17 @@ onceAgain:
   void defRes() {
 
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 |LIST3 | LIST4| LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | CUMUNITS | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge");
-    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST15 | LIST8 | CURAVE | CURUNITS | BOTH | SKIPUNSET, 0, 0, 0L);
-
-    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
+    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST15 | LIST8 | CURAVE | CUMAVE | CURUNITS | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth of trade goods given");
-    doRes(TRADESTRATLASTGAVE, "%trade Gaven", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing");
-   
+    doRes(TRADELASTDIVRCSG, "Given last/Worth", "Percent goods given per sum final trade offer over sum Worth", 1, 2, 1, LIST0 | LIST15 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(TRADELASTDIVFGAVE, "Given last/first", "Percent goods given per sum final trade offer over first offer", 1, 2, 1, LIST0 | LIST15 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(TRADESTRATLASTGAVE, "trade Given", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST0 | LIST15 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
     doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 | CURUNITS | CUMUNITS | BOTH, 0, 0, 0);
-   
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);

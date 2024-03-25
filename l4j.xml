@@ -33,16 +33,16 @@
     <opt>-ea</opt>
   </jre>
   <versionInfo>
-    <fileVersion>19.49.0.0</fileVersion>
-    <txtFileVersion>StarTrader.19.49</txtFileVersion>
+    <fileVersion>19.57.0.0</fileVersion>
+    <txtFileVersion>StarTrader.19.57</txtFileVersion>
     <fileDescription>A mini economics help each other game</fileDescription>
     <copyright>Albert Steiner 2023</copyright>
-    <productVersion>19.49.0.0</productVersion>
-    <txtProductVersion>StarTrader19.49</txtProductVersion>
+    <productVersion>19.57.0.0</productVersion>
+    <txtProductVersion>StarTrader19.57</txtProductVersion>
     <productName>StarTrader</productName>
     <companyName></companyName>
     <internalName>StarTrader</internalName>
-    <originalFilename>StarTrader19.49.exe</originalFilename>
+    <originalFilename>StarTrader19.57.exe</originalFilename>
     <trademarks></trademarks>
     <language>ENGLISH_US</language>
   </versionInfo>

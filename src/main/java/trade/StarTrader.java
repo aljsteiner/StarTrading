@@ -207,7 +207,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.56";
+  static final public String versionText = "19.57";
   static final public String storyText
           = "         StarTrader       Version " + versionText + "\n"
            +
