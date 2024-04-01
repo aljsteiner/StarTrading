@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+import java.util.TreeMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -6494,6 +6495,7 @@ public class StarTrader extends javax.swing.JFrame {
       }
       // years is a -1 origin,
       EM.doYearTime = startYear = new Date().getTime();
+      eM.myAICvals = "restartYear";
       stateConst = STARTING;
       eM.year++;
       E.resetMsgs();
@@ -7199,12 +7201,32 @@ public class StarTrader extends javax.swing.JFrame {
         int diedPerY = (int) (EM.year > 0 ? diedCnt * invY : diedCnt);
         int ffLim = (int) eM.econLimits3[0];
         int cLim = yEcons;
+        int cIx = 0;
+        Integer temp;
+        String str="";
         cpIx1 = controlPanels.getSelectedIndex();
         controlPanels.setSelectedIndex(3);
         cpIx2 = controlPanels.getSelectedIndex();
         // displayPanel0Text.setBackground(E.clan.values()[curEc.getClan()].getColor(curEc.pors));
         displayPanel0Text.setBackground(new Color(0x00849A));
         Color myTest = E.clan.values()[curEc.getClan()].getColor(curEc.pors);
+
+        //String[] myChars = {"a","b","c","d","e","f","g"};
+        if(EM.myAIlearnings == null) EM.myAIlearnings = new TreeMap();
+        String tstr = EM.myAIlearnings.size() + " oPer=";
+        for (cIx = 0; cIx < 7; cIx++) {
+          str = eM.oPerS + eM.myChars[cIx]; //myAICvals + "oPer=" + eM.myChars[cIx];
+          temp = EM.myAIlearnings.get(str);
+          temp = temp == null ? 0 : temp; //deal with null's
+          tstr += eM.myChars[cIx] + temp + " ";
+        }
+        tstr += ", mProsp=";
+        for (cIx = 0; cIx < 7; cIx++) {
+          str = eM.prosBS + eM.myChars[cIx];//myAICvals + "mProspC=" + eM.myChars[cIx];
+          temp = EM.myAIlearnings.get(str);
+          temp = temp == null ? 0 : temp; //deal with null's
+          tstr += eM.myChars[cIx] + temp + " ";
+        }
         String disp1 = "year" + eM.year + " ";
         
         disp1 += " " + EM.econCnt + ":most" + EM.econs.size() + ":min" + cLim + ":max" + ffLim + ", Planets=" + EM.porsCnt[E.P] + " ships=" + EM.porsCnt[E.S] + " died=" + diedCnt + " /Y" + diedPerY + " "
@@ -7215,6 +7237,7 @@ public class StarTrader extends javax.swing.JFrame {
                  + "iyrAveRCSG =" + EM.mf(brcsg) + " Planets " + EM.mf(prcsg) + " Ships " + EM.mf(srcsg) + newLine
                  + "TradedYear " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.S + 1, 0, E.LCLANS) +" " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, E.LCLANS)+ " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " , " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + " , "  + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.S, E.S + 1, 0, 5) + newLine
                  + "GameYrs    " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 + "Map notes  " + tstr + newLine
                  + "TradedGame " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " also:" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " rej:" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.S + 1, 0, 5) + " lost:" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "BothCreated " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0 , E.P, E.S + 1, 0, 5) + " , "+ eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.S + 1, 0, 5)  + " Planets " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "GameCreated"  + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0 , E.P, E.S + 1, 0, 5) + " , "+ eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5)  + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine 

@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2012 Albert Steiner
- Copyright (C) 2022 Albert Steiner
+ Copyright (C) 2024 Albert Steiner
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ Assets.CashFlow.HSwaps holds history of swaps to be used in an udo,redo of the s
 
 The game attempts to minimize the storage used by the game by allocatting full storage for no more than two economies at a time.
  */
+
 /** EM, E, StarTrader contains this set of stats descriptors
  *
  * static final public String statsButton0Tip = "0: Cum Game Worths,";
@@ -69,7 +70,6 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
-import static trade.EM.RDEPRECIATIONP;
 
 /**
  *
@@ -92,8 +92,29 @@ public class Assets {
   int year;  // copy of eM.year
   int myEconCnt;
 
+  //Assets
   static final boolean subAssetsIsStaff[] = {false, false, true, true};
   static final boolean subAssetsIsReserve[] = {false, true, false, true};
+  // now gather some cumulative counts and statistic
+  static final int[] alock1 = {0};
+  static final int[] alock2 = {0};
+  static final int[] alock3 = {0};
+  static volatile int aEntries = 0; //CashFlow.yearEnd()
+  static volatile int aWaits = 0; //CashFlow.yearEnd()
+  static volatile int aPSEntries[] = {0, 0};
+  static volatile int aClanEntries[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile int atEntries = 0; //traded active, failed or lost
+  static volatile int atPSEntries[] = {0, 0};
+  static volatile int atClanEntries[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile float cumOffersPerWorth = 0;
+  static volatile float[] cumOffersPerWorthPS = {0, 0};
+  static volatile float[][] cumOffersPerWorthClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile float cumOffers = 0;
+  static volatile float[] cumOffersPS = {0, 0};
+  static volatile float[][] cumOffersClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile float cumBTWorth = 0;
+  static volatile float[] cumBTWorthPS = {0, 0};
+  static volatile float[][] cumBTWorthClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
   boolean dead = false;  //CFyearEnd if rawProspects2.min < 0 = true
   boolean sos = false;
   boolean didGoods = false;
@@ -373,6 +394,7 @@ public class Assets {
   String resTypeName = "anot";
   double rsval1 = 0., rsval2 = 0.;
   Double rsval = 0.;
+  // a place for local Assets references to local EM. first installation values
   String[][] resS; //space for desc, comment
   double[][][][] resV;
   long[][][][] resI;
@@ -417,7 +439,8 @@ public class Assets {
   String myAIbalances = "1234567";
   String myAIprosperity = "1234567";
   String myAIjoys = "1234567";
-  String myAICvals = "c";
+  volatile static String myAICvals = "coming soon";
+  //Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
   // choose lt values
   double myAiPHELimits[] = {E.PZERO, 0.05, 0.3, 1.7};// 5 choice other
   double[] myAIrawProspectsMinLimits = {E.PZERO, 0.1, 0.7, 3.0};
@@ -534,6 +557,7 @@ public class Assets {
     moreK = new ARow(ec); // in doGrow incr knowledge
     lessM = new ARow(ec); // in doGrow The manual made commonKnowledge
     // rende3 = eM.rende3;
+    //create a local reference not static reference to nonstatic EM values
     resS = eM.resS; //space for desc, comment
     resV = eM.resV;
     resI = eM.resI;
@@ -9446,6 +9470,7 @@ public class Assets {
       }
       start();
       didStart = true;
+
       //   DoTotalWorths tW, rawCW, preSwapW,gSwapW, gGrowW, gCostW, fyW;
       preSwapW = new DoTotalWorths();
       preSwapWorth = preSwapW.getTotWorth();
@@ -9564,6 +9589,83 @@ public class Assets {
       else      if (rawProspectsMin < eM.rawHealthsLow[0][0]) {
         setStat(eM.ISLOW, worthIncrPercent);
       }
+      // incremate entries to cumulative values
+      synchronized (Assets.alock1) {
+        aEntries++;
+        aWaits++;
+        aPSEntries[pors]++;
+        aClanEntries[pors][clan]++;
+        double oPerW = offers / btWTotWorth;
+        double[] oPerWLims = {300., 7000., 45000., 633000.};
+        String oPerWC = "a";
+        double[] minProspLims = {E.PZERO, 0.13, 0.68, 10.15}; //rawProsperity2
+        String mProspC = "a";
+        int cIx = 3;
+
+        if (tradeAccepted) {
+          atEntries++;
+          atPSEntries[pors]++;
+          atClanEntries[pors][clan]++;
+          cumOffers += offers;
+          cumOffersPS[pors] += offers;
+          cumOffersClan[pors][clan] += offers;
+          cumBTWorth += btWTotWorth;
+          cumBTWorthPS[pors] += btWTotWorth;
+          cumBTWorthClan[pors][clan] += btWTotWorth;
+          cumOffersPerWorth += cumOffers / cumBTWorth;
+          cumOffersPS[pors] += cumOffersPS[pors] / cumBTWorthPS[pors];
+          cumOffersClan[pors][clan] += cumOffersClan[pors][clan] / cumBTWorthClan[pors][clan];
+
+
+          for (cIx = 3; cIx > -1; cIx--) {
+            // leave the preset 'a' if less than the least array entry
+            if (oPerWC.contains("a") && oPerW > oPerWLims[cIx]) {
+              oPerWC = eM.myChars[cIx];;
+            }
+            if (mProspC.contains("a") && rawProspects2.min() > minProspLims[cIx]) {
+              mProspC = eM.myChars[cIx];;
+            }
+          }
+          /*
+          static volatile float cumOffersPerWorth = 0;
+  static volatile float[] cumOffersPerWorthPS = {0, 0};
+  static volatile float[][] cumOffersPerWorthClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+ static volatile float cumOffers = 0;
+  static volatile float[] cumOffersPS = {0, 0};
+  static volatile float[][] cumOffersClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile float cumBTWorth = 0;
+  static volatile float[] cumBTWorthPS = {0, 0};
+  static volatile float[][] cumBTWorthClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+           */
+        }
+        // now process the missed counts
+        else {
+          for (cIx = 3; cIx > -1; cIx--) {
+            // leave the preset 'a' if less than the least array entry
+            if (mProspC.contains("a") && rawProspects2.min() > minProspLims[cIx]) {
+              mProspC = eM.myChars[cIx];
+            }
+          }
+          oPerWC = "f";
+        }
+        eM.buildAICvals(ec, eM.vvend); //build part of key if new
+        String str = (EM.oPerS = EM.myAICvals + ":oPer") + oPerWC; // finish key
+        Integer temp = EM.myAIlearnings.get(str);
+        temp = temp == null ? 1 : temp + 1;// force valid number if null
+        EM.myAIlearnings.put(str, temp);
+        if (E.debugAIOut && (aWaits > 10)) {
+          System.out.println("----BAI3---- put key=" + str + " , =" + temp + " year" + EM.year + " myAIlearningsSize=" + EM.myAIlearnings.size());
+        }
+        str = (EM.prosBS = EM.myAICvals + ":mProspC") + mProspC;
+        temp = EM.myAIlearnings.get(str); // force valid number if null
+        temp = temp == null ? 1 : temp + 1;
+        EM.myAIlearnings.put(str, temp);
+        if (E.debugAIOut && (aWaits > 10)) {
+          aWaits = 0;
+          System.out.println("----BAI4---- put key=" + str + " , =" + temp);
+        }
+
+      }// end sync
       // find number of years without trade accepted 3 max
       int ixAccYears = prevAccYears > 3 || prevAccYears < 0 ? 0 : prevAccYears;
       ///  gSwapW = new DoTotalWorths(); // did before

@@ -81,13 +81,14 @@ public class E {
   static final boolean noAsserts = true; // true expect not -ea in program call
   // static final boolean noAsserts = false; // false expect -ea in call
   static boolean ifassert = false; // preset for later test
-  static int PREYEARS = 0; // number of years run as part of run
+  //Use preyears in heavy development, to skip the settings wait
+  static int PREYEARS = 3; // number of years run as part of run
   static final boolean debugfalse = false;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   //static final boolean resetOut = debugOutput;  //change out, err to
 
   static final boolean distributable = false;  //set true before making a jar fine available to public
-  static final boolean resetOut = true || distributable;  //change out, err to local files
+  static final boolean resetOut = false || distributable;  //change out, err to local files
 
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugOutput = debugMaster; //distributable;
@@ -100,6 +101,7 @@ public class E {
   static final boolean debugEconOut = debugOutput; //output messages in Econ
   static final boolean debugCashFlowOut = debugOutput; //output messages in CashFlow
   static final boolean debugTradesOut = debugOutput; //output messages in Trades
+  static final boolean debugAIOut = debugOutput; //output messages for AI
   static final boolean debugCheckBalances = debugMaster &&  false; //check balances in loops
   static final boolean debugEconCnt = debugMaster &&  false; // econCnt = porsCnt0 + porsCnt1
   static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt

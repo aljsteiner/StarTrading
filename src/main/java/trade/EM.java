@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2012 Albert Steiner
- Copyright (C) 2022 Albert Steiner
+ Copyright (C) 2024 Albert Steiner
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
+//import java.lang.String;
+//import java.lang.Integer;
 import java.util.TreeMap;
 import javax.swing.JTable;
 
@@ -225,7 +228,10 @@ class EM {
   static volatile Econ otherEcon;
   static volatile String otherEconName = "no other name";
   static volatile String otherEconClan = "A";
-
+  static int myAIcstart = 'a'; // start of ascii a
+  static int myAIdiv = 20; //divid the values by 5
+  static String myChars[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};//11
+  static volatile Map<String, Integer> myAIlearnings;
   /**
    * set curEcon, curEconName curEconClan;curEconTime,curEconAge get a null
    * error the offered Econ is null
@@ -587,6 +593,7 @@ class EM {
       bKeep = Files.newBufferedWriter(KEEP, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       bKeep.write(rOut, 0, rOut.length());
       keepBuffered = true;
+
 
     }
     catch (Exception | Error ex) {
@@ -1553,8 +1560,7 @@ class EM {
    */
   static volatile double valD[][][][] = new double[lvals][][][];
   // eventually column = modeC,p
-  static int myAIcstart = 65; // start of ascii A
-  static int myAIdiv = 5; //divid the values by 5
+
 
   /**
    * references of Environments being logged
@@ -2704,7 +2710,8 @@ class EM {
    * now fill out valI with the values set into valD for vv, and the gc in valI
    * now fill out the rest of the valD, valI, valS field Also check for range
    * errors, and method errors set arrays cstart and gstart the starts of the
-   * display panels
+   * display panels for gc == 2 the S value is at {{,S}}; for gc == 4 The S
+   * value is at {{},{S}}
    *
    * @param vv
    * @return vv
@@ -3202,7 +3209,7 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      System.err.println(tError = ("-----EXG----end getSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
       ex.printStackTrace(System.err);
       flushes();
       flushes();
@@ -3245,7 +3252,7 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("-----EXG----end putSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      System.err.println(tError = ("-----EXG----end putSettingsValueForAi " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
       ex.printStackTrace(System.err);
       flushes();
       flushes();
@@ -3253,6 +3260,12 @@ onceAgain:
     }
     return res;
   }
+  static volatile String myAICvals;
+  static String prosBS = "xx", oPerS = "xx";
+  char[] prevAr = new char[vvend];
+  char[] prevAr1 = new char[vvend];
+  char cc = 'A';
+  String[] valCr = new String[vvend];
   /**
    * build AICvals in Assets.myAICvals from myAIvals as sliderVals
    *
@@ -3260,42 +3273,63 @@ onceAgain:
    * @param vvend The count of the last doVal
    * @return
    */
-  char[] buildAICvals(Econ ec, int vvend) {
-    char[] valCr = new char[vvend];
-    int sliderVal = 0;
-    // static int myAIcstart  = 65; // start of ascii A
-    // static int myAIdiv  = 5; //divid the values by 5
+  String buildAICvals(Econ ec, int vvend) {
+
+    int sliderVal = 0, tix = 0;
+    // static int myAIcstart  = 'a'; // start of ascii a
+    // static int myAIdiv  = 20; //divid the values by 5
     try {
-      for (int ix = 0; ix < vvend; ix++) {
-        sliderVal = getVal(ix, ec.pors, ec.clan);
-        valCr[ix] = (char) ((sliderVal / myAIdiv) + myAIcstart);
+      if (myAICvals.contains("restartYear")) {
+        if (myAIlearnings == null) {
+          myAIlearnings = new TreeMap();
+          prevAr1[0] = 'A'; // at first use set to ignore diff
+        }
+        // for(int ix = 0; ix < vvend; ix++){prevAr1[ix] = prevAr[ix];}
+
+        String aa = "", bb = "bb";
+        for (int ix = 0; ix < vvend; ix++) {
+        sliderVal = getAIVal(ix, ec.pors, ec.clan);
+        bb = myChars[tix = (int) (sliderVal / myAIdiv)];
+        cc = bb.charAt(0);
+          if (cc != 'A' && prevAr[ix] != cc && E.debugAIOut) {
+            System.out.println("---BIC1--- conflict between values character at setting ix=" + ix + " new=" + bb + " old=" + prevAr[ix] + " desc=" + valS[ix][vDesc] + " str=" + aa
+            );
+        }
+        prevAr[ix] = cc;
+        aa += bb;
+        if (E.debugAIOut) {
+          System.out.println("---BIC2--- vvend" + vvend + "ar=" + valCr.toString() + " ix=" + ix + " tix=" + tix + "=" + bb + "=" + aa);
+        }
       }
-      ec.as.myAICvals = valCr.toString();
+        ec.as.myAICvals = myAICvals = aa; //valCr.toString();
+      }
     }
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("-----EXG4----end buildAICvals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      System.err.println(tError = ("-----EXG4----end buildAICvals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
       ex.printStackTrace(System.err);
       flushes();
       flushes();
       st.setFatalError();
+
     }
-    return valCr;
+    return myAICvals;
   }
 
-  char[] buildAICbals(Econ ec, int vvend) {
+  char[] buildAICbals(Econ ec, int vvend, double minProp) {
     char[] valCb = new char[vvend];
     int sliderVal = 0;
     double[] abals = new double[E.LSECS];
     int[] secsBals = new int[7];
+
     // static int myAIcstart  = 65; // start of ascii A
     // static int myAIdiv  = 5; //divid the values by 5
     try {
       for (int ix = 0; ix < E.LSECS; ix++) {
-        sliderVal = getVal(ix, ec.pors, ec.clan);
+        sliderVal = getAIVal(ix, ec.pors, ec.clan);
         valCb[ix] = (char) ((sliderVal / myAIdiv) + myAIcstart);
       }
       ec.as.myAICvals = valCb.toString();
@@ -3305,13 +3339,69 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("-----EXG5----end buildAICbals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore());
+      System.err.println(tError = ("-----EXG5----end buildAICbals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
       ex.printStackTrace(System.err);
       flushes();
       flushes();
       st.setFatalError();
     }
     return valCb;
+  }
+
+  /**
+   * get value from valD and turn it into a slider int between 0-100 This is
+   * used to generate the slider window
+   *
+   * @param vv The entry being set to a slider to show its value in slider
+   * @param pors 0,1 planet or ship being set
+   * @param clan 0-4,5 5 means a game value, 0-4 are the 5 clans
+   * @return the value to set in the slider
+   */
+  int getAIVal(int vv, int pors, int clan) {
+    int slider1 = -1;
+    int klan = clan % 5;
+    int gc = valI[vv][modeC][0][0];
+    try {
+    if (gc <= vfour) {
+      if (gc == vone || gc == vthree) {
+        return valToSlider(valD[vv][gameAddrC][0][0], valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
+      }
+      else if (gc == vtwo) {
+        return valToSlider(valD[vv][gameAddrC][0][1], valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+      }
+      else if (gc == vfour) {
+        return valToSlider(valD[vv][gameAddrC][1][0], valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+      }
+      else if (E.debugSettingsTab) {  //problem with clan == 5, unknown gc
+
+        String verr = "getVa; illegal clan =" + clan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
+        doMyErr(verr);
+      }
+    } // end of gameMaster clan == 5
+    // now do clan entries gc == vfive then vten
+    else if ((gc == vfive) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
+      return valToSlider(valD[vv][gameAddrC][0][klan], valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
+    }
+    else if ((gc == vten) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
+      return valToSlider(valD[vv][gameAddrC][pors][klan], valD[vv][gameLim][pors][lowC], valD[vv][gameLim][pors][highC]);
+    }
+    else if (E.debugSettingsTab) {
+      tError = "getVa; illegal clan=" + clan + " klan=" + klan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
+      doMyErr(tError);
+      }
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      newError = true;
+      System.err.println(tError = ("-----EXG7----end buildAICbals gc=" + gc + " PorS=" + pors + ", clan=" + clan + " klan=" + klan + " vv=" + vv + " desc=" + valS[vv][vDesc] + ", " + curEconName + since() + ", " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
+      ex.printStackTrace(System.err);
+      flushes();
+      flushes();
+      st.setFatalError();
+    }
+    return 50;
   }
   /**
    * get value from valD and turn it into a slider int between 0-100 This is
@@ -3688,7 +3778,7 @@ onceAgain:
     // doVal("econLimits1  ", econLimits1, mEconLimits1, "Increase the max number of econs (planets+ships) in this game");
     //  doVal("econLimits2  ", econLimits2, mEconLimits2, "Increase the max number of econs (planets+ships) in this game");
     doVal("Clan Ships per planets", clanShipFrac, mClanShipFrac, "increase faction of ships per planets for this clan only, limited by All ships per planets and game ships per planets");
-    doVal("All ships per planets", clanAllShipFrac, mClanAllShipFrac, "for this clan increase the fraction of ships per all planets, limited by Clan Ships per planets  and game Ships per planets ");
+    doVal("All ships per planets", clanAllShipFrac, mClanAllShipFrac, "for this clan increase the fraction of ships per all planets, limited by Clan all Ships per planets  and game Ships per planets ");
     doVal("Ships per planets", gameShipFrac, mGameShipFrac, "increase the fraction of ships in the game. bit for each clan, limited by clanShipFrac and clanAllShipFrac");
     doVal("resourceGrowth", resourceGrowth, mResourceGrowth, "increase amount of resource growth per year, dependent on units of staff");
     doVal("cargoGrowth", cargoGrowth, mCargoGrowth, "increase amount of cargo growth per year dependent of units of staff");
