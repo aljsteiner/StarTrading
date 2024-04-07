@@ -99,10 +99,18 @@ public class Assets {
   static final int[] alock1 = {0};
   static final int[] alock2 = {0};
   static final int[] alock3 = {0};
-  static volatile int aEntries = 0; //CashFlow.yearEnd()
+  //  these entries have  2types, 2PS , 5Clan, 7much
+  static volatile int aEntries[] = {0, 0}; // 2typein CashFlow.yearEnd()
   static volatile int aWaits = 0; //CashFlow.yearEnd()
-  static volatile int aPSEntries[] = {0, 0};
-  static volatile int aClanEntries[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile int aTAMEntries[][][] = {{{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}; // 2type, 2acct, 2 much
+  static volatile int aATEntries[][] = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}; // 2type, 7 much
+  static volatile int aPSMEntries[][][][] = {/*type*/{/*ps*/{/*acct*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}, {/*ps*/{/*acct*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}};//  2type 2acct 2Ps 7MUCH
+  static volatile int bClanEntries[][][][][] = {{/*type*/{/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}, {/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0/*clan*/}/*PS*/}/*type*/}/*much*/}, {/*type*/{/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}, {/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0/*clan*/}/*PS*/}/*type*/}/*much*/}}; //2type, 2acct, 2PS,5Clan,7much
+  static int aType = 0, aPorS = 0, aClan = 0, aSize = 0, aMuch = 0, aCnts = 0;
+  static int aKeys = 0, aNums = 0, acct = 0;
+  static final int nTypes = 2;
+  static volatile int aClanEntries[][][][][];
+
   static volatile int atEntries = 0; //traded active, failed or lost
   static volatile int atPSEntries[] = {0, 0};
   static volatile int atClanEntries[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
@@ -365,6 +373,7 @@ public class Assets {
   A6Row cashFlowSubAssetUnitsAvailableToSwap;
   A2Row rawFertilities2;
   A2Row rawProspects2;
+  A2Row prevProspects2;
   A6Row invMEfficiency;
   A6Row invGEfficiency;
   //more Assets definitions
@@ -442,10 +451,10 @@ public class Assets {
   volatile static String myAICvals = "coming soon";
   //Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
   // choose lt values
-  double myAiPHELimits[] = {E.PZERO, 0.05, 0.3, 1.7};// 5 choice other
-  double[] myAIrawProspectsMinLimits = {E.PZERO, 0.1, 0.7, 3.0};
-  double[] myAIWorthGrowthLimits = {-.5, -.1, 0.5, 2.0};
-  char[] myAIjoy = {'a', 'b', 'c', 'd', 'e'};// PHE, rawProspectsMins, worthGrowth
+ // double myAiPHELimits[] = {E.PZERO, 0.05, 0.3, 1.7};// 5 choice other
+  //double[] myAIrawProspectsMinLimits = {E.PZERO, 0.1, 0.7, 3.0};
+  //double[] myAIWorthGrowthLimits = {-.5, -.1, 0.5, 2.0};
+  //char[] myAIjoy = {'a', 'b', 'c', 'd', 'e'};// PHE, rawProspectsMins, worthGrowth
   /**
    * The history versions of CashFlow are always copied to involving a new
    * HAssets(), than copy of the cur values that are of interest. The history
@@ -511,7 +520,25 @@ public class Assets {
     dFrac = NumberFormat.getNumberInstance();
     whole = NumberFormat.getNumberInstance();
     dfo = dFrac;
-
+    // define aClanEntries only once before any use
+    if (aClanEntries == null) {
+      aClanEntries = new int[nTypes][][][][];
+      for (aType = 0; aType < nTypes; aType++) {
+        aClanEntries[aType] = new int[2][][][];
+        for (acct = 0; acct < 2; acct++) {
+          aClanEntries[aType][acct] = new int[2][][];
+          for (aPorS = 0; aPorS < 2; aPorS++) {
+            aClanEntries[aType][acct][aPorS] = new int[E.LCLANS][];
+            for (aClan = 0; aClan < E.LCLANS; aClan++) {
+              aClanEntries[aType][acct][aPorS][aClan] = new int[7];
+              for (aMuch = 0; aMuch < 7; aMuch++) {
+                aClanEntries[aType][acct][aPorS][aClan][aMuch] = 0;
+              }
+            }
+          }
+        }
+      }
+    }
     //   startYrs = new HCashFlow[7]; // might use instead of name 1,2 ...
     //   prevns = new HCashFlow[7];
     double sumPri = 0.;
@@ -9062,7 +9089,7 @@ public class Assets {
               retOffer.setTerm(-4); // other so no more return
             }
           }
-          else if (newTerm == -2 || entryTerm == -2) {  // the other ship traded
+          else if (newTerm == -2 || entryTerm == -2) {  // skipped the other ship traded
             tradedShipOrdinal++; // set ordinal of the next ship if any
             tradedSuccessTrades++;
             tradeAccepted = true;
@@ -9121,8 +9148,7 @@ public class Assets {
           }
           else if (entryTerm < -1) { // should stop in econ
             tradeLost = true;
-            tradeMissed = tradeRejected
-                    = tradeAccepted = false;
+            tradeMissed = tradeRejected = tradeAccepted = false;
             prevNotAcceptedYear = yearTradeLost = year;
             retOffer.setTerm(-5);
             fav = -3.;
@@ -9402,15 +9428,17 @@ public class Assets {
       if (!didStart) {
         if (iyW == null) { //first year initial only
           iyW = new DoTotalWorths();
-          //    iyWTotWorth = iyW.getTotWorth();
+          iyWTotWorth = iyW.getTotWorth();
           startYrSumWorth = initialSumWorth = sumTotWorth = iyW.getTotWorth();
           startYrSumKnowledge = initialSumKnowledge = iyW.sumKnowledgeBal;
           startYrSumKnowledgeWorth = initialSumKnowledgeWorth = iyW.sumKnowledgeWorth;
           //setStat(EM.BOTHCREATE, pors, clan, initialSumWorth, 1); //done in StarTrader
         }
+        prevYrSumWorth = fyW == null ? iyW.getTotWorth() : fyW.getTotWorth();
+
         syW = new DoTotalWorths();
         syWTotWorth = syW.getTotWorth();
-        prevYrSumWorth = startYrSumWorth;
+        //prevYrSumWorth = startYrSumWorth;
         prevYrSumKnowledge = startYrSumKnowledge;
         prevYrSumKnowledgeWorth = startYrSumKnowledgeWorth;
         startYrSumWorth = sumTotWorth = syW.getTotWorth();
@@ -9521,7 +9549,7 @@ public class Assets {
       eM.printHere("----AEYac---", ec, " CashFlow.yearEnd just after swap doLoop");
       bals.set4(ABalRows.GROWTHS3IX, growths); //in Assets.CashFlow.yCalcRawCosts
       // sLoops[0] = 0;
-      gSwapW = new DoTotalWorths();
+      gSwapW = new DoTotalWorths();  // worth after swap loops pre grow costs
       sumTotWorth = gSwapWTotWorth = gSwapW.getTotWorth();
       gSwapIncr = gSwapWTotWorth - preSwapWorth;
       fracLoopsCost = (sumTotWorth - startYrSumWorth) / startYrSumWorth;
@@ -9591,17 +9619,17 @@ public class Assets {
       }
       // incremate entries to cumulative values
       synchronized (Assets.alock1) {
-        aEntries++;
-        aWaits++;
-        aPSEntries[pors]++;
-        aClanEntries[pors][clan]++;
-        double oPerW = offers / btWTotWorth;
-        double[] oPerWLims = {300., 7000., 45000., 633000.};
-        String oPerWC = "a";
-        double[] minProspLims = {E.PZERO, 0.13, 0.68, 10.15}; //rawProsperity2
-        String mProspC = "a";
-        int cIx = 3;
 
+        double oPerW = offers / btWTotWorth;
+        double[] oPerWLims = {-99999999., 300., 7000., 45000., 633000.};
+        String oPerWC = "a";
+        double[] minProspLims = {-99999999., E.PZERO, 0.13, 0.68, 10.15}; //rawProsperity2
+        String mProspC = "a";
+        int cIx = 7;
+        int much = 7;
+        int aType = 0;
+        int acct = 1;
+        aWaits++;
         if (tradeAccepted) {
           atEntries++;
           atPSEntries[pors]++;
@@ -9616,14 +9644,25 @@ public class Assets {
           cumOffersPS[pors] += cumOffersPS[pors] / cumBTWorthPS[pors];
           cumOffersClan[pors][clan] += cumOffersClan[pors][clan] / cumBTWorthClan[pors][clan];
 
-
-          for (cIx = 3; cIx > -1; cIx--) {
+          acct = 1;
+          for (much = 4; much > -1; much--) {
             // leave the preset 'a' if less than the least array entry
-            if (oPerWC.contains("a") && oPerW > oPerWLims[cIx]) {
-              oPerWC = eM.myChars[cIx];;
+            // assume much == 0 is the rest of the entries, do not test
+            aType = 0;
+            if (oPerWC.contains("a") && (much == 0 || oPerW > oPerWLims[much])) {
+              oPerWC = eM.myChars[much];
+              aEntries[aType]++;
+              aTAMEntries[aType][acct][much]++;
+              aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+              aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
             }
-            if (mProspC.contains("a") && rawProspects2.min() > minProspLims[cIx]) {
-              mProspC = eM.myChars[cIx];;
+            if (mProspC.contains("a") && (much == 0 || rawProspects2.min() > minProspLims[much - 1])) {
+              aType = 0;
+              mProspC = eM.myChars[much];
+              aEntries[aType]++;
+              aTAMEntries[aType][acct][much]++;
+              aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+              aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
             }
           }
           /*
@@ -9640,36 +9679,52 @@ public class Assets {
         }
         // now process the missed counts
         else {
-          for (cIx = 3; cIx > -1; cIx--) {
+          acct = 0; // not active
+          for (much = 4; much > -1; much--) {
             // leave the preset 'a' if less than the least array entry
-            if (mProspC.contains("a") && rawProspects2.min() > minProspLims[cIx]) {
-              mProspC = eM.myChars[cIx];
+            aType = 0;
+            if (mProspC.contains("a") && (rawProspects2.min() > minProspLims[much])) {
+              mProspC = eM.myChars[much];
+              aEntries[aType]++;
+              aTAMEntries[aType][acct][much]++;
+              aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+              aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
             }
           }
+
+          aType = 1;
           oPerWC = "f";
+          much = 5;
+          aEntries[aType]++;
+          aTAMEntries[aType][acct][much]++;
+          aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+          aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
         }
-        eM.buildAICvals(ec, eM.vvend); //build part of key if new
-        String str = (EM.oPerS = EM.myAICvals + ":oPer") + oPerWC; // finish key
-        Integer temp = EM.myAIlearnings.get(str);
-        temp = temp == null ? 1 : temp + 1;// force valid number if null
-        EM.myAIlearnings.put(str, temp);
-        if (E.debugAIOut && (aWaits > 10)) {
-          System.out.println("----BAI3---- put key=" + str + " , =" + temp + " year" + EM.year + " myAIlearningsSize=" + EM.myAIlearnings.size());
+        eM.buildAICvals(ec, eM.vvend); //build part of key with pors,clan
+        aType = 1;
+        String str = (EM.oPerS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + oPerWC; // finish key
+
+        Integer aMany = EM.myAIlearnings.get(str);
+        aMany = aMany == null ? 1 : aMany + 1;// force valid number if null
+        EM.myAIlearnings.put(str, aMany);
+        if (E.debugAIOut && (aWaits > 5)) {
+          System.out.println("----BAI3---- put key=" + str + " , =" + aMany + " much=" + much + " year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
         }
-        str = (EM.prosBS = EM.myAICvals + ":mProspC") + mProspC;
-        temp = EM.myAIlearnings.get(str); // force valid number if null
-        temp = temp == null ? 1 : temp + 1;
-        EM.myAIlearnings.put(str, temp);
-        if (E.debugAIOut && (aWaits > 10)) {
+        aType = 0;
+        str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
+        aMany = EM.myAIlearnings.get(str); // force valid number if null
+        aMany = aMany == null ? 1 : aMany + 1;
+        EM.myAIlearnings.put(str, aMany);
+        if (E.debugAIOut && (aWaits > 5)) {
           aWaits = 0;
-          System.out.println("----BAI4---- put key=" + str + " , =" + temp);
+          System.out.println("----BAI4---- put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
         }
 
       }// end sync
       // find number of years without trade accepted 3 max
       int ixAccYears = prevAccYears > 3 || prevAccYears < 0 ? 0 : prevAccYears;
       ///  gSwapW = new DoTotalWorths(); // did before
-      if (rawProspects2.curMin() > PZERO) { //proceed  if live,skip if dead
+      if (rawProspects2.curMin() > PZERO) { //proceed  live if no min < PZERo
         //========================LIVE LIVE LIVE ========================
         n = 0;
         if (History.dl > History.informationMinor9) {
@@ -9761,7 +9816,7 @@ public class Assets {
         setStat(EM.CUMCATWORTH, pors, clan, bals.sum4(ABalRows.CUMBONUSWORTHIX), 1);
         setStat(EM.GROWTHWORTHINCR, pors, clan, bals.sum4(ABalRows.GROWTHWORTHSIX), 1);
         EM.wasHere = "CashFlow.endYear after doGrowth cccae" + ++cccae;
-        gGrowW = new DoTotalWorths();
+        gGrowW = new DoTotalWorths(); // worth after years growth
         sumTotWorth = gGrowW.getTotWorth();
         double sumRCSGincr = gGrowW.sumRCSGBal - gSwapW.sumRCSGBal;
         setStat(EM.INCRGROWRCSG, pors, clan, sumRCSGincr, 1);
@@ -9794,7 +9849,7 @@ public class Assets {
         s.sumGrades(); // sets s worth
         g.sumGrades(); // sets g worth
         //      DoTotalWorths syW, tW, gSwapW, gGrowW, gCostW, fyW;
-        gCostW = new DoTotalWorths();
+        gCostW = new DoTotalWorths();  // worth after costs
         sumTotWorth = gCostW.getTotWorth();  //after costs taken
         bals.setA4toBminusC(ABalRows.COSTWORTHSIX, ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
         setStat(EM.MTGCOSTS, mtgCosts10.curSum());

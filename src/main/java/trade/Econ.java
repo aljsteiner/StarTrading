@@ -1428,7 +1428,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
 
       // barter between economies planet/ship until accept or reject,
       // aoffer.term is always set in the Econ.barter ...
-      // term = -3 means done 
+      // term = -3 means bartering done
       // term starts at eM.barterStart
       // see Assets.CashFlow.barter for the flow of term
       for (int termLoop = aOffer.getTerm(); termLoop > -3; termLoop = aOffer.getTerm()) {

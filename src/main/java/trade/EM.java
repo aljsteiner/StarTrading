@@ -547,7 +547,9 @@ class EM {
     wasHere7 = "";
     wasHere8 = "";
   }
-
+  static StringWriter sw = new StringWriter();
+  static PrintWriter pw = new PrintWriter(sw);
+  static String firstStack = "", secondStack = "", thirdStack = "", fourthStack = "";
   /**
    * instantiate another EM, set static eE and static eM = new EM
    *
@@ -559,11 +561,10 @@ class EM {
     st = aST;
     eM = this;
     myEM = this;
+    //   sw = new StringWriter();
+    //   pw = new PrintWriter(sw);
   }
 
-  static StringWriter sw;
-  static PrintWriter pw;
-  static String firstStack = "", secondStack = "", thirdStack = "", fourthStack = "";
   /**
    * initialize eM read the existing keeps, close that and open as
    *
@@ -574,8 +575,8 @@ class EM {
     try {
       String dateString = MYDATEFORMAT.format(new Date());
       String rOut = "New Game V" + StarTrader.versionText + " " + dateString + "\r\n";
-      sw = new StringWriter();
-      pw = new PrintWriter(sw);
+      //   sw = new StringWriter();
+      //  pw = new PrintWriter(sw);
       Econ.nowThread = Thread.currentThread().getName(); // goes into Static Econ
       // define each of the first dimension of res or stats values
       resS = new String[rende3][]; //space for desc, comment
@@ -3262,10 +3263,10 @@ onceAgain:
   }
   static volatile String myAICvals;
   static String prosBS = "xx", oPerS = "xx";
-  char[] prevAr = new char[vvend];
-  char[] prevAr1 = new char[vvend];
+  char[] prevAr = new char[lvals];
+  char[] prevAr1 = new char[lvals];
   char cc = 'A';
-  String[] valCr = new String[vvend];
+  String[] valCr = new String[lvals];
   /**
    * build AICvals in Assets.myAICvals from myAIvals as sliderVals
    *
@@ -3279,30 +3280,35 @@ onceAgain:
     // static int myAIcstart  = 'a'; // start of ascii a
     // static int myAIdiv  = 20; //divid the values by 5
     try {
-      if (myAICvals.contains("restartYear")) {
-        if (myAIlearnings == null) {
+      if (myAIlearnings == null) {
+        if (E.debugAIOut) {
+          System.out.println("------BIC1-----EM.buildAICvals null TreeMap new TreeMap year=" + year);
+        }
           myAIlearnings = new TreeMap();
-          prevAr1[0] = 'A'; // at first use set to ignore diff
+          prevAr1[0] = cc = 'A'; // at first use set to ignore diff
         }
         // for(int ix = 0; ix < vvend; ix++){prevAr1[ix] = prevAr[ix];}
 
-        String aa = "", bb = "bb";
-        for (int ix = 0; ix < vvend; ix++) {
+      String aa = "", bb = "bb";
+      // start bb with the schars for pors and clan
+      int aWaits = 0;
+      for (int ix = 0; ix < vvend; ix++) { // scan each doVal
         sliderVal = getAIVal(ix, ec.pors, ec.clan);
         bb = myChars[tix = (int) (sliderVal / myAIdiv)];
         cc = bb.charAt(0);
-          if (cc != 'A' && prevAr[ix] != cc && E.debugAIOut) {
-            System.out.println("---BIC1--- conflict between values character at setting ix=" + ix + " new=" + bb + " old=" + prevAr[ix] + " desc=" + valS[ix][vDesc] + " str=" + aa
-            );
+        if (false && cc != 'A' && prevAr[ix] != cc && E.debugAIOut) {
+          System.out.println("---BIC2--- conflict between values character at setting ix=" + ix + " new=" + bb + " old=" + prevAr[ix] + " desc=" + valS[ix][vDesc] + " str=" + aa);
         }
-        prevAr[ix] = cc;
-        aa += bb;
-        if (E.debugAIOut) {
-          System.out.println("---BIC2--- vvend" + vvend + "ar=" + valCr.toString() + " ix=" + ix + " tix=" + tix + "=" + bb + "=" + aa);
+          prevAr[ix] = cc;
+          //int dd = aa.charAt(0) - 'a';
+          aa += bb;  //build key from value char of each doval
+        if (E.debugAIOut && aWaits > 5) {
+          aWaits = 0;
+          System.out.println("---BIC3--- vvend" + vvend + " desc=" + valS[ix][vDesc] + " aa=" + aa + " ix=" + ix + " bb=" + bb + " key=" + aa);
         }
       }
         ec.as.myAICvals = myAICvals = aa; //valCr.toString();
-      }
+
     }
     catch (Exception | Error ex) {
       firstStack = secondStack + "";

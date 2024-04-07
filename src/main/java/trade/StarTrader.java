@@ -6000,6 +6000,8 @@ public class StarTrader extends javax.swing.JFrame {
   int panelW = -2, panelH = -2, tableW = -2, tableH = -2, table2W = -2, table2H = -2;
   int myW3 = -2;
 //  String[][] statsData;
+  static StringWriter sw = new StringWriter();
+  static PrintWriter pw = new PrintWriter(sw);
 
   public StarTrader() {
     try {
@@ -6009,8 +6011,8 @@ public class StarTrader extends javax.swing.JFrame {
     }
     catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
-      ex.printStackTrace(EM.pw);
-      EM.secondStack = EM.sw.toString();
+      ex.printStackTrace(pw);
+      EM.secondStack = sw.toString();
       EM.newError = true;
       eM.flushes();
       System.err.println(Econ.nowName + since() + " " + Econ.nowName + " " + Econ.nowThread + " Exception " + ex.toString() + " message=" + ex.getMessage() + " " + EM.andMore());
@@ -7184,7 +7186,42 @@ public class StarTrader extends javax.swing.JFrame {
       double invY = 1./EM.year;
       //   controlPanels.setSelectedIndex(3);
       int blip = 5;
-
+      int ix=0,ix2=0,ix3=0,ix4=0;
+      int aType = 0, aPorS = 0, aClan = 0, aSize = 0, aMuch = 0, aCnts = 0;
+      int aKeys = 0, aNums = 0, acct=0;
+      //many of [type][pors][clan][aMuch]
+      int aMany[][][][][] = new int[2][][][][];
+      for (aType = 0; aType < 2; aType++) {
+        aMany[aType] = new int[2][][][];
+        for (acct = 0; acct < 2; acct++) {
+          aMany[aType][acct] = new int[2][][];
+        for (aPorS = 0; aPorS < 2; aPorS++) {
+          aMany[aType][acct][aPorS] = new int[5][];
+          for (aClan = 0; aClan < 5; aClan++) {
+            aMany[aType][acct][aPorS][aClan] = new int[7];
+            for (aMuch = 0; aMuch < 7; aMuch++) {
+              aMany[aType][acct][aPorS][aClan][aMuch] = 0;
+            }
+          }
+        }
+        }
+      }
+      // aMany7[type][strns]
+      int aMany7[][] = new int[2][];
+      int aMany27[][][] = new int[2][][];
+      for (aType = 0; aType < 2; aType++) {
+        aMany7[aType] = new int[7];  // type much
+        for (aMuch = 0; aMuch < 7; aMuch++) {
+          aMany7[aType][aMuch] = 0;
+        }
+        aMany27[aType] = new int[2][];
+        for (acct = 0; acct < 2; acct++) {
+          aMany27[aType][acct] = new int[7];
+          for (aMuch = 0; aMuch < 7; aMuch++) {
+            aMany27[aType][acct][aMuch] = 0;
+          }
+        }
+      }
       if (curEc == null || EM.dfe()) {
 
       }
@@ -7203,7 +7240,7 @@ public class StarTrader extends javax.swing.JFrame {
         int cLim = yEcons;
         int cIx = 0;
         Integer temp;
-        String str="";
+        String str = "";
         cpIx1 = controlPanels.getSelectedIndex();
         controlPanels.setSelectedIndex(3);
         cpIx2 = controlPanels.getSelectedIndex();
@@ -7212,21 +7249,103 @@ public class StarTrader extends javax.swing.JFrame {
         Color myTest = E.clan.values()[curEc.getClan()].getColor(curEc.pors);
 
         //String[] myChars = {"a","b","c","d","e","f","g"};
-        if(EM.myAIlearnings == null) EM.myAIlearnings = new TreeMap();
-        String tstr = EM.myAIlearnings.size() + " oPer=";
-        for (cIx = 0; cIx < 7; cIx++) {
-          str = eM.oPerS + eM.myChars[cIx]; //myAICvals + "oPer=" + eM.myChars[cIx];
-          temp = EM.myAIlearnings.get(str);
-          temp = temp == null ? 0 : temp; //deal with null's
-          tstr += eM.myChars[cIx] + temp + " ";
+         String tstr = "Later";
+        if (Assets.aEntries[0] > 0 && EM.myAIlearnings != null) {
+        synchronized (Assets.alock1) {
+          for (String aKey : EM.myAIlearnings.keySet()) {
+            if (EM.myAIlearnings == null) {
+              if (E.debugAIOut) {
+                System.out.println("-----BIC0-----Make myAIlearnings in Assets year=" + EM.year);
+              }
+              EM.myAIlearnings = new TreeMap();
+            }
+          aKeys++;
+            aPorS = (int) (aKey.charAt(2) - 'a');
+            aClan = (int) (aKey.charAt(3) - 'a');
+            acct = (int) (aKey.charAt(1) - 'a');
+            aType = (int) (aKey.charAt(0) - 'a');
+          aSize = aKey.length();
+          aMuch = (aKey.charAt(aSize - 1) - 'a'); // muchness in this key
+          Integer aCntr = EM.myAIlearnings.get(aKey);
+          aCnts = aCntr == null ? 0 : aCntr;
+            aNums += aCnts; // sum of counts, should be double keys
+          aMany[aType][acct][aPorS][aClan][aMuch] += aCnts;
+            aMany7[aType][aMuch] += aCnts;
+            aMany27[aType][acct][aMuch] += aCnts;
+          }//end process keys
+        } //sync
+
+        // now generate output
+        tstr = EM.myAIlearnings.size() + ":" + aKeys + ":" + aNums + ":"                      + Assets.aEntries[0] + " All =";
+        for (aType = 0; aType < 2; aType++) {
+          tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
+          for (aMuch = 0; aMuch < 6; aMuch++) { //a3, b2, c4, d2. e3. f7
+            for (acct = 0; acct < 2; acct++) {
+              tstr +=  aMany27[aType][acct][aMuch] + (acct == 0 ? ":" : ",");
+            }
+          }
         }
-        tstr += ", mProsp=";
-        for (cIx = 0; cIx < 7; cIx++) {
-          str = eM.prosBS + eM.myChars[cIx];//myAICvals + "mProspC=" + eM.myChars[cIx];
-          temp = EM.myAIlearnings.get(str);
-          temp = temp == null ? 0 : temp; //deal with null's
-          tstr += eM.myChars[cIx] + temp + " ";
-        }
+          tstr += "\n Red";
+        for (aType = 0; aType < 2; aType++) {
+          tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
+          for (aMuch = 0; aMuch < 6; aMuch++) {
+             for (acct = 0; acct < 2; acct++) {
+              // combine the two PorS values for            [PorS][clan]
+              tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+          }}
+          }
+          tstr += " Red cnts only";
+          for (aType = 0; aType < 2; aType++) {
+            tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
+            for (aMuch = 0; aMuch < 6; aMuch++) {
+              for (acct = 0; acct < 2; acct++) {
+                // combine the two PorS values for            [PorS][clan]
+                tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+              }
+            }
+          }
+
+          tstr += "\n Orange only";
+          for (aType = 0; aType < 2; aType++) {
+            tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
+            for (aMuch = 0; aMuch < 6; aMuch++) {
+              for (acct = 0; acct < 2; acct++) {
+                // combine the two PorS values for            [PorS][clan]
+                 tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+              }
+            }
+          }
+          tstr += " Yellow only";
+          for (aType = 0; aType < 2; aType++) {
+            tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
+            for (aMuch = 0; aMuch < 6; aMuch++) {
+              for (acct = 0; acct < 2; acct++) {
+                // combine the two PorS values for            [PorS][clan]
+                 tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+              }
+            }
+          }
+          tstr += "\n Green only";
+          for (aType = 0; aType < 2; aType++) {
+            tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
+            for (aMuch = 0; aMuch < 6; aMuch++) {
+              for (acct = 0; acct < 2; acct++) {
+                // combine the two PorS values for            [PorS][clan]
+                 tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+              }
+            }
+          }
+          tstr += " Blue only";
+          for (aType = 0; aType < 2; aType++) {
+            tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
+            for (aMuch = 0; aMuch < 6; aMuch++) {
+              for (acct = 0; acct < 2; acct++) {
+                // combine the two PorS values for            [PorS][clan]
+                tstr += (acct == 0 && aMuch == 0 ? "" : ", ") + (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : "");
+              }
+            }
+          }
+        } //if alearnings exists
         String disp1 = "year" + eM.year + " ";
         
         disp1 += " " + EM.econCnt + ":most" + EM.econs.size() + ":min" + cLim + ":max" + ffLim + ", Planets=" + EM.porsCnt[E.P] + " ships=" + EM.porsCnt[E.S] + " died=" + diedCnt + " /Y" + diedPerY + " "
