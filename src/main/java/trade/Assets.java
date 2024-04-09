@@ -6082,7 +6082,8 @@ public class Assets {
 
           myxit3Goods = myxit2Goods = myxit1Goods = myxitGoods = bids.copy();
           //     listDifBid(History.valuesMajor6, "xit17", oprevGoods);
-          String aHist = "Trade T" + term + " sv" + EM.mf(sv) + " sf" + EM.mf(sf) + " rGoal0=" + EM.mf(rGoal0) + tradeHist;
+
+          String aHist = "---TRD3---Trade T" + term + " sv" + EM.mf(sv) + " sf" + EM.mf(sf) + " rGoal0=" + EM.mf(rGoal0) + tradeHist;
           if (E.tradeDebugTerms) {
             System.out.println(aHist);
           }
@@ -6090,7 +6091,7 @@ public class Assets {
           term--;
           myOffer.setTerm(term);
           if (E.debugDisplayTrade) {
-            System.out.println("Trd.btr " + name + " t=" + prevTerm + "=>" + term
+            System.out.println("---TRD4---Trd.btr " + name + " t=" + prevTerm + "=>" + term
                                + " changes" + changes + " trdVals=" + EM.mf(sv1) + "=>" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "=>" + EM.mf(sf) + " offrs=" + EM.mf(offers) + "=>" + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + "=>" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(xof2) + "=>" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
             );
           }
@@ -6120,7 +6121,7 @@ public class Assets {
           listGoods(mRes, aPre);
           hist.add(new History(aPre, lRes, "done=" + term + " " + name, "barter", "ended", "barter", "ended", "<<<<<<<"));
           ec.addOHist(ohist, new History(aPre, lRes, "done=" + term + " " + name, "barter", "ended", "barter", "ended", "<<<<<<<"));
-          // if I had to make changes, I d0 not accept final offer
+          // if I had to make changes, I do not accept final offer
           if (testNoTrade(myOffer) || myOffer.getTerm() < 1) {  // Assets.CashFlow.Trades.barter
             tradeRejected = true;
             listDifBid(History.valuesMajor6, "rej" + term, oprevGoods);
@@ -6157,8 +6158,8 @@ public class Assets {
 
           ec.addOHist(ohist, new History(aPre, 3, "T" + term + " " + name + " ACC3" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
           if (E.debugDisplayTrade) {
-            System.out.println("Trade.barter accepted " + name + " t=" + prevTerm + "=>" + term
-                               + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
+            eM.printHere("---TRDA---", ec, "Trade.barter accepted " + name + " t=" + prevTerm + "=>" + term
+                                           + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
             );
           }
           myOffer.accepted(ec); // the bid becomes a move
@@ -6222,8 +6223,8 @@ public class Assets {
             hist.add(new History(aPre, lRes, "T" + term + " " + name + " REJ chgs" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
             ec.addOHist(ohist, new History(aPre, lRes, "T" + term + " " + name + " REJchgs" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
             if (E.debugDisplayTrade) {
-              System.out.println("Trade.barter rejected2 " + name + " t=" + prevTerm + "=>" + term
-                                 + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
+              eM.printHere("---TRDR---", ec, "Trade.barter rejected2 " + name + " t=" + prevTerm + "=>" + term
+                                             + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
               );
             }
             xitBarter();
@@ -6238,8 +6239,7 @@ public class Assets {
               ec.addOHist(ohist, new History(aPre, lRes, "T" + term + " " + name + " ACCc" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
             }
             if (E.debugDisplayTrade) {
-              System.out.println("Trade.barter accepted2 " + name + " t=" + prevTerm + "=>" + term
-                                 + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
+              eM.printHere("---TRDa2---", ec, "Trade.barter accepted2 " + name + " t=" + prevTerm + "=>" + term + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
               );
             }
             myOffer.accepted(ec); // the bid becomes a move
@@ -6271,8 +6271,8 @@ public class Assets {
           myOffer.setTerm(term - 1);
           term--;
           if (E.debugDisplayTrade) {
-            System.out.println("Trade.barter continue " + name + " t=" + prevTerm + "=>" + term
-                               + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
+            eM.printHere("---TRDc---", ec, "Trade.barter continue " + name + " t=" + prevTerm + "=>" + term
+                                           + " changes" + changes + " trdVals=" + EM.mf(sv1) + "->" + EM.mf(sv) + " goals=" + EM.mf(sf1) + "->" + EM.mf(sf) + " offrs=" + EM.mf(offers) + EM.mf(bids.curPlusSum()) + " rqst=" + EM.mf(requests) + " negSum" + EM.mf(bids.curNegSum()) + "excessOfrs" + EM.mf(excessOffers) + " xcess/of=" + EM.mf(excessOffers / offers)
             );
           }
           //         myxit3Goods = myxit2Goods;
@@ -8913,7 +8913,9 @@ public class Assets {
         int entryTerm = inOffer.getTerm();
         int newTerm = entryTerm; // until barter runs, then post barter value
         int ehist = 0;
-
+        if (E.debugBarterOut) {
+          eM.printHere("---CBAaa---", ec, "Assets.CashFlow.barter Enter " + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
+        }
         hist.add(new History(aPre, 5, "entr CashFlow barter", (eTrad == null ? " !eTrad" : " eTrad"), "entryTerm=", wh(entryTerm), "$=" + EM.mf(sumTotWorth), "l=" + hist.size() + "======================<<<<<<<<<<"));
         int lhist = hist.size();
         int lhista = lhist;
@@ -9027,12 +9029,15 @@ public class Assets {
           retOffer.set2Values(ec, btWTotWorth, btW.getSumRCSGBal(), tWTotWorth); // needed in TradeRecord SearchRecord
 
           if (newTerm == 0 || newTerm == -2 || entryTerm == -2) {  //trade accepted
-            eM.printHere("---CBX---", ec, " newTerm" + newTerm + " entryTerm" + entryTerm + " tradedShipOrdinal" + tradedShipOrdinal);
+           // eM.printHere("---CBX---", ec, " newTerm" + newTerm + " entryTerm" + entryTerm + " tradedShipOrdinal" + tradedShipOrdinal);
             tradedShipOrdinal++; // set ordinal of the next ship if any
             tradedSuccessTrades++;
             tradeAccepted = true;
             tradeMissed = tradeRejected = tradeLost = false;
             lastAcceptedYear = yearTradeAccepted = year;
+            if (E.debugBarterOut) {
+              eM.printHere("---CBA1---", ec, "Assets.CashFlow.barter set TradeAccepted true");
+            }
             EM.tradedCnt++;
             if (firstVisit) {
               EM.porsTraded[pors]++;
@@ -9094,6 +9099,9 @@ public class Assets {
             tradedSuccessTrades++;
             tradeAccepted = true;
             tradeMissed = tradeRejected = tradeLost = false;
+            if (E.debugBarterOut) {
+              eM.printHere("---CBA0---", ec, "Assets.CashFlow.barter set TradeAccepted true");
+            }
             lastAcceptedYear = yearTradeAccepted = year;
             EM.tradedCnt++;
             EM.porsTraded[pors]++;
@@ -9119,6 +9127,9 @@ public class Assets {
             tradeLost = true;
             prevNotAcceptedYear = yearTradeLost = year;
             tradeMissed = tradeRejected = tradeAccepted = false;
+            if (E.debugBarterOut) {
+              eM.printHere("---CBa2---", ec, "Assets.CashFlow.barter set !TradeAccepted = false");
+            }
             EM.tradedCnt++;
             // EM.porsTraded[pors]++;
             // EM.porsClanTraded[pors][clan]++;
@@ -9126,12 +9137,15 @@ public class Assets {
             setStat(EM.TradeLostValuePerGoal, percentValuePerGoal, 1);
             setStat(EM.TradeLostStrategicGoal, pors, clan, strategicGoal, 1);
             setStat(EM.TradeLostStrategicValue, pors, clan, strategicValue, 1);
-            retOffer.setTerm(-4);
+            retOffer.setTerm(-5);
 
           }
           else if (newTerm == -1) { // trade rejected by barter
             tradeRejected = true;
             tradeMissed = tradeLost = tradeAccepted = false;
+            if (E.debugBarterOut) {
+              eM.printHere("---CBa3---", ec, "Assets.CashFlow.barter set !TradeAccepted = false");
+            }
             prevNotAcceptedYear = yearTradeRejected = year;
             setStat(EM.TradeRejectValuePerGoal, percentValuePerGoal, 1);
             setStat(EM.TradeRejectedStrategicGoal, pors, clan, strategicGoal, 1);
@@ -9146,9 +9160,19 @@ public class Assets {
             }
             // else leave retOffer.ter -1 for the other cn
           }
-          else if (entryTerm < -1) { // should stop in econ
+          else if (entryTerm == -4) { // should stop in econ
+            tradeAccepted = true;
+            if (E.debugBarterOut) {
+              eM.printHere("---CBa4---", ec, "Assets.CashFlow.barter set TradeAccepted true");
+            }
+            retOffer.setTerm(-5);
+          }
+          else if (entryTerm != -2 && entryTerm < -1) { // should stop in econ
             tradeLost = true;
             tradeMissed = tradeRejected = tradeAccepted = false;
+            if (E.debugBarterOut) {
+              eM.printHere("---CBa5---", ec, "Assets.CashFlow.barter set !TradeAccepted = false");
+            }
             prevNotAcceptedYear = yearTradeLost = year;
             retOffer.setTerm(-5);
             fav = -3.;
@@ -9242,7 +9266,7 @@ public class Assets {
         eM.secondStack = eM.sw.toString();
         System.out.flush();
         System.err.flush();
-        System.err.println(eM.tError = ("----CFBa----CF Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+        System.err.println(eM.tError = ("----CBAf----ERROR Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
         //     ex.printStackTrace(System.err);
         st.setFatalError();
         throw new WasFatalError(eM.tError);
@@ -9472,13 +9496,16 @@ public class Assets {
      */
     double yearEnd() {  // Assets.CashFlow.yearEnd() after trading done
       String aPre = "E@";
+      if (E.debugBarterOut) {
+        eM.printHere("---CBAbb---", ec, " entering Assets.CashFlow.yearEnd Enter " + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
+      }
       if (eM.dfe()) {
         return 0.;
       }
 
       EM.setCurEcon(ec);
       ec.aYearEndTime = eM.now();
-      eM.printHere("----YEacy----", ec, " starting Assets.CashFlow.yearEnd");
+      eM.printHere("----YEacy----", ec, " starting Assets.CashFlow.yearEnd " + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
       curGrowGoal = eM.goalGrowth[pors][clan];
       curMaintGoal = eM.goalHealth[pors][clan];
       preveHr = preveHs = emergHr = emergHs = false;
@@ -9498,7 +9525,9 @@ public class Assets {
       }
       start();
       didStart = true;
-
+      if (E.debugBarterOut) {
+        eM.printHere("---CBAba---", ec, "Assets.CashFlow.yearEnd after start " + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
+      }
       //   DoTotalWorths tW, rawCW, preSwapW,gSwapW, gGrowW, gCostW, fyW;
       preSwapW = new DoTotalWorths();
       preSwapWorth = preSwapW.getTotWorth();
@@ -9717,7 +9746,7 @@ public class Assets {
         EM.myAIlearnings.put(str, aMany);
         if (E.debugAIOut && (aWaits > 5)) {
           aWaits = 0;
-          System.out.println("----BAI4---- put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
+          eM.printHere("----BAI4----", ec, " put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
         }
 
       }// end sync
@@ -10781,7 +10810,7 @@ public class Assets {
       //     if(eM.dfe()) return 0.;
       //Assets.CashFlow.yearEnd  final cleanup for starting the next year
       if (E.debugDoYearEndOut) {
-        System.err.println("-----YEDPg ---- " + ec.name + " near end " + (dead ? "DEAD" : "LIVE") + " in Assets.CashFlow.yearEnd() ");
+        eM.printHere("-----YEDPg ---- ", ec, " near end in Assets.CashFlow.yearEnd() " + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
       }
       if (!dead) {
         didStart = true;
@@ -11332,14 +11361,14 @@ public class Assets {
               assert nGrowth.get(ix + 6, j) > 0.0 : "nGrowth.get(ix + 6, j) <= 0.0 =" + EM.mf(nGrowth.get(ix + 6, j));
               bals.set4(ABalRows.GROWTHCOSTSYYIX, nGrowth);
               assert bals.sum1(ABalRows.GROWTHCOSTSYYIX, 0) > 0.0 : "ABalRows.GROWTHCOSTSYYIX <= 0.0 =" + EM.mf(bals.sum1(ABalRows.GROWTHCOSTSYYIX, 1));
-              eM.printHere("----CRC----", ec, "bals.sum4(ABalRows.GROWTHCOSTSYYIX)=" + EM.mf(bals.sum4(ABalRows.GROWTHCOSTSYYIX)) + " bal=" + eM.mf(bals.sum1(0, 2)) + " ibal" + eM.mf(iBal) + " sbal" + eM.mf(sBal) + " rs" + eM.mf(rs[4][0][ix]) + " invGEfficiency.get(ix + 2, i)=" + eM.mf(invGEfficiency.get(ix + 2, i)));
+              eM.printHere(E.debugCalcRawCosts, "----CRC----", ec, "bals.sum4(ABalRows.GROWTHCOSTSYYIX)=" + EM.mf(bals.sum4(ABalRows.GROWTHCOSTSYYIX)) + " bal=" + eM.mf(bals.sum1(0, 2)) + " ibal" + eM.mf(iBal) + " sbal" + eM.mf(sBal) + " rs" + eM.mf(rs[4][0][ix]) + " invGEfficiency.get(ix + 2, i)=" + eM.mf(invGEfficiency.get(ix + 2, i)));
             }
             else {
               assert nReqGrowth.get(2 + ix, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(2 + ix, j));
               assert nReqGrowth.get(6 + ix, j) > 0.0 : " nReqGrowth.get(2,j) <= 0.0 =" + EM.mf(nReqGrowth.get(6 + ix, j));
               assert nGrowth.get(ix + 2, j) > 0.0 : " nGrowth.get(ix + 2, j) <= 0.0 =" + EM.mf(nGrowth.get(ix + 2, j));
               assert nGrowth.get(ix + 6, j) > 0.0 : "nGrowth.get(ix + 6, j) <= 0.0 =" + EM.mf(nGrowth.get(ix + 6, j));
-              eM.printHere("----CRC2----", ec, "bals.sum4(ABalRows.GROWTHCOSTSYYIX)=" + EM.mf(bals.sum4(ABalRows.GROWTHCOSTSYYIX)) + " bal=" + eM.mf(bals.sum1(0, 2)) + " ibal" + eM.mf(iBal) + " sbal" + eM.mf(sBal) + " rs" + eM.mf(rs[4][0][ix]) + " invGEfficiency.get(ix + 2, i)=" + eM.mf(invGEfficiency.get(ix + 2, i)));
+              eM.printHere(E.debugCalcRawCosts, "----CRC2----", ec, "bals.sum4(ABalRows.GROWTHCOSTSYYIX)=" + EM.mf(bals.sum4(ABalRows.GROWTHCOSTSYYIX)) + " bal=" + eM.mf(bals.sum1(0, 2)) + " ibal" + eM.mf(iBal) + " sbal" + eM.mf(sBal) + " rs" + eM.mf(rs[4][0][ix]) + " invGEfficiency.get(ix + 2, i)=" + eM.mf(invGEfficiency.get(ix + 2, i)));
             }
           }
           //       consumerGrowthCosts10.add(0, i, t1);

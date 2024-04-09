@@ -704,7 +704,7 @@ public class Offer {
     myIx = cn[0] == ec ? 0 : cn[1] == ec ? 1 : 2;
     oIx = (1 + myIx) % 2; // set to the other
     
-    if (E.debugOutput) {
+    if (E.debugSetMyIx) {
       System.err.println("----OFSM----" + ec.getName() + " setMyIx=" + myIx + " 0=" + cn[0].getName() + " 1=" + cn[1].getName());
     }
     assert myIx != 2: ec.getName() + " is not=" + cn[0].getName() + " or=" + cn[1].getName();

@@ -88,13 +88,16 @@ public class E {
   //static final boolean resetOut = debugOutput;  //change out, err to
 
   static final boolean distributable = false;  //set true before making a jar fine available to public
-  static final boolean resetOut = false || distributable;  //change out, err to local files
+  static final boolean resetOut = true || distributable;  //change out, err to local files
 
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugOutput = debugMaster; //distributable;
   static final boolean outputLess = true;  // reduce the output chars in mf2
   static final boolean debugStuck = true; //error if stuck int testing
   static final boolean debugListNewE = false && debugOutput; //list known econs
+  static final boolean debugSetMyIx = false && debugOutput; //listsetMyIx
+  static final boolean debugCalcRawCosts = false && debugOutput; //calcRawCosts
+  static final boolean debugBarterOut = debugOutput; //Barter
   static final boolean debugCreateOut = debugOutput; //output messages Assets
   static final boolean debugCreateNullOut = debugOutput; //did not choose died Econ
   static final boolean debugAssetsOut = debugOutput; //output messages Assets
