@@ -2325,9 +2325,9 @@ public class Assets {
     tradedFirstNegProspectsSum = 0;
     // double[] tradedGoodBal = new double[E.hcnt];
     // double[] tradedGoodWorth = new double[E.hcnt];
-    tradeAccepted = false;
-    tradeRejected = false;
-    tradeLost = false;
+    //tradeAccepted = false;
+    //tradeRejected = false;
+    //tradeLost = false;
     // int acceptedTrade = -5;  // barter number of tradeOK
     // int rejectedTrade = -6; // barter number of rejected trad
     //  tradedBid = null;

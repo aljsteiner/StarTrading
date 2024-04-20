@@ -28,6 +28,7 @@ package trade;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -173,6 +174,7 @@ class EM {
   static final public SimpleDateFormat MYDATEFORMAT = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss:SSSz");
   static final Path REMEMBER = Paths.get("remember");
   static final Path KEEP = Paths.get("keep");
+  static final String AIFILE = "aiFile";
   static BufferedWriter bRemember = null, bKeep = null;
   static BufferedReader bKeepr = null;
 
@@ -3173,6 +3175,166 @@ onceAgain:
 
     }//keep from page
   }//doWriteKeepVals
+
+  int doReadAIFile() {
+    int rtn = 0; // number of keys read
+    String myKey = "";
+    Byte aa[] = new Byte[500];
+    myKey = aa.toString();
+    try {
+
+      // String dateString = MYDATEFORMAT.format(new Date());
+      // String rOut = "New Game " + dateString + "\n";
+      FileInputStream myAIFile = new FileInputStream(AIFILE);
+      int first = 0;
+      // loop reading keyLen, key,int until first<0 or EOFException ex
+      while ((first = myAIFile.read()) > 0) {
+        int len = myAiFile.read(aa, 0,)
+
+      )
+      }
+      if (false) {
+        String sd = "Hello World! 3 + 3.0  -5.0 = 6 true";
+        Scanner sds = new Scanner(sd);
+        sds.useLocale(Locale.US);
+        while (sds.hasNext()) {
+          if (sds.hasNextDouble()) {
+            System.out.println("Found :" + sds.nextDouble());
+          }
+          else {
+            System.out.println("Not Found :" + sds.next());
+          }
+        }
+        sds.close();
+      }
+      Scanner s = new Scanner(bKeepr);
+      System.err.println("locale " + s.locale());
+      Locale locale = Locale.US;
+      s.useLocale(Locale.US);
+onceAgain:
+      s.useDelimiter("\\s");
+      while (s.hasNext()) {
+        String cname = "notNot";
+        String sname = "notNot";
+        String fname = "notnot";
+        String lname = "notNot";
+        String pound = "notNot";
+        int vv = -999;
+        int ps = -999;
+        int klan = -999;
+        int clan = -999;
+        int slider = -999;
+        Boolean isNeg = false;
+        double val = -999.;
+        try {
+          cname = s.useDelimiter("\\s").next();
+          sname = "space";
+          fname = "notnot";
+          lname = "line";
+          switch (cname) {
+            case "new":
+            case "New":
+            case "year":
+            case "title":
+            case "more":
+            case "version":
+              lname = s.nextLine();
+              System.out.println("a line=" + cname + " :: " + lname);
+              break;
+            case "keep":
+              // sname = s.next("\\s");
+              sname = s.useDelimiter("\\S*").next(); //stop at non space
+              fname = s.useDelimiter("#\\s*").next();
+              pound = s.useDelimiter("\\s*").next(); // to a space
+              Object vo = valMap.get(fname); // look up fname in valMap
+              double prevVal = -100.;
+              if (vo != null) {
+                vv = (int) vo; // convert object to int
+                s.useDelimiter("\\s");
+                ps = s.nextInt();  //pors
+                klan = s.nextInt(); // clan
+                clan = klan = klan % 5;
+                //if(s.hasNext("\\s*-")) {s.useDelimiter("\\s*-").next(); isNeg=true;}
+                if (s.hasNextDouble()) {
+                  val = s.nextDouble();
+                  System.out.println("found double= " + mf(val));
+                }
+                else if (s.hasNextFloat()) {
+                  val = s.nextFloat();
+                  System.out.println("found Float= " + mf(val));
+                }
+                else if (s.hasNextInt()) {
+                  System.out.println("oops hasNextInt= " + s.nextInt());
+                }
+                else {
+                  System.out.println("Oops just something not number = " + s.next());
+                }
+                //     val = isNeg?-val:val;
+                //  svalp = valToSlider(vR = valD[vv][gameAddrC][pors][0], lL = valD[vv][gameLim][pors][vLowLim], lH = valD[vv][gameLim][pors][vHighLim]);
+                if (val > valD[vv][gameLim][ps][vHighLim] || val < valD[vv][gameLim][ps][vLowLim]) {
+                  double val0 = val;
+
+                  val = val > valD[vv][gameLim][ps][vHighLim] ? valD[vv][gameLim][ps][vHighLim] : val < valD[vv][gameLim][ps][vLowLim] ? valD[vv][gameLim][ps][vLowLim] : val;
+                  if (E.debugScannerOut) {
+                    System.out.println("keep  val restored to range " + fname + " " + pound + " " + vv + "  " + ps + " " + mf(val0) + " => " + mf(val));
+                  }// debug
+                } // restored
+                prevVal = valD[vv][gameAddrC][ps][klan];
+                valD[vv][gameAddrC][ps][klan] = val; // set to kept value
+                slider = valToSlider(valD[vv][gameAddrC][clan][ps], valD[vv][gameLim][ps][vLowLim], valD[vv][gameLim][ps][vHighLim]);
+                int prev3a = valI[vv][prev3SliderC][ps][clan];
+                int prev2a = valI[vv][prev2SliderC][ps][clan];
+                int prev1a = valI[vv][prevSliderC][ps][clan];
+                int prev0a = valI[vv][sliderC][ps][clan];
+                int prev3 = valI[vv][prev3SliderC][ps][clan] = valI[vv][prev2SliderC][ps][clan];
+                int prev2 = valI[vv][prev2SliderC][ps][clan] = valI[vv][prevSliderC][ps][clan];
+                int prev1 = valI[vv][prevSliderC][ps][clan] = valI[vv][sliderC][ps][clan];
+                valI[vv][sliderC][ps][clan] = slider; // a new value for slider
+
+                lname = s.nextLine();
+                if (E.debugScannerOut) {
+                  System.out.println("keep changed  \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + " prevVal=" + mf(prevVal) + " =>val=" + mf(val) + "slider a0123,0123=" + prev0a + " " + prev1a + " " + prev2a + " " + prev3a + " , " + slider + " " + prev1 + " " + prev2 + " " + prev3 + " " + " \n  :: moreLine=" + lname);
+                }
+              }
+              else {
+
+                lname = s.nextLine();
+                if (E.debugScannerOut) {
+                  System.out.println("keep unknown = \"blank=" + sname + "\" name=\"" + fname + "\"  pound=" + pound + " :: " + lname);
+                }
+              }
+              break;
+            default:
+              lname = s.nextLine();
+              System.out.println("Unknow line cmd=" + cname + " :: line=" + lname);
+          } // switch
+        }
+        catch (Exception | Error ex) {
+          firstStack = secondStack + "";
+          ex.printStackTrace(pw);
+          secondStack = sw.toString();
+          // newError = true;
+          System.out.println("Igmore doReadKeepVals Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
+        }
+      } // while
+      if (bKeepr != null) {
+        bKeepr.close();
+      }
+
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      System.err.println("doReadKeepVals error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore());
+      System.err.flush();
+      // ex.printStackTrace(System.err);
+      System.err.println("doReadKeepVals Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + addlErr + andMore());
+    }
+    finally {
+      return ret;
+    }
+  }
 
   /**
    * get the current settings value
