@@ -17,6 +17,7 @@
 */
 /*
 ******* sometimes new lines went to the end, recently they went to start.  not always done
+4/30/2024 I've gone back and forth on whether the AIFile is text or binary. I think text at this point and while bytes are used to create the key's I think the keys should also be a string and not a binary array. Convert result arrays to put results into the byte array, which is finally converte to a string
 4/20/2024 I think the memory fine AIFile should be a text file like keep it will consist of multiple lines of a string key and then an integer value of the number of instances of that key.  Each key contains one the values of the settings and one or more values interesting value like worth, trade given, tradesAccepted, settings pushed etc.  The idea is to judge the "joy" (closeness to success) of a given push.  The success is of course set by the score settings indicating which values lead to success.
 4/19/2024 I took time off for some health issues.  I solved a significant problem that cleared the tradeAccepted flag before most of the reslults were saved, so that the map values did not show accepted.  I created both a map and a large static array to save a limited set of values.  I have not developed the means of saving the map betwen runs like I do with the "keep" file.
 3/19/2024 now look at values beyound settings to pput into count , 5 separate values each

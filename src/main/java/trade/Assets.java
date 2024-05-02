@@ -70,6 +70,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
+import static trade.EM.bCharStart;
 
 /**
  *
@@ -99,7 +100,19 @@ public class Assets {
   static final int[] alock1 = {0};
   static final int[] alock2 = {0};
   static final int[] alock3 = {0};
-  //  these entries have  2types, 2PS , 5Clan, 7much
+
+  //Assets AI pointers into   //Assets AI pointers into
+  static final int ptype = 0, pacct = 1, ppors = 2, pclan = 3, poPerW = 4, pMinP = 5, pMaxP = 6, pMinW = 7, pMaxW = 8;
+  static final int pRs = 9, pSs = 16, pPerW = 23, pW = 24, pKW = 25;
+  /* now add some AI variables for this economy */
+  String myAIvalC = "soon";
+  String myAIbalances = "1234567";
+  String myAIprosperity = "1234567";
+  String myAIjoys = "1234567";
+  volatile static byte[] myAIBytes = {0, 0}; // extended in eM.buildMyAICvals
+  volatile static String myAICvals = "coming soon"; // converted for myAIBytes
+  //Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
+// Assets these AI entries have  2types, 2PS , 5Clan, 7much
   static volatile int aEntries[] = {0, 0}; // 2typein CashFlow.yearEnd()
   static volatile int aWaits = 0; //CashFlow.yearEnd()
   static volatile int aTAMEntries[][][] = {{{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}; // 2type, 2acct, 2 much
@@ -443,13 +456,7 @@ public class Assets {
   private static final int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
   private static final int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
   Assets.CashFlow.DoTotalWorths syW, iyW; //predefine references to worths
-  /* now add some AI variables for this economy */
-  String myAIvalC = "soon";
-  String myAIbalances = "1234567";
-  String myAIprosperity = "1234567";
-  String myAIjoys = "1234567";
-  volatile static String myAICvals = "coming soon";
-  //Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
+
   // choose lt values
  // double myAiPHELimits[] = {E.PZERO, 0.05, 0.3, 1.7};// 5 choice other
   //double[] myAIrawProspectsMinLimits = {E.PZERO, 0.1, 0.7, 3.0};
@@ -9652,7 +9659,7 @@ public class Assets {
         double oPerW = offers / btWTotWorth;
         double[] oPerWLims = {-99999999., 300., 7000., 45000., 633000.};
         String oPerWC = "a";
-        double[] minProspLims = {-99999999., E.PZERO, 0.13, 0.68, 10.15}; //rawProsperity2
+        double[] minProspLims = {-99999999., E.PZERO, 0.13, 0.68, 1.2, 3.2, 10.15}; //rawProsperity2
         String mProspC = "a";
         int cIx = 7;
         int much = 7;
@@ -9722,16 +9729,30 @@ public class Assets {
           }
 
           aType = 1;
-          oPerWC = "f";
+          oPerWC = 'z';
           much = 5;
           aEntries[aType]++;
           aTAMEntries[aType][acct][much]++;
           aPSMEntries[aType][acct][pors][much]++;// type acct pors much
           aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
         }
-        eM.buildAICvals(ec, eM.vvend); //build part of key with pors,clan
+        myAIBytes = new byte[eM.bCharStart + eM.vvend];
+        eM.buildAICvals(ec, myAIBytes, eM.vvend); //build part of key with pors,clan
         aType = 1;
-        String str = (EM.oPerS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + oPerWC; // finish key
+        int ix = 0;
+        int ptype = 0, pacct = 1, ppors = 2, pclan = 3, poPerW = 4, pMinP = 5, pMaxP = 6, pMinW = 7, pMaxW = 8;
+        //  int pRs = 9, pSs = 16, pPerW = 23, pW = 24, pKW = 25;
+        myAIBytes[ptype] = (byte) ('a' + aType);
+        myAIBytes[pacct] = (byte) ('a' + acct);
+        myAIBytes[ppors] = (byte) ('a' + pors);
+        myAIBytes[pclan] = (byte) ('a' + clan);
+        myAIBytes[poPerW] = (byte) oPerWC;
+        myAIBytes[pMinP] = (byte) ('a' + aType);
+        myAIBytes[pMinW] = (byte) ('a' + aType);
+        myAIBytes[pMaxW] = (byte) ('a' + aType);
+        myAIBytes[pMinP] = (byte) ('a' + aType);
+        myAIBytes[pMinP] = (byte) ('a' + aType);
+        //  String str = (EM.oPerS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + myAICvals) + oPerWC; // finish key
 
         Integer aMany = EM.myAIlearnings.get(str);
         aMany = aMany == null ? 1 : aMany + 1;// force valid number if null

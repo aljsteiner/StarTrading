@@ -6108,7 +6108,7 @@ public class StarTrader extends javax.swing.JFrame {
         statsTable1.setPreferredSize(new Dimension(myW3, myH2));
     
       eE.init(eM, this);
-      eM.aInit();
+      eM.init();
       this.pack();
  
 

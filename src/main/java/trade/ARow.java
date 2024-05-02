@@ -2053,18 +2053,20 @@ public class ARow {
   }
 
   /**
-   * order the ix from max to min of values then set valid
+   * order the ix from index of largest to index of smallest order max from
+   * largest to smallest also generate sum and update savCnt to setCnt setCnt is
+   * increased whenever any value is updated
    */
   ARow makeMaxOrderIx() {
     if (values == null) {
       fill();
     }
     double[] max = new double[E.lsecs];
-    int[] maxIx = new int[E.lsecs];
+    int[] maxIx = new int[E.LSECS];
     double maxC, maxO;
     int maxOIx, maxCIx;
     sum = 0.;
-    for (int g = 0; g < E.lsecs; g++) {
+    for (int g = 0; g < E.LSECS; g++) {
       sum += maxC = values[g];
       maxCIx = g;
       for (int k = 0; k < g; k++) {
@@ -2094,7 +2096,7 @@ public class ARow {
     if (setCnt != savCnt) {
       makeOrderIx();
     }
-    return ix[n];
+    return ix[E.LSECS - 1 - n];
   }
 
   int minIx() {
@@ -2114,7 +2116,7 @@ public class ARow {
     if (setCnt != savCnt) {
       makeOrderIx();
     }
-    return ix[n];
+    return ix[E.LSECS - 1 - n];
   }
 
   /**
@@ -2128,7 +2130,7 @@ public class ARow {
     if (setCnt != savCnt) {
       makeOrderIx();
     }
-    return ix[E.lsecs - 1];
+    return ix[0];
   }
 
   /**
@@ -2141,7 +2143,7 @@ public class ARow {
     if (setCnt != savCnt) {
       makeOrderIx();
     }
-    return ix[E.lsecs - 1 - n];
+    return ix[n];
   }
 
   /**
@@ -2169,6 +2171,23 @@ public class ARow {
       set(m, Math.min(A.get(m), get(m)));
     }
     return this;
+  }
+
+  /**
+   * convert ARow to an ordered min to max characters 'a' to 'z' This makes a
+   * copy from the ARow,
+   *
+   * @param a an ARow to convert
+   * @param res the byte array for 7 results
+   * @param bias the place to start in the res array
+   *
+   */
+  public void getAChars(ARow a, byte[] res, int bias) {
+    double extent = a.max() - a.min(0);
+    byte[] ret = {0, 0, 0, 0, 0, 0, 0};
+    for (int ix = 0; ix < E.LSECS; ix++) {
+      res[ix + bias] = (byte) ((25.0 * a.min(ix) / extent) + 'a');
+    }
   }
 
   /**
@@ -2438,7 +2457,7 @@ public class ARow {
     if (setCnt != savCnt) {
       makeOrderIx();
     }
-    return values[ix[E.lsecs - 1]];
+    return values[ix[0]];
   }
 
   /**
@@ -2451,7 +2470,7 @@ public class ARow {
     if (setCnt != savCnt) {
       makeOrderIx();
     }
-    return values[ix[E.lsecs - 1 - n]];
+    return values[ix[n]];
   }
 
   /**

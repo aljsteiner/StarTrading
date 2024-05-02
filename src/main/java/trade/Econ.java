@@ -368,6 +368,88 @@ public class Econ {
     return rtnEcon;
   }
 
+  public byte[] bmask = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0};
+
+  /**
+   * take difference of 2 byte arrays
+   *
+   * @param a first array
+   * @param b second array
+   * @return 0 if a match else a[ix]-b[ix] or a.length - b.length if they are
+   * different
+   */
+  int bDifr(byte[] a, byte[] b) {
+    int rtn = 0;
+    if ((rtn = (a.length - b.length)) != 0) {
+      return rtn;
+    }
+    for (int ix = 0; ix < a.length; ix++) {
+      if ((rtn = a[ix] - b[ix]) != 0) {
+        return rtn;
+      }
+    }
+    return 0; // reached end ok
+  }
+
+  /**
+   * take difference of 2 byte arrays with a mask
+   *
+   * @param a first array
+   * @param b second array
+   * @param m mask where a nz means ignore a difference
+   * @return 0 if a match else a[ix]-b[ix] or a.length - b.length if they are
+   * different however if a[ix] != b[ix] but m.length < a.length or m[ix] != 0
+   * igmore a[ix] dif
+   */
+  int bDifmr(byte[] a, byte[] b, byte[] m) {
+    int rtn = 0;
+    if ((rtn = (a.length - b.length)) != 0) {
+      return rtn;
+    }
+    for (int ix = 0; ix < a.length; ix++) {
+      if (((rtn = a[ix] - b[ix]) != 0) && ((m.length >= ix) && (m[ix] == 0))) {
+        return rtn;
+      }
+    }
+    return 0; // reached end ok
+  }
+
+  /**
+   * take difference of 2 byte arrays with a mask
+   *
+   * @param a first array
+   * @param b second array
+   * @use mask bmask where a nz means ignore a difference
+   * @return 0 if a match else a[ix]-b[ix] or a.length - b.length if they are
+   * different however if a[ix] != b[ix] but m.length < a.length or m[ix] != 0
+   * igmore a[ix] dif
+   */
+  int bDifmr(byte[] a, byte[] b) {
+    byte m[] = bmask;
+    int rtn = 0;
+    if ((rtn = (a.length - b.length)) != 0) {
+      return rtn;
+    }
+    for (int ix = 0; ix < a.length; ix++) {
+      if (((rtn = a[ix] - b[ix]) != 0) && ((m.length >= ix) && (m[ix] == 0))) {
+        return rtn;
+      }
+    }
+    return 0; // reached end ok
+  }
+
+  /**
+   * get position xyz[p]
+   *
+   * @param p
+   * @return xyz[p]
+   */
   double getXyz(int p) {
     return xyz[p];
   }

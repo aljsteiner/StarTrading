@@ -174,9 +174,10 @@ class EM {
   static final public SimpleDateFormat MYDATEFORMAT = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss:SSSz");
   static final Path REMEMBER = Paths.get("remember");
   static final Path KEEP = Paths.get("keep");
-  static final String AIFILE = "aiFile";
   static BufferedWriter bRemember = null, bKeep = null;
   static BufferedReader bKeepr = null;
+  static final Path AIFILE = Paths.get("aiFile");
+  static BufferedReader baiFiler;
 
   /* each keep goes false after end of page process new page or settings ended */
   static boolean keepFromPage = false;  // keep clicked titles on this page
@@ -232,7 +233,9 @@ class EM {
   static volatile String otherEconClan = "A";
   static int myAIcstart = 'a'; // start of ascii a
   static int myAIdiv = 20; //divid the values by 5
-  static String myChars[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};//11
+  static String myStrs[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};//11
+  Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
   static volatile Map<String, Integer> myAIlearnings;
   /**
    * set curEcon, curEconName curEconClan;curEconTime,curEconAge get a null
@@ -552,6 +555,9 @@ class EM {
   static StringWriter sw = new StringWriter();
   static PrintWriter pw = new PrintWriter(sw);
   static String firstStack = "", secondStack = "", thirdStack = "", fourthStack = "";
+  static int rende3 = 700;
+  static volatile int bCharStart = 25, bCharEnd = -2, vvend = -1;
+
   /**
    * instantiate another EM, set static eE and static eM = new EM
    *
@@ -571,9 +577,7 @@ class EM {
    * initialize eM read the existing keeps, close that and open as
    *
    */
-  int rende3 = 700;
-
-  void aInit() {
+  void init() {
     try {
       String dateString = MYDATEFORMAT.format(new Date());
       String rOut = "New Game V" + StarTrader.versionText + " " + dateString + "\r\n";
@@ -584,8 +588,10 @@ class EM {
       resS = new String[rende3][]; //space for desc, comment
       resV = new double[rende3][][][];
       resI = new long[rende3][][][];
-      defRes();
-      runVals();
+      defRes();  // generate result objects
+      runVals();  // generate settings objects to vvend
+      //static volatile int bCharStart = 10, bCharEnd = -2, vvend = -1;
+      bCharEnd = vvend + bCharStart; // set length for  of key
       System.out.println("++++counts at init EM doVal vvend=" + vvend + ", doRes rend4=" + rende4 + ", assiged doRes arrays rende3=" + rende3 + " +++++++");
       doReadKeepVals();
       if (bKeepr != null) {
@@ -807,6 +813,82 @@ class EM {
       secondStack = sw.toString();
       System.err.println("Ignore " + eo + " pauses() error " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
     }
+  }
+
+  public byte[] bmask = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0};
+
+  /**
+   * take difference of 2 byte arrays
+   *
+   * @param a first array
+   * @param b second array
+   * @return 0 if a match else a[ix]-b[ix] or a.length - b.length if they are
+   * different
+   */
+  int bDifr(byte[] a, byte[] b) {
+    int rtn = 0;
+    if ((rtn = (a.length - b.length)) != 0) {
+      return rtn;
+    }
+    for (int ix = 0; ix < a.length; ix++) {
+      if ((rtn = a[ix] - b[ix]) != 0) {
+        return rtn;
+      }
+    }
+    return 0; // reached end ok
+  }
+
+  /**
+   * take difference of 2 byte arrays with a mask
+   *
+   * @param a first array
+   * @param b second array
+   * @param m mask where a nz means ignore a difference
+   * @return 0 if a match else a[ix]-b[ix] or a.length - b.length if they are
+   * different however if a[ix] != b[ix] but m.length < a.length or m[ix] != 0
+   * igmore a[ix] dif
+   */
+  int bDifmr(byte[] a, byte[] b, byte[] m) {
+    int rtn = 0;
+    if ((rtn = (a.length - b.length)) != 0) {
+      return rtn;
+    }
+    for (int ix = 0; ix < a.length; ix++) {
+      if (((rtn = a[ix] - b[ix]) != 0) && ((m.length >= ix) && (m[ix] == 0))) {
+        return rtn;
+      }
+    }
+    return 0; // reached end ok
+  }
+
+  /**
+   * take difference of 2 byte arrays with a mask
+   *
+   * @param a first array
+   * @param b second array
+   * @use mask bmask where a nz means ignore a difference
+   * @return 0 if a match else a[ix]-b[ix] or a.length - b.length if they are
+   * different however if a[ix] != b[ix] but m.length < a.length or m[ix] != 0
+   * igmore a[ix] dif
+   */
+  int bDifmr(byte[] a, byte[] b) {
+    byte m[] = bmask;
+    int rtn = 0;
+    if ((rtn = (a.length - b.length)) != 0) {
+      return rtn;
+    }
+    for (int ix = 0; ix < a.length; ix++) {
+      if (((rtn = a[ix] - b[ix]) != 0) && ((m.length >= ix) && (m[ix] == 0))) {
+        return rtn;
+      }
+    }
+    return 0; // reached end ok
   }
 
   /**
@@ -2499,7 +2581,8 @@ class EM {
   int gameDisplayNumber[] = {-1, -1, -1, -1, -1, -1};//-1=not set, 0-nn start of current disp in the array of game or clan enums
   int clanisplayNumber[] = {-1, -1, -1, -1, -1, -1};//-1=not set, 0-nn start of current disp in the array of game or clan enums
   static int gamePorS = 0;  // 0=p,1=ship, used in getIval and setIval
-  int vv = -1, gc = -2, vFill = 0, lowC = 0, highC = 1, vvend = -1;
+  static volatile int vv = -1, gc = -2, vFill = 0, lowC = 0, highC = 1;
+
 
   /**
    * values of game where the next display will start
@@ -3185,10 +3268,10 @@ onceAgain:
 
       // String dateString = MYDATEFORMAT.format(new Date());
       // String rOut = "New Game " + dateString + "\n";
-      FileInputStream myAIFile = new FileInputStream(AIFILE);
+      baiFiler = Files.newBufferedReader(AIFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       int first = 0;
       // loop reading keyLen, key,int until first<0 or EOFException ex
-      while ((first = myAIFile.read()) > 0) {
+      while ((first = baiFile.read()) > 0) {
         int len = myAiFile.read(aa, 0,)
 
       )
@@ -3423,21 +3506,68 @@ onceAgain:
     }
     return res;
   }
-  static volatile String myAICvals;
+
+  /**
+   * get a byte value from a series of tests to put into myAICvals[iix] called
+   * in Assets.CashFlow.yearEnd() with tests specified in Assets
+   *
+   * @param a the source value
+   * @param tests an array of tests that a may be greater than
+   * @return an small case letter 'b'+ a.length-1 greater than largest test
+   * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
+   * test
+   */
+  static byte getValueByte(double a, double[] tests) {
+    byte ret = 'a';
+    int testsLen = tests.length;
+    for (int ix = testsLen - 1; ix > -1; ix--) {
+      if (a > tests[ix]) {
+        return (ret = (byte) ('b' + ix));
+      }
+    }
+    return ret;
+  }
+
+  /**
+   * set a byte value from a series of tests to put into res[bias+ix]; called in
+   * buildAICvals and in Assets.CashFlow.yearEnd() with tests specified in
+   * Assets
+   *
+   * @param res the array to set
+   * @param bias the bias into the array
+   * @param a the source value
+   * @param tests an array of tests that a may be greater than
+   * @return an small case letter 'b'+ a.length-1 greater than largest test
+   * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
+   * test
+   */
+  static void setValueByte(byte[] res, int bias, double a, double[] tests) {
+    byte ret = 'a';
+    int ix = 0;
+    int testsLen = tests.length;
+    for (ix = testsLen - 1; ix > -1; ix--) {
+      if (a > tests[ix]) {
+        ret = (byte) ('b' + ix);
+        ix = -2; // exit loop
+      }
+    }
+    res[bias] = ret;
+  }
+//  static volatile byte[] myAICvals;
   static String prosBS = "xx", oPerS = "xx";
-  char[] prevAr = new char[lvals];
-  char[] prevAr1 = new char[lvals];
-  char cc = 'A';
-  String[] valCr = new String[lvals];
+  byte[] prevAr = new byte[bCharEnd];
+  byte[] prevAr1 = new byte[bCharEnd];
+  byte cc = 'A';
+  byte[] valCr = new byte[bCharEnd];
   /**
    * build AICvals in Assets.myAICvals from myAIvals as sliderVals
    *
    * @param ec current Econ
+   * @param res the byte array for the key, start at bCharStart
    * @param vvend The count of the last doVal
    * @return
    */
-  String buildAICvals(Econ ec, int vvend) {
-
+  void buildAICvals(Econ ec, byte[] res, int vvend) {
     int sliderVal = 0, tix = 0;
     // static int myAIcstart  = 'a'; // start of ascii a
     // static int myAIdiv  = 20; //divid the values by 5
@@ -3454,23 +3584,13 @@ onceAgain:
       String aa = "", bb = "bb";
       // start bb with the schars for pors and clan
       int aWaits = 0;
+      for (int ix = 0; ix < bCharStart; ix++) {
+        res[ix] = '#';
+      }
       for (int ix = 0; ix < vvend; ix++) { // scan each doVal
         sliderVal = getAIVal(ix, ec.pors, ec.clan);
-        bb = myChars[tix = (int) (sliderVal / myAIdiv)];
-        cc = bb.charAt(0);
-        if (false && cc != 'A' && prevAr[ix] != cc && E.debugAIOut) {
-          System.out.println("---BIC2--- conflict between values character at setting ix=" + ix + " new=" + bb + " old=" + prevAr[ix] + " desc=" + valS[ix][vDesc] + " str=" + aa);
-        }
-          prevAr[ix] = cc;
-          //int dd = aa.charAt(0) - 'a';
-          aa += bb;  //build key from value char of each doval
-        if (E.debugAIOut && aWaits > 5) {
-          aWaits = 0;
-          System.out.println("---BIC3--- vvend" + vvend + " desc=" + valS[ix][vDesc] + " aa=" + aa + " ix=" + ix + " bb=" + bb + " key=" + aa);
-        }
-      }
-        ec.as.myAICvals = myAICvals = aa; //valCr.toString();
-
+        res[ix + bCharStart] = (byte) ((int) (sliderVal / myAIdiv) + 'a');
+    }
     }
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
@@ -3482,9 +3602,7 @@ onceAgain:
       flushes();
       flushes();
       st.setFatalError();
-
     }
-    return myAICvals;
   }
 
   char[] buildAICbals(Econ ec, int vvend, double minProp) {
