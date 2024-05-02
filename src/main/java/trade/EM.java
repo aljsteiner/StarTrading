@@ -3555,10 +3555,10 @@ onceAgain:
   }
 //  static volatile byte[] myAICvals;
   static String prosBS = "xx", oPerS = "xx";
-  byte[] prevAr = new byte[bCharEnd];
-  byte[] prevAr1 = new byte[bCharEnd];
-  byte cc = 'A';
-  byte[] valCr = new byte[bCharEnd];
+//  byte[] prevAr = new byte[bCharEnd];
+  // byte[] prevAr1 = new byte[bCharEnd];
+//  byte cc = 'A';
+//  byte[] valCr = new byte[bCharEnd];
   /**
    * build AICvals in Assets.myAICvals from myAIvals as sliderVals
    *
@@ -3577,11 +3577,11 @@ onceAgain:
           System.out.println("------BIC1-----EM.buildAICvals null TreeMap new TreeMap year=" + year);
         }
           myAIlearnings = new TreeMap();
-          prevAr1[0] = cc = 'A'; // at first use set to ignore diff
+        //  prevAr1[0] = cc = 'A'; // at first use set to ignore diff
         }
         // for(int ix = 0; ix < vvend; ix++){prevAr1[ix] = prevAr[ix];}
 
-      String aa = "", bb = "bb";
+      // String aa = "", bb = "bb";
       // start bb with the schars for pors and clan
       int aWaits = 0;
       for (int ix = 0; ix < bCharStart; ix++) {

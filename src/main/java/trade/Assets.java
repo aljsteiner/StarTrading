@@ -595,6 +595,7 @@ public class Assets {
     resS = eM.resS; //space for desc, comment
     resV = eM.resV;
     resI = eM.resI;
+    prevProspects2 = new A2Row(ec);
     // lStatsWaitList = eM.lStatsWaitList;
     // statsWaitList = eM.statsWaitList;
     ISSET = eM.ISSET;
@@ -9748,13 +9749,16 @@ public class Assets {
         myAIBytes[pclan] = (byte) ('a' + clan);
         myAIBytes[poPerW] = (byte) oPerWC;
         //static void setValueByte(byte[] res, int bias, double value, double[] tests)
+        if (prevProspects2 != null) {
         EM.setValueByte(myAIBytes, pMinP, prevProspects2.curMin(), minProspLims);
-        EM.setValueByte(myAIBytes, pMaxP, prevProspects2.curMax(), minProspLims);
+          EM.setValueByte(myAIBytes, pMaxP, prevProspects2.curMax(), minProspLims);
+          prevProspects2.getRow(0).getAChars(myAIBytes, pRs);
+          prevProspects2.getRow(1).getAChars(myAIBytes, pSs);
+        }
         double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};
         EM.setValueByte(myAIBytes, pMinW, syWTotWorth, worthLims);
         EM.setValueByte(myAIBytes, pMaxW, syWTotWorth, worthLims);
-        prevProspects2.getRow(0).getAChars(myAIBytes, pRs);
-        prevProspects2.getRow(1).getAChars(myAIBytes, pSs);
+
         myAIBytes[pMinP] = (byte) ('a' + aType);
         myAIBytes[pMinW] = (byte) ('a' + aType);
         myAIBytes[pMaxW] = (byte) ('a' + aType);

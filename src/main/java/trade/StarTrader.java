@@ -7196,10 +7196,10 @@ public class StarTrader extends javax.swing.JFrame {
         for (acct = 0; acct < 2; acct++) {
           aMany[aType][acct] = new int[2][][];
         for (aPorS = 0; aPorS < 2; aPorS++) {
-          aMany[aType][acct][aPorS] = new int[5][];
-          for (aClan = 0; aClan < 5; aClan++) {
-            aMany[aType][acct][aPorS][aClan] = new int[7];
-            for (aMuch = 0; aMuch < 7; aMuch++) {
+          aMany[aType][acct][aPorS] = new int[8][];
+          for (aClan = 0; aClan < 8; aClan++) {
+            aMany[aType][acct][aPorS][aClan] = new int[11];
+            for (aMuch = 0; aMuch < 10; aMuch++) {
               aMany[aType][acct][aPorS][aClan][aMuch] = 0;
             }
           }
@@ -7269,6 +7269,7 @@ public class StarTrader extends javax.swing.JFrame {
           Integer aCntr = EM.myAIlearnings.get(aKey);
           aCnts = aCntr == null ? 0 : aCntr;
             aNums += aCnts; // sum of counts, should be double keys
+            aMuch = aMuch < 5 && aMuch > -1 ? aMuch : 5;
           aMany[aType][acct][aPorS][aClan][aMuch] += aCnts;
             aMany7[aType][aMuch] += aCnts;
             aMany27[aType][acct][aMuch] += aCnts;
