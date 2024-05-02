@@ -9657,13 +9657,13 @@ public class Assets {
       synchronized (Assets.alock1) {
 
         double oPerW = offers / btWTotWorth;
-        double[] oPerWLims = {-99999999., 300., 7000., 45000., 633000.};
-        String oPerWC = "a";
-        double[] minProspLims = {-99999999., E.PZERO, 0.13, 0.68, 1.2, 3.2, 10.15}; //rawProsperity2
-        String mProspC = "a";
+        double[] oPerWLims = {-99999999, 50., 100., 200., 300., 1000., 7000., 45000., 633000.}; //9
+        byte oPerWC = 'a';
+        double[] minProspLims = {-99999999., -0.1, E.PZERO, 0.13, 0.5, 0.68, 1.2, 3.2, 10.15}; //prevProsperity2
+        byte mProspC = 'a';
         int cIx = 7;
         int much = 7;
-        int aType = 0;
+        int aType = 1;
         int acct = 1;
         aWaits++;
         if (tradeAccepted) {
@@ -9681,24 +9681,23 @@ public class Assets {
           cumOffersClan[pors][clan] += cumOffersClan[pors][clan] / cumBTWorthClan[pors][clan];
 
           acct = 1;
-          for (much = 4; much > -1; much--) {
+          aType = 1;
+          for (much = oPerWLims.length - 1; much > -1; much--) {
             // leave the preset 'a' if less than the least array entry
             // assume much == 0 is the rest of the entries, do not test
-            aType = 0;
-            if (oPerWC.contains("a") && (much == 0 || oPerW > oPerWLims[much])) {
-              oPerWC = eM.myChars[much];
-              aEntries[aType]++;
-              aTAMEntries[aType][acct][much]++;
-              aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-              aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
+            if (oPerWC == 'a' && (much == 0 || oPerW > oPerWLims[much])) {
+              oPerWC = (byte) ('a' + much);
+              //aEntries[aType]++;
+              // aTAMEntries[aType][acct][much]++;
+              // aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+              //aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
             }
-            if (mProspC.contains("a") && (much == 0 || rawProspects2.min() > minProspLims[much - 1])) {
-              aType = 0;
-              mProspC = eM.myChars[much];
+            if (mProspC == 'a' && (much == 0 || prevProspects2.min() > minProspLims[much - 1])) {
+              mProspC = (byte) ('a' + much);
               aEntries[aType]++;
-              aTAMEntries[aType][acct][much]++;
-              aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-              aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
+              //aTAMEntries[aType][acct][much]++;
+              //aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+              //aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
             }
           }
           /*
@@ -9716,43 +9715,53 @@ public class Assets {
         // now process the missed counts
         else {
           acct = 0; // not active
-          for (much = 4; much > -1; much--) {
+          aType = 0;
+          for (much = oPerWLims.length - 1; much > -1; much--) {
             // leave the preset 'a' if less than the least array entry
-            aType = 0;
-            if (mProspC.contains("a") && (rawProspects2.min() > minProspLims[much])) {
-              mProspC = eM.myChars[much];
-              aEntries[aType]++;
-              aTAMEntries[aType][acct][much]++;
-              aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-              aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
-            }
-          }
 
-          aType = 1;
+            if (mProspC == 'a' && (rawProspects2.min() > minProspLims[much])) {
+              mProspC = (byte) ('a' + much);
+              // aEntries[aType]++;
+              // aTAMEntries[aType][acct][much]++;
+              // aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+              // aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
+            }
+          }//for much
+
           oPerWC = 'z';
           much = 5;
           aEntries[aType]++;
-          aTAMEntries[aType][acct][much]++;
-          aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-          aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
+          //aTAMEntries[aType][acct][much]++;
+          //aPSMEntries[aType][acct][pors][much]++;// type acct pors much
+          //aClanEntries[aType][acct][pors][clan][much]++; // type pors clan much
         }
-        myAIBytes = new byte[eM.bCharStart + eM.vvend];
+        myAIBytes = new byte[eM.bCharStart + eM.vvend]; // new array
+        // leave EM.bCharStart # characters to be changed before settings values
+        // settings values are based on this clan and pors
         eM.buildAICvals(ec, myAIBytes, eM.vvend); //build part of key with pors,clan
-        aType = 1;
         int ix = 0;
-        int ptype = 0, pacct = 1, ppors = 2, pclan = 3, poPerW = 4, pMinP = 5, pMaxP = 6, pMinW = 7, pMaxW = 8;
+        //int ptype = 0, pacct = 1, ppors = 2, pclan = 3, poPerW = 4, pMinP = 5, pMaxP = 6, pMinW = 7, pMaxW = 8;
         //  int pRs = 9, pSs = 16, pPerW = 23, pW = 24, pKW = 25;
         myAIBytes[ptype] = (byte) ('a' + aType);
         myAIBytes[pacct] = (byte) ('a' + acct);
         myAIBytes[ppors] = (byte) ('a' + pors);
         myAIBytes[pclan] = (byte) ('a' + clan);
         myAIBytes[poPerW] = (byte) oPerWC;
+        //static void setValueByte(byte[] res, int bias, double value, double[] tests)
+        EM.setValueByte(myAIBytes, pMinP, prevProspects2.curMin(), minProspLims);
+        EM.setValueByte(myAIBytes, pMaxP, prevProspects2.curMax(), minProspLims);
+        double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};
+        EM.setValueByte(myAIBytes, pMinW, syWTotWorth, worthLims);
+        EM.setValueByte(myAIBytes, pMaxW, syWTotWorth, worthLims);
+        prevProspects2.getRow(0).getAChars(myAIBytes, pRs);
+        prevProspects2.getRow(1).getAChars(myAIBytes, pSs);
         myAIBytes[pMinP] = (byte) ('a' + aType);
         myAIBytes[pMinW] = (byte) ('a' + aType);
         myAIBytes[pMaxW] = (byte) ('a' + aType);
         myAIBytes[pMinP] = (byte) ('a' + aType);
         myAIBytes[pMinP] = (byte) ('a' + aType);
         //  String str = (EM.oPerS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + myAICvals) + oPerWC; // finish key
+        String str = myAIBytes.toString();
 
         Integer aMany = EM.myAIlearnings.get(str);
         aMany = aMany == null ? 1 : aMany + 1;// force valid number if null
@@ -9761,7 +9770,7 @@ public class Assets {
           System.out.println("----BAI3---- put key=" + str + " , =" + aMany + " much=" + much + " year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
         }
         aType = 0;
-        str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
+        // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
         aMany = EM.myAIlearnings.get(str); // force valid number if null
         aMany = aMany == null ? 1 : aMany + 1;
         EM.myAIlearnings.put(str, aMany);
@@ -10863,6 +10872,7 @@ public class Assets {
       oTradedEconsNext = 0;
       syW = null; // get rid of hanging DoTotalWorths
       didDepreciation = false;  // second setting
+      prevProspects2 = rawProspects2;
       if (!dead) {
         EM.econCountsTest();
         EM.isHere("--EYEYag--", ec, "end of yearEnd stats");

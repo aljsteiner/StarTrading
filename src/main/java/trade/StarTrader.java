@@ -6497,7 +6497,7 @@ public class StarTrader extends javax.swing.JFrame {
       }
       // years is a -1 origin,
       EM.doYearTime = startYear = new Date().getTime();
-      eM.myAICvals = "restartYear";
+   //   eM.myAICvals = "restartYear";
       stateConst = STARTING;
       eM.year++;
       E.resetMsgs();

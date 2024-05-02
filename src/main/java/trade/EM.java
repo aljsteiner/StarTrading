@@ -3268,14 +3268,14 @@ onceAgain:
 
       // String dateString = MYDATEFORMAT.format(new Date());
       // String rOut = "New Game " + dateString + "\n";
-      baiFiler = Files.newBufferedReader(AIFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    //  baiFiler = Files.newBufferedReader(AIFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       int first = 0;
       // loop reading keyLen, key,int until first<0 or EOFException ex
-      while ((first = baiFile.read()) > 0) {
-        int len = myAiFile.read(aa, 0,)
+     // while ((first = baiFile.read()) > 0) {
+      //   int len = myAiFile.read(aa, 0,)
 
-      )
-      }
+      //  )
+      //}
       if (false) {
         String sd = "Hello World! 3 + 3.0  -5.0 = 6 true";
         Scanner sds = new Scanner(sd);
@@ -3415,7 +3415,7 @@ onceAgain:
       System.err.println("doReadKeepVals Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + addlErr + andMore());
     }
     finally {
-      return ret;
+      return rtn;
     }
   }
 
@@ -3511,17 +3511,17 @@ onceAgain:
    * get a byte value from a series of tests to put into myAICvals[iix] called
    * in Assets.CashFlow.yearEnd() with tests specified in Assets
    *
-   * @param a the source value
+   * @param value the source value
    * @param tests an array of tests that a may be greater than
    * @return an small case letter 'b'+ a.length-1 greater than largest test
    * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
    * test
    */
-  static byte getValueByte(double a, double[] tests) {
+  static byte getValueByte(double value, double[] tests) {
     byte ret = 'a';
     int testsLen = tests.length;
     for (int ix = testsLen - 1; ix > -1; ix--) {
-      if (a > tests[ix]) {
+      if (value > tests[ix]) {
         return (ret = (byte) ('b' + ix));
       }
     }
@@ -3535,20 +3535,20 @@ onceAgain:
    *
    * @param res the array to set
    * @param bias the bias into the array
-   * @param a the source value
+   * @param value the source value
    * @param tests an array of tests that a may be greater than
    * @return an small case letter 'b'+ a.length-1 greater than largest test
    * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
    * test
    */
-  static void setValueByte(byte[] res, int bias, double a, double[] tests) {
+  static void setValueByte(byte[] res, int bias, double value, double[] tests) {
     byte ret = 'a';
     int ix = 0;
     int testsLen = tests.length;
     for (ix = testsLen - 1; ix > -1; ix--) {
-      if (a > tests[ix]) {
+      if (value > tests[ix]) {
         ret = (byte) ('b' + ix);
-        ix = -2; // exit loop
+        ix = -2; // exit test loop
       }
     }
     res[bias] = ret;

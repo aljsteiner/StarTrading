@@ -2174,19 +2174,18 @@ public class ARow {
   }
 
   /**
-   * convert ARow to an ordered min to max characters 'a' to 'z' This makes a
-   * copy from the ARow,
+   * convert an ARow to an ordered min to max characters 'a' to 'z' This makes a
+   * copy of characters in res from the ARow,
    *
-   * @param a an ARow to convert
    * @param res the byte array for 7 results
    * @param bias the place to start in the res array
    *
    */
-  public void getAChars(ARow a, byte[] res, int bias) {
-    double extent = a.max() - a.min(0);
+  public void getAChars(byte[] res, int bias) {
+    double extent = max() - min(0);
     byte[] ret = {0, 0, 0, 0, 0, 0, 0};
     for (int ix = 0; ix < E.LSECS; ix++) {
-      res[ix + bias] = (byte) ((25.0 * a.min(ix) / extent) + 'a');
+      res[ix + bias] = (byte) ((25.0 * min(ix) / extent) + 'a');
     }
   }
 

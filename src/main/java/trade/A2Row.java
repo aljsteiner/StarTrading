@@ -186,11 +186,11 @@ public class A2Row {
       min[g] = minC;
       ix[g] = minCIx;
     }
-    for (int h = 0; h < eM.minSumCnt; h++) {
+    for (int h = 0; h < eM.minSumCnt; h++) {  // low 7
       // use array left above;
       minSum += min[h];
     }
-    for (int h = 0; h < eM.minSum2Cnt; h++) {
+    for (int h = 0; h < eM.minSum2Cnt; h++) { // low 3
       // use array left above;
       minSum2 += min[h];
     }
@@ -261,7 +261,6 @@ public class A2Row {
       }
     }
     return E.l2secs - 1;
-
   }
 
   /**
@@ -1735,7 +1734,7 @@ public class A2Row {
    * @return
    */
   double max(int n) {
-    return min(E.lsecs * 2 - 1 - n);
+    return min(E.L2SECS - 1 - n);
   }
 
   /**
@@ -1744,15 +1743,15 @@ public class A2Row {
    * @return the max value
    */
   double max() {
-    return min(E.lsecs * 2 - 1);
+    return min(E.L2SECS - 1);
   }
 
   double max2() {
-    return min(E.lsecs * 2 - 1 - 1);
+    return min(E.L2SECS - 1 - 1);
   }
 
   double max3() {
-    return min(E.lsecs * 2 - 1 - 2);
+    return min(E.L2SECS - 1 - 2);
   }
 
   double min2() {
