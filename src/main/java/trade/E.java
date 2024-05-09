@@ -88,7 +88,7 @@ public class E {
   //static final boolean resetOut = debugOutput;  //change out, err to
 
   static final boolean distributable = false;  //set true before making a jar fine available to public
-  static final boolean resetOut = true || distributable;  //change out, err to local files
+  static final boolean resetOut = false || distributable;  //change out, err to local files
 
   static final boolean debugMaster = !distributable;// !distributable;
   static final boolean debugOutput = debugMaster; //distributable;
@@ -176,33 +176,42 @@ public class E {
   static final boolean debugAtJavaOut = debugOutput && false; // output at java locations
   static boolean doCalcCatastrophy = true; //temp disable
 
-  /**
-   * constructor for E the major repository of tables and values set by the game
-   * master and the clan master. The game may have a number of instances of E
-   * and EM
+  /* AI pointers moved from Assets here to permit easy back and forth with Assets.CashFlow.yearEnd
+   static final int ptype = 0, pacct = 1, ppors = 2, pclan = 3, pPrevP=4;
+  static final int pPrevW=5, pPrevKW=6, pPrevRInc=7,pPrevSinc=8,pPrevKinc=9;
+  static final int pPrevPinc=10,pPrevoPerW=11,pPrevoPerWinc=12;
+  static final int pRps = 13, pSps = 20;
+  static final int poPerW = 13, pMaxP = 7, pCurW = 8;
+  static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
-  public E() {
-    assert ifassert = true;
-    // ok if ifassert true, noAsserts false, error if ifassert false noAsserts false,
-    // ok if ifassert false and noAsserts true,error if ifassert true and noAsserts true;
-    // allow no -ea with debug
-    //   if(ifassert == noAsserts)EM.doMyErr("improper value for E.noAsserts" + (ifassert?" yes ifassert ":"no ifassert") + (noAsserts?" yes noAsserts ":" no noAsserts "));
-  }
+  static final byte nChar = 'a' - 1;//  "'" I think initial ' not final '
+  static final byte mChar = 'a' - 4;//  "^"
+  static private int aiPcntr = 0;
+  static final int ptype = aiPcntr++;
+  static final int pacct = aiPcntr++;
+  static final int ppors = aiPcntr++;
+  static final int pclan = aiPcntr++;
+  static final int pPrevP = aiPcntr++;
+  static final int pPrevW = aiPcntr++;
+  static final int pPrevKW = aiPcntr++;
+  static final int pPrevB0Inc = aiPcntr++;
+  static final int pPrevB1Inc = aiPcntr++;
+  static final int pPrevPinc = aiPcntr++;
+  static final int pPrevoPerW = aiPcntr++;
+  static final int pPrevoPerWinc = aiPcntr++;
+  static final int pPrevB0Row = aiPcntr;  //row 0 in balances
+  static final int pPrevB1Row = aiPcntr = aiPcntr + 7;
+  static final int pB0W = aiPcntr = aiPcntr + 7;
+  static final int pB1W = ++aiPcntr;
+  static final int pKW = ++aiPcntr;
+  static final int poPerW = ++aiPcntr;
+  static final int pPerW = ++aiPcntr;
+  static final int pMinP = ++aiPcntr;
+  static final int bValsStart = ++aiPcntr;
 
-  ;
+  //static final int pPrevoPerW = ++aiPcntr;
+  //static final int pPrevoPerW = ++aiPcntr;
 
-  void init(EM em, StarTrader st) {
-    this.eM = em;
-    this.st = st;
-    for (int m = 0; m < lsecs; m++) {
-      alsecs[m] = m;
-      zlsecs[m] = lsecs - m;
-      a2lsecs[m] = m;
-      a2lsecs[m + lsecs] = m + lsecs;
-      z2lsecs[m] = l2secs - 1 - m;
-      z2lsecs[m + lsecs] = lsecs - 1 - m;
-    }
-  }
   /* Start Global data, set in tab init
    * [pors]
    */
@@ -625,6 +634,33 @@ public class E {
     }
   }
    */
+  /**
+   * constructor for E the major repository of tables and values set by the game
+   * master and the clan master. The game may have a number of instances of E
+   * and EM
+   */
+  public E() {
+    assert ifassert = true;
+    // ok if ifassert true, noAsserts false, error if ifassert false noAsserts false,
+    // ok if ifassert false and noAsserts true,error if ifassert true and noAsserts true;
+    // allow no -ea with debug
+    //   if(ifassert == noAsserts)EM.doMyErr("improper value for E.noAsserts" + (ifassert?" yes ifassert ":"no ifassert") + (noAsserts?" yes noAsserts ":" no noAsserts "));
+  }
+
+  ;
+
+  void init(EM em, StarTrader st) {
+    this.eM = em;
+    this.st = st;
+    for (int m = 0; m < lsecs; m++) {
+      alsecs[m] = m;
+      zlsecs[m] = lsecs - m;
+      a2lsecs[m] = m;
+      a2lsecs[m + lsecs] = m + lsecs;
+      z2lsecs[m] = l2secs - 1 - m;
+      z2lsecs[m + lsecs] = lsecs - 1 - m;
+    }
+  }
   /**
    * enum to store odd values in req
    *

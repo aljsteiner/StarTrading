@@ -774,6 +774,8 @@ public class Econ {
     return as.getYrTradesStarted();
   }
 
+  double rMult = 0.;
+  double rCent = 1.;// the random is + or - this center
   /**
    * generate an array of random numbers using . E.gameRandomFrac and
    * E.clanRisk[pors][clan] if E.gameRandomFrac == 0, always trand[] to 1. noop
@@ -790,7 +792,7 @@ public class Econ {
     // make range (0->.7 + 0->1*0->.5) = (0->1.2)
     //rMult = (eM.randFrac[pors][0] + eM.clanRisk[pors][clan] * eM.gameClanRiskMult[pors][0]);
     rMult = eM.randFrac[pors][0] + eM.clanRisk[pors][clan];
-    rMult = Math.max(eM.randMin, Math.min(eM.randMax, rMult));  // set max multiplier,  .001 < random < 1.9 
+    rMult = Math.max(eM.randMin, Math.min(eM.randMax, rMult));  // set limits 0.1-1.95
     //  rCent = rMult + eM.randMin;
 
     for (int ii = 0; ii < E.lrand; ii++) {
@@ -806,8 +808,7 @@ public class Econ {
     }
     return trand;
   }
-  double rMult = 0.;
-  double rCent = 1.;
+
 
   /**
    * get a preassigned random value at randx % rand, reduce randomicity by mRand

@@ -5210,6 +5210,10 @@ public class StarTrader extends javax.swing.JFrame {
   void runYears(int nYears) {
     try {
       System.err.println("-----AAa----- runYears;" + since() + " at start stateConst=" + stateConst + " stateCnt =" + stateCnt + " stateName=" + stateStringNames[stateConst] + " year=" + eM.year + (javax.swing.SwingUtilities.isEventDispatchThread() ? " is eventDispatchThread" : " is not EventDispatchThread"));
+      System.out.println("----MScg----continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
+      //      System.exit(-16);
+      System.out.flush();
+      System.err.flush();
       getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
       stateConst = RUNNING;
       yearsToRun = nYears;
@@ -5219,6 +5223,7 @@ public class StarTrader extends javax.swing.JFrame {
       RunYrs1 rYrs1 = new RunYrs1();
       rYrs1.setPriority(5);
       rYrs1.start();  // start runYears2 the annimation thread
+      //System.exit(-16);
       //    stateConst = STATS;
       // runBackgroundYears4(nYears);
     }
@@ -5333,6 +5338,7 @@ public class StarTrader extends javax.swing.JFrame {
         System.out.println(EM.wasHere3 = "-------MA--------runYears2;" + sinceA() + " at start" + " cnt" + stateCnt + stateStringNames[stateConst] + "Y" + eM.year);
       }
       E.myTest(javax.swing.SwingUtilities.isEventDispatchThread(), "runYears2 is eventDispatchThread not a separate animation thread");
+     // System.exit(-17);
       paintCurDisplay(ec);
       if (E.debugStatsOut1) {
         System.out.println(EM.wasHere3 = "------MB------- runYears2;" + sinceA() + sinceRY2() + stateStringNames[stateConst] + "Y" + EM.year);
@@ -7223,7 +7229,7 @@ public class StarTrader extends javax.swing.JFrame {
         }
       }
       if (curEc == null || EM.dfe()) {
-
+     return;
       }
       else { // curEc != null
         //      econCnt = curEc.econCnt;
@@ -7250,7 +7256,7 @@ public class StarTrader extends javax.swing.JFrame {
 
         //String[] myChars = {"a","b","c","d","e","f","g"};
          String tstr = "Later";
-        if (Assets.aEntries[0] > 0 && EM.myAIlearnings != null) {
+        if (false && Assets.aEntries[0] > 0 && EM.myAIlearnings != null) {
         synchronized (Assets.alock1) {
           for (String aKey : EM.myAIlearnings.keySet()) {
             if (EM.myAIlearnings == null) {
@@ -7292,7 +7298,7 @@ public class StarTrader extends javax.swing.JFrame {
           for (aMuch = 0; aMuch < 6; aMuch++) {
              for (acct = 0; acct < 2; acct++) {
               // combine the two PorS values for            [PorS][clan]
-              tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+              tstr += (Assets.aClanEntries[aType][acct][0][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][0][aMuch]) + (acct == 0 ? ":" : ",");
           }}
           }
           tstr += " Red cnts only";
@@ -7301,7 +7307,7 @@ public class StarTrader extends javax.swing.JFrame {
             for (aMuch = 0; aMuch < 6; aMuch++) {
               for (acct = 0; acct < 2; acct++) {
                 // combine the two PorS values for            [PorS][clan]
-                tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+                tstr += (Assets.aClanEntries[aType][acct][0][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][0][aMuch]) + (acct == 0 ? ":" : ",");
               }
             }
           }
@@ -7312,7 +7318,7 @@ public class StarTrader extends javax.swing.JFrame {
             for (aMuch = 0; aMuch < 6; aMuch++) {
               for (acct = 0; acct < 2; acct++) {
                 // combine the two PorS values for            [PorS][clan]
-                 tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+                 tstr += (Assets.aClanEntries[aType][acct][0][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][0][aMuch]) + (acct == 0 ? ":" : ",");
               }
             }
           }
@@ -7322,7 +7328,7 @@ public class StarTrader extends javax.swing.JFrame {
             for (aMuch = 0; aMuch < 6; aMuch++) {
               for (acct = 0; acct < 2; acct++) {
                 // combine the two PorS values for            [PorS][clan]
-                 tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+                 tstr += (Assets.aClanEntries[aType][acct][0][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][0][aMuch]) + (acct == 0 ? ":" : ",");
               }
             }
           }
@@ -7332,7 +7338,7 @@ public class StarTrader extends javax.swing.JFrame {
             for (aMuch = 0; aMuch < 6; aMuch++) {
               for (acct = 0; acct < 2; acct++) {
                 // combine the two PorS values for            [PorS][clan]
-                 tstr += (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : ",");
+                 tstr += (Assets.aClanEntries[aType][acct][0][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][0][aMuch]) + (acct == 0 ? ":" : ",");
               }
             }
           }
@@ -7342,7 +7348,7 @@ public class StarTrader extends javax.swing.JFrame {
             for (aMuch = 0; aMuch < 6; aMuch++) {
               for (acct = 0; acct < 2; acct++) {
                 // combine the two PorS values for            [PorS][clan]
-                tstr += (acct == 0 && aMuch == 0 ? "" : ", ") + (Assets.aClanEntries[aType][acct][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][aMuch]) + (acct == 0 ? ":" : "");
+                tstr += (acct == 0 && aMuch == 0 ? "" : ", ") + (Assets.aClanEntries[aType][acct][0][0][0][aMuch] + Assets.aClanEntries[aType][acct][1][0][0][aMuch]) + (acct == 0 ? ":" : "");
               }
             }
           }
@@ -8382,13 +8388,17 @@ public class StarTrader extends javax.swing.JFrame {
       }
       else {
         System.err.println("----MSa----continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
+        //System.exit(-16);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
           // java.awt.EventQueue.invokeAndWait(new Runnable() {
           @Override
           public void run() {
             st.setVisible(true);
+            System.out.println("----MScc----continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
             if (E.PREYEARS > 0) {
+              System.out.println("----MScd----continuing main thread=" + Thread.currentThread().getName() + "msecs" + (new Date().getTime() - startTime));
+              // System.exit(-16);
               st.runYears(E.PREYEARS);
             }
             if (args.length > 0 && (args[0].contains("run5"))) {
@@ -8403,8 +8413,10 @@ public class StarTrader extends javax.swing.JFrame {
             else if (args.length > 0 && (args[0].contains("run10"))) {
               st.runYears(10);
             }
+            //System.exit(-18);
           }
-        });// invokeLater
+        }
+        );// invokeLater
       } // end if test
       /* } catch (InterruptedException ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -8442,6 +8454,7 @@ public class StarTrader extends javax.swing.JFrame {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
+    //  System.exit(-23);
     }
   }
 
@@ -8470,7 +8483,7 @@ public class StarTrader extends javax.swing.JFrame {
         //  jout1 = new PrintStream(new File("StarTraderOut1.txt"));
         //  jout1.println("jout1 line");
         jout.println("jout line0 " + (new Date()).toString());
-        System.out.println("----MSO0----System.out line 0=" + (new Date()).toString());
+        System.out.println("----MS00----System.out line 0=" + (new Date()).toString());
         jerr = new PrintStream(new File("StarTraderErrors.txt"));
         jerr.println("jout line0 " + (new Date()).toString());
         //     jerr1 = new PrintStream(new File("StarTraderErr1.txt"));
@@ -8482,18 +8495,19 @@ public class StarTrader extends javax.swing.JFrame {
           System.err.println("----MSOE----output to System.err after setErr " + (new Date()).toString());
 
         }
-        System.out.println("-----MSOo1-----output after if statment " + (new Date()).toString());
+        System.out.println("-----MSO01-----output after if statment " + (new Date()).toString());
         System.err.println("----MSOe1-----output to err after if statment " + (new Date()).toString());
       }
-
+      System.out.println("-----MSOf1-----output to out after if statment " + (new Date()).toString());
       for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-
         if ("Nimbus".equals(info.getName())) {
           javax.swing.UIManager.setLookAndFeel(info.getClassName());
           break;
         }
-      }
-    }
+      }  // for
+      System.out.println("-----MSOo2-----output after for statment " + (new Date()).toString());
+      System.err.println("----MSOe2-----output to err after for statment " + (new Date()).toString());
+    } // try
     catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
@@ -8506,7 +8520,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.flushes();
       fatalError = true;
       st.fatalError = true;
-      System.exit(-17);
+      // System.exit(-17);
     }
   }// mainStart
 

@@ -478,7 +478,7 @@ class EM {
   static double[] difficultyByPriorityMult = {2.4, 2.4}; // increase increases costs of low priority
   static final double[][] mDifficultyByPriorityMult = {{1., 6.}, {1., 6.}}; //
   static volatile double[][] randFrac = {{0.5}, {0.4}};  // game risk
-  static final double[][] mRandFrac = {{.0, .9}, {0., .9}};  // range 0. - .9,.7
+  static final double[][] mRandFrac = {{0.0, .9}, {0.0, .9}};  // range 0. - .9,.7
   static volatile double[][] clanRisk = {{.5, .4, .6, .3, .5}, {.5, .4, .6, .3, .5}};  //risk taken with assets
   static final double[][] mClanRisk = {{.0, .7}, {.0, .7}};
   static volatile double[][] gameClanRiskMult = {{1.}, {1.}};  // range .0 - .6
@@ -1245,7 +1245,7 @@ class EM {
       else if ((v > -99999. && v < -0.0) || (v > .001 && v < 99999.)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-        return "w" + dFrac.format(v);
+   return dFrac.format(v);
       }
       else if ((v > -999999. && v < -0.00) || (v > .001 && v < 999999.)) {
         if(test5)System.err.printf("----MFT1--- v= %10.5f\n",v);
@@ -1292,7 +1292,7 @@ class EM {
       else if ((v > -999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-        return "w" + dFrac.format(v);
+       return dFrac.format(v);
       }
       else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 99999999.)) { //8 9
         dFrac.setMinimumFractionDigits(0);
@@ -1335,7 +1335,7 @@ class EM {
       else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 8 8 13 13
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-        return "w" + dFrac.format(v);
+       return dFrac.format(v);
       }
       else if ((v > -99999999. && v < -0.00) || (v >= 0.0 && v < 99999999.)) {// 8 8  12 11
         dFrac.setMinimumFractionDigits(0);
@@ -1394,7 +1394,7 @@ class EM {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
         if(test5)System.err.printf("----MFT9g--- v= %10.7e, " + dFrac.format(v) + " \n",v);
-        return "w" + dFrac.format(v);
+           return dFrac.format(v);
       }
       else if ((v > -99999999999. && v < -0.00) || (v >= 0.0 && v < 99999999999.)) {//11 11
         dFrac.setMinimumFractionDigits(0);
@@ -1749,11 +1749,11 @@ class EM {
   static double[][] mGRGrowthMult2 = {{.01, 1.6}, {.01, 1.6}};
   // freq .2 means chance for today is .2 or 1 in 5years, .333 = 1 in 3 years
   // goal freq from 1 in 2yrs to 1 in 10 yrs  per econ
-  static double[][] userCatastrophyFreq = {{0.2, .3, .2, .55, .25}, {0.2, .3, .2, .55, .25}};
+  static double[][] userCatastrophyFreq = {{0.25, .25, .25, .25, .25}, {0.25, .25, .25, .25, .25}};
   static double[][] mUserCatastrophyFreq = {{.0, .65}, {.0, .65}};
   // value 1.5 means  mult user value by 1.5 so .2 * 1.5= .3 about 1 in 3 yrs
   // remember there are also random multipliers
-  static double[][] gameUserCatastrophyMult = {{.3}, {.25}};
+  static double[][] gameUserCatastrophyMult = {{.2}, {.2}};
   static double[][] mGameUserCatastrophyMult = {{.0, .65}, {.0, .65}};
 
   static final double[][] mGuestWorthBias = {{.2, 1.5}, {.2, 1.5}};
@@ -2346,7 +2346,7 @@ class EM {
   // ships get much more to survive and grow with planets
   // the fracs get reduced as the trades continue
   static final double mTradeFrac[][] = {{.001, .4}, {.1, 1.4}};
-  static double[][] tradeFrac = {{.03, .03, .03, .03, .03}, {.5, .6, .5, .6, .6}, ssFrac[0]};
+  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.4, .4, .4, .4, .4}, ssFrac[0]};
   // termFrac = (goalTermBias )/(goalTermBias + barterStart - term)
   //    gtb=18 t=18  18/18 = 1;  t=9  18/(18 + 18-9=27) = .6666; t=`0 18/36 = .5
   // related to decrement per term
@@ -3565,9 +3565,10 @@ onceAgain:
    * @param ec current Econ
    * @param res the byte array for the key, start at bCharStart
    * @param vvend The count of the last doVal
+   * @param
    * @return
    */
-  void buildAICvals(Econ ec, byte[] res, int vvend) {
+  void buildAICvals(Econ ec, byte[] res, int vvend, byte[] uMasked) {
     int sliderVal = 0, tix = 0;
     // static int myAIcstart  = 'a'; // start of ascii a
     // static int myAIdiv  = 20; //divid the values by 5
@@ -3577,20 +3578,28 @@ onceAgain:
           System.out.println("------BIC1-----EM.buildAICvals null TreeMap new TreeMap year=" + year);
         }
           myAIlearnings = new TreeMap();
-        //  prevAr1[0] = cc = 'A'; // at first use set to ignore diff
-        }
-        // for(int ix = 0; ix < vvend; ix++){prevAr1[ix] = prevAr[ix];}
+
+      }
 
       // String aa = "", bb = "bb";
       // start bb with the schars for pors and clan
       int aWaits = 0;
-      for (int ix = 0; ix < bCharStart; ix++) {
-        res[ix] = '#';
+      int lRes = E.bValsStart + vvend;
+      lRes = res.length;
+      int ix = 0, ixa = 0;
+      //res = new byte[lRes];// set Res to a new right length
+      //uMasked = new byte[lRes];
+      for (ix = 0; ix < lRes; ix++) { //prefill with no match
+        res[ix] = E.nChar; //'a'-1;
+        uMasked[ix] = 0;  // prefill with unMasked
       }
-      for (int ix = 0; ix < vvend; ix++) { // scan each doVal
+      for (ix = 0; ix < vvend; ix++) { // scan each doVal
         sliderVal = getAIVal(ix, ec.pors, ec.clan);
-        res[ix + bCharStart] = (byte) ((int) (sliderVal / myAIdiv) + 'a');
-    }
+        res[ixa = ix + E.bValsStart] = (byte) ((int) (sliderVal / myAIdiv) + 'a');
+        int gc = valI[vv][modeC][0][0];
+        if (gc > vfour) {
+          uMasked[ixa] = E.mChar; // set mask for each user val
+        }    }
     }
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
@@ -3603,35 +3612,6 @@ onceAgain:
       flushes();
       st.setFatalError();
     }
-  }
-
-  char[] buildAICbals(Econ ec, int vvend, double minProp) {
-    char[] valCb = new char[vvend];
-    int sliderVal = 0;
-    double[] abals = new double[E.LSECS];
-    int[] secsBals = new int[7];
-
-    // static int myAIcstart  = 65; // start of ascii A
-    // static int myAIdiv  = 5; //divid the values by 5
-    try {
-      for (int ix = 0; ix < E.LSECS; ix++) {
-        sliderVal = getAIVal(ix, ec.pors, ec.clan);
-        valCb[ix] = (char) ((sliderVal / myAIdiv) + myAIcstart);
-      }
-      ec.as.myAICvals = valCb.toString();
-    }
-    catch (Exception | Error ex) {
-      firstStack = secondStack + "";
-      ex.printStackTrace(pw);
-      secondStack = sw.toString();
-      newError = true;
-      System.err.println(tError = ("-----EXG5----end buildAICbals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
-      ex.printStackTrace(System.err);
-      flushes();
-      flushes();
-      st.setFatalError();
-    }
-    return valCb;
   }
 
   /**
@@ -3995,7 +3975,7 @@ onceAgain:
     doVal("maxEcons", econLimits3, mEconLimits3, "Increase the max number of econs (planets+ships) in this game, it maxEcons too large the game will blow up out of memory, depending on your available memory");
     doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year by about 30%.");
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
-    doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
+    // doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
     doVal("clanRisks", clanRisk, mClanRisk, "increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
     /*
      winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
@@ -4028,6 +4008,7 @@ onceAgain:
     doVal("minEconomies ", minEcons, mMinEcons, "iincrease the minimum number of economies after the startup numbers, the game creates new economies, new economies start to be added at a random clan, rotating to other clans next");
     doVal("Min Econs by Year", minEconsMult, mMinEconsMult, " increase min econs for each year, also affect minEcons");
     doVal("tradeAddlSVFrac", offerAddlFrac, mOfferAddlFrac, "increase the process excessOffers in a barter");
+
     doVal("tradeFraction", tradeFrac, mTradeFrac, "Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
     //   doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
     // doVal("HiLoFactorDif",);
