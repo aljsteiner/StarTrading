@@ -2346,7 +2346,7 @@ class EM {
   // ships get much more to survive and grow with planets
   // the fracs get reduced as the trades continue
   static final double mTradeFrac[][] = {{.1, .8}, {.1, 0.8}};
-  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.3, .3, .3, .3, .3}, ssFrac[0]};
+  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.25, .25, .25, .25, .25}, ssFrac[0]};
   // termFrac = (goalTermBias )/(goalTermBias + barterStart - term)
   //    gtb=18 t=18  18/18 = 1;  t=9  18/(18 + 18-9=27) = .6666; t=`0 18/36 = .5
   // related to decrement per term

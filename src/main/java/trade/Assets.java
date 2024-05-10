@@ -1437,6 +1437,7 @@ public class Assets {
       //only one thread at a time gets resLock  and can enter this code
       //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
       synchronized (resL) {
+        EM.wasHere8 = "---ELa3--- Assets res has lock";
         if (E.debugStatsOut) {
           String sList = "----SSLa----setStat " + name + "Y" + EM.year + " in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
@@ -1602,6 +1603,7 @@ public class Assets {
       long[] resICurmCC = resI[rn][curm][CCONTROLD];
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
       synchronized (resL) {
+        EM.wasHere8 = "---ELa4--- Assets resMax has lock";
         if (resICumCC[ISSET] < 1) {
           for (int m = 0; m < 2; m++) {
             double aresVC[] = resV[rn][ICUM][m];
@@ -1771,6 +1773,7 @@ public class Assets {
       long[] resICurmCC = resI[rn][curm][CCONTROLD];
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
       synchronized (resL) {
+        EM.wasHere8 = "---ELa5 --- Assets res Min has lock";
         if (resICumCC[ISSET] < 1) {
           for (int m = 0; m < 2; m++) {
             double aresVC[] = resV[rn][ICUM][m];
@@ -5054,6 +5057,7 @@ public class Assets {
        * @return
        */
       synchronized double cost3(double cost, int sourceIx, double availFrac) {
+        EM.wasHere8 = "---ELa6--- Assets cost3 has lock";
         // Assets.CashFlow.SubAsset.cost3
         if (sstaff) {
           checkGrades();
@@ -7824,23 +7828,24 @@ public class Assets {
         assert thFrac > E.PPZERO : "Illegal thFrac=" + EM.mf(thFrac) + ", thAccept=" + thAccept + ", thReject=" + thReject + ", thLost=" + thLost;
         //Set special ttype for ship to ship trade
         ttype = oEcon.pors == E.S && pors == E.S ? 2 : pors;
-        //       tmpRand = cRand(15 + term, eM.randMult);
-        tmpRand = cRand(15, eM.randMult);
-        randFrac = tmpRand < 1. / eM.randMax ? 1. / eM.randMax : tmpRand > eM.randMax ? eM.randMax : tmpRand;
+        //       tmpRand = cRand(15 + term, EM.randMult);
+        tmpRand = cRand(15, EM.randMult);
+        // randFrac = 1/EM.randMax < tmpRand < EM.randMax
+        randFrac = tmpRand < 1. / EM.randMax ? 1. / EM.randMax : tmpRand > EM.randMax ? EM.randMax : tmpRand;
         oClan = myOffer.getOClan();
         oPors = myOffer.getOPors();
         boolean oSOS = myOffer.getOtherSOS();
         //reduce FavFrac as favor goes higher
         //set V from my clan favor of other clan
-        myFavV = (eM.favMult * eM.fav[clan][pors][oClan] - eM.favMult * 3.);
+        myFavV = (EM.favMult * EM.fav[clan][pors][oClan] - EM.favMult * 3.);
         myFavFrac = 1. / (1. + myFavV); // higher favor makes lower goal
         // 
         // and the others favor of my clan above 3
-        oFavV = (eM.favMult * (eM.fav[oClan][oPors][clan] - 3.)) * eM.oClanMult;
+        oFavV = (EM.favMult * (EM.fav[oClan][oPors][clan] - 3.)) * EM.oClanMult;
         oFavFrac = 1. / (1. + oFavV);
         // reduce goal if you accept an SOS from the other
-        //double sosFrac = 1. / (1. + (sos ? (eM.fav[clan][oClan] > 3. && eM.fav[oClan][clan] > 3.) ? eM.sosfrac[pors] : 0. : 0.));
-        double sosMore = (oSOS ? (eM.fav[clan][pors][oClan] > 3. && eM.fav[oClan][oPors][clan] > 3.) ? eM.sosfrac[pors] : 0. : 0.);
+        //double sosFrac = 1. / (1. + (sos ? (EM.fav[clan][oClan] > 3. && EM.fav[oClan][clan] > 3.) ? EM.sosfrac[pors] : 0. : 0.));
+        double sosMore = (oSOS ? (EM.fav[clan][pors][oClan] > 3. && EM.fav[oClan][oPors][clan] > 3.) ? EM.sosfrac[pors] : 0. : 0.);
         // assert sosMore > E.PPZERO : "ILLEGAL sosMore=" + EM.mf(sosMore) + " ," + (oSOS?" oSOS": "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac)       ;
         double sosFrac1 = 1. / (1. + sosMore);
         assert sosFrac1 > E.PPZERO : " ILLEGAL sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac);
@@ -7848,7 +7853,7 @@ public class Assets {
         assert oFavFrac > E.PPZERO : " ILLEGAL oFavFrac=" + EM.mf(oFavFrac) + ", myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV);
         double sosMin = .80;
         double sosFrac = Math.max(sosMin, sosFrac1);
-        gtBias = eM.goalTermBias[pors]; // reduce goal at each barter (term)
+        gtBias = EM.goalTermBias[pors]; // reduce goal at each barter (term)
         termFrac02 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.) * (gtBias + EM.barterStart - 0.));
         termFrac03 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.));
         termFrac0 = (EM.barterStart) / ((gtBias + EM.barterStart - 0.));
@@ -7857,17 +7862,17 @@ public class Assets {
         termFrac3 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term));
         termFrac = (EM.barterStart) / ((gtBias + EM.barterStart - term));
         tfrac = EM.tradeFrac[pors][clan];
-        // rGoalFrac = eM.tradeFrac[pors][clan] * randFrac * myFavFrac * oFavFrac * sosFrac;
+        // rGoalFrac = EM.tradeFrac[pors][clan] * randFrac * myFavFrac * oFavFrac * sosFrac;
         rGoalFrac = Math.min(EM.goalMaxBias[pors][0] * tfrac, tfrac * myFavFrac * oFavFrac * sosFrac * thFrac);
         sf = strategicGoal = frac = rGoalFrac * termFrac;
         rGoal0 = rGoalFrac * termFrac0;  // the goal after doing all the barters
         EM.wasHere = "before History clan=" + clan + " oClan=" + oClan + " term=" + term;
-        EM.wasHere2 = " (eM.fav[clan][pors][oClan])=" + EM.mf(eM.fav[clan][pors][oClan]);
+        EM.wasHere2 = " (EM.fav[clan][pors][oClan])=" + EM.mf(EM.fav[clan][pors][oClan]);
         assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + ", oFavFrac=" + EM.mf(oFavFrac) + ", myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac) + ", tFrac=" + EM.mf(tfrac);
         hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF"
-                                                                                                                           + EM.mf(eM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc"
-                                                                                                                                                                                        + EM.mf(eM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF ="
-                                                                                                                                                                                                                                                                                + EM.mf(eM.tradeFrac[pors][clan]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
+                                                                                                                           + EM.mf(EM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc"
+                                                                                                                                                                                        + EM.mf(EM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF ="
+                                                                                                                                                                                                                                                                                + EM.mf(EM.tradeFrac[pors][clan]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
         hist.add(new History(aPre, 5, "2T" + term, "*rnd=" + EM.mf(tfrac), "*tF=" + EM.mf(termFrac), "goal=", EM.mf(frac), "gtb", EM.mf(gtBias), "<<<<<<<"));
         return strategicGoal = frac;
       }// Assets.CashFlow.Trades.calcStrategicGoal
@@ -7904,14 +7909,14 @@ public class Assets {
         histTitles("calcTrades1");
         stratVars = make2(stratVars, "stratValues");
         //stratVars = stratVars.copy();
-        //stratVars.getRow(BALANCESIX + RCIX).setAmultV(stratVars.getRow(BALANCESIX + RCIX), eM.nominalWealthPerTrade[pors]);
+        //stratVars.getRow(BALANCESIX + RCIX).setAmultV(stratVars.getRow(BALANCESIX + RCIX), EM.nominalWealthPerTrade[pors]);
         // planets should not request staff;
-        // stratVars.getRow(BALANCESIX + SGIX).setAmultV(stratVars.getRow(BALANCESIX + SGIX), eM.tradeWealthPerStaff[pors]);
-        tEmerg = rawProspects2.curMin() < eM.tradeEmergFrac[pors][clan]; //.1-.3
+        // stratVars.getRow(BALANCESIX + SGIX).setAmultV(stratVars.getRow(BALANCESIX + SGIX), EM.tradeWealthPerStaff[pors]);
+        tEmerg = rawProspects2.curMin() < EM.tradeEmergFrac[pors][clan]; //.1-.3
         //      stratVars = stratVars.mult(stratVars, E.nominalWealthPerResource);
         //   cStratVal = stratVars.getRow(0);
         //    gStratVal = stratVars.getRow(1);
-        //  hist.add(new History(aPre, 9, " stratVars", " is stratVars rc mult", EM.mf(eM.nominalWealthPerTrade[pors]), "PG" + EM.mf(eM.tradeWealthPerStaff[pors]), "SG" + EM.mf(eM.tradeWealthPerStaff[pors])));
+        //  hist.add(new History(aPre, 9, " stratVars", " is stratVars rc mult", EM.mf(EM.nominalWealthPerTrade[pors]), "PG" + EM.mf(EM.tradeWealthPerStaff[pors]), "SG" + EM.mf(EM.tradeWealthPerStaff[pors])));
         bLev = 99;
         stratVars.sendHist(hist, bLev, aPre, "c stratVars", "g stratVars");
         stratVars.sendHist(hist, bLev, aPre, "c stratVars", "g stratVars");
@@ -7932,8 +7937,8 @@ public class Assets {
         // swap/repurpose them to make availabe if needed by planet in emergency
         // This code tries to increase the offered values of least strategic values
         int startAvail = (int) EM.startAvail[pors][clan]; //.8
-        int criticalNumber = (int) eM.tradeCriticalNumber[pors][clan];
-        // double[] availMin = {eM.availMin[pors] * bals.getRow(BALANCESIX + RCIX).ave(), eM.availMin[pors] * bals.getRow(BALANCESIX + SGIX).ave()}; // min avail for rc&sg
+        int criticalNumber = (int) EM.tradeCriticalNumber[pors][clan];
+        // double[] availMin = {EM.availMin[pors] * bals.getRow(BALANCESIX + RCIX).ave(), EM.availMin[pors] * bals.getRow(BALANCESIX + SGIX).ave()}; // min avail for rc&sg
         int endRequests = criticalNumber; // 3
         double reservFrac = EM.availFrac[pors][clan];  //.6
         double emergFrac = EM.emergFrac[pors][clan]; //.9
@@ -8087,12 +8092,12 @@ public class Assets {
         void updatePlanet(TradeRecord tRec) {
           //   double goodsSum = tRec.goods.plusSum() - tRec.goods.negSum();
           if (prevYear < 0) { // first entry
-            prevYear = eM.year;
-            firstYear = eM.year;
+            prevYear = EM.year;
+            firstYear = EM.year;
             //   firstTradeWorth = tRec.endWorth;
           }
           // lastTradeWorth = tRec.endWorth;
-          lastYear = eM.year;
+          lastYear = EM.year;
           for (int n = 0; n < E.L2SECS; n++) {
             // initial values of 0.0
             //   goodsFracs.add(n, tRec.goods.get(n) / goodsSum);
@@ -9694,7 +9699,7 @@ public class Assets {
       }
       // incremate entries to cumulative values after 1 year
       if (ec.age > 0)synchronized (Assets.alock1) {
-
+        EM.wasHere8 = "---ELa7--- Assets AI set has lock";
         double oPerW = offers / btWTotWorth;
         double[] oPerWLims = {-99999999, 50., 100., 200., 300., 1000., 7000., 45000., 633000.}; //9
         byte oPerWC = 'a';
@@ -10865,7 +10870,7 @@ public class Assets {
           }
           EM.wasHere7 = "---ELa---Assets.10607 seek lock";
           synchronized (A4Row.econLock) {
-            EM.wasHere8 = "---ELa2--- Assets has lock";
+            EM.wasHere8 = "---ELa2--- Assets cnt dead has lock";
             EM.clanCnt[clan]--;
             EM.porsClanCnt[pors][clan]--;
             EM.porsCnt[pors]--;

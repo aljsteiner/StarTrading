@@ -1080,6 +1080,7 @@ public class Econ {
   static int getThreadCnt() {
     int tCnts;
     synchronized (doEndYearCnt) {
+      EM.wasHere8 = "---ELa9--- Econ cnt end year has lock";
       tCnts = doEndYearCnt[0];
     }
     return tCnts;
@@ -1776,6 +1777,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   synchronized void incrEndYearCnt() {
+    EM.wasHere8 = "---ELa10--- Econ incrEndYearCnt has lock";
     if (dead) {
       return;
     }
@@ -1798,6 +1800,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   synchronized void decrEndYearCnt() { //Econ
+    EM.wasHere8 = "---ELa11--- Econ decrEndYearCnthas lock";
       doEndYearCnt[0]--;
       for(int ix=0;ix < maxEndYears-1;ix++){
         if(econNames[ix] != null && econNames[ix].equals(name)){

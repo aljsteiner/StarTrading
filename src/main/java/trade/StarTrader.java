@@ -5597,7 +5597,8 @@ public class StarTrader extends javax.swing.JFrame {
       if (E.debugChangeEconCnt) {
         EM.wasHere7 = "---ELd---StarTrader seek econLock";
         synchronized (A4Row.econLock) { // protect the increment of econCnt
-          EM.wasHere8 = "---ELda---StarTrder got econLock";
+          EM.wasHere8 = "---ELa14--- StarTrder got econLock";
+          //EM.wasHere8 = "---ELda---StarTrder got econLock";
           EM.porsClanCnt[newEC.pors][newEC.clan]++;
           EM.clanCnt[newEC.clan]++;
           EM.porsCnt[newEC.pors]++;
@@ -7099,6 +7100,7 @@ public class StarTrader extends javax.swing.JFrame {
    * @param curEc the current econ usually EM.curEcon
    */
   synchronized void paintCurDisplay(Econ curEc) {
+    EM.wasHere8 = "---ELc3--- StarTrder paintCurDisplay";
     try {
       int numEcons = EM.econs.size();
       int rN = 999999;
@@ -8253,6 +8255,7 @@ public class StarTrader extends javax.swing.JFrame {
   static int listResNoteCount = 0;
 
   synchronized void listRes(int list, long resLoops[][], double[] fullRes) {
+    EM.wasHere8 = "---ELa13--- ST.listres cnt  has lock";
     arow = 0;
     eM.getWinner(); // recalc winner, my be after settings changed
     eM.rememberFromPage = false; // forget remember at a new page
