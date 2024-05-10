@@ -3032,7 +3032,7 @@ public class Assets {
       double sumSGWorth = sumSWorth + sumGWorth;
       double[] sumWorths = {sumRCWorth, sumSGWorth, sumRWorth, sumCWorth, sumSWorth, sumGWorth};
       A6Row myBalances = bals.copyBalances(History.valuesMinor7, "balances");
-      double[] worthPerSubBal = {eM.nominalWealthPerResource[pors], eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0], .3, .3}; //finish at instantiation
+      double[] worthPerSubBal = {eM.nominalWealthPerResource[pors], eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0], eM.nominalWealthPerStaff[pors], eM.nominalWealthPerStaff[pors] * eM.guestWorthBias[0]}; //
       double myCash = cash;
       //ARow myCommonKnowledge = commonKnowledge.copy();
       double sumCommonKnowledgeBal = make(commonKnowledge).sum();
@@ -10172,17 +10172,17 @@ public class Assets {
         // gameRes.MANUALSB.wet(pors, clan, manuals.sum(), 1);
         // in live Assets.CashFlow.yearEnd()
         //eM.setStat(EM.MANUALSFRAC, pors, clan, 100. * manuals.sum() * eM.nominalWealthPerTradeManual[pors] / totWorth, 1);
-        setStat(EM.MANUALSFRAC, pors, clan, calcPercent(totWorth, manuals.sum() * eM.nominalWealthPerTradeManual[pors]), 1);
+        setStat(EM.MANUALSFRAC, pors, clan, fyW.sumManualsBal / fyW.sumKnowledgeBal, 1);
         // gameRes.NEWKNOWLEDGEB.wet(pors, clan, newKnowledge.sum() / knowledge.sum(), 1);
-        setStat(EM.NEWKNOWLEDGEFRAC, pors, clan, calcPercent(totWorth, newKnowledge.sum() * eM.nominalWealthPerNewKnowledge[pors][0]), 1);
+        setStat(EM.NEWKNOWLEDGEFRAC, pors, clan, fyW.sumNewKnowledgeWorth / fyW.sumTotWorth, 1);
         EM.isHere1(ec, "CashFlow.yearEnd before many setStat dddde=" + ++dddde);
         // gameRes.COMMONKNOWLEDGEB.wet(pors, clan, commonKnowledge.sum() / knowledge.sum(), 1);
-        setStat(EM.COMMONKNOWLEDGEFRAC, pors, clan, calcPercent(totWorth, commonKnowledge.sum() * eM.nominalWealthPerCommonKnowledge[0]), 1);
+        setStat(EM.COMMONKNOWLEDGEFRAC, pors, clan, fyW.sumCommonKnowledgeWorth / fyW.sumTotWorth, 1);
         // gameRes.KNOWLEDGEINCR.wet(pors, clan, (knowledge.sum() - (tprev = asyW.getKnowledgeBal())) / tprev, 1);
-        setStat(EM.KNOWLEDGEINCR, pors, clan, calcIncrease(syW.getSumKnowledgeBal(), knowledge.sum()), 1);
+        setStat(EM.KNOWLEDGEINCR, pors, clan, fyW.sumKnowledgeBal / syW.sumKnowledgeBal, 1);
         // gameRes.NEWKNOWLEDGEINCR.wet(pors, clan, (newKnowledge.sum() - (tprev = asyW.getNewKnowledgeBal())) / tprev);
         if ((tprev = syW.sumNewKnowledgeWorth) > PZERO) {
-          setStat(EM.NEWKNOWLEDGEINCR, pors, clan, calcIncrease(syW.sumNewKnowledgeWorth, fyW.sumNewKnowledgeWorth), 1);
+          setStat(EM.NEWKNOWLEDGEINCR, pors, clan, fyW.sumNewKnowledgeBal / syW.sumNewKnowledgeBal, 1);
         }
         // gameRes.COMMONKNOWLEDGEINCR.wet(pors, clan, (commonKnowledge.sum() - (tprev = asyW.getCommonKnowledgeBal())) / tprev, 1);
         if ((tprev = syW.getSumCommonKnowledgeWorth()) > PZERO) {
@@ -10196,10 +10196,10 @@ public class Assets {
         //double worthIncrPercent = (sumTotWorth - startYrSumWorth)*100 / startYrSumWorth;
         // setStat(EM.WORTHINCR, pors, clan, worthIncrPercent, 1);
         // gameRes.RCTBAL.wet(pors, clan, fyW.sumRCBal, 1);
-        setStat(EM.RCfrac, pors, clan, 100. * fyW.sumRCWorth / fyW.sumTotWorth, 1);
+        setStat(EM.RCfrac, pors, clan, fyW.sumRCWorth / fyW.sumTotWorth, 1);
         // gameRes.SGTBAL.wet(pors, clan, fyW.sumSG, 1);
-        setStat(EM.SGfrac, pors, clan, 100. * fyW.sumSGWorth / fyW.sumTotWorth, 1);
-        setStat(EM.KNOWLEDGEFRAC, pors, clan, 100. * fyW.sumKnowledgeBal / sumTotWorth, 1);
+        setStat(EM.SGfrac, pors, clan, fyW.sumSGWorth / fyW.sumTotWorth, 1);
+        setStat(EM.KNOWLEDGEFRAC, pors, clan, fyW.sumKnowledgeWorth / fyW.sumTotWorth, 1);
         setStat(EM.DIEDPERCENT, pors, clan, 0., 1);  // didn't die
         double criticalStrategicRequestsPercentTWorth = sumCriticalStrategicRequests / startYrSumWorth;
         double criticalStrategicRequestsPercentFirst = (criticalStrategicRequestsFirst - sumCriticalStrategicRequests) / criticalStrategicRequestsFirst;

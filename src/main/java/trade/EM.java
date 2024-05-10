@@ -2345,8 +2345,8 @@ class EM {
   // tradeFrac is initial goal of requests/offers
   // ships get much more to survive and grow with planets
   // the fracs get reduced as the trades continue
-  static final double mTradeFrac[][] = {{.001, .4}, {.1, 1.4}};
-  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.4, .4, .4, .4, .4}, ssFrac[0]};
+  static final double mTradeFrac[][] = {{.1, .8}, {.1, 0.8}};
+  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.3, .3, .3, .3, .3}, ssFrac[0]};
   // termFrac = (goalTermBias )/(goalTermBias + barterStart - term)
   //    gtb=18 t=18  18/18 = 1;  t=9  18/(18 + 18-9=27) = .6666; t=`0 18/36 = .5
   // related to decrement per term
@@ -5227,8 +5227,8 @@ onceAgain:
     doRes(GRAWMC, "%GMaintCosts", "G Maintenance Costs/ RCSGBal");
     doRes(SGRAWMC, "%SGMaintCosts", "SG Maintenance Costs/ RCSGBal", 1, 1, 1, LIST22 | CURAVE | both | SKIPUNSET, 0, 0, 0);
     //   doRes(RCRAWMC, "RCRawMaintCosts", "RC Maintenance Costs/ RCSGBal");
-    doRes(RCfrac, "%RC/yr Worth", "RC / yr Worth");
-    doRes(SGfrac, "%SG/yr Worth", "SG / yr Worth");
+    doRes(RCfrac, "%RC/yr Worth", "RCSG / yr Worth");
+    doRes(SGfrac, "%SG/yr Worth", "RCSG / yr Worth");
     //chgd KNOWLEDGEB MANUALSfrac NEWKNOWLEDGEfrac COMMONKNOWLEDGEfrac KNOWLEDGEINCR NEWKNOWLEDGEINCR MANUALSINCR COMMONKNOWLEDGEINCR
     doRes(POORKNOWLEDGEEFFECT, "Dumb csts", "frac Increase in costs due to limited knowledge(ignorance)", 1, 3, 2, 0, ROWS1 | LIST1 | LIST5 | LIST7 | LIST8 | LIST9 | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(POORHEALTHEFFECT, "Poor Health Cost", "Increase in costs due to insufficient required resources and staff");
