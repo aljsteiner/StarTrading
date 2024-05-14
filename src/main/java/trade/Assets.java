@@ -2633,6 +2633,7 @@ public class Assets {
     int costsUse = -10;  // recompute costs of costsUse > costsComp;
     double yearStartHealth = 2.0;
     double fertility = 2., minH = -.5, minFert = -.3, phe = -1, poorHealthEffect = -1;
+    double resilience = -1, hope = -1;
     int ixArow;
     int srcIx = -2, destIx = -2, forIx = -2, ixWRFor = -2, chrgIx = -2, needIx = -2, need4Ix = -2, need3Ix = -2, sourceIx = -2;
     int rChrgIx = -2, sChrgIx = -2;
@@ -10023,7 +10024,7 @@ public class Assets {
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, initialSumWorth, 1);
-        setStat(EM.WORTHINCR, pors, clan, totalYearWorthIncr, 1);
+        setStat(EM.WORTHINCR, pors, clan, percentYearWorthIncr, 1);
         setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
         setStat(EM.PREVGROWTH, pors, clan, bals.sum4(ABalRows.PREVGROWTHSIX), 1);
         //  setStat(EM.RCSG, pors, clan, syW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
@@ -10042,7 +10043,7 @@ public class Assets {
         int[] growthsA = {EM.GROWTHSN0, EM.GROWTHSN1, EM.GROWTHSN2, EM.GROWTHSN3};
         int[] fertilitiesA = {EM.FERTILITYSN0, EM.FERTILITYSN1, EM.FERTILITYSN2, EM.FERTILITYSN3};
         int[] rcsgIncrA = {EM.RCSGINCRN0, EM.RCSGINCRN1, EM.RCSGINCRN2, EM.RCSGINCRN3};
-        setStat(worthIncrA[ixAccYears], pors, clan, totalYearWorthIncr, 1);
+        setStat(worthIncrA[ixAccYears], pors, clan, percentYearWorthIncr, 1);
         setStat(growthsA[ixAccYears], pors, clan, bals.sum4(ABalRows.GROWTHSIX), 1);
         setStat(rcsgIncrA[ixAccYears], pors, clan, sumYearRCSGincr, 1);
         setStat(fertilitiesA[ixAccYears], pors, clan, gSwapW.aveFertility, 1);
@@ -10467,7 +10468,7 @@ public class Assets {
           int[] growthsA = {EM.DGROWTHSN0, EM.DGROWTHSN1, EM.DGROWTHSN2, EM.DGROWTHSN3};
           int[] fertilitiesA = {EM.DFERTILITYSN0, EM.DFERTILITYSN1, EM.DFERTILITYSN2, EM.DFERTILITYSN3};
           int[] rcsgIncrA = {EM.DRCSGINCRN0, EM.DRCSGINCRN1, EM.DRCSGINCRN2, EM.DRCSGINCRN3};
-          setStat(worthIncrA[ixAccYears], pors, clan, totalYearWorthIncr, 1);
+          setStat(worthIncrA[ixAccYears], pors, clan, percentYearWorthIncr, 1);
           setStat(growthsA[ixAccYears], pors, clan, sumGrowth, 1);
           setStat(rcsgIncrA[ixAccYears], pors, clan, sumYearRCSGincr, 1);
           setStat(fertilitiesA[ixAccYears], pors, clan, gSwapW.aveFertility, 1);
@@ -12388,7 +12389,12 @@ public class Assets {
       alev = History.loopMinorConditionals5;
       rtn.blev = aDl;   // set this blev
       aPre = "secIx#";
-
+      ARow resil = new ARow(ec);
+      for (int resilIx = 0; resilIx < E.LSECS; resilIx++) {
+        resil.set(resilIx, rawProspects2.get(0, resilIx) * rawProspects2.get(1, resilIx));
+      }
+      resilience = resil.max() / resil.ave();
+      hope = resilience * phe;
       lev = alev;  // set this level
       if (aDl > 3 || true) {
         hist.add(new History(History.valuesMinor7, "xit getNeeds", "aDl=" + aDl,

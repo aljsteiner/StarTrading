@@ -479,7 +479,7 @@ class EM {
   static final double[][] mDifficultyByPriorityMult = {{1., 6.}, {1., 6.}}; //
   static volatile double[][] randFrac = {{0.5}, {0.4}};  // game risk
   static final double[][] mRandFrac = {{0.0, .9}, {0.0, .9}};  // range 0. - .9,.7
-  static volatile double[][] clanRisk = {{.5, .4, .6, .3, .5}, {.5, .4, .6, .3, .5}};  //risk taken with assets
+  static volatile double[][] clanRisk = {{.4, .4, .4, .4, .4}, {.4, .4, .4, .4, .4}};  //risk taken with assets
   static final double[][] mClanRisk = {{.0, .7}, {.0, .7}};
   static volatile double[][] gameClanRiskMult = {{1.}, {1.}};  // range .0 - .6
   static final double[][] mGameClanRiskMult = {{.0, 1.6}, {.0, 1.6}};  // range .0 - .6
@@ -2346,7 +2346,7 @@ class EM {
   // ships get much more to survive and grow with planets
   // the fracs get reduced as the trades continue
   static final double mTradeFrac[][] = {{.1, .8}, {.1, 0.8}};
-  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.25, .25, .25, .25, .25}, ssFrac[0]};
+  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.22, .22, .22, .22, .22}, ssFrac[0]};
   // termFrac = (goalTermBias )/(goalTermBias + barterStart - term)
   //    gtb=18 t=18  18/18 = 1;  t=9  18/(18 + 18-9=27) = .6666; t=`0 18/36 = .5
   // related to decrement per term
@@ -4998,10 +4998,10 @@ onceAgain:
     doRes(GROWTHSN1, "noAcc1Growths", "yearly growth if trade not accepted for 1 year", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(GROWTHSN2, "noAcc2Growths", "yearly growth if trade not accepted for 2 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(GROWTHSN3, "noAcc3Growths", "yearly growth if trade not accepted for 3 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(WORTHINCRN0, "AccWorthIncr", "yearly increase in worth if trade accepted");
-    doRes(WORTHINCRN1, "noAcc1WorInc", "yearly increase in worth if trade not accepted for 1 year");
-    doRes(WORTHINCRN2, "noAcc2WorInc", "yearly increase in worth if trade not accepted for 2 years");
-    doRes(WORTHINCRN3, "noAcc3WorInc", "yearly increase in worth if trade not accepted for 3 years");
+    doRes(WORTHINCRN0, "AccWorthIncr", "%yearly increase in worth if trade accepted", 1, 1, 1, LIST0 | LIST16 | CURAVE | BOTH, 0L, 0L, 0L);
+    doRes(WORTHINCRN1, "noAcc1WorInc", "%yearly increase in worth if trade not accepted for 1 year");
+    doRes(WORTHINCRN2, "noAcc2WorInc", "%yearly increase in worth if trade not accepted for 2 years");
+    doRes(WORTHINCRN3, "noAcc3WorInc", "%yearly increase in worth if trade not accepted for 3 years");
     //   doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 1, 1, 2, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     /*
       static final int HIGHWORTH = ++e4;
@@ -5072,10 +5072,10 @@ onceAgain:
     doRes(RCSGINCRN1, "noAcc1RCSGInc", "yearly increase in RCSG if trade not accepted for 1 year", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RCSGINCRN2, "noAcc2RCSGInc", "yearly increase in RCSG if trade not accepted for 2 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RCSGINCRN3, "noAcc3RCSGInc", "yearly increase in RCSG if trade not accepted for 3 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(DWORTHINCRN0, "dAccWorthIncr", "died yearly increase in worth if trade accepted", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(DWORTHINCRN1, "dnoAcc1WorInc", "died yearly increase in worth if trade not accepted for 1 year", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(DWORTHINCRN2, "dnoAcc2WorInc", "died yearly increase in worth if trade not accepted for 2 years", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(DWORTHINCRN3, "dnoAcc3WorInc", "died yearly increase in worth if trade not accepted for 3 years", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(DWORTHINCRN0, "dAccWorthIncr", "died %yearly increase in worth if trade accepted", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(DWORTHINCRN1, "dnoAcc1WorInc", "died %yearly increase in worth if trade not accepted for 1 year", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(DWORTHINCRN2, "dnoAcc2WorInc", "died %yearly increase in worth if trade not accepted for 2 years", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(DWORTHINCRN3, "dnoAcc3WorInc", "died %yearly increase in worth if trade not accepted for 3 years", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(DGROWTHSN0, "dAccGrowths", "died yearly growth if trade accepted", 2, 2, 2, LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(DGROWTHSN1, "dnoAcc1Growths", "died yearly growth if trade not accepted for 1 year", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(DGROWTHSN2, "dnoAcc2Growths", "died yearly growth if trade not accepted for 2 years", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
