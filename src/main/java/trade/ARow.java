@@ -2183,7 +2183,6 @@ public class ARow {
    */
   public void getAChars(byte[] res, int bias) {
     double extent = max() - min(0);
-    byte[] ret = {0, 0, 0, 0, 0, 0, 0};
     for (int ix = 0; ix < E.LSECS; ix++) {
       res[ix + bias] = (byte) ((25.0 * min(ix) / extent) + 'a');
     }

@@ -172,12 +172,13 @@ class EM {
   static final Charset CHARSET = Charset.forName("US-ASCII");
   //                                                                        TUE 04/02/2021 14:03:02:233 cdt
   static final public SimpleDateFormat MYDATEFORMAT = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss:SSSz");
-  static final Path REMEMBER = Paths.get("remember");
+  //static final Path REMEMBER = Paths.get("remember");
   static final Path KEEP = Paths.get("keep");
-  static BufferedWriter bRemember = null, bKeep = null;
+  static BufferedWriter bKeep = null;
   static BufferedReader bKeepr = null;
-  static final Path AIFILE = Paths.get("aiFile");
-  static BufferedReader baiFiler;
+  static final Path MAPFILE = Paths.get("mapfile");
+  static BufferedReader bMapFr = null;
+  static BufferedWriter bMapFW = null;
 
   /* each keep goes false after end of page process new page or settings ended */
   static boolean keepFromPage = false;  // keep clicked titles on this page
@@ -581,6 +582,7 @@ class EM {
     try {
       String dateString = MYDATEFORMAT.format(new Date());
       String rOut = "New Game V" + StarTrader.versionText + " " + dateString + "\r\n";
+
       //   sw = new StringWriter();
       //  pw = new PrintWriter(sw);
       Econ.nowThread = Thread.currentThread().getName(); // goes into Static Econ
@@ -591,14 +593,17 @@ class EM {
       defRes();  // generate result objects
       runVals();  // generate settings objects to vvend
       //static volatile int bCharStart = 10, bCharEnd = -2, vvend = -1;
-      bCharEnd = vvend + bCharStart; // set length for  of key
-      System.out.println("++++counts at init EM doVal vvend=" + vvend + ", doRes rend4=" + rende4 + ", assiged doRes arrays rende3=" + rende3 + " +++++++");
+      bCharEnd = vvend + bCharStart; // set length for of key
+      System.out.println("---INem1--- counts at init EM doVal vvend=" + vvend + ", doRes rend4=" + rende4 + ", assiged doRes arrays rende3=" + rende3);
       doReadKeepVals();
       if (bKeepr != null) {
         bKeepr.close(); //close reading keep
       }
-      // bRemember = Files.newBufferedWriter(REMEMBER, CHARSET);     
-      //  bRemember.write(rOut,0,rOut.length());
+      doReadMapFile();
+      if (bMapFr != null) {
+        bMapFr.close();
+      }
+
       bKeep = Files.newBufferedWriter(KEEP, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       bKeep.write(rOut, 0, rOut.length());
       keepBuffered = true;
@@ -3259,16 +3264,21 @@ onceAgain:
     }//keep from page
   }//doWriteKeepVals
 
-  int doReadAIFile() {
+  int doReadMapFile() {
     int rtn = 0; // number of keys read
     String myKey = "";
     Byte aa[] = new Byte[500];
     myKey = aa.toString();
     try {
+      String dateString = MYDATEFORMAT.format(new Date());
+      String mVer = "VersionV" + StarTrader.versionText;
+      String mOut = mVer + " " + dateString + "\r\n";
 
-      // String dateString = MYDATEFORMAT.format(new Date());
-      // String rOut = "New Game " + dateString + "\n";
-    //  baiFiler = Files.newBufferedReader(AIFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+      bMapFr = Files.newBufferedReader(MAPFILE, CHARSET);
+      Scanner s = new Scanner(bMapFr);
+      System.err.println("locale " + s.locale());
+      Locale locale = Locale.US;
+      s.useLocale(Locale.US);
       int first = 0;
       // loop reading keyLen, key,int until first<0 or EOFException ex
      // while ((first = baiFile.read()) > 0) {
@@ -3276,7 +3286,7 @@ onceAgain:
 
       //  )
       //}
-      if (false) {
+      if (false) { // start a test
         String sd = "Hello World! 3 + 3.0  -5.0 = 6 true";
         Scanner sds = new Scanner(sd);
         sds.useLocale(Locale.US);
@@ -3289,10 +3299,8 @@ onceAgain:
           }
         }
         sds.close();
-      }
-      Scanner s = new Scanner(bKeepr);
-      System.err.println("locale " + s.locale());
-      Locale locale = Locale.US;
+      } // ebd test
+
       s.useLocale(Locale.US);
 onceAgain:
       s.useDelimiter("\\s");
@@ -3309,7 +3317,7 @@ onceAgain:
         int slider = -999;
         Boolean isNeg = false;
         double val = -999.;
-        try {
+        try { //ignore reading errors
           cname = s.useDelimiter("\\s").next();
           sname = "space";
           fname = "notnot";
@@ -3391,7 +3399,7 @@ onceAgain:
               lname = s.nextLine();
               System.out.println("Unknow line cmd=" + cname + " :: line=" + lname);
           } // switch
-        }
+        } // end reading error try
         catch (Exception | Error ex) {
           firstStack = secondStack + "";
           ex.printStackTrace(pw);
@@ -3404,7 +3412,7 @@ onceAgain:
         bKeepr.close();
       }
 
-    }
+    }// end large tru
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
@@ -3568,7 +3576,7 @@ onceAgain:
    * @param
    * @return
    */
-  void buildAICvals(Econ ec, byte[] res, int vvend, byte[] uMasked) {
+  void buildAICvals(Econ ec, byte[] res, int vvend) {
     int sliderVal = 0, tix = 0;
     // static int myAIcstart  = 'a'; // start of ascii a
     // static int myAIdiv  = 20; //divid the values by 5
@@ -3590,15 +3598,15 @@ onceAgain:
       //res = new byte[lRes];// set Res to a new right length
       //uMasked = new byte[lRes];
       for (ix = 0; ix < lRes; ix++) { //prefill with no match
-        res[ix] = E.nChar; //'a'-1;
-        uMasked[ix] = 0;  // prefill with unMasked
+        res[ix] = E.nChar; //E.aByte -1;
+        //uMasked[ix] = 0;  // prefill  unMasked
       }
       for (ix = 0; ix < vvend; ix++) { // scan each doVal
         sliderVal = getAIVal(ix, ec.pors, ec.clan);
         res[ixa = ix + E.bValsStart] = (byte) ((int) (sliderVal / myAIdiv) + 'a');
         int gc = valI[vv][modeC][0][0];
         if (gc > vfour) {
-          uMasked[ixa] = E.mChar; // set mask for each user val
+          //uMasked[ixa] = E.mChar; // set mask for each user val
         }    }
     }
     catch (Exception | Error ex) {
@@ -3978,7 +3986,7 @@ onceAgain:
     // doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
     doVal("clanRisks", clanRisk, mClanRisk, "increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
     /*
-     winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
+    winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
     winner = scoreVals(TRADELASTGAVE, wGiven, ICUM, isV);
     winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
     winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
@@ -8294,6 +8302,14 @@ onceAgain:
 
   static boolean isWinner = false;
   static double myScore[] = {400., 400., 400., 400., 400.};
+  static int myScorePosClan[] = {1, 2, 3, 4, 5};
+  static int myScoreClanPos[] = {1, 2, 3, 4, 5};
+  static double myScore2[] = {400., 400., 400., 400., 400.};
+  static int myScorePosClan2[] = {1, 2, 3, 4, 5};
+  static int myScoreClanPos2[] = {1, 2, 3, 4, 5};
+  static double myScore3[] = {400., 400., 400., 400., 400.};
+  static int myScorePosClan3[] = {1, 2, 3, 4, 5};
+  static int myScoreClanPos3[] = {1, 2, 3, 4, 5};
   static double myScoreSum = 0.0;
   static int isV = 0;
   static int isI = 1;
@@ -8309,16 +8325,18 @@ onceAgain:
     // initialize curDif,difMult if year < 2
     curDif = year < 2 ? winDif[0][0] : curDif;
     difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;
-    for (int n = 0; n < 5; n++) {
-      myScore[n] = 400.;  // allow negatives to reduce it
+    int ixClan = 0, ixPS = 0, ixC2 = 0;
+    for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+      myScore[ixClan] = 400.;  // allow negatives to reduce it
     }
-    winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
+    try {
+      //  winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
     winner = scoreVals(TRADELASTGAVE, wGiven, ICUM, isV);
     winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
-    winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
+      //winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
     winner = scoreVals(LIVEWORTH, wLiveWorthScore, ICUR0, isV);
     winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
-    winner = scoreVals(WTRADEDINCRMULT, wYearTradeV, ICUR0, isV);
+      // winner = scoreVals(WTRADEDINCRMULT, wYearTradeV, ICUR0, isV);
     // winner = scoreVals(WTRADEDINCRMULT, wYearTradeI, ICUR0, isI);
     winner = scoreVals(DIED, iNumberDied, ICUM, isI);
     winner = scoreVals(BOTHCREATE, iBothCreateScore, ICUM, isI);
@@ -8326,19 +8344,64 @@ onceAgain:
     // winner = scoreVals(getStatrN("WTRADEDINCRMULT"), wYearTradeI, ICUR0, isI);
     resI[SCORE][ICUR0][CCONTROLD][ISSET] = 1;
     myScoreSum = 0.0;
-    for (int n = 0; n < 5; n++) {
-      myScoreSum = myScore[n] * 2;
-      resV[SCORE][ICUR0][0][n] = myScore[n];
-      resV[SCORE][ICUR0][1][n] = myScore[n];
-      resI[SCORE][ICUR0][1][n] = 1;
-      resI[SCORE][ICUR0][0][n] = 1;
+    for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+      myScoreSum = myScore[ixClan];
+      resV[SCORE][ICUR0][0][ixClan] = myScore[ixClan];
+      resV[SCORE][ICUR0][1][ixClan] = myScore[ixClan];
+      resI[SCORE][ICUR0][1][ixClan] = 1;
+      resI[SCORE][ICUR0][0][ixClan] = 1;
     }
+    int min = 0, prevMin = 0;
+    // static int myScorePosClan[] = {1,2,3,4,5};// clan score min to max
+    //static int myScoreClanPos[] = {1,2,3,4,5}; //clan positions of score
+    myScorePosClan[0] = 0;
+    myScorePosClan[1] = 1;
+    myScoreClanPos[0] = 0;
+    myScoreClanPos[1] = 1;
+      for (ixClan = 1; ixClan < E.LCLANS; ixClan++) {
+        myScorePosClan[ixClan] = ixClan; // set score pos to the current clan
+      if (myScore[myScorePosClan[ixClan - 1]] < myScore[myScorePosClan[ixClan]]) {
+        // ixClan=2 1<2 or 0<2
+        myScorePosClan[ixClan] = ixClan;// set score position ixClan to clan ixclan
+        myScoreClanPos[ixClan] = ixClan;// set the clan to score position
+      }
+      else { // 1>= 2 ixClan=2
+        min = ixClan;
+        // move the lower score pos up to current ixClan
+        myScorePosClan[ixClan] = myScorePosClan[ixClan - 1];// <=0
+        //now set clan ixClan to its new higher score position
+        myScoreClanPos[myScorePosClan[ixClan]] = ixClan;
+        // set one less score pos to the prev clan (ixClan)
+        myScorePosClan[ixClan - 1] = min; //2
+        // clan 2 moved to score 1, set clan2 to 1
+        myScoreClanPos[myScorePosClan[ixClan - 1]] = ixClan - 1;
+        //Than move the new clan score down the array as needed
+        for (ixC2 = ixClan - 1; ixC2 > 0; ixC2--) { //1 => 0, 2 => 1
+          if (myScore[myScorePosClan[ixC2 - 1]] < myScore[myScorePosClan[ixC2]]) {
+            // already in order do nothing
+          }
+          else {
+            min = myScorePosClan[ixC2]; // save current score clan position
+            // move the lower position clan up to the ixC2 position
+            myScorePosClan[ixC2] = myScorePosClan[ixC2 - 1];
+            //now set clan ixC2 to its new higher score position
+            myScoreClanPos[myScorePosClan[ixC2]] = ixC2;
+            // now save the ixC2 clan into the lower score position
+            myScorePosClan[ixC2 - 1] = min; //2  now in least pos
+            // clan 2 moved to score 1, set clan2 to 1
+            myScoreClanPos[myScorePosClan[ixC2 - 1]] = ixC2 - 1;
+          } // else ixC2
+        } // ixC2
+      }// else ixClan
+    }// ixClan
+    winner = myScoreClanPos[4];
+
     double dif = 0.0, wDif = 0.0;
     // dif = max - myScore.ave
     // wDif = dif/myScore.av - curDif
     // isWinner if wDif > 0.0 that is max  is enough greater than ave
     int prevWinner = winner;
-    boolean badbad = winner < 0 || winner > 4 ? true : false; // set legal winner
+      boolean badbad = winner < 0 || winner > 4; // set legal winner
     winner = badbad ? 0 : winner; // set winner legal
     difPercent = (wDif = (dif = (myScore[winner] - myScoreSum * .1) / myScoreSum * .1) - curDif) * 100.0;
     if (wDif > 0.0) {  // wDif is frac (max-ave)/ave - curDif
@@ -8351,8 +8414,26 @@ onceAgain:
       // redices amt max/ave >  curDif
       curDif -= (curDif - curDif * difMult) > 0.0 ? curDif * difMult : 0.0;
     }
+
     System.out.println("getWinner " + resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner + (badbad ? " illegal winner=" + prevWinner : ""));
-    return winner;
+      return winner;
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      ex.printStackTrace(System.err);
+      flushes();
+      System.err.println("----ERWIN3--- Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " ixClan" + ixClan + " ixC2" + ixC2 + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
+      flushes();
+      flushes();
+      //   System.exit(-15);
+      fatalError = true;
+
+      // ex.printStackTrace(System.err);
+      st.setFatalError();
+    }
+    return 0;
   }
 
   /**
@@ -8372,46 +8453,67 @@ onceAgain:
     double max = -min; // increase to max
     double max1 = max - 1.;// an almost max amount
     int ii = 0;
-    int m = 0, n = 0;
-    for (m = 0; m < 2; m++) {
-      for (n = 0; n < 5; n++) {
-
-        if (m == 0) {
+    int ixPS = 0, ixClan = 0;
+    for (ixPS = 0; ixPS < 2; ixPS++) {
+      for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+     if (ixPS == 0) {
           // initialize with planet values for each clan
           if (isN == isI) {
-            inScore[n] = resI[dRn][cumCur][m][n] * mm;
+            myScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
           }
           else if (isN == isV) {
-            inScore[n] = resV[dRn][cumCur][m][n] * mm;
+            myScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
           }
           else { // isScoreAve
-            ii = (int) resI[dRn][cumCur][m][n];
-            inScore[n] = mm * (ii == 0 ? 1. : resV[dRn][cumCur][m][n] / ii);
+            ii = (int) resI[dRn][cumCur][ixPS][ixClan];
+            myScore[ixClan] += mm * resV[dRn][cumCur][ixPS][ixClan];
           }
         }
         else { // Than add ship values per clan
           if (isN == isI) {
-            inScore[n] += resI[dRn][cumCur][m][n] * mm;
+            myScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
           }
           else if (isN == isV) {
-            inScore[n] += resV[dRn][cumCur][m][n] * mm;
+            myScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
           }
           else {
-            ii = (int) resI[dRn][cumCur][m][n];
-            inScore[n] += mm * (ii == 0 ? 1. : resV[dRn][cumCur][m][n] / ii);
+            myScore[ixClan] += mm * resV[dRn][cumCur][ixPS][ixClan];
           }
-          // than find the min value of all clans
-          if (inScore[n] < min) {
-            min = inScore[n];  // update min for all clanSums
+        /* old process
+        if (ixPS == 0) {
+          // initialize with planet values for each clan
+          if (isN == isI) {
+            inScore[ixClan] = resI[dRn][cumCur][ixPS][ixClan] * mm;
           }
-          // find the max value of all clans
-          if (inScore[n] > max) {
-            max1 = max; // update the previous max
-            max = inScore[n];  // update max for all clanSums
+          else if (isN == isV) {
+            inScore[ixClan] = resV[dRn][cumCur][ixPS][ixClan] * mm;
+          }
+          else { // isScoreAve
+            ii = (int) resI[dRn][cumCur][ixPS][ixClan];
+            inScore[ixClan] = mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
           }
         }
-      }//n
-    }//m
+        else { // Than add ship values per clan
+          if (isN == isI) {
+            inScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
+          }
+          else if (isN == isV) {
+            inScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
+          }
+          else {
+            ii = (int) resI[dRn][cumCur][ixPS][ixClan];
+            inScore[ixClan] += mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
+          }
+           // than find the min value of all clans
+          if (inScore[ixClan] < min) {
+            min = inScore[ixClan];  // update min for all clanSums
+          }
+          // find the max value of all clans
+          if (inScore[ixClan] > max) {
+            max1 = max; // update the previous max
+            max = inScore[ixClan];  // update max for all clanSums
+          }
+
     double smax = -9999999999.E+10;// ?? reset max
     // increase myScore for each clan by clanSum/min
     // neg inScore reduces myScore
@@ -8421,15 +8523,20 @@ onceAgain:
     // plus inScore large min small increase
     // plus large inScore small plus min large increase
     // plus large inScore small neg min large decrease
-    for (n = 0; n < 5; n++) {
-      myScore[n] += (inScore[n] + .00001) / (min * .3 + .00001); //update to max greater than max1
-      if (myScore[n] > smax) {
-        smax = myScore[n];
-        winner = n; // current winner
+    for (ixClan = 0; ixClan < 5; ixClan++) {
+      myScore[ixClan] += (inScore[ixClan] + .00001) / (min * .3 + .00001); //update to max greater than max1
+      if (myScore[ixClan] > smax) {
+        smax = myScore[ixClan];
+        winner = ixClan; // current winner
       }
     }
     System.out.println("scoreVals " + resS[dRn][0] + ", mult=" + mm + ", inScore=" + mf(inScore[0]) + " , " + mf(inScore[1]) + " , " + mf(inScore[2]) + "," + mf(inScore[3]) + "," + mf(inScore[4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner);
-    return winner;
+                  */
+
+        }
+      }//ixClan
+    }//ixPS
+    return 4;
   }
 
   int scoreVals(String rName, double[][] mult, int cumCur, int isN) {

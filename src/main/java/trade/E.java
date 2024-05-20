@@ -184,13 +184,14 @@ public class E {
   static final int poPerW = 13, pMaxP = 7, pCurW = 8;
   static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
-  static final byte nChar = 'a' - 1;//  "'" I think initial ' not final '
-  static final byte mChar = 'a' - 4;//  "^"
+  static final byte aByte = 'A';
+  static final byte nChar = aByte - 1;//  "@"
+  static final byte mChar = aByte - 2;//  "?"
   static private int aiPcntr = 0;
   static final int ptype = aiPcntr++;
   static final int pacct = aiPcntr++;
   static final int ppors = aiPcntr++;
-  static final int pclan = aiPcntr++;
+  // static final int pclan = aiPcntr++;
   static final int pPrevP = aiPcntr++;
   static final int pPrevW = aiPcntr++;
   static final int pPrevKW = aiPcntr++;
