@@ -6516,7 +6516,7 @@ public class StarTrader extends javax.swing.JFrame {
       //     resetRes(fullRes);  // move years up cur, leave 0 ready for new statRes
       paintWaiting();
       if (!doStop && !eM.dfe()) {
-        eM.doStartYear();  //move stats up for the next year
+        eM.doStartYear();  //move stats up for the next year/update AI
       }
       else {
         stateConst = STOPPED;

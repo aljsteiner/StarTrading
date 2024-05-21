@@ -71,7 +71,6 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
-import static trade.EM.bCharStart;
 
 /**
  *
@@ -91,7 +90,7 @@ public class Assets {
   // int oclan;
   //int opors;
   int oClan = -5, oPors = -6;  //in Assets preInstantiation
-  int year;  // copy of eM.year
+ // int year;  // copy of eM.year
   int myEconCnt;
 
   //Assets
@@ -112,14 +111,17 @@ public class Assets {
   static int pTradeFrac = -1;
   static int pUserCatastrophyFreq = -1;
   /* now add some AI variables for this economy */
+  double prevWorth;
+  double prevOffer;
   String myAIvalC = "soon";
   String myAIbalances = "1234567";
   String myAIprosperity = "1234567";
   String myAIjoys = "1234567";
   int prevScorePos = -1;
-  double prevScore = -0.1;
-  volatile static byte[] myAIBytes = {0, 0}; // extended in eM.buildMyAICvals
-  volatile static String myAICvals = "coming soon"; // converted for myAIBytes
+  double prevScore;
+  double prevClanScore = -0.1;
+  // volatile static byte[] EM.psClanBytes[pors][clan] = {0, 0}; // extended in eM.buildMyAICvals
+  volatile static String myAICvals = "coming soon"; // converted for EM.psClanBytes[pors][clan]
   //Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
 // Assets these AI entries have  2types, 2PS , 5Clan, 9much, 3sVal,3rRes
   static volatile int aEntries[] = {0, 0}; // 2typein CashFlow.yearEnd()
@@ -291,6 +293,7 @@ public class Assets {
   double econsCnt;
   double worthIncrPercent = 0.;
   double worthIncr = 0.;
+  double worth = 0., resilience = 0., hope = 0.;
   static double[][][] maintRequired = E.maintRequired;
   static double[][][] mxCosts = E.maintCost;
   static double[][][] tCosts = E.shipTravelLightyearCostsBySourcePerConsumer;
@@ -582,7 +585,7 @@ public class Assets {
         }
       }
     }
-    myAIBytes = new byte[E.bValsStart + eM.vvend]; // new array
+    //  EM.psClanBytes[pors][clan] = new byte[E.bValsStart + eM.vvend]; // new array
   //  aiMask1 = new byte[E.bValsStart + eM.vvend];
     //   startYrs = new HCashFlow[7]; // might use instead of name 1,2 ...
     //   prevns = new HCashFlow[7];
@@ -645,7 +648,7 @@ public class Assets {
     CCONTROLD = eM.CCONTROLD;
     //ydifficulty = new ARow(ec);  set by priority
     double sumWealth = res * eM.nominalWealthPerResource[pors] + colonists * eM.nominalWealthPerStaff[pors] + aknowledge * eM.nominalWealthPerCommonKnowledge[0] + wealth;
-    hist.add(new History("aa", History.loopIncrements3, "InitAs " + year + " i$" + EM.mf(iwealth), "r" + EM.mf(res), "r$" + EM.mf(res * eM.nominalWealthPerResource[pors]), "s" + EM.mf(colonists), "s$" + EM.mf(colonists * eM.nominalWealthPerStaff[pors]), "K" + EM.mf(aknowledge), "K$" + EM.mf(aknowledge * eM.nominalWealthPerCommonKnowledge[0]), "$" + EM.mf(wealth), "i$" + EM.mf(iwealth), "difficulty=", EM.mf(percentDifficulty)));
+    hist.add(new History("aa", History.loopIncrements3, "InitAs " + EM.year + " i$" + EM.mf(iwealth), "r" + EM.mf(res), "r$" + EM.mf(res * eM.nominalWealthPerResource[pors]), "s" + EM.mf(colonists), "s$" + EM.mf(colonists * eM.nominalWealthPerStaff[pors]), "K" + EM.mf(aknowledge), "K$" + EM.mf(aknowledge * eM.nominalWealthPerCommonKnowledge[0]), "$" + EM.mf(wealth), "i$" + EM.mf(iwealth), "difficulty=", EM.mf(percentDifficulty)));
     //  System.out.println("Assets() 623 end constructor");
     System.out.println("Assets.assetsInit 407 more" + name);
     //  needsArray = new A6Row[5];
@@ -817,6 +820,43 @@ public class Assets {
         // if still left, lt [0] then the 'A' preset is put
         ix = -2; // exit test loop
       }
+    }
+    res[bias] = ret;
+  }
+
+  /**
+   * put a byte value from a series of tests to put into res[bias+ix]; called in
+   * buildAICvals and in Assets.CashFlow.yearEnd() with tests specified in
+   * Assets
+   *
+   * @param res the array to set
+   * @param bias the bias into the array
+   * @param value the source value
+   * @param tests an array of tests that a may be greater than
+   * @param what a descriptor string for this value
+   * @param ifPrint print message to System.out if true
+   * @return an small case letter 'b'+ a.length-1 greater than largest test
+   * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
+   * test
+   */
+  static void putValueByte(byte[] res, int bias, double value, double[] tests, String what, boolean ifPrint) {
+    byte ret = 'A';
+    int ix = 0;
+    int testsLen = tests.length;
+    for (ix = testsLen - 1; ix > -1; ix--) {
+      if (value > tests[ix]) {
+        if (ix > 25) {
+          ret = (byte) ('a' + ix - 25);
+        }
+        else {
+          ret = (byte) ('B' + ix);
+        } // if gt than [0]
+        // if still left, lt [0] then the 'A' preset is put
+        ix = -2; // exit test loop
+      }
+    }
+    if (ifPrint) {
+      System.out.println("----PVB3---- putValByte=" + ret + " for value=" + EM.mf(value));
     }
     res[bias] = ret;
   }
@@ -1591,7 +1631,7 @@ public class Assets {
 
             eM.printHere("---STat---", ec, resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumSet=" + resICumIsset + ", curClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
             /*      System.out.println(
-                      "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                      "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
             
               System.out.flush();
              */
@@ -1752,7 +1792,7 @@ public class Assets {
               if (cntStatsPrints < E.ssMax) {
                 cntStatsPrints += 1;
                 System.out.println("---SMXb---"
-                                   + "EM.setMaxStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                                   + "EM.setMaxStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
                 System.out.flush();
               } //ssMax
             }
@@ -1922,7 +1962,7 @@ public class Assets {
               if (cntStatsPrints < E.ssMax) {
                 cntStatsPrints += 1;
                 System.out.println("---SMINLc---"
-                                   + "EM.setMinStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+                                   + "EM.setMinStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
                 System.out.flush();
               } //ssMax
             }
@@ -2314,7 +2354,7 @@ public class Assets {
    * @param ahist the hist for the new year
    */
   void yearStart(double[] atrand, ArrayList<History> ahist) { // trade.Assets.yearStart
-    year = eM.year;
+  //  year = eM.year;
     otherName = "";
     trand = atrand;   // set history array
     hist = ahist;   // set hist
@@ -8359,7 +8399,7 @@ public class Assets {
         lTitle = "strtCashFlow";
         histTitles(lTitle);
         if (!ec.myClearHist) {
-          hist.add(new History(aPre, 5, ec.name + " CFinitYr" + year, "wealth=", EM.mf(wealth), "colonists=", EM.mf(colonists), "res=", EM.mf(res), "Knowledge=", EM.mf(aknowledge), "difficulty=", EM.mf(percentDifficulty)));
+          hist.add(new History(aPre, 5, ec.name + " CFinitYr" + EM.year, "wealth=", EM.mf(wealth), "colonists=", EM.mf(colonists), "res=", EM.mf(res), "Knowledge=", EM.mf(aknowledge), "difficulty=", EM.mf(percentDifficulty)));
         }
         start();
       }
@@ -8399,11 +8439,29 @@ public class Assets {
       return nSavd;
     }
 
+    /**
+     * return a pointer to the calling subasset
+     *
+     * @param sa a reference to a subasset
+     * @return a reference to the same subasset I think
+     */
     SubAsset copyIf(CashFlow.SubAsset sa) { // only
       if (sa == null) {
         return null;
       }
       return sys[sa.sIx];
+    }
+
+    /**
+     * get the Assets equivalent of the score for each clan
+     *
+     * @param offer The last offer given of the previous year 0 if none
+     * @param worth The final worth of the previous year
+     * @return
+     */
+    double getScore(double offer, double worth) {
+      double score = offer * EM.wGiven[0][0] + worth * EM.wLiveWorthScore[0][0];
+      return score;
     }
 
     //  double addCash(double cash) {
@@ -8555,7 +8613,7 @@ public class Assets {
         static final int CRISISSTAFFREDUCESURPLUSPERCENT = ++e4;
          */
         double rc1, sc2, rc3, rreduced, sreduced;
-        yearCatastrophy = year; // flag entered
+        yearCatastrophy = EM.year; // flag entered
         r.cumUnitBonus.add(r1, deteriorationReduce3);
         r.cumUnitBonus.add(r2, deteriorationReduce2); // help those hit
         s.cumUnitBonus.add(s1, deteriorationReduce1);
@@ -9175,7 +9233,7 @@ public class Assets {
             tradedSuccessTrades++;
             tradeAccepted = true;
             tradeMissed = tradeRejected = tradeLost = false;
-            lastAcceptedYear = yearTradeAccepted = year;
+            lastAcceptedYear = yearTradeAccepted = EM.year;
             if (E.debugBarterOut) {
               eM.printHere("---CBA1---", ec, "Assets.CashFlow.barter set TradeAccepted true");
             }
@@ -9243,7 +9301,7 @@ public class Assets {
             if (E.debugBarterOut) {
               eM.printHere("---CBA0---", ec, "Assets.CashFlow.barter set TradeAccepted true");
             }
-            lastAcceptedYear = yearTradeAccepted = year;
+            lastAcceptedYear = yearTradeAccepted = EM.year;
             EM.tradedCnt++;
             EM.porsTraded[pors]++;
             EM.porsClanTraded[pors][clan]++;
@@ -9266,7 +9324,7 @@ public class Assets {
             eM.porsVisited[pors]++;
             eM.porsClanVisited[pors][clan]++;
             tradeLost = true;
-            prevNotAcceptedYear = yearTradeLost = year;
+            prevNotAcceptedYear = yearTradeLost = EM.year;
             tradeMissed = tradeRejected = tradeAccepted = false;
             if (E.debugBarterOut) {
               eM.printHere("---CBa2---", ec, "Assets.CashFlow.barter set !TradeAccepted = false");
@@ -9287,7 +9345,7 @@ public class Assets {
             if (E.debugBarterOut) {
               eM.printHere("---CBa3---", ec, "Assets.CashFlow.barter set !TradeAccepted = false");
             }
-            prevNotAcceptedYear = yearTradeRejected = year;
+            prevNotAcceptedYear = yearTradeRejected = EM.year;
             setStat(EM.TradeRejectValuePerGoal, percentValuePerGoal, 1);
             setStat(EM.TradeRejectedStrategicGoal, pors, clan, strategicGoal, 1);
             setStat(EM.TradeRejectedStrategicValue, pors, clan, strategicValue, 1);
@@ -9314,7 +9372,7 @@ public class Assets {
             if (E.debugBarterOut) {
               eM.printHere("---CBa5---", ec, "Assets.CashFlow.barter set !TradeAccepted = false");
             }
-            prevNotAcceptedYear = yearTradeLost = year;
+            prevNotAcceptedYear = yearTradeLost = EM.year;
             retOffer.setTerm(-5);
             fav = -3.;
           } //exitif   Assets.CashFlow.barter
@@ -9874,53 +9932,58 @@ public class Assets {
           //aPSMEntries[aType][acct][pors][much]++;// type acct pors much
           //aClanEntries[aType][acct][pors][aSVal][aRRes][much]++; // type pors clan much
         }
-        myAIBytes = new byte[E.bValsStart + eM.vvend]; // new array
-        double[] myWLims = {-99999999, 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-       // aiMask1 = new byte[E.bValsStart + eM.vvend];
+        //  EM.psClanBytes[pors][clan] = new byte[E.bValsStart + EM.vvend]; // new array
         // leave EM.bCharStart 'a'-1 characters to be changed before settings values
         // settings values are based on this clan and pors
-        eM.buildAICvals(ec, myAIBytes, eM.vvend); //build a key , filled with null
+      //  eM.buildAICvals(ec, EM.psClanBytes[pors][clan], eM.vvend); //build a key , filled with null
         int ix = 0;
         //int ptype = 0, pacct = 1, ppors = 2, pclan = 3, poPerW = 4, pMinP = 5, pMaxP = 6, pMinW = 7, pMaxW = 8;
         //  int pRs = 9, pSs = 16, pPerW = 23, pW = 24, pKW = 25;
-        myAIBytes[E.ptype] = (byte) (E.aByte + aType);
-        myAIBytes[E.pacct] = (byte) (E.aByte + acct);
-        myAIBytes[E.ppors] = (byte) (E.aByte + pors);
-        // myAIBytes[E.pclan] = (byte) (E.aByte + clan);
+        EM.psClanBytes[pors][clan][E.ptype] = (byte) (E.aByte + aType);
+        EM.psClanBytes[pors][clan][E.pacct] = (byte) (E.aByte + acct);
+        EM.psClanBytes[pors][clan][E.ppors] = (byte) (E.aByte + pors);
+        // EM.psClanBytes[pors][clan][E.pclan] = (byte) (E.aByte + clan);
         /*
         // double oPerW = offers / btWTotWorth;
         
         byte oPerWC = 'a';
         double[] prospLims = {-99999999., -0.1, E.PZERO, 0.13, 0.5, 0.68, 1.2, 3.2, 10.15}; //9 prevProsperity2
 
-        myAIBytes[poPerW] = (byte) oPerWC;
+        EM.psClanBytes[pors][clan][poPerW] = (byte) oPerWC;
          */
         if (acct == 1) {
-          EM.setValueByte(myAIBytes, E.poPerW, offers / btWTotWorth, oPerWLims);
+          EM.setValueByte(EM.psClanBytes[pors][clan], E.poPerW, offers / btWTotWorth, oPerWLims);
         }
+        boolean ifPrint = true;
         if (prevProspects2 != null) {
-          putValueByte(myAIBytes, E.pPrevP, prevProspects2.curMin(), myWLims);
-          putValueByte(myAIBytes, E.pPrevW, prevProspects2.curMax(), myWLims);
-        prevBalances.getRow(0).getAChars(myAIBytes, E.pPrevB0Row);
-          prevBalances.getRow(1).getAChars(myAIBytes, E.pPrevB1Row);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevP, prevProspects2.curMin(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevPmin, prevProspects2.curMin(), E.AILims, "rawProspects2.min", ifPrint);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevO, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "Offers", ifPrint);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          prevBalances.getRow(0).getAChars(EM.psClanBytes[pors][clan], E.pPrevB0Row);
+          prevBalances.getRow(1).getAChars(EM.psClanBytes[pors][clan], E.pPrevB1Row);
         }
         double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};
-        EM.setValueByte(myAIBytes, E.pPrevW, syWTotWorth, worthLims);
-        EM.setValueByte(myAIBytes, E.pPrevKW, syWTotWorth, worthLims);
+        EM.setValueByte(EM.psClanBytes[pors][clan], E.pPrevW, syWTotWorth, worthLims);
+        EM.setValueByte(EM.psClanBytes[pors][clan], E.pPrevKW, syWTotWorth, worthLims);
 
-        myAIBytes[E.pMinP] = (byte) ('a' + aType);
-        myAIBytes[E.pMinP] = (byte) ('a' + aType);
-        myAIBytes[E.pMinP] = (byte) ('a' + aType);
-        myAIBytes[E.pMinP] = (byte) ('a' + aType);
-        myAIBytes[E.pMinP] = (byte) ('a' + aType);
+        EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
+        EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
+        EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
+        EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
+        EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
         //  String str = (EM.oPerS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + myAICvals) + oPerWC; // finish key
-        String str = myAIBytes.toString();
+        String str = EM.psClanBytes[pors][clan].toString();
 
         Integer aMany = EM.myAIlearnings.get(str);
         aMany = aMany == null ? 1 : aMany + 1;// force valid number if null
         EM.myAIlearnings.put(str, aMany);
         if (E.debugAIOut && (aWaits > 5)) {
-          System.out.println("----BAI3---- put key=" + str + " , =" + aMany + " much=" + much + " year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
+          System.out.println("----BAI3---- put key=" + str + " , =" + aMany + " much=" + much + " EM.year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
         }
         aType = 0;
         // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
@@ -10042,7 +10105,7 @@ public class Assets {
         double rem = 0;
         EM.wasHere = " CashFlow.yearEnd.after yrphase.pay cccd=" + ++cccd;
         if ((rem = bals.curSum() - mtgCosts10.curSum()) < PZERO) {
-          E.myTest(true, "year end costsSum= %7.3f exceeds balancesSum= %7.3f,remnantSum= %7.3f age=" + ec.age + ", year=" + eM.year + ", rc sum=" + EM.mf(bals.getRow(0).sum()), mtgCosts10.curSum(), bals.curSum(), rem);
+          E.myTest(true, "year end costsSum= %7.3f exceeds balancesSum= %7.3f,remnantSum= %7.3f age=" + ec.age + ", year=" + EM.year + ", rc sum=" + EM.mf(bals.getRow(0).sum()), mtgCosts10.curSum(), bals.curSum(), rem);
         }
         if (eM.dfe()) {
           return 0.;
@@ -10093,7 +10156,7 @@ public class Assets {
         //live
         fyW = new DoTotalWorths();
         fyW.setPrev(syW);
-        sumTotWorth = fyW.getTotWorth();
+        worth = sumTotWorth = fyW.getTotWorth();
         if (History.dl > History.informationMinor9) {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
           hist.add(new History(aPre, History.valuesMinor7, "n" + n + "post Health", ">>> at", wh(a0.getLineNumber()), "H=" + EM.mf(rawProspects2.curMin()), "Ntrade$$", EM.mf(startYrSumWorth), EM.mf(sumTotWorth - startYrSumWorth), EM.mf(sumTotWorth)));
@@ -10374,7 +10437,7 @@ public class Assets {
         }
         eM.printHere("----LYE----", ec, "CashFlow.live yearEnd before many setStat");
 
-        if (year == yearTradeAccepted && oClan >= 0) {
+        if (EM.year == yearTradeAccepted && oClan >= 0) {
           //set of accepted trades
           String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
           String[] negRawUnitGrowths = {"rNeg1RawUnitGrowth", "cNeg1RawUnitGrowth", "sNeg1RawUnitGrowth", "gNeg1RawUnitGrowth"};
@@ -10586,7 +10649,7 @@ public class Assets {
               setStat(EM.MISCLOWDIEDPERCENT, pors, clan, 100., 1);
             }
           }
-          if (yearCatastrophy == year) {
+          if (yearCatastrophy == EM.year) {
             setStat(EM.DIEDCATASTROPHY, pors, clan, worthincr1, 1);
           }
           //    setStat("TRADES%", pors, clan, fav > NZERO ? 100. : 0., 1);

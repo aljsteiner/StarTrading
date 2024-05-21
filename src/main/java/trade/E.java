@@ -98,6 +98,7 @@ public class E {
   static final boolean debugSetMyIx = false && debugOutput; //listsetMyIx
   static final boolean debugCalcRawCosts = false && debugOutput; //calcRawCosts
   static final boolean debugBarterOut = debugOutput; //Barter
+  static final boolean debugPutValByteOut = debugOutput; //PutValByte
   static final boolean debugCreateOut = debugOutput; //output messages Assets
   static final boolean debugCreateNullOut = debugOutput; //did not choose died Econ
   static final boolean debugAssetsOut = debugOutput; //output messages Assets
@@ -192,9 +193,23 @@ public class E {
   static final int pacct = aiPcntr++;
   static final int ppors = aiPcntr++;
   // static final int pclan = aiPcntr++;
-  static final int pPrevP = aiPcntr++;
-  static final int pPrevW = aiPcntr++;
-  static final int pPrevKW = aiPcntr++;
+  static final int pPrevP = aiPcntr++; //rawProspects2 ave
+  static final int pPrevPmin = aiPcntr++; //rawProspects2 min
+  static final int pPrevW = aiPcntr++;  // last worth
+  static final int pPrevKW = aiPcntr++; // last knowledge worth
+  static final int pPrevSc = aiPcntr++; // last score worth
+  static final int pPrevO = aiPcntr++; // last Offer worth
+  static final int pPrevResil = aiPcntr++; // last resilience worth
+  static final int pPrevHope = aiPcntr++; // last hope worth
+  static final int pIncP = aiPcntr++; //rawProspects2
+  static final int pIncPmin = aiPcntr++; //rawProspects2 ave
+  static final int pIncW = aiPcntr++;  // last worth
+  static final int pIncKW = aiPcntr++; // last knowledge worth
+  static final int pIncSc = aiPcntr++; // last score worth
+  static final int pIncO = aiPcntr++; // last Offer worth
+  static final int pIncResil = aiPcntr++; // last resilience worth
+  static final int pPIncHope = aiPcntr++; // last hope worth
+  //resilience, hope
   static final int pPrevB0Inc = aiPcntr++;
   static final int pPrevB1Inc = aiPcntr++;
   static final int pPrevPinc = aiPcntr++;
@@ -209,6 +224,9 @@ public class E {
   static final int pPerW = ++aiPcntr;
   static final int pMinP = ++aiPcntr;
   static final int bValsStart = ++aiPcntr;
+
+  // for use by Assets.putValueByte()
+  static final double[] AILims = {-99999999, -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
 
   //static final int pPrevoPerW = ++aiPcntr;
   //static final int pPrevoPerW = ++aiPcntr;

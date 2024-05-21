@@ -114,6 +114,9 @@ class EM {
   static final int lStatsWaitList = 10;
   static String[] statsWaitList = new String[lStatsWaitList];
   static volatile int ixStatsWaitList = 0;
+  static volatile int ixPS = 0; //for P or S
+  static volatile int ixClan = 0;
+  static volatile int ixC2 = 0;
 
   /**
    * synchronize the adding of an entry to the statsWaitList avoid an error
@@ -284,10 +287,10 @@ class EM {
                   );
                 }
                 int myClanCnt = 0,myPorsClanCnt=0;
-                for(int clanIx=0;clanIx < E.LCLANS; clanIx++ ){
-                  myClanCnt += clanCnt[clanIx];
+        for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+          myClanCnt += clanCnt[ixClan];
                 for(int psIx=0; psIx < 2;psIx++){
-                    myPorsClanCnt += porsClanCnt[psIx][clanIx];
+                  myPorsClanCnt += porsClanCnt[psIx][ixClan];
                   }
                 }
                 if(econCnt != myClanCnt){
@@ -558,6 +561,7 @@ class EM {
   static String firstStack = "", secondStack = "", thirdStack = "", fourthStack = "";
   static int rende3 = 700;
   static volatile int bCharStart = 25, bCharEnd = -2, vvend = -1;
+  static volatile byte psClanBytes[][][] = new byte[2][][];
 
   /**
    * instantiate another EM, set static eE and static eM = new EM
@@ -3577,6 +3581,20 @@ onceAgain:
    * @return
    */
   void buildAICvals(Econ ec, byte[] res, int vvend) {
+    buildAICvals(ec.pors, ec.clan, ec.name, res, vvend);
+  }
+
+  /**
+   * build AICvals in Assets.myAICvals from myAIvals as sliderVals
+   *
+   * @param ixPS pors value
+   * @param ixClan clan value
+   * @param res the byte array for the key, start at bCharStart
+   * @param vvend The count of the last doVal
+   * @param
+   * @return
+   */
+  void buildAICvals(int ixPS, int ixClan, String ecName, byte[] res, int vvend) {
     int sliderVal = 0, tix = 0;
     // static int myAIcstart  = 'a'; // start of ascii a
     // static int myAIdiv  = 20; //divid the values by 5
@@ -3602,7 +3620,7 @@ onceAgain:
         //uMasked[ix] = 0;  // prefill  unMasked
       }
       for (ix = 0; ix < vvend; ix++) { // scan each doVal
-        sliderVal = getAIVal(ix, ec.pors, ec.clan);
+        sliderVal = getAIVal(ix, ixPS, ixClan);
         res[ixa = ix + E.bValsStart] = (byte) ((int) (sliderVal / myAIdiv) + 'a');
         int gc = valI[vv][modeC][0][0];
         if (gc > vfour) {
@@ -3614,7 +3632,7 @@ onceAgain:
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println(tError = ("-----EXG4----end buildAICvals " + "PorS=" + ec.pors + ", clan=" + ec.clan + " " + ec.name + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
+      System.err.println(tError = ("-----EXG4----end buildAICvals " + "PorS=" + ixPS + ", clan=" + ixClan + " " + ecName + since() + " " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
       ex.printStackTrace(System.err);
       flushes();
       flushes();
@@ -5909,12 +5927,12 @@ onceAgain:
 
       resV[rN][yrsIx] = new double[DVECTOR3L][]; // p,s
       resI[rN][yrsIx] = new long[IVECTOR3L][];// p,s,ctl
-      for (int ixPorS = 0; ixPorS < 2; ixPorS++) {
-        resV[rN][yrsIx][ixPorS] = new double[E.lclans];
-        resI[rN][yrsIx][ixPorS] = new long[E.lclans]; // counts array
-        for (int clanIx = 0; clanIx < E.LCLANS; clanIx++) {
-          resV[rN][yrsIx][ixPorS][clanIx] = 0.0;
-          resI[rN][yrsIx][ixPorS][clanIx] = 0;
+      for (ixPS = 0; ixPS < 2; ixPS++) {
+        resV[rN][yrsIx][ixPS] = new double[E.lclans];
+        resI[rN][yrsIx][ixPS] = new long[E.lclans]; // counts array
+        for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+          resV[rN][yrsIx][ixPS][ixClan] = 0.0;
+          resI[rN][yrsIx][ixPS][ixClan] = 0;
         }
       }
       ccntl = ((yrsIx == 0) ? 11 : 3);
@@ -6045,8 +6063,24 @@ onceAgain:
 
     try {
       clearWH();
+      //move the score and positions to prev...
+      for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+        prevMyScore[ixClan] = myScore[ixClan];
+        prevMyScoreClanPos[ixClan] = myScoreClanPos[ixClan];
+        prevMyScorePosClan[ixClan] = myScorePosClan[ixClan];
+      }
+      int lRes = E.bValsStart + vvend;
+      // psClanBytes[ixPS] = new byte[2][][];
+      for (ixPS = 0; ixPS < 2; ixPS++) {
+        psClanBytes[ixPS] = new byte[5][];
+        for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+          psClanBytes[ixPS][ixClan] = new byte[lRes];
+          buildAICvals(ixPS, ixClan, "preset", psClanBytes[ixPS][ixClan], vvend);
+        }
+      }
+
       iMaxThreads[0] = (int) maxThreads[0][0];
-      for (rN = 0; rN < rende4 && !dfe(); rN++) {
+      for (rN = 0; rN < rende4 && !dfe(); rN++) { // move res(results) up a year
         rn = rN;
         // skip undefined entries without error
         if (resI[rN] != null) {
@@ -6141,17 +6175,17 @@ onceAgain:
                 if (curIx == 0) {  // 0 instance, create new array objects
                   dd = new double[DVECTOR3L][]; // p,s
                   ii = new long[IVECTOR3L][]; // p,s,controld
-                  for (int ixPorS = 0; ixPorS < 2; ixPorS++) {
-                    dd[ixPorS] = new double[E.lclans];// make the clans
-                    ii[ixPorS] = new long[E.lclans]; // make array for i
-                    //resV[rN][yrsIx][ixPorS] = new double[E.lclans];// make the clans
-                    //resI[rN][yrsIx][ixPorS] = new long[E.lclans]; // make array for i
-                    for (int clanIx = 0; clanIx < E.LCLANS; clanIx++) {
+                  for (ixPS = 0; ixPS < 2; ixPS++) {
+                    dd[ixPS] = new double[E.lclans];// make the clans
+                    ii[ixPS] = new long[E.lclans]; // make array for i
+                    //resV[rN][yrsIx][ixPS] = new double[E.lclans];// make the clans
+                    //resI[rN][yrsIx][ixPS] = new long[E.lclans]; // make array for i
+                    for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
                       // zero the instances of the clan
-                      dd[ixPorS][clanIx] = 0.0;
-                      ii[ixPorS][clanIx] = 0;
-                      //resV[rN][yrsIx][ixPorS][clanIx] = 0.0;
-                      //resI[rN][yrsIx][ixPorS][clanIx] = 0;
+                      dd[ixPS][ixClan] = 0.0;
+                      ii[ixPS][ixClan] = 0;
+                      //resV[rN][yrsIx][ixPS][ixClan] = 0.0;
+                      //resI[rN][yrsIx][ixPS][ixClan] = 0;
                     }
                   }
                   ii[CCONTROLD] = new long[3];
@@ -6204,8 +6238,12 @@ onceAgain:
           //     E.myTest(true, "doStartYear rcur" + (resI[rN][lockC][0][rValid] - 1) + " is null" + " rValid=" + resI[rN][lockC][0][rValid] + (resI[rN][rcur0] == null ? " !!!" : " " + "rcur0") + (resI[rN][rcur0 + 1] == null ? " !!!" : " " + "rcur1") + (resI[rN][rcur0 + 2] == null ? " !!!" : " " + "rcur2") + (resI[rN][rcur0 + 3] == null ? " !!!" : " " + "rcur3") + (resI[rN][rcur0 + 4] == null ? " !!!" : " " + "rcur4") + (resI[rN][rcur0 + 5] == null ? " !!!" : " " + "rcur5"));
           //        }
         }
-      }// end rN loop
+      }// end rN res loop
+      for (ixPS = 0; ixPS < 2; ixPS++) {
+        for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
 
+        }
+      }
     }
     catch (trade.WasFatalError ex) {
       ex.printStackTrace(pw);
@@ -6289,10 +6327,10 @@ onceAgain:
             maxCumP = -10;
             int maxCumixPorS = 0, m;
             // find the largest abs value in aclansIx values in resV
-            for (int ixPorS = 0; ixPorS < 2; ixPorS++) {
-              for (int clansIx = 0; clansIx < E.LCLANS; clansIx++) {
-                prevLine = "rN" + rN + ", statsLim" + statsLim + ", yrsIx" + yrsIx + ", ixPorS" + ixPorS + ", clansIx" + clansIx;
-                maxCum = Math.max(maxCum, Math.abs(resV[rN][yrsIx][ixPorS][clansIx]));
+            for (ixPS = 0; ixPS < 2; ixPS++) {
+              for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+                prevLine = "rN" + rN + ", statsLim" + statsLim + ", yrsIx" + yrsIx + ", ixPS" + ixPS + ", ixClan" + ixClan;
+                maxCum = Math.max(maxCum, Math.abs(resV[rN][yrsIx][ixPS][ixClan]));
               }
             }
             prevLine = "";
@@ -8302,15 +8340,19 @@ onceAgain:
 
   static boolean isWinner = false;
   static double myScore[] = {400., 400., 400., 400., 400.};
-  static int myScorePosClan[] = {1, 2, 3, 4, 5};
-  static int myScoreClanPos[] = {1, 2, 3, 4, 5};
+  static int myScorePosClan[] = {0, 1, 2, 3, 4};
+  static int myScoreClanPos[] = {0, 1, 2, 3, 4};
   static double myScore2[] = {400., 400., 400., 400., 400.};
-  static int myScorePosClan2[] = {1, 2, 3, 4, 5};
-  static int myScoreClanPos2[] = {1, 2, 3, 4, 5};
+  static int myScorePosClan2[] = {0, 1, 2, 3, 4};
+  static int myScoreClanPos2[] = {0, 1, 2, 3, 4};
   static double myScore3[] = {400., 400., 400., 400., 400.};
-  static int myScorePosClan3[] = {1, 2, 3, 4, 5};
-  static int myScoreClanPos3[] = {1, 2, 3, 4, 5};
+  static int myScorePosClan3[] = {0, 1, 2, 3, 4};
+  static int myScoreClanPos3[] = {0, 1, 2, 3, 4};
   static double myScoreSum = 0.0;
+  static double prevMyScore[] = {400., 400., 400., 400., 400.};
+  static int prevMyScorePosClan[] = {0, 1, 2, 3, 4};
+  static int prevMyScoreClanPos[] = {0, 1, 2, 3, 4};
+  static double prevMyScoreSum = 0.0;
   static int isV = 0;
   static int isI = 1;
   static int isScoreAve = 2;
@@ -8325,14 +8367,14 @@ onceAgain:
     // initialize curDif,difMult if year < 2
     curDif = year < 2 ? winDif[0][0] : curDif;
     difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;
-    int ixClan = 0, ixPS = 0, ixC2 = 0;
+    // int ixClan = 0, ixPS = 0, ixC2 = 0;
     for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
       myScore[ixClan] = 400.;  // allow negatives to reduce it
     }
     try {
       //  winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
     winner = scoreVals(TRADELASTGAVE, wGiven, ICUM, isV);
-    winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
+      // winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
       //winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
     winner = scoreVals(LIVEWORTH, wLiveWorthScore, ICUR0, isV);
     winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
