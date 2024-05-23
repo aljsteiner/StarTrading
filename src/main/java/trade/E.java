@@ -199,6 +199,7 @@ public class E {
   static final int pPrevKW = aiPcntr++; // last knowledge worth
   static final int pPrevSc = aiPcntr++; // last score worth
   static final int pPrevO = aiPcntr++; // last Offer worth
+  /*
   static final int pPrevResil = aiPcntr++; // last resilience worth
   static final int pPrevHope = aiPcntr++; // last hope worth
   static final int pIncP = aiPcntr++; //rawProspects2
@@ -215,15 +216,16 @@ public class E {
   static final int pPrevPinc = aiPcntr++;
   static final int pPrevoPerW = aiPcntr++;
   static final int pPrevoPerWinc = aiPcntr++;
-  static final int pPrevB0Row = aiPcntr;  //row 0 in balances
-  static final int pPrevB1Row = aiPcntr = aiPcntr + 7;
-  static final int pB0W = aiPcntr = aiPcntr + 7;
-  static final int pB1W = ++aiPcntr;
+  //static final int pPrevB0Row = aiPcntr;  //row 0 in balances
+ // static final int pPrevB1Row = aiPcntr = aiPcntr + 7;
+  //static final int pB0W = aiPcntr = aiPcntr + 7;
+ // static final int pB1W = ++aiPcntr;
   static final int pKW = ++aiPcntr;
   static final int poPerW = ++aiPcntr;
   static final int pPerW = ++aiPcntr;
   static final int pMinP = ++aiPcntr;
-  static final int bValsStart = ++aiPcntr;
+   */
+  static final int bValsStart = aiPcntr; // end value
 
   // for use by Assets.putValueByte()
   static final double[] AILims = {-99999999, -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};

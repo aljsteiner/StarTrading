@@ -181,7 +181,7 @@ class EM {
   static BufferedReader bKeepr = null;
   static final Path MAPFILE = Paths.get("mapfile");
   static BufferedReader bMapFr = null;
-  static BufferedWriter bMapFW = null;
+  static BufferedWriter bMapFw = null;
 
   /* each keep goes false after end of page process new page or settings ended */
   static boolean keepFromPage = false;  // keep clicked titles on this page
@@ -611,6 +611,8 @@ class EM {
       bKeep = Files.newBufferedWriter(KEEP, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       bKeep.write(rOut, 0, rOut.length());
       keepBuffered = true;
+      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+      bMapFw.write(rOut, 0, rOut.length());
 
 
     }
@@ -3305,6 +3307,7 @@ onceAgain:
         sds.close();
       } // ebd test
 
+      if (false) {
       s.useLocale(Locale.US);
 onceAgain:
       s.useDelimiter("\\s");
@@ -3402,7 +3405,9 @@ onceAgain:
             default:
               lname = s.nextLine();
               System.out.println("Unknow line cmd=" + cname + " :: line=" + lname);
-          } // switch
+
+        } // switch
+
         } // end reading error try
         catch (Exception | Error ex) {
           firstStack = secondStack + "";
@@ -3412,11 +3417,12 @@ onceAgain:
           System.out.println("Igmore doReadKeepVals Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
         }
       } // while
-      if (bKeepr != null) {
-        bKeepr.close();
+      if (bMapFr != null) {
+          bMapFr.close();
       }
+      }
+    }// end large try
 
-    }// end large tru
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
@@ -3430,6 +3436,48 @@ onceAgain:
       return rtn;
     }
   }
+
+  /**
+   * write the keep file if the keepFromPage flag set, a new page clears the
+   * flag
+   *
+   * @param vv the index of the val used to get the title
+   * @param ps the first index often the pors value
+   * @param klan the second index often the clan
+   * @param val the value to be saved
+   * @param val the previous value before the change
+   * @param slider the new slider value
+   * @param prevSlider the previous slider value
+   * @param prev2Slider the previous previous slider value
+   * @throws IOException
+   */
+  public void doWriteMapfile(int vv, int ps, int klan, double val, double prevVal, int slider, int prevslider, int prev2slider) throws IOException {
+
+    String ll = " ";
+    if (true) {
+// something happens to opens, so it is ok to do it again I think.
+      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+      System.err.println("---DWM2---did reopen of mapfile");
+      if (year != keepYear || !st.settingsComment.getText().matches(prevKeepCmt)) { // need another year comment page
+        keepYear = year;
+        prevKeepCmt = st.settingsComment.getText() + ""; // force a copy
+        String dateString = MYDATEFORMAT.format(new Date());
+        //    String rOut = "New Game " + dateString + "\r\n";
+        ll = "year" + year + " version " + st.versionText + " " + dateString + " " + st.settingsComment.getText() + "\r\n";
+        bKeep.write(ll, 0, ll.length());
+        System.err.println("wrote=" + ll);
+      }
+      ll = "title " + valS[vv][1] + "\r\n"; // the detail description of the keep
+      bKeep.write(ll, 0, ll.length());
+      System.err.println("wrote=" + ll);
+      ll = "keep " + valS[vv][0] + "# " + ps + " " + klan + " " + mf(val) + " <= " + mf(prevVal) + " sliders " + slider + " <= " + prevslider + " <= " + prev2slider + "\r\n";
+      bKeep.write(ll, 0, ll.length());
+      System.err.println("wrote=" + ll);
+
+      keepBuffered = true;
+
+    }//keep from page
+  }//doWriteMapfile
 
   /**
    * get the current settings value
@@ -3554,12 +3602,12 @@ onceAgain:
    * test
    */
   static void setValueByte(byte[] res, int bias, double value, double[] tests) {
-    byte ret = 'a';
+    byte ret = 'A';
     int ix = 0;
     int testsLen = tests.length;
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
-        ret = (byte) ('b' + ix);
+        ret = (byte) ('B' + ix);
         ix = -2; // exit test loop
       }
     }
@@ -3616,7 +3664,7 @@ onceAgain:
       //res = new byte[lRes];// set Res to a new right length
       //uMasked = new byte[lRes];
       for (ix = 0; ix < lRes; ix++) { //prefill with no match
-        res[ix] = E.nChar; //E.aByte -1;
+        res[ix] = E.aByte;
         //uMasked[ix] = 0;  // prefill  unMasked
       }
       for (ix = 0; ix < vvend; ix++) { // scan each doVal

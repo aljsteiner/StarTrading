@@ -7793,7 +7793,7 @@ public class StarTrader extends javax.swing.JFrame {
   public void getGameValues(int[] currentVals1, JPanel[] panelAr, JTextField[] textFieldsAr, JSlider[] gamePSliders, JSlider[] gameSSliders) {
     try {
       int val = 0, v = -1, oldval = 0, gc = -1;
-      EM.wasHere5 = "-----GV-----inTo ST.getGameValues " + EM.threadsStacks() + ", clan =" + eM.gameClanStatus;
+      EM.wasHere5 = "-----GV-----inTo ST.getGameValues clan =" + eM.gameClanStatus + EM.threadsStacks();
       if (E.debugSettingsTab) {
         System.out.println(EM.wasHere5);
       }

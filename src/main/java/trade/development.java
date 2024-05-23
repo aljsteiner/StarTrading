@@ -17,6 +17,7 @@
 */
 /*
 ******* sometimes new lines went to the end, recently they went to start.  not always done
+5/23/2024 in looking for a way to go Byte to String, one of the results said you should really be using char, so I am going to try that
 5/20/2024 Ideas to proceed, an Assets joy is a combination of size of in Assets score, combined increase in score this year
 At EM. start of year, create 10 keys for ps and clan leave blank the Assets part of the keys, so keys settings are not derived for each run of Assets.CashFlow.aStartCashFlow() first started.  Assets.CashFlow.aStartCashFlow() is started for Trades as well as Assets.CashFlow.yearEnd().  The first Assets.CashFlow.aStartCashFlow() !didCashFlowStart processes the key map to determine which keys have the highest joy to pick the nudge in settings that may help increase the score. It will build an array of keys, consilidating keys that only differ in values that are masked.  If it appears a slight change in a setting produced more joy for the 3 changable settings. The previous value of the settings is saved to be restored after generating the result key pair in Assets.CashFlow.yearEnd().  The Assets score is derived from the individual values of results that go into the annual pick winner process.  I think it is important to save the values that go into the score as well as the settings that result from the score
 
