@@ -185,31 +185,92 @@ public class E {
   static final int poPerW = 13, pMaxP = 7, pCurW = 8;
   static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
-  static final byte aByte = 'A';
-  static final byte nChar = aByte - 1;//  "@"
-  static final byte mChar = aByte - 2;//  "?"
+  //static final byte aByte = 'A';
+  //static final byte nChar = aByte - 1;//  "@"
+  //static final byte mChar = aByte - 2;//  "?"
+  static final char startC = 'a';
+  static final char nextC = 'A';
+  static final char maskC = '@';
+  static final char lessStart = (char) ('a' - 1); // gt lessNext
+  static final char lessNext = (char) ('A' - 1); //
+  /**
+   * get char for AI key
+   *
+   * @param ix int index of char for results
+   * @return return (0-25)a-z,(26-51)A-Z else *
+   */
+  static char getAIResChar(int ix) {
+    if (ix > 51 || ix < 0) {
+      return '*';
+    }
+    if (ix > 25) {
+      return (char) ('A' + ix - 26);
+    }
+    return (char) (ix + 'a');
+  }
+
+  /**
+   * get char for the settings input This concentrates single number changes for
+   * values 40-60 The values <40 or >60 are divided by 3 to give a result of
+   * 0-49
+   *
+   * @param a100 the slider value for a given setting 0-100
+   * @return a * for illegal value, or the char for getAIResChar
+   */
+  static char getAISetChar(int a100) {
+    if (a100 < 0) {
+      return '*';
+    }
+    if (a100 < 40) {
+      return getAIResChar(a100 / 3); //0-13
+    }
+    if (a100 < 61) {
+      return getAIResChar(a100 - 40); //14-34
+    }
+    if (a100 < 101) {
+      return getAIResChar(((a100 - 61) / 3) + 35);//35-49 highest value
+    }
+    return '*'; // value too high
+  }
+
+  /**
+   * for a given settings char in the AIKey return the number of the value
+   *
+   * @param aa
+   * @return
+   */
+  static int getAIMuch(char aa) {
+    if (aa > lessStart) {
+      return startC - aa; // 'a' - aa
+    }
+    return nextC - aa; // otherWise 'A'-aa may be -1 for maskC
+  }
   static private int aiPcntr = 0;
   static final int ptype = aiPcntr++;
   static final int pacct = aiPcntr++;
   static final int ppors = aiPcntr++;
   // static final int pclan = aiPcntr++;
+  static final int pPrevResil = aiPcntr++; // last resilience worth
+  static final int pPrevHope = aiPcntr++; // last hope worth
+  static final int pIncResil = aiPcntr++; // last resilience worth
+  static final int pPIncHope = aiPcntr++; // last hope worth
   static final int pPrevP = aiPcntr++; //rawProspects2 ave
   static final int pPrevPmin = aiPcntr++; //rawProspects2 min
   static final int pPrevW = aiPcntr++;  // last worth
   static final int pPrevKW = aiPcntr++; // last knowledge worth
-  static final int pPrevSc = aiPcntr++; // last score worth
+  static final int pPrevScP = aiPcntr++; // last score position
+  static final int pPrevScW = aiPcntr++; // last score worth
   static final int pPrevO = aiPcntr++; // last Offer worth
-  /*
-  static final int pPrevResil = aiPcntr++; // last resilience worth
-  static final int pPrevHope = aiPcntr++; // last hope worth
   static final int pIncP = aiPcntr++; //rawProspects2
   static final int pIncPmin = aiPcntr++; //rawProspects2 ave
   static final int pIncW = aiPcntr++;  // last worth
   static final int pIncKW = aiPcntr++; // last knowledge worth
   static final int pIncSc = aiPcntr++; // last score worth
   static final int pIncO = aiPcntr++; // last Offer worth
-  static final int pIncResil = aiPcntr++; // last resilience worth
-  static final int pPIncHope = aiPcntr++; // last hope worth
+
+  /*
+
+  
   //resilience, hope
   static final int pPrevB0Inc = aiPcntr++;
   static final int pPrevB1Inc = aiPcntr++;
@@ -226,6 +287,7 @@ public class E {
   static final int pMinP = ++aiPcntr;
    */
   static final int bValsStart = aiPcntr; // end value
+  static volatile int bValsEnd = EM.vvend + bValsStart; // end of key
 
   // for use by Assets.putValueByte()
   static final double[] AILims = {-99999999, -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};

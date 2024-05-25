@@ -208,7 +208,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.57";
+  static final public String versionText = "19.58";
   static final public String storyText
           = "         StarTrader       Version " + versionText + "\n"
            +
@@ -7268,25 +7268,25 @@ public class StarTrader extends javax.swing.JFrame {
               EM.myAIlearnings = new TreeMap();
             }
           aKeys++;
-            aPorS = (int) (aKey.charAt(2) - 'a');
-            aClan = (int) (aKey.charAt(3) - 'a');
-            acct = (int) (aKey.charAt(1) - 'a');
-            aType = (int) (aKey.charAt(0) - 'a');
-          aSize = aKey.length();
-          aMuch = (aKey.charAt(aSize - 1) - 'a'); // muchness in this key
+            aPorS = E.getAIMuch(aKey.charAt(2)); //int) (aKey[2] - 'a');
+            aClan = E.getAIMuch(aKey.charAt(3));//(int) (aKey[3] - 'a');
+            acct = E.getAIMuch(aKey.charAt(1));//(int) (aKey[1] - 'a');
+            aType = E.getAIMuch(aKey.charAt(0));//((int) (aKey[0] - 'a');
+            aSize = aKey.length();
+            aMuch = E.getAIMuch(aKey.charAt(aSize - 1)); // muchness in this key
           Integer aCntr = EM.myAIlearnings.get(aKey);
-          aCnts = aCntr == null ? 0 : aCntr;
+            aCnts = aCntr == null ? 0 : aCntr;  //if key is new
             aNums += aCnts; // sum of counts, should be double keys
             aMuch = aMuch < 5 && aMuch > -1 ? aMuch : 5;
-          aMany[aType][acct][aPorS][aClan][aMuch] += aCnts;
-            aMany7[aType][aMuch] += aCnts;
-            aMany27[aType][acct][aMuch] += aCnts;
+            // aMany[aType][acct][aPorS][aClan][aMuch] += aCnts;
+            //aMany7[aType][aMuch] += aCnts;
+            // aMany27[aType][acct][aMuch] += aCnts;
           }//end process keys
         } //sync
 
         // now generate output
         tstr = EM.myAIlearnings.size() + ":" + aKeys + ":" + aNums + ":"                      + Assets.aEntries[0] + " All =";
-        for (aType = 0; aType < 2; aType++) {
+          /* for (aType = 0; aType < 2; aType++) {
           tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";
           for (aMuch = 0; aMuch < 6; aMuch++) { //a3, b2, c4, d2. e3. f7
             for (acct = 0; acct < 2; acct++) {
@@ -7294,6 +7294,7 @@ public class StarTrader extends javax.swing.JFrame {
             }
           }
         }
+           */
           tstr += "\n Red";
         for (aType = 0; aType < 2; aType++) {
           tstr += (aType == 0 ? " pros=" : ", oPer=") + " ";

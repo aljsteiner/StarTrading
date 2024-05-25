@@ -117,8 +117,8 @@ public class Assets {
   int prevScorePos = -1;
   double prevScore;
   double prevClanScore = -0.1;
-  // volatile static byte[] EM.psClanBytes[pors][clan] = {0, 0}; // extended in eM.buildMyAICvals
-  volatile static String myAICvals = "coming soon"; // converted for EM.psClanBytes[pors][clan]
+  // volatile static char[] EM.psClanChars[pors][clan] = {0, 0}; // extended in eM.buildMyAICvals
+  volatile static String myAICvals = "coming soon"; // converted for EM.psClanChars[pors][clan]
   //Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
 // Assets these AI entries have  2types, 2PS , 5Clan, 9much, 3sVal,3rRes
   static volatile int aEntries[] = {0, 0}; // 2typein CashFlow.yearEnd()
@@ -127,7 +127,7 @@ public class Assets {
   // static volatile int aATEntries[][] = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}; // 2type, 7 much
   // static volatile int aPSMEntries[][][][] = {/*type*/{/*ps*/{/*acct*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}, {/*ps*/{/*acct*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}};//  2type 2acct 2Ps 7MUCH
   // static volatile int bClanEntries[][][][][] = {{/*type*/{/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}, {/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0/*clan*/}/*PS*/}/*type*/}/*much*/}, {/*type*/{/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}, {/*PS*/{/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {/*clan*/{/*much*/0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0/*clan*/}/*PS*/}/*type*/}/*much*/}}; //2type, 2acct, 2PS,5Clan,7much
-//  byte[] aiMask1 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//  char[] aiMask1 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   static int aType = 0, aPorS = 0, aClan = 0, aSize = 0, aMuch = 0, aCnts = 0;
   static int aKeys = 0, aNums = 0, acct = 0;
   static final int nTypes = 3; //accepted/also,rejected/lost,missed
@@ -582,7 +582,7 @@ public class Assets {
         }
       }
     }
-    //  EM.psClanBytes[pors][clan] = new byte[E.bValsStart + eM.vvend]; // new array
+    //  EM.psClanChars[pors][clan] = new byte[E.bValsStart + eM.vvend]; // new array
     //  aiMask1 = new byte[E.bValsStart + eM.vvend];
     //   startYrs = new HCashFlow[7]; // might use instead of name 1,2 ...
     //   prevns = new HCashFlow[7];
@@ -792,30 +792,22 @@ public class Assets {
 
   /**
    * put a byte value from a series of tests to put into res[bias+ix]; called in
-   * buildAICvals and in Assets.CashFlow.yearEnd() with tests specified in
+   * EM.buildAICvals and in Assets.CashFlow.yearEnd() with tests specified in
    * Assets
    *
    * @param res the array to set
    * @param bias the bias into the array
    * @param value the source value
    * @param tests an array of tests that a may be greater than
-   * @return an small case letter 'b'+ a.length-1 greater than largest test
-   * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
-   * test
+   * 
    */
-  static void putValueByte(byte[] res, int bias, double value, double[] tests) {
-    byte ret = 'A';
+  static void putValueChar(char[] res, int bias, double value, double[] tests) {
     int ix = 0;
+    char ret = E.getAIResChar(ix);
     int testsLen = tests.length;
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
-        if (ix > 25) {
-          ret = (byte) ('a' + ix - 25);
-        }
-        else {
-          ret = (byte) ('B' + ix);
-        } // if gt than [0]
-        // if still left, lt [0] then the 'A' preset is put
+        ret = E.getAIResChar(ix);
         ix = -2; // exit test loop
       }
     }
@@ -823,7 +815,7 @@ public class Assets {
   }
 
   /**
-   * put a byte value from a series of tests to put into res[bias+ix]; called in
+   * put a char value from a series of tests to put into res[bias+ix]; called in
    * buildAICvals and in Assets.CashFlow.yearEnd() with tests specified in
    * Assets
    *
@@ -837,27 +829,22 @@ public class Assets {
    * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
    * test
    */
-  static void putValueByte(byte[] res, int bias, double value, double[] tests, String what, boolean ifPrint) {
-    byte ret[] = {'A'};
+  static void putValueChar(char[] res, int bias, double value, double[] tests, String what, boolean ifPrint) {
+    //byte ret[] = {'A'};
+    char ret = E.getAIResChar(0);
     int ix = 0;
     int testsLen = tests.length;
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
-        if (ix > 25) {
-          ret[0] = (byte) ('a' + ix - 25);
-        }
-        else {
-          ret[0] = (byte) ('B' + ix);
-        } // if gt than [0]
-        // if still left, lt [0] then the 'A' preset is put
+        ret = E.getAIResChar(ix);
         ix = -2; // exit test loop
       }
     }
-    res[bias] = ret[0];
+    res[bias] = ret;
     if (ifPrint) {
-      String ss = res.toString();
-      char rr = (char) ret[0];
-      System.out.println("----PVB3---- putValByte bias =" + bias + " key=" + ss + " length" + res.length + " char=" + rr + "=" + ret[0] + " for " + what + "  value=" + EM.mf(value)
+      String ss = new String(res);
+      char rr = ret;
+      System.out.println("----PVB3---- putValByte bias =" + bias + " key=" + ss + " length" + res.length + " char=" + ret + "=" + ret + " for " + what + "  value=" + EM.mf(value)
       );
     }
 
@@ -10967,21 +10954,21 @@ public class Assets {
     } // Assets.CashFlow.yearEnd()
 
     /**
-     * routine to save AI memory in Map
+     * routine to save AI memory in Map This modifies the key for this pors clan
+     * at EM.psClanChars[pors][clan] skip the first year of an Assets since prev
+     * values don't exist
      *
      */
     synchronized void saveAI() {
       if (ec.age > 0) {
         EM.wasHere8 = "---ELa7--- Assets AI set has lock";
         double oPerW = offers / btWTotWorth;
-        double[] oPerWLims = {-99999999, 50., 100., 200., 300., 1000., 7000., 45000., 633000.}; //9
-        byte oPerWC = 'A';
-        double[] prospLims = {-99999999., -0.1, E.PZERO, 0.13, 0.5, 0.68, 1.2, 3.2, 10.15}; //9 prevProsperity2
-        byte mProspC = 'A';
+        char oPerWC = 'A';
         int cIx = 7;
         int much = 7;
         int aType = 1;
         int acct = 1;
+        boolean ifPrint = true;
         aWaits++;
         if (tradeAccepted) {
           atEntries++;
@@ -10996,124 +10983,81 @@ public class Assets {
           cumOffersPerWorth += cumOffers / cumBTWorth;
           cumOffersPS[pors] += cumOffersPS[pors] / cumBTWorthPS[pors];
           cumOffersClan[pors][clan] += cumOffersClan[pors][clan] / cumBTWorthClan[pors][clan];
-
           acct = 1; // trade accepted
-          aType = 1;
-          for (much = oPerWLims.length - 1; much > -1; much--) {
-            // leave the preset 'A' if less than the least array entry
-            // assume much == 0 is the rest of the entries, do not test
-            if (oPerWC == 'A' && (much == 0 || oPerW > oPerWLims[much])) {
-              oPerWC = (byte) ('A' + much);
-              //aEntries[aType]++;
-              // aTAMEntries[aType][acct][much]++;
-              // aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-              //aClanEntries[aType][acct][pors][aSVal][aRRes][much]++; // type pors  much
-            }
-            if (prevProspects2 != null && mProspC == 'A' && (much == 0 || prevProspects2.min() > prospLims[much - 1])) {
-              mProspC = (byte) ('A' + much);
-              aEntries[aType]++;
-              //aTAMEntries[aType][acct][much]++;
-              //aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-              //aClanEntries[aType][acct][pors][aSVal][aRRes][much]++; // type pors clan much
-            }
+          if (E.debugAIOut && (aWaits > 5)) {
+            String str = new String(EM.psClanChars[pors][clan]);
+            System.out.println("----BAI1---- put key=" + str + " len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size());
           }
-          /*
-          static volatile float cumOffersPerWorth = 0;
-  static volatile float[] cumOffersPerWorthPS = {0, 0};
-  static volatile float[][] cumOffersPerWorthClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
- static volatile float cumOffers = 0;
-  static volatile float[] cumOffersPS = {0, 0};
-  static volatile float[][] cumOffersClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
-  static volatile float cumBTWorth = 0;
-  static volatile float[] cumBTWorthPS = {0, 0};
-  static volatile float[][] cumBTWorthClan = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
-           */
+
         }
         // now process the missed counts
         else {
           acct = 0; // not active
           aType = 0;
-          for (much = oPerWLims.length - 1; much > -1; much--) {
-            // leave the preset 'a' if less than the least array entry
-
-            if (mProspC == 'a' && (rawProspects2.min() > prospLims[much])) {
-              mProspC = (byte) ('a' + much);
-              // aEntries[aType]++;
-              // aTAMEntries[aType][acct][much]++;
-              // aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-              // aClanEntries[aType][acct][pors][aSVal][aRRes][much]++; // type pors clan much
-            }
-          }//for much
-
-          oPerWC = 'z';
+          //        oPerWC = 'z';
           much = 5;
           aEntries[aType]++;
-          //aTAMEntries[aType][acct][much]++;
-          //aPSMEntries[aType][acct][pors][much]++;// type acct pors much
-          //aClanEntries[aType][acct][pors][aSVal][aRRes][much]++; // type pors clan much
-        }// ELSE
-        //  EM.psClanBytes[pors][clan] = new byte[E.bValsStart + EM.vvend]; // new array
-        // leave EM.bCharStart 'a'-1 characters to be changed before settings values
-        // settings values are based on this clan and pors
-        //  eM.buildAICvals(ec, EM.psClanBytes[pors][clan], eM.vvend); //build a key , filled with null
-        int ix = 0;
-        //int ptype = 0, pacct = 1, ppors = 2, pclan = 3, poPerW = 4, pMinP = 5, pMaxP = 6, pMinW = 7, pMaxW = 8;
-        //  int pRs = 9, pSs = 16, pPerW = 23, pW = 24, pKW = 25;
-        EM.psClanBytes[pors][clan][E.ptype] = (byte) ('B' + aType);
-        EM.psClanBytes[pors][clan][E.pacct] = (byte) ('B' + acct);
-        EM.psClanBytes[pors][clan][E.ppors] = (byte) ('B' + pors);
-        // EM.psClanBytes[pors][clan][E.pclan] = (byte) ('B' + clan);
+
+        }
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevP, prevProspects2.curMin(), E.AILims, "rawProspects2.ave", ifPrint);
+        EM.psClanChars[pors][clan][E.ptype] = E.getAIResChar(aType);//(char) ('B' + aType);
+        EM.psClanChars[pors][clan][E.pacct] = E.getAIResChar(acct);//(char) ('B' + acct);
+        EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(char) ('B' + pors);
+        // EM.psClanChars[pors][clan][E.pclan] = pE.getAIResChar(clan);//(char) ('B' + clan);
         /*
         // double oPerW = offers / btWTotWorth;
 
-        byte oPerWC = 'a';
+        char oPerWC = 'a';
         //double[] prospLims = {-99999999., -0.1, E.PZERO, 0.13, 0.5, 0.68, 1.2, 3.2, 10.15}; //9 prevProsperity2
 
-        EM.psClanBytes[pors][clan][poPerW] = (byte) oPerWC;
+        EM.psClanChars[pors][clan][poPerW] = (char) oPerWC;
          */
         if (acct == 1) {
-          //      EM.setValueByte(EM.psClanBytes[pors][clan], E.poPerW, offers / btWTotWorth, oPerWLims);
+          //      EM.setValueByte(EM.psClanChars[pors][clan], E.poPerW, offers / btWTotWorth, oPerWLims);
         }
-        boolean ifPrint = true;
+
         if (prevProspects2 != null) {
-          putValueByte(EM.psClanBytes[pors][clan], E.pPrevP, prevProspects2.curMin(), E.AILims, "rawProspects2.ave", ifPrint);
-          putValueByte(EM.psClanBytes[pors][clan], E.pPrevPmin, prevProspects2.curMin(), E.AILims, "rawProspects2.min", ifPrint);
-          //  putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          //  putValueByte(EM.psClanBytes[pors][clan], E.pPrevO, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "Offers", ifPrint);
-          //  putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          //  putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          // putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          // prevBalances.getRow(0).getAChars(EM.psClanBytes[pors][clan], E.pPrevB0Row);
-          // prevBalances.getRow(1).getAChars(EM.psClanBytes[pors][clan], E.pPrevB1Row);
+          //putValueChar(EM.psClanChars[pors][clan], E.pPrevP, prevProspects2.curMin(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueChar(EM.psClanChars[pors][clan], E.pPrevPmin, prevProspects2.curMin(), E.AILims, "rawProspects2.min", ifPrint);
+          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevO, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "Offers", ifPrint);
+          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          // putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          // prevBalances.getRow(0).getAChars(EM.psClanChars[pors][clan], E.pPrevB0Row);
+          // prevBalances.getRow(1).getAChars(EM.psClanChars[pors][clan], E.pPrevB1Row);
         }
         // double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};
-        putValueByte(EM.psClanBytes[pors][clan], E.pPrevW, prevWorth, E.AILims, "prewWorth", ifPrint);
-        putValueByte(EM.psClanBytes[pors][clan], E.pPrevKW, prevKnowledge, E.AILims, "prevKnowledge", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevWorth, E.AILims, "prewWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevKW, prevKnowledge, E.AILims, "prevKnowledge", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.myScore[clan], E.AILims, "prewScoreWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, EM.myScoreClanPos[clan], E.AILims, "prevClanScorePos", ifPrint);
+        EM.psClanChars[pors][clan][E.pPrevScP] = E.getAIResChar(EM.myScoreClanPos[clan]);//(char) ('B' + pors);
         curWorth = fyW.sumTotWorth;
 
-        // EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
-        // EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
-        //  EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
-        // EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
-        // EM.psClanBytes[pors][clan][E.pMinP] = (byte) ('a' + aType);
+        // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
+        // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
+        //  EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
+        // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
+        // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
         //  String str = (EM.oPerS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + myAICvals) + oPerWC; // finish key
-        String str = EM.psClanBytes[pors][clan].toString();
+        String str = new String(EM.psClanChars[pors][clan]);
 
         Integer aMany = EM.myAIlearnings.get(str);
         aMany = aMany == null ? 1 : aMany + 1;// force valid number if null
         EM.myAIlearnings.put(str, aMany);
         if (E.debugAIOut && (aWaits > 5)) {
-          System.out.println("----BAI3---- put key=" + str + " , =" + aMany + " much=" + much + " EM.year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
+          System.out.println("----BAI2---- put key=" + str + " , =" + aMany + " much=" + much + " EM.year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
         }
         aType = 0;
         // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
-        aMany = EM.myAIlearnings.get(str); // force valid number if null
-        aMany = aMany == null ? 1 : aMany + 1;
-        EM.myAIlearnings.put(str, aMany);
-        if (E.debugAIOut && (aWaits > 5)) {
+        //aMany = EM.myAIlearnings.get(str); // force valid number if null
+        // aMany = aMany == null ? 1 : aMany + 1;
+        // EM.myAIlearnings.put(str, aMany);
+        if (false && E.debugAIOut && (aWaits > 5)) {
           aWaits = 0;
-          eM.printHere("----BAI4----", ec, " put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
+          //  eM.printHere("----BAI4----", ec, " put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
         }
 
       }// end id

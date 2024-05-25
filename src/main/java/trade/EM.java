@@ -560,8 +560,10 @@ class EM {
   static PrintWriter pw = new PrintWriter(sw);
   static String firstStack = "", secondStack = "", thirdStack = "", fourthStack = "";
   static int rende3 = 700;
-  static volatile int bCharStart = 25, bCharEnd = -2, vvend = -1;
+  static volatile int vvend = -1;
   static volatile byte psClanBytes[][][] = new byte[2][][];
+  static volatile char psClanChars[][][] = new char[2][][];
+  static volatile char psClanMasks[][][] = new char[2][][];
 
   /**
    * instantiate another EM, set static eE and static eM = new EM
@@ -596,8 +598,8 @@ class EM {
       resI = new long[rende3][][][];
       defRes();  // generate result objects
       runVals();  // generate settings objects to vvend
-      //static volatile int bCharStart = 10, bCharEnd = -2, vvend = -1;
-      bCharEnd = vvend + bCharStart; // set length for of key
+      //static volatile int  vvend = -1;
+      E.bValsEnd = vvend + E.bValsStart; // set length for of key
       System.out.println("---INem1--- counts at init EM doVal vvend=" + vvend + ", doRes rend4=" + rende4 + ", assiged doRes arrays rende3=" + rende3);
       doReadKeepVals();
       if (bKeepr != null) {
@@ -3628,21 +3630,20 @@ onceAgain:
    * @param
    * @return
    */
-  void buildAICvals(Econ ec, byte[] res, int vvend) {
-    buildAICvals(ec.pors, ec.clan, ec.name, res, vvend);
+  void buildAICvals(Econ ec, char[] res, char[] uMasked, int vvend) {
+    buildAICvals(ec.pors, ec.clan, ec.name, res, uMasked, vvend);
   }
 
   /**
-   * build AICvals in Assets.myAICvals from myAIvals as sliderVals
+   * build AICvals in res from myAIvals as sliderVals
    *
    * @param ixPS pors value
    * @param ixClan clan value
-   * @param res the byte array for the key, start at bCharStart
+   * @param ecName name of current ec if any
+   * @param res the Char array for the key, start at bCharStart
    * @param vvend The count of the last doVal
-   * @param
-   * @return
    */
-  void buildAICvals(int ixPS, int ixClan, String ecName, byte[] res, int vvend) {
+  void buildAICvals(int ixPS, int ixClan, String ecName, char[] res, char[] uMasked, int vvend) {
     int sliderVal = 0, tix = 0;
     // static int myAIcstart  = 'a'; // start of ascii a
     // static int myAIdiv  = 20; //divid the values by 5
@@ -3658,23 +3659,24 @@ onceAgain:
       // String aa = "", bb = "bb";
       // start bb with the schars for pors and clan
       int aWaits = 0;
-      int lRes = E.bValsStart + vvend;
+      int lRes = E.bValsEnd = E.bValsStart + vvend;
       lRes = res.length;
       int ix = 0, ixa = 0;
       //res = new byte[lRes];// set Res to a new right length
       //uMasked = new byte[lRes];
-      for (ix = 0; ix < lRes; ix++) { //prefill with no match
-        res[ix] = E.aByte;
-        //uMasked[ix] = 0;  // prefill  unMasked
+      for (ix = 0; ix < lRes; ix++) { //prefill with lowest val
+        res[ix] = 'a';
+        uMasked[ix] = 0;  // prefill  unMasked
       }
       for (ix = 0; ix < vvend; ix++) { // scan each doVal
         sliderVal = getAIVal(ix, ixPS, ixClan);
-        res[ixa = ix + E.bValsStart] = (byte) ((int) (sliderVal / myAIdiv) + 'a');
+        res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
         int gc = valI[vv][modeC][0][0];
         if (gc > vfour) {
-          //uMasked[ixa] = E.mChar; // set mask for each user val
-        }    }
-    }
+          uMasked[ixa] = E.maskC; // set mask for each user val
+        }
+      }// ix
+    }//
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
@@ -6117,13 +6119,15 @@ onceAgain:
         prevMyScoreClanPos[ixClan] = myScoreClanPos[ixClan];
         prevMyScorePosClan[ixClan] = myScorePosClan[ixClan];
       }
-      int lRes = E.bValsStart + vvend;
-      // psClanBytes[ixPS] = new byte[2][][];
+      int lRes = E.bValsEnd = E.bValsStart + vvend;
+      // psClanChars[ixPS] = new byte[2][][];
       for (ixPS = 0; ixPS < 2; ixPS++) {
-        psClanBytes[ixPS] = new byte[5][];
+        psClanChars[ixPS] = new char[5][];
+        psClanMasks[ixPS] = new char[5][];// rebuild keys and masks each year
         for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-          psClanBytes[ixPS][ixClan] = new byte[lRes];
-          buildAICvals(ixPS, ixClan, "preset", psClanBytes[ixPS][ixClan], vvend);
+          psClanChars[ixPS][ixClan] = new char[lRes];
+          psClanMasks[ixPS][ixClan] = new char[lRes];
+          buildAICvals(ixPS, ixClan, "preset", psClanChars[ixPS][ixClan], psClanMasks[ixPS][ixClan], vvend);
         }
       }
 
@@ -8388,8 +8392,8 @@ onceAgain:
 
   static boolean isWinner = false;
   static double myScore[] = {400., 400., 400., 400., 400.};
-  static int myScorePosClan[] = {0, 1, 2, 3, 4};
-  static int myScoreClanPos[] = {0, 1, 2, 3, 4};
+  static int myScorePosClan[] = {0, 1, 2, 3, 4};//score pos2 has clan4
+  static int myScoreClanPos[] = {0, 1, 2, 3, 4};//clan #3 has score pos 2
   static double myScore2[] = {400., 400., 400., 400., 400.};
   static int myScorePosClan2[] = {0, 1, 2, 3, 4};
   static int myScoreClanPos2[] = {0, 1, 2, 3, 4};
