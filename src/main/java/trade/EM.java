@@ -144,8 +144,10 @@ class EM {
   static int lEnvsPerYear = envsPerYear.length;
   // int porsClanCntd[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; // defaults
   static volatile int porsClanCnt[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile int porsClanPreCnt[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
   //int clanCntd[] = {0, 0, 0, 0, 0};
   static volatile int clanCnt[] = {0, 0, 0, 0, 0};
+  static volatile int clanPreCnt[] = {0, 0, 0, 0, 0};
   static volatile Integer econCnt = 0;
   static volatile int deadCnt = 0;
   static final int econLock[] = {0};
@@ -561,9 +563,22 @@ class EM {
   static String firstStack = "", secondStack = "", thirdStack = "", fourthStack = "";
   static int rende3 = 700;
   static volatile int vvend = -1;
-  static volatile byte psClanBytes[][][] = new byte[2][][];
+  //static volatile byte psClanBytes[][][] = new byte[2][][];
   static volatile char psClanChars[][][] = new char[2][][];
   static volatile char psClanMasks[][][] = new char[2][][];
+  static volatile double psClanPreWorth[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};//new double[2][];
+  static volatile double psClanWorth[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
+  static volatile double psClanPreOffers[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
+  static volatile double psClanOffers[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
+  static volatile double psClanPreForward[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
+  static volatile double psClanForward[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
+  static volatile double psClanPreResilience[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
+  static volatile double psClanResilience[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
+  static volatile int psClanPreEconCnt[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile int psClanEconCnt[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile int psClanPreEconDied[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+  static volatile int psClanEconDied[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
+
 
   /**
    * instantiate another EM, set static eE and static eM = new EM
@@ -4470,6 +4485,7 @@ onceAgain:
   // now star the list of numbered dores names
   static int e4 = -1;
   static final int SCORE = ++e4;
+  static final int RELSCORE = ++e4;
   static final int STARTWORTH = ++e4;
   static final int LIVEWORTH = ++e4;
   static final int WORTHINCR = ++e4; //
@@ -4962,7 +4978,8 @@ onceAgain:
 
   void defRes() {
 
-    doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 |LIST3 | LIST4| LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
+    doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
+    doRes(RELSCORE, "Score", "Relative score toward winning", 3, 3, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | BOTH, 0, 0, 0);
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | CUMUNITS | SUM, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
@@ -6327,25 +6344,71 @@ onceAgain:
   /**
    * do end of year processing, determine if values need to be divided by power
    * of 10 and then shown in the display of the result process the score
-   * processor getWinner() before the rest of doEndYear
-   *
+   * processor getWinner() before the rest of doEndYear Process AI values
+     *
    * @return
    */
   int doEndYear() {
     doResSpecial();
     getWinner();
+    /*//now update ai yearly arrays
+static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};//new double[2][];
+  static volatile double psClanWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
+  static volatile double psClanPreOffers[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
+  static volatile double psClanOffers[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
+  static volatile double psClanPreForward[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
+  static volatile double psClanForward[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
+  static volatile double psClanPreResilience[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
+  static volatile double psClanResilience[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
+  static volatile int psClanPreEconCnt[][] = {{0,0,0,0,0},{0,0,0,0,0}};
+  static volatile int psClanEconCnt[][] = {{0,0,0,0,0},{0,0,0,0,0}};
+  static volatile int psClanPreEconDied[][] = {{0,0,0,0,0},{0,0,0,0,0}};
+  static volatile int psClanEconDied[][] = {{0,0,0,0,0},{0,0,0,0,0}};
+      //  winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
+    winner = scoreVals(TRADELASTGAVE, wGiven, ICUM, isV);
+      // winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
+      //winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
+    winner = scoreVals(LIVEWORTH, wLiveWorthScore, ICUR0, isV);
+    winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
+      // winner = scoreVals(WTRADEDINCRMULT, wYearTradeV, ICUR0, isV);
+    // winner = scoreVals(WTRADEDINCRMULT, wYearTradeI, ICUR0, isI);
+    winner = scoreVals(DIED, iNumberDied, ICUM, isI);
+    winner = scoreVals(BOTHCREATE, iBothCreateScore, ICUM, isI);
+     */
+    // afer getWinneer res move cur arrays to prev arrays and set cur arrays as needed
+    for (ixPS = 0; ixPS < 2; ixPS++) {
+      for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+        psClanPreWorth[ixPS][ixClan] = psClanWorth[ixPS][ixClan];
+        psClanWorth[ixPS][ixClan] = resV[LIVEWORTH][ICUR0][ixPS][ixClan];
+        psClanPreForward[ixPS][ixClan] = psClanForward[ixPS][ixClan];
+        psClanForward[ixPS][ixClan] = clanFutureFunds[ixClan];
+        psClanPreOffers[ixPS][ixClan] = psClanOffers[ixPS][ixClan];
+        psClanOffers[ixPS][ixClan] = resV[TRADELASTGAVE][ICUR0][ixPS][ixClan];
+        psClanPreResilience[ixPS][ixClan] = psClanResilience[ixPS][ixClan]; //??
+        psClanResilience[ixPS][ixClan] = resV[LIVEWORTH][ICUR0][ixPS][ixClan];
+        // psClanPreWorth[ixPS][ixClan] = psClanWorth[ixPS][ixClan];
+        // psClanWorth[ixPS][ixClan] = resV[LIVEWORTH][ICUR0][ixPS][ixClan];
+        psClanPreEconCnt[ixPS][ixClan] = psClanEconCnt[ixPS][ixClan];
+        psClanEconCnt[ixPS][ixClan] = (int) resI[LIVEWORTH][ICUR0][ixPS][ixClan];
+        psClanEconDied[ixPS][ixClan] = psClanEconDied[ixPS][ixClan];
+        psClanEconDied[ixPS][ixClan] = (int) resI[DIED][ICUR0][ixPS][ixClan];
+        // prevRelScorePorSClan[ixPS][ixClan] = relScorePorSClan[ixPS][ixClan];
+      }
+    }
+
     int cnt = 0, curIx = -7, newIx = -7, ccntl = -8;
     int valid0 = -4, cur0 = -7, yearsGrp = 20, valid = 10;
     int mdepth = 22;
     long depth = 20, ydepth = 10;
     yearErrCnt = 0;
+    //
     for (int rN = 0; rN < rende4; rN++) {
       // skip undefined entries without error
       if (resI[rN] != null) {
         cnt++;
 
         /**
-         * resI [resNum][ICUM,ICUR0,...ICUR6(7*6rounds
+         * finalize set power for each results entry         * resI [resNum][ICUM,ICUR0,...ICUR6(7*6rounds
          * +2][PCNTS,SCNTS,CCONTROLD][LCLANS :{over
          * CCONTROLD}ISSET,IVALID,IPOWER:{only for
          * ICUM,CCONTROLD}LOCKS0,LOCKS1,L0CKS2,LOCKS3,IFRACS,IDEPTH] valid
@@ -6447,6 +6510,7 @@ onceAgain:
       }
     }
     didEndYear++;
+
     return rende4 - cnt; // number of slots left
   }
 
@@ -8392,14 +8456,15 @@ onceAgain:
 
   static boolean isWinner = false;
   static double myScore[] = {400., 400., 400., 400., 400.};
+  static double prevScore[] = {400., 400., 400., 400., 400.};
+  static double relScore[] = {400., 400., 400., 400., 400.};
+  static double prevRelScore[] = {400., 400., 400., 400., 400.};
   static int myScorePosClan[] = {0, 1, 2, 3, 4};//score pos2 has clan4
   static int myScoreClanPos[] = {0, 1, 2, 3, 4};//clan #3 has score pos 2
-  static double myScore2[] = {400., 400., 400., 400., 400.};
-  static int myScorePosClan2[] = {0, 1, 2, 3, 4};
-  static int myScoreClanPos2[] = {0, 1, 2, 3, 4};
-  static double myScore3[] = {400., 400., 400., 400., 400.};
-  static int myScorePosClan3[] = {0, 1, 2, 3, 4};
-  static int myScoreClanPos3[] = {0, 1, 2, 3, 4};
+  static double myScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
+  static double prevScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
+  static double relScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
+  static double prevRelScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double myScoreSum = 0.0;
   static double prevMyScore[] = {400., 400., 400., 400., 400.};
   static int prevMyScorePosClan[] = {0, 1, 2, 3, 4};
@@ -8419,9 +8484,9 @@ onceAgain:
     // initialize curDif,difMult if year < 2
     curDif = year < 2 ? winDif[0][0] : curDif;
     difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;
-    // int ixClan = 0, ixPS = 0, ixC2 = 0;
     for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-      myScore[ixClan] = 400.;  // allow negatives to reduce it
+      myScore[ixClan] = 4000.;  // allow negatives to reduce it
+      myScorePorSClan[0][ixClan] = myScorePorSClan[1][ixClan] = 2000.;
     }
     try {
       //  winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
@@ -8439,12 +8504,23 @@ onceAgain:
     resI[SCORE][ICUR0][CCONTROLD][ISSET] = 1;
     myScoreSum = 0.0;
     for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-      myScoreSum = myScore[ixClan];
+      myScoreSum += myScore[ixClan];
       resV[SCORE][ICUR0][0][ixClan] = myScore[ixClan];
       resV[SCORE][ICUR0][1][ixClan] = myScore[ixClan];
-      resI[SCORE][ICUR0][1][ixClan] = 1;
-      resI[SCORE][ICUR0][0][ixClan] = 1;
-    }
+      resI[SCORE][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
+      resI[SCORE][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
+      }
+      double myScoreAve = myScoreSum * E.invL2secs; //  inv 14 
+      double invMyScoreAve = 1. / myScoreAve;
+      // now convert sum to a frac relative to the ave of myScoreSum
+      for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+        for (ixPS = 0; ixPS < 2; ixPS++) {
+          relScorePorSClan[ixPS][ixClan] = (myScore[ixClan] - myScoreAve) * invMyScoreAve;
+          resV[RELSCORE][ICUR0][ixPS][ixClan] = relScorePorSClan[ixPS][ixClan];
+          resI[RELSCORE][ICUR0][ixPS][ixClan] = resI[LIVEWORTH][ICUR0][ixPS][ixClan];
+        }
+      }
+
     int min = 0, prevMin = 0;
     // static int myScorePosClan[] = {1,2,3,4,5};// clan score min to max
     //static int myScoreClanPos[] = {1,2,3,4,5}; //clan positions of score
@@ -8550,63 +8626,59 @@ onceAgain:
     int ixPS = 0, ixClan = 0;
     for (ixPS = 0; ixPS < 2; ixPS++) {
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-     if (ixPS == 0) {
-          // initialize with planet values for each clan
-          if (isN == isI) {
-            myScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else if (isN == isV) {
-            myScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else { // isScoreAve
-            ii = (int) resI[dRn][cumCur][ixPS][ixClan];
-            myScore[ixClan] += mm * resV[dRn][cumCur][ixPS][ixClan];
-          }
+        // initialize with planet values for each clan
+        if (isN == isI) {
+          myScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
+          myScorePorSClan[ixPS][ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
+
         }
-        else { // Than add ship values per clan
-          if (isN == isI) {
-            myScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else if (isN == isV) {
-            myScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else {
-            myScore[ixClan] += mm * resV[dRn][cumCur][ixPS][ixClan];
-          }
-        /* old process
-        if (ixPS == 0) {
-          // initialize with planet values for each clan
-          if (isN == isI) {
-            inScore[ixClan] = resI[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else if (isN == isV) {
-            inScore[ixClan] = resV[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else { // isScoreAve
-            ii = (int) resI[dRn][cumCur][ixPS][ixClan];
-            inScore[ixClan] = mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
-          }
+        else if (isN == isV) {
+          myScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
+          myScorePorSClan[ixPS][ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
         }
-        else { // Than add ship values per clan
-          if (isN == isI) {
-            inScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else if (isN == isV) {
-            inScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
-          }
-          else {
-            ii = (int) resI[dRn][cumCur][ixPS][ixClan];
-            inScore[ixClan] += mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
-          }
-           // than find the min value of all clans
-          if (inScore[ixClan] < min) {
-            min = inScore[ixClan];  // update min for all clanSums
-          }
-          // find the max value of all clans
-          if (inScore[ixClan] > max) {
-            max1 = max; // update the previous max
-            max = inScore[ixClan];  // update max for all clanSums
-          }
+        else { // isScoreAve
+          ii = (int) resI[dRn][cumCur][ixPS][ixClan];
+          myScore[ixClan] += (resV[dRn][cumCur][ixPS][ixClan]) * mm / ii;
+          myScorePorSClan[ixPS][ixClan] += (resV[dRn][cumCur][ixPS][ixClan]) * mm / ii;
+        }
+      }
+    }
+
+    if (false) {// old process
+      if (ixPS == 0) {
+        // initialize with planet values for each clan
+        if (isN == isI) {
+          inScore[ixClan] = resI[dRn][cumCur][ixPS][ixClan] * mm;
+        }
+        else if (isN == isV) {
+          inScore[ixClan] = resV[dRn][cumCur][ixPS][ixClan] * mm;
+        }
+        else { // isScoreAve
+          ii = (int) resI[dRn][cumCur][ixPS][ixClan];
+          inScore[ixClan] = mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
+        }
+      }
+      else { // Than add ship values per clan
+        if (isN == isI) {
+          inScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
+        }
+        else if (isN == isV) {
+          inScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
+        }
+        else {
+          ii = (int) resI[dRn][cumCur][ixPS][ixClan];
+          inScore[ixClan] += mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
+        }
+        // than find the min value of all clans
+        if (inScore[ixClan] < min) {
+          min = inScore[ixClan];  // update min for all clanSums
+        }
+        // find the max value of all clans
+        if (inScore[ixClan] > max) {
+          max1 = max; // update the previous max
+          max = inScore[ixClan];  // update max for all clanSums
+        }
+      }
 
     double smax = -9999999999.E+10;// ?? reset max
     // increase myScore for each clan by clanSum/min
@@ -8625,11 +8697,7 @@ onceAgain:
       }
     }
     System.out.println("scoreVals " + resS[dRn][0] + ", mult=" + mm + ", inScore=" + mf(inScore[0]) + " , " + mf(inScore[1]) + " , " + mf(inScore[2]) + "," + mf(inScore[3]) + "," + mf(inScore[4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner);
-                  */
-
-        }
-      }//ixClan
-    }//ixPS
+    }
     return 4;
   }
 
@@ -8650,11 +8718,11 @@ onceAgain:
   }
 
   int getCurrentPlanetUnits(int rN) {
-    return getCurCumPorsClanUnitSum(rN, ICUR0, E.P, E.S + 1, 0, E.LCLANS);
+    return getCurCumPorsClanUnitSum(rN, ICUR0, E.P, E.P + 1, 0, E.LCLANS);
   }
 
   int getCurrentSumUnits(String dname) {
-    return getCurCumPorsClanUnitSum(getStatrN(dname), ICUR0, E.P, E.P + 1, 0, E.LCLANS);
+    return getCurCumPorsClanUnitSum(getStatrN(dname), ICUR0, E.P, E.S + 1, 0, E.LCLANS);
   }
 
   int getCurrentSumUnits(int dname) {

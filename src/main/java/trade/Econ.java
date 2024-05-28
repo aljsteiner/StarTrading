@@ -196,11 +196,11 @@ public class Econ {
 
     // now recalculate values by fractions regardless of value of initWorth
     tworth = initWorth * eM.upWorth[pors];
-    double partsSum = eM.initialCommonKnowledgeFrac[pors] * eM.nominalWealthPerCommonKnowledge[0] + eM.initialResourceFrac[pors] * (1.0 + eM.initialReserve[pors]) * eM.nominalWealthPerResource[pors] + eM.initialColonistFrac[pors] * (1.0 + eM.initialReserve[pors]) * eM.nominalWealthPerStaff[pors] + (eM.initialWealthFrac[pors] * (eM.haveCash[0][0] > .9 ? 1.0 : 0.0));
-    double partsSumFrac = 1 / partsSum; // change to mult once instead of at each frac
+    double partsSum = EM.initialCommonKnowledgeFrac[pors] * EM.nominalWealthPerCommonKnowledge[0] + eM.initialResourceFrac[pors] * (1.0 + EM.initialReserve[pors]) * EM.nominalWealthPerResource[pors] + EM.initialColonistFrac[pors] * (1.0 + EM.initialReserve[pors]) * EM.nominalWealthPerStaff[pors] + (EM.initialWealthFrac[pors] * (EM.haveCash[0][0] > .9 ? 1.0 : 0.0));
+    double partsSumFrac = 1 / partsSum; // change to mult once instead of divide at each frac
     // change back to units
-    knowledge = tworth * eM.initialCommonKnowledgeFrac[pors] * partsSumFrac / eM.nominalWealthPerCommonKnowledge[0];
-    wealth = tworth * eM.initialWealthFrac[pors] * partsSumFrac * (eM.haveCash[0][0] > .9 ? 1.0 : 0.0);
+    knowledge = tworth * EM.initialCommonKnowledgeFrac[pors] * partsSumFrac / eM.nominalWealthPerCommonKnowledge[0];
+    wealth = tworth * eM.initialWealthFrac[pors] * partsSumFrac * (EM.haveCash[0][0] > .9 ? 1.0 : 0.0);
     colonists = (sworth = tworth * partsSumFrac * eM.initialColonistFrac[pors] * (1.0 + eM.initialReserve[pors])) / eM.nominalWealthPerStaff[pors];
     res = (rworth = tworth * partsSumFrac * eM.initialResourceFrac[pors] * (1.0 + eM.initialReserve[pors])) / eM.nominalWealthPerResource[pors];
 

@@ -104,12 +104,12 @@ public class Assets {
   static int pTradeFrac = -1;
   static int pUserCatastrophyFreq = -1;
   /* now add some AI variables for this economy */
-  double prevWorth = -7.;
-  double prevOffers = -5., offers = -8., offersInc = -5.;
-  double prevKnowledge = -3., prevProspave = -7., prospAve = -7.;
-  double prevProspMin = -8., prospMin = -9., prospMinInc = -11.;
-  double curKnowledge = -3., knowledgeInc = -7., worthInc = -9.;
-  double curWorth = -1., resilience = -8., hope = -7., Offers = -9;
+  double prevAIWorth = -7., aiWorth = -9, aiWorthInc = -6.;
+  double prevAIOffers = -5., aiOffers = -8., aiOffersInc = -5.;
+  double prevAIKnowledge = -3., prevAIProspave = -7., prospAIAve = -7.;
+  double prevAIProspMin = -8., prospAIMin = -9., prospAIMinInc = -11.;
+  double aiKnowledge = -3., aiKnowledgeInc = -7.;
+  double prevAIResilience = -8., aiResilience = -8., aiHope = -7.;
   // String myAIvalC = "soon";
   // String myAIbalances = "1234567";
   // String myAIprosperity = "1234567";
@@ -306,9 +306,11 @@ public class Assets {
   int tradedSuccessTrades; // successful trades this year
   double tradedStrategicRequests; // sum of strategic requests
   double tradedStrategicOffers; // sum of strategic offers
+  double tradedOffers = -.5; // sum of strategic offers
   double tradedNominalRequests;// sum of nominal requests
   double tradedNominalOffers; // sum of nominal offers
   double tradedTotalStrategicRequests; // sum of strategic requests+cash+manuals
+  double tradedRequests = -7.;
   double tradedTotalStrategicOffers; // sum of strategic offers+cash+manuals
   double tradedTotalNominalRequests;// sum of nominal requests+cash+manuals
   double tradedTotalNominalOffers; // sum of nominal offers+cash+manuals
@@ -5645,7 +5647,7 @@ public class Assets {
         eM.printHere("----TINa----", ec, "initTrade... before calcEfficiency loop");
         if (!didCashFlowStart && !ec.dead) {
           if (E.doCalcCatastrophy) {
-            calcCatastrophy();
+            calcCatastrophy(0);
           }
 
         }
@@ -6822,12 +6824,12 @@ public class Assets {
         offeredManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[oPors][oClan]);
         requestedManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[pors][clan]);
         offers = multV.plusSum() + offeredManualsValue + plusCash;
-        tradedTotalStrategicOffers = totalStrategicOffers = sumStrategicOffers + offeredManualsValue + plusCash;
+        tradedOffers = tradedTotalStrategicOffers = totalStrategicOffers = sumStrategicOffers + offeredManualsValue + plusCash;
         nominalOffers = nominalV.plusSum();
         tradedTotalNominalOffers = totalNominalOffers = nominalOffers + offeredManualsValue + plusCash;
         sendSum = bids.plusSum() + offeredManuals + plusCash;
         totalSend = unitOffers = multV.plusSum() + plusCash;
-        requests = totalStrategicRequests = -multV.negSum() + requestedManualsValue + negCash;
+        tradedRequests = requests = totalStrategicRequests = -multV.negSum() + requestedManualsValue + negCash;
         unitRequests = -multV.negSum() + negCash;
         nominalRequests = -nominalV.negSum();
         nominalRequestsSum = nominalRequests + negCash + requestedManualsValue;
@@ -8292,7 +8294,7 @@ public class Assets {
       // now initialize knowledge subs from bals references
       EM.wasHere = "CashFlow.aStartCashFlow before for loop eeeb=" + ++eeeb;
       // only initialize if not didCashFlowStart first call
-      for (int i = (didCashFlowStart ? E.LSECS : 0); i < E.lsecs; i++) { //first time
+      for (int i = (didCashFlowStart ? E.LSECS : 0); i < E.LSECS; i++) { //first time
         commonKnowledge.set(i, E.knowledgeForPriority * aknowledge * ySectorPriorityYr.get(i) / ySectorPriorityYr.sum() + E.knowledgeByDefault * aknowledge, "set initial knowledge per econ sector");
       }
       //Assets.CashFlow.aStartCashFlow
@@ -8301,6 +8303,7 @@ public class Assets {
       term = -4;
       hist.add(new History("&&", 9, "knowledge", knowledge));
       //  System.out.println("5651 mid CashFlow.initCashFlow");
+      /* NOW init subAssets */
       lTitle = "initResource";
       histTitles(lTitle);
       boolean worker = false;
@@ -8344,15 +8347,15 @@ public class Assets {
       invMEff.setUseBalances(History.valuesMinor7, "invMEff", r.invMaintEfficiency, c.invMaintEfficiency, s.invMaintEfficiency, g.invMaintEfficiency);
       invGEff.setUseBalances(History.valuesMinor7, "invGEff", r.invGroEfficiency, c.invGroEfficiency, s.invGroEfficiency, g.invGroEfficiency);
       //   calcPriority(percentDifficulty);
-      clanRisk = eM.clanRisk[pors][clan];
+      clanRisk = EM.clanRisk[pors][clan];
       doFailed = false;
       // EM.wasHere = "CashFlow.init... before calc Priority eeef=" + ++eeef;
       //  calcPriority(percentDifficulty); // calc this years piority into priorityYr and as.difficulty
       //  EM.wasHere = "CashFlow.init... before calcCatastrophy eeeg=" + ++eeeg;
       if (!didCashFlowStart) { // do yearStart only, use rs the life of the Econ or not
         bals.put4AtoB(ABalRows.BALANCESIX, ABalRows.STARTYEARBALANCESIX);
-        r.worth.setAmultV(r.balance, eM.nominalWealthPerResource[pors]);
-        c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
+        r.worth.setAmultV(r.balance, EM.nominalWealthPerResource[pors]);
+        c.worth.setAmultV(c.balance, EM.nominalWealthPerResource[pors] * EM.cargoWorthBias[0]);
         s.sumGrades(); // sets s worth
         g.sumGrades(); // sets g worth
         // in aStartCashFlow set values not references
@@ -8367,11 +8370,12 @@ public class Assets {
           bals.set2(ABalRows.INITIALASSETSWORTHSIX + 2, s.worth);
           bals.set2(ABalRows.INITIALASSETSWORTHSIX + 3, g.worth);
         }
-        if (!didCashFlowStart && !ec.dead && E.doCalcCatastrophy) {
-          calcCatastrophy();
+        startYearAI(); // start AI set pre, set nudges
+        if (!ec.dead && E.doCalcCatastrophy) {
+          calcCatastrophy(0);
         }
-      }
-      if (!didCashFlowStart && !ec.dead) {
+
+        if (!ec.dead) {
         rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
         EM.wasHere = "CashFlow.init... before calcEfficiency loop eeeh" + ++eeeh;
         for (k = 0; k < 4; k++) {
@@ -8383,32 +8387,38 @@ public class Assets {
         }
         didDepreciation = true; // did both calcEfficiency and calcGrowth
         eM.printHere("---ASCF---", ec, "did calcEfficiency, calcGrowth growths.sum4=" + EM.mf(growths.sum4()));
-      }
+        }//!dead
+
       rawFertilities2 = new A2Row(ec); //for DoTotalWorths
       EM.wasHere = "CashFlow.init... after calcGrowth loop eeei" + ++eeei;
       //  System.out.println("5631 near end CashFlow.initCashFlow");
       //didStart = (ec.age < 1 ? false : didStart);// probably age = -1 not y0
-      String pStarted = (didStart ? " doCFStart " : " wasStarted ");
-      String pInited = (didCashFlowStart ? " initCF  " : " cfWasInited ");
+
       if (!didStart) {
         lTitle = "strtCashFlow";
         histTitles(lTitle);
         if (!ec.myClearHist) {
           hist.add(new History(aPre, 5, ec.name + " CFinitYr" + EM.year, "wealth=", EM.mf(wealth), "colonists=", EM.mf(colonists), "res=", EM.mf(res), "Knowledge=", EM.mf(aknowledge), "difficulty=", EM.mf(percentDifficulty)));
         }
-        start();
-      }
+          start();  // set startTotalWorth
+        }
+
+      }//end !didCashFlowStart
       s.sumGrades();
       g.sumGrades();
+      String pStarted = (didStart ? " doCFStart " : " wasStarted ");
+      String pInited = (didCashFlowStart ? " initCF  " : " cfWasInited ");
       //    started = traded = growed = endyr = copyy(cur);
       // in Assets.CashFlow.aStartCashFlow
       didCashFlowStart = true;
       didCashFlowInit = true;
-
-      //EM.wasHere = " " + ec.name + " CF at end " + pStarted + pInited + " eeej" + ++eeej;
-      EM.here("----ECF----", ec, " CF at end " + pStarted + pInited + " eeej" + ++eeej);
-
+      EM.wasHere = " " + ec.name + " CF at end " + pStarted + pInited + " eeej" + ++eeej;
+      eM.printHere("----CFSa---", ec, EM.wasHere);
     }  //Assets.CashFlow.aStartCashFlow
+
+    void startYearAI() {
+      prevAIWorth = aiWorth = syWTotWorth;
+    }
 
     /**
      * return the current value of loop n
@@ -8454,7 +8464,7 @@ public class Assets {
      * @return
      */
     double getScore(double offer, double worth) {
-      double score = offer * EM.wGiven[0][0] + worth * EM.wLiveWorthScore[0][0];
+      double score = (offer / worth) * EM.wGiven[0][0] + worth * EM.wLiveWorthScore[0][0];
       return score;
     }
 
@@ -8545,19 +8555,20 @@ public class Assets {
      * <li>  </li>
      * </ol>
      */
-    void calcCatastrophy() {
+    void calcCatastrophy(int n) {
       double t1 = 0., t2 = 0., cc = 1.;
-
-      //  if (eM.randFrac[pors][0] > PZERO && ec.age > 2 && ((t1 = cRand(31)) < (t2 =eM.userCatastrophyFreq[pors][clan] * (cc = eM.gameUserCatastrophyMult[pors][0]) * cRand(34))) && t1 > 0.) {
-      // cc will be both user and game catastrophy values
-      // random 0.0 to 1.0,%5lt; asum of 0-.65 + 0-.65
-      if ((t2 = eM.gameUserCatastrophyMult[pors][0]) == 0.0) {
-        return; // skip if 0
-      }
       if (didCatastrophy) {
         return; // only 1 time per year
       }
-      if ((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] * (t2 = eM.gameUserCatastrophyMult[pors][0]))) {
+      if (eM.randFrac[pors][0] > PZERO && ec.age > 1 && n < 2 && ((t1 = cRand(31)) < (t2 = eM.userCatastrophyFreq[pors][clan] * (cc = eM.gameUserCatastrophyMult[pors][0]) * cRand(34))) && t1 > 0.) {
+      // cc will be both user and game catastrophy values
+      // random 0.0 to 1.0,%5lt; asum of 0-.65 + 0-.65
+     // if ((t2 = eM.gameUserCatastrophyMult[pors][0]) == 0.0) {
+         // return; // skip if 0
+         //}
+        eM.printHere("----CATe1----", ec, EM.mf("enter Catastrophy t1", t1) + EM.mf(" t2", t2));
+
+         if ((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] * (t2 = eM.gameUserCatastrophyMult[pors][0]))) { //.25 *.2 = .05 so very seldom
         didCatastrophy = true; // only if actually done
         int r1 = new Random().nextInt(7);
         int r2 = new Random().nextInt(7);
@@ -8623,7 +8634,8 @@ public class Assets {
         r.bonusYears.add(bonusX2, bonusYrs2);
         setStat("rCatBonusY", pors, clan, bonusYrs1 + bonusYrs2, 2);
         r.bonusUnitGrowth.add(bonusX1, bonusVal1);
-        r.bonusUnitGrowth.add(bonusX2, bonusVal2);
+           r.bonusUnitGrowth.add(bonusX2, bonusVal2);
+           eM.printHere("----CATr2---", ec, "Catastrophy  rsector" + bonusX2 + "=" + EM.mf("b unit1", bonusVal2) + " sec" + bonusX1 + "=" + EM.mf("b unit2", bonusVal2));
         setStat("rCatBonusVal", pors, clan, bonusVal1 + bonusVal2, 2);
         s.bonusYears.add(bonusX3, bonusYrs3);
         setStat("sCatBonusY", pors, clan, bonusYrs3, 1);
@@ -8651,7 +8663,7 @@ public class Assets {
           //setStat("rCatNegDepreciation", pors, clan, rd5, 0);
         }
         else {  // ships
-          manuals.add(bonusX2, bonusManuals1);  // Adds into value of trades
+          manuals.add(bonusX2, bonusManuals1);  // Adds for sectorX bonusMan
           setStat("sCatBonusManuals", pors, clan, bonusManuals1, 1);
           newKnowledge.add(bonusX1, bonusNewKnowledge1);
           setStat("sCatBonusNewKnowledge", pors, clan, bonusNewKnowledge1, 1);
@@ -8661,12 +8673,14 @@ public class Assets {
           setStat("sCatBonusNewKnowledge", pors, clan, bonusNewKnowledge2, 1);
           catEffManualsBen += bonusManuals1 + bonusManuals2;
           catEffKnowBen += bonusNewKnowledge1 + bonusNewKnowledge2;
+          eM.printHere("----CATc3---", ec, "Catastrophy Ship sector" + bonusX2 + "=" + EM.mf("manuals", bonusManuals1) + " sec" + bonusX1 + "=" + EM.mf("manuals", bonusManuals2));
         }
 
       }
       sumCumulativeUnitBonus = r.cumUnitBonus.sum() + s.cumUnitBonus.sum();
       sumBonusUnitGrowth = r.bonusUnitGrowth.sum() + s.bonusUnitGrowth.sum();
       sumCumDepreciation = r.cumulativeUnitDepreciation.sum() + s.cumulativeUnitDepreciation.sum();
+      }
     }// calcCatastrophy
 
     /**
@@ -10006,7 +10020,7 @@ public class Assets {
         //live
         fyW = new DoTotalWorths();
         fyW.setPrev(syW);
-        curWorth = sumTotWorth = fyW.getTotWorth();
+        aiWorth = sumTotWorth = fyW.getTotWorth();
         if (History.dl > History.informationMinor9) {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
           hist.add(new History(aPre, History.valuesMinor7, "n" + n + "post Health", ">>> at", wh(a0.getLineNumber()), "H=" + EM.mf(rawProspects2.curMin()), "Ntrade$$", EM.mf(startYrSumWorth), EM.mf(sumTotWorth - startYrSumWorth), EM.mf(sumTotWorth)));
@@ -11029,12 +11043,12 @@ public class Assets {
           // prevBalances.getRow(1).getAChars(EM.psClanChars[pors][clan], E.pPrevB1Row);
         }
         // double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevWorth, E.AILims, "prewWorth", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevKW, prevKnowledge, E.AILims, "prevKnowledge", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prewWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevKW, prevAIKnowledge, E.AILims, "prevKnowledge", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.myScore[clan], E.AILims, "prewScoreWorth", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, EM.myScoreClanPos[clan], E.AILims, "prevClanScorePos", ifPrint);
         EM.psClanChars[pors][clan][E.pPrevScP] = E.getAIResChar(EM.myScoreClanPos[clan]);//(char) ('B' + pors);
-        curWorth = fyW.sumTotWorth;
+        aiWorth = fyW.sumTotWorth;
 
         // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
         // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);

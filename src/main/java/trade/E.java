@@ -62,8 +62,8 @@ public class E {
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
   static final public String statsButton20Tip = "20: cost, cost calculations";
-  static final public String statsButton21Tip = "21: no display";
-  static final public String statsButton22Tip = "22: no display";
+  static final public String statsButton21Tip = "21: AI values";
+  static final public String statsButton22Tip = "22: SomeThing more";
   static final public String statsButton23Tip = "23: display table";
 
   static EM eM;
@@ -185,9 +185,6 @@ public class E {
   static final int poPerW = 13, pMaxP = 7, pCurW = 8;
   static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
-  //static final byte aByte = 'A';
-  //static final byte nChar = aByte - 1;//  "@"
-  //static final byte mChar = aByte - 2;//  "?"
   static final char startC = 'a';
   static final char nextC = 'A';
   static final char maskC = '@';

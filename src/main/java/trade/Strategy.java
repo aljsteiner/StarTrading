@@ -40,7 +40,7 @@ public class Strategy {
    * @param clanKey the clanKey in EM
    * @param clanMask the mask in em
    */
-  Strategy(int pors, int clan, char[] aKey, char[] clanKey, char[] clanMask) {
+  Strategy(int pors, int clan, String aKey, char[] clanKey, char[] clanMask) {
 
   }
 
