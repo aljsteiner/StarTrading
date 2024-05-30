@@ -104,7 +104,11 @@ public class Assets {
   static int pTradeFrac = -1;
   static int pUserCatastrophyFreq = -1;
   /* now add some AI variables for this economy */
-  double prevAIWorth = -7., aiWorth = -9, aiWorthInc = -6.;
+  // consolidate key's reading adding cnt, greatest age up to 51, greates scoreIx
+  int cnts[] = new int[3]; // cnt=occurrances,age>>age of Econ,scoreIx>>scoreix
+  double aiScore = -2., prevAIScore = -3, prevPrevAIScore = -4., incAIScore = -5.;
+  double incPrevAIScore = -6.;
+  double prevAIWorth = -7., aiWorth = -9, aiWorthInc = -6., fyWAIWorth = -9.;
   double prevAIOffers = -5., aiOffers = -8., aiOffersInc = -5.;
   double prevAIKnowledge = -3., prevAIProspave = -7., prospAIAve = -7.;
   double prevAIProspMin = -8., prospAIMin = -9., prospAIMinInc = -11.;
@@ -827,11 +831,11 @@ public class Assets {
    * @param tests an array of tests that a may be greater than
    * @param what a descriptor string for this value
    * @param ifPrint print message to System.out if true
-   * @return an small case letter 'b'+ a.length-1 greater than largest test
-   * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
+   * @return ix index greatest value of test, put resChar into res[bias] an
+     * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
    * test
    */
-  static void putValueChar(char[] res, int bias, double value, double[] tests, String what, boolean ifPrint) {
+  static int putValueChar(char[] res, int bias, double value, double[] tests, String what, boolean ifPrint) {
     //byte ret[] = {'A'};
     char ret = E.getAIResChar(0);
     int ix = 0;
@@ -849,9 +853,33 @@ public class Assets {
       System.out.println("----PVB3---- putValByte bias =" + bias + " key=" + ss + " length" + res.length + " char=" + ret + "=" + ret + " for " + what + "  value=" + EM.mf(value)
       );
     }
+    return ix;
+  }
+
+  /**
+   * get the smaller int from testing a value against an array of test values
+   *
+   * @param value value to be tested
+   * @param tests array of test values
+   * @param what
+   * @return
+   */
+  int getTestVal(double value, double[] tests, String what) {
+    int ret = 0;
+    int ix = 0;
+    int testsLen = tests.length;
+    for (ix = testsLen - 1; ix > -1; ix--) {
+      if (value > tests[ix]) {
+        ret = ix;
+        ix = -2; // exit test loop
+      }
+    }
+    return ret;
+  
 
   }
 
+  ;
   /**
    * convert the number to a string representation
    *
@@ -6112,7 +6140,7 @@ public class Assets {
        * cash, divided by this turns strategicRatio minus the value of manuals
        * earned in the trade. If health is &lt 40% an include available cash in
        * the offer.<br>
-       * 15) check for accept, keep track of raises rejected, either ruduce
+       * 15) check for accept, keep track of raises rejected, either reduce
        * later requests, increase offers but not above rejection, or offer cash
        * if urgent and cash available. Planet request only the 4 top requests,
        * 5'th only if offered, repeat planet offers<br>
@@ -6823,8 +6851,8 @@ public class Assets {
         goodFrac = bids.negSum() > NZERO || -goodC.negSum() * 2 > -bids.negSum() ? 1. : -goodC.negSum() * 2 / -bids.negSum();
         offeredManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[oPors][oClan]);
         requestedManualsValue = Math.min(multV.plusSum() * EM.manualsMaxPercent[pors][clan], offeredManuals * eM.tradeManualsFrac2[pors][clan]);
-        offers = multV.plusSum() + offeredManualsValue + plusCash;
-        tradedOffers = tradedTotalStrategicOffers = totalStrategicOffers = sumStrategicOffers + offeredManualsValue + plusCash;
+        tradedOffers = offers = multV.plusSum() + offeredManualsValue + plusCash;
+        tradedTotalStrategicOffers = totalStrategicOffers = sumStrategicOffers + offeredManualsValue + plusCash;
         nominalOffers = nominalV.plusSum();
         tradedTotalNominalOffers = totalNominalOffers = nominalOffers + offeredManualsValue + plusCash;
         sendSum = bids.plusSum() + offeredManuals + plusCash;
@@ -8417,7 +8445,7 @@ public class Assets {
     }  //Assets.CashFlow.aStartCashFlow
 
     void startYearAI() {
-      prevAIWorth = aiWorth = syWTotWorth;
+      prevAIWorth = ec.age < 2 ? syWTotWorth : fyWAIWorth;
     }
 
     /**
@@ -10020,7 +10048,7 @@ public class Assets {
         //live
         fyW = new DoTotalWorths();
         fyW.setPrev(syW);
-        aiWorth = sumTotWorth = fyW.getTotWorth();
+        aiWorth = fyWAIWorth = sumTotWorth = fyW.getTotWorth();
         if (History.dl > History.informationMinor9) {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
           hist.add(new History(aPre, History.valuesMinor7, "n" + n + "post Health", ">>> at", wh(a0.getLineNumber()), "H=" + EM.mf(rawProspects2.curMin()), "Ntrade$$", EM.mf(startYrSumWorth), EM.mf(sumTotWorth - startYrSumWorth), EM.mf(sumTotWorth)));
@@ -10974,9 +11002,9 @@ public class Assets {
      *
      */
     synchronized void saveAI() {
-      if (ec.age > 0) {
+      if (ec.age > 1) {
         EM.wasHere8 = "---ELa7--- Assets AI set has lock";
-        double oPerW = offers / btWTotWorth;
+        double oPerW = tradedOffers / syWTotWorth;
         char oPerWC = 'A';
         int cIx = 7;
         int much = 7;
@@ -11002,7 +11030,7 @@ public class Assets {
             String str = new String(EM.psClanChars[pors][clan]);
             System.out.println("----BAI1---- put key=" + str + " len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size());
           }
-
+          fyWAIWorth = fyW.sumTotWorth;
         }
         // now process the missed counts
         else {
@@ -11042,13 +11070,24 @@ public class Assets {
           // prevBalances.getRow(0).getAChars(EM.psClanChars[pors][clan], E.pPrevB0Row);
           // prevBalances.getRow(1).getAChars(EM.psClanChars[pors][clan], E.pPrevB1Row);
         }
-        // double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prewWorth", ifPrint);
+        // double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};  fyWAIWorth  aiWorthInc
+
+        fyWAIWorth = fyWTotWorth; // pIncW, pLastW
+        aiWorthInc = (fyWAIWorth - prevAIWorth) / prevAIWorth;
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prewAIWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pLastW, fyWAIWorth, E.AILims, "lastAIWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pIncW, aiWorthInc, E.AILims, "incAIWorth", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevKW, prevAIKnowledge, E.AILims, "prevKnowledge", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.myScore[clan], E.AILims, "prewScoreWorth", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, EM.myScoreClanPos[clan], E.AILims, "prevClanScorePos", ifPrint);
-        EM.psClanChars[pors][clan][E.pPrevScP] = E.getAIResChar(EM.myScoreClanPos[clan]);//(char) ('B' + pors);
-        aiWorth = fyW.sumTotWorth;
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.myScore[clan], E.AILims, "prewPosScoreWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevEScW, prevPrevAIScore, E.AILims, "prevClanScorePos", ifPrint);
+        incPrevAIScore = (prevAIScore - prevPrevAIScore) / prevPrevAIScore;
+        incAIScore = (aiScore - prevAIScore) / prevAIScore;
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevEScInc, incPrevAIScore, E.AILims, "incPrevClanScorePos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIScore, E.AILims, "prevAIScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, incAIScore, E.AILims, "incvClanScorePos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pEScW, aiScore, E.AILims, "prevClanScorePos", ifPrint);
+
+
 
         // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
         // EM.psClanChars[pors][clan][E.pMinP] = (char) ('a' + aType);
@@ -11058,11 +11097,23 @@ public class Assets {
         //  String str = (EM.oPerS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + myAICvals) + oPerWC; // finish key
         String str = new String(EM.psClanChars[pors][clan]);
 
-        Integer aMany = EM.myAIlearnings.get(str);
-        aMany = aMany == null ? 1 : aMany + 1;// force valid number if null
-        EM.myAIlearnings.put(str, aMany);
+        Integer aManys[] = EM.myAIlearnings.get(str);
+        if (aManys == null) {// cnt,age,score
+          aManys = new Integer[3];
+          aManys[0] = 1;
+          aManys[1] = 1;
+          aManys[2] = getTestVal(aiScore, E.AILims, "aiScore");
+
+        }
+        else {
+          aManys[0] += 1;
+          // aManys[1] += 1;  // aged in EM.doYearEnd()
+          aManys[2] = getTestVal(aiScore, E.AILims, "aiScore");
+        }
+
+        EM.myAIlearnings.put(str, aManys);
         if (E.debugAIOut && (aWaits > 5)) {
-          System.out.println("----BAI2---- put key=" + str + " , =" + aMany + " much=" + much + " EM.year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
+          System.out.println("----BAI2---- put aType" + aType + " key=" + str + "= cnt" + aManys[0] + " age" + aManys[1] + " scoreIx" + aManys[2] + " EM.year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
         }
         aType = 0;
         // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;

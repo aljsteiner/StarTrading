@@ -237,12 +237,12 @@ class EM {
   static volatile Econ otherEcon;
   static volatile String otherEconName = "no other name";
   static volatile String otherEconClan = "A";
-  static int myAIcstart = 'a'; // start of ascii a
-  static int myAIdiv = 20; //divid the values by 5
+  // static int myAIcstart = 'a'; // start of ascii a
+  // static int myAIdiv = 20; //divid the values by 5
   static String myStrs[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};//11
   Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-  static volatile Map<String, Integer> myAIlearnings;
+  static volatile Map<String, Integer[]> myAIlearnings;
   /**
    * set curEcon, curEconName curEconClan;curEconTime,curEconAge get a null
    * error the offered Econ is null
@@ -566,6 +566,7 @@ class EM {
   //static volatile byte psClanBytes[][][] = new byte[2][][];
   static volatile char psClanChars[][][] = new char[2][][];
   static volatile char psClanMasks[][][] = new char[2][][];
+  static volatile int nudges[] = new int[5];
   static volatile double psClanPreWorth[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};//new double[2][];
   static volatile double psClanWorth[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
   static volatile double psClanPreOffers[][] = {{0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0.}};
@@ -6124,12 +6125,20 @@ onceAgain:
    */
   int doStartYear() {
     // loop through all of the entries
-
     int maxCopy = MAXDEPTH - 1; //don't copy curIx=6 to above => a curIx=0
     yearErrCnt = 0;
 
     try {
       clearWH();
+
+      if (myAIlearnings != null) {
+      for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
+        if (entry != null) {
+        String aKey = entry.getKey();
+          Integer[] aVal = entry.getValue();
+        }
+        }
+      }
       //move the score and positions to prev...
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
         prevMyScore[ixClan] = myScore[ixClan];
@@ -6327,8 +6336,9 @@ onceAgain:
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
+      ex.printStackTrace(System.err);
       flushes();
-      System.err.println("doStartYear" + year + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + "lRes I" + resI[rN].length + ", V" + resV[rN].length + andMore());
+      System.err.println("Error doStartYear" + year + " name=" + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + "lRes I" + resI[rN].length + ", V" + resV[rN].length + andMore());
 //      ex.printStackTrace(System.err);
       st.setFatalError(); // throws WasFatalError
       //throw new WasFatalError(curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());

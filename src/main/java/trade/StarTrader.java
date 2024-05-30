@@ -7369,8 +7369,13 @@ public class StarTrader extends javax.swing.JFrame {
             aType = E.getAIMuch(aKey.charAt(0));//((int) (aKey[0] - 'a');
             aSize = aKey.length();
             aMuch = E.getAIMuch(aKey.charAt(aSize - 1)); // muchness in this key
-          Integer aCntr = EM.myAIlearnings.get(aKey);
-            aCnts = aCntr == null ? 0 : aCntr;  //if key is new
+            Integer aManys[] = EM.myAIlearnings.get(aKey);
+            if (aManys == null) {
+              aCnts = 1;
+            }
+            else {
+              aCnts = aManys[0];
+            }
             aNums += aCnts; // sum of counts, should be double keys
             aMuch = aMuch < 5 && aMuch > -1 ? aMuch : 5;
             // aMany[aType][acct][aPorS][aClan][aMuch] += aCnts;
