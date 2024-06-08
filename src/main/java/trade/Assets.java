@@ -106,20 +106,32 @@ public class Assets {
   /* now add some AI variables for this economy */
   // consolidate key's reading adding cnt, greatest age up to 51, greates scoreIx
   int cnts[] = new int[3]; // cnt=occurrances,age>>age of Econ,scoreIx>>scoreix
-  double aiScore = -2., prevAIScore = -3, prevPrevAIScore = -4., incAIScore = -5.;
-  double incPrevAIScore = -6.;
-  double prevAIWorth = -7., aiWorth = -9, aiWorthInc = -6., fyWAIWorth = -9.;
-  double prevAIOffers = -5., aiOffers = -8., aiOffersInc = -5.;
-  double prevAIKnowledge = -3., prevAIProspave = -7., prospAIAve = -7.;
-  double prevAIProspMin = -8., prospAIMin = -9., prospAIMinInc = -11.;
-  double aiKnowledge = -3., aiKnowledgeInc = -7.;
-  double prevAIResilience = -8., aiResilience = -8., aiHope = -7.;
+  double aiScore = 2., prevAIScore = -3, prevPrevAIScore = -4., prevIncAIScore = -5.;
+  int prevAIPos = 4, prevPrevAIPos = 4;
+  double prevAIWorth = -7., aiWorth = 10, prevIncAIWorth = -6., prevPrevAIWorth = -9.;
+  double prevAIOffers = -5., aiOffers = 10, prevIncAIOffers = -5.;
+  double prevPrevAIOffers = -7., prevIncAIOperW = -9., prevAIOperW = -9.;
+  double lastAIOperW = 7., aiOperW = 7.;
+  double prevAIKnowledge = 3., prevAIProspAve = -7., aiProspAve = 7.;
+  double prevPrevAIKnowledge = -1., prevIncAIKnowledge = -3., prevPrevAIProspAve = -7.;
+  double prevIncAIProspAve = -9., prevPrevAIProspMin = -7.;
+  double prevAIProspMin = -8., aiProspMin = 9., prevIncAIProspMin = -11.;
+  double aiKnowledge = 3., aiKnowledgeInc = 7.;
+  double prevAIResilience = -8., aiResilience = 8., prevIncAIResilience = -7.;
+  double prevPrevAIResilience = -3., hope = 7., prevAIHope = -9., prevPrevAIHope = -7.;
+  double prevIncAIHope = -7., aiHope = -6.;
+  // trade values kept in assets
+  double strategicGoal = 0., rGoal0 = 0., strategicValue = 0., goodFrac = 0.;
+  double prevStrategicGoal = 0, prevStrategicValue = 0., prevGoodFrac = 0.;
+  double prevPrevStrategicGoal = 0, prevPrevStrategicValue = 0., prevPrevGoodFrac = 0.;
+
+  double sf = 0., sv = 0.;
+  static double firstStrategicGoal = 0., firstStrategicValue = 0.;
   // String myAIvalC = "soon";
   // String myAIbalances = "1234567";
   // String myAIprosperity = "1234567";
 // String myAIjoys = "1234567";
   int prevScorePos = -1;
-  double prevScore;
   double prevClanScore = -0.1;
   // volatile static char[] EM.psClanChars[pors][clan] = {0, 0}; // extended in eM.buildMyAICvals
   volatile static String myAICvals = "coming soon"; // converted for EM.psClanChars[pors][clan]
@@ -138,11 +150,7 @@ public class Assets {
   static final int nMuches = 9;
   static final int nSVals = 4; // n source values Wealth, other off/w,prevStratGoal
   static int[] sVals = new int[nSVals]; // nMuches divisions
-  // trade values kept in assets
-  double strategicGoal = 0., rGoal0 = 0., strategicValue = 0., goodFrac = 0.;
-  double prevStrategicGoal = 0;
-  double sf = 0., sv = 0.;
-  double firstStrategicGoal = 0., firstStrategicValue = 0.;
+
   int aSVal = 1, aRRes = 1;
   static final int nRRes = 3; // number of result pointer to values in array
   static int[] rRes = new int[nRRes];// pointers to result kept nMuches division
@@ -311,6 +319,8 @@ public class Assets {
   double tradedStrategicRequests; // sum of strategic requests
   double tradedStrategicOffers; // sum of strategic offers
   double tradedOffers = -.5; // sum of strategic offers
+  double tradedPrevOffers = -.5; // sum of strategic offers
+  double tradedPrevPrevOffers = -.5; // sum of strategic offers
   double tradedNominalRequests;// sum of nominal requests
   double tradedNominalOffers; // sum of nominal offers
   double tradedTotalStrategicRequests; // sum of strategic requests+cash+manuals
@@ -484,7 +494,7 @@ public class Assets {
   private static final int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
   private static final int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
   private static final int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
-  Assets.CashFlow.DoTotalWorths syW, iyW; //predefine references to worths
+  Assets.CashFlow.DoTotalWorths syW, iyW, pyW; //predefine references to worths
 
   // choose lt values
   // double myAiPHELimits[] = {E.PZERO, 0.05, 0.3, 1.7};// 5 choice other
@@ -1649,7 +1659,7 @@ public class Assets {
 
             long isset1 = (yrsIx - 1 + yrsIxj < resI[rN].length ? resI[rN][yrsIx - 1 + yrsIxj] != null ? resI[rN][yrsIx - 1 + yrsIxj][CCONTROLD][ISSET] : -1 : -2);
 
-            eM.printHere("---STat---", ec, resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumSet=" + resICumIsset + ", curClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
+            eM.printHere("---SSTat---", ec, resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " " + (EM.myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + EM.myAIlearnings.size()) + ", " + " resIcum=" + resICumClan + ", age" + age + ", Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumSet=" + resICumIsset + ", curClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
             /*      System.out.println(
                       "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
             
@@ -2385,8 +2395,12 @@ public class Assets {
     tradedStrategicOffers = 0.;// sum of strategic offers
     tradedNominalRequests = 0.;// 2-3 least strategic value traded
     tradedNominalOffers = 0.; // 2-3 real costs of trades
+    tradedOffers = 0.; // 2-3 real costs (offers) of trades
+   // tradedPrevOffers = 0.; // prev real costs (offers) of trades
+   // tradedPrevPrevOffers = 0.; // prev prev real costs (offers) of trades
     tradedManualsWorths = 0.; // worth of manuals received in trades
-    prevStrategicGoal = strategicGoal; // from a trade
+    strategicGoal = 0;
+   // prevStrategicGoal = strategicGoal; // from a trade
     //   lightYearsTraveled = lYears;
     if (E.tradeInitOut) {
 
@@ -2463,7 +2477,7 @@ public class Assets {
     eM.printHere("-----YEDPm ----", ec, " near end " + (dead ? "DEAD" : "LIVE") + " in Assets.yearEnd() ");
 
     assert cur.c.balance == bals.A[2 + 1] : getName() + " c != bals.A[3], c=" + EM.mf(cur.c.balance.sum()) + " != bals c=" + EM.mf(bals.A[1 + 2].sum());
-    if (E.debugMisc && !dead && !EM.dfe() && syW != null) {
+    if (false && E.debugMisc && !dead && !EM.dfe() && syW != null) {
       EM.newError = true;
       throw new MyErr("Assets.yearEnd says CashFlow.yearEnd did not null syW, probably skipped some code");
     }
@@ -2530,7 +2544,7 @@ public class Assets {
     //tradeLost = false;
     // int acceptedTrade = -5;  // barter number of tradeOK
     // int rejectedTrade = -6; // barter number of rejected trad
-    //  tradedBid = null;
+    tradedBid = null;
     tradedStrategicValue = 0.;
     tradedStrategicFrac = 0.;
     tradedMoreManuals = null;
@@ -2862,7 +2876,7 @@ public class Assets {
     // Assets holds iyW,syW
     // in Assets.CashFlow
     DoTotalWorths btW, tW, rawCW, preSwapW, gSwapW, gGrowW, gCostW, fyW;
-    double rawCWTotWorth = 0., preSwapWTotWorth = 0., gSwapWTotWorth = 0., gGrowWTotWorth = 0., gCostWTotWorth = 0., fyWTotWorth = 0.;
+    double rawCWTotWorth = 0., preSwapWTotWorth = 0., gSwapWTotWorth = 0., gGrowWTotWorth = 0., gCostWTotWorth = 0.;
     double gSwapIncr = 0.;  // Incr of worth over swaps
     double btWrcsgSum;
     double NeedsPlusSum, NeedsNegSum, rawProspectsMin, rawProspectsMin2, rawProspectsNegSum;
@@ -3207,6 +3221,8 @@ public class Assets {
       double sumManualsWorth = sumManualsBal * eM.manualFracKnowledge[pors] * eM.nominalWealthPerCommonKnowledge[0];
       ;
       double sumTotWorth = sumRCWorth + sumSGWorth + cash + sumKnowledgeWorth + sumManualsWorth;
+      double resilience;
+      double hope;
       // int aLev = History.valuesMinor7;
       //  A6Row myGrowths = bals.getGrowths(History.valuesMinor7, "myGrowths");
       //  A6Row myGrowths = growths.copy(ec);
@@ -3242,6 +3258,12 @@ public class Assets {
           prev = this;
         }
         now = this;
+        ARow resil = new ARow(ec);
+        for (int resilIx = 0; resilIx < E.LSECS; resilIx++) {
+          resil.set(resilIx, rawProspects2.get(0, resilIx) * rawProspects2.get(1, resilIx));
+        }
+        resilience = resil.max() / resil.ave();
+        hope = resilience * phe;
         //       assert sumRCBal > 0.0:"error " + name + " Neg RCbal=" + EM.mf(sumRCBal);
       } // end DoTotalWorth()
 
@@ -5169,7 +5191,7 @@ public class Assets {
             srcSum += grades[sourceIx][gIx];
             destSum += myDest.grades[destIx][gIx];
           }
-          eM.printHere("---MVc---", ec.ec, " gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + " myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + "\n sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + "\n source=" + EM.mf(srcSum) + "\n myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + " ninitial gradeCost=" + EM.mf(gradeCost) + "\nremMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
+          eM.printHere("---MVc---", ec.ec, " gradeIx=" + gradeIx + " myDest.sIx" + myDest.sIx + " myDest.grades[" + destIx + "][" + kt + "]=" + EM.mf(oldDGrade) + " source.six=" + sIx + "\n---MVc2--- sourceIx.grades[" + sourceIx + "][" + k + "]=" + EM.mf(oldSGrade) + " - " + "gradeCost7=" + EM.mf(gradeCost7) + " source=" + EM.mf(srcSum) + " myDest=" + EM.mf(destSum) + " move=" + EM.mf(move) + " avmov=" + EM.mf(avmov) + " ninitial gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevSBal=" + EM.mf(prevSBal) + ", prevDBal=" + EM.mf(prevDBal));
 
           double difMax = balances.get(sourceIx) * 0.001 + .0001;
           double dif = 0.0;
@@ -8370,7 +8392,7 @@ public class Assets {
       c.worth.setAmultV(c.balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
       s.sumGrades(); // sets s worth
       g.sumGrades(); // sets g worth
-      eM.printHere("----ACFg----", ec, " CashFlow.init after worths age=" + ec.age);
+      eM.printHere("----ACFg----", ec, " CashFlow.init after worths A" + ec.age);
       rawGrowths.setUseBalances(History.informationMinor9, "rawGrowth", r.rawGrowth, c.rawGrowth, s.rawGrowth, g.rawGrowth);// meaning unknown see calcGrowth
       invMEff.setUseBalances(History.valuesMinor7, "invMEff", r.invMaintEfficiency, c.invMaintEfficiency, s.invMaintEfficiency, g.invMaintEfficiency);
       invGEff.setUseBalances(History.valuesMinor7, "invGEff", r.invGroEfficiency, c.invGroEfficiency, s.invGroEfficiency, g.invGroEfficiency);
@@ -8445,7 +8467,57 @@ public class Assets {
     }  //Assets.CashFlow.aStartCashFlow
 
     void startYearAI() {
-      prevAIWorth = ec.age < 2 ? syWTotWorth : fyWAIWorth;
+      /*
+    double aiScore = -2., prevAIScore = -3, prevPrevAIScore = -4., prevIncAIScore = -5.;
+  int prevAIPos = -3;
+  double prevAIWorth = -7., aiWorth = -9, prevIncAIWorth = -6., prevPrevAIWorth = -9.;
+  double prevAIOffers = -5., aiOffers = -8., prevIncAIOffers = -5.;
+  double prevPrevAIOffers = -7., prevIncAIOperW = -9., prevAIOperW = -9.;
+  double lastAIOperW=7., aiOperW=-7.;
+  double prevAIKnowledge = -3., prevAIProspAve = -7., aiProspAve = -7.;
+  double prevPrevAIKnowledge = -1., prevIncAIKnowledge = -3., prevPrevAIProspAve = -7.;
+  double prevIncAIProspAve = -9., prevPrevAIProspMin = -7.;
+  double prevAIProspMin = -8., aiprospMin = -9., prevIncAIProspMin = -11.;
+  double aiKnowledge = -3., aiKnowledgeInc = -7.;
+  double prevAIResilience = -8., aiResilience = -8., prevIncAIResilience = -7.;
+  double prevPrevAIResilience = -3., hope = -7., prevHope = -9., prevPrevHope = -7.;
+  double prevIncHope = -7.;
+  // trade values kept in assets
+  double strategicGoal = 0., rGoal0 = 0., strategicValue = 0., goodFrac = 0.;
+  double prevStrategicGoal = 0, prevStrategicValue = 0., prevGoodFrac = 0.;
+  double prevPrevStrategicGoal = 0, prevPrevStrategicValue = 0., prevPrevGoodFrac = 0.;
+       */
+      EM.prevScore[clan] = EM.myScore[clan];
+      prevPrevAIPos = prevAIPos;
+      prevAIPos = EM.myScoreClanPos[clan];
+      prevPrevAIScore = prevAIScore;
+      prevAIScore = aiScore;
+      prevIncAIScore = (prevAIScore - prevPrevAIScore) / prevPrevAIScore;
+      prevPrevAIWorth = prevAIWorth;
+      prevAIWorth = aiWorth;
+      prevIncAIWorth = (prevAIWorth - prevPrevAIWorth) / prevPrevAIWorth;
+      prevPrevAIOffers = prevAIOffers;
+      prevAIOffers = aiOffers;
+      prevIncAIOffers = (prevAIOffers - prevPrevAIOffers) / prevPrevAIOffers;
+      prevPrevAIProspMin = prevAIProspMin;
+      prevAIProspMin = aiProspMin;
+      prevIncAIProspMin = (prevAIProspMin - prevPrevAIProspMin) / prevPrevAIProspMin;
+      prevPrevAIProspAve = prevAIProspAve;
+      prevAIProspAve = aiProspAve;
+      //aiProspAve = rawProspects2.ave();
+      prevAIOperW = prevAIOffers / prevAIWorth;
+      prevPrevAIResilience = prevAIResilience;
+      prevAIResilience = aiResilience;
+      prevIncAIResilience = (prevAIResilience - prevPrevAIResilience) / prevPrevAIResilience;
+      aiResilience = resilience; // set in getNeeds
+      prevPrevAIHope = prevAIHope;
+      prevAIHope = aiHope;
+      prevIncAIHope = (prevAIHope - prevPrevAIHope) / prevPrevAIHope;
+      aiHope = hope; // set in getNeeds
+      prevPrevStrategicValue = prevStrategicValue;
+      prevStrategicValue = strategicValue;
+      prevPrevStrategicGoal = prevStrategicGoal;
+      prevStrategicGoal = strategicGoal;
     }
 
     /**
@@ -8514,7 +8586,7 @@ public class Assets {
         uAdjPri.set(i, eM.userPriorityAdjustment[i][pors][clan] * E.priorityAdjustmentMultiplierFrac[pors]);
         yPritmp.set(i, (aSectorPriority.get(i) + E.initPriorityBias[pors] + uAdjPri.get(i)));
       }
-      String a11a = ">>>2>>>Assets.CashFlow.calcPriority.sectorPriority=";
+      String a11a = "----ACCp---- sectorPriority=";
       for (int i = 0; i < E.lsecs; i++) {
         //adjust each value by the sectoryPriory sum/ yPritmp sum
         // gets a sum of values add up to 100
@@ -8522,7 +8594,7 @@ public class Assets {
         a11a += EM.mf(aSectorPriority.get(i)) + ", " + EM.mf(ySectorPriorityYr.get(i)) + ": ";
       }
       if (E.debugPriorityOut) {
-        System.out.println(a11a + "<<<2<<<<");
+        System.out.println(a11a);
       }
       hist.add(new History("&&", 9, "uAdjPri", uAdjPri));
       hist.add(new History("&&", 9, "yPritmp", yPritmp));
@@ -8964,7 +9036,7 @@ public class Assets {
           val = Math.min(val, Math.min(maxFutureTrans, (maxF4 = mtgAvails6.get(sourceIx) * (0.89 - reservMult))));
           rsval = val * eM.nominalRSWealth[ixWRSrc][pors];
           if (E.debugFFOut) {
-            System.out.println("-----DA---FF unNeeded " + name + " m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
+            System.out.println("-----DFFa---FF unNeeded " + name + " m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
                                + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
           //    srcIx = bals.getRow(ixWRSrc).maxIx();
@@ -8988,7 +9060,7 @@ public class Assets {
           assert rsval >= 0. : "Error neg val" + EM.mf(val) + " type=" + resTypeName + " source" + sourceIx; //String.format("Error neg val=%9.4f, resTypeName=%s, ixWRSrc=%d, srcIx=%d", val, resTypeName, ixWRSrc, srcIx));
           double sourcSum = bals.get(2 + 2 * ixWRSrc, srcIx) + bals.get(3 + 2 * ixWRSrc, srcIx);
           //  assert E.PZERO > Math.abs(bals.get(sourceIx) - sourcSum) : "err rs sum" + EM.mf(bals.get(sourceIx)) + " != sourcSum" + EM.mf(sourcSum);
-          assert bals.get(sourceIx) * eM.nominalRSWealth[ixWRSrc][pors] >= rsval / eM.nominalRSWealth[ixWRSrc][pors] : ("-----DD---rsval too big for working + reserve" + EM.mf(rawProsp)
+          assert bals.get(sourceIx) * eM.nominalRSWealth[ixWRSrc][pors] >= rsval / eM.nominalRSWealth[ixWRSrc][pors] : ("-----DFFE---rsval too big for working + reserve" + EM.mf(rawProsp)
                                                                                                                         + " rsval" + EM.mf(rsval) + " source" + EM.mf(bals.get(sourceIx)) + " sourceIx" + sourceIx
                                                                                                                         + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           if (E.debugFutureFund) {
@@ -9016,7 +9088,7 @@ public class Assets {
                                "r" + EM.mf(bals.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(0).sum()),
                                "s" + EM.mf(bals.getRow(1).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<<"));
           if (E.debugFFOut) {
-            System.out.println("-----E---" + name + "Y" + EM.year + " did rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
+            System.out.println("-----FF22---" + name + "Y" + EM.year + " did rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
                                + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
           // only count first FutureFund of each type of this year
@@ -9037,7 +9109,7 @@ public class Assets {
           sys[ixWRSrc * 2].cost3(val, srcIx, reservMult);
           //   E.sysmsg("did transfer val=%5.0f, name=%5s, m=%d",val,resTypeName,m);
           if (E.debugFFOut) {
-            System.out.println("-----F---" + name + "Y" + EM.year + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
+            System.out.println("-----FF23---" + name + "Y" + EM.year + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
                                + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3) + " maxF4=" + EM.mf(maxF4));
           }
 
@@ -9049,14 +9121,14 @@ public class Assets {
           destIx = srcIx;
           swapType = 3;
           if (E.debugFFOut) {
-            System.out.println("-----G---" + name + "Y" + EM.year + " all done rawProspects2" + EM.mf(rawProsp) + " sourceIx" + sourceIx
+            System.out.println("-----FF24---" + name + "Y" + EM.year + " all done rawProspects2" + EM.mf(rawProsp) + " sourceIx" + sourceIx
                                + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
           }
           return m > 0;
         }
       } // end doing|xcess
       if (E.debugFFOut) {
-        System.out.println("-----GE---" + name + "Y" + EM.year + " all done rawProspects2" + EM.mf(rawProsp) + " sourceIx" + sourceIx
+        System.out.println("-----FF26---" + name + "Y" + EM.year + " all done rawProspects2" + EM.mf(rawProsp) + " sourceIx" + sourceIx
                            + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
       }
       //  E.sysmsg("in calcFutureFund end m=%d",m);
@@ -9698,6 +9770,7 @@ public class Assets {
 
         syW = new DoTotalWorths();
         syWTotWorth = syW.getTotWorth();
+        pyW = fyW == null ? syW : fyW; // save earlier
         //prevYrSumWorth = startYrSumWorth;
         if (rawProspects2 != null) {
           prevProspects2 = rawProspects2.copy();
@@ -9890,7 +9963,7 @@ public class Assets {
 
       // find number of years without trade accepted 3 max
       int ixAccYears = prevAccYears > 3 || prevAccYears < 0 ? 0 : prevAccYears;
-      ///  gSwapW = new DoTotalWorths(); // did before
+      gSwapW = new DoTotalWorths(); // do again, needed for dead
       if (rawProspects2.curMin() > PZERO) { //proceed  live if no min < PZERo
         //========================LIVE LIVE LIVE ========================
         n = 0;
@@ -10048,7 +10121,7 @@ public class Assets {
         //live
         fyW = new DoTotalWorths();
         fyW.setPrev(syW);
-        aiWorth = fyWAIWorth = sumTotWorth = fyW.getTotWorth();
+        // aiWorth = fyWAIWorth = sumTotWorth = fyW.getTotWorth();
         if (History.dl > History.informationMinor9) {
           StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
           hist.add(new History(aPre, History.valuesMinor7, "n" + n + "post Health", ">>> at", wh(a0.getLineNumber()), "H=" + EM.mf(rawProspects2.curMin()), "Ntrade$$", EM.mf(startYrSumWorth), EM.mf(sumTotWorth - startYrSumWorth), EM.mf(sumTotWorth)));
@@ -10950,18 +11023,16 @@ public class Assets {
       //Assets.CashFlow.yearEnd  final cleanup for starting the next year
       if (E.debugDoYearEndOut) {
         eM.printHere("-----YEDPg ---- ", ec, " near end in Assets.CashFlow.yearEnd() " + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
+        saveAI(dead ? gSwapW.sumTotWorth : fyW.sumTotWorth, dead); // save the AI live info
       }
       if (!dead) {
         didStart = true;
         getTradingGoods(); // pick up new trading goods
         didStart = false; // force start at next initCashFlow
-
-        //     yDestroyFiles();  no longer needed, Assets.yearEnd() nulls cur
         EM.econCountsTest();
       }
       EM.isHere("--EYEYaf--", ec, "end of yearEnd stats");
       didGoods = false;
-      // sLoops[0] = 
       n = 0;
       catastrophyBalIncr[n] = catastrophyPBalIncr[n] = 0.;
       catastrophyBalIncr[n]
@@ -10980,18 +11051,18 @@ public class Assets {
       fav = -4;
       oTradedEcons = new Econ[20];
       oTradedEconsNext = 0;
-      syW = null; // get rid of hanging DoTotalWorths
+      // syW = null; // get rid of hanging DoTotalWorths
       didDepreciation = false;  // second setting
       prevProspects2 = rawProspects2;
       if (!dead) {
         EM.econCountsTest();
         EM.isHere("--EYEYag--", ec, "end of yearEnd stats");
         if (E.debugMisc && syW != null) {
-          throw new MyErr("in CF.yearEnd end, syW != null");
+          //   throw new MyErr("in CF.yearEnd end, syW != null");
         }
-        saveAI(); // save the AI info
         return health = rawProspects2.curMin();
       } // end not dead
+
       return 0.;
     } // Assets.CashFlow.yearEnd()
 
@@ -11001,17 +11072,21 @@ public class Assets {
      * values don't exist
      *
      */
-    synchronized void saveAI() {
-      if (ec.age > 1) {
+    synchronized void saveAI(double worth,boolean dead) {//Assets.CashFlow
+      aiWorth = worth;
+      aiProspMin = rawProspects2.min();
+      aiProspAve = rawProspects2.ave();
+      aiScore = getScore(aiOffers, aiWorth);
+      aiOffers = tradedOffers;
+      if (ec.age > 1) {  // you prev values
         EM.wasHere8 = "---ELa7--- Assets AI set has lock";
-        double oPerW = tradedOffers / syWTotWorth;
-        char oPerWC = 'A';
         int cIx = 7;
         int much = 7;
         int aType = 1;
         int acct = 1;
         boolean ifPrint = true;
         aWaits++;
+        ifPrint = aWaits > 5;
         if (tradeAccepted) {
           atEntries++;
           atPSEntries[pors]++;
@@ -11028,63 +11103,57 @@ public class Assets {
           acct = 1; // trade accepted
           if (E.debugAIOut && (aWaits > 5)) {
             String str = new String(EM.psClanChars[pors][clan]);
-            System.out.println("----BAI1---- put key=" + str + " len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size());
+            System.out.println("----BAI1----  len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size() + " put key=" + str + "");
           }
-          fyWAIWorth = fyW.sumTotWorth;
+          //       fyWAIWorth = fyW.sumTotWorth;
         }
         // now process the missed counts
         else {
           acct = 0; // not active
           aType = 0;
           //        oPerWC = 'z';
-          much = 5;
+          //much = 5;
           aEntries[aType]++;
 
-        }
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevP, prevProspects2.curMin(), E.AILims, "rawProspects2.ave", ifPrint);
-        EM.psClanChars[pors][clan][E.ptype] = E.getAIResChar(aType);//(char) ('B' + aType);
-        EM.psClanChars[pors][clan][E.pacct] = E.getAIResChar(acct);//(char) ('B' + acct);
-        EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(char) ('B' + pors);
-        // EM.psClanChars[pors][clan][E.pclan] = pE.getAIResChar(clan);//(char) ('B' + clan);
-        /*
-        // double oPerW = offers / btWTotWorth;
-
-        char oPerWC = 'a';
-        //double[] prospLims = {-99999999., -0.1, E.PZERO, 0.13, 0.5, 0.68, 1.2, 3.2, 10.15}; //9 prevProsperity2
-
-        EM.psClanChars[pors][clan][poPerW] = (char) oPerWC;
-         */
+        }// end set aType and acct
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevP, prevProspects2.curMin(), E.AILims, "rawProspects2.min", ifPrint);
+        EM.psClanChars[pors][clan][E.ptype] = E.getAIResChar(aType);//(char) ('a' + aType);
+        EM.psClanChars[pors][clan][E.pacct] = E.getAIResChar(acct);//(char) ('a' + acct);
+        EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(char) ('a' + pors);
+        EM.psClanChars[pors][clan][E.pPrevScP] = E.getAIResChar(prevAIPos);//(char) ('a' + prevAIPos);
+        // E.pPrevScP pPrevScW
+        // EM.psClanChars[pors][clan][E.pclan] = pE.getAIResChar(clan);//(char) ('a' + clan);
+        double prevOPerW = prevAIOffers / prevAIWorth;
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.prevScore[clan], E.AILims, "rawProspects2.ave", ifPrint);
         if (acct == 1) {
           //      EM.setValueByte(EM.psClanChars[pors][clan], E.poPerW, offers / btWTotWorth, oPerWLims);
         }
 
         if (prevProspects2 != null) {
-          //putValueChar(EM.psClanChars[pors][clan], E.pPrevP, prevProspects2.curMin(), E.AILims, "rawProspects2.ave", ifPrint);
-          putValueChar(EM.psClanChars[pors][clan], E.pPrevPmin, prevProspects2.curMin(), E.AILims, "rawProspects2.min", ifPrint);
-          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          //putValueChar(EM.psClanChars[pors][clan], E.pPrevP, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueChar(EM.psClanChars[pors][clan], E.pPrevPmin, prevAIProspMin, E.AILims, "rawProspects2.min", ifPrint);
+          putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIProspAve, E.AILims, "rawProspects2.ave", ifPrint);
           //  putValueChar(EM.psClanChars[pors][clan], E.pPrevO, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "Offers", ifPrint);
-          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
+          putValueChar(EM.psClanChars[pors][clan], E.pPrevO, prevAIOffers, E.AILims, "prevAIOffers", ifPrint);
+          putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prevAIWorth", ifPrint);
           //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
           // putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          // prevBalances.getRow(0).getAChars(EM.psClanChars[pors][clan], E.pPrevB0Row);
-          // prevBalances.getRow(1).getAChars(EM.psClanChars[pors][clan], E.pPrevB1Row);
-        }
-        // double[] worthLims = {1000., 7000., 20000., 70000., 200000., 700000., 2000000., 7000000., 2.E8, 7.E9, 7.E15, 7.E30, 7.E100};  fyWAIWorth  aiWorthInc
 
-        fyWAIWorth = fyWTotWorth; // pIncW, pLastW
-        aiWorthInc = (fyWAIWorth - prevAIWorth) / prevAIWorth;
+        }
+        // ifPrint = false;
         putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prewAIWorth", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pLastW, fyWAIWorth, E.AILims, "lastAIWorth", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pIncW, aiWorthInc, E.AILims, "incAIWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevW, prevPrevAIWorth, E.AILims, "prewPrevAIWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pLastW, aiWorth, E.AILims, "lastAIWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pIncW, prevIncAIWorth, E.AILims, "prevIncAIWorth", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevKW, prevAIKnowledge, E.AILims, "prevKnowledge", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.myScore[clan], E.AILims, "prewPosScoreWorth", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevEScW, prevPrevAIScore, E.AILims, "prevClanScorePos", ifPrint);
-        incPrevAIScore = (prevAIScore - prevPrevAIScore) / prevPrevAIScore;
-        incAIScore = (aiScore - prevAIScore) / prevAIScore;
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevEScInc, incPrevAIScore, E.AILims, "incPrevClanScorePos", ifPrint);
+        //   EM.psClanChars[pors][clan][E.pPrevScP] = E.getAIResChar(prevScorePos);
+        //  prevIncAIScore = (prevAIScore - prevPrevAIScore) / prevPrevAIScore;
+        // incAIScore = (aiScore - prevAIScore) / prevAIScore;
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, prevIncAIScore, E.AILims, "incPrevIncAIScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevEScInc, prevIncAIScore, E.AILims, "incPrevClanScorePos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIScore, E.AILims, "prevAIScore", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, incAIScore, E.AILims, "incvClanScorePos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, prevIncAIScore, E.AILims, "incvClanScorePos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pEScW, aiScore, E.AILims, "prevClanScorePos", ifPrint);
 
 
@@ -11101,7 +11170,7 @@ public class Assets {
         if (aManys == null) {// cnt,age,score
           aManys = new Integer[3];
           aManys[0] = 1;
-          aManys[1] = 1;
+          aManys[1] = EM.year;
           aManys[2] = getTestVal(aiScore, E.AILims, "aiScore");
 
         }
@@ -11112,20 +11181,21 @@ public class Assets {
         }
 
         EM.myAIlearnings.put(str, aManys);
-        if (E.debugAIOut && (aWaits > 5)) {
-          System.out.println("----BAI2---- put aType" + aType + " key=" + str + "= cnt" + aManys[0] + " age" + aManys[1] + " scoreIx" + aManys[2] + " EM.year" + EM.year + " TreeMap size=" + EM.myAIlearnings.size());
+        if (E.debugAIOut || (aWaits > 5)) {
+          eM.printHere("----BAI2----", ec, " put aType" + aType + "= cnt" + aManys[E.aValCnts] + aManys[E.aValYear] + " scoreIx" + aManys[E.aValIxMyScore] + " TreeMap size=" + EM.myAIlearnings.size() + " key=" + str);
+          eM.seeCntArrays(0, 1, 2, 30); //update the map arrays
         }
         aType = 0;
         // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
         //aMany = EM.myAIlearnings.get(str); // force valid number if null
         // aMany = aMany == null ? 1 : aMany + 1;
         // EM.myAIlearnings.put(str, aMany);
-        if (false && E.debugAIOut && (aWaits > 5)) {
+        if ((aWaits > 5)) {
           aWaits = 0;
-          //  eM.printHere("----BAI4----", ec, " put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
+          //   eM.printHere("----BAI4----", ec, " put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
         }
 
-      }// end id
+      }// end if
     } //saveAI
 
     void yDestroyFiles() {

@@ -68,8 +68,8 @@ public class Econ {
   //Neighbor[] neighbors = new Neighbor[20];
   protected int pors;
   protected int year;  // EM.year of StarTrader
-  protected int age = -1;   // age of this economy, first year is age 0 after aStartCashFlow
-  int dage = -1;          // years dead
+  protected int age = 0;   // age of this economy, first year is age 1 after aStartCashFlow
+  int dage = 0;          // years dead
   protected Assets as;
   protected int myEconCnt = 0;
   static int keepHist = 4;  // keep hist for myEconCnt up to 5;
@@ -171,7 +171,7 @@ public class Econ {
     this.year = eM.year;
     this.myEconCnt = econCnt;
     this.dead = false;
-    this.age = -1; // reset age if using a dead econ
+    this.age = 0; // reset age if using a dead econ
     dyear =-5;
 
     planetList = new ArrayList<TradeRecord>();
@@ -666,7 +666,9 @@ public class Econ {
    * 
    * @return Econ name
    */
-  String printName(){ return  " " + name + (dead ? " dead" + " =" + getDAge() : " live")+ printInit() + printYearStart();}
+  String printName() {
+    return " " + name + "A" + age + "Y" + EM.year + (dead ? " d" + getDAge() : " l");
+  }//+ printInit() + printYearStart();}
 
    long initTime; // time of init for this Econ
    int initCnt = 100; // times since last init print

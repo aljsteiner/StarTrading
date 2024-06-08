@@ -94,9 +94,10 @@ public class E {
   static final boolean debugOutput = debugMaster; //distributable;
   static final boolean outputLess = true;  // reduce the output chars in mf2
   static final boolean debugStuck = true; //error if stuck int testing
-  static final boolean debugListNewE = false && debugOutput; //list known econs
-  static final boolean debugSetMyIx = false && debugOutput; //listsetMyIx
-  static final boolean debugCalcRawCosts = false && debugOutput; //calcRawCosts
+  static final boolean outputFewer = false;
+  static final boolean debugListNewE = outputFewer && debugOutput; //list known econs
+  static final boolean debugSetMyIx = outputFewer && debugOutput; //listsetMyIx
+  static final boolean debugCalcRawCosts = outputFewer && debugOutput; //calcRawCosts
   static final boolean debugBarterOut = debugOutput; //Barter
   static final boolean debugPutValByteOut = debugOutput; //PutValByte
   static final boolean debugCreateOut = debugOutput; //output messages Assets
@@ -106,8 +107,8 @@ public class E {
   static final boolean debugCashFlowOut = debugOutput; //output messages in CashFlow
   static final boolean debugTradesOut = debugOutput; //output messages in Trades
   static final boolean debugAIOut = debugOutput; //output messages for AI
-  static final boolean debugCheckBalances = debugMaster &&  false; //check balances in loops
-  static final boolean debugEconCnt = debugMaster &&  false; // econCnt = porsCnt0 + porsCnt1
+  static final boolean debugCheckBalances = debugMaster && outputFewer; //check balances in loops
+  static final boolean debugEconCnt = debugMaster && outputFewer; // econCnt = porsCnt0 + porsCnt1
   static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt
   static final boolean debugNegGrowth = debugMaster; // neg Growth made negCosts
   static final boolean debugEfficiency = debugMaster; // efficiency has double trouble
@@ -117,16 +118,16 @@ public class E {
   static final boolean debugTNoLastGoods = debugMaster; //error open TradeRecord
   static final boolean debugOfferCargos = debugMaster; //cargos in offer == cargo.balance
   static final boolean debugSumGrades = debugMaster; //sum of grades = sum of staff/guests
-  static final boolean debugResum = debugMaster &&  false; //rc == r + c  sg == s + g
-  static final boolean debugResumP = debugMaster &&  false; //rc == r + c  sg == s + g add || set
+  static final boolean debugResum = debugMaster && outputFewer; //rc == r + c  sg == s + g
+  static final boolean debugResumP = debugMaster && outputFewer; //rc == r + c  sg == s + g add || set
   static final boolean debugCosts = debugMaster;  // check that cost processing ok
   static final boolean debugDouble = debugMaster; //doubleTrouble and infinity or NaN
-  static final boolean debugTradeRecord = debugMaster; // or false
+  static final boolean debugTradeRecord = debugMaster; // or outputFewer
   static final boolean debugTradeBarter = debugMaster; // in barter process
   static final boolean debugTradeSetup = debugMaster; // distance, location etc
   static final boolean debugSwaps = debugMaster; // doloops other swap tests
   static final boolean debugDidEconYearEnd = debugMaster; // StarTrader.doYear() doYearEdn
-  static final boolean debugAssetsStats = debugMaster &&  false; // why stats aren't showing
+  static final boolean debugAssetsStats = debugMaster && outputFewer; // why stats aren't showing
   static final boolean debugStats = debugMaster; // why stats aren't showing
   static final boolean debugStatsOut = debugOutput; // stats output
   static final boolean debugScannerOut = debugOutput; // scanner output
@@ -140,41 +141,42 @@ public class E {
   static boolean debugDoRes = debugMaster; //errors from settings doValx
   static final boolean SWAPTRADESYSTEMOUT = debugOutput;  //Swap outputs
   static final boolean PAINTDISPLAYOUT = debugOutput; //outputs from StarTrader displays
-  static final boolean DEBUGCALCGROWTH = debugMaster;
+  static final boolean DEBUGCALCGROWTH = outputFewer && debugMaster;
   static final boolean tradeInitOut = debugOutput;
   static final boolean DEBUGASSETSOUT = debugMaster;
   static final boolean debugPutValue = debugMaster; //test putValue processing
-  static final boolean debugPutValue1 = outputLess; //test putValue processing
-  static final boolean debugPutValue2 = outputLess; //test putValue processing
-  static final boolean debugPutValue3 = debugMaster &&  false; //choose alternative for too big
-  static final boolean debugPutRowsOut6 = debugOutput && false;
-  static final boolean debugPutRows6aOut = debugOutput && false;
+  static final boolean debugPutValue1 = outputFewer; //test putValue processing
+  static final boolean debugPutValue2 = outputFewer; //test putValue processing
+  static final boolean debugPutValue3 = debugMaster && outputFewer; //choose alternative for too big
+  static final boolean debugPutRowsOut6 = debugOutput && outputFewer;
+  static final boolean debugPutRows6aOut = debugOutput && outputFewer;
   static final boolean debugPutRows6abOut = debugOutput && true;
-  static final boolean debugPutRows6acOut = debugOutput && false;
+  static final boolean debugPutRows6acOut = debugOutput && outputFewer;
   static final boolean debugPutRows6agOut = debugOutput;
-  static final boolean debugIsHere1Out = debugOutput;
-  static final boolean debugIsHere2Out = debugOutput;
-  static final boolean debugIsHere3Out = debugOutput;
-  static final boolean debugPutRows2 = debugOutput && false;
-  static final boolean DEBUGWAITTRACE = debugOutput && false;
-  static final boolean debugLogsOut = debugOutput; // StarTrader logs output
-  static final boolean debugThreads = debugMaster &&  false;
-  static final boolean debugRsOut = debugOutput && false; // EM rs output
-  static final boolean debugFFOut = debugOutput && false; // EM Assets.CashFlow.calcForwardFund output
-  static final boolean debugStatsOut1 = debugOutput && false; // stats output1
-  static final boolean debugStatsOut2 = debugOutput && false; // stats output1
+  static final boolean debugIsHere1Out = debugOutput && outputFewer;
+  static final boolean debugIsHere2Out = debugOutput && outputFewer;
+  static final boolean debugIsHere3Out = debugOutput && outputFewer;
+  static final boolean debugPutRows2 = debugOutput && outputFewer;
+  static final boolean DEBUGWAITTRACE = debugOutput && outputFewer;
+  static final boolean debugLogsOut = debugOutput && outputFewer; // StarTrader logs output
+  static final boolean debugThreads = debugMaster && outputFewer;
+  static final boolean debugRsOut = debugOutput && outputFewer; // EM rs output
+  static final boolean debugFFOut = debugOutput && outputFewer; // EM Assets.CashFlow.calcForwardFund output
+  static final boolean debugStatsOut1 = debugOutput && outputFewer; // stats output1
+  static final boolean debugStatsOut2 = debugOutput && outputFewer; // stats output1
+  static final boolean debugLiveOut = debugOutput && outputFewer; // list names output1
   static final boolean debugYcalcCosts = debugMaster;
-  static final boolean debugPriorityOut = debugOutput;
-  static final boolean debugPutRowsOut = debugOutput;//test putValue processing
-  static final boolean debugPutRowsOutUnset = debugOutput && false; //put out warnings of unset stats
+  static final boolean debugPriorityOut = debugOutput && outputFewer;
+  static final boolean debugPutRowsOut = debugOutput && outputFewer;//test putValue processing
+  static final boolean debugPutRowsOutUnset = debugOutput && outputFewer; //put out warnings of unset stats
 
-  static final boolean debugDoStartYear = debugMaster &&  false; // output lines
-  static final int ssMax = 10; // max setStats printed;
+  static final boolean debugDoStartYear = debugMaster && outputFewer; // output lines
+  static final int ssMax = 21; // max setStats printed;
   static final boolean debugThreadsOut = debugOutput; // threads output
   static final boolean debugThreadsOut1 = debugOutput; // threads output1
   static final boolean errEconInit = debugMaster;
-  static final boolean debugDoYearEndOut = debugOutput || debugFFOut; //output messages re yearEnd
-  static final boolean debugAtJavaOut = debugOutput && false; // output at java locations
+  static final boolean debugDoYearEndOut = debugOutput || true; //output messages re yearEnd
+  static final boolean debugAtJavaOut = debugOutput && outputFewer; // output at java locations
   static boolean doCalcCatastrophy = true; //temp disable
 
   /* AI pointers moved from Assets here to permit easy back and forth with Assets.CashFlow.yearEnd
@@ -185,25 +187,40 @@ public class E {
   static final int poPerW = 13, pMaxP = 7, pCurW = 8;
   static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
+  // aVal[] = <cnts><year><ixMyScore>
+  static final int aValCnts = 0, aValYear = 1, aValIxMyScore = 2;
   static final char startC = 'a';
   static final char nextC = 'A';
   static final char maskC = '@';
   static final char lessStart = (char) ('a' - 1); // gt lessNext
   static final char lessNext = (char) ('A' - 1); //
+  static final char econDiedC = '!';
+  static final int econDiedI = -1;
+  static final char notActiveC = '#';
+  static final int notActiveI = -2;
+  static final char missingC = '-';
+  static final int missingI = -3;
+  static final char undefC = '*';
+  static final int undefI = -4;
   /**
    * get char for AI key
    *
    * @param ix int index of char for results
-   * @return return (0-25)a-z,(26-51)A-Z else *
+   * @return return (0-25)startC a-z,(26-51)nextC A-Z else econDied, notActive,
+   * missing or undef C
    */
   static char getAIResChar(int ix) {
+    if (ix < 0) {
+      return ix == econDiedI ? econDiedC : ix == notActiveI ? notActiveC
+              : ix == missingI ? missingC : undefC;
+    }
     if (ix > 51 || ix < 0) {
-      return '*';
+      return undefC;
     }
     if (ix > 25) {
-      return (char) ('A' + ix - 26);
+      return (char) (nextC + ix - 26);
     }
-    return (char) (ix + 'a');
+    return (char) (ix + startC);
   }
 
   /**
@@ -216,7 +233,7 @@ public class E {
    */
   static char getAISetChar(int a100) {
     if (a100 < 0) {
-      return '*';
+      return undefC;
     }
     if (a100 < 40) {
       return getAIResChar(a100 / 3); //0-13
@@ -227,7 +244,7 @@ public class E {
     if (a100 < 101) {
       return getAIResChar(((a100 - 61) / 3) + 35);//35-49 highest value
     }
-    return '*'; // value too high
+    return undefC; // value too high
   }
 
   /**
@@ -237,43 +254,70 @@ public class E {
    * @return
    */
   static int getAIMuch(char aa) {
-    if (aa > lessStart) {
-      return startC - aa; // 'a' - aa
+    if (aa == undefC) {
+      return undefI;
     }
-    return nextC - aa; // otherWise 'A'-aa may be -1 for maskC
+    if (aa == missingC) {
+      return missingI;
+    }
+    if (aa == notActiveC) {
+      return notActiveI;
+    }
+    if (aa == econDiedC) {
+      return econDiedI;
+    }
+    if ((aa > (startC - 1)) && (aa < (startC + 26))) { //0-25
+      return aa - startC; // aa - 'a'
+    }
+    if ((aa > (nextC - 1)) && (aa < (nextC + 26))) { // 26-51
+      return nextC - aa + 26; // otherWise aa - 'A' +26 may be -1 for maskC
+    }
+    return undefI; //something undefined
   }
+
+  /* now define pointers into EM.myAIlearnings key arrays EM.psClanChars[ixPS][ixClan]
+
+   */
   static private int aiPcntr = 0;
   static final int ptype = aiPcntr++;
   static final int pacct = aiPcntr++;
   static final int ppors = aiPcntr++;
   // static final int pclan = aiPcntr++;
+  static final int pPrevScP = aiPcntr++; // Prev score position
+  static final int pPrevScW = aiPcntr++; // Prev score worth last years score
+  static final int pPrevEScW = aiPcntr++; // prev econ score worth
   static final int pPrevResil = aiPcntr++; // last resilience worth
+  static final int pPrevPmin = aiPcntr++; //rawProspects2 min
+  static final int pPrevP = aiPcntr++; //rawProspects2 ave
   static final int pPrevHope = aiPcntr++; // last hope worth
   static final int pIncResil = aiPcntr++; // last resilience worth
   static final int pPIncHope = aiPcntr++; // last hope worth
-  static final int pPrevP = aiPcntr++; //rawProspects2 ave
-  static final int pPrevPmin = aiPcntr++; //rawProspects2 min
-  static final int pLastW = aiPcntr++;  // last worth
-  static final int pPrevW = aiPcntr++; // prev worth
+  static final int pIncP = aiPcntr++; //rawProspects2 inc
+  static final int pIncPmin = aiPcntr++; //rawProspects2 min
+
+  static final int pPrevPrevP = aiPcntr++; //rawProspects2 ave
+
+  static final int pPrevPrevPmin = aiPcntr++; //rawProspects2 min
+  static final int pLastO = aiPcntr++; // last Offer worth
+  static final int pPrevO = aiPcntr++; // prev Offer worth
+  static final int pPrevPrevO = aiPcntr++; // prev prev Offer worth
+  static final int pLastW = aiPcntr++;  // last aiWorth
+  static final int pPrevW = aiPcntr++; // prevAIWorth
+  static final int pPrevPrevW = aiPcntr++; // prevPrevAIWorth
+  static final int pIncPrevW = aiPcntr++; // incPrevAIWorth
   static final int pIncW = aiPcntr++; // Inc worth
   static final int pPrevKW = aiPcntr++; // last knowledge worth
-  static final int pPrevScP = aiPcntr++; // last score position
-  static final int pPrevScW = aiPcntr++; // last score worth
+
   static final int pPrevPrevEScW = aiPcntr++; // prev prev econ score worth
   static final int pPrevPrevEScInc = aiPcntr++; // prev prev econ score inc
-  static final int pPrevEScW = aiPcntr++; // prev econ score worth
+ // static final int pPrevEScW = aiPcntr++; // prev econ score worth
   static final int pPrevEScInc = aiPcntr++; // prev econ score inc
   static final int pEScW = aiPcntr++; // last econ score worth
-  static final int pPrevO = aiPcntr++; // last Offer worth
-  static final int pIncP = aiPcntr++; //rawProspects2
-  static final int pIncPmin = aiPcntr++; //rawProspects2 ave
   static final int pIncKW = aiPcntr++; // last knowledge worth
   static final int pIncSc = aiPcntr++; // last score worth
   static final int pIncO = aiPcntr++; // last Offer worth
-
   /*
 
-  
   //resilience, hope
   static final int pPrevB0Inc = aiPcntr++;
   static final int pPrevB1Inc = aiPcntr++;

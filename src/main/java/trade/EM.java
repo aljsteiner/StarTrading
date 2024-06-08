@@ -28,7 +28,6 @@ package trade;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -241,8 +240,16 @@ class EM {
   // static int myAIdiv = 20; //divid the values by 5
   static String myStrs[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};//11
   Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
   static volatile Map<String, Integer[]> myAIlearnings;
+  //pPrevScW,myScoreAr,E.pPrevEScW,aiScoreAr,pPrevResil,aiResilAr
+  static int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6, skippedCnt = 7, negIxs = 8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
+  static int[][] ars;
+  static int ixIxs[][] = {{E.pPrevScP, 3, 5}, {E.pPrevScW, -1, 52}, {E.pPrevEScW, -1, 52}, {E.pPrevResil, -1, 52}, {E.pPrevResil, -1, 52}};
+  static String whats[] = {"winner with myScore", "winner with aiScore", "winner with Resonance values", "", "", ""};
+  static String seeArrays[] = {"newa ", "new0 ", "new1", "new2 ", "new3 ", "new4 "};
+  static int entryCnt = 0, cntsCnt = 0;
   /**
    * set curEcon, curEconName curEconClan;curEconTime,curEconAge get a null
    * error the offered Econ is null
@@ -596,11 +603,17 @@ class EM {
     //   pw = new PrintWriter(sw);
   }
 
+  static int cntInit = 0;
   /**
    * initialize eM read the existing keeps, close that and open as
    *
    */
   void init() {
+    System.out.println("----EIn1---- enter count EM.init " + cntInit + " " + atJava(6));
+    if (cntInit > 0) {
+      return;
+    }
+    cntInit++;
     try {
       String dateString = MYDATEFORMAT.format(new Date());
       String rOut = "New Game V" + StarTrader.versionText + " " + dateString + "\r\n";
@@ -616,10 +629,23 @@ class EM {
       runVals();  // generate settings objects to vvend
       //static volatile int  vvend = -1;
       E.bValsEnd = vvend + E.bValsStart; // set length for of key
-      System.out.println("---INem1--- counts at init EM doVal vvend=" + vvend + ", doRes rend4=" + rende4 + ", assiged doRes arrays rende3=" + rende3);
+      System.out.println("---INem1--- Y" + year + "counts at init EM doVal vvend=" + vvend + ", doRes rend4=" + rende4 + ", assiged doRes arrays rende3=" + rende3);
       doReadKeepVals();
       if (bKeepr != null) {
         bKeepr.close(); //close reading keep
+      }
+
+      //initialize the ai Map array files
+      int ix = 0, ix2 = 0;
+      ars = new int[6][]; // 0,1,2,3,4,5
+      for (ix = 0; ix < 4; ix++) {
+        ars[ix] = new int[lenIx];
+        for (ix2 = 0; ix2 < lenIx; ix2++) {
+          ars[ix][ix2] = 0;
+        }
+      }
+      if (E.debugAIOut) {
+        System.out.println("----INem3----Y" + year + " Init just initialize ars");
       }
       doReadMapFile();
       if (bMapFr != null) {
@@ -629,7 +655,7 @@ class EM {
       bKeep = Files.newBufferedWriter(KEEP, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       bKeep.write(rOut, 0, rOut.length());
       keepBuffered = true;
-      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
       bMapFw.write(rOut, 0, rOut.length());
 
 
@@ -640,9 +666,9 @@ class EM {
       secondStack = sw.toString();
       ex.printStackTrace(System.err);
       flushes();
-      System.err.println("aInit Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
+      System.err.println("----INem4----Y" + year + " Init Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
       System.exit(-17);
-      fatalError = true;
+      // fatalError = true;
 
       // ex.printStackTrace(System.err);
       st.setFatalError();
@@ -3287,12 +3313,16 @@ onceAgain:
 
     }//keep from page
   }//doWriteKeepVals
-
+/**
+   * read the Map File
+   *
+   * @return
+   */
   int doReadMapFile() {
     int rtn = 0; // number of keys read
     String myKey = "";
     Byte aa[] = new Byte[500];
-    myKey = aa.toString();
+    // myKey = aa.toString();
     try {
       String dateString = MYDATEFORMAT.format(new Date());
       String mVer = "VersionV" + StarTrader.versionText;
@@ -3300,7 +3330,7 @@ onceAgain:
 
       bMapFr = Files.newBufferedReader(MAPFILE, CHARSET);
       Scanner s = new Scanner(bMapFr);
-      System.err.println("locale " + s.locale());
+      System.err.println("----RMap1----locale " + s.locale());
       Locale locale = Locale.US;
       s.useLocale(Locale.US);
       int first = 0;
@@ -3432,71 +3462,255 @@ onceAgain:
           ex.printStackTrace(pw);
           secondStack = sw.toString();
           // newError = true;
-          System.out.println("Igmore doReadKeepVals Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
+          System.out.println("----DMap3----Igmore doReadMapFile Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
         }
       } // while
       if (bMapFr != null) {
           bMapFr.close();
       }
-      }
+      } // end if(false)
     }// end large try
 
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("doReadKeepVals error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore());
+      System.err.println("----DMap4----doReadMapFile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore());
       System.err.flush();
       // ex.printStackTrace(System.err);
-      System.err.println("doReadKeepVals Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + addlErr + andMore());
+      System.err.println("----DMap5----doReadMapFile Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + ", addlErr=" + addlErr + andMore());
     }
     finally {
       return rtn;
     }
   }
 
-  /**
-   * write the keep file if the keepFromPage flag set, a new page clears the
-   * flag
-   *
-   * @param vv the index of the val used to get the title
-   * @param ps the first index often the pors value
-   * @param klan the second index often the clan
-   * @param val the value to be saved
-   * @param val the previous value before the change
-   * @param slider the new slider value
-   * @param prevSlider the previous slider value
-   * @param prev2Slider the previous previous slider value
-   * @throws IOException
+  /*
+     setCntAr(E.pPrevScP, E.pPrevScW, myScoreAr, aKey, aVal, "winner with myScore");
+ setCntAr(E.pPrevScP, E.pPrevEScW, aiScoreAr, aKey, aVal, "winner with aiScore");
+setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance values");
    */
-  public void doWriteMapfile(int vv, int ps, int klan, double val, double prevVal, int slider, int prevslider, int prev2slider) throws IOException {
 
+  /**
+   * write the MAPFILE file from EM.doEndYear(), also gather a list of result
+   * arrays related to the IX's of those variables
+   *  
+   *
+   * create EM.seeArrays[6] a string of output when myScore op==4 winner
+   *
+   */
+  public String doWriteMapfile() {
+    int ix = 0;
     String ll = " ";
-    if (true) {
+    String rtn = "";
+    int entryCnt = 0, cntsCnt = 0;
+    try {
 // something happens to opens, so it is ok to do it again I think.
-      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-      System.err.println("---DWM2---did reopen of mapfile");
-      if (year != keepYear || !st.settingsComment.getText().matches(prevKeepCmt)) { // need another year comment page
-        keepYear = year;
-        prevKeepCmt = st.settingsComment.getText() + ""; // force a copy
+      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+      System.err.println("---DWM2---did reopen of mapfile  " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
+      String aKey;
+      Integer[] aVal;
+      // rebuild the ars arrays and zero it
+      ars = new int[6][]; // 0,1,2,3,4,5 2 spare
+      for (ix = 0; ix < 4; ix++) {
+        ars[ix] = new int[lenIx];
+        for (int ix2 = 0; ix2 < lenIx; ix2++) {
+          ars[ix][ix2] = 0;
+        }
+      }
+      if (E.debugAIOut) {
+        System.out.println("----DWM3---- initialized ars files");
+      };
+      //  myScoreAr = new int[lenIx];
+      /// aiScoreAr = new int[lenIx];
+      //    aiResilAr = new int[lenIx]; // set up new arrays end of each year
+      //   for (ix = 0; ix < lenIx; ix++) {
+      //    myScoreAr[ix] = 0;
+      //    aiScoreAr[ix] = 0;
+      //    aiResilAr[ix] = 0;
+      // }
+    if (true && myAIlearnings != null) {
         String dateString = MYDATEFORMAT.format(new Date());
         //    String rOut = "New Game " + dateString + "\r\n";
         ll = "year" + year + " version " + st.versionText + " " + dateString + " " + st.settingsComment.getText() + "\r\n";
-        bKeep.write(ll, 0, ll.length());
-        System.err.println("wrote=" + ll);
-      }
-      ll = "title " + valS[vv][1] + "\r\n"; // the detail description of the keep
-      bKeep.write(ll, 0, ll.length());
-      System.err.println("wrote=" + ll);
-      ll = "keep " + valS[vv][0] + "# " + ps + " " + klan + " " + mf(val) + " <= " + mf(prevVal) + " sliders " + slider + " <= " + prevslider + " <= " + prev2slider + "\r\n";
-      bKeep.write(ll, 0, ll.length());
-      System.err.println("wrote=" + ll);
+       bMapFw.write(ll, 0, ll.length());
+      System.out.println("---DWM4---wrote=" + ll);
+      System.out.println("---DWM5---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
+         for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
+           if (entry != null) {
+             aKey = entry.getKey();
+             aVal = entry.getValue();
+             cntsCnt += aVal[E.aValCnts];
+             entryCnt++;
+             ll = aKey + " " + aVal[0] + " " + aVal[1] + " " + aVal[2];
+             setCntAr(0, 1, -1, -1, aKey, aVal);
+             setCntAr(0, 2, -1, -1, aKey, aVal);
+             setCntAr(0, 3, -1, -1, aKey, aVal);
+             // setCntAr(E.pPrevScP, E.pPrevScW, myScoreAr, aKey, aVal, "winner with myScore");
+             // setCntAr(E.pPrevScP, E.pPrevEScW, aiScoreAr, aKey, aVal, "winner with myScore");
+             // setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance values");
+           }
 
-      keepBuffered = true;
+         }//entry
+         // now do the output
+      //seeArrays[0] = "Keys" + entryCnt + " #Counts" + cntsCnt + "\n";
+      System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
+      seeCntArrays(0, 1, 2, 3);
 
-    }//keep from page
+      System.err.println("---DWM8---now write mapfile year" + year + " out=" + ll);
+      rtn = ll;
+    }
+
+    }//
+     catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+       System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
+
+       ex.printStackTrace(System.err);
+       System.err.flush();
+    }
+    finally {
+      return rtn;
+    }
   }//doWriteMapfile
 
+  String seeCntArrays(int x0, int x1, int x2, int x3) {
+
+    String ll = seeArrays[0] = "Keys" + entryCnt + " #Counts" + cntsCnt + "\n";
+    ll += seeCntArray(x1, -2) + "\n";
+    ll += seeCntArray(x2, -3) + "\n";
+    ll += seeCntArray(x3, -1) + "\n";
+    //  ll += seeCntArrays(E.pPrevScP, E.pPrevScW, myScoreAr, "winner with myScore") + "\n";
+    //   ll += seeCntArrays(E.pPrevScP, E.pPrevEScW, aiScoreAr, "winner with ai Econ Scores") + "\n";
+    //  ll += seeCntArrays(E.pPrevScP, E.pPrevResil, aiResilAr, "winner with Resonance values") + "\n";
+    return ll;
+  }
+
+  static int SCACnt = 0;
+  /**
+   * see the visual results for a given array
+   *
+   * @param x1 index of the set of arrays for the input and output
+   * @param x2 dummyindex of the set of arrays for the input and output
+   * @note this uses ars as the input array and whats as the name,
+   * @return a string that shows the results
+   */
+ // String seeCntArrays(int wIx, int eIx, int[] ar, String what, String seeArrayx) {
+  String seeCntArray(int x1, int x2) {
+    //static int mostIx=0, ixAllSum=1, ixMySum=2,ixAllCnt=3, ixCntedCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
+//negIxs = econDiedI = -1;notActiveI = -2;missingI = -3;undefI = -4;
+    try {
+    System.err.println("----SCA1---- seeCntArray enters x1=" + x1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
+    SCACnt++; //count seeCntArray entry
+    /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
+    // int screenIx = E.getAIMuch(aKey.charAt(x2));//E.AILims mf(E.AILims[ix])
+    String ret = "";
+    int tst1 = ars[x1][ixCntedCnt];
+    int tst2 = ars[x1][ixMySum];
+    String tst3 = mf(E.AILims[(int) (ars[x1][ixMySum])]);
+    String myAve = (ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]));
+    String myAllAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]);
+    ret += whats[x1] + " allentries" + ars[x1][ixAllCnt] + ":" + myAllAve + " cnted" + ars[x1][ixCntedCnt] + ":" + myAve;
+    ret += " first" + ars[x1][firstIx] + ":" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " most" + ars[x1][mostIx] + ":" + mf(E.AILims[(int) (ars[x1][mostIx])]) + " top" + ars[x1][topIx] + ":" + mf(E.AILims[(int) (ars[x1][topIx])]) + "\n";
+    int lastIx = (ars[x1][mostIx] + 2) > ars[x1][topIx] ? ars[x1][topIx] : ars[x1][mostIx] + 2;
+    lastIx = lastIx < strtIxs ? strtIxs : lastIx;
+    int ix = (ars[x1][mostIx] - 2) < ars[x1][firstIx] ? firstIx : ars[x1][mostIx] - 2;
+    ix = ix < strtIxs ? strtIxs : ix;
+    ret += (ix - strtIxs) + ":" + ars[x1][ix] + ":" + mf(E.AILims[ix - strtIxs]);
+    for (ix = ix; ix <= lastIx; ix++) {
+      // see value Ix, entryCnt at that value, value at that value Ix
+      ret += ", " + (ix - strtIxs) + ":" + ars[x1][ix] + ":" + mf(E.AILims[ix - strtIxs]);
+    }
+      seeArrays[x1] = ret;
+    }//
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      int xx1 = x1 > 3 ? 3 : x1;
+      System.err.println("----SCA7----seeCntArray error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " x1=" + x1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[xx1].length : " ars ok len=" + ars[1].length));
+      ex.printStackTrace(System.err);
+      System.err.flush();
+      return "";
+    }
+    return ret; //caller puts in \n
+  }
+
+  int setCntSee = 0;
+  /**
+   * put into an array counts most limited by the winner value from wIx
+   *
+   * @param x0 The screen aKey character must have values==4 for the winner   * clan
+   * @param x1 The counted aKey character index for the character index sum
+   * @param ar The array for the counting
+   * @param aKey The key for the counting
+   * @param aVal The value part for the counting
+   * @param what counted is about
+   * @return ocassionally see results
+   */
+  String setCntAr(int x0, int x1, int x2, int x3, String aKey, Integer[] aVal) {
+    //static int mostIx=0, ixAllSum=1, ixMySum=2,ixAllCnt=3, ixCntedCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
+    System.out.println("---sCA2---setCntArCnt=" + setCntSee + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
+    try {
+    char ch0 = '&';
+    char ch1 = '*';
+    int myIx0 = 0, myIx1 = 1;
+    int valIx = E.getAIMuch(ch1 = aKey.charAt(myIx1 = ixIxs[x1][0])); //value to array
+    int screenIx = E.getAIMuch(ch0 = aKey.charAt(myIx0 = ixIxs[x0][0])); // value test for winners
+    int vvIx = strtIxs + valIx;
+    System.out.println("---sCA3---setCntArCnt=" + setCntSee + "Y" + year + " what=" + whats[x1] + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[x1][ixAllCnt]);
+    // all occurances, not just the winners
+    ars[x1][ixAllCnt] += aVal[E.aValCnts];;
+    ars[x1][ixAllSum] += valIx; // AllAve = (int)(ixAllSum/ixAllCnt)
+    // these are only winners
+    if (screenIx > ixIxs[x0][1] && screenIx < ixIxs[x0][2]) { // winners only
+     if (valIx < 0 && valIx > -5) {
+       ars[x1][-valIx + negIxs] += 1;
+     }
+     else if (valIx < 0 || valIx > 51) {
+       ars[x1][skippedCnt] += 1;
+
+     }
+     else { // if valIx >= 0 && valIx <= 51 good numbers
+       ars[x1][ixCntedCnt] += aVal[E.aValCnts]; // sum of all counted
+       ars[x1][ixMySum] += vvIx; // aveIx = (int)(ar[ixMySum]/ar[ixCntedCnt])
+       ars[x1][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
+
+       if (ars[x1][mostIx] == 0 || ars[x1][vvIx] > ars[x1][ars[x1][mostIx]]) { //ar[IX] of most count
+         ars[x1][mostIx] = vvIx;
+    }
+       if (ars[x1][firstIx] == 0 || ars[x1][firstIx] > vvIx) { //firstIx too high
+         ars[x1][firstIx] = vvIx; //lower firstIx
+       }
+       if (ars[x1][topIx] == 0 || ars[x1][topIx] < vvIx) { //the highest val
+         ars[x1][topIx] = vvIx;// raise topIx
+       }
+      }
+    }
+      if (++setCntSee % 14 == 0) {
+      String myAve = ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]); //only winners
+      String allAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]); // all values this val
+
+      //  System.out.println("---sCA3---setCntr=" + what + " subKey=" );
+      System.out.println("---sCA3---setCntr=" + setCntSee + " W=" + whats[x1] + " " + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + ":" + myAve + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[x1][ixAllCnt] + ":" + allAve);
+      System.out.println("---sCA4--- first" + ars[x1][firstIx] + ":" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " most" + ars[x1][mostIx] + ":" + mf(E.AILims[(int) (ars[x1][mostIx])]) + " top" + ars[x1][topIx] + ":" + mf(E.AILims[(int) (ars[x1][topIx])]));
+      System.out.println("---sCA5---" + seeArrays[x1]);
+      }
+    }//
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      int xx1 = x1 > 3 ? 3 : x1;
+      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " x1=" + x1 + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[xx1].length : " ars ok len=" + ars[1].length));
+      ex.printStackTrace(System.err);
+      System.err.flush();
+    return "";
+  }
+    return "";
+  }
   /**
    * get the current settings value
    *
@@ -3504,27 +3718,27 @@ onceAgain:
    * @param ec the economy
    * @return
    */
-  double getSettingsValueForAi(int setingsNum, Econ ec) {
+  double getSettingsValueForAi(int settingsNum, Econ ec) {
     double res = 0;
 
     try {
       // char []ac = {'a','b','c','d'};
       // string st1 = ac.toString();
-      gc = valI[setingsNum][modeC][0][0];
+      gc = valI[settingsNum][modeC][0][0];
       if (gc == vone) {
-        res = valD[setingsNum][sliderC][0][0];
+        res = valD[settingsNum][sliderC][0][0];
       }
       else if (gc == vtwo) {
-        res = valD[setingsNum][sliderC][1][0];
+        res = valD[settingsNum][sliderC][1][0];
       }
       else if (gc == vthree) {
-        res = valD[setingsNum][sliderC][0][0];
+        res = valD[settingsNum][sliderC][0][0];
       }
       else if (gc == vfour) {
-        res = valD[setingsNum][sliderC][0][1];
+        res = valD[settingsNum][sliderC][0][1];
       }
       else {
-        res = valD[setingsNum][sliderC][ec.pors][ec.clan];
+        res = valD[settingsNum][sliderC][ec.pors][ec.clan];
       }
       return res;
     }
@@ -3668,8 +3882,7 @@ onceAgain:
         if (E.debugAIOut) {
           System.out.println("------BIC1-----EM.buildAICvals null TreeMap new TreeMap year=" + year);
         }
-          myAIlearnings = new TreeMap();
-
+        myAIlearnings = new TreeMap();
       }
 
       // String aa = "", bb = "bb";
@@ -6126,17 +6339,25 @@ onceAgain:
   int doStartYear() {
     // loop through all of the entries
     int maxCopy = MAXDEPTH - 1; //don't copy curIx=6 to above => a curIx=0
-    yearErrCnt = 0;
+    int yearErrCnt = 0;
+    int ix = 0;
 
     try {
       clearWH();
 
-      if (myAIlearnings != null) {
-      for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
-        if (entry != null) {
-        String aKey = entry.getKey();
-          Integer[] aVal = entry.getValue();
+      if (myAIlearnings == null) {
+        if (E.debugAIOut) {
+          System.out.println("------DSY11-----EM.doStartYear null TreeMap new TreeMap year=" + year);
         }
+        myAIlearnings = new TreeMap();
+      }
+
+      if (myAIlearnings != null) {
+        for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
+          if (entry != null) {
+            String aKey = entry.getKey();
+            Integer[] aVal = entry.getValue();
+          }
         }
       }
       //move the score and positions to prev...
@@ -6359,7 +6580,11 @@ onceAgain:
    * @return
    */
   int doEndYear() {
+    System.err.println("---EDWMa---doEndYear of mapfile  year" + year + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
     doResSpecial();
+    System.err.println("---EDWMb---doEndYear of mapfile  year" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
+    doWriteMapfile();
+    System.err.println("---EDWMc---doEndYear of mapfile  Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
     getWinner();
     /*//now update ai yearly arrays
 static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};//new double[2][];
@@ -6388,14 +6613,15 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     // afer getWinneer res move cur arrays to prev arrays and set cur arrays as needed
     for (ixPS = 0; ixPS < 2; ixPS++) {
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-        psClanPreWorth[ixPS][ixClan] = psClanWorth[ixPS][ixClan];
         psClanWorth[ixPS][ixClan] = resV[LIVEWORTH][ICUR0][ixPS][ixClan];
-        psClanPreForward[ixPS][ixClan] = psClanForward[ixPS][ixClan];
+        psClanPreWorth[ixPS][ixClan] = psClanWorth[ixPS][ixClan];
         psClanForward[ixPS][ixClan] = clanFutureFunds[ixClan];
+        psClanPreForward[ixPS][ixClan] = psClanForward[ixPS][ixClan];
+        psClanOffers[ixPS][ixClan] = resV[TRADELASTGAVE][ICUR0][ixPS][ixClan];
         psClanPreOffers[ixPS][ixClan] = psClanOffers[ixPS][ixClan];
         psClanOffers[ixPS][ixClan] = resV[TRADELASTGAVE][ICUR0][ixPS][ixClan];
-        psClanPreResilience[ixPS][ixClan] = psClanResilience[ixPS][ixClan]; //??
-        psClanResilience[ixPS][ixClan] = resV[LIVEWORTH][ICUR0][ixPS][ixClan];
+        //  psClanPreResilience[ixPS][ixClan] = psClanResilience[ixPS][ixClan]; //??
+        // psClanResilience[ixPS][ixClan] = resV[LIVEWORTH][ICUR0][ixPS][ixClan];
         // psClanPreWorth[ixPS][ixClan] = psClanWorth[ixPS][ixClan];
         // psClanWorth[ixPS][ixClan] = resV[LIVEWORTH][ICUR0][ixPS][ixClan];
         psClanPreEconCnt[ixPS][ixClan] = psClanEconCnt[ixPS][ixClan];
@@ -8171,20 +8397,25 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     }
     return wasHere6;
   }
-  /** print location file.number.method if debugAtJavaOut
-   * 
+  /**
+   * print stack: file.number.method if debugAtJavaOut
+     * 
    * @param num The l
    * @return 
    */
   String atJava(int num){
-     StackTraceElement[] aa = Thread.currentThread().getStackTrace();
-    if(E.debugAtJavaOut && aa.length >= num) {
-      return " " + aa[num].getFileName() + "." + aa[num].getLineNumber() + "." + aa[num].getMethodName();
+    StackTraceElement[] aa = Thread.currentThread().getStackTrace();
+    String ret = "atJava=";
+    if (E.debugAtJavaOut) {
+      for (int ix = aa.length >= num ? num : aa.length; ix >= 0; ix--) {
+        ret += " " + aa[num].getFileName() + "." + aa[num].getLineNumber() + "." + aa[num].getMethodName();
+      }
     }
-    return "";
+    return ret;
   }
-/**  print a System.out line if E.debugDoYearEndOut or other debugs
- * 
+  /**
+   * print a System.out line with intro if E.debugOut
+   * * 
  * @param flag a flag like ---FLAG---
  * @param ec  current Econ
  * @param what the 
@@ -8198,7 +8429,8 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     }
     if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + " game" + past(startTime) + atJava(2) + what);
     else if (E.debugDoYearEndOut) {
-      System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ((int) EM.econLimits3[0]) + ec.printName() + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+      //System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ec.printName()+ ((int) EM.econLimits3[0])  + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+      System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ec.printName() + what);
       }
     }
   }
@@ -8509,7 +8741,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     // winner = scoreVals(WTRADEDINCRMULT, wYearTradeI, ICUR0, isI);
     winner = scoreVals(DIED, iNumberDied, ICUM, isI);
     winner = scoreVals(BOTHCREATE, iBothCreateScore, ICUM, isI);
-
+      // double econScore = lastOffer * EM.wGiven[0][0] + liveWorth*EM.wLiveWorthScore[0][0];
     // winner = scoreVals(getStatrN("WTRADEDINCRMULT"), wYearTradeI, ICUR0, isI);
     resI[SCORE][ICUR0][CCONTROLD][ISSET] = 1;
     myScoreSum = 0.0;
