@@ -137,7 +137,7 @@ public class Assets {
   volatile static String myAICvals = "coming soon"; // converted for EM.psClanChars[pors][clan]
   //Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
 // Assets these AI entries have  2types, 2PS , 5Clan, 9much, 3sVal,3rRes
-  static volatile int aEntries[] = {0, 0}; // 2typein CashFlow.yearEnd()
+  static volatile int aEntries[] = {0, 0, 0, 0, 0}; // 2typein CashFlow.yearEnd()
   static volatile int aWaits = 0; //CashFlow.yearEnd()
   // static volatile int aTAMEntries[][][] = {{{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}, {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}}; // 2type, 2acct, 2 much
   // static volatile int aATEntries[][] = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}; // 2type, 7 much
@@ -829,7 +829,8 @@ public class Assets {
     }
     res[bias] = ret;
   }
-
+  static int putValCnt = 0;
+  static String putValStr = "coming soon";
   /**
    * put a char value from a series of tests to put into res[bias+ix]; called in
    * buildAICvals and in Assets.CashFlow.yearEnd() with tests specified in
@@ -849,18 +850,22 @@ public class Assets {
     //byte ret[] = {'A'};
     char ret = E.getAIResChar(0);
     int ix = 0;
+    int retIx = 0;
     int testsLen = tests.length;
+    //go greatest to smallest value, if not found then ix =0 = a
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
+        retIx = ix;
         ret = E.getAIResChar(ix);
         ix = -2; // exit test loop
       }
     }
     res[bias] = ret;
-    if (ifPrint) {
+    putValStr = " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias =" + bias + " char=" + retIx + " =" + ret + " value=" + EM.mf(value) + " putValCnt" + putValCnt;
+    if (ifPrint && (++putValCnt % 47) == 0) {
       String ss = new String(res);
       char rr = ret;
-      System.out.println("----PVB3---- putValByte bias =" + bias + " key=" + ss + " length" + res.length + " char=" + ret + "=" + ret + " for " + what + "  value=" + EM.mf(value)
+      System.out.println("----PVB3---- putValByte what=" + what + " bias =" + bias + " char=" + retIx + "=" + ret + " value=" + EM.mf(value) + " putValCnt" + putValCnt + " key.length" + res.length + " key=" + ss
       );
     }
     return ix;
@@ -11146,15 +11151,15 @@ public class Assets {
         putValueChar(EM.psClanChars[pors][clan], E.pLastW, aiWorth, E.AILims, "lastAIWorth", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pIncW, prevIncAIWorth, E.AILims, "prevIncAIWorth", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevKW, prevAIKnowledge, E.AILims, "prevKnowledge", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.myScore[clan], E.AILims, "prewPosScoreWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.myScore[clan], E.AILims1, "prewPosScoreWorth", ifPrint);
         //   EM.psClanChars[pors][clan][E.pPrevScP] = E.getAIResChar(prevScorePos);
         //  prevIncAIScore = (prevAIScore - prevPrevAIScore) / prevPrevAIScore;
         // incAIScore = (aiScore - prevAIScore) / prevAIScore;
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, prevIncAIScore, E.AILims, "incPrevIncAIScore", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevEScInc, prevIncAIScore, E.AILims, "incPrevClanScorePos", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIScore, E.AILims, "prevAIScore", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, prevIncAIScore, E.AILims, "incvClanScorePos", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pEScW, aiScore, E.AILims, "prevClanScorePos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, prevIncAIScore, E.AILims1, "incPrevIncAIScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevEScInc, prevIncAIScore, E.AILims1, "incPrevPrevClanScorePos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScInc, prevIncAIScore, E.AILims1, "incvClanScorePos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pEScW, aiScore, E.AILims1, "lastClanScorePos", ifPrint);
 
 
 
@@ -11183,7 +11188,8 @@ public class Assets {
         EM.myAIlearnings.put(str, aManys);
         if (E.debugAIOut || (aWaits > 5)) {
           eM.printHere("----BAI2----", ec, " put aType" + aType + "= cnt" + aManys[E.aValCnts] + aManys[E.aValYear] + " scoreIx" + aManys[E.aValIxMyScore] + " TreeMap size=" + EM.myAIlearnings.size() + " key=" + str);
-          eM.seeCntArrays(0, 1, 2, 30); //update the map arrays
+          eM.seeCntArrays(); //update the map arrays
+          EM.seeArrays[0] = putValStr;
         }
         aType = 0;
         // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;

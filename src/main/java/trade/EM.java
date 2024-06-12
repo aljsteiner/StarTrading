@@ -25,6 +25,7 @@ package trade;
  *
  * @author albert Steiner
  */
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -245,10 +246,14 @@ class EM {
   static volatile Map<String, Integer[]> myAIlearnings;
   //pPrevScW,myScoreAr,E.pPrevEScW,aiScoreAr,pPrevResil,aiResilAr
   static int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6, skippedCnt = 7, negIxs = 8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
+  static int ixLimSum = 2, ixLimCnt = 4; // holds 52+2 spare
   static int[][] ars;
+  // each subarray = ar#,pMain#,pLim1,low,upper,pLim2,low,upper,pLim3,low,upper lenghts 5,8,11
+  static int xAr[][] = {{1, E.pPrevScW, E.pPrevScP, 3, 5, E.pPrevScW, -1, 52}, {2, E.pPrevEScW, E.pPrevScP, 3, 5, E.pPrevEScW, -1, 52}, {2, E.pPrevResil, E.pPrevScP, 3, 5, E.pPrevResil, -1, 52}};
+  
   static int ixIxs[][] = {{E.pPrevScP, 3, 5}, {E.pPrevScW, -1, 52}, {E.pPrevEScW, -1, 52}, {E.pPrevResil, -1, 52}, {E.pPrevResil, -1, 52}};
   static String whats[] = {"winner with myScore", "winner with aiScore", "winner with Resonance values", "", "", ""};
-  static String seeArrays[] = {"newa ", "new0 ", "new1", "new2 ", "new3 ", "new4 "};
+  static String seeArrays[] = {"newa ", "new0 ", "new1", "new2 ", "new3 ", "new4 ", "new5 ", "new6 "};
   static int entryCnt = 0, cntsCnt = 0;
   /**
    * set curEcon, curEconName curEconClan;curEconTime,curEconAge get a null
@@ -3112,7 +3117,7 @@ class EM {
     }
   }//doVal5
 
-  String ret = "234f";
+  String ret = "234f", ret2 = "112j", ret3 = "222j";
 
   String doReadKeepVals() {
     try {
@@ -3542,23 +3547,24 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
              aVal = entry.getValue();
              cntsCnt += aVal[E.aValCnts];
              entryCnt++;
-             ll = aKey + " " + aVal[0] + " " + aVal[1] + " " + aVal[2];
-             setCntAr(0, 1, -1, -1, aKey, aVal);
-             setCntAr(0, 2, -1, -1, aKey, aVal);
-             setCntAr(0, 3, -1, -1, aKey, aVal);
-             // setCntAr(E.pPrevScP, E.pPrevScW, myScoreAr, aKey, aVal, "winner with myScore");
-             // setCntAr(E.pPrevScP, E.pPrevEScW, aiScoreAr, aKey, aVal, "winner with myScore");
-             // setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance values");
-           }
-
+             ll = "KEY " + aKey + " " + aVal[0] + " " + aVal[1] + " " + aVal[2];
+             bMapFw.write(ll, 0, ll.length());
+             //    setCntAr(0, 1, -1, -1, aKey, aVal);
+             //   setCntAr(0, 2, -1, -1, aKey, aVal);
+             //   setCntAr(0, 3, -1, -1, aKey, aVal);
+             //   String setCntAr(String aKey, Integer[] aVal,String what,int arn, int pX1, int lX1,int llX1, int luX1)
+             setCntAr(E.AILims1, aKey, aVal, "winner with myScore", 1, E.pPrevScW, E.pPrevScP, 3, 5);
+             setCntAr(E.AILims1, aKey, aVal, "winner with myAIScore", 2, E.pPrevEScW, E.pPrevScP, 3, 5);
+             setCntAr(E.AILims, aKey, aVal, "winner with Resonance values", 3, E.pPrevResil, E.pPrevScP, 3, 5);
+           }//if
          }//entry
          // now do the output
-      //seeArrays[0] = "Keys" + entryCnt + " #Counts" + cntsCnt + "\n";
-      System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
-      seeCntArrays(0, 1, 2, 3);
+      seeArrays[0] = rtn = "doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + "\n";
+      System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + seeArrays[0]);
+      seeCntArrays();
+      //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
+      System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);
 
-      System.err.println("---DWM8---now write mapfile year" + year + " out=" + ll);
-      rtn = ll;
     }
 
     }//
@@ -3567,70 +3573,255 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       ex.printStackTrace(pw);
       secondStack = sw.toString();
        System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
-
        ex.printStackTrace(System.err);
        System.err.flush();
+       newError = true;
+       st.setFatalError(Color.RED);
     }
     finally {
-      return rtn;
+      return "doWriteMapfile" + rtn;
     }
   }//doWriteMapfile
 
-  String seeCntArrays(int x0, int x1, int x2, int x3) {
+  /**
+   * see the existing array that are in use Add to the seeCntArray list as
+   * needed, used in Assets.CashFlow.savAI
+   *
+   * @return
+   */
+  String seeCntArrays() {
 
-    String ll = seeArrays[0] = "Keys" + entryCnt + " #Counts" + cntsCnt + "\n";
-    ll += seeCntArray(x1, -2) + "\n";
-    ll += seeCntArray(x2, -3) + "\n";
-    ll += seeCntArray(x3, -1) + "\n";
-    //  ll += seeCntArrays(E.pPrevScP, E.pPrevScW, myScoreAr, "winner with myScore") + "\n";
-    //   ll += seeCntArrays(E.pPrevScP, E.pPrevEScW, aiScoreAr, "winner with ai Econ Scores") + "\n";
-    //  ll += seeCntArrays(E.pPrevScP, E.pPrevResil, aiResilAr, "winner with Resonance values") + "\n";
+    String ll = seeArrays[0] = "seeCntArrays Keys" + entryCnt + " #Counts" + cntsCnt;// seeArrays[0] =
+
+    //  ll += seeCntArray(x1, -2) + "\n";
+    //ll += seeCntArray(x2, -3) + "\n";
+    //ll += seeCntArray(x3, -1) + "\n";
+    seeCntArray(seeArrays, 1, E.AILims1, 1, E.pPrevScW, "winner with myScore");
+    seeCntArray(seeArrays, 2, E.AILims, 2, E.pPrevEScW, "winner with ai Econ Scores");
+    seeCntArray(seeArrays, 3, E.AILims, 3, E.pPrevResil, "winner with Resonance values");
     return ll;
   }
 
   static int SCACnt = 0;
+  String keepMe = "aaa";
+  
+ /**
+   * see the visual results for a given array
+   *
+   * @param seeAr the seeAr to use
+   * @param seeN the n in the above seeAr
+   * @param myAILim the AILim for this what
+   * @param arn ars array index
+   * @param pX1 pointer Index of the value
+   * @param what description of array use
+   * @note this uses ars as the input array and whats as the name,
+   * @return a string that shows the results
+   */
+ // String seeCntArrays(int wIx, int eIx, int[] ar, String what, String seeArrayx) {
+  String seeCntArray(String seeAr[], int seeN, double[] myAILim, int arn, int pX1, String what) {
+    //static int mostIx=0, ixAllSum=1, ixLimSum=2,ixAllCnt=3, ixLimCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
+//negIxs = econDiedI = -1;notActiveI = -2;missingI = -3;undefI = -4;
+   // String ret = "1", ret2 = "2";
+    try {
+      System.err.println("----SCA1---- seeCntArray enters pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
+    SCACnt++; //count seeCntArray entry
+    /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
+    // int screenIx = E.getAIMuch(aKey.charAt(x2));//myAILim mf(myAILim[ix])
+
+      int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
+      int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
+      int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
+      //      : (int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt]); //only winners
+      int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+      //      : (int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt]); // all values this val
+      String limAveVal = mf(myAILim[cLimAve]);
+      //     : mf(myAILim[(int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt])]); //only winners
+      String allAveVal = mf(myAILim[cAllAve]);
+      // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
+      int myN = 0;
+      ret = seeArrays[0] = what + " Keys" + entryCnt + " #Counts" + cntsCnt + " all entriesN" + cAll + " allSum:" + cAllSum + " allAve:" + cAllAve + " allAveVal:" + allAveVal + " limEntries::" + cLim + " limSum:" + cLimSum + " limAve:" + cLimAve + " limAveVal:" + limAveVal;
+      ret = seeArrays[0] += " mostN" + (myN = (mostIx < strtIxs ? strtIxs : mostIx - strtIxs))
+                            + " C:" + ars[arn][ars[arn][mostIx]] + " :V" + mf(myAILim[myN]);
+      ret2 = " firstN" + (myN = (firstIx < strtIxs ? strtIxs : firstIx - strtIxs))
+             + " C:" + ars[arn][ars[arn][firstIx]] + " :V" + mf(myAILim[myN])
+             + " topIxN" + (myN = (topIx < strtIxs ? strtIxs : topIx - strtIxs)) + " C:" + ars[arn][ars[arn][topIx]]
+             + " :V" + mf(myAILim[myN])
+             + "\n";
+      int lastIx = (ars[arn][mostIx] + 2) > ars[arn][topIx] ? ars[arn][topIx] : ars[arn][mostIx] + 2;
+      lastIx = lastIx < strtIxs ? strtIxs : lastIx;
+      int ixa = (ars[arn][mostIx] - 2) < ars[arn][firstIx] ? ars[arn][firstIx] : ars[arn][mostIx] - 2;
+      ixa = ixa < strtIxs ? strtIxs : ixa;
+      ret3 = " rowN" + (ixa - strtIxs) + " :C" + ars[arn][ixa] + " :V" + mf(myAILim[ixa - strtIxs]);
+      for (int ix = ixa + 1; ix <= lastIx; ix++) {
+      // see value Ix, entryCnt at that value, value at that value Ix
+      ret3 += ",  N" + (ix - strtIxs) + " :C" + ars[arn][ix] + " :V" + mf(myAILim[ix - strtIxs]);
+      }// ix
+     // seeArrays[arn] = keepMe = " seex " + ret + ret2;
+      seeAr[seeN] = "seeAr " + ret + ret2 + ret3; //seeArrays[seeN]
+      System.err.print("----SCA6----seeCntArray enters pX1=");
+      System.err.print(pX1 + " SCACnt" + SCACnt);
+      System.err.println("Y" + year + " stEnter="
+                         + st.cntInit + " EM entries=" + cntInit
+                         + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + "\n"
+                         + "----SCA6b----" + ret + ret2 + " limAve:" + cLimAve + " keepMe=" + keepMe);
+
+    }//
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      int xx1 = pX1 > 3 ? 3 : pX1;
+      System.err.println("----SCA7----seeCntArray error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + " ars[arn][mostIx]=" + ars[arn][mostIx] + andMore()
+      );
+      ex.printStackTrace(System.err);
+      System.err.flush();
+      newError = true;
+      st.setFatalError(Color.RED);
+      return "" + ret;
+    }
+    return seeArrays[seeN] = ret + ret2 + ret3; //caller puts in \n
+  }
+  int setCntSee = 0;
+
+  /**
+   * put into array arn counts limited by the winner value from lX1 Find the
+   * value with higest count for pX1
+   *
+   * @param myAILim aiLim for this what
+   * @param aKey the key for this setting
+   * @param aVal The value part for the counting
+   * @param what describe what is seen
+   * @parm arn number of ars array to use
+   * @param pX1 The main Value aKey character must have values==4 for the winner
+   * * clan
+   * @param lX1 The first limit aKey character index for the character index sum
+   * @param llX1 lower X1 lower limit accept only values above this X
+   * @param luX1 lower X1 upper limit accept only values below this X
+   * @param ar The array for the counting
+   *
+   * @return ocassionally see results
+   */
+  String setCntAr(double[] myAILim, String aKey, Integer[] aVal, String what, int arn, int pX1, int lX1, int llX1, int luX1) {
+    //static int mostIx=0, ixAllSum=1, ixLimSum=2,ixAllCnt=3, ixLimCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
+    System.out.println("---sCAP2---setCntArCnt=" + setCntSee + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
+    try {
+      char ch0 = '&';
+      char ch1 = '*';
+      char ch2 = '*';
+      int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //value to array
+      int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // value test for winners
+      // int l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // value test for winners
+      int vvIx = strtIxs + pValIx;
+      //   System.out.println("---sCAP3---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":" + ch0 + ":" + pValIx + ":" + ars[arn][ixAllCnt] + + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + " :allCnt" + ars[arn][ixAllCnt] + ":allAve" + allAve + " :: lx1:" + lX1 + ":" + ch1 + ":" + l1ValIx  + ":" + ars[arn][ixLimCnt]));
+      System.out.println("---sCAP2---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + " :allCnt" + ars[arn][ixAllCnt] + " :: lx1:" + lX1 + ":C " + ch1 + ":Vx" + l1ValIx + ":limCnt" + ars[arn][ixLimCnt]);
+
+      // all occurances, not just the winners
+      ars[arn][ixAllCnt] += aVal[E.aValCnts];;
+      ars[arn][ixAllSum] += pValIx * aVal[E.aValCnts]; // AllAve = (int)(ixAllSum/ixAllCnt)
+      // these are only winners
+      if (l1ValIx > llX1 && l1ValIx < luX1) { // winners only
+        if (pValIx < 0 && pValIx > -5) {
+          ars[arn][-pValIx + negIxs]++;
+        }
+        else if (pValIx < 0 || pValIx > 51) {
+          ars[arn][skippedCnt]++;
+
+        }
+        else { // if pValIx >= 0 && pValIx <= 51 accepted numbers
+          ars[arn][ixLimCnt] += aVal[E.aValCnts]; // sum of all limited
+          ars[arn][ixLimSum] += pValIx * aVal[E.aValCnts]; //
+          ars[arn][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
+          //compute mostIx, firstIx, topIx
+          if (ars[arn][mostIx] == 0 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
+            ars[arn][mostIx] = vvIx; // move to a new mostIx
+          }
+          if (ars[arn][firstIx] == 0 || ars[arn][firstIx] > vvIx) { //firstIx too high
+            ars[arn][firstIx] = vvIx; //lower firstIx
+          }
+          if (ars[arn][topIx] == 0 || ars[arn][topIx] < vvIx) { //the highest val
+            ars[arn][topIx] = vvIx;// raise topIx
+          }
+        }
+      }
+      if (++setCntSee % 14 == 0) {
+        int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
+        int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
+        int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
+        //      : (int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt]); //only winners
+        int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+        //      : (int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt]); // all values this val
+        String limAveVal = mf(myAILim[cLimAve]);
+        //     : mf(myAILim[(int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt])]); //only winners
+        String allAveVal = mf(myAILim[cAllAve]);
+        // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
+        String ret = " all entriesN" + cAll + " allSum:" + cAllSum + " allAve:" + cAllAve + " allAveVal:" + allAveVal
+                     + " limEntries::" + cLim + " limSum:" + cLimSum + " limAve:" + cLimAve + " limAveVal:" + limAveVal;
+
+        //  System.out.println("---sCA3---setCntr=" + what + " subKey=" );
+        // System.out.println("---sCA3---setCntr=" + setCntSee + " W=" + whats[x1] + " " + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + ":" + myAve + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[arn][ixAllCnt] + ":" + allAve);
+        System.out.println("---sCAP4---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + ret);
+        System.out.println("---sCA5--- firstN" + ars[arn][firstIx] + ":V"
+                           + mf(myAILim[(int) (ars[arn][firstIx - strtIxs])]) + " mostN" + ars[arn][mostIx - strtIxs] + ":V" + mf(myAILim[(int) (ars[arn][mostIx])]) + " top" + ars[arn][topIx - strtIxs] + ":V" + mf(myAILim[(int) (ars[arn][topIx])]));
+        //   System.out.println("---sCA5---" + seeArrays[x1]);
+      }
+    }//
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      //int xx1 = pX1 > 3 ? 3 : pX1;
+      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " pX1=" + pX1 + " lX1=" + lX1 + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
+      ex.printStackTrace(System.err);
+      System.err.flush();
+      return ret;
+    }
+    return "" + ret;
+  }
+
   /**
    * see the visual results for a given array
    *
    * @param x1 index of the set of arrays for the input and output
    * @param x2 dummyindex of the set of arrays for the input and output
+   * @param x3 dummyindex of the set of arrays for the input and output
    * @note this uses ars as the input array and whats as the name,
    * @return a string that shows the results
    */
- // String seeCntArrays(int wIx, int eIx, int[] ar, String what, String seeArrayx) {
-  String seeCntArray(int x1, int x2) {
+  // String seeCntArrays(int wIx, int eIx, int[] ar, String what, String seeArrayx) {
+  String seeCntArray(int x1, int x2, int x3) {
     //static int mostIx=0, ixAllSum=1, ixMySum=2,ixAllCnt=3, ixCntedCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
 //negIxs = econDiedI = -1;notActiveI = -2;missingI = -3;undefI = -4;
     try {
-    System.err.println("----SCA1---- seeCntArray enters x1=" + x1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
-    SCACnt++; //count seeCntArray entry
-    /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
-    // int screenIx = E.getAIMuch(aKey.charAt(x2));//E.AILims mf(E.AILims[ix])
-    String ret = "";
-    int tst1 = ars[x1][ixCntedCnt];
-    int tst2 = ars[x1][ixMySum];
-    String tst3 = mf(E.AILims[(int) (ars[x1][ixMySum])]);
-    String myAve = (ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]));
-    String myAllAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]);
-    ret += whats[x1] + " allentries" + ars[x1][ixAllCnt] + ":" + myAllAve + " cnted" + ars[x1][ixCntedCnt] + ":" + myAve;
-    ret += " first" + ars[x1][firstIx] + ":" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " most" + ars[x1][mostIx] + ":" + mf(E.AILims[(int) (ars[x1][mostIx])]) + " top" + ars[x1][topIx] + ":" + mf(E.AILims[(int) (ars[x1][topIx])]) + "\n";
-    int lastIx = (ars[x1][mostIx] + 2) > ars[x1][topIx] ? ars[x1][topIx] : ars[x1][mostIx] + 2;
-    lastIx = lastIx < strtIxs ? strtIxs : lastIx;
-    int ix = (ars[x1][mostIx] - 2) < ars[x1][firstIx] ? firstIx : ars[x1][mostIx] - 2;
-    ix = ix < strtIxs ? strtIxs : ix;
-    ret += (ix - strtIxs) + ":" + ars[x1][ix] + ":" + mf(E.AILims[ix - strtIxs]);
-    for (ix = ix; ix <= lastIx; ix++) {
-      // see value Ix, entryCnt at that value, value at that value Ix
-      ret += ", " + (ix - strtIxs) + ":" + ars[x1][ix] + ":" + mf(E.AILims[ix - strtIxs]);
-    }
-      seeArrays[x1] = ret;
+      System.err.println("----SCA1---- seeCntArray enters x1=" + x1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
+      SCACnt++; //count seeCntArray entry
+      /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
+      // int screenIx = E.getAIMuch(aKey.charAt(x2));//E.AILims mf(E.AILims[ix])
+      String ret = "";
+      int tst1 = ars[x1][ixCntedCnt];
+      int tst2 = ars[x1][ixMySum];
+      //  String tst3 = mf(E.AILims[(int) (ars[x1][ixMySum])]);
+      String myAve = (ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]));
+      String myAllAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]);
+      ret += whats[x1] + " allentriesC" + ars[x1][ixAllCnt] + ":AVE " + myAllAve + " ScreenedC" + ars[x1][ixCntedCnt] + " :AVE " + myAve;
+      ret += " firstN" + (ars[x1][firstIx] - strtIxs) + " :V" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " mostN" + (ars[x1][mostIx] - strtIxs) + " :V" + mf(E.AILims[(int) (ars[x1][mostIx])])
+             + " topN" + (ars[x1][topIx] - strtIxs) + ":" + mf(E.AILims[(int) (ars[x1][topIx])]) + "\n";
+      int lastIx = (ars[x1][mostIx] + 2) > ars[x1][topIx] ? ars[x1][topIx] : ars[x1][mostIx] + 2;
+      lastIx = lastIx < strtIxs ? strtIxs : lastIx;
+      int ixa = (ars[x1][mostIx] - 2) < ars[x1][firstIx] ? ars[x1][firstIx] : ars[x1][mostIx] - 2;
+      ixa = ixa < strtIxs ? strtIxs : ixa;
+      ret += " N" + (ixa - strtIxs) + " :C" + ars[x1][ixa] + " :V" + mf(E.AILims[ixa - strtIxs]);
+      for (int ix = ixa; ix <= lastIx; ix++) {
+        // see value Ix, entryCnt at that value, value at that value Ix
+        ret += ",  N" + (ix - strtIxs) + " :C" + ars[x1][ix] + " :V" + mf(E.AILims[ix - strtIxs]);
+      }
+      seeArrays[x1] = ret; //seeArrays[0]
     }//
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       int xx1 = x1 > 3 ? 3 : x1;
-      System.err.println("----SCA7----seeCntArray error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " x1=" + x1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[xx1].length : " ars ok len=" + ars[1].length));
+      System.err.println("----SCA7----seeCntArray error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " x1=" + x1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[xx1].length : " ars ok len=" + ars[1].length) + andMore());
       ex.printStackTrace(System.err);
       System.err.flush();
       return "";
@@ -3638,7 +3829,6 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     return ret; //caller puts in \n
   }
 
-  int setCntSee = 0;
   /**
    * put into an array counts most limited by the winner value from wIx
    *
@@ -3660,7 +3850,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     int valIx = E.getAIMuch(ch1 = aKey.charAt(myIx1 = ixIxs[x1][0])); //value to array
     int screenIx = E.getAIMuch(ch0 = aKey.charAt(myIx0 = ixIxs[x0][0])); // value test for winners
     int vvIx = strtIxs + valIx;
-    System.out.println("---sCA3---setCntArCnt=" + setCntSee + "Y" + year + " what=" + whats[x1] + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[x1][ixAllCnt]);
+      //     System.out.println("---sCA3---setCntArCnt=" + setCntSee + "Y" + year + " what=" + what + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixLimCnt] + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[0][ixAllCnt]);
     // all occurances, not just the winners
     ars[x1][ixAllCnt] += aVal[E.aValCnts];;
     ars[x1][ixAllSum] += valIx; // AllAve = (int)(ixAllSum/ixAllCnt)
@@ -3711,6 +3901,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   }
     return "";
   }
+  
   /**
    * get the current settings value
    *
@@ -6340,7 +6531,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     // loop through all of the entries
     int maxCopy = MAXDEPTH - 1; //don't copy curIx=6 to above => a curIx=0
     int yearErrCnt = 0;
-    int ix = 0;
+    int ix = 0, ixClan = 0, ixPS = 0; // force indexs into this method
 
     try {
       clearWH();
@@ -6559,8 +6750,10 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       secondStack = sw.toString();
       ex.printStackTrace(System.err);
       flushes();
-      System.err.println("Error doStartYear" + year + " name=" + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + "lRes I" + resI[rN].length + ", V" + resV[rN].length + andMore());
-//      ex.printStackTrace(System.err);
+      System.err.println("Error doStartYear" + year + " name=" + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + "lRes I" + resI[rN].length + ", V" + resV[rN].length + " ixClan" + ixClan + " ixPS" + ixPS + andMore());
+      ex.printStackTrace(System.err);
+      newError = true;
+      flushes();
       st.setFatalError(); // throws WasFatalError
       //throw new WasFatalError(curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());
       flushes();
