@@ -9339,7 +9339,8 @@ public class Assets {
           percentValuePerGoal = strategicGoal > E.PZERO ? 100. * strategicValue / strategicGoal : 1.;
           retOffer.set2Values(ec, btWTotWorth, btW.getSumRCSGBal(), tWTotWorth); // needed in TradeRecord SearchRecord
 
-          if (newTerm == 0 || newTerm == -2 || entryTerm == -2) {  //trade accepted
+          //if (newTerm == 0 || newTerm == -2 || entryTerm == -2) {  //trade accepted
+          if (newTerm == 0) {  //trade accepted
             // eM.printHere("---CBX---", ec, " newTerm" + newTerm + " entryTerm" + entryTerm + " tradedShipOrdinal" + tradedShipOrdinal);
             tradedShipOrdinal++; // set ordinal of the next ship if any
             tradedSuccessTrades++;
@@ -9390,8 +9391,8 @@ public class Assets {
             setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
             setStat(EM.TradeLastStrategicGoal, pors, clan, strategicGoal, 1);
             setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
-            setStat(EM.AlsoTradeLastStrategicValue, pors, clan, strategicValue, 1);
-            setStat(EM.AlsoTradeStrategicValueLastPercentFirst, pors, clan, calcPercent(firstStrategicValue, strategicValue), 1);
+            setStat(EM.TradeLastStrategicValue, pors, clan, strategicValue, 1);
+            setStat(EM.TradeStrategicValueLastPercentFirst, pors, clan, calcPercent(firstStrategicValue, strategicValue), 1);
             setStat(EM.TradeNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
             setMax(EM.MaxNominalReceivePercentNominalOffer, calcPercent(nominalOffers, nominalRequests));
             setMin(EM.MinNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
@@ -9418,6 +9419,8 @@ public class Assets {
             EM.porsTraded[pors]++;
             EM.porsClanTraded[pors][clan]++;
             EM.clanTraded[clan]++;
+            setStat(EM.AlsoTradeLastStrategicValue, pors, clan, strategicValue, 1);
+            setStat(EM.AlsoTradeStrategicValueLastPercentFirst, pors, clan, calcPercent(firstStrategicValue, strategicValue), 1);
             setStat(EM.TradeAcceptValuePerGoal, percentValuePerGoal, 1);
             setStat(EM.TradeAlsoBidRequestsFirst, sumBidRequestsFirst, 1);
             setStat(EM.TradeAlsoCriticalBidRequestsFirst, sumCriticalBidRequestsFirst, 1);

@@ -3512,7 +3512,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     int ix = 0;
     String ll = " ";
     String rtn = "";
-    int entryCnt = 0, cntsCnt = 0;
+    //int entryCnt = 0, cntsCnt = 0;
     try {
 // something happens to opens, so it is ok to do it again I think.
       bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
