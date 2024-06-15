@@ -45,8 +45,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
-//import java.lang.String;
-//import java.lang.Integer;
 import java.util.TreeMap;
 import javax.swing.JTable;
 
@@ -76,7 +74,7 @@ class EM {
   // The following is a start of the capability to save and instance of
   // a game at the current level with new referents for arrays etc.
   // the cureent game could continue or another EM instance could be made active
-  // could be reloded onto the active instance of 
+  // could be reloded onto the active instance of
   EM copyTo; // during a copy, doVal, doRes etc must copy
   boolean doingCopy = false;
 
@@ -250,7 +248,7 @@ class EM {
   static int[][] ars;
   // each subarray = ar#,pMain#,pLim1,low,upper,pLim2,low,upper,pLim3,low,upper lenghts 5,8,11
   static int xAr[][] = {{1, E.pPrevScW, E.pPrevScP, 3, 5, E.pPrevScW, -1, 52}, {2, E.pPrevEScW, E.pPrevScP, 3, 5, E.pPrevEScW, -1, 52}, {2, E.pPrevResil, E.pPrevScP, 3, 5, E.pPrevResil, -1, 52}};
-  
+
   static int ixIxs[][] = {{E.pPrevScP, 3, 5}, {E.pPrevScW, -1, 52}, {E.pPrevEScW, -1, 52}, {E.pPrevResil, -1, 52}, {E.pPrevResil, -1, 52}};
   static String whats[] = {"winner with myScore", "winner with aiScore", "winner with Resonance values", "", "", ""};
   static String seeArrays[] = {"newa ", "new0 ", "new1", "new2 ", "new3 ", "new4 ", "new5 ", "new6 "};
@@ -283,11 +281,11 @@ class EM {
     otherEconClan = x.getColor();
     return otherEconName = x.getName();
   }
-  
+
   /** if E.debugEconCnt test that econCnt == the porsCnt s
-   * 
+   *
    *  use assert if it -ae enabled asserts, skip if test ifassert
-   * 
+   *
    */
   static void econCountsTest(){
     if (E.debugEconCnt) {
@@ -434,7 +432,7 @@ class EM {
                   && sFrac3 < clanShipFrac[P][clan])
                       ? E.S : E.P;
 
-   
+
      if(E.debugCreateOut)System.out.println("----PScc---- pors lPlanets=" + porsCnt[P]
                          + " lEconCnt=" + econCnt
                         + " lShips=" + porsCnt[S]
@@ -450,7 +448,7 @@ class EM {
                          + (sFrac1 < clanAllShipFrac[P][clan] ? "S" : "P")
                          + (sFrac2 < gameShipFrac[P] ? "S" : "P")
                          + (sFrac3 < clanShipFrac[P][clan] ? "S" : "P"))));
-    
+
     return pors;
   }
 
@@ -504,7 +502,7 @@ class EM {
   static volatile double[][] catastrophyUnitReduction = {{5.}, {5.}}; // frac of balance reduction
   static final double[][] mCatastrophyUnitReduction = {{.0, 1.0}, {.0, 1.0}};
   static volatile double[][] catastrophyBonusYears = {{8.}, {12.}};  // 2 - 25
-  static final double[][] mCatastrophyBonusYears = {{02., 25.0}, {1., 25.}};  // 
+  static final double[][] mCatastrophyBonusYears = {{02., 25.0}, {1., 25.}};  //
   static volatile double[][] catastrophyBonusYearsBias = {{1.6}, {1.9}}; // adds to the divisor year into bonus units
   static final double[][] mCatastrophyBonusYearsBias = {{.5, 15.}, {.5, 15.}};
   static volatile double[][] catastrophyBonusGrowthValue = {{1.3}, {1.3}};  // frac balances
@@ -672,7 +670,9 @@ class EM {
       ex.printStackTrace(System.err);
       flushes();
       System.err.println("----INem4----Y" + year + " Init Error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore());
-      System.exit(-17);
+      if (E.debugMaster) {
+        System.exit(-17);
+      }
       // fatalError = true;
 
       // ex.printStackTrace(System.err);
@@ -691,7 +691,7 @@ class EM {
   }
 
   ;
-  
+
    /**
    * determine of a string does not exist or is empty
    *
@@ -711,7 +711,7 @@ class EM {
    */
   protected static String threadsStacks() {
     String ret = "\n----THs---- " + curEconName + " Start ThreadStacks stacks by " + Thread.currentThread().getName() + since() + sinceDoYear() + "\n" + mem() + lfe() + "\n tError=" + tError + "\n";
-            
+
     Thread[] tarray = new Thread[10];
     Thread.enumerate(tarray);
     for (Thread th : tarray) {
@@ -1058,12 +1058,12 @@ class EM {
     return " " + mf(nu * .001);
   }
   /** return long current time in milliseconds
-   * 
+   *
    * @return time in milliseconds for 1970?
    */
   static long now(){ return (new Date()).getTime(); }
   /** return the seconds since pastTime as a string
-   * 
+   *
    * @param pastTime a remembered pastTime
    * @return time past in string seconds with millisecond fraction
    */
@@ -1275,7 +1275,7 @@ class EM {
     NumberFormat dFrac = NumberFormat.getNumberInstance();
     NumberFormat whole = NumberFormat.getNumberInstance();
     NumberFormat exp = new DecimalFormat("0.######E0");
- 
+
     if (mfShort || myWidth < 1190) { // 7 characters
       if (v == .0 || v == -0) {  // actual zero
       dFrac.setMinimumFractionDigits(0);
@@ -1366,7 +1366,7 @@ class EM {
       }
 
     } // end of < 1200
-    
+
     else if (myWidth < 1500) { // 12 characters
       if (v == .0 || v == -0) {  // actual zero
       dFrac.setMinimumFractionDigits(0);
@@ -1412,33 +1412,33 @@ class EM {
        if(test5)System.err.printf("----MFT9a--- v= %15.9e, %9.3e remainder %9.3e " + exp.format(v) +  " \n",v,tmp,v, E.PPZERO);
        return exp.format(v);
       }
-      
+
        else if((v > -999999999999. && v < 0.0 && (tmp < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && (tmp < E.PPZERO))) {  //12 13 whole number iwith a remainder smaller than 13 digits after . and less than a very large number, anything large goes to the e format
        dFrac.setMaximumFractionDigits(0);// whole numbers only
        if(test5)System.err.printf("----MFT9b--- v= %15.9e, %9.3e zero %9.3e" + dFrac.format(v) +  " \n",v,tmp, E.PPZERO);
        return dFrac.format(v);
-      } // next a slightly 
-       
-     else 
+      } // next a slightly
+
+     else
          if ((v > -99. && v < -0.0) || (v < 999.0 && v >= 0.0)) {// 2 3
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(9);
         if(test5)System.err.printf("----MFT9c--- v= %15.9e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
          }
-      else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 9999999.)) { // 6 7 
+      else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 9999999.)) { // 6 7
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(5);
         if(test5)System.err.printf("----MFT9k--- v= %15.9e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
     }
-      else if ((v > -9999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 7 8 
+      else if ((v > -9999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 7 8
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(4);
         if(test5)System.err.printf("----MFT9d--- v= %15.8e, " + dFrac.format(v) + " \n",v);
         return dFrac.format(v);
     }
-      else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 8 9 
+      else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 8 9
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         if(test5)System.err.printf("----MFT9e--- v= %10.5e, " + dFrac.format(v) + " \n",v);
@@ -1472,7 +1472,7 @@ class EM {
     }
     exp = new DecimalFormat("0.######E0");
     return exp.format(v);
-    
+
   }
 
 
@@ -1768,7 +1768,7 @@ class EM {
   static double[][][] userPriorityAdjustment = {uLifePriAdj, uStrucPriAdj, uEnergyPriAdj, uPropelPriAdj, uDefensePriAdj, uGovPriAdj, uColonistsPriAdj};
   static double[][] mUserPriorityAdjustment = {{.01, .15}, {.01, .15}};
   static final double[] oldNominalPriorities = {23, 21, 2, 3, 5, 6, 7};
-  // slider 0-24(<2.0):random, 25-49(<3.0): current goods of searched: 
+  // slider 0-24(<2.0):random, 25-49(<3.0): current goods of searched:
 // slider 50-100 (3.->5.)select by trade history
   static double[][] tradeEconSearchType = {{2.1, 2.1, 2.1, 2.1, 2.1}, {1.6, 2.6, 2.6, 3.6, 3.6}};
   static final double[][] mTradeEconSearchType = {{1., 5.}, {1., 5.}};
@@ -1971,10 +1971,10 @@ class EM {
   double mab1[] = {.2, .05}; // resource costs planet,ship
   //double mab1[] = {.6,.6}; // resource costs planet,ship
   //double mab1[] = {.6, .13}; // resource c planet ship
-  // double mac1[] = {.6,.6}; // staff costs planet ship 
- // double mac1[] = {1.3, .23}; // staff costs planet ship 
-  double mac1[] = {.2, .5}; // staff costs planet ship 
-  //double mac1[] = {.6, .13}; // staff costs planet ship 
+  // double mac1[] = {.6,.6}; // staff costs planet ship
+ // double mac1[] = {1.3, .23}; // staff costs planet ship
+  double mac1[] = {.2, .5}; // staff costs planet ship
+  //double mac1[] = {.6, .13}; // staff costs planet ship
  // double mac1[] = {.6, .13}; // staff costs, planet, ship
   double mabc[][] = {mab1, mac1}; //r or s, p or s
   static double mmab1[][] = {{.01, 2.}, {.01, 2.1}}; // resource costs planet,ship
@@ -1988,11 +1988,11 @@ class EM {
   static double vdifMult = .005; // was 2.0 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
-  
+
   double vFracSum = 0.;
   static boolean AlwaysMakeRS = true;
 
-  
+
   /**
    * make a multiplyer for CashFlow.calcRawCosts, creates a table rs that
    * modifies each cost by resource or staff, planet or ship, which SubAsset
@@ -2014,14 +2014,14 @@ class EM {
     double hiLoMult = ec.getHiLoMult();
     double difficulty = ec.initDifficulty;
     try {
-      
+
       double vinit = 0., vlive = 0., vfrac = 0.;
       int aa, ab, ac, ac2;
 
       double clanSum[][] = new double[2][]; // { pors,clan}
       for (aa = 0; aa < 5; aa++) { //type reqM reqG m t g
         rs[aa] = new double[2][];
-        for (ab = 0; ab < 2; ab++) { // r s 
+        for (ab = 0; ab < 2; ab++) { // r s
           rs[aa][ab] = new double[4];
           for (ac = 0; ac < 4; ac++) { //rcsg
             rs[aa][ab][ac] = 0.;
@@ -2082,7 +2082,7 @@ class EM {
             vrs = 0;
             vrs
                     = rs[aa][ab][ac]
-                    = 
+                    =
                     // (vdif = difficultyPercent[0] * 0.025)
                     //  (vdif = difficultyPercent[0] * 0.05)
                     (vdif = difficulty * vdifMult)
@@ -2133,17 +2133,21 @@ class EM {
       flushes();
       System.err.println(curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());
 //      ex.printStackTrace(System.err);
-      System.exit(-5);
+      if (E.debugMaster) {
+        System.exit(-5);
+      }
     }
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println("makeClanRs " + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + Thread.currentThread().getName() + andMore());
+      System.err.println("makeClanRs " + curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + Thread.currentThread().getName() + secondStack + andMore());
 //      ex.printStackTrace(System.err);
       st.setFatalError();
-      System.exit(-55);
+      if (E.debugMaster) {
+        System.exit(-55);
+      }
       throw new WasFatalError(curEconName + " " + Econ.nowThread + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());
 
     }
@@ -2555,9 +2559,9 @@ class EM {
   static final public int TX = 1;  // Transmute W R of different resources
   static final public int TT = 2;  // Trade  W R of different environment
   // [TR,TX,TT][iW,iR][oW,oR][P,S]
-  // static final public double[][][][] swapRrxtcost = {swapRregRcost, swapRtransRcost, swapRtradeRcost};  
+  // static final public double[][][][] swapRrxtcost = {swapRregRcost, swapRtransRcost, swapRtradeRcost};
   // res cargo cost
-  //  final static public double[][][][] swapSrxtcost = {swapSregScost, swapStransScost, swapStradeScost};  
+  //  final static public double[][][][] swapSrxtcost = {swapSregScost, swapStransScost, swapStradeScost};
   // staff guests cost
   static final public int CR = 0;  // class resource
   static final public int CS = 1;  // class staff
@@ -2768,7 +2772,7 @@ class EM {
     }
     gc = vaddr.length == 1 ? vone : vaddr.length == 2 ? vtwo : vaddr.length == 7 ? vseven : 11;
     vv = doVal1(gc, vdesc, lims, vdetail);
-    double[][] vacc = {vaddr}; // {{val0}}  or {{val0,val1}} 
+    double[][] vacc = {vaddr}; // {{val0}}  or {{val0,val1}}
     valD[vv][gameAddrC] = vacc; //valD[vv][vFill] {vaddr} //valD[vv][vFill][] {{addr0,addr1}}
     valI[vv][vFill][vFill][sevenC] = vindex; //valI[vv][0][0][vindex] (0-6)
     doVal3(vv);
@@ -3295,7 +3299,7 @@ onceAgain:
 
     String ll = " ";
     if (keepFromPage) {
-// something happens to opens, so it is ok to do it again I think.   
+// something happens to opens, so it is ok to do it again I think.
       bKeep = Files.newBufferedWriter(KEEP, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       System.err.println("did reopen of keep");
       if (year != keepYear || !st.settingsComment.getText().matches(prevKeepCmt)) { // need another year comment page
@@ -3499,7 +3503,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   /**
    * write the MAPFILE file from EM.doEndYear(), also gather a list of result
    * arrays related to the IX's of those variables
-   *  
+   *
    *
    * create EM.seeArrays[6] a string of output when myScore op==4 winner
    *
@@ -3540,6 +3544,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         ll = "year" + year + " version " + st.versionText + " " + dateString + " " + st.settingsComment.getText() + "\r\n";
        bMapFw.write(ll, 0, ll.length());
       System.out.println("---DWM4---wrote=" + ll);
+      synchronized (A6Rowa.ASECS) {
       System.out.println("---DWM5---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
          for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
            if (entry != null) {
@@ -3553,11 +3558,17 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
              //   setCntAr(0, 2, -1, -1, aKey, aVal);
              //   setCntAr(0, 3, -1, -1, aKey, aVal);
              //   String setCntAr(String aKey, Integer[] aVal,String what,int arn, int pX1, int lX1,int llX1, int luX1)
-             setCntAr(E.AILims1, aKey, aVal, "winner with myScore", 1, E.pPrevScW, E.pPrevScP, 3, 5);
-             setCntAr(E.AILims1, aKey, aVal, "winner with myAIScore", 2, E.pPrevEScW, E.pPrevScP, 3, 5);
-             setCntAr(E.AILims, aKey, aVal, "winner with Resonance values", 3, E.pPrevResil, E.pPrevScP, 3, 5);
+/*
+             boolean no = false;
+             setCntAr(E.AILims1, aKey, aVal, "winner with myScore", 1, E.pPrevScW, E.pPrevScP, 3, 5,no);
+             setCntAr(E.AILims1, aKey, aVal, "winner with myAIScore", 2, E.pPrevEScW, E.pPrevScP, 3, 5,no);
+             setCntAr(E.AILims, aKey, aVal, "winner with Resonance values", 3, E.pPrevResil, E.pPrevScP, 3, 5,no);
+             setCntAr(aKey,aVal);
+              */
+             setCntAr(aKey, aVal);
            }//if
          }//entry
+      }
          // now do the output
       seeArrays[0] = rtn = "doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + "\n";
       System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + seeArrays[0]);
@@ -3572,10 +3583,13 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-       System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
+       System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + secondStack);
        ex.printStackTrace(System.err);
        System.err.flush();
        newError = true;
+       if (E.debugMaster) {
+         System.exit(-33);
+       }
        st.setFatalError(Color.RED);
     }
     finally {
@@ -3590,9 +3604,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @return
    */
   String seeCntArrays() {
-
     String ll = seeArrays[0] = "seeCntArrays Keys" + entryCnt + " #Counts" + cntsCnt;// seeArrays[0] =
-
     //  ll += seeCntArray(x1, -2) + "\n";
     //ll += seeCntArray(x2, -3) + "\n";
     //ll += seeCntArray(x3, -1) + "\n";
@@ -3602,9 +3614,18 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     return ll;
   }
 
+  /**
+   * define the set of array setting calls for defining the seeArrays
+   */
+  void setCntAr(String aKey, Integer[] aVal) {
+    boolean no = false;
+             setCntAr(E.AILims1, aKey, aVal, "winner with myScore", 1, E.pPrevScW, E.pPrevScP, 3, 5,no);
+             setCntAr(E.AILims1, aKey, aVal, "winner with myAIScore", 2, E.pPrevEScW, E.pPrevScP, 3, 5,no);
+    setCntAr(E.AILims, aKey, aVal, "winner with Resonance values", 3, E.pPrevResil, E.pPrevScP, 3, 5, no);
+}
   static int SCACnt = 0;
   String keepMe = "aaa";
-  
+
  /**
    * see the visual results for a given array
    *
@@ -3617,16 +3638,20 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @note this uses ars as the input array and whats as the name,
    * @return a string that shows the results
    */
- // String seeCntArrays(int wIx, int eIx, int[] ar, String what, String seeArrayx) {
   String seeCntArray(String seeAr[], int seeN, double[] myAILim, int arn, int pX1, String what) {
     //static int mostIx=0, ixAllSum=1, ixLimSum=2,ixAllCnt=3, ixLimCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
 //negIxs = econDiedI = -1;notActiveI = -2;missingI = -3;undefI = -4;
    // String ret = "1", ret2 = "2";
+    int myN = 0, myNn = 0;
     try {
       System.err.println("----SCA1---- seeCntArray enters pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
     SCACnt++; //count seeCntArray entry
     /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
     // int screenIx = E.getAIMuch(aKey.charAt(x2));//myAILim mf(myAILim[ix])
+      // right much the **Ix s
+      ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
+      ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
+      ars[arn][topIx] = ars[arn][topIx] > strtIxs ? ars[arn][topIx] : strtIxs;
 
       int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
       int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
@@ -3638,26 +3663,19 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       //     : mf(myAILim[(int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt])]); //only winners
       String allAveVal = mf(myAILim[cAllAve]);
       // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
-      int myN = 0;
-      ret = seeArrays[0] = what + " Keys" + entryCnt + " #Counts" + cntsCnt + " all entriesN" + cAll + " allSum:" + cAllSum + " allAve:" + cAllAve + " allAveVal:" + allAveVal + " limEntries::" + cLim + " limSum:" + cLimSum + " limAve:" + cLimAve + " limAveVal:" + limAveVal;
-      ret = seeArrays[0] += " mostN" + (myN = (mostIx < strtIxs ? strtIxs : mostIx - strtIxs))
-                            + " C:" + ars[arn][ars[arn][mostIx]] + " :V" + mf(myAILim[myN]);
-      ret2 = " firstN" + (myN = (firstIx < strtIxs ? strtIxs : firstIx - strtIxs))
-             + " C:" + ars[arn][ars[arn][firstIx]] + " :V" + mf(myAILim[myN])
-             + " topIxN" + (myN = (topIx < strtIxs ? strtIxs : topIx - strtIxs)) + " C:" + ars[arn][ars[arn][topIx]]
-             + " :V" + mf(myAILim[myN])
-             + "\n";
+
+      ret = what + " Keys" + entryCnt + " #Counts" + cntsCnt + " all entriesN" + cAll + " allSum:" + cAllSum + " allAve:" + cAllAve + " allAveVal:" + allAveVal + " limEntries::" + cLim + " limSum:" + cLimSum + " limAve:" + cLimAve + " limAveVal:" + limAveVal + " mostN" + (myN = ars[arn][mostIx]) + " :" + (myNn = myN - strtIxs) + " C:" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + " firstN" + (myN = ars[arn][firstIx]) + " :" + (myNn = myN - strtIxs) + " C:" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + " topN" + (myN = ars[arn][topIx]) + " :" + (myNn = myN - strtIxs) + " C:" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + "\n";
       int lastIx = (ars[arn][mostIx] + 2) > ars[arn][topIx] ? ars[arn][topIx] : ars[arn][mostIx] + 2;
       lastIx = lastIx < strtIxs ? strtIxs : lastIx;
       int ixa = (ars[arn][mostIx] - 2) < ars[arn][firstIx] ? ars[arn][firstIx] : ars[arn][mostIx] - 2;
       ixa = ixa < strtIxs ? strtIxs : ixa;
-      ret3 = " rowN" + (ixa - strtIxs) + " :C" + ars[arn][ixa] + " :V" + mf(myAILim[ixa - strtIxs]);
+      ret2 = " rowN" + (myN = ixa) + " :" + (myNn = myN - strtIxs) + " :C" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + ":" + mf(myAILim[myN]);
+
       for (int ix = ixa + 1; ix <= lastIx; ix++) {
       // see value Ix, entryCnt at that value, value at that value Ix
-      ret3 += ",  N" + (ix - strtIxs) + " :C" + ars[arn][ix] + " :V" + mf(myAILim[ix - strtIxs]);
+      ret2 += ",  N" + +(myN = ix) + " :" + (myNn = myN - strtIxs) + " :C" + ars[arn][ix] + " :V" + mf(myAILim[myNn]);
       }// ix
-     // seeArrays[arn] = keepMe = " seex " + ret + ret2;
-      seeAr[seeN] = "seeAr " + ret + ret2 + ret3; //seeArrays[seeN]
+      seeAr[seeN] = keepMe = "seeAr " + ret + ret2; //seeArrays[seeN]
       System.err.print("----SCA6----seeCntArray enters pX1=");
       System.err.print(pX1 + " SCACnt" + SCACnt);
       System.err.println("Y" + year + " stEnter="
@@ -3677,9 +3695,12 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       System.err.flush();
       newError = true;
       st.setFatalError(Color.RED);
+      if (E.debugMaster) {
+        System.exit(-37);
+      }
       return "" + ret;
     }
-    return seeArrays[seeN] = ret + ret2 + ret3; //caller puts in \n
+    return seeAr[seeN] = ret + ret2; //caller puts in \n
   }
   int setCntSee = 0;
 
@@ -3701,18 +3722,26 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    *
    * @return ocassionally see results
    */
-  String setCntAr(double[] myAILim, String aKey, Integer[] aVal, String what, int arn, int pX1, int lX1, int llX1, int luX1) {
+  String setCntAr(double[] myAILim, String aKey, Integer[] aVal, String what, int arn, int pX1, int lX1, int llX1, int luX1, boolean printDeb) {
+    char ch0 = '&';
+    char ch1 = '*';
+    int myN = 0, myNn = 0;
+    int xN = 0;
+    char ch2 = '*';
+    double eee = 0.;
+    String see = "";
     //static int mostIx=0, ixAllSum=1, ixLimSum=2,ixAllCnt=3, ixLimCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
     System.out.println("---sCAP2---setCntArCnt=" + setCntSee + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
     try {
-      char ch0 = '&';
-      char ch1 = '*';
-      char ch2 = '*';
       int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //value to array
       int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // value test for winners
-      // int l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // value test for winners
+      // int l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // value test for IxIx
+      pValIx = pValIx > 0 ? pValIx : 0;
+      l1ValIx = l1ValIx > 0 ? l1ValIx : 0;
       int vvIx = strtIxs + pValIx;
-      //   System.out.println("---sCAP3---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":" + ch0 + ":" + pValIx + ":" + ars[arn][ixAllCnt] + + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + " :allCnt" + ars[arn][ixAllCnt] + ":allAve" + allAve + " :: lx1:" + lX1 + ":" + ch1 + ":" + l1ValIx  + ":" + ars[arn][ixLimCnt]));
+      //  ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
+      //  ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
+      //  ars[arn][topIx] = ars[arn][topIx] > strtIxs ? ars[arn][topIx] : strtIxs;
       System.out.println("---sCAP2---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + " :allCnt" + ars[arn][ixAllCnt] + " :: lx1:" + lX1 + ":C " + ch1 + ":Vx" + l1ValIx + ":limCnt" + ars[arn][ixLimCnt]);
 
       // all occurances, not just the winners
@@ -3725,25 +3754,24 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         }
         else if (pValIx < 0 || pValIx > 51) {
           ars[arn][skippedCnt]++;
-
         }
         else { // if pValIx >= 0 && pValIx <= 51 accepted numbers
           ars[arn][ixLimCnt] += aVal[E.aValCnts]; // sum of all limited
           ars[arn][ixLimSum] += pValIx * aVal[E.aValCnts]; //
           ars[arn][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
           //compute mostIx, firstIx, topIx
-          if (ars[arn][mostIx] == 0 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
+          if (ars[arn][mostIx] < strtIxs + 1 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
             ars[arn][mostIx] = vvIx; // move to a new mostIx
           }
-          if (ars[arn][firstIx] == 0 || ars[arn][firstIx] > vvIx) { //firstIx too high
+          if (ars[arn][firstIx] < strtIxs + 1 || ars[arn][firstIx] > vvIx) { //firstIx too high
             ars[arn][firstIx] = vvIx; //lower firstIx
           }
-          if (ars[arn][topIx] == 0 || ars[arn][topIx] < vvIx) { //the highest val
+          if (ars[arn][topIx] < strtIxs + 1 || ars[arn][topIx] < vvIx) { //the highest val
             ars[arn][topIx] = vvIx;// raise topIx
           }
         }
       }
-      if (++setCntSee % 14 == 0) {
+      if (++setCntSee % 14 == 0 || printDeb) {
         int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
         int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
         int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
@@ -3756,13 +3784,25 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
         String ret = " all entriesN" + cAll + " allSum:" + cAllSum + " allAve:" + cAllAve + " allAveVal:" + allAveVal
                      + " limEntries::" + cLim + " limSum:" + cLimSum + " limAve:" + cLimAve + " limAveVal:" + limAveVal;
-
-        //  System.out.println("---sCA3---setCntr=" + what + " subKey=" );
-        // System.out.println("---sCA3---setCntr=" + setCntSee + " W=" + whats[x1] + " " + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + ":" + myAve + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[arn][ixAllCnt] + ":" + allAve);
-        System.out.println("---sCAP4---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + ret);
-        System.out.println("---sCA5--- firstN" + ars[arn][firstIx] + ":V"
-                           + mf(myAILim[(int) (ars[arn][firstIx - strtIxs])]) + " mostN" + ars[arn][mostIx - strtIxs] + ":V" + mf(myAILim[(int) (ars[arn][mostIx])]) + " top" + ars[arn][topIx - strtIxs] + ":V" + mf(myAILim[(int) (ars[arn][topIx])]));
-        //   System.out.println("---sCA5---" + seeArrays[x1]);
+        if (ars[arn][mostIx] < strtIxs + 1 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
+          ars[arn][mostIx] = vvIx; // move to a new mostIx
+        }
+        if (ars[arn][firstIx] < strtIxs + 1 || ars[arn][firstIx] > vvIx) { //firstIx too high
+          ars[arn][firstIx] = vvIx; //lower firstIx
+        }
+        if (ars[arn][topIx] < strtIxs + 1 || ars[arn][topIx] < vvIx) { //the highest val
+          ars[arn][topIx] = vvIx;// raise topIx
+        }
+        System.out.print("---sCAP4---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + ret);
+        System.out.print("firstN" + (myN = ars[arn][firstIx]) + ":" + (myNn = myN - strtIxs) + ":V");
+        eee = myAILim[myNn];
+        System.out.print(see = mf(eee));
+        System.out.print("mostN" + (myN = ars[arn][mostIx]) + ":" + (myNn = myN - strtIxs) + ":V");
+        eee = myAILim[myNn];
+        System.out.print(see = mf(eee));
+        System.out.print("topN" + (myN = ars[arn][topIx]) + ":" + (myNn = myN - strtIxs) + ":V");
+        eee = myAILim[myNn];
+        System.out.println(see = mf(eee));
       }
     }//
     catch (Exception | Error ex) {
@@ -3770,9 +3810,13 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       //int xx1 = pX1 > 3 ? 3 : pX1;
-      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " pX1=" + pX1 + " lX1=" + lX1 + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
+      fatalError = true;
+      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " what=" + what + " pX1=" + pX1 + " lX1=" + lX1 + " value=" + see + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + secondStack + andMore());
       ex.printStackTrace(System.err);
       System.err.flush();
+      if (E.debugMaster) {
+        System.exit(-25);
+      }
       return ret;
     }
     return "" + ret;
@@ -3901,7 +3945,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   }
     return "";
   }
-  
+
   /**
    * get the current settings value
    *
@@ -4648,7 +4692,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final long THISYEAR = thisYr;
   private static final long cur = lli = lli << 1;//0000400L;  // sums of values a listing for each saved year
   static final long CUR = cur;
-  private static final long cum = lli = lli << 1;// 0040000L; // cum sum of values both 
+  private static final long cum = lli = lli << 1;// 0040000L; // cum sum of values both
   static final long CUM = cum;
   static final long CURUNITS = lli = lli << 1;//0001000L; // total units that divide curUnitAve values
   static final long CUMUNITS = lli = lli << 1;//0002000L; // cum sum of  units
@@ -4659,14 +4703,14 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
 
   private static final long mask1 = getP | getS | SUM | BOTH | CURAVE | CUMAVE | THISYEARAVE | CUR | CUM | THISYEAR | CURUNITS | CUMUNITS | THISYEARUNITS | ZEROUNSET | SKIPUNSET;
   static final long CMDSONLYMASK = CURAVE | CUMAVE | THISYEARAVE | CUR | CUM | THISYEAR | CURUNITS | CUMUNITS | THISYEARUNITS | ZEROUNSET | SKIPUNSET; //0777770L; // mask for commands but not both,sum,p
-  static final long CMDSMASK = SUM | BOTH | CURAVE | CUMAVE | THISYEARAVE | CUR | CUM | THISYEAR | CURUNITS | CUMUNITS | THISYEARUNITS | ZEROUNSET | SKIPUNSET;// 0777776L; // opr mask commands with both and sum 
+  static final long CMDSMASK = SUM | BOTH | CURAVE | CUMAVE | THISYEARAVE | CUR | CUM | THISYEAR | CURUNITS | CUMUNITS | THISYEARUNITS | ZEROUNSET | SKIPUNSET;// 0777776L; // opr mask commands with both and sum
   static final long ROWS1 = lli = lli << 1;//   010000000000000000L;
   static final long ROWS2 = lli = lli << 1;//   020000000000000000L;
   static final long ROWS3 = lli = lli << 1;//   040000000000000000L;
   static final long ROWS123 = ROWS1 | ROWS2 | ROWS3;
   static final long ROWSMASK = ROWS123;
   static final long DUP = lli = lli << 1;//      0100000000000000000L;//
-  static final long SKIPDUP = lli = lli << 1;//  0200000000000000000L;// 
+  static final long SKIPDUP = lli = lli << 1;//  0200000000000000000L;//
   // static final long THISYEARUNITAVE = thisYearUnitAve;
 //  static final long thisYrUnitAve = thisYearUnitAve;
   // static final long thisYrAve = thisYrUnitAve;
@@ -4885,7 +4929,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   private String myDetail = "";
   private String dds = description + myDetail;
   private String isPercent = "";
-  
+
   static int rende4;
   // now star the list of numbered dores names
   static int e4 = -1;
@@ -4954,7 +4998,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final int POSTSWAP = ++e4;
 
    static final int CATWORTHINCR = ++e4;
-  static final int CUMCATWORTH = ++e4; 
+  static final int CUMCATWORTH = ++e4;
   static final int TRADEWORTH = ++e4;
   static final int TRADEWORTHINCR = ++e4;
   static final int TRADERCSGINCR = ++e4;
@@ -5120,7 +5164,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final int rejectAtOne = ++e4;
   static final int rejectAtOneTerm = ++e4;
   //static final int DEADSWAPSNCOUNT = ++e4;
-  
+
   static final int SWAPRINCRCOST = ++e4;
   static final int SWAPSINCRCOST = ++e4;
   static final int SWAPRDECRCOST = ++e4;
@@ -5849,7 +5893,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(sumCatEffKnowBen, "EffCatKnoBen", "Catastrophy effective knowledge benefits");
     doRes(sumCatEffRDepreciationBen, "EffRDepreciationBen", "Catastrophy effective resource depreciation decrements");
     doRes(sumCatEffSDepreciationBen, "EffSDepreciationBen", "Catastrp[ju effoctove staff decau decrements");
-    // repeatlists at "W..." at a later point rn 
+    // repeatlists at "W..." at a later point rn
     doRes("WTRADEDINCRF5", "Fav5Trd%IncW", "% Years worth increase at Favor5/start year worth", 2, 3, 2, both | SKIPUNSET, ROWS1 | LIST21 | CURAVE | BOTH | SKIPUNSET, ROWS2 | THISYEARUNITS | BOTH | SKIPUNSET, ROWS3 | THISYEARAVE | BOTH | SKIPUNSET);
     doRes("WTRADEDINCRF4", "Fav4Trd%IncW", "% Years worth increase at Favor4/start year worth", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WTRADEDINCRF3", "Fav3Trd%IncW", "% Years worth increase at Favor3/start year worth", 2, 3, 2, DUP, 0, 0, 0);
@@ -6593,9 +6637,9 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
           valid = 0;
           //YEARS    0,   4,   8,    16,    32,   999999}; // + over 31+ group
           //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
-          //starts  0      1        8        15       22       29       36       43<45>   
+          //starts  0      1        8        15       22       29       36       43<45>
           //   LIST015 LIST10 LIST11 LIST12 LIST13 LIST14 LIST15
-          // LIST8-20        
+          // LIST8-20
           //              44                0
           // start yrsIx as the top one to copy up one row, 42 or 6
           double[][] dd = new double[DVECTOR3L][]; // p,s
@@ -6613,10 +6657,10 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
 
             wasHere += " " + (resI[rN][yrsIx] == null ? " not null" + yrsIx : " is null" + yrsIx);
 
-            if (icur0 != 0) { // (42 -1) = 41%7 = 
+            if (icur0 != 0) { // (42 -1) = 41%7 =
               doMyErr(String.format("In doStartYear a thread=" + Thread.currentThread().getName() + ", Error icur0=" + icur0 + " not 0 error rN=%2d,resS[Rn][0]=%5s, resI[rN].length=%3d, curIx=" + curIx + " ICUR0=" + ICUR0 + ",yrsIx=" + yrsIx + ", cur0=" + cur0 + ", cura=" + cura + ", icur0=" + icur0 + "\n", rN, resS[rN][0], resI[rN].length));
             }
-            // using ICUM choose depth = YDEPTH if yearsGrp !=0 , IDEPTH if == 0 
+            // using ICUM choose depth = YDEPTH if yearsGrp !=0 , IDEPTH if == 0
             depth = resI[rN][ICUM][CCONTROLD][(yearsGrp == 0 ? IDEPTH : IYDEPTH)];
 
             if (resI[rN][yrsIx] != null) { // don't try to mov null up one
@@ -6638,7 +6682,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
 
                   wasHere3 += " " + (resI[rN][yrsIx] == null ? " not null" + yrsIx : " is null" + yrsIx);
                   long rrr[][] = resI[rN][yrsIx]; // test for null
-                  // overwrite any previous reference 
+                  // overwrite any previous reference
                   // ensure that each reference is in one ICURO+yrsIx
                   resI[rN][yrsIx + 1] = resI[rN][yrsIx];  //moving [pors][clan][CCONTROLD]. up by 1 to depth
                   resV[rN][yrsIx + 1] = resV[rN][yrsIx];
@@ -6741,7 +6785,9 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       flushes();
       System.err.println(curEconName + " " + Econ.nowThread + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());
 //      ex.printStackTrace(System.err);
-      System.exit(-5);
+      if (E.debugMaster) {
+        System.exit(-5);
+      }
     }
     catch (Exception | Error ex) {
       newError = true;
@@ -6757,8 +6803,9 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       st.setFatalError(); // throws WasFatalError
       //throw new WasFatalError(curEconName + " " + Thread.currentThread().getName() + " Caught Exception " + ex.toString() + "  cause=" + ex.getCause() + " message=" + ex.getMessage() + andMore());
       flushes();
-      System.exit(-27);
-
+      if (E.debugMaster) {
+        System.exit(-27);
+      }
     }
     return rende4 - cnt;
   }// end doStartYear
@@ -6845,7 +6892,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
          */
         int statsLen = resI[rN].length; // length of yrsIx vector I think
         int[] spots = {0, 1};  // ICUM,ICUR0 short spots no LISTYRS
-        // 8 for LIST10 
+        // 8 for LIST10
         int[] spotsl = {0, 1, 8, 15, 22, 29, 36};// long cur0 index
         int statsLim = statsLen > STATSSHORTLEN ? STATSLONGLIM : STATSSHORTLIM; // pick the right spots
         boolean doYears = statsLen > STATSSHORTLEN;
@@ -6854,7 +6901,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
 
         //YEARS 0-99999   0,   4,   8,    16,    32,   999999}; // + over 31+ group
         //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
-        //spots  0   1     8    15    22    29    36       43(44)    
+        //spots  0   1     8    15    22    29    36       43(44)
         //   LIST012 LIST10 LIST11 LIST12 LIST13 LIST14
         // LIST8-20
         for (int yrsIx = ICUM; yrsIx < statsLim; yrsIx += yrsIx == ICUM ? ICUR0 - ICUM : MAXDEPTH) {
@@ -6865,7 +6912,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
           cur0 = yrsIx - curIx;
 
           // find the max value in cum and cur
-          // all entries 
+          // all entries
           if (!didPower) {
             double maxCum = -99999999.;
             maxCumP = -10;
@@ -6986,7 +7033,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
   int cntStatsPrints = 0;
   static volatile int ste = 0, lstk = 0, a = -5, b = -5, curm = 0;
 
-  //synchronized 
+  //synchronized
   double oldsetStat(int rn, int pors, int clan, double v, int cnt, int age
   ) {
     try {
@@ -7012,10 +7059,10 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         lResI = resI[rn].length;
         if (lResI > STATSSHORTLEN) {
           for (a = 1; a < 6 && b < 0; a++) {
-            //AGESTARTS   0,   4,   8,    16,    32,   999999}; 
+            //AGESTARTS   0,   4,   8,    16,    32,   999999};
             //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
             //   MAXDEPTH = 7
-            if (age < AGESTARTS[a]) { //0, 4, 8, 16, 32, 999999,9999999}; 
+            if (age < AGESTARTS[a]) { //0, 4, 8, 16, 32, 999999,9999999};
               b = a; //ageIx: b1 = 0-3,B2 4-7,B3 8-15,B4 16-31 B5 32-999999
             }
           }
@@ -7029,8 +7076,8 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         int ycnt = cnt > -2 ? cnt : 0;// allow -1
 
         // calculate the needed changes for ICUM  ICUR0  and possible ICURx
-        double[] resVCum = resV[rn][ICUM][pors]; //array object 
-        double resVCumC = resVCum[clan]; // value in 
+        double[] resVCum = resV[rn][ICUM][pors]; //array object
+        double resVCumC = resVCum[clan]; // value in
         resVCumC += v; // doesn't change resVCum[clan]
         long[] resICum = resI[rn][ICUM][pors];
         double[] resVCur = resV[rn][ICUR0][pors];
@@ -7188,7 +7235,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         // check if we do agelist
         if (resI[rn].length > STATSSHORTLEN) {
           for (a = 1; a < 6 && b < 0; a++) {
-            //AGESTARTS   0,   4,   8,    16,    32,   999999}; 
+            //AGESTARTS   0,   4,   8,    16,    32,   999999};
             //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
             //   LIST0-LIST9 LIST10 LIST11 LIST12 LIST13 LIST14 LIST15-LIST20
             //   MAXDEPTH = 7
@@ -7201,8 +7248,8 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         double resL[][][] = resV[rn];
         int ycnt = cnt > 0 ? cnt : 0;
 
-        double[] resVCum = resV[rn][ICUM][pors]; //array object 
-        double resVCumC = resVCum[clan]; // value in 
+        double[] resVCum = resV[rn][ICUM][pors]; //array object
+        double resVCumC = resVCum[clan]; // value in
         resVCumC += v; // won't work
         long[] resICum = resI[rn][ICUM][pors];
         double[] resVCur = resV[rn][ICUR0][pors];
@@ -7348,7 +7395,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         // check if we do agelist
         if (resI[rn].length > STATSSHORTLEN) {
           for (a = 1; a < 6 && b < 0; a++) {
-            //AGESTARTS   0,   4,   8,    16,    32,   999999}; 
+            //AGESTARTS   0,   4,   8,    16,    32,   999999};
             //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
             //   LIST0-LIST9 LIST10 LIST11 LIST12 LIST13 LIST14 LIST15-LIST20
             //   MAXDEPTH = 7
@@ -7361,8 +7408,8 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         double resL[][][] = resV[rn];
         int ycnt = cnt > 0 ? cnt : 0;
 
-        double[] resVCum = resV[rn][ICUM][pors]; //array object 
-        double resVCumC = resVCum[clan]; // value in 
+        double[] resVCum = resV[rn][ICUM][pors]; //array object
+        double resVCumC = resVCum[clan]; // value in
         resVCumC += v; // won't work
         long[] resICum = resI[rn][ICUM][pors];
         double[] resVCur = resV[rn][ICUR0][pors];
@@ -8325,7 +8372,9 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
       System.err.println(tError = ("putRows2 " + curEconName + " " + Econ.nowThread + "Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + andMore()));
       System.err.println("rn=" + rn + ", desc=" + resS[rn][0]);
       //ex.printStackTrace(System.err);
-      System.exit(-31);
+      if (E.debugMaster) {
+        System.exit(-31);
+      }
       throw new WasFatalError(tError);
     }
   }
@@ -8379,8 +8428,10 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
       secondStack = sw.toString();
       flushes();
       System.err.println(tError = ("Remember " + curEconName + " " + Econ.nowThread + "Ignore this error " + new Date().toString() + " " + (new Date().getTime() - startTime) + " cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + ", addlErr=" + addlErr + andMore()));
-      System.exit(-23);
-      throw new WasFatalError(tError);
+      if (E.debugMaster) {
+        System.exit(-23);
+      }
+      st.setFatalError(Color.ORANGE);
     }
   }//doWriteRememberVals
 
@@ -8592,9 +8643,9 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
   }
   /**
    * print stack: file.number.method if debugAtJavaOut
-     * 
+     *
    * @param num The l
-   * @return 
+   * @return
    */
   String atJava(int num){
     StackTraceElement[] aa = Thread.currentThread().getStackTrace();
@@ -8608,10 +8659,10 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
   }
   /**
    * print a System.out line with intro if E.debugOut
-   * * 
+   * *
  * @param flag a flag like ---FLAG---
  * @param ec  current Econ
- * @param what the 
+ * @param what the
  */
   void printHere(String flag, Econ ec, String what) {
     if (E.debugOutput) {
@@ -8628,16 +8679,16 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     }
   }
   /**  print a System.out line if E.debugDoYearEndOut or other debugs
- * 
+ *
  * @param test only print if test true, may be E.???
  * @param flag a flag like ---FLAG---
  * @param ec  current Econ
- * @param what the 
+ * @param what the
  */
   void printHere(boolean test, String flag, Econ ec, String what){
     if(test)printHere(flag,ec,what);
   }
-  
+
   /**
    * generate a string with names of Econ, Thread, file.line.method,
    * file.line.method why Place the string at variable wasHere
@@ -8945,7 +8996,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
       resI[SCORE][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
       resI[SCORE][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
       }
-      double myScoreAve = myScoreSum * E.invL2secs; //  inv 14 
+      double myScoreAve = myScoreSum * E.invL2secs; //  inv 14
       double invMyScoreAve = 1. / myScoreAve;
       // now convert sum to a frac relative to the ave of myScoreSum
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {

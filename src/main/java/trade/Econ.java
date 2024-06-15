@@ -74,7 +74,7 @@ public class Econ {
   protected int myEconCnt = 0;
   static int keepHist = 4;  // keep hist for myEconCnt up to 5;
   protected double trand[] = new double[E.lrand];
-  
+
   /**
    * add some Econ class variables
    */
@@ -286,14 +286,14 @@ public class Econ {
 
     double difSetVals = (EM.mPrioritySetMult[pors][0] - EM.mPrioritySetMult[pors][1]);
     double fracMult = (EM.prioritySetMult[pors][0]-EM.mPrioritySetMult[pors][0])/difSetVals;
-    double difPriority  = priorityMid; 
+    double difPriority  = priorityMid;
        */
       // poorer mean 3 poor financial sectors not just 2
       int poorer = EM.prioritySetMult[pors][0] > EM.midPrioritySetMult[pors] ? 1 : 0;
-      if (m < (2 + poorer) && EM.prioritySetMult[pors][0] <= EM.midPrioritySetMult[pors]) { // low pmm<midpmm 14 - 
+      if (m < (2 + poorer) && EM.prioritySetMult[pors][0] <= EM.midPrioritySetMult[pors]) { // low pmm<midpmm 14 -
         difSetVals = (EM.midPrioritySetMult[pors] - EM.mPrioritySetMult[pors][0]);// low sets dif
         fracMult = (EM.prioritySetMult[pors][0] - EM.mPrioritySetMult[pors][0]) / difSetVals; // low sets <Mult <frac
-        //slide:value:fracMult:pa:*rand 
+        //slide:value:fracMult:pa:*rand
         // settingss at 0.0:1.0:0.:14 :should be 14. or priorityMid * rand
         //at 75:2.5:1.0:2.0  result should be priorityLims[pors][1] * rand
         //at 85:2.7:.4:1.8 should be  (priorityLims[pors][1] - difPriLims[pors][1] + .4) * rand
@@ -502,7 +502,7 @@ public class Econ {
    if(dead) return EM.year - dyear;
    return -5;
   }
-  
+
    /**
    * test of double NaN or Infinite skip testing if not debugDouble
    *
@@ -663,7 +663,7 @@ public class Econ {
     return true; //OK past all limits
   }
   /** return Econ name with leading blank include living possibly seconds since new and since startYear
-   * 
+   *
    * @return Econ name
    */
   String printName() {
@@ -674,7 +674,7 @@ public class Econ {
    int initCnt = 100; // times since last init print
    static int initPrintCnt = 10; // number of calls with no print
    /** return the initTime if initCnt %gt; initPrintCnt
-    * 
+    *
     * @return Econ past initTime every initPrintCnt
     */
    String printInit() {
@@ -685,7 +685,7 @@ public class Econ {
      return "";
    }
      /** seconds since the start of this year
-    * 
+    *
     * @return Econ past initTime every initPrintCnt
     */
    String printYearStart() {
@@ -695,7 +695,7 @@ public class Econ {
    static int printGameTimeCnt = 100; // times since last init print
    static int printGameMaxCnt = 10; // number of calls with no print
    /** return the initTime if initCnt %gt; initPrintCnt
-    * 
+    *
     * @return Econ past initTime every initPrintCnt
     */
    String printGameTime() {
@@ -705,23 +705,23 @@ public class Econ {
      }
      return "";
    }
-   
+
    long aYearEndTime = 0; // start of Assets.CashFlow.YearEnd
    /**  seconds since start of YearEnd if E.debugDoYearEndOut
-    * 
+    *
     * @return seconds since startYearEndTime
     */
   String printYearEndStart(){
     if(startYearEndTime > 0 && E.debugDoYearEndOut) {
       return " eye" + eM.past(startYearEndTime);
-    } 
+    }
     if(aYearEndTime >0 && E.debugDoYearEndOut) {
        return " aye" + eM.past(aYearEndTime);
     }
     return "";
   }
   /** name of thread and seconds after start if startThead %gt; 0 and E.debugDoYearEndOut
-   * 
+   *
    * @return name of thread and seconds after start or blank
    */
   String printThread() {
@@ -731,9 +731,9 @@ public class Econ {
     return "";
   }
 
-   
+
 /** return Assets newKnowledge if not dead
- * 
+ *
  * @return Assets.newKnowledge
  */
   ARow getNewKnowledge() {
@@ -886,7 +886,7 @@ public class Econ {
     return hiLoMult;
   }
   ;
-  
+
   /** get the Hi true when the HiLoMult will increase the worth
    * of each year by decreasing the difficulty
    * @return true if hiLoMult will increase growth by decreasing difficulty
@@ -1103,27 +1103,27 @@ public class Econ {
     nowEc = this;
    // myYearEndTime = new Date().getTime();
     try {
-     EM.econCountsTest(); 
+     EM.econCountsTest();
       as.yearEnd();
       EM.wasHere3 = "after as.yearEnd " + name + "Y"+ EM.year + " yyyee1=" + yyyee1++;
-      EM.econCountsTest(); 
+      EM.econCountsTest();
       EM.wasHere3 = "after as.yearEnd " + name + "Y"+ EM.year + " yyyee2=" + yyyee2++;
       if (getDie()) {
         dage++;
         age = -1;
- EM.econCountsTest(); 
+ EM.econCountsTest();
       }// getDie
       EM.wasHere3 = "after as.getDie() " + name + "Y"+ EM.year + " yyyee3=" + yyyee3++;
       if (clearHist()) {
         hist.clear(); // wipe out previous hist
       }
-      EM.econCountsTest(); 
+      EM.econCountsTest();
       EM.wasHere3 = "at econ.yearEnd end " + name + "Y"+ EM.year + " yyyee4=" + yyyee4++;
       myClearHist = false;
       didYearEnd = false;
       nowName = name;
       nowEc = this;
-     EM.econCountsTest(); 
+     EM.econCountsTest();
       EM.wasHere3 = "at econ.yearEnd end after sync " + name + "Y"+ EM.year + " yyyee6=" + yyyee6++;
     } catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack+"";
@@ -1275,7 +1275,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           // String trName = tr.getName();
           Econ trCn = tr.cn;
           // int nTradePriority = -3;
-          // look for a tradePriority Econ in wilda, and update parallel tPriority 
+          // look for a tradePriority Econ in wilda, and update parallel tPriority
           for (int nn = 0; nn < wLen; nn++) {
             if (wilda[nn] == trCn) {
               tPriority[nn].updateValues(tr);
@@ -1296,10 +1296,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
             aPri = 0.;
             for (int gIx = 0; gIx < 3; gIx++) {
               sIx = tradeGoodsNeeds.curMaxIx(gIx);
-              // count how much they offer of what we need highest 3 needs only 
+              // count how much they offer of what we need highest 3 needs only
               aPri += Math.max(0.0, Math.min(tradeGoodsNeeds.get(sIx), -otherGoods.get(sIx)));
             }
-            // remove travel costs from the potential gain from trade 
+            // remove travel costs from the potential gain from trade
             aPri = Math.max(0.0, aPri - sumTrade1YearTravelMaintCosts * calcLY(this, wilda[n]));
           } else {  // >= 3. <= 5. previous historical info
             aPri = tPriority[nn].getPriority();
@@ -1587,7 +1587,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     int retTerm = ret.getTerm();
     if(E.debugTradeBarter){ eM.printHere("----EB----",this," before mergeLists length=" + planetList.size() + " term =" + retTerm);
     if (retTerm == 0 || retTerm == -2) {
-      planetList = mergeLists(planetList, otherEcon.planetList, ret);     
+      planetList = mergeLists(planetList, otherEcon.planetList, ret);
     //  System.out.println(" --EB--econ.barter " + ret.getPlanetName() + " after mergeLists length=" + planetList.size());
       }
     }
@@ -1641,7 +1641,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     return !(alreadyTrading || didYearEnd) && visitedShipNext < maxShips;
   }
 
-  
+
 
   /**
    * wait until a synchronized what drops to a limit or until an interrupt or
@@ -1662,9 +1662,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     int atCnt = 0;
     int prevCnt = what[0];
     long imMore = imStart - EM.doYearTime;
-    
-  
-  EM.econCountsTest(); 
+
+
+  EM.econCountsTest();
     //.  ixImWaitingList = ++ixImWaitingList % lImWaitingList;
     String sss = EM.wasHere2 = "---IMWa---imWaiting in thread " + Thread.currentThread().getName() + " name=" + name + " Since doYear" + eM.year + "=" + imMore + " doEndYearCnt" + doEndYearCnt[0] + " econNames=";
     boolean doComma=false;
@@ -1694,7 +1694,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     // what is always doEndYearCnt, so use doEndYearCnt[0]
     boolean dowait = doEndYearCnt[0] > limit;
     for (int timeLoop = 0; timeLoop < secs && dowait; timeLoop++) {
-     EM.econCountsTest(); 
+     EM.econCountsTest();
       if (E.debugThreads) {
         if (timeLoop % 2 == 0) {
           System.out.println("------KKK-----imWaiting in thread " + Thread.currentThread().getName() + name + "Y" + EM.year + " " + why + " have cnt " + what[0] + " limit=" + limit + " seconds=" + timeLoop);
@@ -1705,12 +1705,13 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         prevCnt = what[0];
         secs += timeLoop; // update the limit
       }
-      //  synchronized (what) {tCnts = what[0];}
+
+      synchronized (A2Row.ASECS) {
       if (doEndYearCnt[0] <= limit) {
         dowait = false; // no more waiting
-       EM.econCountsTest(); 
+       EM.econCountsTest();
       } else {
-       EM.econCountsTest(); 
+       EM.econCountsTest();
         if (timeLoop > secs + 2) {
           EM.flushes();
           long imStuck = (new Date()).getTime();
@@ -1720,12 +1721,12 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           st.setFatalError();
         } else {
           try {
-           EM.econCountsTest(); 
+           EM.econCountsTest();
             Thread.sleep(100L);
- EM.econCountsTest(); 
+ EM.econCountsTest();
           } catch (Exception | Error ex) {
   EM.firstStack = EM.secondStack+"";
-       ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();      
+       ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
             System.err.println(eM.tError = (st.sinceEcon() + " caught=" + ex.toString() + " message " + ex.getMessage() + EM.andMore()));
             ex.printStackTrace(System.err);
            eM.flushes();
@@ -1736,7 +1737,8 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           }
         }
 
-      } //else
+        } //else
+      }// end sync
     } // timeLoop
     long imDoneT = (new Date()).getTime() - eM.doYearTime;
     EM.wasHere2 = imWaitingList[ixImWaitingList = ++ixImWaitingList < lImWaitingList ? ixImWaitingList : 0] = "----IMWf----  im " + name + "Y" + EM.year + " done waiting " + imDoneT + " " + nowName + " " + Thread.currentThread().getName() + " from " + imWaitingList[ixImWaitingList];
@@ -1778,32 +1780,43 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    * a synchronized increment of the doEndYearCnt   * save a names of counted econs in a list
    *
    */
-  synchronized void incrEndYearCnt() {
-    EM.wasHere8 = "---ELa10--- Econ incrEndYearCnt has lock";
+  void incrEndYearCnt() {
+
     if (dead) {
       return;
     }
-      for(int ix=0;ix < maxEndYears-1;ix++){
-       if(econNames[ix] == null){
-         econNames[ix] = name;
-         break;
-        }
+    synchronized (A2Row.ASECS) {
+      EM.wasHere8 = "---ELa10--- Econ incrEndYearCnt has lock";
       doEndYearCnt[0]++;
-    };
-     eM.printHere("----CI----",this," incrEndYearCnt" + doEndYearCnt[0] + " insert=" + name + " Econ Names=");
-      boolean doComma=false;
-      for(int ix=0; ix< maxEndYears-1;ix++){
-        if(econNames[ix] != null){ System.err.print((doComma?", ":"")  + econNames[ix] ); doComma= true;}
+      for (int ix = 0; ix < maxEndYears - 1; ix++) {
+        if (econNames[ix] == null) {
+          econNames[ix] = name;
+          break;
+        }
+
       }
+
+      eM.printHere("----CI----", this, " incrEndYearCnt" + doEndYearCnt[0] + " insert=" + name + " Econ Names=");
+      boolean doComma = false;
+      for (int ix = 0; ix < maxEndYears - 1; ix++) {
+        if (econNames[ix] != null) {
+          System.err.print((doComma ? ", " : "") + econNames[ix]);
+          doComma = true;
+        }
+      }
+    }
   }
 
+  ;
   /**
    * a synchronized decrement of the doEndYearCnt   * remove name of the current econ name
    *
    */
-  synchronized void decrEndYearCnt() { //Econ
+  void decrEndYearCnt() { //Econ
     EM.wasHere8 = "---ELa11--- Econ decrEndYearCnthas lock";
-      doEndYearCnt[0]--;
+  synchronized (A2Row.ASECS) {
+    doEndYearCnt[0]--;
+
       for(int ix=0;ix < maxEndYears-1;ix++){
         if(econNames[ix] != null && econNames[ix].equals(name)){
           econNames[ix] = null;
@@ -1813,6 +1826,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       boolean doComma=false;
       for(int ix=0; ix< maxEndYears-1;ix++){
         if(econNames[ix] != null){ System.err.print((doComma?", ":"")  + econNames[ix] ); doComma= true;}
+      }
     }
   } // Econ.decrEndYearCnt
 
@@ -1826,10 +1840,10 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   void doYearEnd() {
-    
+
     if (!dead && !didYearEnd) {
-     EM.econCountsTest(); 
-        
+     EM.econCountsTest();
+
       didYearEnd = true;
       nowName = name;
       dyThreadName = Thread.currentThread().getName();
@@ -1842,7 +1856,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
      // etTimes[0] = etStart;
       int atCnt = 0;
       nowName = name;
-     EM.econCountsTest(); 
+     EM.econCountsTest();
 
       if ((doImw = eM.maxThreads[0][0] >= 2.0 && doEndYearCnt[0] > eM.maxThreads[0][0])) {  // wait only if over cnt
         imWaiting(doEndYearCnt, (int) eM.maxThreads[0][0], 6, "doYearEnd " + name);
@@ -1865,7 +1879,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
           atCnt++;
         }//for
       }//DEBUGWAITTRACE
-      EM.econCountsTest(); 
+      EM.econCountsTest();
       if (EM.maxThreads[0][0] >= 2.) {
         // now in the main thread, up the assigned thread count
         incrEndYearCnt();
@@ -1875,9 +1889,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         moreTimes[2] = etTimes[2] - etTimes[1]; //imCounted time
         //long msecs = EM.doYearTime - etTimes[1];
         atList[0] = "\n---ECTH---" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " imCounted +" + moreTimes[2];
-       EM.econCountsTest(); 
+       EM.econCountsTest();
         EconThread emm = new EconThread(this, etTimes, atList, sETList, ixETList);
-   
+
         emm.setPriority(Thread.MIN_PRIORITY);
         etTimes[3] = (new Date()).getTime(); // after create
         int acge = eM.curEcon.age;
@@ -1898,7 +1912,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       }
 
     }  // dead didYearEnd
-  }//doYearEnd  
+  }//doYearEnd
 
 // this is a inner thread class which  runs yearEnd
   public class EconThread extends Thread {
@@ -1979,7 +1993,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
 
       //synchronized (doEndYearCnt) {doEndYearCnt[0]--;}  // done
       decrEndYearCnt();
-EM.econCountsTest(); 
+EM.econCountsTest();
       if (E.debugThreadsOut) {
         long b4e = (new Date()).getTime();
         etTimes[7] = b4e;

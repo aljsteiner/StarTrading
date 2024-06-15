@@ -159,7 +159,7 @@ public class E {
   static final boolean debugPutRows2 = debugOutput && outputFewer;
   static final boolean DEBUGWAITTRACE = debugOutput && outputFewer;
   static final boolean debugLogsOut = debugOutput && outputFewer; // StarTrader logs output
-  static final boolean debugThreads = debugMaster && outputFewer;
+  static final boolean debugThreads = debugMaster;
   static final boolean debugRsOut = debugOutput && outputFewer; // EM rs output
   static final boolean debugFFOut = debugOutput && outputFewer; // EM Assets.CashFlow.calcForwardFund output
   static final boolean debugStatsOut1 = debugOutput && outputFewer; // stats output1

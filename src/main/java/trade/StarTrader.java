@@ -6975,7 +6975,7 @@ public class StarTrader extends javax.swing.JFrame {
                          + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.age
                          + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
           if (E.debugLiveOut) {
-            System.out.println(new Date().toString() + disp1);
+            System.out.println("-----EYs----" + new Date().toString() + disp1);
           }
           namesList.add(envsLoop2, disp1);
           EM.econCountsTest(); 
@@ -6988,6 +6988,7 @@ public class StarTrader extends javax.swing.JFrame {
         setEconState(WAITING);
         EM.econCountsTest(); 
         EM.curEcon.imWaiting(Econ.doEndYearCnt, 0, 4, "doYear ended yearEnds");
+        System.out.println("----EYT1-----" + EM.threadsStacks()); // record any endyear threads
         EM.econCountsTest(); 
         setEconState(ENDYR);
         paintCurDisplay(eM.curEcon);

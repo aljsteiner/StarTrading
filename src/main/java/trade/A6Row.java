@@ -295,7 +295,7 @@ public class A6Row extends A6Rowa {
         for (int n = 0; n < E.LSECS; n++) {
           A[m].values[n] = prev.A[m].values[n];
         }
-      }// end m     
+      }// end m
     }
     return this;
   }
@@ -336,7 +336,7 @@ public class A6Row extends A6Rowa {
       for (int n = 0; n < E.LSECS; n++) {
         A[m + 2].values[n] = prev.A[prevIx].values[n];
       }
-    }// end m     
+    }// end m
     return this;
   }
 
@@ -591,7 +591,7 @@ public class A6Row extends A6Rowa {
     }
   }
    */
-  
+
   /**
    * copy A6Row object, copy each by each of calling A6Row use as A6Row b =
    * a.copy(); no change to a, b is a new object lev,titl,balances,costs,blev
