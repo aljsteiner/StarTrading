@@ -1517,7 +1517,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       // term = -3 means bartering done
       // term starts at eM.barterStart
       // see Assets.CashFlow.barter for the flow of term
-      for (int termLoop = aOffer.getTerm(); termLoop > -3; termLoop = aOffer.getTerm()) {
+      for (int termLoop = aOffer.getTerm(); termLoop > -4; termLoop = aOffer.getTerm()) {
         bb1 = bb; // starts at 0
         bb = ++bb % 2; // starts at 1
         //send loop to both histories cn[0] planet

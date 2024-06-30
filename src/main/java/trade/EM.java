@@ -237,22 +237,27 @@ class EM {
   static volatile String otherEconClan = "A";
   // static int myAIcstart = 'a'; // start of ascii a
   // static int myAIdiv = 20; //divid the values by 5
+  /*
   static String myStrs[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};//11
   Character myChars[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
     'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+  */
   static volatile Map<String, Integer[]> myAIlearnings;
   //pPrevScW,myScoreAr,E.pPrevEScW,aiScoreAr,pPrevResil,aiResilAr
-  static int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6, skippedCnt = 7, negIxs = 8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
-  static int ixLimSum = 2, ixLimCnt = 4; // holds 52+2 spare
+  static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6, skippedCnt = 7, negIxs = 8, undef = 8, missing = 9, inactive = 10, died = 11, econDiedI = -1, notActiveI = -2, missingI = -3, undefI = -4, strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
+//  negIxs = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
+  static final int ixLimSum = 2, ixLimCnt = 4; // holds 91=12+77+2 spare
+  static final int nars = 7;
   static int[][] ars;
   // each subarray = ar#,pMain#,pLim1,low,upper,pLim2,low,upper,pLim3,low,upper lenghts 5,8,11
-  static int xAr[][] = {{1, E.pPrevScW, E.pPrevScP, 3, 5, E.pPrevScW, -1, 52}, {2, E.pPrevEScW, E.pPrevScP, 3, 5, E.pPrevEScW, -1, 52}, {2, E.pPrevResil, E.pPrevScP, 3, 5, E.pPrevResil, -1, 52}};
+  static int xAr[][] = {{1, E.pPrevScW, E.pPrevScP, 3, 5, E.pPrevScW, -1, 52}, {2, E.pPrevEScW, E.pPrevScP, 3, 5, E.pPrevEScW, -1, 77}, {2, E.pPrevResil, E.pPrevScP, 3, 5, E.pPrevResil, -1, 77}};
 
-  static int ixIxs[][] = {{E.pPrevScP, 3, 5}, {E.pPrevScW, -1, 52}, {E.pPrevEScW, -1, 52}, {E.pPrevResil, -1, 52}, {E.pPrevResil, -1, 52}};
-  static String whats[] = {"winner with myScore", "winner with aiScore", "winner with Resonance values", "", "", ""};
-  static String seeArrays[] = {"newa ", "new0 ", "new1", "new2 ", "new3 ", "new4 ", "new5 ", "new6 "};
+  static int ixIxs[][] = {{E.pPrevScP, 3, 5}, {E.pPrevScW, -1, 77}, {E.pPrevEScW, -1, 77}, {E.pPrevResil, -1, 77}, {E.pPrevResil, -1, 52}};
+  static String whats[] = {"winr&myScore", "winr&aiScore", "winr&Resonance values", "", "", ""};
+  static String seeArrays[] = {"newa ", "new0 ", "new1", "new2 ", "new3 ", "new4 ", "new5 ", "new6 ", "new7"};
   static int entryCnt = 0, cntsCnt = 0;
+
   /**
    * set curEcon, curEconName curEconClan;curEconTime,curEconAge get a null
    * error the offered Econ is null
@@ -282,51 +287,52 @@ class EM {
     return otherEconName = x.getName();
   }
 
-  /** if E.debugEconCnt test that econCnt == the porsCnt s
+  /**
+   * if E.debugEconCnt test that econCnt == the porsCnt s
    *
-   *  use assert if it -ae enabled asserts, skip if test ifassert
+   * use assert if it -ae enabled asserts, skip if test ifassert
    *
    */
-  static void econCountsTest(){
+  static void econCountsTest() {
     if (E.debugEconCnt) {
       wasHere7 = "---ELb---econCounts seek econLock ";
       synchronized (A4Row.econLock) {
         wasHere8 = "---ELba--- econCounts got econLock";
-                int myPorsCnt = porsCnt[0] + porsCnt[1];
+        int myPorsCnt = porsCnt[0] + porsCnt[1];
         assert econCnt == myPorsCnt : "Counts error " + curEconName + "Y" + year + ", econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt;
-                if (!E.ifassert && (econCnt != (porsCnt[0] + porsCnt[1]))) {
-                  doMyErr("Counts error, econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt
-                  );
-                }
-                int myClanCnt = 0,myPorsClanCnt=0;
+        if (!E.ifassert && (econCnt != (porsCnt[0] + porsCnt[1]))) {
+          doMyErr("Counts error, econCnt=" + econCnt + " != myPorsCnt=" + myPorsCnt
+          );
+        }
+        int myClanCnt = 0, myPorsClanCnt = 0;
         for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
           myClanCnt += clanCnt[ixClan];
-                for(int psIx=0; psIx < 2;psIx++){
-                  myPorsClanCnt += porsClanCnt[psIx][ixClan];
-                  }
-                }
-                if(econCnt != myClanCnt){
-                  doMyErr("Counts error, econCnt=" + econCnt + " != myClanCnt=" + myClanCnt );
-                }
-                if(econCnt != myPorsClanCnt){
-                  doMyErr("Counts error, econCnt=" + econCnt + " != myPorsClanCnt=" + myPorsClanCnt );
-                }// if myPorsClanCnt
-              } //sync
-            } //if debug
+          for (int psIx = 0; psIx < 2; psIx++) {
+            myPorsClanCnt += porsClanCnt[psIx][ixClan];
+          }
+        }
+        if (econCnt != myClanCnt) {
+          doMyErr("Counts error, econCnt=" + econCnt + " != myClanCnt=" + myClanCnt);
+        }
+        if (econCnt != myPorsClanCnt) {
+          doMyErr("Counts error, econCnt=" + econCnt + " != myPorsClanCnt=" + myPorsClanCnt);
+        }// if myPorsClanCnt
+      } //sync
+    } //if debug
   } //econCountsTest
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
   static double[] difficultyPercent = {50.};
   static final double[][] mDifficultyPercent = {{0., 99.}, {0., 99.}};
-  static double [][]balanceMult = {{1.3,1.3}};
-  static final double[][] mBalanceMult = {{.5,15.5},{.5,15.5}};
+  static double[][] balanceMult = {{1.3, 1.3}};
+  static final double[][] mBalanceMult = {{.5, 15.5}, {.5, 15.5}};
   static double[][] hiLoMult = {{1.3, 1.3, 1.3, .3, .3}, {1.3, 1.3, 1.3, .3, .3}};
   static final double[][] mHiLoMult = {{.2, 2.}, {.2, 2.}};
   static double[][] minEconsMult = {{1.1}}; // nultiplies values in envsPerYear
   static final double[][] mMinEconsMult = {{.5, 10.0}};
   static volatile double[][] minEcons = {{30.}}; // goes into last envsPerYear;
   static final double[][] mMinEcons = {{10., 100.}};
-  static volatile double[][] maxThreads = {{9.0}};
+  static volatile double[][] maxThreads = {{1.0}};
   static final double[][] mmaxThreads = {{1.0, 12.0}};
   static volatile int[] iMaxThreads = {1};
   static volatile double[][] haveColors = {{.3}};
@@ -415,7 +421,7 @@ class EM {
    * @param clan for which clan
    * @return pors for the given clan
    */
-    int getNewPorS(int clan) {
+  int getNewPorS(int clan) {
     double sFrac1 = 99.;
     double sFrac2 = 99.;
     double sFrac3 = 99.;
@@ -429,25 +435,26 @@ class EM {
                 && porsClanCnt[P][clan] > 0
                 && sFrac1 < clanAllShipFrac[P][clan]
                 && sFrac2 < gameShipFrac[P]
-                  && sFrac3 < clanShipFrac[P][clan])
-                      ? E.S : E.P;
+                && sFrac3 < clanShipFrac[P][clan])
+                    ? E.S : E.P;
 
-
-     if(E.debugCreateOut)System.out.println("----PScc---- pors lPlanets=" + porsCnt[P]
+    if (E.debugCreateOut) {
+      System.out.println("----PScc---- pors lPlanets=" + porsCnt[P]
                          + " lEconCnt=" + econCnt
-                        + " lShips=" + porsCnt[S]
-                        + " lPlanets=" + porsCnt[P]                         + "\n lClanPlanets=" + porsClanCnt[P][clan]
+                         + " lShips=" + porsCnt[S]
+                         + " lPlanets=" + porsCnt[P] + "\n lClanPlanets=" + porsClanCnt[P][clan]
                          + " lClanCnt[" + clan + "]=" + clanCnt[clan]
                          + " lClanShips=" + porsClanCnt[S][clan]
                          + " lClanEcons=" + clanCnt[clan]
-                        + "\n clanShipsFrac=" + mf(sFrac3)
-                        + " gameShipFrac[P][clan] =" + mf(sFrac2)                         + " pors=" + (pors == P?"planet":"ship")
+                         + "\n clanShipsFrac=" + mf(sFrac3)
+                         + " gameShipFrac[P][clan] =" + mf(sFrac2) + " pors=" + (pors == P ? "planet" : "ship")
                          + "\n+++"
                          + (clanCnt[clan] == 0 ? "P0000" : "S"
-                         + (porsClanCnt[P][clan] == 0 ? "P000" : "S"
-                         + (sFrac1 < clanAllShipFrac[P][clan] ? "S" : "P")
-                         + (sFrac2 < gameShipFrac[P] ? "S" : "P")
-                         + (sFrac3 < clanShipFrac[P][clan] ? "S" : "P"))));
+                                                           + (porsClanCnt[P][clan] == 0 ? "P000" : "S"
+                                                                                                   + (sFrac1 < clanAllShipFrac[P][clan] ? "S" : "P")
+                                                                                                   + (sFrac2 < gameShipFrac[P] ? "S" : "P")
+                                                                                                   + (sFrac3 < clanShipFrac[P][clan] ? "S" : "P"))));
+    }
 
     return pors;
   }
@@ -590,7 +597,6 @@ class EM {
   static volatile int psClanPreEconDied[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
   static volatile int psClanEconDied[][] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}};
 
-
   /**
    * instantiate another EM, set static eE and static eM = new EM
    *
@@ -607,6 +613,7 @@ class EM {
   }
 
   static int cntInit = 0;
+
   /**
    * initialize eM read the existing keeps, close that and open as
    *
@@ -640,8 +647,8 @@ class EM {
 
       //initialize the ai Map array files
       int ix = 0, ix2 = 0;
-      ars = new int[6][]; // 0,1,2,3,4,5
-      for (ix = 0; ix < 4; ix++) {
+      ars = new int[nars][]; // 0,1,2,3,4,5,6,7
+      for (ix = 0; ix < nars; ix++) {
         ars[ix] = new int[lenIx];
         for (ix2 = 0; ix2 < lenIx; ix2++) {
           ars[ix][ix2] = 0;
@@ -660,7 +667,6 @@ class EM {
       keepBuffered = true;
       bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
       bMapFw.write(rOut, 0, rOut.length());
-
 
     }
     catch (Exception | Error ex) {
@@ -1057,17 +1063,25 @@ class EM {
     double nu = now - oldTime;
     return " " + mf(nu * .001);
   }
-  /** return long current time in milliseconds
+
+  /**
+   * return long current time in milliseconds
    *
    * @return time in milliseconds for 1970?
    */
-  static long now(){ return (new Date()).getTime(); }
-  /** return the seconds since pastTime as a string
+  static long now() {
+    return (new Date()).getTime();
+  }
+
+  /**
+   * return the seconds since pastTime as a string
    *
    * @param pastTime a remembered pastTime
    * @return time past in string seconds with millisecond fraction
    */
-  String past(long pastTime){ return mf((now() - pastTime) * .001);}
+  String past(long pastTime) {
+    return mf((now() - pastTime) * .001);
+  }
 
   /**
    * get seconds since oldTime
@@ -1077,7 +1091,7 @@ class EM {
    * @return seconds ssss.mmm
    */
   protected static String since(String desc, long oldTime) {
-    return " " + desc + "=" + mf( (oldTime -(new Date()).getTime()) * .001);
+    return " " + desc + "=" + mf((oldTime - (new Date()).getTime()) * .001);
   }
 
   /**
@@ -1259,6 +1273,7 @@ class EM {
 
   static boolean mfShort = false;
   static boolean test5 = true; // temp to test funcionss
+
   /**
    * format the Double value to a x char string if myWidth > 1800 make max 15
    * char string
@@ -1267,7 +1282,7 @@ class EM {
    * @return value as a string
    */
   static public String mf(Double v) {
-   double tmp = v < 0.0 ? (-v % 1.0) : v % 1.0; // remainder from 1.0
+    double tmp = v < 0.0 ? (-v % 1.0) : v % 1.0; // remainder from 1.0
     if (v.isNaN()) {
       return "# " + v;
     }
@@ -1278,21 +1293,23 @@ class EM {
 
     if (mfShort || myWidth < 1190) { // 7 characters
       if (v == .0 || v == -0) {  // actual zero
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(1);
-      return dFrac.format(v);
-    } else
-      if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder //very close to zero remainder
-        if(test5)System.err.printf("----MFT1A--- v= %10.5f\n",v);
-      dFrac.setMaximumFractionDigits(0);
-      return dFrac.format(v);
-    } else
-      if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) { //6 7
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return dFrac.format(v);
+      }
+      else if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder //very close to zero remainder
+        if (test5) {
+          System.err.printf("----MFT1A--- v= %10.5f\n", v);
+        }
+        dFrac.setMaximumFractionDigits(0);
+        return dFrac.format(v);
+      }
+      else if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) { //6 7
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(5);
         return dFrac.format(v);
-      } else
- if (!mfShort && (v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
+      }
+      else if (!mfShort && (v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         return dFrac.format(v);
@@ -1305,36 +1322,38 @@ class EM {
       else if ((v > -99999. && v < -0.0) || (v > .001 && v < 99999.)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-   return dFrac.format(v);
+        return dFrac.format(v);
       }
       else if ((v > -999999. && v < -0.00) || (v > .001 && v < 999999.)) {
-        if(test5)System.err.printf("----MFT1--- v= %10.5f\n",v);
+        if (test5) {
+          System.err.printf("----MFT1--- v= %10.5f\n", v);
+        }
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
         return dFrac.format(v);
       }
 
-    else if (v == .0 || v == -0) {  // actual zero
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(1);
-      return dFrac.format(v);
-    }
- else {
-   exp = new DecimalFormat("0.###E0");
+      else if (v == .0 || v == -0) {  // actual zero
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return dFrac.format(v);
+      }
+      else {
+        exp = new DecimalFormat("0.###E0");
         return exp.format(v);
-    }
+      }
     } // end v< 1190
     if (myWidth < 1200) {  // 9 charcters
       if (v == .0 || v == -0) {  // actual zero
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(1);
-      return dFrac.format(v);
-    } else
-     if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //very close to zero remainder
-       dFrac.setMaximumFractionDigits(0);
-       return dFrac.format(v);
-      } else
-     if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) {
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return dFrac.format(v);
+      }
+      else if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //very close to zero remainder
+        dFrac.setMaximumFractionDigits(0);
+        return dFrac.format(v);
+      }
+      else if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(7);
         return dFrac.format(v);
@@ -1352,7 +1371,7 @@ class EM {
       else if ((v > -999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-       return dFrac.format(v);
+        return dFrac.format(v);
       }
       else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 99999999.)) { //8 9
         dFrac.setMinimumFractionDigits(0);
@@ -1360,8 +1379,8 @@ class EM {
         return dFrac.format(v);
 
       }
-     else {
-       exp = new DecimalFormat("0.#####E0");
+      else {
+        exp = new DecimalFormat("0.#####E0");
         return exp.format(v);
       }
 
@@ -1369,15 +1388,15 @@ class EM {
 
     else if (myWidth < 1500) { // 12 characters
       if (v == .0 || v == -0) {  // actual zero
-      dFrac.setMinimumFractionDigits(0);
-      dFrac.setMaximumFractionDigits(1);
-      return dFrac.format(v);
-    } else
-     if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //8 8 very close to zero remainder
-       dFrac.setMaximumFractionDigits(0);
-       return dFrac.format(v);
-      } else
-     if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) { // up to 9 fractions
+        dFrac.setMinimumFractionDigits(0);
+        dFrac.setMaximumFractionDigits(1);
+        return dFrac.format(v);
+      }
+      else if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //8 8 very close to zero remainder
+        dFrac.setMaximumFractionDigits(0);
+        return dFrac.format(v);
+      }
+      else if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) { // up to 9 fractions
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(9);
         return dFrac.format(v);
@@ -1386,7 +1405,7 @@ class EM {
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         return dFrac.format(v);
-    }
+      }
       else if ((v > -9999999. && v < -0.0) || (v > .001 && v < 99999999.)) { // 7 8 13 13
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(2);
@@ -1395,7 +1414,7 @@ class EM {
       else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 8 8 13 13
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-       return dFrac.format(v);
+        return dFrac.format(v);
       }
       else if ((v > -99999999. && v < -0.00) || (v >= 0.0 && v < 99999999.)) {// 8 8  12 11
         dFrac.setMinimumFractionDigits(0);
@@ -1405,66 +1424,87 @@ class EM {
       else {
         return exp.format(v);
       }
-  }
+    }
     else if (myWidth > 1500) { // 15 characters
-      if(test5)System.err.printf("----MFT9--- v= %15.9e\n",v);
-       if((v > -999999999999. && v < 0.0 && tmp < .000000001 && tmp > E.PPZERO ) || (v >= 0.0 && v < 9999999999999. && tmp < .000000001 && tmp > E.PPZERO)) {  //12 13 whole number with a remainder less than 9 digits after . more than 13 digits after . and less than a  number up to 12 digits, anything large goes to the exp format
-       if(test5)System.err.printf("----MFT9a--- v= %15.9e, %9.3e remainder %9.3e " + exp.format(v) +  " \n",v,tmp,v, E.PPZERO);
-       return exp.format(v);
+      if (test5) {
+        System.err.printf("----MFT9--- v= %15.9e\n", v);
+      }
+      if ((v > -999999999999. && v < 0.0 && tmp < .000000001 && tmp > E.PPZERO) || (v >= 0.0 && v < 9999999999999. && tmp < .000000001 && tmp > E.PPZERO)) {  //12 13 whole number with a remainder less than 9 digits after . more than 13 digits after . and less than a  number up to 12 digits, anything large goes to the exp format
+        if (test5) {
+          System.err.printf("----MFT9a--- v= %15.9e, %9.3e remainder %9.3e " + exp.format(v) + " \n", v, tmp, v, E.PPZERO);
+        }
+        return exp.format(v);
       }
 
-       else if((v > -999999999999. && v < 0.0 && (tmp < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && (tmp < E.PPZERO))) {  //12 13 whole number iwith a remainder smaller than 13 digits after . and less than a very large number, anything large goes to the e format
-       dFrac.setMaximumFractionDigits(0);// whole numbers only
-       if(test5)System.err.printf("----MFT9b--- v= %15.9e, %9.3e zero %9.3e" + dFrac.format(v) +  " \n",v,tmp, E.PPZERO);
-       return dFrac.format(v);
+      else if ((v > -999999999999. && v < 0.0 && (tmp < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && (tmp < E.PPZERO))) {  //12 13 whole number iwith a remainder smaller than 13 digits after . and less than a very large number, anything large goes to the e format
+        dFrac.setMaximumFractionDigits(0);// whole numbers only
+        if (test5) {
+          System.err.printf("----MFT9b--- v= %15.9e, %9.3e zero %9.3e" + dFrac.format(v) + " \n", v, tmp, E.PPZERO);
+        }
+        return dFrac.format(v);
       } // next a slightly
 
-     else
-         if ((v > -99. && v < -0.0) || (v < 999.0 && v >= 0.0)) {// 2 3
+      else if ((v > -99. && v < -0.0) || (v < 999.0 && v >= 0.0)) {// 2 3
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(9);
-        if(test5)System.err.printf("----MFT9c--- v= %15.9e, " + dFrac.format(v) + " \n",v);
+        if (test5) {
+          System.err.printf("----MFT9c--- v= %15.9e, " + dFrac.format(v) + " \n", v);
+        }
         return dFrac.format(v);
-         }
+      }
       else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 9999999.)) { // 6 7
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(5);
-        if(test5)System.err.printf("----MFT9k--- v= %15.9e, " + dFrac.format(v) + " \n",v);
+        if (test5) {
+          System.err.printf("----MFT9k--- v= %15.9e, " + dFrac.format(v) + " \n", v);
+        }
         return dFrac.format(v);
-    }
+      }
       else if ((v > -9999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 7 8
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(4);
-        if(test5)System.err.printf("----MFT9d--- v= %15.8e, " + dFrac.format(v) + " \n",v);
+        if (test5) {
+          System.err.printf("----MFT9d--- v= %15.8e, " + dFrac.format(v) + " \n", v);
+        }
         return dFrac.format(v);
-    }
+      }
       else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 8 9
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
-        if(test5)System.err.printf("----MFT9e--- v= %10.5e, " + dFrac.format(v) + " \n",v);
+        if (test5) {
+          System.err.printf("----MFT9e--- v= %10.5e, " + dFrac.format(v) + " \n", v);
+        }
         return dFrac.format(v);
-    }
-      else if ((v > -9999999999. && v < -0.0) || (v >= 0.0&& v < 999999999.)) { // 9 9
+      }
+      else if ((v > -9999999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 9 9
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(2);
-        if(test5)System.err.printf("----MFT9f--- v= %10.3e, " + dFrac.format(v) + " \n",v);
+        if (test5) {
+          System.err.printf("----MFT9f--- v= %10.3e, " + dFrac.format(v) + " \n", v);
+        }
         return dFrac.format(v);
       }
       else if ((v > -9999999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 9 8
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
-        if(test5)System.err.printf("----MFT9g--- v= %10.7e, " + dFrac.format(v) + " \n",v);
-           return dFrac.format(v);
+        if (test5) {
+          System.err.printf("----MFT9g--- v= %10.7e, " + dFrac.format(v) + " \n", v);
+        }
+        return dFrac.format(v);
       }
       else if ((v > -99999999999. && v < -0.00) || (v >= 0.0 && v < 99999999999.)) {//11 11
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
-        if(test5)System.err.printf("----MFT9h--- v= %10.7e, " + dFrac.format(v) + " \n",v);
+        if (test5) {
+          System.err.printf("----MFT9h--- v= %10.7e, " + dFrac.format(v) + " \n", v);
+        }
         return dFrac.format(v);
       }
     }
     else {
-      if(test5)System.err.printf("----MFT9i--- v= %10.5e, " + exp.format(v) + " \n",v);
+      if (test5) {
+        System.err.printf("----MFT9i--- v= %10.5e, " + exp.format(v) + " \n", v);
+      }
       return exp.format(v);
     }
     if (test5) {
@@ -1474,7 +1514,6 @@ class EM {
     return exp.format(v);
 
   }
-
 
   /**
    * format the value to a 5 character string and a sign
@@ -1677,8 +1716,11 @@ class EM {
    */
   static int lvals = 200;
   static volatile int valI[][][][] = new int[lvals][][][];
+  static volatile int valAI[] = new int[lvals];
+  static volatile int vvAx = 0;
   static int modeC = 0; // gc in valI
   static int sevenC = 1;  //unused index into a 7 sector array
+  static int aiC = 1; // 0= ignore,1=put into array
   // static int divByC = 2;  // unused number of entry7 to divide by
   static int sliderC = modeC + 2; //2 [][] slider values of valD[vv][gameAddrC];
   //static int sliderC = modeC;// [][] active real values of valD[vv][modeC][p|s}[clan]
@@ -1691,6 +1733,8 @@ class EM {
   static final int sliderLow = 0;  // lowest value of slider
   static final double sliderExtent = 100.;// 0 - 99
   static final double invSliderExtent = 1. / sliderExtent;//.01
+///  static int valAI[] = new ; // vv value of each vv to be saved in ai
+  // static int vvAx = 0; // index into the next entry in valAI
   static int gameAddrC = 0;  // valD[rn][0 gameAddrC]
   static int gameLim = 1; // valD[rn][1 gameLim]  lims[pors]{{vLowLim},{vHighLim}}
   static int vLowLim = 0;
@@ -1705,7 +1749,6 @@ class EM {
    */
   static volatile double valD[][][][] = new double[lvals][][][];
   // eventually column = modeC,p
-
 
   /**
    * references of Environments being logged
@@ -1944,7 +1987,7 @@ class EM {
   int travelCostTabRow[] = {0, 0, 7, 7};
 
   static double[] multReqMaintC = {.7, .2}; // mult ReqM costs p,s
- // static double[] multReqMaintC = {1.5, .5}; // mult ReqM costs p,s
+  // static double[] multReqMaintC = {1.5, .5}; // mult ReqM costs p,s
   static final double[][] mmult5Ctbl = {{.2, 2.2}, {.2, 2.2}}; // limits all 5
   static double[] multReqGrowthC = multReqMaintC;
   static double[] multMaintC = multReqMaintC;
@@ -1972,10 +2015,10 @@ class EM {
   //double mab1[] = {.6,.6}; // resource costs planet,ship
   //double mab1[] = {.6, .13}; // resource c planet ship
   // double mac1[] = {.6,.6}; // staff costs planet ship
- // double mac1[] = {1.3, .23}; // staff costs planet ship
+  // double mac1[] = {1.3, .23}; // staff costs planet ship
   double mac1[] = {.2, .5}; // staff costs planet ship
   //double mac1[] = {.6, .13}; // staff costs planet ship
- // double mac1[] = {.6, .13}; // staff costs, planet, ship
+  // double mac1[] = {.6, .13}; // staff costs, planet, ship
   double mabc[][] = {mab1, mac1}; //r or s, p or s
   static double mmab1[][] = {{.01, 2.}, {.01, 2.1}}; // resource costs planet,ship
   static double[][] mmab2 = {{.05, 1.9}, {.05, 1.9}};
@@ -1988,10 +2031,8 @@ class EM {
   static double vdifMult = .005; // was 2.0 0.035,0.05,0.075
   // multiply the rs4 above by the above maa to mad
 
-
   double vFracSum = 0.;
   static boolean AlwaysMakeRS = true;
-
 
   /**
    * make a multiplyer for CashFlow.calcRawCosts, creates a table rs that
@@ -2077,13 +2118,12 @@ class EM {
             // wasHere += " rsab[ac].length=" + rsab[ac].length;
             double rsac = rsab[ac];
             // vrs = rs[aa][ab][ac];
-            prevLine = " makeClanRS=" + mf(rsac) + ",  aa=" + aa + ", ab=" + ab + ", ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + "difficulty=" + mf(difficulty) +  "vdif=" + mf(difficulty * vdifMult) + " th=" + Thread.currentThread().getName();
+            prevLine = " makeClanRS=" + mf(rsac) + ",  aa=" + aa + ", ab=" + ab + ", ac=" + ac + " Ty" + (new Date().getTime() - st.startYear) + "difficulty=" + mf(difficulty) + "vdif=" + mf(difficulty * vdifMult) + " th=" + Thread.currentThread().getName();
             //vrs4a = rs4[aa][ab][pors][ac2];
             vrs = 0;
             vrs
                     = rs[aa][ab][ac]
-                    =
-                    // (vdif = difficultyPercent[0] * 0.025)
+                    = // (vdif = difficultyPercent[0] * 0.025)
                     //  (vdif = difficultyPercent[0] * 0.05)
                     (vdif = difficulty * vdifMult)
                     // reduce costs so that final rcsg = 2*init rcsg
@@ -2647,7 +2687,6 @@ class EM {
   static int gamePorS = 0;  // 0=p,1=ship, used in getIval and setIval
   static volatile int vv = -1, gc = -2, vFill = 0, lowC = 0, highC = 1;
 
-
   /**
    * values of game where the next display will start
    */
@@ -2729,11 +2768,12 @@ class EM {
   }
 
   /**
-   * doVal for master with vaddr only a double diff[] = {.5} or {.5,.5} Find gc=vone one
-   * value {val}, gc=vtwo {pVal,sVal}
+   * doVal for master with vaddr only a double diff[] = {.5} or {.5,.5} Find
+   * gc=vone one value {val}, gc=vtwo {pVal,sVal}
    *
    * @param vdesc title of the input
-   * @param vaddr master {.5} or {.5,.5} not {{.5},{.6}} or clan{{{1.,2.},{},{},{},{}}
+   * @param vaddr master {.5} or {.5,.5} not {{.5},{.6}} or
+   * clan{{{1.,2.},{},{},{},{}}
    * @param lims limits of the input
    * @param vdetail details about the input
    * @return vv the number of the input in valI,valD,valS
@@ -2752,6 +2792,7 @@ class EM {
     doVal3(vv);
     return vv;
   }
+
 
   /**
    * doVal with vaddr a 7 sector array {0.3} => vone {0.1,0.2} => vtwo {
@@ -2780,11 +2821,11 @@ class EM {
   }
 
   /**
-   * doVal determine type from the arrays at vaddr
-   * with vaddr full double val[][p,s] = {{.5}} or {{.5},{.5}} gc vone
-   * val[vv][0]{val}, valD {{val}} gc vtwo val[vv][0][pors] {pVal,sVal}, valD
-   * {{pVal,sVal}} gc vthree val[vv][0][val1] {{val}}, valD {{val}} same as vone
-   * gc vfour val[vv][pors][val1] {{pVal},{sVal}}. valD {{pVal},{sVal}} gc vfive
+   * doVal determine type from the arrays at vaddr with vaddr full double
+   * val[][p,s] = {{.5}} or {{.5},{.5}} gc vone val[vv][0]{val}, valD {{val}} gc
+   * vtwo val[vv][0][pors] {pVal,sVal}, valD {{pVal,sVal}} gc vthree
+   * val[vv][0][val1] {{val}}, valD {{val}} same as vone gc vfour
+   * val[vv][pors][val1] {{pVal},{sVal}}. valD {{pVal},{sVal}} gc vfive
    * val[vv][0][val5] {{1,2,3,4,5}}, valD{{1,2,3,4,5}}; gc vten
    * valD[vv][0][pors][val5] {{1,2,3,4,5},{6,7,8,9,10}}
    *
@@ -2823,6 +2864,26 @@ class EM {
     return vv;
   }
 
+  /**
+   * doVal flag to put in key determine type from the arrays at vaddr with vaddr
+   * full double   * val[][p,s] = {{.5}} or {{.5},{.5}} gc vone val[vv][0]{val}, valD {{val}} gc
+   * vtwo val[vv][0][pors] {pVal,sVal}, valD {{pVal,sVal}} gc vthree
+   * val[vv][0][val1] {{val}}, valD {{val}} same as vone gc vfour
+   * val[vv][pors][val1] {{pVal},{sVal}}. valD {{pVal},{sVal}} gc vfive
+   * val[vv][0][val5] {{1,2,3,4,5}}, valD{{1,2,3,4,5}}; gc vten
+   * valD[vv][0][pors][val5] {{1,2,3,4,5},{6,7,8,9,10}}
+   *
+   * @param vdesc title of the input
+   * @param vaddr address of the input
+   * @param lims limits of the input
+   * @param vdetail details about the input
+   * @return vv the number of the input in valI,valD,valS
+   */
+  int doAIVal(String vdesc, double[][] vaddr, double[][] lims, String vdetail) throws IOException {
+    int rt = doVal(vdesc, vaddr, lims, vdetail);
+    valAI[vvAx++] = rt;
+    return rt;
+}
   /**
    * sub doVal1 assign the next vv and the initial storage that will be filled
    * in doVal1
@@ -3322,7 +3383,8 @@ onceAgain:
 
     }//keep from page
   }//doWriteKeepVals
-/**
+
+  /**
    * read the Map File
    *
    * @return
@@ -3344,7 +3406,7 @@ onceAgain:
       s.useLocale(Locale.US);
       int first = 0;
       // loop reading keyLen, key,int until first<0 or EOFException ex
-     // while ((first = baiFile.read()) > 0) {
+      // while ((first = baiFile.read()) > 0) {
       //   int len = myAiFile.read(aa, 0,)
 
       //  )
@@ -3365,118 +3427,118 @@ onceAgain:
       } // ebd test
 
       if (false) {
-      s.useLocale(Locale.US);
+        s.useLocale(Locale.US);
 onceAgain:
-      s.useDelimiter("\\s");
-      while (s.hasNext()) {
-        String cname = "notNot";
-        String sname = "notNot";
-        String fname = "notnot";
-        String lname = "notNot";
-        String pound = "notNot";
-        int vv = -999;
-        int ps = -999;
-        int klan = -999;
-        int clan = -999;
-        int slider = -999;
-        Boolean isNeg = false;
-        double val = -999.;
-        try { //ignore reading errors
-          cname = s.useDelimiter("\\s").next();
-          sname = "space";
-          fname = "notnot";
-          lname = "line";
-          switch (cname) {
-            case "new":
-            case "New":
-            case "year":
-            case "title":
-            case "more":
-            case "version":
-              lname = s.nextLine();
-              System.out.println("a line=" + cname + " :: " + lname);
-              break;
-            case "keep":
-              // sname = s.next("\\s");
-              sname = s.useDelimiter("\\S*").next(); //stop at non space
-              fname = s.useDelimiter("#\\s*").next();
-              pound = s.useDelimiter("\\s*").next(); // to a space
-              Object vo = valMap.get(fname); // look up fname in valMap
-              double prevVal = -100.;
-              if (vo != null) {
-                vv = (int) vo; // convert object to int
-                s.useDelimiter("\\s");
-                ps = s.nextInt();  //pors
-                klan = s.nextInt(); // clan
-                clan = klan = klan % 5;
-                //if(s.hasNext("\\s*-")) {s.useDelimiter("\\s*-").next(); isNeg=true;}
-                if (s.hasNextDouble()) {
-                  val = s.nextDouble();
-                  System.out.println("found double= " + mf(val));
-                }
-                else if (s.hasNextFloat()) {
-                  val = s.nextFloat();
-                  System.out.println("found Float= " + mf(val));
-                }
-                else if (s.hasNextInt()) {
-                  System.out.println("oops hasNextInt= " + s.nextInt());
+        s.useDelimiter("\\s");
+        while (s.hasNext()) {
+          String cname = "notNot";
+          String sname = "notNot";
+          String fname = "notnot";
+          String lname = "notNot";
+          String pound = "notNot";
+          int vv = -999;
+          int ps = -999;
+          int klan = -999;
+          int clan = -999;
+          int slider = -999;
+          Boolean isNeg = false;
+          double val = -999.;
+          try { //ignore reading errors
+            cname = s.useDelimiter("\\s").next();
+            sname = "space";
+            fname = "notnot";
+            lname = "line";
+            switch (cname) {
+              case "new":
+              case "New":
+              case "year":
+              case "title":
+              case "more":
+              case "version":
+                lname = s.nextLine();
+                System.out.println("a line=" + cname + " :: " + lname);
+                break;
+              case "keep":
+                // sname = s.next("\\s");
+                sname = s.useDelimiter("\\S*").next(); //stop at non space
+                fname = s.useDelimiter("#\\s*").next();
+                pound = s.useDelimiter("\\s*").next(); // to a space
+                Object vo = valMap.get(fname); // look up fname in valMap
+                double prevVal = -100.;
+                if (vo != null) {
+                  vv = (int) vo; // convert object to int
+                  s.useDelimiter("\\s");
+                  ps = s.nextInt();  //pors
+                  klan = s.nextInt(); // clan
+                  clan = klan = klan % 5;
+                  //if(s.hasNext("\\s*-")) {s.useDelimiter("\\s*-").next(); isNeg=true;}
+                  if (s.hasNextDouble()) {
+                    val = s.nextDouble();
+                    System.out.println("found double= " + mf(val));
+                  }
+                  else if (s.hasNextFloat()) {
+                    val = s.nextFloat();
+                    System.out.println("found Float= " + mf(val));
+                  }
+                  else if (s.hasNextInt()) {
+                    System.out.println("oops hasNextInt= " + s.nextInt());
+                  }
+                  else {
+                    System.out.println("Oops just something not number = " + s.next());
+                  }
+                  //     val = isNeg?-val:val;
+                  //  svalp = valToSlider(vR = valD[vv][gameAddrC][pors][0], lL = valD[vv][gameLim][pors][vLowLim], lH = valD[vv][gameLim][pors][vHighLim]);
+                  if (val > valD[vv][gameLim][ps][vHighLim] || val < valD[vv][gameLim][ps][vLowLim]) {
+                    double val0 = val;
+
+                    val = val > valD[vv][gameLim][ps][vHighLim] ? valD[vv][gameLim][ps][vHighLim] : val < valD[vv][gameLim][ps][vLowLim] ? valD[vv][gameLim][ps][vLowLim] : val;
+                    if (E.debugScannerOut) {
+                      System.out.println("keep  val restored to range " + fname + " " + pound + " " + vv + "  " + ps + " " + mf(val0) + " => " + mf(val));
+                    }// debug
+                  } // restored
+                  prevVal = valD[vv][gameAddrC][ps][klan];
+                  valD[vv][gameAddrC][ps][klan] = val; // set to kept value
+                  slider = valToSlider(valD[vv][gameAddrC][clan][ps], valD[vv][gameLim][ps][vLowLim], valD[vv][gameLim][ps][vHighLim]);
+                  int prev3a = valI[vv][prev3SliderC][ps][clan];
+                  int prev2a = valI[vv][prev2SliderC][ps][clan];
+                  int prev1a = valI[vv][prevSliderC][ps][clan];
+                  int prev0a = valI[vv][sliderC][ps][clan];
+                  int prev3 = valI[vv][prev3SliderC][ps][clan] = valI[vv][prev2SliderC][ps][clan];
+                  int prev2 = valI[vv][prev2SliderC][ps][clan] = valI[vv][prevSliderC][ps][clan];
+                  int prev1 = valI[vv][prevSliderC][ps][clan] = valI[vv][sliderC][ps][clan];
+                  valI[vv][sliderC][ps][clan] = slider; // a new value for slider
+
+                  lname = s.nextLine();
+                  if (E.debugScannerOut) {
+                    System.out.println("keep changed  \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + " prevVal=" + mf(prevVal) + " =>val=" + mf(val) + "slider a0123,0123=" + prev0a + " " + prev1a + " " + prev2a + " " + prev3a + " , " + slider + " " + prev1 + " " + prev2 + " " + prev3 + " " + " \n  :: moreLine=" + lname);
+                  }
                 }
                 else {
-                  System.out.println("Oops just something not number = " + s.next());
-                }
-                //     val = isNeg?-val:val;
-                //  svalp = valToSlider(vR = valD[vv][gameAddrC][pors][0], lL = valD[vv][gameLim][pors][vLowLim], lH = valD[vv][gameLim][pors][vHighLim]);
-                if (val > valD[vv][gameLim][ps][vHighLim] || val < valD[vv][gameLim][ps][vLowLim]) {
-                  double val0 = val;
 
-                  val = val > valD[vv][gameLim][ps][vHighLim] ? valD[vv][gameLim][ps][vHighLim] : val < valD[vv][gameLim][ps][vLowLim] ? valD[vv][gameLim][ps][vLowLim] : val;
+                  lname = s.nextLine();
                   if (E.debugScannerOut) {
-                    System.out.println("keep  val restored to range " + fname + " " + pound + " " + vv + "  " + ps + " " + mf(val0) + " => " + mf(val));
-                  }// debug
-                } // restored
-                prevVal = valD[vv][gameAddrC][ps][klan];
-                valD[vv][gameAddrC][ps][klan] = val; // set to kept value
-                slider = valToSlider(valD[vv][gameAddrC][clan][ps], valD[vv][gameLim][ps][vLowLim], valD[vv][gameLim][ps][vHighLim]);
-                int prev3a = valI[vv][prev3SliderC][ps][clan];
-                int prev2a = valI[vv][prev2SliderC][ps][clan];
-                int prev1a = valI[vv][prevSliderC][ps][clan];
-                int prev0a = valI[vv][sliderC][ps][clan];
-                int prev3 = valI[vv][prev3SliderC][ps][clan] = valI[vv][prev2SliderC][ps][clan];
-                int prev2 = valI[vv][prev2SliderC][ps][clan] = valI[vv][prevSliderC][ps][clan];
-                int prev1 = valI[vv][prevSliderC][ps][clan] = valI[vv][sliderC][ps][clan];
-                valI[vv][sliderC][ps][clan] = slider; // a new value for slider
-
-                lname = s.nextLine();
-                if (E.debugScannerOut) {
-                  System.out.println("keep changed  \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + " prevVal=" + mf(prevVal) + " =>val=" + mf(val) + "slider a0123,0123=" + prev0a + " " + prev1a + " " + prev2a + " " + prev3a + " , " + slider + " " + prev1 + " " + prev2 + " " + prev3 + " " + " \n  :: moreLine=" + lname);
+                    System.out.println("keep unknown = \"blank=" + sname + "\" name=\"" + fname + "\"  pound=" + pound + " :: " + lname);
+                  }
                 }
-              }
-              else {
-
+                break;
+              default:
                 lname = s.nextLine();
-                if (E.debugScannerOut) {
-                  System.out.println("keep unknown = \"blank=" + sname + "\" name=\"" + fname + "\"  pound=" + pound + " :: " + lname);
-                }
-              }
-              break;
-            default:
-              lname = s.nextLine();
-              System.out.println("Unknow line cmd=" + cname + " :: line=" + lname);
+                System.out.println("Unknow line cmd=" + cname + " :: line=" + lname);
 
-        } // switch
+            } // switch
 
-        } // end reading error try
-        catch (Exception | Error ex) {
-          firstStack = secondStack + "";
-          ex.printStackTrace(pw);
-          secondStack = sw.toString();
-          // newError = true;
-          System.out.println("----DMap3----Igmore doReadMapFile Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
-        }
-      } // while
-      if (bMapFr != null) {
+          } // end reading error try
+          catch (Exception | Error ex) {
+            firstStack = secondStack + "";
+            ex.printStackTrace(pw);
+            secondStack = sw.toString();
+            // newError = true;
+            System.out.println("----DMap3----Igmore doReadMapFile Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
+          }
+        } // while
+        if (bMapFr != null) {
           bMapFr.close();
-      }
+        }
       } // end if(false)
     }// end large try
 
@@ -3499,7 +3561,6 @@ onceAgain:
  setCntAr(E.pPrevScP, E.pPrevEScW, aiScoreAr, aKey, aVal, "winner with aiScore");
 setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance values");
    */
-
   /**
    * write the MAPFILE file from EM.doEndYear(), also gather a list of result
    * arrays related to the IX's of those variables
@@ -3520,8 +3581,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       String aKey;
       Integer[] aVal;
       // rebuild the ars arrays and zero it
-      ars = new int[6][]; // 0,1,2,3,4,5 2 spare
-      for (ix = 0; ix < 4; ix++) {
+      ars = new int[nars][]; // 0,1,2,3,4,5,6,7
+      for (ix = 0; ix < nars; ix++) {
         ars[ix] = new int[lenIx];
         for (int ix2 = 0; ix2 < lenIx; ix2++) {
           ars[ix][ix2] = 0;
@@ -3538,59 +3599,59 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       //    aiScoreAr[ix] = 0;
       //    aiResilAr[ix] = 0;
       // }
-    if (true && myAIlearnings != null) {
+      if (true && myAIlearnings != null) {
         String dateString = MYDATEFORMAT.format(new Date());
         //    String rOut = "New Game " + dateString + "\r\n";
         ll = "year" + year + " version " + st.versionText + " " + dateString + " " + st.settingsComment.getText() + "\r\n";
-       bMapFw.write(ll, 0, ll.length());
-      System.out.println("---DWM4---wrote=" + ll);
-      synchronized (A6Rowa.ASECS) {
-      System.out.println("---DWM5---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
-         for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
-           if (entry != null) {
-             aKey = entry.getKey();
-             aVal = entry.getValue();
-             cntsCnt += aVal[E.aValCnts];
-             entryCnt++;
-             ll = "KEY " + aKey + " " + aVal[0] + " " + aVal[1] + " " + aVal[2];
-             bMapFw.write(ll, 0, ll.length());
-             //    setCntAr(0, 1, -1, -1, aKey, aVal);
-             //   setCntAr(0, 2, -1, -1, aKey, aVal);
-             //   setCntAr(0, 3, -1, -1, aKey, aVal);
-             //   String setCntAr(String aKey, Integer[] aVal,String what,int arn, int pX1, int lX1,int llX1, int luX1)
+        bMapFw.write(ll, 0, ll.length());
+        System.out.println("---DWM4---wrote=" + ll);
+        synchronized (A6Rowa.ASECS) {
+          System.out.println("---DWM5---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
+          for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
+            if (entry != null) {
+              aKey = entry.getKey();
+              aVal = entry.getValue();
+              cntsCnt += aVal[E.aValCnts];
+              entryCnt++;
+              ll = "KEY " + aKey + " " + aVal[0] + " " + aVal[1] + " " + aVal[2];
+              bMapFw.write(ll, 0, ll.length());
+              //    setCntAr(0, 1, -1, -1, aKey, aVal);
+              //   setCntAr(0, 2, -1, -1, aKey, aVal);
+              //   setCntAr(0, 3, -1, -1, aKey, aVal);
+              //   String setCntAr(String aKey, Integer[] aVal,String what,int arn, int pX1, int lX1,int llX1, int luX1)
 /*
              boolean no = false;
              setCntAr(E.AILims1, aKey, aVal, "winner with myScore", 1, E.pPrevScW, E.pPrevScP, 3, 5,no);
              setCntAr(E.AILims1, aKey, aVal, "winner with myAIScore", 2, E.pPrevEScW, E.pPrevScP, 3, 5,no);
-             setCntAr(E.AILims, aKey, aVal, "winner with Resonance values", 3, E.pPrevResil, E.pPrevScP, 3, 5,no);
+             setCntAr(E.AILims, aKey, aVal, "winner with Resiliance values", 3, E.pPrevResil, E.pPrevScP, 3, 5,no);
              setCntAr(aKey,aVal);
-              */
-             setCntAr(aKey, aVal);
-           }//if
-         }//entry
-      }
-         // now do the output
-      seeArrays[0] = rtn = "doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + "\n";
-      System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + seeArrays[0]);
-      seeCntArrays();
-      //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
-      System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);
+               */
+              setCntAr(aKey, aVal);
+            }//if
+          }//entry
+        }
+        // now do the output
+        seeArrays[0] = rtn = "doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " wnr:" + myScorePosClan[0] + myScorePosClan[0] + myScorePosClan[2] + myScorePosClan[2] + myScorePosClan[4] + "\n";
+        System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + seeArrays[0]);
+        seeCntArrays();
+        //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
+        System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);
 
-    }
+      }
 
     }//
-     catch (Exception | Error ex) {
+    catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-       System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + secondStack);
-       ex.printStackTrace(System.err);
-       System.err.flush();
-       newError = true;
-       if (E.debugMaster) {
-         System.exit(-33);
-       }
-       st.setFatalError(Color.RED);
+      System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + secondStack);
+      ex.printStackTrace(System.err);
+      System.err.flush();
+      newError = true;
+      if (E.debugMaster) {
+        System.exit(-33);
+      }
+      st.setFatalError(Color.RED);
     }
     finally {
       return "doWriteMapfile" + rtn;
@@ -3604,13 +3665,14 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @return
    */
   String seeCntArrays() {
-    String ll = seeArrays[0] = "seeCntArrays Keys" + entryCnt + " #Counts" + cntsCnt;// seeArrays[0] =
+    String ll = seeArrays[0] = "seeCntArrays " + "winr" + myScorePosClan[0] + myScorePosClan[1] + myScorePosClan[2] + myScorePosClan[3] + myScorePosClan[4] + ":" + " Keys" + entryCnt + " #Counts" + cntsCnt;// seeArrays[0] =
     //  ll += seeCntArray(x1, -2) + "\n";
     //ll += seeCntArray(x2, -3) + "\n";
     //ll += seeCntArray(x3, -1) + "\n";
-    seeCntArray(seeArrays, 1, E.AILims1, 1, E.pPrevScW, "winner with myScore");
-    seeCntArray(seeArrays, 2, E.AILims, 2, E.pPrevEScW, "winner with ai Econ Scores");
-    seeCntArray(seeArrays, 3, E.AILims, 3, E.pPrevResil, "winner with Resonance values");
+    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevScW,"winr&myScore");
+    seeCntArray(seeArrays, 2, E.AILims1, E.pPrevEScW, "winr&myAIScore");
+    seeCntArray(seeArrays, 3, E.AILims1, E.pPrevResil, "winr&Resilance");
+    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin");
     return ll;
   }
 
@@ -3619,77 +3681,158 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    */
   void setCntAr(String aKey, Integer[] aVal) {
     boolean no = false;
-             setCntAr(E.AILims1, aKey, aVal, "winner with myScore", 1, E.pPrevScW, E.pPrevScP, 3, 5,no);
-             setCntAr(E.AILims1, aKey, aVal, "winner with myAIScore", 2, E.pPrevEScW, E.pPrevScP, 3, 5,no);
-    setCntAr(E.AILims, aKey, aVal, "winner with Resonance values", 3, E.pPrevResil, E.pPrevScP, 3, 5, no);
-}
+    //String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb)
+    setCntAr(aKey, aVal, "winr&myScore", 4, 1, E.AILims1, E.pPrevScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "winr&myAIScore", 5, 2, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "winr&Resilance", 6, 3, E.AILims1, E.pPrevResil, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+  }
+  //E.pPrevPmin, prevAIProspMin, E.AILims1
   static int SCACnt = 0;
   String keepMe = "aaa";
 
- /**
+  /**
    * see the visual results for a given array
    *
    * @param seeAr the seeAr to use
    * @param seeN the n in the above seeAr
    * @param myAILim the AILim for this what
    * @param arn ars array index
-   * @param pX1 pointer Index of the value
+   * @param pX1 pointer Index of the value unused
    * @param what description of array use
    * @note this uses ars as the input array and whats as the name,
    * @return a string that shows the results
    */
-  String seeCntArray(String seeAr[], int seeN, double[] myAILim, int arn, int pX1, String what) {
-    //static int mostIx=0, ixAllSum=1, ixLimSum=2,ixAllCnt=3, ixLimCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
-//negIxs = econDiedI = -1;notActiveI = -2;missingI = -3;undefI = -4;
-   // String ret = "1", ret2 = "2";
+  String seeCntArray(String seeAr[],  int arn, double[] myAILim, int pX1, String what) {
+    //static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6,   //skippedCnt = 7, negIxs = 8,undef=8,missing=9,inactive=10,died=11,econDiedI=-1,notActiveI=-2,missingI=-3,undefI=-4, //strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
+//  negIxs = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
+    //static final int ixLimSum = 2, ixLimCnt = 4; // holds 91=12+77+2 spare
+    // String ret = "1", ret2 = "2";
     int myN = 0, myNn = 0;
+    String myIx = " ???";
     try {
       System.err.println("----SCA1---- seeCntArray enters pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
-    SCACnt++; //count seeCntArray entry
-    /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
-    // int screenIx = E.getAIMuch(aKey.charAt(x2));//myAILim mf(myAILim[ix])
-      // right much the **Ix s
+      SCACnt++; //count seeCntArray entry
+      /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
+      // int screenIx = E.getAIMuch(aKey.charAt(x2));//myAILim mf(myAILim[ix])
+      // see that no ..Ix is < strtIxs
+      /*
+      ars[arn][afirstIx] = ars[arn][afirstIx] > strtIxs ? ars[arn][afirstIx] : strtIxs;
+      ars[arn][amostIx] = ars[arn][amostIx] > strtIxs ? ars[arn][amostIx] : strtIxs;
+      ars[arn][atopIx] = ars[arn][atopIx] > strtIxs + 1 ? ars[arn][atopIx] : strtIxs + 1;
+       */
       ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
       ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
-      ars[arn][topIx] = ars[arn][topIx] > strtIxs ? ars[arn][topIx] : strtIxs;
+      ars[arn][topIx] = ars[arn][topIx] > strtIxs + 1 ? ars[arn][topIx] : strtIxs + 1;
 
       int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
       int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
-      int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
-      //      : (int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt]); //only winners
+
       int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+      cAllAve = cAllAve >= 0 ? cAllAve : 0;
       //      : (int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt]); // all values this val
+       String allAveVal = mf(myAILim[cAllAve]);
+      // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
+      int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
+      cLimAve = cLimAve >= 0 ? cLimAve : 0;
+      //      : (int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt]); //only winners
       String limAveVal = mf(myAILim[cLimAve]);
       //     : mf(myAILim[(int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt])]); //only winners
-      String allAveVal = mf(myAILim[cAllAve]);
-      // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
+/*
+      int alastIx = (ars[arn][amostIx] + 2) > ars[arn][atopIx] ? ars[arn][atopIx] : ars[arn][amostIx] + 2;
+      alastIx = alastIx < strtIxs + 1 ? strtIxs + 1 : alastIx;
+      int aixa = (ars[arn][amostIx] - 2) < ars[arn][afirstIx] ? ars[arn][afirstIx] : ars[arn][amostIx] - 2;
+      aixa = aixa < strtIxs ? strtIxs : aixa;
+//calculate abest the average of a range around most
+      int arange = ars[arn][atopIx] - ars[arn][amostIx];
+      int arange1 = ars[arn][amostIx] - ars[arn][afirstIx];
+      arange = arange1 < arange ? arange1 : arange;
+      int ablast = ars[arn][mostIx] + arange;
+      ablast = alastIx < ablast ? alastIx : ablast;
+      int abfirst = ablast - 4; //3,4,5,6,7
+      abfirst = aixa > abfirst ? aixa : abfirst;
+      double absum = 0.;
+      int abest = 0, abcnt = 0;
+      for (int ix = abfirst; ix <= ablast; ix++) {
+        absum += ars[arn][ix] * ix; // cnt * pos
+        abcnt += ars[arn][ix];
+      }
+      abest = (int) (absum / abcnt);
+*/
 
-      ret = what + " Keys" + entryCnt + " #Counts" + cntsCnt + " all entriesN" + cAll + " allSum:" + cAllSum + " allAve:" + cAllAve + " allAveVal:" + allAveVal + " limEntries::" + cLim + " limSum:" + cLimSum + " limAve:" + cLimAve + " limAveVal:" + limAveVal + " mostN" + (myN = ars[arn][mostIx]) + " :" + (myNn = myN - strtIxs) + " C:" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + " firstN" + (myN = ars[arn][firstIx]) + " :" + (myNn = myN - strtIxs) + " C:" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + " topN" + (myN = ars[arn][topIx]) + " :" + (myNn = myN - strtIxs) + " C:" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + "\n";
-      int lastIx = (ars[arn][mostIx] + 2) > ars[arn][topIx] ? ars[arn][topIx] : ars[arn][mostIx] + 2;
-      lastIx = lastIx < strtIxs ? strtIxs : lastIx;
-      int ixa = (ars[arn][mostIx] - 2) < ars[arn][firstIx] ? ars[arn][firstIx] : ars[arn][mostIx] - 2;
+      int lastIx = (ars[arn][mostIx] + 3) > ars[arn][topIx] ? ars[arn][topIx] : ars[arn][mostIx] + 3;
+      lastIx = lastIx < strtIxs + 1 ? strtIxs + 1 : lastIx;
+      int ixa = (ars[arn][mostIx] - 3) < ars[arn][firstIx] ? ars[arn][firstIx] : ars[arn][mostIx] - 3;
       ixa = ixa < strtIxs ? strtIxs : ixa;
-      ret2 = " rowN" + (myN = ixa) + " :" + (myNn = myN - strtIxs) + " :C" + ars[arn][myN] + " :V" + mf(myAILim[myNn]) + ":" + mf(myAILim[myN]);
+      //now get best for regular
+      int range = ars[arn][topIx] - ars[arn][mostIx];
+      int range1 = ars[arn][mostIx] - ars[arn][firstIx];
+      range = range1 < range ? range1 : range;
+      int blast = ars[arn][mostIx] + range;
+      blast = lastIx < blast ? lastIx : blast;
+      int bfirst = blast - 4; //3,4,5,6,7
+      bfirst = ixa > bfirst ? ixa : bfirst;
+      double bsum = 0.;
+      int best = 0, bcnt = 0;
+      for (int ix = bfirst; ix <= blast; ix++) {
+        bsum += ars[arn][ix] * ix;
+        bcnt += ars[arn][ix];
+      }
+      best = (int) (bsum / bcnt);
 
-      for (int ix = ixa + 1; ix <= lastIx; ix++) {
-      // see value Ix, entryCnt at that value, value at that value Ix
-      ret2 += ",  N" + +(myN = ix) + " :" + (myNn = myN - strtIxs) + " :C" + ars[arn][ix] + " :V" + mf(myAILim[myNn]);
-      }// ix
-      seeAr[seeN] = keepMe = "seeAr " + ret + ret2; //seeArrays[seeN]
-      System.err.print("----SCA6----seeCntArray enters pX1=");
-      System.err.print(pX1 + " SCACnt" + SCACnt);
-      System.err.println("Y" + year + " stEnter="
-                         + st.cntInit + " EM entries=" + cntInit
-                         + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + "\n"
-                         + "----SCA6b----" + ret + ret2 + " limAve:" + cLimAve + " keepMe=" + keepMe);
+      // create the output that is displayed in display as a  breadcrum of progress
+      if (true) {  //break up the following additions to ret to localize any index error
+        ret = "l" + myAILim.length + " " + what + " aN" + cAll + ":" + cAllSum + ":"
+              + cAllAve + "V:" + allAveVal
+              + " ::limC" + cLim + ":" + cLimSum + ":"
+              + cLimAve + " V:" + limAveVal;
 
-    }//
+        ret += (myIx = " ::mostN:") + +ars[arn][(myN = ars[arn][mostIx])];
+        ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
+        ret += (myIx = " firstN:") + +ars[arn][(myN = ars[arn][firstIx])];
+        ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
+        ret += (myIx = " topN:") + +ars[arn][(myN = ars[arn][topIx])];
+        ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
+        ret += " best:" + best + "\n";
+
+        ret2 = " rowN";
+        boolean doComma = false;
+        for (int ix = ixa; ix <= lastIx; ix++) {
+          // see value Ix, entryCnt at that value, value at that value Ix
+          ret2 += ((doComma ? " ," : " ") + "N" + ars[arn][myN = ix] + "V:" + mf(myAILim[myNn = myN - strtIxs]));
+          doComma = true;
+        }// ix
+        seeAr[arn] = keepMe = "seeAr " + ret + ret2; //seeArrays[seeN]
+        System.err.print("----SCA6----seeCntArray enters pX1=");
+        System.err.print(pX1 + " SCACnt" + SCACnt + " myIx=" + myIx + ":" + myN);
+        System.err.println("Y" + year + " stEnter="
+                           + st.cntInit + " EM entries=" + cntInit
+                           + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size="
+                           + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn
+                ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len="
+                           + ars[arn].length: " ars ok len=" + ars[arn].length) + "\n"
+                           + "----SCA6b----" + ret + ret2 + " limAve:" + cLimAve + " keepMe=" + keepMe);
+      }// if
+    }// try
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       int xx1 = pX1 > 3 ? 3 : pX1;
-      System.err.println("----SCA7----seeCntArray error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + " ars[arn][mostIx]=" + ars[arn][mostIx] + andMore()
+      System.err.println("----SCA7----seeCntArray error  Caught Exception cause="
+                         + ex.getCause() + " message=" + ex.getMessage()
+                         + " string=" + ex.toString() + " " + Thread.currentThread().getName()
+                         + " pX1=" + pX1
+                         + " SCACnt" + SCACnt + "Y" + year + " myN" + myN + " myNn" + myNn
+                         + " myIx=" + myIx + "\n"
+                         + "----SCA7a---" + ret
+                         + "\n" + "----SCA7b---" + " stEnter = " + st.cntInit + " EM entries = "
+                         + cntInit + (myAIlearnings == null ? " myAIlearnings is null"
+                      : " myAIlearnings size = " + myAIlearnings.size()) + (ars == null
+              ? " null ars" : ars.length < arn ? " ars too Small"
+                      : ars[arn].length < lenIx ? " err ars Len = " + ars[arn].length
+                              : " ars ok len = " + ars[arn].length)
+                         + " ars[arn][mostIx] =" + ars[arn][mostIx] + andMore()
       );
       ex.printStackTrace(System.err);
       System.err.flush();
@@ -3700,90 +3843,141 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       }
       return "" + ret;
     }
-    return seeAr[seeN] = ret + ret2; //caller puts in \n
+    return seeAr[arn] = ret + ret2; //caller puts in \n
   }
   int setCntSee = 0;
 
   /**
-   * put into array arn counts limited by the winner value from lX1 Find the
-   * value with higest count for pX1
+   * put into seeArrays[arn] count array ar pX1 counts limited by the limit
+   * value from lX1 Find the value with most count for pX1
    *
-   * @param myAILim aiLim for this what
    * @param aKey the key for this setting
    * @param aVal The value part for the counting
    * @param what describe what is seen
-   * @parm arn number of ars array to use
-   * @param pX1 The main Value aKey character must have values==4 for the winner
-   * * clan
+   * @parm aarn number of ars array to use for all members unused
+   * @parm arn number of ars array to use for pX1
+   * @param myAILim the values array for this pX1
+   * @param pX1 The main Value aKey character must that is being counted
+   * @param myAILim1 the values array for pX1 lower and upper, match setting of
+   * lX1
    * @param lX1 The first limit aKey character index for the character index sum
-   * @param llX1 lower X1 lower limit accept only values above this X
-   * @param luX1 lower X1 upper limit accept only values below this X
-   * @param ar The array for the counting
+   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
+   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
+   * @param myAILim2 the values array for pX2 lower and upper, match setting of
+   * lX2
+   * @param lX2 The 2nd limit aKey character index for the character index sum
+   * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
+   * @param luX2 lX2 iupper limit only accept keys with lX2 &le; luX2
+   * @param printDeb The boolean whether to print to System.out
    *
-   * @return ocassionally see results
+   * @return ocassionally see results in seeArrays[arn]
    */
-  String setCntAr(double[] myAILim, String aKey, Integer[] aVal, String what, int arn, int pX1, int lX1, int llX1, int luX1, boolean printDeb) {
+  String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb) {
+//static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6,   //skippedCnt = 7, negIxs = 8,undef=8,missing=9,inactive=10,died=11,econDiedI=-1,notActiveI=-2,missingI=-3,undefI=-4, //strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
+//  negIxs = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
+    //static final int ixLimSum = 2, ixLimCnt = 4; // holds 91=12+77+2 spare
     char ch0 = '&';
-    char ch1 = '*';
+    char ch1 = '*', ch2 = '*';
     int myN = 0, myNn = 0;
     int xN = 0;
-    char ch2 = '*';
     double eee = 0.;
     String see = "";
-    //static int mostIx=0, ixAllSum=1, ixLimSum=2,ixAllCnt=3, ixLimCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
-    System.out.println("---sCAP2---setCntArCnt=" + setCntSee + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
+    String ret = "", ret2 = "";
+    int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value to array
+    int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix limit for winners
+    int l11ValIx = Assets.getTestVal(llX1, myAILim1, "lx1 lower limit");
+    int lu1ValIx = Assets.getTestVal(luX1, myAILim1, "lx1 upper limit");
+    int l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // ix 2nd limit
+    int l12ValIx = Assets.getTestVal(llX2, myAILim1, "lx2 lower limit");
+    int lu2ValIx = Assets.getTestVal(luX1, myAILim1, "lx2 upper limit");
+    boolean l1 = l1ValIx >= l11ValIx && l1ValIx <= lu1ValIx;
+    boolean l2 = l2ValIx >= l12ValIx && l2ValIx <= lu2ValIx;
+    String l1V = (l1 ? " l1V" : " !l1V");
+    String l2V = (l2 ? " l2V" : " !l2V");
     try {
-      int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //value to array
-      int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // value test for winners
-      // int l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // value test for IxIx
-      pValIx = pValIx > 0 ? pValIx : 0;
+      pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value to array
+      l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix limit for winners
+      l11ValIx = Assets.getTestVal(llX1, myAILim1, "lx1 lower limit");
+      lu1ValIx = Assets.getTestVal(luX1, myAILim1, "lx1 upper limit");
+      l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // ix 2nd limit
+      l12ValIx = Assets.getTestVal(llX2, myAILim2, "lx2 lower limit");
+      lu2ValIx = Assets.getTestVal(luX1, myAILim2, "lx2 upper limit");
+      l1 = l1ValIx >= l11ValIx && l1ValIx <= lu1ValIx;
+      l2 = l2ValIx >= l12ValIx && l2ValIx <= lu2ValIx;
+      l1V = (l1 ? " l1V" : " !l1V");
+      l2V = (l2 ? " l2V" : " !l2V");
+      System.out.println("---sCAP2---setCntArCnt=" + setCntSee + "Y" + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + pValIx + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
+
+      if (pValIx < E.undefI || pValIx > 76) {
+        ars[arn][skippedCnt] += aVal[E.aValCnts];
+      }
+      pValIx = pValIx >= E.undefI ? pValIx : 0;
       l1ValIx = l1ValIx > 0 ? l1ValIx : 0;
       int vvIx = strtIxs + pValIx;
-      //  ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
-      //  ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
-      //  ars[arn][topIx] = ars[arn][topIx] > strtIxs ? ars[arn][topIx] : strtIxs;
-      System.out.println("---sCAP2---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + " :allCnt" + ars[arn][ixAllCnt] + " :: lx1:" + lX1 + ":C " + ch1 + ":Vx" + l1ValIx + ":limCnt" + ars[arn][ixLimCnt]);
+      vvIx = vvIx >= strtIxs + E.undefI ? vvIx : strtIxs;
+      ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
+      ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
+      ars[arn][topIx] = ars[arn][topIx] > strtIxs ? ars[arn][topIx] : strtIxs;
+      int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
+      int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
+      int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
+      int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+      String allAveVal = mf(myAILim[cAllAve]);
+      // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
+      // then these accepted by the limits
+      String ret0 = "Y" + year + " what=" + what + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + " allC:" + ars[arn][ixAllCnt] + " allAveVal:" + allAveVal + " :: lx1N:" + lX1 + ":" + ch1 + ":X" + l1ValIx + ":C" + ">=" + " l11ValIx:" + l11ValIx + l1V + " lX2N:" + lX2 + ":" + ch2 + ":X" + l2ValIx + "<=" + " lu2ValIx:" + lu2ValIx + l2V + ars[arn][ixLimCnt];
+      System.out.println("---sCAP3---setCntAr Cnt=" + setCntSee + ret0);
 
       // all occurances, not just the winners
-      ars[arn][ixAllCnt] += aVal[E.aValCnts];;
+      ars[arn][ixAllCnt] += aVal[E.aValCnts];
       ars[arn][ixAllSum] += pValIx * aVal[E.aValCnts]; // AllAve = (int)(ixAllSum/ixAllCnt)
-      // these are only winners
-      if (l1ValIx > llX1 && l1ValIx < luX1) { // winners only
-        if (pValIx < 0 && pValIx > -5) {
-          ars[arn][-pValIx + negIxs]++;
+      // static final int aValCnts = 0, aValYear = 1, aValIxMyScore = 2;
+     // vvIx = vvIx >= strtIxs + E.undefI ? vvIx : strtIxs + E.undefI; //limit 1
+      ars[arn][vvIx] += aVal[E.aValCnts]; // update the counts  ??undefI
+     // ars[aarn][vvIx] += aVal[E.aValCnts];
+      vvIx = vvIx > strtIxs + E.undefI ? vvIx : strtIxs; // limit again
+
+      //      : (int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt]); // all values this val
+     // String limAveVal = mf(myAILim[cLimAve]);
+      //     : mf(myAILim[(int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt])]); //only winners
+      //String allAveVal = mf(myAILim[cAllAve]);
+      // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
+      // then these accepted by the limits
+      if (l1 & l2) { // pass both limits
+        if (pValIx < 0 && pValIx >= E.undefI) {
+          // ars[arn][pValIx + strtIxs]++;  // counted above above
         }
-        else if (pValIx < 0 || pValIx > 51) {
-          ars[arn][skippedCnt]++;
+        else if (pValIx < -4 || pValIx > 76) {
+          // ars[arn][skippedCnt] += aVal[E.aValCnts];
         }
-        else { // if pValIx >= 0 && pValIx <= 51 accepted numbers
+        else { // if pValIx >= 0 && pValIx <= 76 accepted numbers
           ars[arn][ixLimCnt] += aVal[E.aValCnts]; // sum of all limited
           ars[arn][ixLimSum] += pValIx * aVal[E.aValCnts]; //
-          ars[arn][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
-          //compute mostIx, firstIx, topIx
+          //ars[arn][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
+          // possibly change firstIx, topIx, mostIx
+          // test counts
           if (ars[arn][mostIx] < strtIxs + 1 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
-            ars[arn][mostIx] = vvIx; // move to a new mostIx
+            ars[arn][mostIx] = vvIx; // move  to a new mostIx
           }
           if (ars[arn][firstIx] < strtIxs + 1 || ars[arn][firstIx] > vvIx) { //firstIx too high
-            ars[arn][firstIx] = vvIx; //lower firstIx
+            ars[arn][firstIx] = vvIx; //lower firstIx it must be lowest
           }
-          if (ars[arn][topIx] < strtIxs + 1 || ars[arn][topIx] < vvIx) { //the highest val
-            ars[arn][topIx] = vvIx;// raise topIx
+          if (ars[arn][topIx] < strtIxs + 1 || ars[arn][topIx] < vvIx) { //the highest value
+            ars[arn][topIx] = vvIx;// raise topIx it must be highest
           }
-        }
-      }
-      if (++setCntSee % 14 == 0 || printDeb) {
-        int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
-        int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
-        int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
+          cLim = ars[arn][ixLimCnt];
+          cAll = ars[arn][ixAllCnt];
+          cLimSum = ars[arn][ixLimSum];
+          cAllSum = ars[arn][ixAllSum];
+          cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
         //      : (int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt]); //only winners
-        int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+        cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
         //      : (int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt]); // all values this val
-        String limAveVal = mf(myAILim[cLimAve]);
+        String limAveVal = (cLimAve > 0 && cLimAve < myAILim.length ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);//mf(myAILim[cLimAve]);
         //     : mf(myAILim[(int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt])]); //only winners
-        String allAveVal = mf(myAILim[cAllAve]);
+        allAveVal = (cAllAve > 0 && cAllAve < myAILim.length ? mf(myAILim[cAllAve]) : " cAllAv=" + cAllAve);
         // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
-        String ret = " all entriesN" + cAll + " allSum:" + cAllSum + " allAve:" + cAllAve + " allAveVal:" + allAveVal
-                     + " limEntries::" + cLim + " limSum:" + cLimSum + " limAve:" + cLimAve + " limAveVal:" + limAveVal;
+
         if (ars[arn][mostIx] < strtIxs + 1 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
           ars[arn][mostIx] = vvIx; // move to a new mostIx
         }
@@ -3793,31 +3987,40 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         if (ars[arn][topIx] < strtIxs + 1 || ars[arn][topIx] < vvIx) { //the highest val
           ars[arn][topIx] = vvIx;// raise topIx
         }
-        System.out.print("---sCAP4---setCntAr Cnt=" + setCntSee + "Y" + year + " what=" + what + " pX1" + pX1 + ":C" + ch0 + ":Vx" + pValIx + ret);
-        System.out.print("firstN" + (myN = ars[arn][firstIx]) + ":" + (myNn = myN - strtIxs) + ":V");
-        eee = myAILim[myNn];
-        System.out.print(see = mf(eee));
-        System.out.print("mostN" + (myN = ars[arn][mostIx]) + ":" + (myNn = myN - strtIxs) + ":V");
-        eee = myAILim[myNn];
-        System.out.print(see = mf(eee));
-        System.out.print("topN" + (myN = ars[arn][topIx]) + ":" + (myNn = myN - strtIxs) + ":V");
-        eee = myAILim[myNn];
-        System.out.println(see = mf(eee));
+
+        }
+      }//if
+      ret = ret0 + "\n" + " lim" + llX1 + "<=" + l1ValIx + "<=" + luX1 + " allN" + cAll;
+      ret += ":" + cAllSum + " ave:";
+      ret += cAllAve + "V:" + (cAllAve > 0 && cAllAve < myAILim.length ? mf(myAILim[cAllAve]) : " cAllAve=" + cAllAve);
+      ret += " ::limN" + cLim + ":" + cLimSum + "Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < myAILim.length ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
+      ret2 = ("firstN" + (myN = ars[arn][firstIx]) + ":" + ars[arn][(myN)] + ":V");
+      //eee = myAILim[myNn];
+      ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn));
+      ret2 += ("mostN" + (myN = ars[arn][mostIx]) + ":" + ars[arn][(myN)] + ":V");
+      //eee = myAILim[myNn];
+      ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn));
+      ret2 += ("topN" + (myN = ars[arn][topIx]) + ":" + ars[arn][(myN)] + ":V");
+      //eee = myAILim[myNn];
+      ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn));
+      if ((++setCntSee % 15) == 0 || printDeb || l1) {
+        System.out.println("---sCAP4---setCntAr Cnt=" + setCntSee + "Y" + year + "L:" + myAILim.length + " what=" + what + " pX1:" + pX1 + ":" + ch0 + ":" + pValIx + ret + "\n" + ret2);
       }
-    }//
+      seeArrays[arn] = ret + ret2;
+    }// try
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       //int xx1 = pX1 > 3 ? 3 : pX1;
       fatalError = true;
-      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " what=" + what + " pX1=" + pX1 + " lX1=" + lX1 + " value=" + see + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + secondStack + andMore());
+      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " what=" + what + " pX1=" + pX1 + " lX1=" + lX1 + " value=" + (myNn > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn) + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + secondStack + andMore());
       ex.printStackTrace(System.err);
       System.err.flush();
       if (E.debugMaster) {
         System.exit(-25);
       }
-      return ret;
+      return "" + ret;
     }
     return "" + ret;
   }
@@ -3843,9 +4046,14 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       String ret = "";
       int tst1 = ars[x1][ixCntedCnt];
       int tst2 = ars[x1][ixMySum];
+      int myNn = 0;
       //  String tst3 = mf(E.AILims[(int) (ars[x1][ixMySum])]);
-      String myAve = (ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]));
-      String myAllAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]);
+      String myAve = (ars[x1][ixCntedCnt] < 1 ? (ixMySum > 0 && ixMySum < E.AILims.length ? mf(E.AILims[ixMySum]) : " ixMySum=" + ixMySum)
+              : (myNn = ((int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt]))) > 0 && myNn < E.AILims.length
+                      ? mf(E.AILims[myNn]) : " myNn=" + myNn);//mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]));
+      String myAllAve = (ars[x1][ixCntedCnt] < 1 ? (ixAllSum > 0 && ixAllSum < E.AILims.length ? mf(E.AILims[ixAllSum]) : " ixAllSum=" + ixAllSum)
+              : (myNn = ((int) (ars[x1][ixAllSum] / ars[x1][ixCntedCnt]))) > 0 && myNn < E.AILims.length
+                      ? mf(E.AILims[myNn]) : " myNn=" + myNn);
       ret += whats[x1] + " allentriesC" + ars[x1][ixAllCnt] + ":AVE " + myAllAve + " ScreenedC" + ars[x1][ixCntedCnt] + " :AVE " + myAve;
       ret += " firstN" + (ars[x1][firstIx] - strtIxs) + " :V" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " mostN" + (ars[x1][mostIx] - strtIxs) + " :V" + mf(E.AILims[(int) (ars[x1][mostIx])])
              + " topN" + (ars[x1][topIx] - strtIxs) + ":" + mf(E.AILims[(int) (ars[x1][topIx])]) + "\n";
@@ -3876,7 +4084,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   /**
    * put into an array counts most limited by the winner value from wIx
    *
-   * @param x0 The screen aKey character must have values==4 for the winner   * clan
+   * @param x0 The screen aKey character must have values==4 for the winner *
+   * clan
    * @param x1 The counted aKey character index for the character index sum
    * @param ar The array for the counting
    * @param aKey The key for the counting
@@ -3888,49 +4097,49 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     //static int mostIx=0, ixAllSum=1, ixMySum=2,ixAllCnt=3, ixCntedCnt=4, firstIx=5, topIx=6,skippedCnt=7, negIxs=8, strtIxs = 12, lenIx = 66; // holds 52+2 spare
     System.out.println("---sCA2---setCntArCnt=" + setCntSee + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
     try {
-    char ch0 = '&';
-    char ch1 = '*';
-    int myIx0 = 0, myIx1 = 1;
-    int valIx = E.getAIMuch(ch1 = aKey.charAt(myIx1 = ixIxs[x1][0])); //value to array
-    int screenIx = E.getAIMuch(ch0 = aKey.charAt(myIx0 = ixIxs[x0][0])); // value test for winners
-    int vvIx = strtIxs + valIx;
+      char ch0 = '&';
+      char ch1 = '*';
+      int myIx0 = 0, myIx1 = 1;
+      int valIx = E.getAIMuch(ch1 = aKey.charAt(myIx1 = ixIxs[x1][0])); //value to array
+      int screenIx = E.getAIMuch(ch0 = aKey.charAt(myIx0 = ixIxs[x0][0])); // value test for winners
+      int vvIx = strtIxs + valIx;
       //     System.out.println("---sCA3---setCntArCnt=" + setCntSee + "Y" + year + " what=" + what + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixLimCnt] + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[0][ixAllCnt]);
-    // all occurances, not just the winners
-    ars[x1][ixAllCnt] += aVal[E.aValCnts];;
-    ars[x1][ixAllSum] += valIx; // AllAve = (int)(ixAllSum/ixAllCnt)
-    // these are only winners
-    if (screenIx > ixIxs[x0][1] && screenIx < ixIxs[x0][2]) { // winners only
-     if (valIx < 0 && valIx > -5) {
-       ars[x1][-valIx + negIxs] += 1;
-     }
-     else if (valIx < 0 || valIx > 51) {
-       ars[x1][skippedCnt] += 1;
+      // all occurances, not just the winners
+      ars[x1][ixAllCnt] += aVal[E.aValCnts];;
+      ars[x1][ixAllSum] += valIx; // AllAve = (int)(ixAllSum/ixAllCnt)
+      // these are only winners
+      if (screenIx > ixIxs[x0][1] && screenIx < ixIxs[x0][2]) { // winners only
+        if (valIx < 0 && valIx > -5) {
+          ars[x1][-valIx + negIxs] += 1;
+        }
+        else if (valIx < 0 || valIx > 51) {
+          ars[x1][skippedCnt] += 1;
 
-     }
-     else { // if valIx >= 0 && valIx <= 51 good numbers
-       ars[x1][ixCntedCnt] += aVal[E.aValCnts]; // sum of all counted
-       ars[x1][ixMySum] += vvIx; // aveIx = (int)(ar[ixMySum]/ar[ixCntedCnt])
-       ars[x1][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
+        }
+        else { // if valIx >= 0 && valIx <= 51 good numbers
+          ars[x1][ixCntedCnt] += aVal[E.aValCnts]; // sum of all counted
+          ars[x1][ixMySum] += vvIx; // aveIx = (int)(ar[ixMySum]/ar[ixCntedCnt])
+          ars[x1][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
 
-       if (ars[x1][mostIx] == 0 || ars[x1][vvIx] > ars[x1][ars[x1][mostIx]]) { //ar[IX] of most count
-         ars[x1][mostIx] = vvIx;
-    }
-       if (ars[x1][firstIx] == 0 || ars[x1][firstIx] > vvIx) { //firstIx too high
-         ars[x1][firstIx] = vvIx; //lower firstIx
-       }
-       if (ars[x1][topIx] == 0 || ars[x1][topIx] < vvIx) { //the highest val
-         ars[x1][topIx] = vvIx;// raise topIx
-       }
+          if (ars[x1][mostIx] == 0 || ars[x1][vvIx] > ars[x1][ars[x1][mostIx]]) { //ar[IX] of most count
+            ars[x1][mostIx] = vvIx;
+          }
+          if (ars[x1][firstIx] == 0 || ars[x1][firstIx] > vvIx) { //firstIx too high
+            ars[x1][firstIx] = vvIx; //lower firstIx
+          }
+          if (ars[x1][topIx] == 0 || ars[x1][topIx] < vvIx) { //the highest val
+            ars[x1][topIx] = vvIx;// raise topIx
+          }
+        }
       }
-    }
       if (++setCntSee % 14 == 0) {
-      String myAve = ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]); //only winners
-      String allAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]); // all values this val
+        String myAve = ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]); //only winners
+        String allAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]); // all values this val
 
-      //  System.out.println("---sCA3---setCntr=" + what + " subKey=" );
-      System.out.println("---sCA3---setCntr=" + setCntSee + " W=" + whats[x1] + " " + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + ":" + myAve + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[x1][ixAllCnt] + ":" + allAve);
-      System.out.println("---sCA4--- first" + ars[x1][firstIx] + ":" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " most" + ars[x1][mostIx] + ":" + mf(E.AILims[(int) (ars[x1][mostIx])]) + " top" + ars[x1][topIx] + ":" + mf(E.AILims[(int) (ars[x1][topIx])]));
-      System.out.println("---sCA5---" + seeArrays[x1]);
+        //  System.out.println("---sCA3---setCntr=" + what + " subKey=" );
+        System.out.println("---sCA3---setCntr=" + setCntSee + " W=" + whats[x1] + " " + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + ":" + myAve + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[x1][ixAllCnt] + ":" + allAve);
+        System.out.println("---sCA4--- first" + ars[x1][firstIx] + ":" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " most" + ars[x1][mostIx] + ":" + mf(E.AILims[(int) (ars[x1][mostIx])]) + " top" + ars[x1][topIx] + ":" + mf(E.AILims[(int) (ars[x1][topIx])]));
+        System.out.println("---sCA5---" + seeArrays[x1]);
       }
     }//
     catch (Exception | Error ex) {
@@ -3941,8 +4150,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " x1=" + x1 + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIx ? " err ars Len=" + ars[xx1].length : " ars ok len=" + ars[1].length));
       ex.printStackTrace(System.err);
       System.err.flush();
-    return "";
-  }
+      return "";
+    }
     return "";
   }
 
@@ -4086,6 +4295,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   // byte[] prevAr1 = new byte[bCharEnd];
 //  byte cc = 'A';
 //  byte[] valCr = new byte[bCharEnd];
+
   /**
    * build AICvals in Assets.myAICvals from myAIvals as sliderVals
    *
@@ -4168,32 +4378,32 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     int klan = clan % 5;
     int gc = valI[vv][modeC][0][0];
     try {
-    if (gc <= vfour) {
-      if (gc == vone || gc == vthree) {
-        return valToSlider(valD[vv][gameAddrC][0][0], valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
-      }
-      else if (gc == vtwo) {
-        return valToSlider(valD[vv][gameAddrC][0][1], valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
-      }
-      else if (gc == vfour) {
-        return valToSlider(valD[vv][gameAddrC][1][0], valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
-      }
-      else if (E.debugSettingsTab) {  //problem with clan == 5, unknown gc
+      if (gc <= vfour) {
+        if (gc == vone || gc == vthree) {
+          return valToSlider(valD[vv][gameAddrC][0][0], valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
+        }
+        else if (gc == vtwo) {
+          return valToSlider(valD[vv][gameAddrC][0][1], valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+        }
+        else if (gc == vfour) {
+          return valToSlider(valD[vv][gameAddrC][1][0], valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+        }
+        else if (E.debugSettingsTab) {  //problem with clan == 5, unknown gc
 
-        String verr = "getVa; illegal clan =" + clan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
-        doMyErr(verr);
+          String verr = "getVa; illegal clan =" + clan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
+          doMyErr(verr);
+        }
+      } // end of gameMaster clan == 5
+      // now do clan entries gc == vfive then vten
+      else if ((gc == vfive) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
+        return valToSlider(valD[vv][gameAddrC][0][klan], valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
       }
-    } // end of gameMaster clan == 5
-    // now do clan entries gc == vfive then vten
-    else if ((gc == vfive) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
-      return valToSlider(valD[vv][gameAddrC][0][klan], valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
-    }
-    else if ((gc == vten) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
-      return valToSlider(valD[vv][gameAddrC][pors][klan], valD[vv][gameLim][pors][lowC], valD[vv][gameLim][pors][highC]);
-    }
-    else if (E.debugSettingsTab) {
-      tError = "getVa; illegal clan=" + clan + " klan=" + klan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
-      doMyErr(tError);
+      else if ((gc == vten) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
+        return valToSlider(valD[vv][gameAddrC][pors][klan], valD[vv][gameLim][pors][lowC], valD[vv][gameLim][pors][highC]);
+      }
+      else if (E.debugSettingsTab) {
+        tError = "getVa; illegal clan=" + clan + " klan=" + klan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
+        doMyErr(tError);
       }
     }
     catch (Exception | Error ex) {
@@ -4209,6 +4419,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     }
     return 50;
   }
+
   /**
    * get value from valD and turn it into a slider int between 0-100 This is
    * used to generate the slider window
@@ -4549,10 +4760,10 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doVal("Min Econs by Year", minEconsMult, mMinEconsMult, " increase min econs for each year, also affect minEcons");
     doVal("tradeAddlSVFrac", offerAddlFrac, mOfferAddlFrac, "increase the process excessOffers in a barter");
 
-    doVal("tradeFraction", tradeFrac, mTradeFrac, "Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
+    doAIVal("tradeFraction", tradeFrac, mTradeFrac, "Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
     //   doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
     // doVal("HiLoFactorDif",);
-    doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
+    doAIVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
     doVal("healthGoal", goalHealth, mRegGoals, "set normal, non-emergency health goal, may increase health and reduce costs");
     doVal("emergHealthGoal", emergHealth, mAllGoals, "set emergency health goals for when economies are weak more might help or might may make them worse");
     doVal("favr", fav0, mfavs, "increase how much your clan favors clan red by giving a better barter discount, this increases the amount you help clan red ");
@@ -4584,7 +4795,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
 
     // doVal("econLimits1  ", econLimits1, mEconLimits1, "Increase the max number of econs (planets+ships) in this game");
     //  doVal("econLimits2  ", econLimits2, mEconLimits2, "Increase the max number of econs (planets+ships) in this game");
-    doVal("Clan Ships per planets", clanShipFrac, mClanShipFrac, "increase faction of ships per planets for this clan only, limited by All ships per planets and game ships per planets");
+    doAIVal("Clan Ships per planets", clanShipFrac, mClanShipFrac, "increase faction of ships per planets for this clan only, limited by All ships per planets and game ships per planets");
     doVal("All ships per planets", clanAllShipFrac, mClanAllShipFrac, "for this clan increase the fraction of ships per all planets, limited by Clan all Ships per planets  and game Ships per planets ");
     doVal("Ships per planets", gameShipFrac, mGameShipFrac, "increase the fraction of ships in the game. bit for each clan, limited by clanShipFrac and clanAllShipFrac");
     doVal("resourceGrowth", resourceGrowth, mResourceGrowth, "increase amount of resource growth per year, dependent on units of staff");
@@ -4593,12 +4804,12 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doVal("guestGrowth", guestsGrowth, mGuestsGrowth, "increase amount of guest growth per year, dependent on units of guests");
     doVal("yearsDepreciation", yearsDepreciation, mYearsDepreciation, "increase year until resource,staff,cargo or guests is depreciated");// per unit use .5? value *rawUnitGrowth for depreciation
     doVal("maxStaffGrowth", maxStaffGrowth, mMaxStaffGrowth, "increase the largest possible staffsize, staff growths will slow to prevent reaching this size");
-    doVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the depreciations of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
-    doVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
+    doAIVal("CatastrophyFreq", userCatastrophyFreq, mUserCatastrophyFreq, "Increase the frequency of Catastrophies for this Clan. Catastrophies decrement 2 resource financial sectors and 1 staff financial sector.  then catastrophies create benefits by reducing the depreciations of some planet resource and staff financial sectors, catastrophies also bounus the growth of some financial sectors for a few years  For ships, the catastrophies add a significant amount of manuals, increasing the ship values in trades");
+    doAIVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
     doVal("InitYrsTraveled", initTravelYears, mInitTravelYears, "Increase initial travel cost");
     doVal("ClanFutureFundDues", clanStartFutureFundDues, mClanStartFutureFundDues, "increase the economy worth at which staff and resources are converted to cash used to create new planets or ships.  Balances from the biggest financial sectors are reduce and turned into future fund dues");
-    doVal("futureFundTransferFrac", futureFundTransferFrac, mFutureFundTransferFrac, "increase the amount transfered to futureFund per year at emergencies and dues. This increases building new economies, decreases growth which may increase deaths.");
-    doVal("FutureFundFrac", futureFundFrac, mFutureFundFrac, "also increase the amount transfered to futureFund  at emergencies and dues. increases building new economies, decreases growth may increase deaths, inrease growth, decrease new economies");
+    doAIVal("futureFundTransferFrac", futureFundTransferFrac, mFutureFundTransferFrac, "increase the amount transfered to futureFund per year at emergencies and dues. This increases building new economies, decreases growth which may increase deaths.");
+    doAIVal("FutureFundFrac", futureFundFrac, mFutureFundFrac, "also increase the amount transfered to futureFund  at emergencies and dues. increases building new economies, decreases growth may increase deaths, inrease growth, decrease new economies");
     doVal("FutureFEmerg1", clanFutureFundEmerg1, mClanFutureFundEmerg, "adjust first level emergency trigger when staff  or resources are out of bound,divert max staff/resource sectors balances to the futureFund, larger than FutureFEmerg2 to have 2 triggers, decreasing this value increases helps prevent more ship or planet deaths, but also increases unneeded emergency transfers decreasing ship or planet growth");
     doVal("clanFutureFEmerg2", clanFutureFundEmerg2, mClanFutureFundEmerg, "adjust second level trigger when staff and resources are out of bound causing ship or planet death , see FutureEmerge1");
     doVal("TradeCriticalBias", tradeCriticalFrac, mTradeCriticalFrac, "clan increase the trade value of resources or staff critically needed and decrease the trade value of resources or staff least needed");
@@ -4770,7 +4981,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final long LMASK = lmask;
   static final long AGESMASK = LIST10 | LIST11 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17; // show available age vals
   static final long LISTAGES = AGESMASK;
- // static final long LIST1YRS = LIST1 | LISTYRS;
+  // static final long LIST1YRS = LIST1 | LISTYRS;
   //static final long LIST3YRS = LIST3 | LISTYRS;  // missed deaths
   //static final long LIST4YRS = list4 | LISTYRS;  // trades, accepted rej deaths
   //static final long LIST5YRS = list5 | LISTYRS;  // other deaths
@@ -4778,35 +4989,35 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   //static final long LIST40 = list4 | LIST0;   // trades accepted, rej deaths
   //static final long LIST410 = list4 | LIST1 | LIST0;   // trades accepted, rej deaths
   //static final long LIST51 = LIST5 | LIST1;   // other deaths
- // static final long LIST52 = LIST5 | LIST2;
+  // static final long LIST52 = LIST5 | LIST2;
   //static final long LIST52YRS = LIST52 | LISTYRS;
   //static final long LIST41YRS = list4 | LIST1YRS;
- // static final long LIST431YRS = LIST3 | LIST41YRS;
- // static final long LIST2YRS = LIST2 | LISTYRS;
+  // static final long LIST431YRS = LIST3 | LIST41YRS;
+  // static final long LIST2YRS = LIST2 | LISTYRS;
   //static final long LIST29YRS = LIST2 | LIST9 | LISTYRS;
   //static final long LIST29 = LIST2 | LIST9;
   //static final long LIST42YRS = list4 | LIST2YRS;
   //static final long LIST432YRS = LIST3 | LIST42YRS;
- // static final long LIST43YRS = LIST3 | LIST4YRS;
+  // static final long LIST43YRS = LIST3 | LIST4YRS;
   //static final long LIST432 = LIST4 | LIST3 | LIST2;
- // static final long LIST4321 = LIST4 | LIST3 | LIST2 | LIST1;
+  // static final long LIST4321 = LIST4 | LIST3 | LIST2 | LIST1;
   //static final long LIST43210 = LIST4 | LIST3 | LIST2 | LIST1 | LIST0;
   //static final long LIST94321 = LIST4 | LIST3 | LIST2 | LIST9 | LIST1;
- // static final long LIST4321YRS = LIST1 | LIST432YRS;
- // static final long LIST4320YRS = LIST0 | LIST432YRS;
+  // static final long LIST4321YRS = LIST1 | LIST432YRS;
+  // static final long LIST4320YRS = LIST0 | LIST432YRS;
   //static final long LIST43210YRS = LIST1 | LIST4320YRS;
   //static final long LIST32YRS = LIST2 | LIST3YRS;
- // static final long LIST320YRS = LIST0 | LIST32YRS;
+  // static final long LIST320YRS = LIST0 | LIST32YRS;
   //static final long LTRADE = LIST1YRS | LIST4;
   //static final long LDEATHS = LIST2YRS | LIST3;
   //static final long LIST0YRS = LIST0 | LISTYRS;
- // static final long LCURWORTH = LIST0YRS;
+  // static final long LCURWORTH = LIST0YRS;
   //static final long LTRADNFAVR = LIST1YRS;
   //static final long LCASTFFRAND = LIST2YRS;
   //static final long LRESOURSTAF = LIST0YRS | LIST7;
   //static final long LGRONCSTS = LIST0YRS | LIST8;
- // static final long LXFR = LIST2YRS | LIST14;
- // static final long LDECR = LIST2YRS | LIST13;
+  // static final long LXFR = LIST2YRS | LIST14;
+  // static final long LDECR = LIST2YRS | LIST13;
   //static final long LINCR = LIST2YRS | LIST12;
   //static final long LFORFUND = LIST2YRS | LIST19;
   //static final long LSWAPSA = LISTYRS | LIST17;
@@ -4997,7 +5208,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final int RAWGROWTHSP = ++e4;
   static final int POSTSWAP = ++e4;
 
-   static final int CATWORTHINCR = ++e4;
+  static final int CATWORTHINCR = ++e4;
   static final int CUMCATWORTH = ++e4;
   static final int TRADEWORTH = ++e4;
   static final int TRADEWORTHINCR = ++e4;
@@ -5024,13 +5235,12 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final int RAWCGROWTH = ++e4;
   static final int RAWSGROWTH = ++e4;
   static final int RAWGGROWTH = ++e4;
-    static final int RAWRUGROWTH = ++e4;
+  static final int RAWRUGROWTH = ++e4;
   static final int RAWCUGROWTH = ++e4;
   static final int RAWSUGROWTH = ++e4;
   static final int RAWGUGROWTH = ++e4;
 
   static final int TRADESTRATLASTGAVE = ++e4;
-
 
   static final int WTRADEDINCRMULT = ++e4;
   static final int TRADELOW = ++e4;
@@ -5385,8 +5595,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final int RCWORTH = ++e4;
   static final int RCTBAL = ++e4;
   static final int RCBAL = ++e4;
-    static final int SGTBAL = ++e4;
-      static final int SBAL = ++e4;
+  static final int SGTBAL = ++e4;
+  static final int SBAL = ++e4;
   static final int GBAL = ++e4;
   static final int RBAL = ++e4;
   static final int CBAL = ++e4;
@@ -5754,7 +5964,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(SDADEPRECIATIONP, "s DADepreciation%", "Accepted Died Depreciation in S as the % of unitGrowth");
     doRes(GDADEPRECIATIONP, "g DADepreciation%", "Accepted Died Depreciation in G as the % of unitGrowth");
 
-    doRes(RCMTGC, "%RCmtgCosts", "RC Maintenance,Travel,Growth Costs / RCSGBal", 1, 1, 1, LIST8 | LIST20| CURAVE | both | SKIPUNSET, 0, 0, 0);
+    doRes(RCMTGC, "%RCmtgCosts", "RC Maintenance,Travel,Growth Costs / RCSGBal", 1, 1, 1, LIST8 | LIST20 | CURAVE | both | SKIPUNSET, 0, 0, 0);
     doRes(RRAWMC, "%RMaintCosts", "R Maintenance Costs/ RCSGBal");
 
     doRes(SGREQGC, "%SGREQGCosts", "SG REQ G Costs / RCSGBal", 1, 1, 1, LIST22 | CURAVE | both | SKIPUNSET, 0, 0, 0);
@@ -5763,7 +5973,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(RCREQMC, "%RCREQMCosts", "RC REQ G Costs / RCSGBal");
     doRes(SGMTGC, "%SGmtgCosts", "SG Maintenance,Travel,Growth Costs / RCSGBal");
 
-    doRes(CRAWMC, "%CMaintCosts", "C Maintenance Costs/ RCSGbal", 1, 1, 1, LIST8 | LIST20| CURAVE | both | SKIPUNSET, 0, 0, 0);
+    doRes(CRAWMC, "%CMaintCosts", "C Maintenance Costs/ RCSGbal", 1, 1, 1, LIST8 | LIST20 | CURAVE | both | SKIPUNSET, 0, 0, 0);
     doRes(RCRAWMC, "%RCMaintCosts", "RC Maintenance Costs/ RCSGBal");
     doRes(SRAWMC, "%SMaintCosts", "S Maintenance Costs/ RCSGBal");
     doRes(GRAWMC, "%GMaintCosts", "G Maintenance Costs/ RCSGBal");
@@ -5802,8 +6012,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
 
     doRes(TRADELASTRECEIVE, "Last Received", "Final received goods%tot balance");
     doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade", 2, 2, 2, LIST7 | LIST15 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 1, 3, 2,  ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET,  LIST11 | LIST13 | LIST15 | LIST16 | LIST17  | CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 1, 3, 2,  ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 1, 3, 2, ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 1, 3, 2, ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(TradeCriticalBidRequestsFirst, "BidFirstCriticalRequests", "First Critical requested bids");
     doRes(TradeAlsoBidRequestsFirst, "BidAlsoFirstRequests", "First requested bids");
     doRes(TradeAlsoCriticalBidRequestsFirst, "BidAlsoFirstCriticalRequests", "First Critical requested bids");
@@ -5826,8 +6036,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     //   doRes(BEFORETRADEWORTH, "BeforeTradeWorth", "Worth before A trade");
     // doRes(AFTERTRADEWORTH, "AfterTradeWorth", "Worth after a trade");
     doRes(TRADEWORTHINCRPERCENT, "%TradeWorthIncr", "% increase in Worth after trade", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(TRADERCSGINCR, "TradeRCSGIncr", "this years increase in RCSG after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 | LIST20 |  CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(TRADERCSGINCR, "TradeRCSGIncr", "this years increase in RCSG after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 | LIST20 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeRejectValuePerGoal, "RejectValue%Goal", "Rejected percent value per goal");
     doRes(TradeLostValuePerGoal, "LostValue%Goal", "Lost percent value per goal");
@@ -5838,12 +6048,12 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(TradeStrategicValueLastPercentFirst, "Last%FirstStrategicValue", "LastStrategic Value percent of First Strategic Value just before trade");
     doRes(AlsoTradeLastStrategicValue, "AlsoStrategicValue", "AlsoLast strategic Value strategic receive/strategic gave at trade");
     doRes(AlsoTradeStrategicValueLastPercentFirst, "Also%FirstStratVal", "LastStrategic Value percent of First Strategic Value just before trade");
-    doRes(TradeRejectedStrategicGoal, "RejectedStrategicGoal", " LiveTrade rejected Strategic Goal", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2  | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TradeRejectedStrategicGoal, "RejectedStrategicGoal", " LiveTrade rejected Strategic Goal", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeLostStrategicGoal, "LostStrategicGoal", "Strategic Goal after trade lost");
     doRes(TradeRejectedStrategicValue, "RejStratValue", "Strategic Value after Trade rejected");
     doRes(TradeLostStrategicValue, "LostStrategicValue", "Strategic Value after trade lost");
     doRes(TradeMissedStrategicGoal, "MissedStrategicGoal", "Trade Missed no value");
-    doRes(TradeDeadMissedStrategicGoal, "DeadMissedStrategicGoal", "Dead No Strategic Goal no trade", 2, 3, 2, THISYEARAVE | LIST1 | LIST2 | LIST4 | BOTH | SKIPUNSET, ROWS1 | LIST21| CURAVE | BOTH | SKIPUNSET, 0, ROWS3 | LIST21 | CUMUNITS | BOTH | SKIPUNSET);
+    doRes(TradeDeadMissedStrategicGoal, "DeadMissedStrategicGoal", "Dead No Strategic Goal no trade", 2, 3, 2, THISYEARAVE | LIST1 | LIST2 | LIST4 | BOTH | SKIPUNSET, ROWS1 | LIST21 | CURAVE | BOTH | SKIPUNSET, 0, ROWS3 | LIST21 | CUMUNITS | BOTH | SKIPUNSET);
     doRes(TradeDeadLostStrategicGoal, "DeadLostStrategicGoal", "Strategic Goal after trade lost and dead");
     doRes(TradeDeadLostStrategicValue, "DeadLostStrategicValue", "Strategic Value after trade lost and dead");
     doRes(TradeDeadRejectedStrategicGoal, "DeadRejectedStrategicGoal", "Strategic Goal after trade rejected and dead");
@@ -5860,7 +6070,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(TRADESOS1, "SOS1", "starting with SOS1");
     doRes(TRADESOS2, "SOS2", " starting with SOS2");
     doRes(TRADESOS3, "SOS3", " starting with SOS3");
-    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST5 | LIST13 | THISYEARAVE | BOTH | SKIPUNSET,0L,0L,0L);
+    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST5 | LIST13 | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(TRADEOSOS1, "HlptdS0Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS0");
     doRes(TRADEOSOS2, "HlptdS2Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS2");
     doRes(TRADEOSOS3, "HlptdS3Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS3");
@@ -5921,7 +6131,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes("CRITICALRECEIPTSFRACWORTHF3", "CritTradeFracF3", "% of critical receipts worth favor3 Trades/start totW  ", 2, 3, 2, DUP, 0, 0, 0);
     doRes("CRITICALRECEIPTSFRACWORTHF2", "CritTradeFracF2", "% of critical receipts worth favor2 Trades/start totW  ", 2, 3, 2, DUP, 0, 0, 0);
     doRes("CRITICALRECEIPTSFRACWORTHF1", "CritTradeFracF1", "% of critical receipts worth favor1 Trades/start totW  ", 2, 3, 2, DUP, 0, 0, 0);
-    doRes("WTRADEDINCR", "WTradedIncr", "% Years worth increase/start year worth", 2, 2, 1, LIST1 | LIST5 | LIST13| CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes("WTRADEDINCR", "WTradedIncr", "% Years worth increase/start year worth", 2, 2, 1, LIST1 | LIST5 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes("WORTHAYRNOTRADEINCR", "IncW aYr NoTrade", "% Year increase Worrth/worth if no trades this year", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WORTH2YRNOTRADEINCR", "IncW 2Yr No Trade", "% Year increase Worrth/worth if  2 years of no trades", 2, 3, 2, DUP, 0, 0, 0);
     doRes("WORTH3YRNOTRADEINCR", "IncW 3Yrs No Trade", "% Year increase W/worth if 3 or more years of no trades", 2, 3, 2, DUP, 0, 0, 0);
@@ -6816,7 +7026,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * do end of year processing, determine if values need to be divided by power
    * of 10 and then shown in the display of the result process the score
    * processor getWinner() before the rest of doEndYear Process AI values
-     *
+   *
    * @return
    */
   int doEndYear() {
@@ -6884,7 +7094,8 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         cnt++;
 
         /**
-         * finalize set power for each results entry         * resI [resNum][ICUM,ICUR0,...ICUR6(7*6rounds
+         * finalize set power for each results entry * resI
+         * [resNum][ICUM,ICUR0,...ICUR6(7*6rounds
          * +2][PCNTS,SCNTS,CCONTROLD][LCLANS :{over
          * CCONTROLD}ISSET,IVALID,IPOWER:{only for
          * ICUM,CCONTROLD}LOCKS0,LOCKS1,L0CKS2,LOCKS3,IFRACS,IDEPTH] valid
@@ -6945,7 +7156,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
             if (maxCumP > 0) {
               didPower = true;
               if (E.debugStatsOut) {
-                System.out.printf("-----EY-----EM.doEndYear %s, m=%d,MAX_PRINT[%1d]=%e, maxCum=%e\n", resS[rN][0], m, maxCumP, MAX_PRINT[maxCumP], maxCum);
+                System.out.printf("-----EY-----EM.doEndYear stat=%d:%s, m=%d,MAX_PRINT[%1d]=%e, maxCum=%e\n", rN, resS[rN][0], m, maxCumP, MAX_PRINT[maxCumP], maxCum);
               }
             }
           }
@@ -7816,7 +8027,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
       for (lockIx = 0; lockIx < 4; lockIx++) {
         myLock = lockIx;
         // check for a LISTx match put in prevListMatch
-       //  prevListMatch = (long) (aop & curRes[ICUM][CCONTROLD][LOCKS0 + lockIx]) & lmask;
+        //  prevListMatch = (long) (aop & curRes[ICUM][CCONTROLD][LOCKS0 + lockIx]) & lmask;
         //look for ROWS1 ROWS2 ROWS3
         haveRows = aop & ROWSMASK;  //StarTrader rows key
         // any ROWSx in this lock
@@ -8641,13 +8852,14 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     }
     return wasHere6;
   }
+
   /**
    * print stack: file.number.method if debugAtJavaOut
-     *
+   *
    * @param num The l
    * @return
    */
-  String atJava(int num){
+  String atJava(int num) {
     StackTraceElement[] aa = Thread.currentThread().getStackTrace();
     String ret = "atJava=";
     if (E.debugAtJavaOut) {
@@ -8657,36 +8869,43 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     }
     return ret;
   }
+
   /**
-   * print a System.out line with intro if E.debugOut
-   * *
- * @param flag a flag like ---FLAG---
- * @param ec  current Econ
- * @param what the
- */
+   * print a System.out line with intro if E.debugOut * @param flag a flag like
+   * ---FLAG---
+   *
+   * @param ec current Econ
+   * @param what the
+   */
   void printHere(String flag, Econ ec, String what) {
     if (E.debugOutput) {
-    if (eE.msgcnt++ > eE.msgs) {
-      new Throwable().printStackTrace();
-      eE.sysmsgDone = true;
-      eM.doMyErr(">>>>>>>> ERR messages cnt=" + eE.msgcnt + " exceeds limit msgs" + eE.msgs);
-    }
-    if(ec == null && E.debugDoYearEndOut )System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + " game" + past(startTime) + atJava(2) + what);
-    else if (E.debugDoYearEndOut) {
-      //System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ec.printName()+ ((int) EM.econLimits3[0])  + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
-      System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ec.printName() + what);
+      if (eE.msgcnt++ > eE.msgs) {
+        new Throwable().printStackTrace();
+        eE.sysmsgDone = true;
+        eM.doMyErr(">>>>>>>> ERR messages cnt=" + eE.msgcnt + " exceeds limit msgs" + eE.msgs);
+      }
+      if (ec == null && E.debugDoYearEndOut) {
+        System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + " game" + past(startTime) + atJava(2) + what);
+      }
+      else if (E.debugDoYearEndOut) {
+        //System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ec.printName()+ ((int) EM.econLimits3[0])  + ec.printYearEndStart() + ec.printThread() + ec.printGameTime() + atJava(2) + what);
+        System.out.println(flag + " " + eE.msgcnt + "/" + eE.msgs + ":" + ec.printName() + what);
       }
     }
   }
-  /**  print a System.out line if E.debugDoYearEndOut or other debugs
- *
- * @param test only print if test true, may be E.???
- * @param flag a flag like ---FLAG---
- * @param ec  current Econ
- * @param what the
- */
-  void printHere(boolean test, String flag, Econ ec, String what){
-    if(test)printHere(flag,ec,what);
+
+  /**
+   * print a System.out line if E.debugDoYearEndOut or other debugs
+   *
+   * @param test only print if test true, may be E.???
+   * @param flag a flag like ---FLAG---
+   * @param ec current Econ
+   * @param what the
+   */
+  void printHere(boolean test, String flag, Econ ec, String what) {
+    if (test) {
+      printHere(flag, ec, what);
+    }
   }
 
   /**
@@ -8976,25 +9195,25 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
     }
     try {
       //  winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
-    winner = scoreVals(TRADELASTGAVE, wGiven, ICUM, isV);
+      winner = scoreVals(TRADELASTGAVE, wGiven, ICUM, isV);
       // winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
       //winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
-    winner = scoreVals(LIVEWORTH, wLiveWorthScore, ICUR0, isV);
-    winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
+      winner = scoreVals(LIVEWORTH, wLiveWorthScore, ICUR0, isV);
+      winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
       // winner = scoreVals(WTRADEDINCRMULT, wYearTradeV, ICUR0, isV);
-    // winner = scoreVals(WTRADEDINCRMULT, wYearTradeI, ICUR0, isI);
-    winner = scoreVals(DIED, iNumberDied, ICUM, isI);
-    winner = scoreVals(BOTHCREATE, iBothCreateScore, ICUM, isI);
+      // winner = scoreVals(WTRADEDINCRMULT, wYearTradeI, ICUR0, isI);
+      winner = scoreVals(DIED, iNumberDied, ICUM, isI);
+      winner = scoreVals(BOTHCREATE, iBothCreateScore, ICUM, isI);
       // double econScore = lastOffer * EM.wGiven[0][0] + liveWorth*EM.wLiveWorthScore[0][0];
-    // winner = scoreVals(getStatrN("WTRADEDINCRMULT"), wYearTradeI, ICUR0, isI);
-    resI[SCORE][ICUR0][CCONTROLD][ISSET] = 1;
-    myScoreSum = 0.0;
-    for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-      myScoreSum += myScore[ixClan];
-      resV[SCORE][ICUR0][0][ixClan] = myScore[ixClan];
-      resV[SCORE][ICUR0][1][ixClan] = myScore[ixClan];
-      resI[SCORE][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
-      resI[SCORE][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
+      // winner = scoreVals(getStatrN("WTRADEDINCRMULT"), wYearTradeI, ICUR0, isI);
+      resI[SCORE][ICUR0][CCONTROLD][ISSET] = 1;
+      myScoreSum = 0.0;
+      for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+        myScoreSum += myScore[ixClan];
+        resV[SCORE][ICUR0][0][ixClan] = myScore[ixClan];
+        resV[SCORE][ICUR0][1][ixClan] = myScore[ixClan];
+        resI[SCORE][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
+        resI[SCORE][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
       }
       double myScoreAve = myScoreSum * E.invL2secs; //  inv 14
       double invMyScoreAve = 1. / myScoreAve;
@@ -9007,71 +9226,71 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         }
       }
 
-    int min = 0, prevMin = 0;
-    // static int myScorePosClan[] = {1,2,3,4,5};// clan score min to max
-    //static int myScoreClanPos[] = {1,2,3,4,5}; //clan positions of score
-    myScorePosClan[0] = 0;
-    myScorePosClan[1] = 1;
-    myScoreClanPos[0] = 0;
-    myScoreClanPos[1] = 1;
+      int min = 0, prevMin = 0;
+      // static int myScorePosClan[] = {1,2,3,4,5};// clan score min to max
+      //static int myScoreClanPos[] = {1,2,3,4,5}; //clan positions of score
+      myScorePosClan[0] = 0;
+      myScorePosClan[1] = 1;
+      myScoreClanPos[0] = 0;
+      myScoreClanPos[1] = 1;
       for (ixClan = 1; ixClan < E.LCLANS; ixClan++) {
         myScorePosClan[ixClan] = ixClan; // set score pos to the current clan
-      if (myScore[myScorePosClan[ixClan - 1]] < myScore[myScorePosClan[ixClan]]) {
-        // ixClan=2 1<2 or 0<2
-        myScorePosClan[ixClan] = ixClan;// set score position ixClan to clan ixclan
-        myScoreClanPos[ixClan] = ixClan;// set the clan to score position
-      }
-      else { // 1>= 2 ixClan=2
-        min = ixClan;
-        // move the lower score pos up to current ixClan
-        myScorePosClan[ixClan] = myScorePosClan[ixClan - 1];// <=0
-        //now set clan ixClan to its new higher score position
-        myScoreClanPos[myScorePosClan[ixClan]] = ixClan;
-        // set one less score pos to the prev clan (ixClan)
-        myScorePosClan[ixClan - 1] = min; //2
-        // clan 2 moved to score 1, set clan2 to 1
-        myScoreClanPos[myScorePosClan[ixClan - 1]] = ixClan - 1;
-        //Than move the new clan score down the array as needed
-        for (ixC2 = ixClan - 1; ixC2 > 0; ixC2--) { //1 => 0, 2 => 1
-          if (myScore[myScorePosClan[ixC2 - 1]] < myScore[myScorePosClan[ixC2]]) {
-            // already in order do nothing
-          }
-          else {
-            min = myScorePosClan[ixC2]; // save current score clan position
-            // move the lower position clan up to the ixC2 position
-            myScorePosClan[ixC2] = myScorePosClan[ixC2 - 1];
-            //now set clan ixC2 to its new higher score position
-            myScoreClanPos[myScorePosClan[ixC2]] = ixC2;
-            // now save the ixC2 clan into the lower score position
-            myScorePosClan[ixC2 - 1] = min; //2  now in least pos
-            // clan 2 moved to score 1, set clan2 to 1
-            myScoreClanPos[myScorePosClan[ixC2 - 1]] = ixC2 - 1;
-          } // else ixC2
-        } // ixC2
-      }// else ixClan
-    }// ixClan
-    winner = myScoreClanPos[4];
+        if (myScore[myScorePosClan[ixClan - 1]] < myScore[myScorePosClan[ixClan]]) {
+          // ixClan=2 1<2 or 0<2
+          myScorePosClan[ixClan] = ixClan;// set score position ixClan to clan ixclan
+          myScoreClanPos[ixClan] = ixClan;// set the clan to score position
+        }
+        else { // 1>= 2 ixClan=2
+          min = ixClan;
+          // move the lower score pos up to current ixClan
+          myScorePosClan[ixClan] = myScorePosClan[ixClan - 1];// <=0
+          //now set clan ixClan to its new higher score position
+          myScoreClanPos[myScorePosClan[ixClan]] = ixClan;
+          // set one less score pos to the prev clan (ixClan)
+          myScorePosClan[ixClan - 1] = min; //2
+          // clan 2 moved to score 1, set clan2 to 1
+          myScoreClanPos[myScorePosClan[ixClan - 1]] = ixClan - 1;
+          //Than move the new clan score down the array as needed
+          for (ixC2 = ixClan - 1; ixC2 > 0; ixC2--) { //1 => 0, 2 => 1
+            if (myScore[myScorePosClan[ixC2 - 1]] < myScore[myScorePosClan[ixC2]]) {
+              // already in order do nothing
+            }
+            else {
+              min = myScorePosClan[ixC2]; // save current score clan position
+              // move the lower position clan up to the ixC2 position
+              myScorePosClan[ixC2] = myScorePosClan[ixC2 - 1];
+              //now set clan ixC2 to its new higher score position
+              myScoreClanPos[myScorePosClan[ixC2]] = ixC2;
+              // now save the ixC2 clan into the lower score position
+              myScorePosClan[ixC2 - 1] = min; //2  now in least pos
+              // clan 2 moved to score 1, set clan2 to 1
+              myScoreClanPos[myScorePosClan[ixC2 - 1]] = ixC2 - 1;
+            } // else ixC2
+          } // ixC2
+        }// else ixClan
+      }// ixClan
+      winner = myScoreClanPos[4];
 
-    double dif = 0.0, wDif = 0.0;
-    // dif = max - myScore.ave
-    // wDif = dif/myScore.av - curDif
-    // isWinner if wDif > 0.0 that is max  is enough greater than ave
-    int prevWinner = winner;
+      double dif = 0.0, wDif = 0.0;
+      // dif = max - myScore.ave
+      // wDif = dif/myScore.av - curDif
+      // isWinner if wDif > 0.0 that is max  is enough greater than ave
+      int prevWinner = winner;
       boolean badbad = winner < 0 || winner > 4; // set legal winner
-    winner = badbad ? 0 : winner; // set winner legal
-    difPercent = (wDif = (dif = (myScore[winner] - myScoreSum * .1) / myScoreSum * .1) - curDif) * 100.0;
-    if (wDif > 0.0) {  // wDif is frac (max-ave)/ave - curDif
-      isWinner = true;
-    }
-    else {  // wDif < 0.0 reduce curDif
-      // reduce curDif the amt needed max >= ave
-      curDif += (wDif * difMult);
-      // reduce curDif each year but don't go negative
-      // redices amt max/ave >  curDif
-      curDif -= (curDif - curDif * difMult) > 0.0 ? curDif * difMult : 0.0;
-    }
+      winner = badbad ? 0 : winner; // set winner legal
+      difPercent = (wDif = (dif = (myScore[winner] - myScoreSum * .1) / myScoreSum * .1) - curDif) * 100.0;
+      if (wDif > 0.0) {  // wDif is frac (max-ave)/ave - curDif
+        isWinner = true;
+      }
+      else {  // wDif < 0.0 reduce curDif
+        // reduce curDif the amt needed max >= ave
+        curDif += (wDif * difMult);
+        // reduce curDif each year but don't go negative
+        // redices amt max/ave >  curDif
+        curDif -= (curDif - curDif * difMult) > 0.0 ? curDif * difMult : 0.0;
+      }
 
-    System.out.println("getWinner " + resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner + (badbad ? " illegal winner=" + prevWinner : ""));
+      System.out.println("getWinner " + resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner + (badbad ? " illegal winner=" + prevWinner : ""));
       return winner;
     }
     catch (Exception | Error ex) {
@@ -9166,23 +9385,23 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
         }
       }
 
-    double smax = -9999999999.E+10;// ?? reset max
-    // increase myScore for each clan by clanSum/min
-    // neg inScore reduces myScore
-    // neg min reduces myScore
-    // neg min neg inScore increase myScore
-    // plus min plus inScore increases myScore
-    // plus inScore large min small increase
-    // plus large inScore small plus min large increase
-    // plus large inScore small neg min large decrease
-    for (ixClan = 0; ixClan < 5; ixClan++) {
-      myScore[ixClan] += (inScore[ixClan] + .00001) / (min * .3 + .00001); //update to max greater than max1
-      if (myScore[ixClan] > smax) {
-        smax = myScore[ixClan];
-        winner = ixClan; // current winner
+      double smax = -9999999999.E+10;// ?? reset max
+      // increase myScore for each clan by clanSum/min
+      // neg inScore reduces myScore
+      // neg min reduces myScore
+      // neg min neg inScore increase myScore
+      // plus min plus inScore increases myScore
+      // plus inScore large min small increase
+      // plus large inScore small plus min large increase
+      // plus large inScore small neg min large decrease
+      for (ixClan = 0; ixClan < 5; ixClan++) {
+        myScore[ixClan] += (inScore[ixClan] + .00001) / (min * .3 + .00001); //update to max greater than max1
+        if (myScore[ixClan] > smax) {
+          smax = myScore[ixClan];
+          winner = ixClan; // current winner
+        }
       }
-    }
-    System.out.println("scoreVals " + resS[dRn][0] + ", mult=" + mm + ", inScore=" + mf(inScore[0]) + " , " + mf(inScore[1]) + " , " + mf(inScore[2]) + "," + mf(inScore[3]) + "," + mf(inScore[4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner);
+      System.out.println("scoreVals " + resS[dRn][0] + ", mult=" + mm + ", inScore=" + mf(inScore[0]) + " , " + mf(inScore[1]) + " , " + mf(inScore[2]) + "," + mf(inScore[3]) + "," + mf(inScore[4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner);
     }
     return 4;
   }

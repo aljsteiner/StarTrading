@@ -17,7 +17,7 @@
 */
 /*
 ******* sometimes new lines went to the end, recently they went to start.  not always done
-
+6/30/2024 I've generated a lot of infrastructure for AI but discovered that I don't have  a plan for winning the game, so it is harder to tell AI how to win.  I am keeping almost everyting unchanged.  I am setting up key records of how the previous year went, in particular did your clan get winner position 4.  If so try to determine factors that can change to improve winning.  I need to see how this works as the game progresses in years and worth of economies. In particular are there different values needed.  I am trying to find only one or 2 values to nudge to win.  These would be set in EM start year, by reading the map than building arrays that find the most values for winning.
 5/29/2024 increase value 0f map pair to include age and aiScore.
 In EM.doStartYear() read all MAP entries, increase age by 1 year, drop overage entries with too few cnts(tbd).
 try to determine how well aiScore follows last position.  Create arrays of 52 elements , scoreVal(scoreIx), cnts, cntsMatch position4.  Display these in display, maybe set clan nudge for shipFrac, also arrays for tradeFrac, and accepted goal value.

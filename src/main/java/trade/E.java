@@ -23,10 +23,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * This is an extension of the StarTrader main class. It contains data for
@@ -150,7 +148,7 @@ public class E {
   static final boolean debugPutValue3 = debugMaster && outputFewer; //choose alternative for too big
   static final boolean debugPutRowsOut6 = debugOutput && outputFewer;
   static final boolean debugPutRows6aOut = debugOutput && outputFewer;
-  static final boolean debugPutRows6abOut = debugOutput && true;
+  static final boolean debugPutRows6abOut = debugOutput && outputFewer;
   static final boolean debugPutRows6acOut = debugOutput && outputFewer;
   static final boolean debugPutRows6agOut = debugOutput;
   static final boolean debugIsHere1Out = debugOutput && outputFewer;
@@ -188,9 +186,9 @@ public class E {
   static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
   // aVal[] = <cnts><year><ixMyScore>
-  static final int aValCnts = 0, aValYear = 1, aValIxMyScore = 2;
+  static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValIxMyScore = 3;
   static final char startC = 'a';
-  static final char nextC = 'A';
+  static final char nextC = '0';
   static final char maskC = '@';
   static final char lessStart = (char) ('a' - 1); // gt lessNext
   static final char lessNext = (char) ('A' - 1); //
@@ -205,22 +203,25 @@ public class E {
   /**
    * get char for AI key
    *
-   * @param ix int index of char for results
-   * @return return (0-25)startC a-z,(26-51)nextC A-Z else econDied, notActive,
+   * @param ix int index of char for results includes some punctuaton but not
+   * space or eq
+   * @return return (0-29)startC a-~,(30-76)nextC A-` else econDied, notActive,
    * missing or undef C
    */
   static char getAIResChar(int ix) {
+    //30=startC='a'97-'~'126 end
+    //nextC 30-95 48=ascii ='0'48 -'^'95+1  78=30+48
     if (ix < 0) {
       return ix == econDiedI ? econDiedC : ix == notActiveI ? notActiveC
               : ix == missingI ? missingC : undefC;
     }
-    if (ix > 51 || ix < 0) {
+    if (ix > 77) {
       return undefC;
     }
-    if (ix > 25) {
-      return (char) (nextC + ix - 26);
+    if (ix > 29) { //30-77=48
+      return (char) (nextC + ix - 30); //'0'
     }
-    return (char) (ix + startC);
+    return (char) (startC + ix); //'a' 0-29 =30
   }
 
   /**
@@ -235,14 +236,14 @@ public class E {
     if (a100 < 0) {
       return undefC;
     }
-    if (a100 < 40) {
-      return getAIResChar(a100 / 3); //0-13
+    if (a100 < 40) {  //0-39
+      return getAIResChar(a100 / 2); //0-19
     }
-    if (a100 < 61) {
-      return getAIResChar(a100 - 40); //14-34
+    if (a100 < 61) {  //40-61 =22;40=20,41=21,42=22,60=40,61=41
+      return getAIResChar(a100 - 40 + 20); //20-41
     }
-    if (a100 < 101) {
-      return getAIResChar(((a100 - 61) / 3) + 35);//35-49 highest value
+    if (a100 < 101) { // 61=41; 62=41,63=42,64=42,71=46,91=56,99=60,100=60,101=61
+      return getAIResChar(((a100 - 61 + 82) / 2));//42--61 highest value
     }
     return undefC; // value too high
   }
@@ -250,8 +251,8 @@ public class E {
   /**
    * for a given settings char in the AIKey return the number of the value
    *
-   * @param aa
-   * @return
+   * @param aa character from the key
+   * @return the int index
    */
   static int getAIMuch(char aa) {
     if (aa == undefC) {
@@ -266,14 +267,61 @@ public class E {
     if (aa == econDiedC) {
       return econDiedI;
     }
-    if ((aa > (startC - 1)) && (aa < (startC + 26))) { //0-25
-      return aa - startC; // aa - 'a'
+    if ((aa > (startC - 1)) && (aa < (127))) { //30=startC='a'97-'~'126 end
+      return aa - startC; // aa - 'a' 4 =e101 - a97
     }
-    if ((aa > (nextC - 1)) && (aa < (nextC + 26))) { // 26-51
-      return nextC - aa + 26; // otherWise aa - 'A' +26 may be -1 for maskC
+    //nextC 30-95 48=ascii ='0'48 -'^'95+1  78=30+48
+    if ((aa > (nextC - 1)) && (aa < (nextC + 48))) { //48=96-48 ascii '0'48 -'^'95
+      return aa - nextC + 30; // otherWise aa - '0' +30 may be -1 for maskC
     }
     return undefI; //something undefined
   }
+  /**
+   * get the key char value at location bias
+   *
+   * @param key the AI key
+   * @param bias The bias into the key
+   * @return the index value
+   */
+  static int getMuchfromKey(String key, int bias) {
+    return getAIMuch(key.charAt(bias));
+  }
+
+  /**
+   * get the settings index 0-99 from the character in the map key
+   *
+   * @param aa character from the map key
+   * @return
+   */
+  static int getAISetMuch(char aa) {
+    int ii = getAIMuch(aa);
+    if (ii < 0 && ii > -5) {
+      return ii;
+    }
+    else if (ii < -4 || ii > 76) {
+      return undefI;
+    }
+    else if (ii < 20) {
+      return ii + ii; //19=38
+    }
+    else if (ii < 41) {
+      return ii + 20;//20=40,21=41,31=51,40=60
+    }
+    else
+      return ii + ii - 82 + 61;//41=61,42=63,51=81,56=91,60=99,61=101
+  }
+  /**
+   * get the setting encoded in the key at position bias int
+   *
+   * @param key the key for the AI map
+   * @param the bias into the key
+   * @return return how much value of that character represents
+   *
+   */
+  static int getSettingsValue(String key, int bias) {
+    return getAISetMuch(key.charAt(bias + bValsStart));
+  }
+
 
   /* now define pointers into EM.myAIlearnings key arrays EM.psClanChars[ixPS][ixClan]
 
@@ -287,34 +335,35 @@ public class E {
   static final int pPrevScW = aiPcntr++; // Prev score worth last years score
   static final int pPrevEScW = aiPcntr++; // prev econ score worth
   static final int pPrevResil = aiPcntr++; // last resilience worth
+  static final int poPerW = ++aiPcntr;
   static final int pPrevPmin = aiPcntr++; //rawProspects2 min
-  static final int pPrevP = aiPcntr++; //rawProspects2 ave
-  static final int pPrevHope = aiPcntr++; // last hope worth
-  static final int pIncResil = aiPcntr++; // last resilience worth
-  static final int pPIncHope = aiPcntr++; // last hope worth
-  static final int pIncP = aiPcntr++; //rawProspects2 inc
-  static final int pIncPmin = aiPcntr++; //rawProspects2 min
+ // static final int pPrevP = aiPcntr++; //rawProspects2 ave
+  // static final int pPrevHope = aiPcntr++; // last hope worth
+  // static final int pIncResil = aiPcntr++; // last resilience worth
+  // static final int pPIncHope = aiPcntr++; // last hope worth
+  // static final int pIncP = aiPcntr++; //rawProspects2 inc
+  // static final int pIncPmin = aiPcntr++; //rawProspects2 min
 
-  static final int pPrevPrevP = aiPcntr++; //rawProspects2 ave
+  //static final int pPrevPrevP = aiPcntr++; //rawProspects2 ave
 
-  static final int pPrevPrevPmin = aiPcntr++; //rawProspects2 min
-  static final int pLastO = aiPcntr++; // last Offer worth
-  static final int pPrevO = aiPcntr++; // prev Offer worth
-  static final int pPrevPrevO = aiPcntr++; // prev prev Offer worth
-  static final int pLastW = aiPcntr++;  // last aiWorth
-  static final int pPrevW = aiPcntr++; // prevAIWorth
-  static final int pPrevPrevW = aiPcntr++; // prevPrevAIWorth
-  static final int pIncPrevW = aiPcntr++; // incPrevAIWorth
-  static final int pIncW = aiPcntr++; // Inc worth
-  static final int pPrevKW = aiPcntr++; // last knowledge worth
+  // static final int pPrevPrevPmin = aiPcntr++; //rawProspects2 min
+//  static final int pLastO = aiPcntr++; // last Offer worth
+  // static final int pPrevO = aiPcntr++; // prev Offer worth
+  // static final int pPrevPrevO = aiPcntr++; // prev prev Offer worth
+  // static final int pLastW = aiPcntr++;  // last aiWorth
+//  static final int pPrevW = aiPcntr++; // prevAIWorth
+  // static final int pPrevPrevW = aiPcntr++; // prevPrevAIWorth
+  // static final int pIncPrevW = aiPcntr++; // incPrevAIWorth
+//  static final int pIncW = aiPcntr++; // Inc worth
+  // static final int pPrevKW = aiPcntr++; // last knowledge worth
 
-  static final int pPrevPrevEScW = aiPcntr++; // prev prev econ score worth
-  static final int pPrevPrevEScInc = aiPcntr++; // prev prev econ score inc
+  // static final int pPrevPrevEScW = aiPcntr++; // prev prev econ score worth
+  //// static final int pPrevPrevEScInc = aiPcntr++; // prev prev econ score inc
  // static final int pPrevEScW = aiPcntr++; // prev econ score worth
-  static final int pPrevEScInc = aiPcntr++; // prev econ score inc
-  static final int pEScW = aiPcntr++; // last econ score worth
-  static final int pIncKW = aiPcntr++; // last knowledge worth
-  static final int pIncSc = aiPcntr++; // last score worth
+ // static final int pPrevEScInc = aiPcntr++; // prev econ score inc
+  // static final int pEScW = aiPcntr++; // last econ score worth
+  // static final int pIncKW = aiPcntr++; // last knowledge worth
+  // static final int pIncSc = aiPcntr++; // last score worth
   static final int pIncO = aiPcntr++; // last Offer worth
   /*
 
@@ -329,7 +378,7 @@ public class E {
   //static final int pB0W = aiPcntr = aiPcntr + 7;
  // static final int pB1W = ++aiPcntr;
   static final int pKW = ++aiPcntr;
-  static final int poPerW = ++aiPcntr;
+
   static final int pPerW = ++aiPcntr;
   static final int pMinP = ++aiPcntr;
    */
@@ -337,12 +386,13 @@ public class E {
   static volatile int bValsEnd = EM.vvend + bValsStart; // end of key
 
   // for use by Assets.putValueByte()
-  static final double[] AILims = {-99999999, -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static final double[] AILims1 = {-99999999, -10., -5.0 - 1, 0, -0.1, -0.01, 0.0, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.05, 0.06, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000.,};
-  static final double[] AILims2 = {-99999999, -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static final double[] AILims3 = {-99999999, -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static final double[] AILims4 = {-99999999, -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static double lArs[][] = {AILims, AILims1, AILims2, AILims3, AILims4};
+  static final double[] AILims = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILims1 = {-99999999., -10., -5.0 - 1, -0.8, -0.5, -0.3, -0.25, -0, 2, -0.15, -0.1, -0.08, -.06, -.04, -.02, -0.01, 0.0, 0.01, 0.05, 0.06, 0.1, .3, 0.5, .8, 1., 1.3, 1.5, 1.8, 2., 3., 4., 5., 10., 20., 50., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 2000., 3000., 4000., 4750, 5500., 6000., 6500., 7000., 10000., 25000., 30000., 37000., 45000., 633000., 1300000., 7000000., 11000000., 15000000., 17000000., 19000000., 65000000.,};
+  static final double[] AILims2 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILims3 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILims4 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILims123 = {-99999999., -4., -3., -2., -1., 0., 1., 2., 3., 4., 5., 6., 7., 8., 9.};
+  static final double AILimss[][] = {AILims, AILims123, AILims1, AILims2, AILims3, AILims4};
 
 
   //static final int pPrevoPerW = ++aiPcntr;
@@ -895,7 +945,7 @@ public class E {
     return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
   }
   ;
- 
+
   /**
    * CalcReq growth fraction of SG ave to keep as S to reserve after growth
    * before swap to guests
@@ -2077,7 +2127,7 @@ public class E {
     String aDate = ":" + new Date().toString();
     int year = EM.year;
     //System.out.println(EM.st.since() + ">>>>>>>>>sysmsg" + EM.st.since());
-    // test true debugs to allow 
+    // test true debugs to allow
     if ((debugOutput || debugAssetsOut || debugEconOut || debugDoYearEndOut || debugCashFlowOut || debugTradesOut || debugFutureFund || debugThreadsOut) && !sysmsgDone) {
       msgcnt++;
       System.out.format(">>>>>>>>>sysmsg>>" + msgcnt + "<" + msgs + aDate + EM.st.since() + "Y" + EM.year + " " + EM.curEconName + ":" + Fname + "." + Fline + ";" + Cname + "." + Mname
