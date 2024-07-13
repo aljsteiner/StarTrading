@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.HashMap;
 import java.util.TreeMap;
 import javax.swing.JTable;
 
@@ -243,6 +244,9 @@ class EM {
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
     'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
   */
+  static final int maxRKeys = 1000;
+  static volatile int rKeysIx = 0;
+  static volatile String[] rKeys = new String[maxRKeys];
   static volatile Map<String, Integer[]> myAIlearnings;
   //pPrevScW,myScoreAr,E.pPrevEScW,aiScoreAr,pPrevResil,aiResilAr
   static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6, skippedCnt = 7, negIxs = 8, undef = 8, missing = 9, inactive = 10, died = 11, econDiedI = -1, notActiveI = -2, missingI = -3, undefI = -4, strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
@@ -713,7 +717,7 @@ class EM {
   /**
    * list the stack of each active thread
    *
-   * @return return string
+   * @return return string of active threads
    */
   protected static String threadsStacks() {
     String ret = "\n----THs---- " + curEconName + " Start ThreadStacks stacks by " + Thread.currentThread().getName() + since() + sinceDoYear() + "\n" + mem() + lfe() + "\n tError=" + tError + "\n";
@@ -1297,7 +1301,7 @@ class EM {
         dFrac.setMaximumFractionDigits(1);
         return dFrac.format(v);
       }
-      else if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder //very close to zero remainder
+      else if (true && (v > -9999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder //very close to zero remainder
         if (test5) {
           System.err.printf("----MFT1A--- v= %10.5f\n", v);
         }
@@ -1349,7 +1353,7 @@ class EM {
         dFrac.setMaximumFractionDigits(1);
         return dFrac.format(v);
       }
-      else if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //very close to zero remainder
+      else if (true && (v > -99999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //very close to zero remainder
         dFrac.setMaximumFractionDigits(0);
         return dFrac.format(v);
       }
@@ -1392,7 +1396,7 @@ class EM {
         dFrac.setMaximumFractionDigits(1);
         return dFrac.format(v);
       }
-      else if (true && (v > -999999999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //8 8 very close to zero remainder
+      else if (true && (v > -9999999. && v < 0.0 && ((-v % 1.0) < E.PPZERO)) || (v >= 0.0 && v < 9999999. && ((v % 1.0) < E.PPZERO))) {  //12 13  13 13 very close to zero remainder  //8 8 very close to zero remainder
         dFrac.setMaximumFractionDigits(0);
         return dFrac.format(v);
       }
@@ -1716,8 +1720,9 @@ class EM {
    */
   static int lvals = 200;
   static volatile int valI[][][][] = new int[lvals][][][];
-  static volatile int valAI[] = new int[lvals];
-  static volatile int vvAx = 0;
+  static volatile int valAI[] = new int[lvals];// indexes in valI we put in key
+  static volatile int valAIN[] = new int[lvals];// reference to valI with nudges
+  static volatile int vvAx = 0, vvAN = 0;
   static int modeC = 0; // gc in valI
   static int sevenC = 1;  //unused index into a 7 sector array
   static int aiC = 1; // 0= ignore,1=put into array
@@ -2883,7 +2888,31 @@ class EM {
     int rt = doVal(vdesc, vaddr, lims, vdetail);
     valAI[vvAx++] = rt;
     return rt;
-}
+  }
+
+  /**
+   * doVal flag to put in key determine type from the arrays at vaddr with vaddr
+   * Set the nudge value for this given vvAx; full double * val[][p,s] = {{.5}}
+   * or {{.5},{.5}} gc vone val[vv][0]{val}, valD {{val}} gc vtwo
+   * val[vv][0][pors] {pVal,sVal}, valD {{pVal,sVal}} gc vthree val[vv][0][val1]
+   * {{val}}, valD {{val}} same as vone gc vfour val[vv][pors][val1]
+   * {{pVal},{sVal}}. valD {{pVal},{sVal}} gc vfive val[vv][0][val5]
+   * {{1,2,3,4,5}}, valD{{1,2,3,4,5}}; gc vten valD[vv][0][pors][val5]
+   * {{1,2,3,4,5},{6,7,8,9,10}}
+   *
+   * @param nX index to the nudge values
+   * @param vdesc title of the input
+   * @param vaddr address of the input
+   * @param lims limits of the input
+   * @param vdetail details about the input
+   * @return vv the number of the input in valI,valD,valS
+   */
+  int doAIVal(int nX, String vdesc, double[][] vaddr, double[][] lims, String vdetail) throws IOException {
+    int rt = doVal(vdesc, vaddr, lims, vdetail);
+    valAIN[nX] = rt; // pointers to vv with nudges
+    //valAI[vvAx++] = rt; //do these as special nudge0,nudge1...
+    return rt;
+  }
   /**
    * sub doVal1 assign the next vv and the initial storage that will be filled
    * in doVal1
@@ -3573,13 +3602,17 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     int ix = 0;
     String ll = " ";
     String rtn = "";
-    //int entryCnt = 0, cntsCnt = 0;
+    String aKey;
+    Integer[] aVal;
+    int entryCnt = 0, cntsCnt = 0;
+    int lremove = 0;
+    int mSize = myAIlearnings.size();
+    String dateString = MYDATEFORMAT.format(new Date());
     try {
 // something happens to opens, so it is ok to do it again I think.
       bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-      System.err.println("---DWM2---did reopen of mapfile  " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
-      String aKey;
-      Integer[] aVal;
+      System.err.println("---DWM2---did reopen of mapfile  " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + mSize));
+
       // rebuild the ars arrays and zero it
       ars = new int[nars][]; // 0,1,2,3,4,5,6,7
       for (ix = 0; ix < nars; ix++) {
@@ -3591,44 +3624,52 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       if (E.debugAIOut) {
         System.out.println("----DWM3---- initialized ars files");
       };
-      //  myScoreAr = new int[lenIx];
-      /// aiScoreAr = new int[lenIx];
-      //    aiResilAr = new int[lenIx]; // set up new arrays end of each year
-      //   for (ix = 0; ix < lenIx; ix++) {
-      //    myScoreAr[ix] = 0;
-      //    aiScoreAr[ix] = 0;
-      //    aiResilAr[ix] = 0;
-      // }
       if (true && myAIlearnings != null) {
-        String dateString = MYDATEFORMAT.format(new Date());
         //    String rOut = "New Game " + dateString + "\r\n";
         ll = "year" + year + " version " + st.versionText + " " + dateString + " " + st.settingsComment.getText() + "\r\n";
         bMapFw.write(ll, 0, ll.length());
         System.out.println("---DWM4---wrote=" + ll);
         synchronized (A6Rowa.ASECS) {
-          System.out.println("---DWM5---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
+
+          /*
+static final int maxRKeys=1000;
+  static volatile int rKeysIx=0;
+  static volatile String[] rKeys = new String[maxRKeys];
+           */
+          System.out.println("---DWM5---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + mSize));
+          int lcnt = 0;
+          int mostRKeys = maxRKeys - 2;
+          int rKeys2 = 0;
           for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
             if (entry != null) {
               aKey = entry.getKey();
               aVal = entry.getValue();
               cntsCnt += aVal[E.aValCnts];
+              if (lcnt++ > 100) {
+                lcnt = 0;
+                StarTrader.sameEconState = 0;// prevent stuck alarm
+              }
               entryCnt++;
-              ll = "KEY " + aKey + " " + aVal[0] + " " + aVal[1] + " " + aVal[2];
-              bMapFw.write(ll, 0, ll.length());
-              //    setCntAr(0, 1, -1, -1, aKey, aVal);
-              //   setCntAr(0, 2, -1, -1, aKey, aVal);
-              //   setCntAr(0, 3, -1, -1, aKey, aVal);
-              //   String setCntAr(String aKey, Integer[] aVal,String what,int arn, int pX1, int lX1,int llX1, int luX1)
-/*
-             boolean no = false;
-             setCntAr(E.AILims1, aKey, aVal, "winner with myScore", 1, E.pPrevScW, E.pPrevScP, 3, 5,no);
-             setCntAr(E.AILims1, aKey, aVal, "winner with myAIScore", 2, E.pPrevEScW, E.pPrevScP, 3, 5,no);
-             setCntAr(E.AILims, aKey, aVal, "winner with Resiliance values", 3, E.pPrevResil, E.pPrevScP, 3, 5,no);
-             setCntAr(aKey,aVal);
-               */
-              setCntAr(aKey, aVal);
+              // remove and don't write keys of little value
+              if (mSize > 3000 && rKeysIx < mostRKeys && ((EM.year - aVal[E.aValYear]) > 25) && aVal[E.aValCnts] < 4) {
+                System.err.println("----DWMr1--- save remove key=" + aKey + " :" + aVal[E.aValCnts] + " Y" + aVal[E.aValYear]);
+                lremove++;
+                rKeys[rKeysIx++] = aKey;
+                // myAIlearnings.remove(aKey);
+              }
+              else {
+                ll = "KEY " + aKey + " " + aVal[E.aValCnts] + " " + aVal[E.aValAge] + " " + aVal[E.aValYear] + " " + aVal[E.aValIxMyScore];
+                bMapFw.write(ll, 0, ll.length());
+
+                setCntAr(aKey, aVal);
+              } // not remove
             }//if
           }//entry
+
+          for (int keysIx = 0; keysIx < rKeysIx; keysIx++) {
+            aKey = rKeys[keysIx];
+            System.err.println("----DWMr2--- remove key" + keysIx + " : " + aKey);
+          }
         }
         // now do the output
         seeArrays[0] = rtn = "doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " wnr:" + myScorePosClan[0] + myScorePosClan[0] + myScorePosClan[2] + myScorePosClan[2] + myScorePosClan[4] + "\n";
@@ -3644,7 +3685,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
       secondStack = sw.toString();
-      System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + secondStack);
+      System.err.println("----DWM9----write mapfile error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " entryCnt" + entryCnt + " lremove" + lremove + " cntsCnt" + cntsCnt + andMore() + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + secondStack);
       ex.printStackTrace(System.err);
       System.err.flush();
       newError = true;
@@ -3658,6 +3699,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     }
   }//doWriteMapfile
 
+  boolean no = false, y = true;
   /**
    * see the existing array that are in use Add to the seeCntArray list as
    * needed, used in Assets.CashFlow.savAI
@@ -3669,10 +3711,13 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     //  ll += seeCntArray(x1, -2) + "\n";
     //ll += seeCntArray(x2, -3) + "\n";
     //ll += seeCntArray(x3, -1) + "\n";
-    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevScW,"winr&myScore");
-    seeCntArray(seeArrays, 2, E.AILims1, E.pPrevEScW, "winr&myAIScore");
-    seeCntArray(seeArrays, 3, E.AILims1, E.pPrevResil, "winr&Resilance");
-    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin");
+  //  seeCntArray(seeArrays, 1, E.AILims2, E.pPrevScW, "winr&myScore",y);
+    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevEScW, "winr&myAIScore", y);
+    // seeCntArray(seeArrays, 3, E.AILims1, E.pPrevResil, "winr&Resilance");
+    seeCntArray(seeArrays, 2, E.AILimsC, E.pNudge0, "TradeFrac", y);
+    seeCntArray(seeArrays, 3, E.AILimsC, E.pNudge1, "ForwFundTransfFrac", y);
+    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", no);//E.pPrevoPerW
+    seeCntArray(seeArrays, 5, E.AILims1, E.pPrevoPerW, "winr&PrevOperW", no);
     return ll;
   }
 
@@ -3682,12 +3727,13 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   void setCntAr(String aKey, Integer[] aVal) {
     boolean no = false;
     //String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb)
-    setCntAr(aKey, aVal, "winr&myScore", 4, 1, E.AILims1, E.pPrevScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    setCntAr(aKey, aVal, "winr&myAIScore", 5, 2, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    setCntAr(aKey, aVal, "winr&Resilance", 6, 3, E.AILims1, E.pPrevResil, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "winr&AIScore", 4, 1, E.AILims2, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "tradeFrac", 5, 2, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 3., 4., no);
+    setCntAr(aKey, aVal, "ForwFundTransferFrac", 6, 3, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 3., 4., no);
     setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "winr&PrevOperW", 6, 5, E.AILims1, E.pPrevoPerW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
   }
-  //E.pPrevPmin, prevAIProspMin, E.AILims1
+  //E.pPrevPmin, prevAIProspMin, E.AILims1 E.pPrevoPerW
   static int SCACnt = 0;
   String keepMe = "aaa";
 
@@ -3700,10 +3746,11 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @param arn ars array index
    * @param pX1 pointer Index of the value unused
    * @param what description of array use
+   * @param p2 display the row line of ars
    * @note this uses ars as the input array and whats as the name,
    * @return a string that shows the results
    */
-  String seeCntArray(String seeAr[],  int arn, double[] myAILim, int pX1, String what) {
+  String seeCntArray(String seeAr[], int arn, double[] myAILim, int pX1, String what, boolean p2) {
     //static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6,   //skippedCnt = 7, negIxs = 8,undef=8,missing=9,inactive=10,died=11,econDiedI=-1,notActiveI=-2,missingI=-3,undefI=-4, //strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
 //  negIxs = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
     //static final int ixLimSum = 2, ixLimCnt = 4; // holds 91=12+77+2 spare
@@ -3760,9 +3807,9 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       abest = (int) (absum / abcnt);
 */
 
-      int lastIx = (ars[arn][mostIx] + 3) > ars[arn][topIx] ? ars[arn][topIx] : ars[arn][mostIx] + 3;
+      int lastIx = (ars[arn][mostIx] + 5) > ars[arn][topIx] ? ars[arn][topIx] : ars[arn][mostIx] + 5;
       lastIx = lastIx < strtIxs + 1 ? strtIxs + 1 : lastIx;
-      int ixa = (ars[arn][mostIx] - 3) < ars[arn][firstIx] ? ars[arn][firstIx] : ars[arn][mostIx] - 3;
+      int ixa = (ars[arn][mostIx] - 5) < ars[arn][firstIx] ? ars[arn][firstIx] : ars[arn][mostIx] - 5;
       ixa = ixa < strtIxs ? strtIxs : ixa;
       //now get best for regular
       int range = ars[arn][topIx] - ars[arn][mostIx];
@@ -3783,25 +3830,29 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       // create the output that is displayed in display as a  breadcrum of progress
       if (true) {  //break up the following additions to ret to localize any index error
         ret = "l" + myAILim.length + " " + what + " aN" + cAll + ":" + cAllSum + ":"
-              + cAllAve + "V:" + allAveVal
-              + " ::limC" + cLim + ":" + cLimSum + ":"
-              + cLimAve + " V:" + limAveVal;
-
-        ret += (myIx = " ::mostN:") + +ars[arn][(myN = ars[arn][mostIx])];
-        ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
+              + cAllAve + " ::limC" + cLim + ":" + cLimSum + ":" + cLimAve;
         ret += (myIx = " firstN:") + +ars[arn][(myN = ars[arn][firstIx])];
         ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
         ret += (myIx = " topN:") + +ars[arn][(myN = ars[arn][topIx])];
         ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
-        ret += " best:" + best + "\n";
 
-        ret2 = " rowN";
+        ret += " limAveV:" + limAveVal + " allAveV:" + allAveVal
+               + (myIx = " ::mostN:") + ars[arn][(myN = ars[arn][mostIx])]
+               + "V:" + mf(myAILim[myNn = myN - strtIxs])
+               + " best:" + best + "V:" + mf(myAILim[myNn = myN - strtIxs]);
+
+        if (p2) {
+          ret2 = "\n" + " rowN";
         boolean doComma = false;
         for (int ix = ixa; ix <= lastIx; ix++) {
           // see value Ix, entryCnt at that value, value at that value Ix
-          ret2 += ((doComma ? " ," : " ") + "N" + ars[arn][myN = ix] + "V:" + mf(myAILim[myNn = myN - strtIxs]));
+          ret2 += ((doComma ? " ;" : " ") + "N" + ars[arn][myN = ix] + "V:" + mf(myAILim[myNn = myN - strtIxs]));
           doComma = true;
-        }// ix
+          }// ix
+        }
+        else {
+          ret2 = "";
+        }
         seeAr[arn] = keepMe = "seeAr " + ret + ret2; //seeArrays[seeN]
         System.err.print("----SCA6----seeCntArray enters pX1=");
         System.err.print(pX1 + " SCACnt" + SCACnt + " myIx=" + myIx + ":" + myN);
@@ -4318,7 +4369,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @param res the Char array for the key, start at bCharStart
    * @param vvend The count of the last doVal
    */
-  void buildAICvals(int ixPS, int ixClan, String ecName, char[] res, char[] uMasked, int vvend) {
+  static void buildAICvals(int ixPS, int ixClan, String ecName, char[] res, char[] uMasked, int vvAx) {
     int sliderVal = 0, tix = 0;
     // static int myAIcstart  = 'a'; // start of ascii a
     // static int myAIdiv  = 20; //divid the values by 5
@@ -4333,7 +4384,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       // String aa = "", bb = "bb";
       // start bb with the schars for pors and clan
       int aWaits = 0;
-      int lRes = E.bValsEnd = E.bValsStart + vvend;
+      int lRes = E.bValsEnd = E.bValsStart + vvAx;
       lRes = res.length;
       int ix = 0, ixa = 0;
       //res = new byte[lRes];// set Res to a new right length
@@ -4342,10 +4393,11 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         res[ix] = 'a';
         uMasked[ix] = 0;  // prefill  unMasked
       }
-      for (ix = 0; ix < vvend; ix++) { // scan each doVal
-        sliderVal = getAIVal(ix, ixPS, ixClan);
+      for (ix = 0; ix < vvAx; ix++) { // scan valAI for each doVal
+        int ix2 = valAI[ix];
+        sliderVal = getAIVal(ix2, ixPS, ixClan);
         res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
-        int gc = valI[vv][modeC][0][0];
+        int gc = valI[ix2][modeC][0][0];
         if (gc > vfour) {
           uMasked[ixa] = E.maskC; // set mask for each user val
         }
@@ -4373,7 +4425,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @param clan 0-4,5 5 means a game value, 0-4 are the 5 clans
    * @return the value to set in the slider
    */
-  int getAIVal(int vv, int pors, int clan) {
+  static int getAIVal(int vv, int pors, int clan) {
     int slider1 = -1;
     int klan = clan % 5;
     int gc = valI[vv][modeC][0][0];
@@ -4400,6 +4452,65 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       }
       else if ((gc == vten) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
         return valToSlider(valD[vv][gameAddrC][pors][klan], valD[vv][gameLim][pors][lowC], valD[vv][gameLim][pors][highC]);
+      }
+      else if (E.debugSettingsTab) {
+        tError = "getVa; illegal clan=" + clan + " klan=" + klan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
+        doMyErr(tError);
+      }
+    }
+    catch (Exception | Error ex) {
+      firstStack = secondStack + "";
+      ex.printStackTrace(pw);
+      secondStack = sw.toString();
+      newError = true;
+      System.err.println(tError = ("-----EXG7----end buildAICbals gc=" + gc + " PorS=" + pors + ", clan=" + clan + " klan=" + klan + " vv=" + vv + " desc=" + valS[vv][vDesc] + ", " + curEconName + since() + ", " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
+      ex.printStackTrace(System.err);
+      flushes();
+      flushes();
+      st.setFatalError();
+    }
+    return 50;
+  }
+
+  /**
+   * get value from valD and turn it into a slider int between 0-100 This is
+   * used to generate the slider window
+   *
+   * @param vv The entry being set to a slider to show its value in slider
+   * @param pors 0,1 planet or ship being set
+   * @param clan 0-4,5 5 means a game value, 0-4 are the 5 clans
+   * @param ec reference the Econ then Assets for this value
+   * @param nudge accept a nudge 0==no nudge, 1==nudge[0],2==nudge[1] ...
+   * @return the value to set in the slider
+   */
+  static int getAIVal(int vv, int pors, int clan, Econ ec, int nudge) {
+    int slider1 = -1;
+    int klan = clan % 5;
+    int gc = valI[vv][modeC][0][0];
+    try {
+      double nudgeV = nudge > 0 ? ec.as.aiNudges[nudge - 1][ec.pors] : 0.0;
+      if (gc <= vfour) {
+        if (gc == vone || gc == vthree) {
+          return valToSlider(valD[vv][gameAddrC][0][0] + nudgeV, valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
+        }
+        else if (gc == vtwo) {
+          return valToSlider(valD[vv][gameAddrC][0][1] + nudgeV, valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+        }
+        else if (gc == vfour) {
+          return valToSlider(valD[vv][gameAddrC][1][0] + nudgeV, valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+        }
+        else if (E.debugSettingsTab) {  //problem with clan == 5, unknown gc
+
+          String verr = "getVa; illegal clan =" + clan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
+          doMyErr(verr);
+        }
+      } // end of gameMaster clan == 5
+      // now do clan entries gc == vfive then vten
+      else if ((gc == vfive) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
+        return valToSlider(valD[vv][gameAddrC][0][klan] + nudgeV, valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
+      }
+      else if ((gc == vten) && pors >= 0 && pors <= 1 && klan >= 0 && klan <= 4) {
+        return valToSlider(valD[vv][gameAddrC][pors][klan] + nudgeV, valD[vv][gameLim][pors][lowC], valD[vv][gameLim][pors][highC]);
       }
       else if (E.debugSettingsTab) {
         tError = "getVa; illegal clan=" + clan + " klan=" + klan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
@@ -4590,7 +4701,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @param high 2nd limit usually highest from doVal initialization
    * @return new slider value
    */
-  int valToSlider(double val, double low, double high) {
+  static int valToSlider(double val, double low, double high) {
     // dif1 20 = 29-10+1  dif2 = -20 10 - 29-1
     double gameValueExtent = high - low; // accept both limits
     double gameFrac = (val - low) / gameValueExtent;
@@ -4760,7 +4871,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doVal("Min Econs by Year", minEconsMult, mMinEconsMult, " increase min econs for each year, also affect minEcons");
     doVal("tradeAddlSVFrac", offerAddlFrac, mOfferAddlFrac, "increase the process excessOffers in a barter");
 
-    doAIVal("tradeFraction", tradeFrac, mTradeFrac, "Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
+    doAIVal(0, "tradeFraction", tradeFrac, mTradeFrac, "Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
     //   doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
     // doVal("HiLoFactorDif",);
     doAIVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
@@ -4808,7 +4919,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doAIVal("Catastrophies", gameUserCatastrophyMult, mGameUserCatastrophyMult, "incr slider: increase the size of catastrophies for all clans.   ");
     doVal("InitYrsTraveled", initTravelYears, mInitTravelYears, "Increase initial travel cost");
     doVal("ClanFutureFundDues", clanStartFutureFundDues, mClanStartFutureFundDues, "increase the economy worth at which staff and resources are converted to cash used to create new planets or ships.  Balances from the biggest financial sectors are reduce and turned into future fund dues");
-    doAIVal("futureFundTransferFrac", futureFundTransferFrac, mFutureFundTransferFrac, "increase the amount transfered to futureFund per year at emergencies and dues. This increases building new economies, decreases growth which may increase deaths.");
+    doAIVal(1, "futureFundTransferFrac", futureFundTransferFrac, mFutureFundTransferFrac, "increase the amount transfered to futureFund per year at emergencies and dues. This increases building new economies, decreases growth which may increase deaths.");
     doAIVal("FutureFundFrac", futureFundFrac, mFutureFundFrac, "also increase the amount transfered to futureFund  at emergencies and dues. increases building new economies, decreases growth may increase deaths, inrease growth, decrease new economies");
     doVal("FutureFEmerg1", clanFutureFundEmerg1, mClanFutureFundEmerg, "adjust first level emergency trigger when staff  or resources are out of bound,divert max staff/resource sectors balances to the futureFund, larger than FutureFEmerg2 to have 2 triggers, decreasing this value increases helps prevent more ship or planet deaths, but also increases unneeded emergency transfers decreasing ship or planet growth");
     doVal("clanFutureFEmerg2", clanFutureFundEmerg2, mClanFutureFundEmerg, "adjust second level trigger when staff and resources are out of bound causing ship or planet death , see FutureEmerge1");
@@ -5148,6 +5259,19 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
   static final int RELSCORE = ++e4;
   static final int STARTWORTH = ++e4;
   static final int LIVEWORTH = ++e4;
+  static final int RCSGWORTH = ++e4; //
+  static final int KNOWLEDGEW = ++e4; //
+  /*
+
+  static final int NEWKW = ++e4; //
+  static final int COMMONKW = ++e4; //
+  static final int MANUALSW = ++e4; //
+  static final int KWPERCENT = ++e4; //
+  static final int NEWKWPERCENT = ++e4; //
+  static final int COMMONKWPERCENT = ++e4; //
+  static final int MANUALSWPERCENT = ++e4; //
+  static final int RCSGWPERCENT = ++e4; //
+   */
   static final int WORTHINCR = ++e4; //
   static final int RDEPRECIATIONP = ++e4;  //r depreciation
   static final int RDEPRECIATION2P = ++e4;  //r depreciation before add
@@ -5643,25 +5767,47 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge");
-    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST15 | LIST8 | CURAVE | CUMAVE | CURUNITS | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(RCSGWORTH, "RCSGWorth", "worth of RCSG ", 1, 2, 0, 0, LIST0 | LIST16 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(KNOWLEDGEW, "knowledgeWorth", "worth of knowledge ", 1, 2, 0, 0, LIST0 | LIST16 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    /*
+     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+ 
+    static final int RCSGWORTH = ++e4; //
+  static final int KNOWLEDGEW = ++e4; //
+  static final int NEWKW = ++e4; //
+  static final int COMMONKW = ++e4; //
+  static final int MANUALSW = ++e4; //
+  static final int KWPERCENT = ++e4; //
+  static final int NEWKWPERCENT = ++e4; //
+  static final int COMMONKWPERCENT = ++e4; //
+  static final int MANUALSWPERCENT = ++e4; //
+  static final int RCSGWPERCENT = ++e4; //
+     */
+    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST8 | CURAVE | CUMAVE | CURUNITS | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth of trade goods given");
-    doRes(TRADELASTDIVRCSG, "Given last/Worth", "Percent goods given per sum final trade offer over sum Worth", 1, 2, 1, LIST0 | LIST15 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
-    doRes(TRADELASTDIVFGAVE, "Given last/first", "Percent goods given per sum final trade offer over first offer", 1, 2, 1, LIST0 | LIST15 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
-    doRes(TRADESTRATLASTGAVE, "trade Given", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST0 | LIST15 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(TRADELASTDIVRCSG, "Given last/Worth", "Percent goods given per sum final trade offer over sum Worth", 1, 2, 1, LIST0 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(TRADELASTDIVFGAVE, "Given last/first", "Percent goods given per sum final trade offer over first offer", 1, 2, 1, LIST0 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(TRADESTRATLASTGAVE, "trade Given", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST0 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
     doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 | CURUNITS | CUMUNITS | BOTH, 0, 0, 0);
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(INCRGROWRCSG, "incrGrowRCSG", "this years incr rcsg Value  after grow rcsg - before grow rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(INCRRCSG, "%incrGrowrcsg", "this years incr rcsg Value  end year rcsg - start year rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
+    doRes(INCRGROWRCSG, "incrGrowRCSG", "this years incr rcsg Value  after grow rcsg - before grow rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(INCRRCSG, "%incrGrowrcsg", "this years incr rcsg Value  end year rcsg - start year rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
     doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
-    doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 1, 1, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST15 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 1, 1, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
     doRes(GROWTHSP, "%growths", "growth percwent o start year balance for this year after depreciation before cost reduction", 2, 3, 0, ROWS3 | LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
     doRes(GRADESUP, "gradesUp", "number of times some grades up done", 1, 1, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
@@ -5746,7 +5892,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(RAWSUGROWTH, "S growth", "S rawUnitGrowth before cost reduction");
     doRes(RAWGUGROWTH, "G growth", "G rawUnitGrowth before cost reduction");
 
-    doRes(GROWTHSN0, "AccGrowths", "yearly growth if trade accepted", 2, 2, 2, LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(GROWTHSN0, "AccGrowths", "yearly growth if trade accepted", 2, 2, 2, LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(GROWTHSN1, "noAcc1Growths", "yearly growth if trade not accepted for 1 year", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(GROWTHSN2, "noAcc2Growths", "yearly growth if trade not accepted for 2 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(GROWTHSN3, "noAcc3Growths", "yearly growth if trade not accepted for 3 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
@@ -5768,7 +5914,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    static final int DMISCHIGHWORTH = ++e4;
   static final int DMISCLOWWORTH = ++e4;
      */
-    doRes(TRADEWORTH, "TradeS worth", "trade accepted Econs  yearly worth", 2, 2, 0, LIST7 | LIST15 | LIST16 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(TRADEWORTH, "TradeS worth", "trade accepted Econs  yearly worth", 2, 2, 0, LIST7 | LIST11 | LIST16 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(HIGHWORTH, "T high worth", "trade accepted high Econs average yearly worth", 2, 2, 0, LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LOWWORTH, "T low worth", "trade acceptedlow Econs average yearly worth", 2, 2, 0, LIST7 | LIST16 | THISYEARAVE | BOTH, 0, 0, 0);
 
@@ -5816,11 +5962,11 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         int[] rcsgIncrA = {EM.RCSGINCRN0,EM.RCSGINCRN1,EM.RCSGINCRN2,EM.RCSGINCRN3};
      */
 
-    doRes(FERTILITYSN0, "AccFertility", "fertility if trade accepted", 2, 2, 2, LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(FERTILITYSN0, "AccFertility", "fertility if trade accepted", 2, 2, 2, LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(FERTILITYSN1, "noAcc1Fertility", "fertility if trade not accepted for 1 year", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(FERTILITYSN2, "noAcc2Fertility", "fertility if trade not accepted for 2 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(FERTILITYSN3, "noAcc3Fertility", "fertility if trade not accepted for 3 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(RCSGINCRN0, "AccRCSGIncr", "yearly increase in RCSG if trade accepted", 2, 2, 2, LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(RCSGINCRN0, "AccRCSGIncr", "yearly increase in RCSG if trade accepted", 2, 2, 2, LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RCSGINCRN1, "noAcc1RCSGInc", "yearly increase in RCSG if trade not accepted for 1 year", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RCSGINCRN2, "noAcc2RCSGInc", "yearly increase in RCSG if trade not accepted for 2 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RCSGINCRN3, "noAcc3RCSGInc", "yearly increase in RCSG if trade not accepted for 3 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
@@ -5842,10 +5988,10 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(DRCSGINCRN3, "dnoAcc3RCSGInc", "died yearly increase in RCSG if trade not accepted for 3 years", 2, 2, 2, LIST10 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
 
     doRes(rejectTinyRequestsFirst, "rejectRequests1", "trade with a offer too small show Requests first value", 2, 2, 0, LIST4 | LIST5 | THISYEARUNITS | BOTH, 0, 0, 0);
-    doRes(rejectTinyRequestsPercentFirst, "rejectTReq%First", "trade with a offer too small show request percent of first request", 2, 2, 0, LIST4 | LIST5 | LIST15 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(rejectTinyRequestsPercentFirst, "rejectTReq%First", "trade with a offer too small show request percent of first request", 2, 2, 0, LIST4 | LIST5 | LIST10 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(rejectTinyRequestsTerm, "rejectTinyReqTerm", "trade with a offer too small show term");
     doRes(rejectTinyRequests, "rejTinyRequests", "Rejected trade with a offer too small show strategicValue percent of strategicGoal");
-    doRes(rejectTinyRequestsSv, "statTinyReqSv", "trade with a offer too small show strategicValue ", 2, 2, 0, LIST4 | LIST15 | CURUNITS | SKIPUNSET | BOTH, ROWS2 | LIST15 | CUMAVE | CURAVE | SKIPUNSET | BOTH, 0, 0);
+    doRes(rejectTinyRequestsSv, "statTinyReqSv", "trade with a offer too small show strategicValue ", 2, 2, 0, LIST4 | LIST10 | CURUNITS | SKIPUNSET | BOTH, ROWS2 | LIST10 | CUMAVE | CURAVE | SKIPUNSET | BOTH, 0, 0);
     doRes(rejectNegRequests, "rejectNegRequests", "Rejected trade with a negative offer show strategicValue percent of strategicGoal", 2, 2, 0, 0, ROWS2 | LIST10 | CUMAVE | CURAVE | SKIPUNSET | BOTH, 0, 0);
     doRes(rejectNegRequestsTerm, "rejectNegReqTerm", "Rejected trade with a negative offer show term", 2, 2, 0, 0, ROWS1 | CURAVE | SKIPUNSET | BOTH, 0, 0);
     doRes(rejectGoal0, "rejectGoal0", "Rejected trade when the term 0 offer is too small request show strategicValue percent of strategicGoal");
@@ -6011,9 +6157,9 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(TradeAlsoCriticalBidRequests, "BidAlsoCriticalRequests", "Critical requested bids");
 
     doRes(TRADELASTRECEIVE, "Last Received", "Final received goods%tot balance");
-    doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade", 2, 2, 2, LIST7 | LIST15 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST15 | CURAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 1, 3, 2, ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 1, 3, 2, ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST15 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(TRADERECEIVELASTPERCENTFIRST, "received final%first goods", "Final percent of First  amount requested in a trade", 2, 2, 2, LIST7 | LIST11 | THISYEARAVE | BOTH | SKIPUNSET, 0, LIST11 | CURAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TRADESTRATLASTRECEIVE, "StrategicLastReceived", "Final strategic amount eeceived in trade", 1, 3, 2, ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST11 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, LIST11 | LIST13 | LIST11 | LIST16 | LIST17 | CUM | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TradeBidRequestsFirst, "BidFirstRequests", "First requested bids", 1, 3, 2, ROWS1 | LIST0 | LIST5 | LIST11 | LIST13 | LIST11 | LIST16 | LIST17 | THISYEARUNITS | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(TradeCriticalBidRequestsFirst, "BidFirstCriticalRequests", "First Critical requested bids");
     doRes(TradeAlsoBidRequestsFirst, "BidAlsoFirstRequests", "First requested bids");
     doRes(TradeAlsoCriticalBidRequestsFirst, "BidAlsoFirstCriticalRequests", "First Critical requested bids");
@@ -6021,8 +6167,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(TRADEFIRSTRECEIVE, "First Received", "First received goods%tot balance");
     doRes(TRADESTRATFIRSTRECEIVE, "StrategicFirstReceived", "First strategic amount received in trade", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST22 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(TRADESTRATFIRSTGAVE, "TradeStrategicFirstGave", "First amount given in trade");
-    doRes(TradeNominalReceivePercentNominalOffer, "NomReceive%NomOffer", "% of Nominal Received Per Nominal  Given", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(MaxNominalReceivePercentNominalOffer, "MaxNomReceive%NomOffer", "Max % of Nominal Received Per Nominal  Given", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS3 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(TradeNominalReceivePercentNominalOffer, "NomReceive%NomOffer", "% of Nominal Received Per Nominal  Given", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(MaxNominalReceivePercentNominalOffer, "MaxNomReceive%NomOffer", "Max % of Nominal Received Per Nominal  Given", 2, 2, 2, LIST4 | LIST7 | THISYEARAVE | BOTH | SKIPUNSET, ROWS3 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(MinNominalReceivePercentNominalOffer, "MinNomReceive%NomOffer", "Min % of Nominal Received Per Nominal  Given");
     doRes(TradeStrategicReceivePercentStrategicOffer, "StratReceive%StratGiven", "% of Strategic Received Per Strategic  Given");
     doRes(MaxStrategicReceivePercentStrategicOffer, "MaxStratReceive%StratGiven", "Max % of Strategic Received Per Strategic  Given");
@@ -6038,12 +6184,12 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes(TRADEWORTHINCRPERCENT, "%TradeWorthIncr", "% increase in Worth after trade", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(TRADEWORTHINCR, "TradeWorthIncr", "this years increase in Worth after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(TRADERCSGINCR, "TradeRCSGIncr", "this years increase in RCSG after trade", 2, 2, 2, LIST1 | LIST5 | LIST13 | LIST20 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST15 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
+    doRes(TradeAcceptValuePerGoal, "AcceptValue%Goal", "Accepted value percent of goal", 2, 3, 2, LIST21 | THISYEARAVE | BOTH | SKIPUNSET, ROWS1 | LIST4 | LIST11 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
     doRes(TradeRejectValuePerGoal, "RejectValue%Goal", "Rejected percent value per goal");
     doRes(TradeLostValuePerGoal, "LostValue%Goal", "Lost percent value per goal");
-    doRes(TradeFirstStrategicGoal, "FirstStrategicGoal", "First Strategic Goal", 2, 3, 2, LIST21 | CURAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
+    doRes(TradeFirstStrategicGoal, "FirstStrategicGoal", "First Strategic Goal", 2, 3, 2, LIST21 | CURAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
     doRes(TradeLastStrategicGoal, "LastStrategicGoal", "Strategic Goal after trade");
-    doRes(TradeFirstStrategicValue, "FirstStrategicValue", "First Strategic Value", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
+    doRes(TradeFirstStrategicValue, "FirstStrategicValue", "First Strategic Value", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
     doRes(TradeLastStrategicValue, "StrategicValue", "Strategic-Value strategic receive/strategic gave at trade");
     doRes(TradeStrategicValueLastPercentFirst, "Last%FirstStrategicValue", "LastStrategic Value percent of First Strategic Value just before trade");
     doRes(AlsoTradeLastStrategicValue, "AlsoStrategicValue", "AlsoLast strategic Value strategic receive/strategic gave at trade");
@@ -6165,8 +6311,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes("SizeFFEs", "SE SizeFutureFund", "At size level of resource/staff sums tranfer val  to FutureFund");
     doRes("RSwapFF", "R SwapEmergFF", "At emergency level of resource/staff sums during swaps tranfer val to FutureFund");
     doRes("SSwapFF", "S SwapEmergFF", "At emergency level of staff/resource sums during swaps tranfer val to FutureFund");
-    doRes("sWorth", "sWorth", "staff worth as % of total staff uniits, how change by age", 1, 2, 1, ROWS2 | LIST16 | LIST15 | CURAVE | BOTH, ROWS1 | LIST14 | LIST15 | THISYEARUNITS | BOTH, 0, 0);
-    doRes("sWork", "s work%", "staff work as % of total staff uniits", 1, 2, 1, ROWS2 | LIST16 | LIST15 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes("sWorth", "sWorth", "staff worth as % of total staff uniits, how change by age", 1, 2, 1, ROWS2 | LIST16 | CURAVE | BOTH, ROWS1 | LIST14 | LIST16 | THISYEARUNITS | BOTH, 0, 0);
+    doRes("sWork", "s work%", "staff work as % of total staff uniits", 1, 2, 1, ROWS2 | LIST16 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes("sFacultyEquiv", "s facultyEquiv%", "staff faculty equiv part of many grades as % of total staff uniits, faculty equiv governs the staff and guest advance to higher grades");
     doRes("sResearcherEquiv", "s researcherEquiv%", "staff researcher equiv part of many grades as % of total staff uniits, this governs the creation of new knowledge increasing the efficiency of work, reducing the annual costs");
     doRes("sColonists", "s colonists%", "the first 4 grades of new staff as % of total staff uniits");
@@ -6221,7 +6367,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes("sCatBonusNewKnowledge", "s Catast Bonus New Knowledge", "catastrophy bonus newKnowledge add value ave per catastrophy");
     doRes("rCatBonusManuals", "r Catast Bonus Manuals", "catastrophy bonus manuals add value ave per catastrophy");
     doRes("rCatBonusNewKnowledge", "r Catast Bonus New Knowledge", "catastrophy bonus newKnowledge add value ave per catastrophy");
-    doRes("potentialResGrowthPercent", "r rawGro%", "raw unit resource growth percent of default unit growth", 2, 2, 1, LIST2 | CUMAVE | BOTH | SKIPUNSET, LIST8 | SKIPUNSET | BOTH | THISYEARAVE | THISYEARUNITS, ROWS1 | LIST15 | CURAVE | BOTH, ROWS3 | LIST15 | CURUNITS | BOTH);
+    doRes("potentialResGrowthPercent", "r rawGro%", "raw unit resource growth percent of default unit growth", 2, 2, 1, LIST2 | CUMAVE | BOTH | SKIPUNSET, LIST8 | SKIPUNSET | BOTH | THISYEARAVE | THISYEARUNITS, ROWS1 | LIST16 | CURAVE | BOTH, ROWS3 | LIST16 | CURUNITS | BOTH);
     doRes("potentialStaffGrowthPercent", "s rawGro%", "raw unit staff growth percent of default unit growth");
     doRes("potentialCargoGrowthPercent", "c rawGro%", "raw unit cargo raw growth percent of default unit growth");
     doRes("potentialGuestGrowthPercent", "g rawGro%", "raw unit guest raw growth percent of default unit growth");
@@ -6235,7 +6381,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     doRes("DApotentialCargoGrowthPercent", "DA c rawGro%", "Accepted Dead raw unit cargo raw growth percent of default unit growth");
     doRes("DApotentialGuestGrowthPercent", "DA g rawGro%", "Accepted Dead raw unit guest raw growth percent of default unit growth");
     // String[] negRawUnitGrowths = {"rNeg1RawUnitGrowth","cNeg1RawUnitGrowth","sNeg1RawUnitGrowth","gNeg1RawUnitGrowth"};
-    doRes("rNeg1RawUnitGrowth", "r neg1 RUGrowth", " r negative raw unit growth in one or more sector", 2, 2, 1, 0, LIST8 | SKIPUNSET | BOTH | THISYEAR | THISYEARUNITS, ROWS1 | LIST15 | CURAVE | CURUNITS | BOTH | SKIPUNSET, 0);
+    doRes("rNeg1RawUnitGrowth", "r neg1 RUGrowth", " r negative raw unit growth in one or more sector", 2, 2, 1, 0, LIST8 | SKIPUNSET | BOTH | THISYEAR | THISYEARUNITS, ROWS1 | LIST16 | CURAVE | CURUNITS | BOTH | SKIPUNSET, 0);
     doRes("cNeg1RawUnitGrowth", "c neg1 RUGrowth", " c negative raw unit growth in one or more  sector");
     doRes("sNeg1RawUnitGrowth", "s neg1 RUGrowth", " s negative raw unit growth in one or more  sector");
     doRes("gNeg1RawUnitGrowth", "g neg1 RUGrowth", "g negative raw unit growth in one or more sector");
@@ -6792,8 +6938,9 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
 
       if (myAIlearnings == null) {
         if (E.debugAIOut) {
-          System.out.println("------DSY11-----EM.doStartYear null TreeMap new TreeMap year=" + year);
+          System.out.println("------DSY11-----EM.doStartYear null HashMap new TreeMap year=" + year);
         }
+        //myAIlearnings = new HashMap(25000);
         myAIlearnings = new TreeMap();
       }
 
@@ -6811,7 +6958,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         prevMyScoreClanPos[ixClan] = myScoreClanPos[ixClan];
         prevMyScorePosClan[ixClan] = myScorePosClan[ixClan];
       }
-      int lRes = E.bValsEnd = E.bValsStart + vvend;
+      int lRes = E.bValsEnd = E.bValsStart + vvend;//vvAx
       // psClanChars[ixPS] = new byte[2][][];
       for (ixPS = 0; ixPS < 2; ixPS++) {
         psClanChars[ixPS] = new char[5][];
@@ -7019,6 +7166,19 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     }
     return rende4 - cnt;
   }// end doStartYear
+
+  static int doStartEcon(Econ ec) {
+    int rtn = 0;
+    int lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx vvend
+    // psClanChars[ixPS] = new byte[2][][];
+    int ixPS = ec.pors;
+    int ixClan = ec.clan;
+    psClanChars[ixPS][ixClan] = new char[lRes];
+    psClanMasks[ixPS][ixClan] = new char[lRes];
+    buildAICvals(ixPS, ixClan, "preset", psClanChars[ixPS][ixClan], psClanMasks[ixPS][ixClan], vvAx);
+
+    return rtn;
+  }
 
   static volatile int didEndYear = 0; //a count of active endYears
 
@@ -9199,7 +9359,7 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
       // winner = scoreVals(TRADENOMINALGAVE, wGiven2, ICUM, isV);
       //winner = scoreVals(TRADESTRATLASTGAVE, wGenerous, ICUM, isV);//%given
       winner = scoreVals(LIVEWORTH, wLiveWorthScore, ICUR0, isV);
-      winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
+      // winner = scoreVals(LIVEWORTH, iLiveWorthScore, ICUR0, isI);
       // winner = scoreVals(WTRADEDINCRMULT, wYearTradeV, ICUR0, isV);
       // winner = scoreVals(WTRADEDINCRMULT, wYearTradeI, ICUR0, isI);
       winner = scoreVals(DIED, iNumberDied, ICUM, isI);
@@ -9752,10 +9912,55 @@ static volatile double psClanPreWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}};
       int mPors = 0, nClan = 0, iSum = 0;
       for (mPors = porsStart; mPors < porsEnd; mPors++) {
         for (nClan = clanStart; nClan < clanEnd; nClan++) {
-          vMin += resV[rn][curCum][mPors][nClan] < vMin ? resV[rn][curCum][mPors][nClan] : vMin;
+          vMin = resV[rn][curCum][mPors][nClan] < vMin ? resV[rn][curCum][mPors][nClan] : vMin;
         }
       }
       return vMin;
+    }
+  }
+
+  /**
+   * get a val max from the stats database, it could be for the current year or
+   * for the cunulative max of all the years
+   *
+   * @param rN the index into the stats database<br>
+   * use getStatrN(name) as rN to select by string name
+   * @param curCum either ICUM or ICUR0 from EM
+   * @param porsStart 0:start with planets, 1 start with ships
+   * @param porsEnd 1. 0:1 sum just planets, 2. 0:2 sum planets & ships
+   * @param clanStart 0-4 sum of the clan to start with
+   * @param clanEnd 1-5 end of clan sum, 0:1,1:2 etc. 1 clan<br>
+   * 0:5 sum all of the clans
+   * @return the min of values as filtered by the selectors
+   */
+  double getCurCumPorsClanValMax(int rn, int curCum, int porsStart, int porsEnd, int clanStart, int clanEnd) {
+    synchronized (syncRes) {
+      String anErr = "";
+      if (E.PAINTDISPLAYOUT) {
+        anErr = (curCum < ICUM ? "curCum=" + curCum + " is less than ICUM"
+                : curCum > ICUR0 ? "curCum " + curCum + " is greater than ICUR0"
+                        : porsStart < 0 ? "porsStart=" + porsStart + " is less than 0 E.P"
+                                : porsStart > 1 ? "porsStart=" + porsStart + " is greater than 1 E.S"
+                                        : porsEnd < 1 ? "porsEnd=" + porsEnd + " is less than 1 E.P+1"
+                                                : porsEnd > 2 ? "porsEnd=" + porsEnd + " is greater than 2 E.S+1"
+                                                        : clanStart < 0 ? "clanStart=" + clanStart + " is less than 0"
+                                                                : clanStart > 4 ? "clanStart=" + clanStart + " is greater than 4"
+                                                                        : clanEnd < 1 ? "clanEnd=" + clanEnd + " is less than 1"
+                                                                                : clanEnd > 5 ? "clanEnd=" + clanEnd + " is greater than 5"
+                                                                                        : "");
+        if (anErr.length() > 0) {
+          throw (new MyErr("ERR: " + anErr + " stats#:" + rn + ":" + resS[rn][0]
+          ));
+        }
+      } // if DEBUG
+      double vMax = -999999999999999999.;
+      int mPors = 0, nClan = 0, iSum = 0;
+      for (mPors = porsStart; mPors < porsEnd; mPors++) {
+        for (nClan = clanStart; nClan < clanEnd; nClan++) {
+          vMax = resV[rn][curCum][mPors][nClan] > vMax ? resV[rn][curCum][mPors][nClan] : vMax;
+        }
+      }
+      return vMax;
     }
   }
 } // Class EM

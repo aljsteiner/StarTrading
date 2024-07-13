@@ -54,8 +54,8 @@ public class E {
   static final public String statsButton12Tip = "12: list by ages trades missed, rejected, lost";
   static final public String statsButton13Tip = "13: list by ages affects with growths depreciation";
   static final public String statsButton14Tip = "14: list by ages affects with catastrophies, forwardFunds ";
-  static final public String statsButton15Tip = "15: list by ages live trades";
-  static final public String statsButton16Tip = "16: list by ages worths, work,faculty,research interns";
+  static final public String statsButton15Tip = "15: list by ages KWorths";
+  static final public String statsButton16Tip = "16: list by ages RCSG worths, work,faculty,research interns";
   static final public String statsButton17Tip = "17: list by ages helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";
   static final public String statsButton19Tip = "19: Swaps years Forward Fund imbalance or save";
@@ -105,6 +105,7 @@ public class E {
   static final boolean debugCashFlowOut = debugOutput; //output messages in CashFlow
   static final boolean debugTradesOut = debugOutput; //output messages in Trades
   static final boolean debugAIOut = debugOutput; //output messages for AI
+  static final boolean debugAIOut2 = debugOutput; //output messages for AI
   static final boolean debugCheckBalances = debugMaster && outputFewer; //check balances in loops
   static final boolean debugEconCnt = debugMaster && outputFewer; // econCnt = porsCnt0 + porsCnt1
   static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt
@@ -138,7 +139,7 @@ public class E {
   static final boolean debugSettingsTab2 = debugMaster; //errors from settings doValx
   static boolean debugDoRes = debugMaster; //errors from settings doValx
   static final boolean SWAPTRADESYSTEMOUT = debugOutput;  //Swap outputs
-  static final boolean PAINTDISPLAYOUT = debugOutput; //outputs from StarTrader displays
+  static final boolean PAINTDISPLAYOUT = debugOutput || true; //outputs from StarTrader displays
   static final boolean DEBUGCALCGROWTH = outputFewer && debugMaster;
   static final boolean tradeInitOut = debugOutput;
   static final boolean DEBUGASSETSOUT = debugMaster;
@@ -335,8 +336,10 @@ public class E {
   static final int pPrevScW = aiPcntr++; // Prev score worth last years score
   static final int pPrevEScW = aiPcntr++; // prev econ score worth
   static final int pPrevResil = aiPcntr++; // last resilience worth
-  static final int poPerW = ++aiPcntr;
+  static final int pPrevoPerW = ++aiPcntr;
   static final int pPrevPmin = aiPcntr++; //rawProspects2 min
+  static final int pNudge0 = aiPcntr++; //rawProspects2 min
+  static final int pNudge1 = aiPcntr++; //rawProspects2 min
  // static final int pPrevP = aiPcntr++; //rawProspects2 ave
   // static final int pPrevHope = aiPcntr++; // last hope worth
   // static final int pIncResil = aiPcntr++; // last resilience worth
@@ -372,7 +375,7 @@ public class E {
   static final int pPrevB1Inc = aiPcntr++;
   static final int pPrevPinc = aiPcntr++;
   static final int pPrevoPerW = aiPcntr++;
-  static final int pPrevoPerWinc = aiPcntr++;
+//  static final int pPrevoPerWinc = aiPcntr++;
   //static final int pPrevB0Row = aiPcntr;  //row 0 in balances
  // static final int pPrevB1Row = aiPcntr = aiPcntr + 7;
   //static final int pB0W = aiPcntr = aiPcntr + 7;
@@ -388,11 +391,35 @@ public class E {
   // for use by Assets.putValueByte()
   static final double[] AILims = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
   static final double[] AILims1 = {-99999999., -10., -5.0 - 1, -0.8, -0.5, -0.3, -0.25, -0, 2, -0.15, -0.1, -0.08, -.06, -.04, -.02, -0.01, 0.0, 0.01, 0.05, 0.06, 0.1, .3, 0.5, .8, 1., 1.3, 1.5, 1.8, 2., 3., 4., 5., 10., 20., 50., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 2000., 3000., 4000., 4750, 5500., 6000., 6500., 7000., 10000., 25000., 30000., 37000., 45000., 633000., 1300000., 7000000., 11000000., 15000000., 17000000., 19000000., 65000000.,};
-  static final double[] AILims2 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILims2 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 100000., 250000., 450000., 633000., 950000., 1200000., 1900000., 3500000., 7000000., 15000000., 30000000., 45000000., 65000000., 130000000., 720000000.,
+    1500000000.,
+    15000000000.,
+    150000000000.,
+    1500000000000.,
+    15000000000000.,
+    150000000000000.,
+    1500000000000000.,
+    15000000000000000.,
+    150000000000000000.,
+    1500000000000000000.,
+    15000000000000000000.,
+    150000000000000000000.,
+    1500000000000000000000.,
+    150000000000000000000000.,
+    1500000000000000000000000.,
+    15000000000000000000000000.,
+    150000000000000000000000000.,
+    1500000000000000000000000000.,
+    15000000000000000000000000000.,
+    150000000000000000000000000000.,
+    1500000000000000000000000000000.,
+    15000000000000000000000000000000.,
+    150000000000000000000000000000000.};
   static final double[] AILims3 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
   static final double[] AILims4 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12., 14., 16., 18., 20., 22., 24., 26., 28., 30., 32., 34., 36., 38., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99.99999999};
   static final double[] AILims123 = {-99999999., -4., -3., -2., -1., 0., 1., 2., 3., 4., 5., 6., 7., 8., 9.};
-  static final double AILimss[][] = {AILims, AILims123, AILims1, AILims2, AILims3, AILims4};
+  static final double AILimss[][] = {AILims, AILimsC, AILims123, AILims1, AILims2, AILims3, AILims4};
 
 
   //static final int pPrevoPerW = ++aiPcntr;

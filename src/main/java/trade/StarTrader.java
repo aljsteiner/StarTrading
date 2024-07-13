@@ -5224,6 +5224,8 @@ public class StarTrader extends javax.swing.JFrame {
       }
       eer += "\nYou can send and email to aljsteiner@gmail.com \nSubject StarTrader error exit notes\nwPlease include your notes about the crash, and any comments about the game.";
       displayPanel0Text.setText(eer);
+      System.err.println(eer);
+      System.err.println(EM.threadsStacks());
       EM.flushes();
       EM.flushes();
       EM.flushes();
@@ -5360,7 +5362,7 @@ public class StarTrader extends javax.swing.JFrame {
     if (sameState && sameName && sameWh
         && stateConst != STATS && stateConst != RUNSDONE && stateConst != STOPPED && stateConst != FATALERR) {
       sameEconState++;
-      assert sameEconState < 191 : "STUCK at runYears2.checkEconState Y" + eM.year + " EconTime" + myNow + sinceRY2() + sinceRY3() + " state=" + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
+      assert sameEconState < 191 : "STUCK at runYears2.checkEconState Y" + eM.year + since() + " EconTime" + myNow + sinceRY2() + sinceRY3() + " state=" + stateStringNames[stateConst] + " " + EM.curEconName + " sameEconStatecnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState) + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 90) {
         EM.doMyErr("STUCK at:doYear" + EM.year + myNow + " " + stateStringNames[stateConst] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
