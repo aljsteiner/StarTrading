@@ -115,6 +115,8 @@ public class Assets {
   double prevAIWorth = -7., aiWorth = 10, prevIncAIWorth = -6., prevPrevAIWorth = -9.;
   double prevAIOffers = -5., aiOffers = 10, prevIncAIOffers = -5.;
   double prevPrevAIOffers = -7., prevIncAIOperW = -9., prevAIOperW = -9.;
+  int sliderVala = -15, prevSliderVala = -17, sliderValb = -9, prevSliderValb = -19;
+  int sliderValc = -15, prevSliderValc = -17, sliderVald = -9, prevSliderVald = -19;
   double lastAIOperW = 7., aiOperW = 7.;
   double prevAIKnowledge = 3., prevAIProspAve = -7., aiProspAve = 7.;
   double prevPrevAIKnowledge = -1., prevIncAIKnowledge = -3., prevPrevAIProspAve = -7.;
@@ -8474,20 +8476,26 @@ public class Assets {
 
     void startYearAI() {
       /*
-    double aiScore = -2., prevAIScore = -3, prevPrevAIScore = -4., prevIncAIScore = -5.;
-  int prevAIPos = -3;
-  double prevAIWorth = -7., aiWorth = -9, prevIncAIWorth = -6., prevPrevAIWorth = -9.;
-  double prevAIOffers = -5., aiOffers = -8., prevIncAIOffers = -5.;
+    double aiScore = 2., prevAIScore = -3, prevPrevAIScore = -4., prevIncAIScore = -5.;
+  double tradeFracNudge[] = {0., 0., 0.014, 0.021, 0.028};//dif .1--.8
+  double ffTFracNudge[] = {0., 0., 0.028, .042, 0.056};  //3.0--5.4  014
+  double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
+  int ranInt = -7, rIn = -9;
+  int prevAIPos = 4, prevPrevAIPos = 4;
+  double prevAIWorth = -7., aiWorth = 10, prevIncAIWorth = -6., prevPrevAIWorth = -9.;
+  double prevAIOffers = -5., aiOffers = 10, prevIncAIOffers = -5.;
   double prevPrevAIOffers = -7., prevIncAIOperW = -9., prevAIOperW = -9.;
-  double lastAIOperW=7., aiOperW=-7.;
-  double prevAIKnowledge = -3., prevAIProspAve = -7., aiProspAve = -7.;
+  int sliderVala=-15,prevSliderVala=-17,sliderValb=-9,prevSliderValb=-19;
+  int sliderValc=-15,prevSliderValc=-17,sliderVald=-9,prevSliderVald=-19;
+  double lastAIOperW = 7., aiOperW = 7.;
+  double prevAIKnowledge = 3., prevAIProspAve = -7., aiProspAve = 7.;
   double prevPrevAIKnowledge = -1., prevIncAIKnowledge = -3., prevPrevAIProspAve = -7.;
   double prevIncAIProspAve = -9., prevPrevAIProspMin = -7.;
-  double prevAIProspMin = -8., aiprospMin = -9., prevIncAIProspMin = -11.;
-  double aiKnowledge = -3., aiKnowledgeInc = -7.;
-  double prevAIResilience = -8., aiResilience = -8., prevIncAIResilience = -7.;
-  double prevPrevAIResilience = -3., hope = -7., prevHope = -9., prevPrevHope = -7.;
-  double prevIncHope = -7.;
+  double prevAIProspMin = -8., aiProspMin = 9., prevIncAIProspMin = -11.;
+  double aiKnowledge = 3., aiKnowledgeInc = 7.;
+  double prevAIResilience = -8., aiResilience = 8., prevIncAIResilience = -7.;
+  double prevPrevAIResilience = -3., hope = 7., prevAIHope = -9., prevPrevAIHope = -7.;
+  double prevIncAIHope = -7., aiHope = -6.;
   // trade values kept in assets
   double strategicGoal = 0., rGoal0 = 0., strategicValue = 0., goodFrac = 0.;
   double prevStrategicGoal = 0, prevStrategicValue = 0., prevGoodFrac = 0.;
@@ -8525,6 +8533,11 @@ public class Assets {
       prevStrategicValue = strategicValue;
       prevPrevStrategicGoal = prevStrategicGoal;
       prevStrategicGoal = strategicGoal;
+      prevSliderVala = sliderVala;
+      prevSliderValb = sliderValb;
+      prevSliderValc = sliderValc;
+      prevSliderVald = sliderVald;
+      //int sliderVala=-15,prevSliderVala=-17,sliderValb=-9,prevSliderValb=-19;
       Random rand = new Random();
       rIn = -7;
       ranInt = rand.nextInt(5);
@@ -8537,13 +8550,13 @@ public class Assets {
         //ranInt==1 rIn==4: aiNudges[rnInt][pors] = -aiNudges[ranInt][
         // rIn over 2 is negative
         // clan and pors defined in Assets
-         aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
-        aiNudges[ranInt][(int) ((pors))] = rIn < 3 ? aiV : -aiV;
-
+        // aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
+        aiNudges[ranInt][pors] = aiV = rIn < 3 ? aiNudges[ranInt][rIn + 2] : -aiNudges[ranInt][rIn - 1];
         //int sliderVal = eM.getAIVal(vv, pors, clan,ec,ranInt);
         //   res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
       }
       else {
+        //zero all aiNudges
         for (int ranInta = 0; ranInta < aiNudges.length; ranInta++) {
           for (int rIna = 0; rIna < 2; rIna++) {
             aiNudges[ranInta][rIna] = 0.0;
@@ -8553,21 +8566,27 @@ public class Assets {
       // now install the nudge pointers even if nudge=0,0
 
       int vva = eM.valAIN[0];// nudge to vv array
-      int sliderVala = eM.getAIVal(vva, pors, clan, ec, 0);
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge0, sliderVala, E.AILimsC, "Nudged value0", y);
       int vvb = eM.valAIN[1];// nudge to vv array
-      int sliderValb = eM.getAIVal(vvb, pors, clan, ec, 1);
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge1, sliderVala, E.AILimsC, "Nudged value1", y);
+      if (prevSliderVala < 0) { //for age0
+        prevSliderVala = eM.getAIVal(vva, pors, clan, ec, 0);
+        prevSliderValb = eM.getAIVal(vvb, pors, clan, ec, 0);
+      }
+      // set values for next year
+      sliderVala = eM.getAIVal(vva, pors, clan, ec, 1);
+      sliderValb = eM.getAIVal(vvb, pors, clan, ec, 2);
+      //use last years value, as in saveAI
+      putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
+      putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
       int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);
       int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);
       String valNudgea = EM.mf(aiNudges[0][pors]);
       String valNudgeb = EM.mf(aiNudges[1][pors]);
       String valaiV = EM.mf(aiV);
-      String valNudgec = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][pors] : -11.3);
+        String valNudge5 = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][pors] : -11.3);
       String pValIxaVal = EM.mf(E.AILimsC[pValIxa]);
       String pValIxbVal = EM.mf(E.AILimsC[pValIxb]);
       if (E.debugAIOut2) {
-        System.err.println("-----SAIs3----StartYearAI ranInt=" + ranInt + " pors" + pors + " rIn" + rIn + ":" + valNudgec + ":" + valaiV + " A=" + vva + ":" + sliderVala + ":" + valNudgea + ":" + pValIxaVal + " at" + E.pNudge0 + " B=" + vvb + ":" + sliderValb + ":" + valNudgeb + ":" + pValIxbVal + " at" + E.pNudge1);
+        System.err.println("-----SAIs3----StartYearAI ranInt" + ranInt + " pors" + pors + " rIn" + rIn + ":" + valNudge5 + ":" + valaiV + " A=" + vva + " sv:" + sliderVala + " psv:" + prevSliderVala + " nv:" + valNudgea + " pv:" + pValIxaVal + " at" + E.pNudge0 + " B=" + vvb + " sv:" + sliderValb + " psv:" + prevSliderValb + " nv:" + valNudgeb + " pv:" + pValIxbVal + " at" + E.pNudge1);
         }
         //EM.psClanChars[pors][clan][E.pNudge0 + nX] = E.getAISetChar(sliderVal);
 

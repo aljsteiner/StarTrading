@@ -3714,10 +3714,12 @@ static final int maxRKeys=1000;
   //  seeCntArray(seeArrays, 1, E.AILims2, E.pPrevScW, "winr&myScore",y);
     seeCntArray(seeArrays, 1, E.AILims1, E.pPrevEScW, "winr&myAIScore", y);
     // seeCntArray(seeArrays, 3, E.AILims1, E.pPrevResil, "winr&Resilance");
-    seeCntArray(seeArrays, 2, E.AILimsC, E.pNudge0, "TradeFrac", y);
-    seeCntArray(seeArrays, 3, E.AILimsC, E.pNudge1, "ForwFundTransfFrac", y);
-    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", no);//E.pPrevoPerW
-    seeCntArray(seeArrays, 5, E.AILims1, E.pPrevoPerW, "winr&PrevOperW", no);
+    seeCntArray(seeArrays, 2, E.AILimsC, E.pNudge0, "TradeFrac44", y);
+    seeCntArray(seeArrays, 3, E.AILimsC, E.pNudge0, "TradeFrac23", y);
+    seeCntArray(seeArrays, 4, E.AILimsC, E.pNudge0, "TradeFrac01", y);
+    seeCntArray(seeArrays, 5, E.AILimsC, E.pNudge1, "ForwFundTransfFrac", y);
+    //seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", no);//E.pPrevoPerW
+    // seeCntArray(seeArrays, 5, E.AILims1, E.pPrevoPerW, "winr&PrevOperW", no);
     return ll;
   }
 
@@ -3728,10 +3730,12 @@ static final int maxRKeys=1000;
     boolean no = false;
     //String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb)
     setCntAr(aKey, aVal, "winr&AIScore", 4, 1, E.AILims2, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    setCntAr(aKey, aVal, "tradeFrac", 5, 2, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 3., 4., no);
-    setCntAr(aKey, aVal, "ForwFundTransferFrac", 6, 3, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 3., 4., no);
-    setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    setCntAr(aKey, aVal, "winr&PrevOperW", 6, 5, E.AILims1, E.pPrevoPerW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "tradeFrac44", 5, 2, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "tradeFrac23", 5, 3, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3., no);
+    setCntAr(aKey, aVal, "tradeFrac01", 5, 4, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1., no);
+    setCntAr(aKey, aVal, "ForwFundTransferFrac", 6, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    // setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    //setCntAr(aKey, aVal, "winr&PrevOperW", 6, 5, E.AILims1, E.pPrevoPerW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
   }
   //E.pPrevPmin, prevAIProspMin, E.AILims1 E.pPrevoPerW
   static int SCACnt = 0;
@@ -3757,6 +3761,8 @@ static final int maxRKeys=1000;
     // String ret = "1", ret2 = "2";
     int myN = 0, myNn = 0;
     String myIx = " ???";
+    int mostIxN = 0, topIxN = 0;
+    int lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
     try {
       System.err.println("----SCA1---- seeCntArray enters pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
       SCACnt++; //count seeCntArray entry
@@ -3806,22 +3812,35 @@ static final int maxRKeys=1000;
       }
       abest = (int) (absum / abcnt);
 */
-
-      int lastIx = (ars[arn][mostIx] + 5) > ars[arn][topIx] ? ars[arn][topIx] : ars[arn][mostIx] + 5;
+      topIxN = ars[arn][topIx];
+      int firstIxN = ars[arn][firstIx];
+      mostIxN = ars[arn][mostIx];
+      lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
       lastIx = lastIx < strtIxs + 1 ? strtIxs + 1 : lastIx;
-      int ixa = (ars[arn][mostIx] - 5) < ars[arn][firstIx] ? ars[arn][firstIx] : ars[arn][mostIx] - 5;
+      int ixa = (mostIxN - 5) < firstIxN ? firstIxN : mostIxN - 5;
       ixa = ixa < strtIxs ? strtIxs : ixa;
+      int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN;
+      for (rCnt = 0; rCnt < 7 && nzCnt < 7; rCnt++) {
+        if (((mostIxN - rCnt) >= firstIxN) && ars[arn][mostIxN - rCnt] > 0) {
+          nzCnt++;
+          fRange = mostIxN - rCnt;
+        }
+        if (((mostIxN + rCnt) <= topIxN) && ars[arn][mostIxN + rCnt] > 0) {
+          nzCnt++;
+          tRange = mostIxN + rCnt;
+        }
+      } //rCnt
       //now get best for regular
-      int range = ars[arn][topIx] - ars[arn][mostIx];
-      int range1 = ars[arn][mostIx] - ars[arn][firstIx];
+      int range = topIxN - mostIxN;
+      int range1 = mostIxN - firstIxN;
       range = range1 < range ? range1 : range;
-      int blast = ars[arn][mostIx] + range;
+      int blast = mostIxN + range;
       blast = lastIx < blast ? lastIx : blast;
       int bfirst = blast - 4; //3,4,5,6,7
       bfirst = ixa > bfirst ? ixa : bfirst;
       double bsum = 0.;
       int best = 0, bcnt = 0;
-      for (int ix = bfirst; ix <= blast; ix++) {
+      for (int ix = fRange; ix <= tRange; ix++) {
         bsum += ars[arn][ix] * ix;
         bcnt += ars[arn][ix];
       }
@@ -3831,22 +3850,24 @@ static final int maxRKeys=1000;
       if (true) {  //break up the following additions to ret to localize any index error
         ret = "l" + myAILim.length + " " + what + " aN" + cAll + ":" + cAllSum + ":"
               + cAllAve + " ::limC" + cLim + ":" + cLimSum + ":" + cLimAve;
-        ret += (myIx = " firstN:") + +ars[arn][(myN = ars[arn][firstIx])];
+        ret += (myIx = " firstN:") + (myN = firstIxN) + "C" + ars[arn][(myN)];
         ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
-        ret += (myIx = " topN:") + +ars[arn][(myN = ars[arn][topIx])];
+        ret += (myIx = " topN") + (myN = ars[arn][topIx]) + "C" + ars[arn][(myN)];
         ret += "V:" + mf(myAILim[myNn = myN - strtIxs]);
 
-        ret += " limAveV:" + limAveVal + " allAveV:" + allAveVal
-               + (myIx = " ::mostN:") + ars[arn][(myN = ars[arn][mostIx])]
-               + "V:" + mf(myAILim[myNn = myN - strtIxs])
-               + " best:" + best + "V:" + mf(myAILim[myNn = myN - strtIxs]);
+        ret += " limAveV:" + limAveVal + " allAveV:" + allAveVal;
+        ret += (myIx = " ::mostN:") + (myN = mostIxN) + "C" + ars[arn][(myN)];
+        ret += "V" + mf(myAILim[myNn = myN - strtIxs]);
+        ret += (myIx = " ::bestN:") + (myN = best) + "V" + mf(myAILim[myNn = ((myN - strtIxs) < 0 ? 0 : myN - strtIxs)]);
 
         if (p2) {
           ret2 = "\n" + " rowN";
         boolean doComma = false;
-        for (int ix = ixa; ix <= lastIx; ix++) {
-          // see value Ix, entryCnt at that value, value at that value Ix
-          ret2 += ((doComma ? " ;" : " ") + "N" + ars[arn][myN = ix] + "V:" + mf(myAILim[myNn = myN - strtIxs]));
+          for (int ix = fRange; ix <= tRange; ix++) {
+            // see value Ix, entryCnt at that value, value at that value Ix
+            if (ars[arn][myN = ix] > 0) {
+              ret2 += ((doComma ? " ;" : " ") + "N" + myN + "C" + ars[arn][myN] + "V" + mf(myAILim[myNn = ((myN - strtIxs) < 0 ? 0 : myN - strtIxs)]));
+            }
           doComma = true;
           }// ix
         }
@@ -3872,10 +3893,10 @@ static final int maxRKeys=1000;
       int xx1 = pX1 > 3 ? 3 : pX1;
       System.err.println("----SCA7----seeCntArray error  Caught Exception cause="
                          + ex.getCause() + " message=" + ex.getMessage()
-                         + " string=" + ex.toString() + " " + Thread.currentThread().getName()
+                         + " string=" + ex.toString() + "\n" + Thread.currentThread().getName()
                          + " pX1=" + pX1
-                         + " SCACnt" + SCACnt + "Y" + year + " myN" + myN + " myNn" + myNn
-                         + " myIx=" + myIx + "\n"
+                         + " SCACnt" + SCACnt + "Y" + year + " myIx=" + myIx
+                         + " myN" + myN + " myNn" + myNn + "\n"
                          + "----SCA7a---" + ret
                          + "\n" + "----SCA7b---" + " stEnter = " + st.cntInit + " EM entries = "
                          + cntInit + (myAIlearnings == null ? " myAIlearnings is null"
@@ -3883,7 +3904,7 @@ static final int maxRKeys=1000;
               ? " null ars" : ars.length < arn ? " ars too Small"
                       : ars[arn].length < lenIx ? " err ars Len = " + ars[arn].length
                               : " ars ok len = " + ars[arn].length)
-                         + " ars[arn][mostIx] =" + ars[arn][mostIx] + andMore()
+                         + " mostIxN =" + mostIxN + andMore()
       );
       ex.printStackTrace(System.err);
       System.err.flush();
@@ -4480,7 +4501,8 @@ static final int maxRKeys=1000;
    * @param pors 0,1 planet or ship being set
    * @param clan 0-4,5 5 means a game value, 0-4 are the 5 clans
    * @param ec reference the Econ then Assets for this value
-   * @param nudge accept a nudge 0==no nudge, 1==nudge[0],2==nudge[1] ...
+   * @param nudge accept a nudge 0==0 nudge value value, 1==nudge[0],2==nudge[1]
+   * ...
    * @return the value to set in the slider
    */
   static int getAIVal(int vv, int pors, int clan, Econ ec, int nudge) {
