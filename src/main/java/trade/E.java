@@ -129,7 +129,7 @@ public class E {
   static final boolean debugAssetsStats = debugMaster && outputFewer; // why stats aren't showing
   static final boolean debugStats = debugMaster; // why stats aren't showing
   static final boolean debugStatsOut = debugOutput; // stats output
-  static final boolean debugScannerOut = debugOutput; // scanner output
+  static final boolean debugScannerOut = debugOutput && outputFewer; // scanner output
   static final boolean debugMisc = debugMaster; // other debug tests
   static final boolean debugCanTrade = debugMaster; // planet can trade
   static final boolean debugDisplayTrade = debugMaster; // Trade System.out msgs
@@ -187,7 +187,7 @@ public class E {
   static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
   // aVal[] = <cnts><year><ixMyScore>
-  static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValIxMyScore = 3;
+  static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValPClan = 3, aValIxMyScore = 4, aValSize = 5;
   static final char startC = 'a';
   static final char nextC = '0';
   static final char maskC = '@';

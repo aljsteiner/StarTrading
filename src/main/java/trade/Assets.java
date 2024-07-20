@@ -11244,22 +11244,24 @@ public class Assets {
         int vAge = ec.age;
         int vYear = EM.year;
         if (aManys == null) {// cnt,age,score
-          aManys = new Integer[4];
+          aManys = new Integer[E.aValSize];
           aManys[E.aValCnts] = 1;
           aManys[E.aValAge] = vAge;
-          aManys[E.aValYear] = vYear;
+          aManys[E.aValYear] = vYear; // year of last update
+          aManys[E.aValPClan] = clan == 5 ? 11 : pors * 5 + clan;
           aManys[E.aValIxMyScore] = getTestVal(prevAIScore, E.AILims1, "prevAIScore");
-
         }
         else {
           aManys[E.aValCnts] += 1;
           aManys[E.aValAge] = vAge; // latest year and age usually
           aManys[E.aValYear] = vYear;
+          aManys[E.aValPClan] = clan == 5 ? 11 : pors * 5 + clan;
           aManys[E.aValIxMyScore] = getTestVal(prevAIScore, E.AILims1, "prevAIScore"); //latest
         }
         if (ranInt > -1 && ranInt < aiNudges.length) {
           aiNudges[ranInt][pors] = 0.0; // zero any nudge
-        }        EM.myAIlearnings.put(str, aManys);
+        }
+        EM.myAIlearnings.put(str, aManys);
         eM.setCntAr(str, aManys);  // all of them
         if (E.debugAIOut || (++aWaits % 5) == 0) {
           eM.printHere("----BAI2----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + EM.psClanChars[pors][clan][E.pPrevScP] + " prevAIResilience" + EM.mf(prevAIResilience) + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + ":mC" + aManys[E.aValCnts] + "mY" + aManys[E.aValYear] + ":mA" + aManys[E.aValAge] + " scoreIx" + aManys[E.aValIxMyScore] + " TreeMap size=" + EM.myAIlearnings.size() + " key=" + str);

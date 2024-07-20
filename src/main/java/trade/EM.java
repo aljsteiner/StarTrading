@@ -3420,12 +3420,14 @@ onceAgain:
    */
   int doReadMapFile() {
     int rtn = 0; // number of keys read
+    int rtnc = 0; //count of unprinted KEY lines
     String myKey = "";
+    Integer myVal[] = new Integer[E.aValSize];
     Byte aa[] = new Byte[500];
     // myKey = aa.toString();
     try {
       String dateString = MYDATEFORMAT.format(new Date());
-      String mVer = "VersionV" + StarTrader.versionText;
+      String mVer = "version" + StarTrader.versionText;
       String mOut = mVer + " " + dateString + "\r\n";
 
       bMapFr = Files.newBufferedReader(MAPFILE, CHARSET);
@@ -3455,7 +3457,7 @@ onceAgain:
         sds.close();
       } // ebd test
 
-      if (false) {
+      if (true) {
         s.useLocale(Locale.US);
 onceAgain:
         s.useDelimiter("\\s");
@@ -3464,91 +3466,50 @@ onceAgain:
           String sname = "notNot";
           String fname = "notnot";
           String lname = "notNot";
-          String pound = "notNot";
-          int vv = -999;
-          int ps = -999;
-          int klan = -999;
-          int clan = -999;
-          int slider = -999;
-          Boolean isNeg = false;
-          double val = -999.;
+
           try { //ignore reading errors
             cname = s.useDelimiter("\\s").next();
-            sname = "space";
-            fname = "notnot";
-            lname = "line";
             switch (cname) {
               case "new":
               case "New":
               case "year":
               case "title":
-              case "more":
               case "version":
+                sname = s.useDelimiter("\\s*").next(); //read the version
+                if (sname.contains(st.versionText)) {
                 lname = s.nextLine();
-                System.out.println("a line=" + cname + " :: " + lname);
-                break;
-              case "keep":
-                // sname = s.next("\\s");
-                sname = s.useDelimiter("\\S*").next(); //stop at non space
-                fname = s.useDelimiter("#\\s*").next();
-                pound = s.useDelimiter("\\s*").next(); // to a space
-                Object vo = valMap.get(fname); // look up fname in valMap
-                double prevVal = -100.;
-                if (vo != null) {
-                  vv = (int) vo; // convert object to int
-                  s.useDelimiter("\\s");
-                  ps = s.nextInt();  //pors
-                  klan = s.nextInt(); // clan
-                  clan = klan = klan % 5;
-                  //if(s.hasNext("\\s*-")) {s.useDelimiter("\\s*-").next(); isNeg=true;}
-                  if (s.hasNextDouble()) {
-                    val = s.nextDouble();
-                    System.out.println("found double= " + mf(val));
-                  }
-                  else if (s.hasNextFloat()) {
-                    val = s.nextFloat();
-                    System.out.println("found Float= " + mf(val));
-                  }
-                  else if (s.hasNextInt()) {
-                    System.out.println("oops hasNextInt= " + s.nextInt());
-                  }
-                  else {
-                    System.out.println("Oops just something not number = " + s.next());
-                  }
-                  //     val = isNeg?-val:val;
-                  //  svalp = valToSlider(vR = valD[vv][gameAddrC][pors][0], lL = valD[vv][gameLim][pors][vLowLim], lH = valD[vv][gameLim][pors][vHighLim]);
-                  if (val > valD[vv][gameLim][ps][vHighLim] || val < valD[vv][gameLim][ps][vLowLim]) {
-                    double val0 = val;
-
-                    val = val > valD[vv][gameLim][ps][vHighLim] ? valD[vv][gameLim][ps][vHighLim] : val < valD[vv][gameLim][ps][vLowLim] ? valD[vv][gameLim][ps][vLowLim] : val;
-                    if (E.debugScannerOut) {
-                      System.out.println("keep  val restored to range " + fname + " " + pound + " " + vv + "  " + ps + " " + mf(val0) + " => " + mf(val));
-                    }// debug
-                  } // restored
-                  prevVal = valD[vv][gameAddrC][ps][klan];
-                  valD[vv][gameAddrC][ps][klan] = val; // set to kept value
-                  slider = valToSlider(valD[vv][gameAddrC][clan][ps], valD[vv][gameLim][ps][vLowLim], valD[vv][gameLim][ps][vHighLim]);
-                  int prev3a = valI[vv][prev3SliderC][ps][clan];
-                  int prev2a = valI[vv][prev2SliderC][ps][clan];
-                  int prev1a = valI[vv][prevSliderC][ps][clan];
-                  int prev0a = valI[vv][sliderC][ps][clan];
-                  int prev3 = valI[vv][prev3SliderC][ps][clan] = valI[vv][prev2SliderC][ps][clan];
-                  int prev2 = valI[vv][prev2SliderC][ps][clan] = valI[vv][prevSliderC][ps][clan];
-                  int prev1 = valI[vv][prevSliderC][ps][clan] = valI[vv][sliderC][ps][clan];
-                  valI[vv][sliderC][ps][clan] = slider; // a new value for slider
-
-                  lname = s.nextLine();
-                  if (E.debugScannerOut) {
-                    System.out.println("keep changed  \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + " prevVal=" + mf(prevVal) + " =>val=" + mf(val) + "slider a0123,0123=" + prev0a + " " + prev1a + " " + prev2a + " " + prev3a + " , " + slider + " " + prev1 + " " + prev2 + " " + prev3 + " " + " \n  :: moreLine=" + lname);
+                  System.out.println("a line=" + cname + " version" + sname + " :: " + lname);
+                  if (myAIlearnings == null) {
+                    if (E.debugAIOut) {
+                      System.out.println("------BIC1-----EM.buildAICvals null TreeMap new TreeMap year=" + year);
+                    }
+                    myAIlearnings = new TreeMap();
                   }
                 }
                 else {
-
                   lname = s.nextLine();
-                  if (E.debugScannerOut) {
-                    System.out.println("keep unknown = \"blank=" + sname + "\" name=\"" + fname + "\"  pound=" + pound + " :: " + lname);
-                  }
+                  System.out.println(" unknown version  line=" + cname + " version" + sname + " :: " + lname);
+                  return -1; //unknown version
                 }
+                break;
+              case "KEY":
+                // sname = s.next("\\s");
+//                sname = s.useDelimiter("\\S*").next(); //stop at non space
+                myKey = s.useDelimiter("\\s*").next();
+                myVal[E.aValCnts] = s.nextInt();
+                myVal[E.aValAge] = s.nextInt();
+                myVal[E.aValYear] = s.nextInt();
+                // now age the last time this key was updated
+                myVal[E.aValYear] = myVal[E.aValYear] > -500 ? myVal[E.aValYear] - 50 : myVal[E.aValYear];
+                myVal[E.aValPClan] = s.nextInt();
+                myVal[E.aValIxMyScore] = s.nextInt();
+                rtn++;
+                lname = s.nextLine();
+                if (E.debugScannerOut || rtn < 20 || (rtnc > 100)) {
+                  System.out.println("key" + rtn + "  =" + myKey + " :" + myVal[E.aValCnts] + " :" + myVal[E.aValAge] + " :" + myVal[E.aValYear] + " :" + myVal[E.aValPClan] + " :" + myVal[E.aValIxMyScore] + " :: " + lname);
+                  }
+                myAIlearnings.put(myKey, myVal);
+                setCntAr(myKey, myVal);  // all of them
                 break;
               default:
                 lname = s.nextLine();
@@ -3562,7 +3523,7 @@ onceAgain:
             ex.printStackTrace(pw);
             secondStack = sw.toString();
             // newError = true;
-            System.out.println("----DMap3----Igmore doReadMapFile Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  keep found \"" + fname + "\" vv=" + vv + " pound=" + pound + " ps=" + ps + " klan=" + klan + (isNeg ? " isNeg " : " notNeg ") + "val=" + mf(val) + " :: moreLine=" + s.nextLine() + andMore());
+            System.out.println("----DMap3----Igmore doReadMapFile Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + "\n  key found \"" + myKey + "\" " + ":: moreLine=" + s.nextLine() + andMore());
           }
         } // while
         if (bMapFr != null) {
@@ -3626,7 +3587,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       };
       if (true && myAIlearnings != null) {
         //    String rOut = "New Game " + dateString + "\r\n";
-        ll = "year" + year + " version " + st.versionText + " " + dateString + " " + st.settingsComment.getText() + "\r\n";
+        ll = "version " + st.versionText + " " + dateString + " year" + year + " " + st.settingsComment.getText() + "\r\n";
         bMapFw.write(ll, 0, ll.length());
         System.out.println("---DWM4---wrote=" + ll);
         synchronized (A6Rowa.ASECS) {
@@ -3651,7 +3612,7 @@ static final int maxRKeys=1000;
               }
               entryCnt++;
               // remove and don't write keys of little value
-              if (mSize > 3000 && rKeysIx < mostRKeys && ((EM.year - aVal[E.aValYear]) > 25) && aVal[E.aValCnts] < 4) {
+              if (mSize > 6000 && rKeysIx < mostRKeys && ((EM.year - aVal[E.aValYear]) > 25) && aVal[E.aValCnts] < 4) {
                 System.err.println("----DWMr1--- save remove key=" + aKey + " :" + aVal[E.aValCnts] + " Y" + aVal[E.aValYear]);
                 lremove++;
                 rKeys[rKeysIx++] = aKey;
@@ -6960,13 +6921,15 @@ static final int maxRKeys=1000;
 
       if (myAIlearnings == null) {
         if (E.debugAIOut) {
-          System.out.println("------DSY11-----EM.doStartYear null HashMap new TreeMap year=" + year);
+          System.out.println("------DSY11-----EM.doStartYear null myAIlearnings new TreeMap year=" + year);
         }
         //myAIlearnings = new HashMap(25000);
         myAIlearnings = new TreeMap();
       }
-
-      if (myAIlearnings != null) {
+      if (year == 0) {
+        doReadMapFile(); //only while starting
+      }
+      if (false && myAIlearnings != null) {
         for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
           if (entry != null) {
             String aKey = entry.getKey();
@@ -6982,6 +6945,7 @@ static final int maxRKeys=1000;
       }
       int lRes = E.bValsEnd = E.bValsStart + vvend;//vvAx
       // psClanChars[ixPS] = new byte[2][][];
+      // each year rebuild psClanChars
       for (ixPS = 0; ixPS < 2; ixPS++) {
         psClanChars[ixPS] = new char[5][];
         psClanMasks[ixPS] = new char[5][];// rebuild keys and masks each year
