@@ -3574,8 +3574,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     String dateString = MYDATEFORMAT.format(new Date());
     try {
 // something happens to opens, so it is ok to do it again I think.
-      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-      System.err.println("---DWM2---did reopen of mapfile  " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + mSize));
+      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+      System.err.println("---DWM2---did reopen create, truncate of mapfile  " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + mSize));
 
       // rebuild the ars arrays and zero it
       ars = new int[nars][]; // 0,1,2,3,4,5,6,7
@@ -3636,10 +3636,14 @@ static final int maxRKeys=1000;
             aKey = rKeys[keysIx];
             System.err.println("----DWMr2--- remove key" + keysIx + " : " + aKey);
           }
+          if (bMapFw != null) {
+            bMapFw.flush();
+            bMapFw.close();
+          }
         }
         // now do the output
         seeArrays[0] = rtn = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0] + "\n";
-        System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + " lKey" + lKey + " key" + bKey + seeArrays[0]);
+        System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + "Y" + year + " lKey" + lKey + " key" + bKey + seeArrays[0]);
         seeCntArrays();
         //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
         System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);

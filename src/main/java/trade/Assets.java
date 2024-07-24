@@ -9468,7 +9468,7 @@ public class Assets {
               retOffer.setTerm(-2); // other so no more return
             }            // else leave retOffer.term 0 for the other cn
             else if (newTerm == -2 || entryTerm == -2) {  // the other ship traded
-              retOffer.setTerm(-4); // other so no more return
+              retOffer.setTerm(-5); // other so no more return
             }
           }
           else if (newTerm == -2 || entryTerm == -2) {  // skipped the other ship traded
@@ -9495,7 +9495,7 @@ public class Assets {
             setStat(EM.TRADELASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, requests), 1);
             setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
 
-            retOffer.setTerm(-4);
+            retOffer.setTerm(-5);
 
           }
           else if (entryTerm == -1) {  // Trade lost, others barter
@@ -9536,8 +9536,11 @@ public class Assets {
             fav = -2.;
             if (entryTerm == -1) {
               retOffer.setTerm(-3);
+              // else leave retOffer.term -1 for the other cn
             }
-            // else leave retOffer.ter -1 for the other cn
+            else {
+              retOffer.setTerm(-1);
+            }
           }
           else if (entryTerm == -4) { // should stop in econ
             tradeAccepted = true;
@@ -9634,7 +9637,7 @@ public class Assets {
           // retOffer.setTerm(newTerm - 3);  //
           hist.add(new History(aPre, 5, name + "xit CF.barter t=" + retOffer.getTerm(), "after", "myTrade", "nulled", "<<<<<<<", "<<<<<<<<<"));
           ec.addOHist(ohist, new History(aPre, 5, name + "xit CFbarter t=" + retOffer.getTerm(), "after", "myTrade", "nulled", "<<<<<<<", "<<<<<<<<<"));
-        }
+        }// newTerm < 1
         hist.add(new History(aPre, 5, "xit2 CF.barter", "o=" + oname, "newTerm=" + newTerm, "entryTerm=" + entryTerm, (myTrade == null ? "!myTrade" : "myTrade"), (eTrad == null ? "!eTrad" : "eTrad"), "lhist" + lhista, "ehist" + ehist, "$=" + EM.mf(sumTotWorth)));
         return retOffer;
       }
