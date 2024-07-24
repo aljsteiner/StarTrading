@@ -107,9 +107,9 @@ public class Assets {
   // consolidate key's reading adding cnt, greatest age up to 51, greates scoreIx
   int cnts[] = new int[3]; // cnt=occurrances,age>>age of Econ,scoreIx>>scoreix
   double aiScore = 2., prevAIScore = -3, prevPrevAIScore = -4., prevIncAIScore = -5.;
-  double tradeFracNudge[] = {0., 0., 0.014, 0.021, 0.028};//dif .1--.8
-  double ffTFracNudge[] = {0., 0., 0.028, .042, 0.056};  //3.0--5.4  014
-  double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
+  static double tradeFracNudge[] = {0., 0., 0.014, 0.021, 0.028};//dif .1--.8
+  static double ffTFracNudge[] = {0., 0., 0.028, .042, 0.056};  //3.0--5.4  014
+  static double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int prevAIPos = 4, prevPrevAIPos = 4;
   double prevAIWorth = -7., aiWorth = 10, prevIncAIWorth = -6., prevPrevAIWorth = -9.;
@@ -858,7 +858,7 @@ public class Assets {
     int ix = 0;
     int retIx = 0;
     int testsLen = tests.length;
-    //go greatest to smallest value, if not found then ix =0 = a
+    //go greatest to smallest value, if not found then ix =0 = E.getAIResChar(0)
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
         retIx = ix;
@@ -11190,7 +11190,7 @@ public class Assets {
           aEntries[aType]++;
 
         }// end set aType and acct
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevPmin, prevAIProspMin, E.AILims1, "rawProspects2.min", ifPrint);
+
         EM.psClanChars[pors][clan][E.ptype] = E.getAIResChar(aType);//(char) ('a' + aType);
         EM.psClanChars[pors][clan][E.pacct] = E.getAIResChar(acct);//(char) ('a' + acct);
         EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(char) ('a' + pors);
@@ -11198,6 +11198,7 @@ public class Assets {
         // E.pPrevScP pPrevScW
         // EM.psClanChars[pors][clan][E.pclan] = pE.getAIResChar(clan);//(char) ('a' + clan);
         //double prevOPerW = prevAIOffers / prevAIWorth;
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevPmin, prevAIProspMin, E.AILims1, "rawProspects2.min", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "score pos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevoPerW, prevAIOperW, E.AILims1, "prevAIOperW", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.prevScore[clan], E.AILims1, "rawProspects2.ave", ifPrint);

@@ -289,12 +289,12 @@ public class E {
   }
 
   /**
-   * get the settings index 0-99 from the character in the map key
+   * obsolete   * get the settings index 0-99 from the character in the map key
    *
    * @param aa character from the map key
    * @return
    */
-  static int getAISetMuch(char aa) {
+  static int getAISetMuchNot(char aa) {
     int ii = getAIMuch(aa);
     if (ii < 0 && ii > -5) {
       return ii;
@@ -319,8 +319,8 @@ public class E {
    * @return return how much value of that character represents
    *
    */
-  static int getSettingsValue(String key, int bias) {
-    return getAISetMuch(key.charAt(bias + bValsStart));
+  static int getSettingsValueNot(String key, int bias) {
+    return getAISetMuchNot(key.charAt(bias + bValsStart));
   }
 
 

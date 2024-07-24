@@ -661,11 +661,12 @@ class EM {
       if (E.debugAIOut) {
         System.out.println("----INem3----Y" + year + " Init just initialize ars");
       }
+      if (year == 0) {
       doReadMapFile();
       if (bMapFr != null) {
         bMapFr.close();
       }
-
+      }
       bKeep = Files.newBufferedWriter(KEEP, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       bKeep.write(rOut, 0, rOut.length());
       keepBuffered = true;
@@ -1108,7 +1109,7 @@ class EM {
   }
 
   /**
-   * get seconds since runYears
+   * get seconds since runYearsTime
    *
    * @return seconds ssss.mmm
    */
@@ -1119,7 +1120,7 @@ class EM {
   static long doYearTime;
 
   /**
-   * get seconds since the last doYear
+   * get seconds since the last doYearTime
    *
    * @return seconds ssss.mmm
    */
@@ -1745,10 +1746,10 @@ class EM {
   static int vLowLim = 0;
   static int vHighLim = 1;
   static int dPrevRealC = 2; // original value of vaddr
-  static int vDesc = 0;  // part of valS
-  static int vDetail = 1; // valS
+  static int vDesc = 0;  // part of name displa yed
+  static int vDetail = 1; // description of the setting
   static int vMore = 2; // valS
-  static volatile String valS[][] = new String[lvals][]; // second column [desc,detail]
+  static volatile String valS[][] = new String[lvals][]; // second column [vDesc,vDetail]
   /**
    * [vv][column][pors][clan]
    */
@@ -3471,31 +3472,31 @@ onceAgain:
             cname = s.useDelimiter("\\s").next();
             switch (cname) {
               case "new":
-              case "New":
-              case "year":
-              case "title":
+                lname = s.nextLine();
+                System.out.println("----DRM----- new a line=" + cname + " :: " + lname);
+                break;
               case "version":
-                sname = s.useDelimiter("\\s*").next(); //read the version
+                sname = s.useDelimiter("\\s").next(); //read the version
                 if (sname.contains(st.versionText)) {
                 lname = s.nextLine();
-                  System.out.println("a line=" + cname + " version" + sname + " :: " + lname);
+                  System.out.println("----DRM----- version a line=" + cname + " version" + sname + " :: " + lname);
                   if (myAIlearnings == null) {
                     if (E.debugAIOut) {
-                      System.out.println("------BIC1-----EM.buildAICvals null TreeMap new TreeMap year=" + year);
+                      System.out.println("------DRM3-----EM.doReadMapFile null TreeMap new TreeMap year=" + year);
                     }
                     myAIlearnings = new TreeMap();
                   }
                 }
                 else {
                   lname = s.nextLine();
-                  System.out.println(" unknown version  line=" + cname + " version" + sname + " :: " + lname);
+                  System.out.println("-----UDRM---- unknown version  line=" + cname + " :: " + sname + lname);
                   return -1; //unknown version
                 }
                 break;
               case "KEY":
                 // sname = s.next("\\s");
 //                sname = s.useDelimiter("\\S*").next(); //stop at non space
-                myKey = s.useDelimiter("\\s*").next();
+                myKey = s.useDelimiter("\\s").next();
                 myVal[E.aValCnts] = s.nextInt();
                 myVal[E.aValAge] = s.nextInt();
                 myVal[E.aValYear] = s.nextInt();
@@ -3506,7 +3507,7 @@ onceAgain:
                 rtn++;
                 lname = s.nextLine();
                 if (E.debugScannerOut || rtn < 20 || (rtnc > 100)) {
-                  System.out.println("key" + rtn + "  =" + myKey + " :" + myVal[E.aValCnts] + " :" + myVal[E.aValAge] + " :" + myVal[E.aValYear] + " :" + myVal[E.aValPClan] + " :" + myVal[E.aValIxMyScore] + " :: " + lname);
+                  System.out.println("-----WMK---- KEY" + rtn + "  =" + myKey + " :" + myVal[E.aValCnts] + " :" + myVal[E.aValAge] + " :" + myVal[E.aValYear] + " :" + myVal[E.aValPClan] + " :" + myVal[E.aValIxMyScore] + " :: " + lname);
                   }
                 myAIlearnings.put(myKey, myVal);
                 setCntAr(myKey, myVal);  // all of them
@@ -3564,6 +3565,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     String ll = " ";
     String rtn = "";
     String aKey;
+    String bKey = " mty";
+    int lKey = 0;
     Integer[] aVal;
     int entryCnt = 0, cntsCnt = 0;
     int lremove = 0;
@@ -3571,7 +3574,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     String dateString = MYDATEFORMAT.format(new Date());
     try {
 // something happens to opens, so it is ok to do it again I think.
-      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+      bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
       System.err.println("---DWM2---did reopen of mapfile  " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + mSize));
 
       // rebuild the ars arrays and zero it
@@ -3604,13 +3607,16 @@ static final int maxRKeys=1000;
           for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
             if (entry != null) {
               aKey = entry.getKey();
+              lKey = aKey.length();
+              bKey = aKey + " "; // force a copy
               aVal = entry.getValue();
               cntsCnt += aVal[E.aValCnts];
+              entryCnt++;
               if (lcnt++ > 100) {
                 lcnt = 0;
                 StarTrader.sameEconState = 0;// prevent stuck alarm
               }
-              entryCnt++;
+
               // remove and don't write keys of little value
               if (mSize > 6000 && rKeysIx < mostRKeys && ((EM.year - aVal[E.aValYear]) > 25) && aVal[E.aValCnts] < 4) {
                 System.err.println("----DWMr1--- save remove key=" + aKey + " :" + aVal[E.aValCnts] + " Y" + aVal[E.aValYear]);
@@ -3619,9 +3625,8 @@ static final int maxRKeys=1000;
                 // myAIlearnings.remove(aKey);
               }
               else {
-                ll = "KEY " + aKey + " " + aVal[E.aValCnts] + " " + aVal[E.aValAge] + " " + aVal[E.aValYear] + " " + aVal[E.aValIxMyScore];
+                ll = "KEY " + aKey + " " + aVal[E.aValCnts] + " " + aVal[E.aValAge] + " " + aVal[E.aValYear] + " " + aVal[E.aValPClan] + " " + aVal[E.aValIxMyScore] + "\r\n";
                 bMapFw.write(ll, 0, ll.length());
-
                 setCntAr(aKey, aVal);
               } // not remove
             }//if
@@ -3633,8 +3638,8 @@ static final int maxRKeys=1000;
           }
         }
         // now do the output
-        seeArrays[0] = rtn = "doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " wnr:" + myScorePosClan[0] + myScorePosClan[0] + myScorePosClan[2] + myScorePosClan[2] + myScorePosClan[4] + "\n";
-        System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + seeArrays[0]);
+        seeArrays[0] = rtn = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0] + "\n";
+        System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + " lKey" + lKey + " key" + bKey + seeArrays[0]);
         seeCntArrays();
         //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
         System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);
@@ -4348,7 +4353,7 @@ static final int maxRKeys=1000;
    * @param ixPS pors value
    * @param ixClan clan value
    * @param ecName name of current ec if any
-   * @param res the Char array for the key, start at bCharStart
+   * @param res the Char array for the key, start settings at bCharStart
    * @param vvend The count of the last doVal
    */
   static void buildAICvals(int ixPS, int ixClan, String ecName, char[] res, char[] uMasked, int vvAx) {
@@ -4366,9 +4371,12 @@ static final int maxRKeys=1000;
       // String aa = "", bb = "bb";
       // start bb with the schars for pors and clan
       int aWaits = 0;
-      int lRes = E.bValsEnd = E.bValsStart + vvAx;
-      lRes = res.length;
-      int ix = 0, ixa = 0;
+      int lRes1 = E.bValsEnd = E.bValsStart + vvAx;
+      int lRes = res.length; // use length given
+      int ix = 0, ixa = 0, vv = 0;
+      if (E.debugAIOut) {
+        System.out.println("------BIC2-----EM.buildAICvals Y" + year + " key.len" + lRes + ":" + E.bValsStart + ":" + vvAx + " pClan" + (ixPS * 5 + ixClan) + " aiNudges" + Assets.aiNudges.length);
+      }
       //res = new byte[lRes];// set Res to a new right length
       //uMasked = new byte[lRes];
       for (ix = 0; ix < lRes; ix++) { //prefill with lowest val
@@ -4376,10 +4384,11 @@ static final int maxRKeys=1000;
         uMasked[ix] = 0;  // prefill  unMasked
       }
       for (ix = 0; ix < vvAx; ix++) { // scan valAI for each doVal
-        int ix2 = valAI[ix];
-        sliderVal = getAIVal(ix2, ixPS, ixClan);
-        res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
-        int gc = valI[ix2][modeC][0][0];
+        vv = valAI[ix]; // find the vv value
+        sliderVal = getAIVal(vv, ixPS, ixClan);
+        Assets.putValueChar(res, ix + E.bValsStart, sliderVal, E.AILimsC, valS[vv][vDesc], ix > vvAx - 7);
+        //    res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
+        int gc = valI[vv][modeC][0][0];
         if (gc > vfour) {
           uMasked[ixa] = E.maskC; // set mask for each user val
         }
@@ -4409,7 +4418,7 @@ static final int maxRKeys=1000;
    */
   static int getAIVal(int vv, int pors, int clan) {
     int slider1 = -1;
-    int klan = clan % 5;
+    int klan = clan < 5 ? clan : 1;
     int gc = valI[vv][modeC][0][0];
     try {
       if (gc <= vfour) {
@@ -4445,11 +4454,13 @@ static final int maxRKeys=1000;
       ex.printStackTrace(pw);
       secondStack = sw.toString();
       newError = true;
-      System.err.println(tError = ("-----EXG7----end buildAICbals gc=" + gc + " PorS=" + pors + ", clan=" + clan + " klan=" + klan + " vv=" + vv + " desc=" + valS[vv][vDesc] + ", " + curEconName + since() + ", " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
+      System.err.println(tError = ("-----EXG7----end getAIVal gc=" + gc + " PorS=" + pors + ", clan=" + clan + " klan=" + klan + " vv=" + vv + " desc=" + valS[vv][vDesc] + ", " + curEconName + since() + ", " + curEcon.nowThread + "Exception " + ex.toString() + " message=" + ex.getMessage() + " " + andMore()));
       ex.printStackTrace(System.err);
-      flushes();
-      flushes();
+
       st.setFatalError();
+      flushes();
+      flushes();
+      System.exit(-23);
     }
     return 50;
   }
@@ -6943,7 +6954,7 @@ static final int maxRKeys=1000;
         prevMyScoreClanPos[ixClan] = myScoreClanPos[ixClan];
         prevMyScorePosClan[ixClan] = myScorePosClan[ixClan];
       }
-      int lRes = E.bValsEnd = E.bValsStart + vvend;//vvAx
+      int lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx  vvend
       // psClanChars[ixPS] = new byte[2][][];
       // each year rebuild psClanChars
       for (ixPS = 0; ixPS < 2; ixPS++) {
@@ -6952,7 +6963,7 @@ static final int maxRKeys=1000;
         for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
           psClanChars[ixPS][ixClan] = new char[lRes];
           psClanMasks[ixPS][ixClan] = new char[lRes];
-          buildAICvals(ixPS, ixClan, "preset", psClanChars[ixPS][ixClan], psClanMasks[ixPS][ixClan], vvend);
+          buildAICvals(ixPS, ixClan, "preset", psClanChars[ixPS][ixClan], psClanMasks[ixPS][ixClan], vvAx);
         }
       }
 
