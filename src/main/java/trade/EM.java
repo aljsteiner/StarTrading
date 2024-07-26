@@ -3682,14 +3682,16 @@ static final int maxRKeys=1000;
     //ll += seeCntArray(x2, -3) + "\n";
     //ll += seeCntArray(x3, -1) + "\n";
   //  seeCntArray(seeArrays, 1, E.AILims2, E.pPrevScW, "winr&myScore",y);
-    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevEScW, "winr&myAIScore", y);
+    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevEScInc, "44&prevAIScoreInc", y);
+    seeCntArray(seeArrays, 2, E.AILims1, E.pPrevEScInc, "23&prevAIScoreInc", y);
+    seeCntArray(seeArrays, 3, E.AILims1, E.pPrevEScInc, "01&prevAIScoreInc", y);
     // seeCntArray(seeArrays, 3, E.AILims1, E.pPrevResil, "winr&Resilance");
-    seeCntArray(seeArrays, 2, E.AILimsC, E.pNudge0, "TradeFrac44", y);
-    seeCntArray(seeArrays, 3, E.AILimsC, E.pNudge0, "TradeFrac23", y);
-    seeCntArray(seeArrays, 4, E.AILimsC, E.pNudge0, "TradeFrac01", y);
-    seeCntArray(seeArrays, 5, E.AILimsC, E.pNudge1, "ForwFundTransfFrac", y);
-    //seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", no);//E.pPrevoPerW
-    // seeCntArray(seeArrays, 5, E.AILims1, E.pPrevoPerW, "winr&PrevOperW", no);
+   // seeCntArray(seeArrays, 2, E.AILimsC, E.pNudge0, "TradeFrac44", y);
+    // seeCntArray(seeArrays, 3, E.AILimsC, E.pNudge0, "TradeFrac23", y);
+    //seeCntArray(seeArrays, 4, E.AILimsC, E.pNudge0, "TradeFrac01", y);
+    //seeCntArray(seeArrays, 5, E.AILimsC, E.pNudge1, "ForwFundTransfFrac", y);
+    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", no);//E.pPrevoPerW
+    seeCntArray(seeArrays, 5, E.AILims1, E.pPrevoPerW, "winr&PrevOperW", no);
     return ll;
   }
 
@@ -3697,15 +3699,16 @@ static final int maxRKeys=1000;
    * define the set of array setting calls for defining the seeArrays
    */
   void setCntAr(String aKey, Integer[] aVal) {
-    boolean no = false;
+    boolean no = false, y = true;
     //String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb)
-    setCntAr(aKey, aVal, "winr&AIScore", 4, 1, E.AILims2, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    setCntAr(aKey, aVal, "tradeFrac44", 5, 2, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    setCntAr(aKey, aVal, "tradeFrac23", 5, 3, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3., no);
-    setCntAr(aKey, aVal, "tradeFrac01", 5, 4, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1., no);
-    setCntAr(aKey, aVal, "ForwFundTransferFrac", 6, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    // setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
-    //setCntAr(aKey, aVal, "winr&PrevOperW", 6, 5, E.AILims1, E.pPrevoPerW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    //  E.pPrevEScInc, "44&prevAIScoreInc"
+    setCntAr(aKey, aVal, "44&prevAIScoreInc", 4, 1, E.AILims1, E.pPrevEScInc, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
+    setCntAr(aKey, aVal, "23&prevAIScoreInc", 5, 2, E.AILims1, E.pPrevEScInc, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 4., 4., y);
+    setCntAr(aKey, aVal, "01&prevAIScoreInc", 5, 3, E.AILims1, E.pPrevEScInc, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 2., 3., y);
+    //setCntAr(aKey, aVal, "tradeFrac44", 5, 4, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1., no);
+    //setCntAr(aKey, aVal, "ForwFundTransferFrac", 6, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
+    setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
+    setCntAr(aKey, aVal, "winr&PrevOperW", 6, 5, E.AILims1, E.pPrevoPerW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
   }
   //E.pPrevPmin, prevAIProspMin, E.AILims1 E.pPrevoPerW
   static int SCACnt = 0;
@@ -3785,29 +3788,32 @@ static final int maxRKeys=1000;
       topIxN = ars[arn][topIx];
       int firstIxN = ars[arn][firstIx];
       mostIxN = ars[arn][mostIx];
-      lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
-      lastIx = lastIx < strtIxs + 1 ? strtIxs + 1 : lastIx;
-      int ixa = (mostIxN - 5) < firstIxN ? firstIxN : mostIxN - 5;
-      ixa = ixa < strtIxs ? strtIxs : ixa;
+      // lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
+      // lastIx = lastIx < strtIxs + 1 ? strtIxs + 1 : lastIx;
+      // int ixa = (mostIxN - 5) < firstIxN ? firstIxN : mostIxN - 5;
+      // ixa = ixa < strtIxs ? strtIxs : ixa;
       int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN;
-      for (rCnt = 0; rCnt < 7 && nzCnt < 7; rCnt++) {
+      // find a range up to 10 N less or more than mostIxN, only 10 nz elements
+      for (rCnt = 0; rCnt < 10 && nzCnt < 11; rCnt++) {
+        //find the first lowest N for this range
         if (((mostIxN - rCnt) >= firstIxN) && ars[arn][mostIxN - rCnt] > 0) {
           nzCnt++;
           fRange = mostIxN - rCnt;
         }
+        // find the last highest N for this range
         if (((mostIxN + rCnt) <= topIxN) && ars[arn][mostIxN + rCnt] > 0) {
           nzCnt++;
           tRange = mostIxN + rCnt;
         }
       } //rCnt
       //now get best for regular
-      int range = topIxN - mostIxN;
-      int range1 = mostIxN - firstIxN;
-      range = range1 < range ? range1 : range;
-      int blast = mostIxN + range;
-      blast = lastIx < blast ? lastIx : blast;
-      int bfirst = blast - 4; //3,4,5,6,7
-      bfirst = ixa > bfirst ? ixa : bfirst;
+     // int range = topIxN - mostIxN;
+      //  int range1 = mostIxN - firstIxN;
+      //range = range1 < range ? range1 : range;
+      // int blast = mostIxN + range;
+      // blast = lastIx < blast ? lastIx : blast;
+      //int bfirst = blast - 4; //3,4,5,6,7
+      //bfirst = ixa > bfirst ? ixa : bfirst;
       double bsum = 0.;
       int best = 0, bcnt = 0;
       for (int ix = fRange; ix <= tRange; ix++) {
@@ -3836,7 +3842,7 @@ static final int maxRKeys=1000;
           for (int ix = fRange; ix <= tRange; ix++) {
             // see value Ix, entryCnt at that value, value at that value Ix
             if (ars[arn][myN = ix] > 0) {
-              ret2 += ((doComma ? " ;" : " ") + "N" + myN + "C" + ars[arn][myN] + "V" + mf(myAILim[myNn = ((myN - strtIxs) < 0 ? 0 : myN - strtIxs)]));
+              ret2 += ((doComma ? "; " : " ") + "N" + myN + "C" + ars[arn][myN] + "V" + mf(myAILim[myNn = ((myN - strtIxs) < 0 ? 0 : myN - strtIxs)]));
             }
           doComma = true;
           }// ix
@@ -6188,14 +6194,14 @@ static final int maxRKeys=1000;
     doRes(TradeFirstStrategicGoal, "FirstStrategicGoal", "First Strategic Goal", 2, 3, 2, LIST21 | CURAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
     doRes(TradeLastStrategicGoal, "LastStrategicGoal", "Strategic Goal after trade");
     doRes(TradeFirstStrategicValue, "FirstStrategicValue", "First Strategic Value", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
-    doRes(TradeLastStrategicValue, "StrategicValue", "Strategic-Value strategic receive/strategic gave at trade");
+    doRes(TradeLastStrategicValue, "StrategicValue", "Strategic-Value strategic receive/strategic gave at trade", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
     doRes(TradeStrategicValueLastPercentFirst, "Last%FirstStrategicValue", "LastStrategic Value percent of First Strategic Value just before trade");
-    doRes(AlsoTradeLastStrategicValue, "AlsoStrategicValue", "AlsoLast strategic Value strategic receive/strategic gave at trade");
+    doRes(AlsoTradeLastStrategicValue, "AlsoStrategicValue", "AlsoLast strategic Value strategic receive/strategic gave at trade", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
     doRes(AlsoTradeStrategicValueLastPercentFirst, "Also%FirstStratVal", "LastStrategic Value percent of First Strategic Value just before trade");
-    doRes(TradeRejectedStrategicGoal, "RejectedStrategicGoal", " LiveTrade rejected Strategic Goal", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH | SKIPUNSET, ROWS2 | LIST21 | CUMAVE | BOTH | SKIPUNSET, 0L);
-    doRes(TradeLostStrategicGoal, "LostStrategicGoal", "Strategic Goal after trade lost");
-    doRes(TradeRejectedStrategicValue, "RejStratValue", "Strategic Value after Trade rejected");
-    doRes(TradeLostStrategicValue, "LostStrategicValue", "Strategic Value after trade lost");
+    doRes(TradeRejectedStrategicGoal, "RejectedStrategicGoal", " LiveTrade rejected Strategic Goal", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
+    doRes(TradeLostStrategicGoal, "LostStrategicGoal", "Strategic Goal after trade lost", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
+    doRes(TradeRejectedStrategicValue, "RejStratValue", "Strategic Value after Trade rejected", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
+    doRes(TradeLostStrategicValue, "LostStrategicValue", "Strategic Value after trade lost", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
     doRes(TradeMissedStrategicGoal, "MissedStrategicGoal", "Trade Missed no value");
     doRes(TradeDeadMissedStrategicGoal, "DeadMissedStrategicGoal", "Dead No Strategic Goal no trade", 2, 3, 2, THISYEARAVE | LIST1 | LIST2 | LIST4 | BOTH | SKIPUNSET, ROWS1 | LIST21 | CURAVE | BOTH | SKIPUNSET, 0, ROWS3 | LIST21 | CUMUNITS | BOTH | SKIPUNSET);
     doRes(TradeDeadLostStrategicGoal, "DeadLostStrategicGoal", "Strategic Goal after trade lost and dead");

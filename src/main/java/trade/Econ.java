@@ -1519,13 +1519,14 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       // see Assets.CashFlow.barter for the flow of term
       for (int termLoop = aOffer.getTerm(); termLoop > -4; termLoop = aOffer.getTerm()) {
         bb1 = bb; // starts at 0
-        bb = ++bb % 2; // starts at 1
+        bb = ++bb > 1 ? 0 : 1;
+        //    bb = ++bb % 2; // starts at 1
         //send loop to both histories cn[0] planet
         cn[0].hist.add(new History(History.loopMinorConditionals5, "T" + aOffer.getTerm() + " " + cn[bb].getName() + " loop>>>>> ", "T=" + termLoop, "bb=" + bb1, "cur name=", cn[bb1].getName(), "ship=", ship.getName(), "planet=", planet.getName(), "<<<<<<"));
-        cn[1].hist.add(new History(History.loopMinorConditionals5, "T=", wh(aOffer.getTerm()), "T=" + termLoop, "bb=" + bb1, "name=", cn[bb1].getName(), "ship=", ship.getName(), "planet=", planet.getName(), "<<<<<<<<<"));
+        cn[1].hist.add(new History(History.loopMinorConditionals5, "T=" + aOffer.getTerm(), "T=" + termLoop, "bb=" + bb1, "name=", cn[bb1].getName(), "ship=", ship.getName(), "planet=", planet.getName(), "<<<<<<<<<"));
         eM.setCurEcon(cn[bb1]);  // starts at planet
-        if (termLoop > eM.barterStart - 2) {
-          eM.printHere("----ESTa---", this," sStartTrade .barter term=" + termLoop );
+        if (termLoop < 5 || termLoop > eM.barterStart - 2) {
+          eM.printHere("----ESTa---", cn[bb1], " sStartTrade .barter term=" + termLoop);
         }
         aOffer = cn[bb1].barter(aOffer, cn[bb], termLoop); //bb1 starts at 0
         // aOffer = cn[bb1].as.barter(aOffer); // first barter with planet
