@@ -335,6 +335,7 @@ public class E {
   static final int pPrevScP = aiPcntr++; // Prev score position
   static final int pPrevScW = aiPcntr++; // Prev score worth last years score
   static final int pPrevEScW = aiPcntr++; // prev econ score worth
+  static final int pEScW = aiPcntr++; // last econ score worth
   static final int pPrevResil = aiPcntr++; // last resilience worth
   static final int pPrevoPerW = ++aiPcntr;
   static final int pPrevPmin = aiPcntr++; //rawProspects2 min
@@ -361,8 +362,7 @@ public class E {
   // static final int pPrevKW = aiPcntr++; // last knowledge worth
 
   // static final int pPrevPrevEScW = aiPcntr++; // prev prev econ score worth
-   static final int pPrevPrevEScInc = aiPcntr++; // prev prev econ score inc
- // static final int pPrevEScW = aiPcntr++; // prev econ score worth
+  static final int pPrevPrevEScInc = aiPcntr++; // prev prev econ score inc
   static final int pPrevEScInc = aiPcntr++; // prev econ score inc
   static final int pEScInc = aiPcntr++; // last econ score inc
   // static final int pEScW = aiPcntr++; // last econ score worth

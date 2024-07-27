@@ -11213,6 +11213,8 @@ public class Assets {
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "score pos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevoPerW, prevAIOperW, E.AILims1, "prevAIOperW", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, EM.prevScore[clan], E.AILims1, "prevScoreWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIScore, E.AILims1, "prevEconScoreWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pEScW, aiScore, E.AILims1, "lastEconScoreWorth", ifPrint);
         if (acct == 1) {
           //      EM.setValueByte(EM.psClanChars[pors][clan], E.poPerW, offers / btWTotWorth, oPerWLims);
         }

@@ -3682,16 +3682,16 @@ static final int maxRKeys=1000;
     //ll += seeCntArray(x2, -3) + "\n";
     //ll += seeCntArray(x3, -1) + "\n";
   //  seeCntArray(seeArrays, 1, E.AILims2, E.pPrevScW, "winr&myScore",y);
-    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevEScInc, "44&prevAIScoreInc", y);
-    seeCntArray(seeArrays, 2, E.AILims1, E.pPrevEScInc, "23&prevAIScoreInc", y);
-    seeCntArray(seeArrays, 3, E.AILims1, E.pPrevEScInc, "01&prevAIScoreInc", y);
+    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevEScW, "44&prevAIScoreW", y);
+    seeCntArray(seeArrays, 2, E.AILims1, E.pPrevEScW, "23&prevAIScoreW", y);
+    seeCntArray(seeArrays, 3, E.AILims1, E.pPrevEScW, "01&prevAIScoreW", y);
     // seeCntArray(seeArrays, 3, E.AILims1, E.pPrevResil, "winr&Resilance");
    // seeCntArray(seeArrays, 2, E.AILimsC, E.pNudge0, "TradeFrac44", y);
     // seeCntArray(seeArrays, 3, E.AILimsC, E.pNudge0, "TradeFrac23", y);
     //seeCntArray(seeArrays, 4, E.AILimsC, E.pNudge0, "TradeFrac01", y);
     //seeCntArray(seeArrays, 5, E.AILimsC, E.pNudge1, "ForwFundTransfFrac", y);
-    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", no);//E.pPrevoPerW
-    seeCntArray(seeArrays, 5, E.AILims1, E.pPrevoPerW, "winr&PrevOperW", no);
+    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", y);//E.pPrevoPerW
+    seeCntArray(seeArrays, 5, E.AILims1, E.pEScW, "44&lastAIScoreW", y);
     return ll;
   }
 
@@ -3702,13 +3702,13 @@ static final int maxRKeys=1000;
     boolean no = false, y = true;
     //String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb)
     //  E.pPrevEScInc, "44&prevAIScoreInc"
-    setCntAr(aKey, aVal, "44&prevAIScoreInc", 4, 1, E.AILims1, E.pPrevEScInc, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
-    setCntAr(aKey, aVal, "23&prevAIScoreInc", 5, 2, E.AILims1, E.pPrevEScInc, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 4., 4., y);
-    setCntAr(aKey, aVal, "01&prevAIScoreInc", 5, 3, E.AILims1, E.pPrevEScInc, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 2., 3., y);
+    setCntAr(aKey, aVal, "44&prevAIScoreW", 4, 1, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
+    setCntAr(aKey, aVal, "23&prevAIScoreW", 5, 2, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 4., 4., y);
+    setCntAr(aKey, aVal, "01&prevAIScoreW", 5, 3, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 2., 3., y);
     //setCntAr(aKey, aVal, "tradeFrac44", 5, 4, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1., no);
     //setCntAr(aKey, aVal, "ForwFundTransferFrac", 6, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
     setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
-    setCntAr(aKey, aVal, "winr&PrevOperW", 6, 5, E.AILims1, E.pPrevoPerW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
+    setCntAr(aKey, aVal, "44&lastAIScoreW", 6, 5, E.AILims1, E.pEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
   }
   //E.pPrevPmin, prevAIProspMin, E.AILims1 E.pPrevoPerW
   static int SCACnt = 0;
