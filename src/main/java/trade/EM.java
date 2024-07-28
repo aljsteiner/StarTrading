@@ -251,7 +251,7 @@ class EM {
   //pPrevScW,myScoreAr,E.pPrevEScW,aiScoreAr,pPrevResil,aiResilAr
   static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6, skippedCnt = 7, negIxs = 8, undef = 8, missing = 9, inactive = 10, died = 11, econDiedI = -1, notActiveI = -2, missingI = -3, undefI = -4, strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
 //  negIxs = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
-  static final int ixLimSum = 2, ixLimCnt = 4; // holds 91=12+77+2 spare
+  static final int ixLimSum = 2, ixLimCnt = 4, ixlimCnt = 4; // holds 91=12+77+2 spare
   static final int nars = 7;
   static int[][] ars;
   // each subarray = ar#,pMain#,pLim1,low,upper,pLim2,low,upper,pLim3,low,upper lenghts 5,8,11
@@ -3703,8 +3703,8 @@ static final int maxRKeys=1000;
     //String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb)
     //  E.pPrevEScInc, "44&prevAIScoreInc"
     setCntAr(aKey, aVal, "44&prevAIScoreW", 4, 1, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
-    setCntAr(aKey, aVal, "23&prevAIScoreW", 5, 2, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 4., 4., y);
-    setCntAr(aKey, aVal, "01&prevAIScoreW", 5, 3, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 2., 3., y);
+    setCntAr(aKey, aVal, "23&prevAIScoreW", 5, 2, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3., y);
+    setCntAr(aKey, aVal, "01&prevAIScoreW", 5, 3, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 3., y);
     //setCntAr(aKey, aVal, "tradeFrac44", 5, 4, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1., no);
     //setCntAr(aKey, aVal, "ForwFundTransferFrac", 6, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., no);
     setCntAr(aKey, aVal, "winr&ProspMin", 6, 4, E.AILims1, E.pPrevPmin, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., y);
@@ -4092,17 +4092,17 @@ static final int maxRKeys=1000;
       /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
       // int screenIx = E.getAIMuch(aKey.charAt(x2));//E.AILims mf(E.AILims[ix])
       String ret = "";
-      int tst1 = ars[x1][ixCntedCnt];
-      int tst2 = ars[x1][ixMySum];
+      int tst1 = ars[x1][ixLimCnt];
+      int tst2 = ars[x1][ixLimSum];
       int myNn = 0;
-      //  String tst3 = mf(E.AILims[(int) (ars[x1][ixMySum])]);
-      String myAve = (ars[x1][ixCntedCnt] < 1 ? (ixMySum > 0 && ixMySum < E.AILims.length ? mf(E.AILims[ixMySum]) : " ixMySum=" + ixMySum)
-              : (myNn = ((int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt]))) > 0 && myNn < E.AILims.length
-                      ? mf(E.AILims[myNn]) : " myNn=" + myNn);//mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]));
-      String myAllAve = (ars[x1][ixCntedCnt] < 1 ? (ixAllSum > 0 && ixAllSum < E.AILims.length ? mf(E.AILims[ixAllSum]) : " ixAllSum=" + ixAllSum)
-              : (myNn = ((int) (ars[x1][ixAllSum] / ars[x1][ixCntedCnt]))) > 0 && myNn < E.AILims.length
+      //  String tst3 = mf(E.AILims[(int) (ars[x1][ixLimSum])]);
+      String myAve = (ars[x1][ixLimCnt] < 1 ? (ixLimSum > 0 && ixLimSum < E.AILims.length ? mf(E.AILims[ixLimSum]) : " ixLimSum=" + ixLimSum)
+              : (myNn = ((int) (ars[x1][ixLimSum] / ars[x1][ixLimCnt]))) > 0 && myNn < E.AILims.length
+                      ? mf(E.AILims[myNn]) : " myNn=" + myNn);//mf(E.AILims[(int) (ars[x1][ixLimSum] / ars[x1][ixLmCnt])]));
+      String myAllAve = (ars[x1][ixLimCnt] < 1 ? (ixAllSum > 0 && ixAllSum < E.AILims.length ? mf(E.AILims[ixAllSum]) : " ixAllSum=" + ixAllSum)
+              : (myNn = ((int) (ars[x1][ixAllSum] / ars[x1][ixLimCnt]))) > 0 && myNn < E.AILims.length
                       ? mf(E.AILims[myNn]) : " myNn=" + myNn);
-      ret += whats[x1] + " allentriesC" + ars[x1][ixAllCnt] + ":AVE " + myAllAve + " ScreenedC" + ars[x1][ixCntedCnt] + " :AVE " + myAve;
+      ret += whats[x1] + " allentriesC" + ars[x1][ixAllCnt] + ":AVE " + myAllAve + " ScreenedC" + ars[x1][ixLimCnt] + " :AVE " + myAve;
       ret += " firstN" + (ars[x1][firstIx] - strtIxs) + " :V" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " mostN" + (ars[x1][mostIx] - strtIxs) + " :V" + mf(E.AILims[(int) (ars[x1][mostIx])])
              + " topN" + (ars[x1][topIx] - strtIxs) + ":" + mf(E.AILims[(int) (ars[x1][topIx])]) + "\n";
       int lastIx = (ars[x1][mostIx] + 2) > ars[x1][topIx] ? ars[x1][topIx] : ars[x1][mostIx] + 2;
@@ -4165,8 +4165,8 @@ static final int maxRKeys=1000;
 
         }
         else { // if valIx >= 0 && valIx <= 51 good numbers
-          ars[x1][ixCntedCnt] += aVal[E.aValCnts]; // sum of all counted
-          ars[x1][ixMySum] += vvIx; // aveIx = (int)(ar[ixMySum]/ar[ixCntedCnt])
+          ars[x1][ixLimCnt] += aVal[E.aValCnts]; // sum of all counted
+          ars[x1][ixLimSum] += vvIx; // aveIx = (int)(ar[ixLimSum]/ar[ixLmCnt])
           ars[x1][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
 
           if (ars[x1][mostIx] == 0 || ars[x1][vvIx] > ars[x1][ars[x1][mostIx]]) { //ar[IX] of most count
@@ -4181,11 +4181,11 @@ static final int maxRKeys=1000;
         }
       }
       if (++setCntSee % 14 == 0) {
-        String myAve = ars[x1][ixCntedCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixMySum])]) : mf(E.AILims[(int) (ars[x1][ixMySum] / ars[x1][ixCntedCnt])]); //only winners
+        String myAve = ars[x1][ixLimCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixLimSum])]) : mf(E.AILims[(int) (ars[x1][ixLimSum] / ars[x1][ixLimCnt])]); //only winners
         String allAve = ars[x1][ixAllCnt] < 1 ? mf(E.AILims[(int) (ars[x1][ixAllSum])]) : mf(E.AILims[(int) (ars[x1][ixAllSum] / ars[x1][ixAllCnt])]); // all values this val
 
         //  System.out.println("---sCA3---setCntr=" + what + " subKey=" );
-        System.out.println("---sCA3---setCntr=" + setCntSee + " W=" + whats[x1] + " " + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixCntedCnt] + ":" + myAve + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[x1][ixAllCnt] + ":" + allAve);
+        System.out.println("---sCA3---setCntr=" + setCntSee + " W=" + whats[x1] + " " + myIx1 + ":" + ch1 + ":" + valIx + ":" + ars[0][ixLimCnt] + ":" + myAve + " ::" + " pos:" + ":" + myIx0 + ":" + ch0 + ":" + screenIx + ":" + ars[x1][ixAllCnt] + ":" + allAve);
         System.out.println("---sCA4--- first" + ars[x1][firstIx] + ":" + mf(E.AILims[(int) (ars[x1][firstIx])]) + " most" + ars[x1][mostIx] + ":" + mf(E.AILims[(int) (ars[x1][mostIx])]) + " top" + ars[x1][topIx] + ":" + mf(E.AILims[(int) (ars[x1][topIx])]));
         System.out.println("---sCA5---" + seeArrays[x1]);
       }
