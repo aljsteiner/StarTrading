@@ -11272,7 +11272,7 @@ public class Assets {
           aiNudges[ranInt][pors] = 0.0; // zero any nudge
         }
         EM.myAIlearnings.put(str, aManys);
-        eM.setCntAr(str, aManys);  // all of them
+        eM.setCntAr(str, aManys, true);  // all of them
         if (E.debugAIOut || (++aWaits % 5) == 0) {
           eM.printHere("----BAI2----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + EM.psClanChars[pors][clan][E.pPrevScP] + " prevAIResilience" + EM.mf(prevAIResilience) + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + ":mC" + aManys[E.aValCnts] + "mY" + aManys[E.aValYear] + ":mA" + aManys[E.aValAge] + " scoreIx" + aManys[E.aValIxMyScore] + " TreeMap size=" + EM.myAIlearnings.size() + " key=" + str);
           eM.seeCntArrays(); //update the map arrays
