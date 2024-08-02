@@ -825,12 +825,13 @@ public class Assets {
    *
    */
   static void putValueChar(char[] res, int bias, double value, double[] tests) {
-    int ix = 0;
+    int ix = 0, rix = 0;
     char ret = E.getAIResChar(ix);
     int testsLen = tests.length;
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
-        ret = E.getAIResChar(ix);
+        rix = ix < testsLen - 1 ? ix + 1 : ix;
+        ret = E.getAIResChar(rix);
         ix = -2; // exit test loop
       }
     }
@@ -862,14 +863,14 @@ public class Assets {
     //go greatest to smallest value, if not found then ix =0 = E.getAIResChar(0)
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
-        retIx = ix;
-        ret = E.getAIResChar(ix);
+        retIx = ix < testsLen - 1 ? ix + 1 : ix; //avoid ix too big
+        ret = E.getAIResChar(retIx);
         ix = -2; // exit test loop
       }
     }
     res[bias] = ret;
     putValStr = " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias =" + bias + ":" + retIx + "=" + ret + " V:" + EM.mf(value) + " putValCnt" + putValCnt;
-    if (ifPrint && (++putValCnt % 47) == 0 || bias == E.pPrevEScW) {
+    if ((ifPrint && (++putValCnt % 47) == 0) || bias == E.pPrevEScW) {
       String ss = new String(res);
       char rr = ret;
       System.out.println("----PVB3---- putValByte what=" + what + " bias =" + bias + " char=" + retIx + "=" + ret + " value=" + EM.mf(value) + ":" + EM.mf(tests[retIx]) + " putValCnt" + putValCnt + " key.length" + res.length + " key=" + ss);
@@ -891,7 +892,7 @@ public class Assets {
     int testsLen = tests.length;
     for (ix = testsLen - 1; ix > -1; ix--) {
       if (value > tests[ix]) {
-        ret = ix;
+        ret = ix < testsLen - 1 ? ix + 1 : ix;  // 2.,3.,4.,5. for value=4.::4.>3.[1] but want [2]
         ix = -2; // exit test loop
       }
     }
@@ -11275,7 +11276,7 @@ public class Assets {
         eM.setCntAr(str, aManys, true);  // all of them
         if (E.debugAIOut || (++aWaits % 5) == 0) {
           eM.printHere("----BAI2----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + EM.psClanChars[pors][clan][E.pPrevScP] + " prevAIResilience" + EM.mf(prevAIResilience) + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + ":mC" + aManys[E.aValCnts] + "mY" + aManys[E.aValYear] + ":mA" + aManys[E.aValAge] + " scoreIx" + aManys[E.aValIxMyScore] + " TreeMap size=" + EM.myAIlearnings.size() + " key=" + str);
-          eM.seeCntArrays(); //update the map arrays
+          // eM.seeCntArrays(); //update the map arrays
           EM.seeArrays[0] = putValStr;
         }
         aType = 0;

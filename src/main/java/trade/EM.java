@@ -510,7 +510,7 @@ class EM {
   static final double[][] mClanRisk = {{.0, .7}, {.0, .7}};
   static volatile double[][] gameClanRiskMult = {{1.}, {1.}};  // range .0 - .6
   static final double[][] mGameClanRiskMult = {{.0, 1.6}, {.0, 1.6}};  // range .0 - .6
-  static volatile double[][] catastrophyUnitReduction = {{5.}, {5.}}; // frac of balance reduction
+  static volatile double[][] catastrophyUnitReduction = {{.5}, {.5}}; // frac of balance reduction
   static final double[][] mCatastrophyUnitReduction = {{.0, 1.0}, {.0, 1.0}};
   static volatile double[][] catastrophyBonusYears = {{8.}, {12.}};  // 2 - 25
   static final double[][] mCatastrophyBonusYears = {{02., 25.0}, {1., 25.}};  //
@@ -3642,10 +3642,11 @@ static final int maxRKeys=1000;
           }
         }
         // now do the output
-        seeArrays[0] = rtn = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0] + "\n";
+        seeArrays[0] = rtn = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0] + "\n";
         System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + "Y" + year + " lKey" + lKey + " key" + bKey + seeArrays[0]);
-        seeCntArrays();
+        seeCntArrays(entryCnt, cntsCnt, rKeysIx);
         //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
+        seeArrays[0] = rtn = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0] + "\n";
         System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);
 
       }
@@ -3673,11 +3674,13 @@ static final int maxRKeys=1000;
   /**
    * see the existing array that are in use Add to the seeCntArray list as
    * needed, used in Assets.CashFlow.savAI
-   *
+   * @param entryCnt number of entries in mapFile
+   * @param cntsCnt total of counts with multiples for many keys
+   * @param lRemove number of keys removed
    * @return
    */
-  String seeCntArrays() {
-    String ll = seeArrays[0] = "seeCntArrays " + "winr" + myScorePosClan[0] + myScorePosClan[1] + myScorePosClan[2] + myScorePosClan[3] + myScorePosClan[4] + ":" + " Keys" + entryCnt + " #Counts" + cntsCnt;// seeArrays[0] =
+  String seeCntArrays(int entryCnt, int cntsCnt, int lRemove) {
+    String ll = seeArrays[0] = "seeCntArrays " + "winr" + myScorePosClan[0] + myScorePosClan[1] + myScorePosClan[2] + myScorePosClan[3] + myScorePosClan[4] + ":" + " Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + lRemove;// seeArrays[0] =
 
     //  ll += seeCntArray(x1, -2) + "\n";
     //ll += seeCntArray(x2, -3) + "\n";
@@ -3709,7 +3712,7 @@ static final int maxRKeys=1000;
     boolean no = false, y = true;
     //String setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb)
     //  E.pPrevEScInc, "44&prevAIScoreInc"
-    setCntAr(seeArrays, aKey, aVal, "44&prevAIScoreW", 4, 1, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., pr, y);
+    setCntAr(seeArrays, aKey, aVal, "44&prevAIScoreW", 4, 1, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 4., 5., pr, y);
     setCntAr(seeArrays, aKey, aVal, "23&prevAIScoreW", 5, 2, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3., pr, y);
     setCntAr(seeArrays, aKey, aVal, "01&prevAIScoreW", 5, 3, E.AILims1, E.pPrevEScW, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 3., pr, y);
     setCntAr(seeArrays, aKey, aVal, "tradeFrac44", 5, 6, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1., pr, y);
@@ -3889,62 +3892,79 @@ static final int maxRKeys=1000;
    * @param aKey the key for this setting
    * @param aVal The value part for the counting
    * @param what describe what is seen
-   * @parm aarn number of ars array to use for all members unused
-   * @parm arn number of ars array to use for pX1
+   * @parm aarn UNUSED number of seeAr array to use for all member
+   * @parm arn number of seeAr array to use for pX1
    * @param myAILim the values array for this pX1
-   * @param pX1 The main Value aKey character must that is being counted
-   * @param myAILim1 the values array for pX1 lower and upper, match setting of
-   * lX1
-   * @param lX1 The first limit aKey character index for the character index sum
-   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
-   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
-   * @param myAILim2 the values array for pX2 lower and upper, match setting of
-   * lX2
-   * @param lX2 The 2nd limit aKey character index for the character index sum
-   * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
-   * @param luX2 lX2 iupper limit only accept keys with lX2 &le; luX2
-   * @param printDeb The boolean whether to print to System.out
-   * @param p2 The boolean whether to print the rown to System.out
+   * @param pX1 The main Value index into aKey must that is being counted
+   * @param myAILim1 the values array for lX1 
+   * @param lX1 index in aKey of character for first limit
+   * @param llX1 lX1 double lower first limit of acceptable keys
+   * @param luX1 lX1 double upper first limit of acceptable keys
+   * @param myAILim2 the values array for lX2 
+   * @param lX2 index in aKey of character for second limit
+   * @param llX2 lX2 double lower first limit of acceptable keys
+   * @param luX2 lX2 double upper first limit of acceptable keys
+   * @param printDeb boolean if true print to System.out
+   * @param p2 boolean if true print the rowN line to System.out
    *
-   * @return ocassionally see results in seeArrays[arn]
+   * @return if printDeb see results in seeArrays[arn]
    */
   String setCntAr(String seeAr[], String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb, boolean p2) {
 //static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6,   //skippedCnt = 7, negIxs = 8,undef=8,missing=9,inactive=10,died=11,econDiedI=-1,notActiveI=-2,missingI=-3,undefI=-4, //strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
 //  negIxs = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
     //static final int ixLimSum = 2, ixLimCnt = 4; // holds 91=12+77+2 spare
-    char ch0 = '&';
+    char ch0 = '&';  //character within the key
     char ch1 = '*', ch2 = '*';
-    int myN = 0, myNn = 0;
-    int xN = 0;
-    double eee = 0.;
-    String see = "";
-    String ret = "", ret2 = "";
-    int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value to array
-    int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix limit for winners
-    int l11ValIx = llX1;//(Assets.getTestVal(llX1, myAILim1, "lx1 lower limit");
-    int lu1ValIx = luX1;// Assets.getTestVal(luX1, myAILim1, "lx1 upper limit");
-    int l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // ix 2nd limit
-    int l12ValIx = llX2;//Assets.getTestVal(llX2, myAILim1, "lx2 lower limit");
-    int lu2ValIx = luX2;//Assets.getTestVal(luX2, myAILim1, "lx2 upper limit");
-    boolean l1 = l1ValIx >= l11ValIx && l1ValIx <= lu1ValIx;
-    boolean l2 = l2ValIx >= l12ValIx && l2ValIx <= lu2ValIx;
+    int myN = 0; // the index in the seeAr
+    int myNn = 0; // the index into the myAILim
+    int xN = 0; // also index into the myAILim
+    double dee = 0.; // the double value from the myAILim
+    String vee = ""; // mf(dee) view value
+    String ret = "", ret2 = ""; // partial result strings
+    int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
+    int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix lim1 in myAILim1
+    double l1Vald = myAILim1[l1ValIx]; // double value of lim1
+    String l1Valv = mf(l1Vald); // view value of lim1
+    double l11Vald = llX1;// "lx1 double lower limit";
+    String l11Valv = mf(l11Vald);// "lx1 String lower limit";
+    double lu1Vald = luX1;//"lx1 double upper limit";
+    String lu1Valv = mf(lu1Vald);// "lx1 String upper limit";
+    int l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // ix lim2 in myAILim2
+    double l2Vald = myAILim2[l2ValIx]; // double value of lim2
+    String l2Valv = mf(l2Vald); // view value of lim1
+    double l12Vald = llX2;// "lx2 double lower limit";
+    String l12Valv = mf(l12Vald);// "lx2 String lower limit";
+    double lu2Vald = luX2;//"lx2 double upper limit";
+    String lu2Valv = mf(lu2Vald);// "lx2 String upper limit";
+    boolean l1 = l1Vald >= l11Vald && l1Vald <= lu1Vald;
+    boolean l2 = l2Vald >= l12Vald && l2Vald <= lu2Vald;
     String l1V = (l1 ? " l1V" : " !l1V");
     String l2V = (l2 ? " l2V" : " !l2V");
     myN = 0;
     myNn = 0;
     String myIx = " ???";
-    int mostIxN = 0, topIxN = 0;
+    int mostIxN = 0, topIxN = 0, firstIxN = 0;
     int lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
     try {
-      pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value to array
-      l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix limit for winners
-      l11ValIx = Assets.getTestVal(llX1, myAILim1, "lx1 lower limit");
-      lu1ValIx = Assets.getTestVal(luX1, myAILim1, "lx1 upper limit");
-      l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // ix 2nd limit
-      l12ValIx = Assets.getTestVal(llX2, myAILim2, "lx2 lower limit");
-      lu2ValIx = Assets.getTestVal(luX1, myAILim2, "lx2 upper limit");
-      l1 = l1ValIx >= l11ValIx && l1ValIx <= lu1ValIx;
-      l2 = l2ValIx >= l12ValIx && l2ValIx <= lu2ValIx;
+      pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
+      l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix lim1 in myAILim1
+      l1Vald = myAILim1[l1ValIx]; // double value of lim1
+      l1Valv = mf(l1Vald); // view value of lim1
+      l11Vald = llX1;// "lx1 double lower limit";
+      l11Valv = mf(l11Vald);// "lx1 String lower limit";
+      lu1Vald = luX1;//"lx1 double upper limit";
+      lu1Valv = mf(lu1Vald);// "lx1 String upper limit";
+      l2ValIx = E.getAIMuch(ch2 = aKey.charAt(lX2)); // ix lim2 in myAILim2
+      l2Vald = myAILim2[l2ValIx]; // double value of lim2
+      l2Valv = mf(l2Vald); // view value of lim1
+      l12Vald = llX2;// "lx2 double lower limit";
+      l12Valv = mf(l12Vald);// "lx2 String lower limit";
+      lu2Vald = luX2;//"lx2 double upper limit";
+      lu2Valv = mf(lu2Vald);// "lx2 String upper limit";
+      l1 = l1Vald >= l11Vald && l1Vald <= lu1Vald;
+      l2 = l2Vald >= l12Vald && l2Vald <= lu2Vald;
+      l1V = (l1 ? " l1V" : " !l1V");
+      l2V = (l2 ? " l2V" : " !l2V");
       l1V = (l1 ? " l1++ " : " l1-- ");
       l2V = (l2 ? " l2++ " : " l2-- ");
       System.out.println("---SCNTA2---setCntArCnt=" + setCntSee + "Y" + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + pValIx + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2"));
@@ -3953,26 +3973,28 @@ static final int maxRKeys=1000;
         ars[arn][skippedCnt] += aVal[E.aValCnts];
       }
       pValIx = pValIx >= E.undefI ? pValIx : 0;
-      l1ValIx = l1ValIx > 0 ? l1ValIx : 0;
-      int vvIx = strtIxs + pValIx;
-      vvIx = vvIx >= strtIxs + E.undefI ? vvIx : strtIxs;
+      // l1ValIx = l1ValIx > 0 ? l1ValIx : 0;
+      int vvIx = strtIxs + pValIx; // ars index
+      vvIx = vvIx >= strtIxs + E.undefI ? vvIx : strtIxs; // force 0 or more myAILim index
       ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
       ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
       ars[arn][topIx] = ars[arn][topIx] > strtIxs ? ars[arn][topIx] : strtIxs;
-      int cLim = ars[arn][ixLimCnt], cAll = ars[arn][ixAllCnt];
-      int cLimSum = ars[arn][ixLimSum], cAllSum = ars[arn][ixAllSum];
-      int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
+      int cLim = ars[arn][ixLimCnt];
+      int cAll = ars[arn][ixAllCnt] += aVal[E.aValCnts]; // sum of all limited
+      int cAllSum = ars[arn][ixAllSum] += pValIx * aVal[E.aValCnts]; //
+      int cLimSum = ars[arn][ixLimSum];
+      int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim); //
       int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
       String allAveVal = mf(myAILim[cAllAve]);
       // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
       // then these accepted by the limits
-      String ret0 = "Y" + year + " what=" + what + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + " allC:" + ars[arn][ixAllCnt] + " allAveVal:" + allAveVal + "\n" + (l1 && l2 ? " lim++ " : " lim-- ") + l1V + " lx1N:" + lX1 + ":" + ch1 + ":X" + l1ValIx + ">=" + l11ValIx + ":" + llX1 + "<=" + lu1ValIx + ":" + luX1 + " lX2N:" + lX2 + ":" + ch2 + ":X" + l2ValIx + ">=" + l12ValIx + ":" + llX2 + "<=" + lu2ValIx + ":" + luX2 + l2V + "\n" + ars[arn][ixLimCnt] + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2");
+      String ret0 = "Y" + year + " what=" + what + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + " allC:" + ars[arn][ixAllCnt] + " allAveVal:" + allAveVal + "\n" + (l1 && l2 ? " lim++ " : " lim-- ") + l1V + " lx1N:" + lX1 + ":" + ch1 + ":X" + l1ValIx + ":V" + l1Valv + ">=" + l11Valv + ":" + mf(llX1) + "<=" + lu1Valv + ":" + mf(luX1) + " lX2N:" + lX2 + ":" + ch2 + ":X" + l2ValIx + ":V" + l2Valv + ">=" + l12Valv + ":" + mf(llX2) + "<=" + lu2Valv + ":" + mf(luX2) + l2V + "\n" + ars[arn][ixLimCnt] + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2");
       System.out.println("---SCNTA3---setCntArCnt=" + setCntSee++ + ret0);
 
       // all occurances, not just the winners
       ars[arn][ixAllCnt] += aVal[E.aValCnts];
       ars[arn][ixAllSum] += pValIx * aVal[E.aValCnts]; // AllAve = (int)(ixAllSum/ixAllCnt)
-      ars[arn][vvIx] += aVal[E.aValCnts]; // update the counts  ??undefI
+    //  ars[arn][vvIx] += aVal[E.aValCnts]; // update the counts  if lim ok
       vvIx = vvIx > strtIxs + E.undefI ? vvIx : strtIxs; // limit again
 
       // next process only what passes limits
@@ -3984,8 +4006,32 @@ static final int maxRKeys=1000;
           // ars[arn][skippedCnt] += aVal[E.aValCnts];
         }
         else { // if pValIx >= 0 && pValIx <= 76 accepted numbers
-                /// int valIx = E.getAIMuch(aKey.charAt(ixiXS[X1][0]));
-          // int screenIx = E.getAIMuch(aKey.charAt(x2));//myAILim mf(myAILim[ix])
+          ars[arn][ixLimCnt] += aVal[E.aValCnts]; // sum of all limited
+          ars[arn][ixLimSum] += pValIx * aVal[E.aValCnts]; //
+          ars[arn][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
+          // update possibly change firstIx, topIx, mostIx
+          // test counts
+          if (ars[arn][mostIx] < strtIxs + 1 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
+            ars[arn][mostIx] = vvIx; // move  to a new mostIx
+          }
+          if (ars[arn][firstIx] < strtIxs + 1 || ars[arn][firstIx] > vvIx) { //firstIx too high
+            ars[arn][firstIx] = vvIx; //lower firstIx it must be lowest
+          }
+          if (ars[arn][topIx] < strtIxs + 1 || ars[arn][topIx] < vvIx) { //the highest value
+            ars[arn][topIx] = vvIx;// raise topIx it must be highest
+          }
+          cLim = ars[arn][ixLimCnt];
+          cAll = ars[arn][ixAllCnt];
+          cLimSum = ars[arn][ixLimSum];
+          cAllSum = ars[arn][ixAllSum];
+          cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
+          //      : (int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt]); //only winners
+          cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+          //      : (int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt]); // all values this val
+          String limAveVal = (cLimAve > 0 && cLimAve < myAILim.length ? mf(myAILim[cLimAve]) : " cLimAve=0");//mf(myAILim[cLimAve]);
+          allAveVal = (cAllAve > 0 && cAllAve < myAILim.length ? mf(myAILim[cAllAve]) : " cAllAv=0");
+          // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
+
           // see that no ..Ix is < strtIxs
           ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
           ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
@@ -3995,20 +4041,8 @@ static final int maxRKeys=1000;
           cAll = ars[arn][ixAllCnt];
           cLimSum = ars[arn][ixLimSum];
           cAllSum = ars[arn][ixAllSum];
-
-          cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
-          cAllAve = cAllAve >= 0 ? cAllAve : 0;
-          //      : (int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt]); // all values this val
-          allAveVal = mf(myAILim[cAllAve]);
-          // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
-          cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim);
-          cLimAve = cLimAve >= 0 ? cLimAve : 0;
-          //      : (int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt]); //only winners
-          String limAveVal = mf(myAILim[cLimAve]);
-          //     : mf(myAILim[(int) (ars[arn][ixLimSum] / ars[arn][ixLimCnt])]); //only winners
-
           topIxN = ars[arn][topIx];
-          int firstIxN = ars[arn][firstIx];
+          firstIxN = ars[arn][firstIx];
           mostIxN = ars[arn][mostIx];
           double bsum = 0.;
           int best = 0, bcnt = 0, bc = 0, bmax = 7;
@@ -5056,7 +5090,7 @@ static final int maxRKeys=1000;
     doVal("maxEcons", econLimits3, mEconLimits3, "Increase the max number of econs (planets+ships) in this game, it maxEcons too large the game will blow up out of memory, depending on your available memory");
     doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year by about 30%.");
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
-    // doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
+    doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
     doVal("clanRisks", clanRisk, mClanRisk, "increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
     /*
     winner = scoreVals(TRADELASTGAVE, iGiven, ICUM, isI);
