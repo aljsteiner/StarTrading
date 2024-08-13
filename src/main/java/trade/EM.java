@@ -3510,7 +3510,7 @@ onceAgain:
                   System.out.println("-----WMK---- KEY" + rtn + "  =" + myKey + " :" + myVal[E.aValCnts] + " :" + myVal[E.aValAge] + " :" + myVal[E.aValYear] + " :" + myVal[E.aValPClan] + " :" + myVal[E.aValIxMyScore] + " :: " + lname);
                   }
                 myAIlearnings.put(myKey, myVal);
-                setCntAr(myKey, myVal, false);  // all of them
+                setCntAr(myKey, myVal,false, false);  // don't cound a settingall of them
                 break;
               default:
                 lname = s.nextLine();
@@ -3547,11 +3547,6 @@ onceAgain:
     }
   }
 
-  /*
-     setCntAr(E.pPrevScP, E.pPrevScW, myScoreAr, aKey, aVal, "winner with myScore");
- setCntAr(E.pPrevScP, E.pPrevEScW, aiScoreAr, aKey, aVal, "winner with aiScore");
-setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance values");
-   */
   /**
    * write the MAPFILE file from EM.doEndYear(), also gather a list of result
    * arrays related to the IX's of those variables
@@ -3564,15 +3559,17 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     int ix = 0;
     String ll = " ";
     String rtn = "";
-    String aKey;
+    String aKey = new String(psClanChars[0][0]);
     String bKey = " mty";
     int lKey = 0;
-    Integer[] aVal;
+    Integer[] aVal = {1,1,1,1,1} ;// 5
     entryCnt = 0;
     cntsCnt = 0;
     //   int lremove = 0;
     int mSize = myAIlearnings.size();
     String dateString = MYDATEFORMAT.format(new Date());
+    // + ":mC" + val[E.aValCnts] + "mY" + val[E.aValYear] + ":mA" + val[E.aValAge] + " scoreIx" + val[E.aValIxMyScore]
+    String vString = " count yCreated Age scoreIx myScore ";
     try {
 // something happens to opens, so it is ok to do it again I think.
       bMapFw = Files.newBufferedWriter(MAPFILE, CHARSET, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -3591,7 +3588,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       };
       if (true && myAIlearnings != null) {
         //    String rOut = "New Game " + dateString + "\r\n";
-        ll = "version " + st.versionText + " " + dateString + " year" + year + " " + st.settingsComment.getText() + "\r\n";
+        ll = "version " + st.versionText + " " + dateString + vString + "\r\n";
         bMapFw.write(ll, 0, ll.length());
         System.out.println("---DWM4---wrote=" + ll);
         synchronized (A6Rowa.ASECS) {
@@ -3628,7 +3625,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
               else {
                 ll = "KEY " + aKey + " " + aVal[E.aValCnts] + " " + aVal[E.aValAge] + " " + aVal[E.aValYear] + " " + aVal[E.aValPClan] + " " + aVal[E.aValIxMyScore] + "\r\n";
                 bMapFw.write(ll, 0, ll.length());
-                setCntAr(aKey, aVal, false);
+                setCntAr(aKey, aVal, false, false);
               } // not remove
             }//if
           }//entry
@@ -3645,6 +3642,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         // now do the output
         seeArrays[0] = rtn = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0];
         System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + "Y" + year + " lKey" + lKey + " key" + bKey + seeArrays[0]);
+        if(entryCnt>0)setCntAr(aKey, aVal, false, true);
         // seeCntArrays(entryCnt, cntsCnt, rKeysIx);
         //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
         seeArrays[0] = rtn = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0];
@@ -3682,47 +3680,84 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    */
   String seeCntArrays(int entryCnt, int cntsCnt, int lRemove) {
     String ll = seeArrays[0] = "seeCntArrays " + " Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + lRemove + "winr" + myScorePosClan[0] + myScorePosClan[1] + myScorePosClan[2] + myScorePosClan[3] + myScorePosClan[4];// seeArrays[0] =
-
-    //  ll += seeCntArray(x1, -2) + "\n";
+/*
+    boolean set=false,pr=true;
+     setCntAr(aKey, aVal, "44&lastAIScoreW", 2, 1, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 4., 5.,set , pr, y);
+   setCntAr(aKey, aVal, "44winr&ProspMin", 3, 3, E.AILims1, E.pLastProsM, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4,set , pr, y);
+    setCntAr(aKey, aVal, "44&prevAIScoreInc", 5, 4, E.AILims1, E.pLastEScI, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 4., 5,set , pr, y);
+    setCntAr(aKey, aVal, "44tradeFrac", 7, 6, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1.,set , pr, y);
+     */
+/*
+    seeCntArray(seeArrays, 1, E.AILims1, E.pLastEScW, "44&lasAIScoreW", y);
+    seeCntArray(seeArrays, 3, E.AILims1, E.pLastProsM, "44winr&ProspMin", y);
+    seeCntArray(seeArrays, 4, E.AILims1, E.pLastEScI, "44&prevAIScoreInc", y);
+    seeCntArray(seeArrays, 6, E.AILimsC, E.pNudge0, "TradeFrac44", y);
+ 
+     //  ll += seeCntArray(x1, -2) + "\n";
     //ll += seeCntArray(x2, -3) + "\n";
     //ll += seeCntArray(x3, -1) + "\n";
   //  seeCntArray(seeArrays, 1, E.AILims2, E.pPrevScW, "winr&myScore",y);
-    /*
-    seeCntArray(seeArrays, 1, E.AILims1, E.pPrevEScW, "44&prevAIScoreW", y);
-    seeCntArray(seeArrays, 2, E.AILims1, E.pPrevEScW, "23&prevAIScoreW", y);
-    seeCntArray(seeArrays, 3, E.AILims1, E.pPrevEScW, "01&prevAIScoreW", y);
-    // seeCntArray(seeArrays, 3, E.AILims1, E.pPrevResil, "winr&Resilance");
-   // seeCntArray(seeArrays, 2, E.AILimsC, E.pNudge0, "TradeFrac44", y);
+    //seeCntArray(seeArrays, 2, E.AILims1, E.plasEScW, "30&prevAIScoreW", y);
     // seeCntArray(seeArrays, 3, E.AILimsC, E.pNudge0, "TradeFrac23", y);
     //seeCntArray(seeArrays, 4, E.AILimsC, E.pNudge0, "TradeFrac01", y);
     //seeCntArray(seeArrays, 5, E.AILimsC, E.pNudge1, "ForwFundTransfFrac", y);
-    seeCntArray(seeArrays, 4, E.AILims1, E.pPrevPmin, "winr&ProspMin", y);//E.pPrevoPerW
+    seeCntArray(seeArrays,3, E.AILims1, E.pPrevPmin, "winr&ProspMin", y);//E.pPrevoPerW
     seeCntArray(seeArrays, 5, E.AILims1, E.pEScW, "44&lastAIScoreW", y);
      */
     return ll;
   }
 
   /**
-   * define the set of array setting calls for defining the seeArrays
+   * define the set of seeArrays to be set by this routine
    *
    * @param aKey the current key
    * @param aVal the array of values for that key
+   * @param doSet if false to not set any values from the key and aVal
    * @param pr print results if true
    */
-  void setCntAr(String aKey, Integer[] aVal, boolean pr) {
+  void setCntAr(String aKey, Integer[] aVal, boolean doSet,boolean pr) {
     boolean no = false, y = pr;
     //  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb, boolean p2) 
     //  E.pPrevEScInc, "44&prevAIScoreInc"
-    setCntAr(aKey, aVal, "44&prevAIScoreInc", 4, 4, E.AILims1, E.pLastEScI, E.AILims123, E.pLastScP, 3., 4., E.AILims123, E.pLastScP, 4., 5., pr, y);
-    setCntAr(aKey, aVal, "44&prevAIScoreW", 8, 1, E.AILims1, E.pLastEScW, E.AILims123, E.pLastScP, 3., 4., E.AILims123, E.pLastScP, 4., 5., pr, y);
-    setCntAr(aKey, aVal, "23&prevAIScoreW", 2, 2, E.AILims1, E.pLastEScW, E.AILims123, E.pLastScP, 2., 3., E.AILims123, E.pLastScP, 2., 3., pr, no);
-    setCntAr(aKey, aVal, "01&prevAIScoreW", 3, 3, E.AILims1, E.pLastEScW, E.AILims123, E.pLastScP, 0., 1., E.AILims123, E.pLastScP, 0., 3., pr, no);
-    setCntAr(aKey, aVal, "tradeFrac44", 6, 6, E.AILimsC, E.pNudge0, E.AILims123, E.pLastScP, 0., 1., E.AILims123, E.pLastScP, 0., 1., pr, no);
-    //setCntAr(seeArrays,aKey, aVal, "ForwFundTransferFrac", 5, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.pLastScP, 4., 4., pr, no);
-    setCntAr(aKey, aVal, "winr&ProspMin", 7, 7, E.AILims1, E.pLastProsM, E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.pLastScP, 4., 4., pr, y);
-    setCntAr(aKey, aVal, "44&lastAIScoreW", 9, 5, E.AILims1, E.pLastEScW, E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.pLastScP, 4., 4., pr, y);
+
+    setCntAr(aKey, aVal, "44&lastAIScoreW", 2, 1, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 4., 5.,doSet, pr, y);
+    setCntAr(aKey, aVal, "44winr&ProspMin", 3, 3, E.AILims1, E.pLastProsM, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4., doSet,  pr, y);
+    setCntAr(aKey, aVal, "44&prevAIScoreInc", 5, 4, E.AILims1, E.pLastEScI, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 4., 5., doSet, pr, y);
+    setCntAr(aKey, aVal, "44tradeFrac", 7, 6, E.AILimsC, E.pNudge0, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 1., doSet, pr, y);
+
+    //   setCntAr(aKey, aVal, "23&prevAIScoreW", 2, 2, E.AILims1, E.pLastEScW, E.AILims123, E.pLastScP, 2., 3., E.AILims123, E.pLastScP, 2., 3., doSet, pr, no);
+    //  setCntAr(aKey, aVal, "01&prevAIScoreW", 3, 3, E.AILims1, E.pLastEScW, E.AILims123, E.pLastScP, 0., 1., E.AILims123, E.pLastScP, 0., 3., doSet, pr, no);
+    //setCntAr(seeArrays,aKey, aVal, "ForwFundTransferFrac", 5, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.pLastScP, 4., 4., doSet, pr, no);
+    // setCntAr(aKey, aVal, "44&lastAIScoreW", 9, 5, E.AILims1, E.pLastEScW, E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.pLastScP, 4., 4., doSet, pr, y);
   }
   int setCntSee = 0;
+  /**
+   * put into ars[arn] count array ar pX1 counts limited by the limit * value
+   * from lX1 Find the value with most count for pX1
+   *
+   * @param aKey the key for this setting
+   * @param aVal The value part for the counting
+   * @param what describe what is seen
+   * @parm aarn number of ars array to use for un selected keys
+   * @parm arn number of ars array to use for pX1
+   * @param myAILim the values array for this pX1
+   * @param pX1 The main Value aKey character must that is being counted
+   * @param myAILim1 the values array for lX1 lower and upper, match setting of
+   * lX1
+   * @param lX1 The first limit aKey character index for the character index sum
+   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
+   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
+   * @param doSet if false do not set any updates in ars arrays
+   * @param printDeb The boolean whether to print to System.out
+   * @param p2 whether to add to seeArrays the row entries
+   *
+   * @return the best value for the selected ars and seeArrays
+   */
+  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, boolean doSet,boolean printDeb, boolean p2) {
+    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim, -2, 0, 0, myAILim, -3, 0., 0., myAILim, -4, 0., 0.,doSet, printDeb, p2);
+    return bb;
+  }
+
   /**
    * put into ars[arn] count array ar pX1 counts limited by the limit * value
    * from lX1 Find the value with most count for pX1
@@ -3744,13 +3779,14 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @param lX2 The 2nd limit aKey character index for the character index sum
    * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
    * @param luX2 lX2 iupper limit only accept keys with lX2 &le; luX2
+   * @param doSet if false do not set any updates in ars arrays
    * @param printDeb The boolean whether to print to System.out
    * @param p2 whether to add to seeArrays the row entries
    *
    * @return the best value for the selected ars and seeArrays
    */
-  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean printDeb, boolean p2) {
-    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim2, -3, 0., 0., myAILim2, -4, 0., 0., printDeb, p2);
+  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2,boolean doSet, boolean printDeb, boolean p2) {
+    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim2, -3, 0., 0., myAILim2, -4, 0., 0.,doSet, printDeb, p2);
     return bb;
   }
 
@@ -3781,13 +3817,14 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
      * @param lX3 The 3rd limit aKey character index for the character index sum
      * @param llX3 lX3 lower limit only accept keys with lX3 &ge; llX3
      * @param luX3 lX3 upper limit only accept keys with lX3 &le; luX3
+     * @param doSet if false do not set any updates in ars arrays
      * @param printDeb The boolean whether to print to System.out
      * @param p2 whether to add to seeArrays the row entries
      *
      * @return the best value for the selected ars and seeArrays
      */
-  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3, boolean printDeb, boolean p2) {
-    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim3, lX3, llX3, luX3, myAILim3, -4, 0., 0., printDeb, p2);
+  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3,boolean doSet, boolean printDeb, boolean p2) {
+    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim3, lX3, llX3, luX3, myAILim3, -4, 0., 0.,doSet, printDeb, p2);
     return bb;
   }
 
@@ -3822,12 +3859,13 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
    * @param lX4 The 4th limit aKey character index for the character index sum
    * @param llX4 lX4 lower limit only accept keys with lX4 &ge; llX4
    * @param luX4 lX2 iupper limit only accept keys with lX4 &le; luX4
+   * @parm doSet set the ars to new entries in the key.
    * @param printDeb The boolean whether to print to System.out
    * @param p2 whether to add to seeArrays the row entries
    *
    * @return the best value for the selected ars and seeArrays
    */
-  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3, double[] myAILim4, int lX4, double llX4, double luX4, boolean printDeb, boolean p2) {
+  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3, double[] myAILim4, int lX4, double llX4, double luX4, boolean doSet,boolean printDeb, boolean p2) {
 //static final int mostIx = 0, ixAllSum = 1, ixMySum = 2, ixAllCnt = 3, ixCntedCnt = 4, firstIx = 5, topIx = 6,   //skippedCnt = 7, negIxs = 8,undef=8,missing=9,inactive=10,died=11,econDiedI=-1,notActiveI=-2,missingI=-3,undefI=-4, //strtIxs = 12, lenIx = 91; // holds 91=12+77+2 spare
 //  negIxs = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
     //static final int ixLimSum = 2, ixLimCnt = 4; // holds 91=12+77+2 spare
@@ -3838,10 +3876,12 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     int myNn = 0; // the index into the myAILim
     int xN = 0; // also index into the myAILim
     String see = "", eee = "";
-    double dee = 0., sBest = 0.; // the double value from the myAILim
+    double dee = 0.; // the double value from the myAILim
     String vee = ""; // mf(dee) view value
     String ret = "", ret2 = ""; // partial result strings
     int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
+    int laiLim = myAILim.length;
+    //if lX1 < 0 ignore it i1==true use 0 value
     int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(i1 ? 0 : lX1)); // ix lim1 in myAILim1
     double l1Vald = myAILim1[l1ValIx]; // double value of lim1
     String l1Valv = mf(l1Vald); // view value of lim1
@@ -3878,82 +3918,79 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     boolean l4 = i4 || l4Vald >= l14Vald && l4Vald <= lu4Vald;
     String l3V = (l3 ? " ++l3" : " --!l3");
     String l4V = (l4 ? " ++l4" : " --!l4");
+    boolean lim = l1 && l2 && l3 && l4;
+    String limV = lim? " ++lim":" --lim";
     String s1 = i1 ? "1" : "", s2 = i2 ? "2" : "", s3 = i3 ? "3" : "";
     String s4 = i4 ? "4" : "";// ignore or skip
     String t1 = l1 ? "1" : "", t2 = l2 ? "2" : "", t3 = l3 ? "3" : "";
     String t4 = l4 ? "4" : "";//trues
+    String r1 = l1 ? "1" : "", r2 = l2 ? "2" : "", r3 = l3 ? "3" : "";
+    String r4 = l4 ? "4" : "";//trues
     myN = 0;
     myNn = 0;
     String myIx = " ???";
     int mostIxN = 0, topIxN = 0, firstIxN = 0;
     int lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
+    int best = 0, bcnt = 0, bcsum = 0, best2 = 0, bc = 0, bmax = 7;
+    double bVal = 0.,sBest = 0.,bsum=0.;
+    String bValV = "", sBestV = "";
+    int cLim = ars[arn][ixLimCnt];
+    int cAll = ars[arn][ixAllCnt] += aVal[E.aValCnts]; // sum of all limited
+    int cAllSum = ars[arn][ixAllSum] += pValIx * aVal[E.aValCnts]; //
+    int cLimSum = ars[arn][ixLimSum];
+    int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim); //
+    int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+    String allAveVal = mf(myAILim[cAllAve]);
+    String callAveVal = "";
+    int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN, ix = 0;
+    int rMax=10;
+    int nzMax=11;
+;
     try {
-      /* done before try
-      pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
-      l1ValIx = E.getAIMuch(ch1 = aKey.charAt(i1?0:lX1)); // ix lim1 in myAILim1
-      l1Vald = myAILim1[l1ValIx]; // double value of lim1
-      l1Valv = mf(l1Vald); // view value of lim1
-      l11Vald = llX1;// "lx1 double lower limit";
-      l11Valv = mf(l11Vald);// "lx1 String lower limit";
-      lu1Vald = luX1;//"lx1 double upper limit";
-      lu1Valv = mf(lu1Vald);// "lx1 String upper limit";
-      l2ValIx = E.getAIMuch(ch2 = aKey.charAt(i2?0:lX2)); // ix lim2 in myAILim2
-      l2Vald = myAILim2[l2ValIx]; // double value of lim2
-      l2Valv = mf(l2Vald); // view value of lim1
-      l12Vald = llX2;// "lx2 double lower limit";
-      l12Valv = mf(l12Vald);// "lx2 String lower limit";
-      lu2Vald = luX2;//"lx2 double upper limit";
-      lu2Valv = mf(lu2Vald);// "lx2 String upper limit";
-      l1 = i1 || l1Vald >= l11Vald && l1Vald <= lu1Vald;
-      l2 = i2 || l2Vald >= l12Vald && l2Vald <= lu2Vald;
-      l1V = (l1 ? " ++l1" : " --l1");
-      l2V = (l2 ? " ++l2" : " ++!l2");
-      l3V = (l3 ? " ++l3" : " --l3");
-      l4V = (l4 ? " ++l4" : " --l4");
-       */
-      System.out.println("---SCNTA2---setCntArCnt=" + setCntSee + "Y" + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + pValIx + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + " ignore" + s1 + s2 + s3 + s4 + " true" + t1 + t2 + 53 + t4 + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2"));
+      System.out.println("---SCNTA2---setCntArCnt=" + setCntSee + "A" + arn + "Y" + "lL" + laiLim + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + pValIx + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + limV + " ignore" + s1 + s2 + s3 + s4 + " true" + t1 + t2 + t3 + t4 + "/" + r1 + r2 + r3 + r4 + " key" + aKey + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2"));
 
       if (pValIx < E.undefI || pValIx > 76) {
-        ars[arn][skippedCnt] += aVal[E.aValCnts];
+        if(doSet)ars[arn][skippedCnt] += 1;
       }
       pValIx = pValIx >= E.undefI ? pValIx : 0;
       // l1ValIx = l1ValIx > 0 ? l1ValIx : 0;
       int vvIx = strtIxs + pValIx; // ars index
       vvIx = vvIx >= strtIxs + E.undefI ? vvIx : strtIxs; // protect index
-      ars[arn][vvIx] += aVal[E.aValCnts];
+      if(doSet) ars[arn][vvIx] += 1; // up cnts all and limited
       // avoid -0 values
       ars[arn][firstIx] = ars[arn][firstIx] > strtIxs ? ars[arn][firstIx] : strtIxs;
       ars[arn][mostIx] = ars[arn][mostIx] > strtIxs ? ars[arn][mostIx] : strtIxs;
       ars[arn][topIx] = ars[arn][topIx] > strtIxs ? ars[arn][topIx] : strtIxs;
-      int cLim = ars[arn][ixLimCnt];
-      int cAll = ars[arn][ixAllCnt] += aVal[E.aValCnts]; // sum of all limited
-      int cAllSum = ars[arn][ixAllSum] += pValIx * aVal[E.aValCnts]; //
-      int cLimSum = ars[arn][ixLimSum];
-      int cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim); //
-      int cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
-      String allAveVal = mf(myAILim[cAllAve]);
+      cLim = ars[arn][ixLimCnt];
+      if(doSet)cAll = ars[arn][ixAllCnt] += 1; // sum of all
+      if(doSet)cAllSum = ars[arn][ixAllSum] += pValIx; //
+      cLimSum = ars[arn][ixLimSum];
+      cLimAve = cLim < 1 ? cLimSum : (int) (cLimSum / cLim); //
+      cAllAve = cAll < 1 ? cAllSum : (int) (cAllSum / cAll);
+      allAveVal = mf(myAILim[cAllAve]);
       // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
       // then these accepted by the limits
       String ret0 = "Y" + year + " what=" + what + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + " allC:" + ars[arn][ixAllCnt] + cAllAve + "V:" + (cAllAve > 0 && cAllAve < myAILim.length ? mf(myAILim[cAllAve]) : " cAllAve=" + cAllAve);;
-      String reta = ret0 + "\n" + (l1 && l2 ? " lim++ " : " lim-- ") + l1V + " lx1N:" + lX1 + ":" + ch1 + ":X" + l1ValIx + ":V";
-      reta += l1Valv + ">=" + l11Valv + ":" + mf(llX1) + "<=" + lu1Valv + ":" + mf(luX1) + " lX2N:" + lX2 + ":" + ch2 + ":X" + l2ValIx + ":V" + l2Valv + ">=" + l12Valv + ":" + mf(llX2) + "<=" + lu2Valv + ":" + mf(luX2) + l2V + "\n" + ars[arn][ixLimCnt] + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2");
+      String reta = ret0 + "\n" + limV + l1V + " lx1N:" + lX1 + ":" + ch1 + ":X" + l1ValIx + ":V";
+      reta += l1Valv + ">=" + l11Valv + ":" + mf(llX1) + "<=" + lu1Valv + ":" + mf(luX1) + " lX2N:" + lX2 + ":" + ch2 + ":X" + l2ValIx + ":V" + l2Valv + ">=" + l12Valv + ":" + mf(llX2) + "<=" + lu2Valv + ":" + mf(luX2) + l2V + limV + "\n" + ars[arn][ixLimCnt] + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2");
       System.out.println("---SCNTA3---setCntArCnt=" + setCntSee++ + reta);
       /*  int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
     int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix lim1 in myAILim1
     double l1Vald = myAILim1[l1ValIx]; // double value of lim1
       */
+
       // next process only what passes all limits
-      if (l1 && l2 && l3 && l2) { // pass all limits
+      if (lim) { // pass all limits
         if (pValIx < 0 && pValIx >= E.undefI) {
-          // ars[arn][pValIx + strtIxs]++;  // counted above above
+          // ars[arn][pValIx + strtIxs] += aVal[E.aValCnts];// counted above above
         }
         else if (pValIx < -4 || pValIx > 76) {
-          ars[arn][skippedCnt] += aVal[E.aValCnts];
+          if(doSet)ars[arn][skippedCnt] += aVal[E.aValCnts];
         }
-        else { // if pValIx >= 0 && pValIx <= 76 accepted numbers
-          ars[arn][ixLimCnt] += aVal[E.aValCnts]; // sum of all limited
-          ars[arn][ixLimSum] += pValIx * aVal[E.aValCnts]; //cnt * pX1N
-          //ars[arn][vvIx] += aVal[E.aValCnts]; //done above
+        else { // if pValIx >= 0 && pValIx <= 76 acceptable numbers
+         if(doSet)ars[arn][ixLimCnt] += 1; // sum of all limited
+          if(doSet)ars[arn][ixLimSum] += pValIx ; //cnt * pX1N
+          //if(doSet)ars[arn][vvIx] += 1; //done above
           // possibly change firstIx, topIx, mostIx
           // test counts
           if (ars[arn][mostIx] < strtIxs + 1 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
@@ -3981,41 +4018,39 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
           allAveVal = (cAllAve > 0 && cAllAve < myAILim.length ? mf(myAILim[cAllAve]) : " :cAllAv=" + cAllAve);
           // : mf(myAILim[(int) (ars[arn][ixAllSum] / ars[arn][ixAllCnt])]); // all values this val
 
-          /* done before
-          if (ars[arn][mostIx] < strtIxs + 1 || ars[arn][vvIx] > ars[arn][ars[arn][mostIx]]) { //ar[IX] of most count
-            ars[arn][mostIx] = vvIx; // move to a new mostIx
-          }
-          if (ars[arn][firstIx] < strtIxs + 1 || ars[arn][firstIx] > vvIx) { //firstIx too high
-            ars[arn][firstIx] = vvIx; //lower firstIx
-          }
-          if (ars[arn][topIx] < strtIxs + 1 || ars[arn][topIx] < vvIx) { //the highest val
-            ars[arn][topIx] = vvIx;// raise topIx
-          }
-*/
         } //undefI
 // now put seeArrays value
         ret = ret0 + " ::limN" + cLim + ":" + cLimSum + "Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < myAILim.length ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
-        ret2 = ("firstN" + (myN = ars[arn][firstIx]) + ":" + ars[arn][(myN)] + ":V");
+        ret2 = (" firstN" + (myN = ars[arn][firstIx]) + ":" + ars[arn][(myN)] + ":V");
         //eee = myAILim[myNn];
         ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " :myNn=" + myNn));
-        ret2 += ("mostN" + (myN = ars[arn][mostIx]) + ":" + ars[arn][(myN)] + ":V");
+        ret2 += (" mostN" + (myN = ars[arn][mostIx]) + ":" + ars[arn][(myN)] + ":V");
         //eee = myAILim[myNn];
         ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " :myNn=" + myNn));
-        ret2 += ("topN" + (myN = ars[arn][topIx]) + ":" + ars[arn][(myN)] + ":V");
+        ret2 += (" topN" + (myN = ars[arn][topIx]) + ":" + ars[arn][(myN)] + ":V");
         //eee = myAILim[myNn];
-        ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " :myNn=" + myNn));
-        double bsum = 0.;
+        ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " :myNn=" + myNn)); 
         //define probable best value of pX1
-        int best = 0, bcnt = 0, bc = 0, bmax = 7;
-        int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN, ix = 0;
+       // int
+        best = 0;
+        bcnt = 0;
+        bsum = 0.;
+        bc = 0;
+        bmax = 7;
+        bVal=0.;
+        sBest = 0.;
+        nzCnt = 0; rCnt = 0; fRange = firstIxN; tRange = topIxN; ix = 0;
+        rMax=10;
+        nzMax=11;
         // find a range up to 10 N less or more than mostIxN, only 10 nz elements
-        for (rCnt = 0; rCnt < 10 && nzCnt < 11; rCnt++) {
+        for (rCnt = 0; rCnt < rMax && nzCnt < nzMax; rCnt++) {
           //find the first lowest N for this range
           if (((ix = mostIxN - rCnt) >= firstIxN) && ars[arn][ix] > 0) {
             nzCnt++;
             fRange = ix;
             if (bc < bmax) {
-              bsum += ars[arn][ix] * ix;
+              bsum += ars[arn][ix] * (ix - strtIxs);
+              bVal += ars[arn][ix] * myAILim[ix - strtIxs];
               bcnt += ars[arn][ix];
               bc++;
             }
@@ -4025,24 +4060,28 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
             nzCnt++;
             tRange = ix;
             if (bc < bmax) {
-              bsum += ars[arn][ix] * ix;
+              bsum += ars[arn][ix] * (ix - strtIxs);
+              bVal += ars[arn][ix] * myAILim[ix - strtIxs];
               bcnt += ars[arn][ix];
               bc++;
             }
           }
         } //rCnt
-        //now get best for regular
-        best = (int) (bsum / bcnt);
-        best = best >= strtIxs + 1 ? best : strtIxs + 1;
+        //now get best value  for regular
+        sBest = bsum/bcnt;  // a little less then best
+        sBestV = mf(sBest);
+        bValV = mf(bVal/bcnt);
+        //best = (int) (bsum / bcnt);
+        //best2 = best >=  1 ? best : 1;//case of 0 best
         //The N values are the lowest array value higher than the test value so
         //the actual value is somewhere less than the best value and greater than
         //the best-1 value, this chooses a value bases on an average of 2 sets
         // of values, probably somewhat high
-        double bVal = (myAILim[best] * ars[arn][best]
-                       + myAILim[best - 1] * ars[arn][best - 1])
-                      / (ars[arn][best] * ars[arn][best - 1]);
-        sBest = bVal;
-        ret2 += " bestN:" + best + "V" + mf(bVal);
+       // bVal = (myAILim[best2] * ars[arn][best2+strtIxs]
+       //                + myAILim[best2 - 1] * ars[arn][best2+strtIxs - 1])
+       //               / (bcsum = ars[arn][best2+strtIxs] + ars[arn][best2+strtIxs - 1]);
+      //  bcsum = (int) (bcsum * .5);
+        ret2 += " best:" + sBestV + "V" + bValV;
         if (p2) {
           ret3 = "\n" + " rowN";
           boolean doComma = false;
@@ -4058,24 +4097,25 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
           ret3 = "";
         }
         if ((++setCntSee % 15) == 0 || printDeb || l1) {
-          System.out.println("---sCAP4---setCntAr Cnt=" + setCntSee + "A" + arn + "Y" + year + "L:" + myAILim.length + " what=" + what + " pX1:" + pX1 + ":" + ch0 + ":" + pValIx + ret + "\n" + ret2 + ret3);
+          System.out.println("---sCAP4---setCntAr Cnt=" + setCntSee + "A" + arn + "Y" + year + "L" + myAILim.length + " what=" + what + " pX1:" + pX1 + ":" + ch0 + ":" + pValIx + ret + "\n" + ret2 + ret3);
         }
-        seeArrays[arn] = "A" + arn + ret + ret2 + ret3;
+        seeArrays[arn] = "A" + arn + "IX" + pX1 + "L" + myAILim.length + ret + ret2 + ret3;
       }
 
-      else if (aarn > 0 && aarn != arn) { // now list the rest unselected
+      //do only if the last 3 limits are true
+      else if (aarn > 0 && aarn != arn && l2 && l3 && l4) { // now list the rest unselected
         if (pValIx < 0 && pValIx >= E.undefI) {
           ars[aarn][pValIx + strtIxs]++;
         }
         else if (pValIx < -4 || pValIx > 76) {
-          ars[aarn][skippedCnt] += aVal[E.aValCnts];
+          if(doSet)ars[aarn][skippedCnt] += 1;
         }
         else { // if pValIx >= 0 && pValIx <= 76 accepted numbers
-          cAll = ars[aarn][ixAllCnt] += aVal[E.aValCnts]; // sum of all limited
-          cAllSum = ars[aarn][ixAllSum] += pValIx * aVal[E.aValCnts]; //
-          cLim = ars[aarn][ixLimCnt] += aVal[E.aValCnts]; // sum of all limited
-          cLimSum = ars[aarn][ixLimSum] += pValIx * aVal[E.aValCnts]; //
-          ars[aarn][vvIx] += aVal[E.aValCnts]; //sum cnts of  val's matching the IX
+          if(doSet)cAll = ars[aarn][ixAllCnt] += 1; // sum of all limited
+          if(doSet)cAllSum = ars[aarn][ixAllSum] += pValIx; //
+          if(doSet)cLim = ars[aarn][ixLimCnt] += 1; // sum of all limited
+          if(doSet)cLimSum = ars[aarn][ixLimSum] += pValIx; //
+          if(doSet)ars[aarn][vvIx] +=1; //sum cnts of  val's matching the IX
           // possibly change firstIx, topIx, mostIx
           if (ars[aarn][mostIx] < strtIxs + 1 || ars[aarn][vvIx] > ars[aarn][ars[aarn][mostIx]]) { //ar[IX] of most count
             ars[aarn][mostIx] = vvIx; // move  to a new mostIx
@@ -4117,18 +4157,66 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         ret += ":" + cAllSum + " ave:";
         ret += cAllAve + "V:" + (cAllAve > 0 && cAllAve < myAILim.length ? mf(myAILim[cAllAve]) : " cAllAve=" + cAllAve);
         //  ret += " ::limN" + cLim + ":" + cLimSum + "Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < myAILim.length ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
-        ret2 = ("firstN" + (myN = ars[aarn][firstIx]) + ":" + ars[aarn][(myN)] + ":V");
+        ret2 = (" firstN" + (myN = ars[aarn][firstIx]) + ":" + ars[aarn][(myN)] + ":V");
         //eee = myAILim[myNn];
         ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn));
-        ret2 += ("mostN" + (myN = ars[aarn][mostIx]) + ":" + ars[aarn][(myN)] + ":V");
+        ret2 += (" mostN" + (myN = ars[aarn][mostIx]) + ":" + ars[aarn][(myN)] + ":V");
         //eee = myAILim[myNn];
         ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn));
-        ret2 += ("topN" + (myN = ars[aarn][topIx]) + ":" + ars[aarn][(myN)] + ":V");
+        ret2 += (" topN" + (myN = ars[aarn][topIx]) + ":" + ars[aarn][(myN)] + ":V");
         //eee = myAILim[myNn];
         ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn));
         // find best of the rest
-        double bsum = 0.;
-        int best = 0, bcnt = 0, bc = 0, bmax = 7;
+        best = 0;
+        bcnt = 0;
+        bsum=0.;
+        bc = 0;
+        bmax = 7;
+        nzCnt = 0; rCnt = 0; fRange = firstIxN; tRange = topIxN; ix = 0;
+        rMax=10;
+        nzMax=11;
+        // find a range up to 10 N less or more than mostIxN, only 10 nz elements
+        for (rCnt = 0; rCnt < rMax && nzCnt < nzMax; rCnt++) {
+          //find the first lowest N for this range
+          if (((ix = mostIxN - rCnt) >= firstIxN) && ars[aarn][ix] > 0) {
+            nzCnt++;
+            fRange = ix;
+            if (bc < bmax) {
+              // 280 + 87 + 54 = 421 /15
+              bsum += ars[aarn][ix] * (ix - strtIxs); // 10*28 +3*29 +2 * 27 =
+              bcnt += ars[aarn][ix];// 10 +3 +2 = 15
+              bc++;
+            }
+          }
+          // find the last highest N for this ars[aarn] range
+          if (((ix = mostIxN + rCnt) <= topIxN) && ars[aarn][ix] > 0) {
+            nzCnt++;
+            tRange = ix;
+            if (bc < bmax) {
+              bsum += ars[aarn][ix] * (ix - strtIxs);
+              bcnt += ars[aarn][ix];
+              bc++;
+            }
+          }
+        } //rCnt
+        //now get best for regular
+        best = (int) (bsum / bcnt);
+        best2 = best >=  1 ? best : 1;//case of 0 best
+        //The N values are the lowest array value higher than the test value so
+        //the actual value is somewhere less than the best value and greater than
+        //the best-1 value, this chooses a value bases on an average of 2 sets
+        // of values, probably somewhat high
+        bVal = (myAILim[best2] * ars[aarn][best2+strtIxs]
+                       + myAILim[best2 - 1] * ars[aarn][best2+strtIxs - 1])
+                      / (bcsum = ars[aarn][best2+strtIxs] + ars[aarn][best2+strtIxs - 1]);
+        sBest = bVal;
+        bcsum = (int) (bcsum * .5);
+        /*
+        bsum = 0;
+        best = 0;
+        bcnt = 0;
+        bc = 0;
+        bmax = 7;
         firstIxN = ars[aarn][firstIx];
         topIxN = ars[aarn][topIx];
         mostIxN = ars[aarn][mostIx];
@@ -4157,22 +4245,25 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
           }
         } //rCnt
         best = (int) (bsum / bcnt);
-        best = best >= strtIxs + 1 ? best : strtIxs + 1;
-        double bVal = (myAILim[best] * ars[aarn][best]
-                       + myAILim[best - 1] * ars[aarn][best - 1])
-                      / (ars[aarn][best] * ars[aarn][best - 1]);
-        sBest = bVal;
+        best = best > strtIxs + 1 ? best : strtIxs + 1;
+        best2 = best - strtIxs; // convert back to original ix
+        best2 = best2 > 0 ? best2 : 1;
+        // now find the average
+        double bVal = (myAILim[best2] * ars[aarn][best]
+                       + myAILim[best2 - 1] * ars[aarn][best - 1])
+                      / (bcsum = ars[aarn][best] + ars[aarn][best - 1]);
+        double rsBest = bVal;
+        bcsum = (int) (bcsum * .5);
+        */
         //now get best for regular
 
         //The N values are the lowest array value higher than the test value so
         //the actual value is somewhere less than the best value and greater than
         //the best-1 value, this chooses a value bases on an average of 2 sets
         // of values, probably somewhat high
-        bVal = (myAILim[best] * ars[aarn][best]                       + myAILim[best - 1] * ars[aarn][best - 1])
-               / (ars[aarn][best] * ars[aarn][best - 1]);
-        ret2 += " best" + best + "V" + mf(bVal);
+        ret2 += "rest best" + bcsum + "V" + mf(bVal);
         if (p2) {
-          ret3 = "\n" + " rowN";
+          ret3 = "\n" + "rest rowN";
           boolean doComma = false;
           for (ix = fRange; ix <= tRange; ix++) {
             // see value Ix, entryCnt at that value, value at that value Ix
@@ -4186,9 +4277,9 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
           ret3 = "";
         }
         if ((++setCntSee % 15) == 0 || printDeb || l1) {
-          System.out.println("---sCAP5---setCntAr Cnt=" + setCntSee + "A" + aarn + "Y" + year + "L:" + myAILim.length + " what=" + what + " pX1:" + pX1 + ":" + ch0 + ":" + pValIx + ret + "\n" + ret2 + ret3);
+          System.out.println("---sCAP5---setCntAr Cnt=" + setCntSee + "A" + aarn + "IX" + pX1 + "Y" + year + "L" + myAILim.length + " what=" + what + " pX1:" + pX1 + ":" + ch0 + ":" + pValIx + ret + "\n" + ret2 + ret3);
         }
-        seeArrays[aarn] = "A" + aarn + ret + ret2 + ret3;
+        seeArrays[aarn] = "restA" + aarn + "IX" + pX1 + ret + ret2 + ret3;
 
       }// end aarn
     }// try
@@ -4198,7 +4289,12 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       secondStack = sw.toString();
       //int xx1 = pX1 > 3 ? 3 : pX1;
       fatalError = true;
-      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName() + " what=" + what + " pX1=" + pX1 + " lX1=" + lX1 + " value=" + (myNn > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn) + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + secondStack + andMore());
+      System.err.println("----sCA7----setCntAr error  Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + " " + Thread.currentThread().getName()  + " what = " + what + " pX1 = " + pX1 + " lX1 = " + lX1 + " value = " + (myNn > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn = " + myNn) + " stEnter = " + st.cntInit + " EM entries = " + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size = " + myAIlearnings.size())
+                         + (ars == null ? " null ars " : ars.length < arn
+                              ? " ars too Small " : (ars[arn].length < lenIx
+                                      ? " err ars[arn].length = " + ars[arn].length + "<" + lenIx
+                                      : "  ars ok len = " + ars[arn].length))
+                         + secondStack + andMore());
       ex.printStackTrace(System.err);
       System.err.flush();
       if (E.debugMaster) {
@@ -4232,7 +4328,13 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     String myIx = " ???";
     int mostIxN = 0, topIxN = 0, firstIxN = 0;
     int lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
-    double bVal = 0.;
+    int best = 0, best2 = 0, bmax = 0, bcnt = 0, bc = 0,bsum=0;
+    int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN,ix = 0;
+    int bcSum=0;
+    int rMax=10;
+    int nzMax=11;
+    double bVal = 0.,sBest=0.;
+    String sBestV ="";
     try {
       System.err.println("----SCA1---- seeCntArray enters pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
       SCACnt++; //count seeCntArray entry
@@ -4260,8 +4362,59 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       topIxN = ars[arn][topIx];
       firstIxN = ars[arn][firstIx];
       mostIxN = ars[arn][mostIx];
+      //from cnt
+         bsum = 0;
+        //define probable best value of pX1
+       // int
+        best = 0;
+        bcnt = 0;
+        bc = 0;
+        bmax = 7;
+        nzCnt = 0; rCnt = 0; fRange = firstIxN; tRange = topIxN; ix = 0;
+        rMax=10;
+        nzMax=11;
+        // find a range up to 10 N less or more than mostIxN, only 10 nz elements
+        for (rCnt = 0; rCnt < rMax && nzCnt < nzMax; rCnt++) {
+          //find the first lowest N for this range
+          if (((ix = mostIxN - rCnt) >= firstIxN) && ars[arn][ix] > 0) {
+            nzCnt++;
+            fRange = ix;
+            if (bc < bmax) {
+              bsum += ars[arn][ix] * (ix - strtIxs);
+              bcnt += ars[arn][ix];
+              bc++;
+            }
+          }
+          // find the last highest N for this range
+          if (((ix = mostIxN + rCnt) <= topIxN) && ars[arn][ix] > 0) {
+            nzCnt++;
+            tRange = ix;
+            if (bc < bmax) {
+              bsum += ars[arn][ix] * (ix - strtIxs);
+              bcnt += ars[arn][ix];
+              bc++;
+            }
+          }
+        } //rCnt
+        //now get best for regular
+        best = (int) (bsum / bcnt);
+        best2 = best >=  1 ? best : 1;//case of 0 best
+        //The N values are the lowest array value higher than the test value so
+        //the actual value is somewhere less than the best value and greater than
+        //the best-1 value, this chooses a value bases on an average of 2 sets
+        // of values, probably somewhat high
+        bVal = (myAILim[best2] * ars[arn][best2+strtIxs]
+                       + myAILim[best2 - 1] * ars[arn][best2+strtIxs - 1])
+                      / (bcSum = ars[arn][best2+strtIxs] + ars[arn][best2+strtIxs - 1]);
+        sBest = bVal;
+        bcSum = (int) (bcSum * .5);
+        sBestV = mf(bVal);
+        /*
       double bsum = 0.;
-      int best = 0, bcnt = 0, bc = 0, bmax = 7;
+      best = 0;
+      bcnt = 0;
+      bc = 0;
+      bmax = 7;
       int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN, ix = 0;
       // find a range up to 10 N less or more than mostIxN, only 10 nz elements
       for (rCnt = 0; rCnt < 10 && nzCnt < 11; rCnt++) {
@@ -4288,55 +4441,16 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       } //rCnt
       //now get best for regular
       best = (int) (bsum / bcnt);
+      best = best > strtIxs + 1 ? best : strtIxs + 1;
+      best2 = best - strtIxs;
       //The N values are the lowest array value higher than the test value so
       //the actual value is somewhere less than the best value and greater than
       //the best-1 value, this chooses a value bases on an average of 2 sets
       // of values, probably somewhat high
-      bVal = (myAILim[best] * ars[arn][best]
-              + myAILim[best - 1] * ars[arn][best - 1])
-             / (ars[arn][best] * ars[arn][best - 1]);
-      /*
-      topIxN = ars[arn][topIx];
-      firstIxN = ars[arn][firstIx];
-      mostIxN = ars[arn][mostIx];
-      double bsum = 0.;
-      int best = 0, bcnt = 0, bc = 0, bmax = 7;
-      int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN, ix = 0;
-      // find a range up to 10 N less or more than mostIxN, only 10 nz elements
-      for (rCnt = 0; rCnt < 10 && nzCnt < 11; rCnt++) {
-        //find the first lowest N for this range
-        if (((ix = mostIxN - rCnt) >= firstIxN) && ars[arn][ix] > 0) {
-          nzCnt++;
-          fRange = ix;
-          if (bc < bmax) {
-            bsum += ars[arn][ix] * ix;
-            bcnt += ars[arn][ix];
-            bc++;
-          }
-        }
-        // find the last highest N for this range
-        if (((ix = mostIxN + rCnt) <= topIxN) && ars[arn][ix] > 0) {
-          nzCnt++;
-          tRange = ix;
-          if (bc < bmax) {
-            bsum += ars[arn][ix] * ix;
-            bcnt += ars[arn][ix];
-            bc++;
-          }
-        }
-      } //rCnt
-      //now get best for regular
-      best = (int) (bsum / bcnt);
-  
-      bsum = 0.;
-      best = 0; bcnt = 0;
-      for ( ix = fRange; ix <= tRange; ix++) {
-        bsum += ars[arn][ix] * ix;
-        bcnt += ars[arn][ix];
-      }
-      best = (int) (bsum / bcnt);
-
-       */
+      bVal = (myAILim[best2] * ars[arn][best]
+              + myAILim[best2 - 1] * ars[arn][best - 1])
+             / (ars[arn][best] + ars[arn][best - 1]);
+        */
       // create the output that is displayed in display as a  breadcrum of progress
       if (true) {  //break up the following additions to ret to localize any index error
         ret = "l" + myAILim.length + " " + what + " aN" + cAll + ":" + cAllSum + ":"
@@ -4349,7 +4463,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         ret += " limAveV:" + limAveVal + " allAveV:" + allAveVal;
         ret += (myIx = " mostN") + (myN = mostIxN) + "C" + ars[arn][(myN)];
         ret += "V" + mf(myAILim[myNn = myN - strtIxs]);
-        ret += (myIx = " bestN") + (myN = best) + "V" + mf(myAILim[myNn = ((myN - strtIxs) < 0 ? 0 : myN - strtIxs)]);
+        ret += (myIx = " bestN") + (myN = best2) + "V" + sBestV;
 
         if (p2) {
           ret2 = "\n" + " rowN";
@@ -4365,16 +4479,16 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         else { //p2
           ret2 = "";
         }
-        seeAr[arn] = keepMe = "seeAr " + ret + (p2 ? ret2 : ""); //seeArrays[seeN]
+        seeAr[arn] = keepMe = "seeAr " + ret + ret2; //seeArrays[seeN]
         System.err.print("----SCA6----seeCntArray enters pX1=");
-        System.err.print(pX1 + " SCACnt" + SCACnt + " myIx=" + myIx + ":" + myN);
+        System.err.print(pX1 + "A" + arn + "L" + myAILim.length + " SCACnt" + SCACnt + " myIx=" + myIx + ":" + myN);
         System.err.println("Y" + year + " stEnter="
                            + st.cntInit + " EM entries=" + cntInit
                            + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size="
                            + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn
                 ? " ars too Small" : ars[arn].length < lenIx ? " err ars Len="
                            + ars[arn].length: " ars ok len=" + ars[arn].length) + "\n"
-                           + "----SCA6b----" + ret + ret2 + " limAve:" + cLimAve + " keepMe=" + keepMe);
+                           + "----SCA6b----" + keepMe + " limAve:" + cLimAve + " keepMe=" + keepMe);
       }// if true
     }// try
     catch (Exception | Error ex) {
@@ -4950,7 +5064,7 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
       //eee = myAILim[myNn];
       ret2 += (see = ((myNn = myN - strtIxs) > 0 && myNn < myAILim.length ? mf(myAILim[myNn]) : " myNn=" + myNn));
         double bsum = 0.;
-        int best = 0, bcnt = 0, bc = 0, bmax = 7;
+        int best = 0, best2 = 0, bcnt = 0, bc = 0, bmax = 7;
         int firstIxN = ars[arn][firstIx];
         int topIxN = ars[arn][topIx];
         int mostIxN = ars[arn][mostIx];
@@ -7881,26 +7995,8 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
     int ix = 0, ixClan = 0, ixPS = 0; // force indexs into this method
 
     try {
-      clearWH();
-
-      if (myAIlearnings == null) {
-        if (E.debugAIOut) {
-          System.out.println("------DSY11-----EM.doStartYear null myAIlearnings new TreeMap year=" + year);
-        }
-        //myAIlearnings = new HashMap(25000);
-        myAIlearnings = new TreeMap();
-      }
-      if (year == 0) {
-        doReadMapFile(); //only while starting
-      }
-      if (false && myAIlearnings != null) {
-        for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
-          if (entry != null) {
-            String aKey = entry.getKey();
-            Integer[] aVal = entry.getValue();
-          }
-        }
-      }
+      clearWH();  
+ 
       //move the score and positions to prev...
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
         prevMyScore[ixClan] = myScore[ixClan];
@@ -7908,6 +8004,13 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
         prevMyScorePosClan[ixClan] = myScorePosClan[ixClan];
       }
       int lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx  vvend
+       if (myAIlearnings == null) {
+        if (E.debugAIOut) {
+          System.out.println("------DSY11-----EM.doStartYear null myAIlearnings new TreeMap year=" + year);
+        }
+        //myAIlearnings = new HashMap(25000);
+        myAIlearnings = new TreeMap();
+      }
       // psClanChars[ixPS] = new byte[2][][];
       // each year rebuild psClanChars
       for (ixPS = 0; ixPS < 2; ixPS++) {
@@ -7919,7 +8022,17 @@ setCntAr(E.pPrevScP, E.pPrevResil, aiResilAr, aKey, aVal, "winner with Resonance
           buildAICvals(ixPS, ixClan, "preset", psClanChars[ixPS][ixClan], psClanMasks[ixPS][ixClan], vvAx);
         }
       }
-
+ if (year == 0) {
+        doReadMapFile(); //only while starting
+      }
+      if (false && myAIlearnings != null) {
+        for (Map.Entry<String, Integer[]> entry : myAIlearnings.entrySet()) {
+          if (entry != null) {
+            String aKey = entry.getKey();
+            Integer[] aVal = entry.getValue();
+          }
+        }
+      }
       iMaxThreads[0] = (int) maxThreads[0][0];
       for (rN = 0; rN < rende4 && !dfe(); rN++) { // move res(results) up a year
         rn = rN;
@@ -10275,17 +10388,17 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   static double relScore[] = {400., 400., 400., 400., 400.};
   static double prevRelScore[] = {400., 400., 400., 400., 400.};
   // what clan in position
-  static int myScorePosClan[] = {0, 1, 2, 3, 4};//score pos2 has clan4
+  static int myScorePosClan[] = {0, 1, 2, 3, 4};//score pos4 has clan2
   // what position is clan
-  static int myScoreClanPos[] = {0, 1, 2, 3, 4};//clan #3 has score pos 2
+  static int myScoreClanPos[] = {0, 1, 2, 3, 4};//clan 3 has score pos 4
   static double myScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double prevScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double relScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double prevRelScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double myScoreSum = 0.0;
   static double prevMyScore[] = {400., 400., 400., 400., 400.};
-  static int prevMyScorePosClan[] = {0, 1, 2, 3, 4};
-  static int prevMyScoreClanPos[] = {0, 1, 2, 3, 4};
+  static int prevMyScorePosClan[] = {0, 1, 2, 3, 4};//prev score pos4 has clan2
+  static int prevMyScoreClanPos[] = {0, 1, 2, 3, 4};//prev clan 3 has score pos 4
   static double prevMyScoreSum = 0.0;
   static int isV = 0;
   static int isI = 1;
@@ -10383,7 +10496,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
           } // ixC2
         }// else ixClan
       }// ixClan
-      winner = myScoreClanPos[4];
+      winner = myScoreClanPos[4]; //clan at Pos4
 
       double dif = 0.0, wDif = 0.0;
       // dif = max - myScore.ave

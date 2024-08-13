@@ -8544,8 +8544,8 @@ public class Assets {
       //prevSliderVald = sliderVald;
       //int sliderVala=-15,prevSliderVala=-17,sliderValb=-9,prevSliderValb=-19;
 
-      //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA, int scorePos, double score) {//Assets.CashFlow
-      saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScoreClanPos[clan], EM.myScore[clan]);
+      //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA, int scorePos,int PrevScPos, double score) {//Assets.CashFlow
+      saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos, prevAIPos, EM.myScore[clan]);
       Random rand = new Random();
       rIn = -7;
       ranInt = rand.nextInt(5);
@@ -11162,14 +11162,15 @@ public class Assets {
      * @param offer the last offer of the trade
      * @param prosM last prospects min
      * @param prosA last ave prospects2
-     * @param scorePros position of this clan in last Winner position
+     * @param scorePos position of this clan in last Winner position
+     * @param prevScorePos
      * @param score last score worth;
      *
      */
-    void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA, int scorePros, double score) {//Assets.CashFlow
+    void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA, int scorePos, int prevScorePos, double score) {//Assets.CashFlow
+      // saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos,prevAIPos, EM.myScore[clan]);
       aiOper = offers / worth;
-      if (ec.age > 1) {  // you prev values
-        EM.wasHere8 = "---ELa7--- Assets AI set has lock";
+      if (ec.age > 1) {  // skip year 1 you prev values
         int cIx = 7;
         int much = 7;
         int aType = acct ? 1 : 0;
@@ -11178,20 +11179,6 @@ public class Assets {
         aWaits++;
         ifPrint = aWaits > 5;
 
-          /*
-          atEntries++;
-          atPSEntries[pors]++;
-          atClanEntries[pors][clan]++;
-          cumOffers += offers;
-          cumOffersPS[pors] += offers;
-          cumOffersClan[pors][clan] += offers;
-          cumBTWorth += btWTotWorth;
-          cumBTWorthPS[pors] += btWTotWorth;
-          cumBTWorthClan[pors][clan] += btWTotWorth;
-          cumOffersPerWorth += cumOffers / cumBTWorth;
-          cumOffersPS[pors] += cumOffersPS[pors] / cumBTWorthPS[pors];
-          cumOffersClan[pors][clan] += cumOffersClan[pors][clan] / cumBTWorthClan[pors][clan];
-           */
           if (E.debugAIOut && (aWaits > 5)) {
             String str = new String(EM.psClanChars[pors][clan]);
             System.out.println("----BAI1----  len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size() + " put key=" + str + "");
@@ -11207,10 +11194,11 @@ public class Assets {
         double lastOPerW = offer / worth;
         putValueChar(EM.psClanChars[pors][clan], E.pLastProsM, prosM, E.AILims1, "rawProspects2.min", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos, E.AILims123, "score pos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevscore pos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pLastScW, score, E.AILims1, "LastScoreWorth", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pLastoPerW, prevAIOper, E.AILims1, "LastAIOperW", ifPrint);
         // putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIScore, E.AILims1, "prevEconScoreWorth", ifPrint);
-        //putValueChar(EM.psClanChars[pors][clan], E.pLastEScW, aiScore, E.AILims1, "lastEconScoreWorth", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pLastEScW, aiScore, E.AILims1, "lastEconScoreWorth", ifPrint);
 
 
         if (prevProspects2 != null) {
@@ -11266,10 +11254,10 @@ public class Assets {
           aiNudges[ranInt][pors] = 0.0; // zero any nudge
         }
         EM.myAIlearnings.put(str, val); // save last years values
-        eM.setCntAr(str, val, true);  // set all of the
+        eM.setCntAr(str, val,true, true);  // set all of the
         } // 
-        if (E.debugAIOut || (++aWaits % 5) == 0) {
-          eM.printHere("----BAI2----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + ":mC" + val[E.aValCnts] + "mY" + val[E.aValYear] + ":mA" + val[E.aValAge] + " scoreIx" + val[E.aValIxMyScore] + " TreeMap size=" + EM.myAIlearnings.size() + " key=" + str);
+        if (E.debugAIOut || (aWaits++ % 5) == 0) {
+          eM.printHere("----SAI2s----", ec, " put aType" + aType + " lastAIPos" + aiPos + ":" + " lastAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.myScore[clan]) + "\n" + ":mC" + val[E.aValCnts] + "mY" + val[E.aValYear] + ":mA" + val[E.aValAge] + " scoreIx" + val[E.aValIxMyScore] + " TreeMap size=" + EM.myAIlearnings.size() + " key=" + str);
           // eM.seeCntArrays(); //update the map arrays
           EM.seeArrays[0] = putValStr;
         }
@@ -11300,11 +11288,10 @@ public class Assets {
       prevPrevIncAIScore = prevIncAIScore;
 
       // incAIScore is this years new value after aiScore done
-      incAIScore = (aiScore - prevAIScore) / prevAIScore;
       prevPrevAIScore = prevAIScore;
       prevAIScore = aiScore;
       aiScore = getScore(aiOffer, aiWorth);
-
+      incAIScore = (aiScore - prevAIScore) / prevAIScore;
       aiOper = aiOffer / aiWorth;
       acct = tradeAccepted;
       if (ec.age > 1) {  // you prev values

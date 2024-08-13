@@ -336,7 +336,7 @@ public class E {
   static final int pLastScW = aiPcntr++; // last score Worth
   static final int pLastEScW = aiPcntr++; // last econ score worth
   static final int pLastEScI = aiPcntr++; // last econ score worth
- // static final int pPrevScP = aiPcntr++; // Prev score position
+  static final int pPrevScP = aiPcntr++; // Prev score position
   // static final int pPrevScW = aiPcntr++; // Prev score worth last years score
   static final int pPrevEScW = aiPcntr++; // prev econ score worth
   // static final int pPrevResil = aiPcntr++; // last resilience worth
