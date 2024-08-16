@@ -328,29 +328,39 @@ public class E {
 
    */
   static private int aiPcntr = 0;
-  static final int ptype = aiPcntr++;
+  static final int ptype = aiPcntr++; // 0 type
+   static final int ppors = aiPcntr++; // 1 pOrS
+   static final int pLastScP = aiPcntr++; // 2 Prev score position
+   static final int pPrevScP = aiPcntr++; // 3 Prev score position
+  static final int pPrevProsM = aiPcntr++; //4 rawProspects2 min
+  static final int pNudge0 = aiPcntr++; // 5 the nudge0
+  static final int pNudge1 = aiPcntr++; // 6 the nudge1
+  static final int pPrevEScW = aiPcntr++; // 7 prev econ score worth
+  static final int pPrevERScW = aiPcntr++; // 8 prev econ score worth
+  static final int pPrevEScI = aiPcntr++; // 9 prev econ score Inc
+   static final int pPrevOW = aiPcntr++; // 10 prev Offer worth
+   static final int pPrevOI = aiPcntr++; // 11 prev Offer Inc
+   static final int pPrevoPerW = ++aiPcntr; // 12 prev oPerW
+   static final int pPrevScW = aiPcntr++; // 13 prev score Worth
+   static final int pScW = aiPcntr++; // 13 last score Worth
+   static final int pPrevScI = aiPcntr++; // 14 prev score Inc
+ // static final int pPrevResil = aiPcntr++; // last resilience worth
+ // static final int pLastScW = aiPcntr++; // 6 last score Worth
+ // static final int pLastEScW = aiPcntr++; // 7 last econ score worth
+ // static final int pLastEScI = aiPcntr++; // 8 last econ score worth
+ // static final int pLastScP = aiPcntr++; // 9 last score position
+  
+ // static final int pclan = aiPcntr++;
+ //  static final int pLastoPerW = ++aiPcntr; // 11 last oPerW
+   
+   //static final int pIncOW = aiPcntr++; // 13 Inc Offer worth
   //static final int pacct = aiPcntr++;
-   static final int ppors = aiPcntr++;
-  // static final int pclan = aiPcntr++;
-  static final int pLastScP = aiPcntr++; // last score position
-  static final int pLastScW = aiPcntr++; // last score Worth
-  static final int pLastEScW = aiPcntr++; // last econ score worth
-  static final int pLastEScI = aiPcntr++; // last econ score worth
-  static final int pPrevScP = aiPcntr++; // Prev score position
-  // static final int pPrevScW = aiPcntr++; // Prev score worth last years score
-  static final int pPrevEScW = aiPcntr++; // prev econ score worth
-  // static final int pPrevResil = aiPcntr++; // last resilience worth
-  static final int pLastoPerW = ++aiPcntr;
-  // static final int pPrevoPerW = ++aiPcntr;
-  static final int pLastProsM = aiPcntr++; //rawProspects2 min
-  static final int pNudge0 = aiPcntr++; //the nudge0
-  static final int pNudge1 = aiPcntr++; //the nudge1
   //static final int pNudge2 = aiPcntr++; //the nudge2
   // static final int pLastProsA = aiPcntr++; //rawProspects2 ave
   // static final int pLastProsM = aiPcntr++; //rawProspects2 min
   // static final int pLastProsI = aiPcntr++; //rawProspects2 inc
   // static final int pPrevProsA = aiPcntr++; //rawProspects2 ave
-  // static final int pPrevProsM = aiPcntr++; //rawProspects2 min
+  //static final int pLastProsM = aiPcntr++; // 3 rawProspects2 min
   // static final int pPrevProsI = aiPcntr++; //rawProspects2 inc
   // static final int pPrevHope = aiPcntr++; // last hope worth
   // static final int pIncResil = aiPcntr++; // last resilience worth
@@ -358,7 +368,7 @@ public class E {
 
   // static final int pPrevPrevProsM = aiPcntr++; //rawProspects2 min
 //  static final int pLastOW = aiPcntr++; // last Offer worth
-  // static final int pPrevOW = aiPcntr++; // prev Offer worth
+
   // static final int pPrevPrevOW = aiPcntr++; // prev prev Offer worth
   // static final int pLastW = aiPcntr++;  // last aiWorth
 //  static final int pPrevW = aiPcntr++; // prevAIWorth
@@ -368,13 +378,13 @@ public class E {
   // static final int pLastKW = aiPcntr++; // last knowledge worth
   // static final int pPrevKW = aiPcntr++; // last knowledge worth
   // static final int pPrevPrevEScW = aiPcntr++; // prev prev econ score worth
-  static final int pPrevPrevEScInc = aiPcntr++; // prev prev econ score inc
-  static final int pPrevEScInc = aiPcntr++; // prev econ score inc
-  static final int pEScInc = aiPcntr++; // last econ score inc
+ // static final int pPrevPrevEScInc = aiPcntr++; // prev prev econ score inc
+  //static final int pPrevEScInc = aiPcntr++; // prev econ score inc
+ // static final int pEScInc = aiPcntr++; // last econ score inc
   // static final int pEScW = aiPcntr++; // last econ score worth
   // static final int pIncKW = aiPcntr++; // last knowledge worth
   // static final int pIncSc = aiPcntr++; // last score worth
-  static final int pIncO = aiPcntr++; // last Offer worth
+  
   /*
 
   //resilience, hope
