@@ -6864,8 +6864,8 @@ public class StarTrader extends javax.swing.JFrame {
           eM.setCurEcon(ec = curEc = eM.ships.get(shipsLoop));
           //startEconState = (new Date()).getTime();
           paintCurDisplay(eM.curEcon);
-          E.msgs = E.dmsgs;;  // reset sysMsg counter before each trade
-
+          E.msgs = E.dmsgs;;  // reset sysMsg Max before each trade
+          E.msgcnt=0; // reset sysMsg counter before each trade
           if (!eM.curEcon.getDie()) {  //live
             // ship selects its next planet, from offer list and wildCurs
             Econ cur1 = eM.curEcon;
@@ -7289,26 +7289,26 @@ public class StarTrader extends javax.swing.JFrame {
       // display.setVisible(false);
       //displayPanel1SinceYearStart.setVisible(false)
 
-      int rNyCreated = eM.YEARCREATE;
-      int rNCreated = rN = eM.BOTHCREATE;
-      int rNLiveWorth = eM.LIVEWORTH;
-      int rNFutCreated = eM.FUTURECREATE; // FUTURECREATE
+      int rNyCreated = EM.YEARCREATE;
+      int rNCreated = rN = EM.BOTHCREATE;
+      int rNLiveWorth = EM.LIVEWORTH;
+      int rNFutCreated = EM.FUTURECREATE; // FUTURECREATE
       int rNTraded = EM.TradeLastStrategicValue;
-      int rNAlsoTraded = EM.AlsoTradeLastStrategicValue;
+      int rNAlsoTraded = EM.TRADEALSOLASTGAVE;
       int rNRejected = EM.TradeRejectedStrategicValue;
       int rNLost = EM.TradeLostStrategicValue;
-      int rNDepreciation = eM.RDEPRECIATIONP;// largest
-      int rNBONUSGROWTH = eM.BONUSGROWTH;
-      int rNHlpdLow = eM.ISLOW;// largest
-      int rNHlpdSos0 = eM.ISSOS0;
-      int rNHlpdSos1 = eM.ISSOS1;
-      int rNHlpdSos2 = eM.ISSOS2;
-      int rNHlpdSos3 = eM.ISSOS3; // smallest
-      int rNDied = eM.DIED;
+      int rNDepreciation = EM.RDEPRECIATIONP;// largest
+      int rNBONUSGROWTH = EM.BONUSGROWTH;
+      int rNHlpdLow = EM.ISLOW;// largest
+      int rNHlpdSos0 = EM.ISSOS0;
+      int rNHlpdSos1 = EM.ISSOS1;
+      int rNHlpdSos2 = EM.ISSOS2;
+      int rNHlpdSos3 = EM.ISSOS3; // smallest
+      int rNDied = EM.DIED;
       int rNDAcc = EM.DTRADEACC;
       int rNDLost = EM.TradeDeadLostStrategicValue;
       int rNDRej = EM.TradeDeadRejectedStrategicValue;
-      int rNCrisis = eM.getStatrN("sCatCosts");
+      int rNCrisis = EM.CATASTSCOST;
       int rNLstS1 = EM.TRADEOSOSR1;
       int rNDS1 = EM.DTRADEOSOSR1;
       int rNLstS2 = EM.TRADEOSOSR2;

@@ -114,9 +114,9 @@ public class Assets {
   double aiScoreI = -5., prevAIScoreI = -5., prevPrevAIScoreI = -3.;
   double aiWorth=-11., prevAIWorth=-12.,prevPrevAIWorth=-13.;
   double prevAIWorthI = -14., aiWorthI=-11.;
-  static double tradeFracNudge[] = {0., 0., 0.014, 0.021, 0.028};//dif .1--.8
-  static double ffTFracNudge[] = {0., 0., 0.028, .042, 0.056};  //3.0--5.4  014
-  static double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
+  double tradeFracNudge[] = {0., 0., 0.007,0.014, 0.021, 0.028,0.035};//tradeFrac dif .1--.8 .007
+  double ffTFracNudge[] = {0., 0.,0.014, 0.028, .042, 0.056,0.070};  //futureFundTransferFrac3.0--5.4  014
+  double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
   boolean acct = false; // saveAI set this to the last year tradeAccepted
@@ -1620,7 +1620,7 @@ public class Assets {
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
       //only one thread at a time gets resLock  and can enter this code
       //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
-      synchronized (resL) {
+   //   synchronized (resL) {
         EM.wasHere8 = "---ELa3--- Assets res has lock";
         if (E.debugStatsOut) {
           String sList = "----SSLa----setStat " + name + "Y" + EM.year + " in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
@@ -1662,7 +1662,7 @@ public class Assets {
         }
 
         if (E.debugStatsOut && cntStatsPrints++ > E.ssMax) {
-          cntStatsPrints = 0;
+           if (E.debugStatsOut)cntStatsPrints = 0;
           if (rn > 0) {
             long endSt = (new Date()).getTime();
             long moreTT = endSt - doYearTime;
@@ -1683,15 +1683,17 @@ public class Assets {
 
             long isset1 = (yrsIx - 1 + yrsIxj < resI[rN].length ? resI[rN][yrsIx - 1 + yrsIxj] != null ? resI[rN][yrsIx - 1 + yrsIxj][CCONTROLD][ISSET] : -1 : -2);
 
+            if(E.debugStatsOut){
             eM.printHere("---SSTat---", ec, resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " " + (EM.myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + EM.myAIlearnings.size()) + ", " + " resIcum=" + resICumClan + ", age" + age + ", Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumSet=" + resICumIsset + ", curClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
             /*      System.out.println(
                       "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
 
               System.out.flush();
              */
+            }
           }
         }
-      } // end of lock on res..[rn]
+   //   } // end of lock on res..[rn]
       long[][][] resii = resI[rn];  //for values if using debug
       double[][][] resvv = resV[rn];
       return v;
@@ -1785,7 +1787,7 @@ public class Assets {
       long[] resICurm = resI[rn][curm][pors];
       long[] resICurmCC = resI[rn][curm][CCONTROLD];
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
-      synchronized (resL) {
+      //synchronized (resL) {
         EM.wasHere8 = "---ELa4--- Assets resMax has lock";
         if (resICumCC[ISSET] < 1) {
           for (int m = 0; m < 2; m++) {
@@ -1841,7 +1843,7 @@ public class Assets {
 
             long isset1 = (jj - 1 + jjj < resI[rN].length ? resI[rN][jj - 1 + jjj] != null ? resI[rN][jj - 1 + jjj][CCONTROLD][ISSET] : -1 : -2);
 
-            if (E.debugStatsOut1) {
+            if (E.debugStatsOut) {
               if (cntStatsPrints < E.ssMax) {
                 cntStatsPrints += 1;
                 System.out.println("---SMXb---"
@@ -1851,8 +1853,8 @@ public class Assets {
             }
 
           };
-        }
-      } // end of lock on res..[rn]
+        } //E.debugStatsOut1
+    //  } // end of lock on res..[rn]
       long[][][] resii = resI[rn];  //for values if using debug
       double[][][] resvv = resV[rn];
       return v;
@@ -1957,7 +1959,7 @@ public class Assets {
       long[] resICurm = resI[rn][curm][pors];
       long[] resICurmCC = resI[rn][curm][CCONTROLD];
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
-      synchronized (resL) {
+      //synchronized (resL) {
         EM.wasHere8 = "---ELa5 --- Assets res Min has lock";
         if (resICumCC[ISSET] < 1) {
           for (int m = 0; m < 2; m++) {
@@ -2024,7 +2026,7 @@ public class Assets {
 
           };
         }
-      } // end of lock on res..[rn]
+    //  } // end of lock on res..[rn]
       long[][][] resii = resI[rn];  //for values if using debug
       double[][][] resvv = resV[rn];
       return v;
@@ -2662,19 +2664,20 @@ public class Assets {
     }
     // lastAcceptedYear = eM.year; moved to Assets.CashFlow
     if (cur == null) {
-      eM.printHere("----ABR----", ec, " AsBarter create CashFlow");
+
+      if(E.debugBarterOut)eM.printHere("----ABR----", ec, " AsBarter create CashFlow");
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
     }
     if (!didCashFlowStart) {
       cur.aStartCashFlow(this);
     }
-    eM.printHere(E.tradeInitOut, "----ABR2-----", ec, " Assets.barter tradeInitOut term=" + inOffer.getTerm());
+    if(E.debugBarterOut)eM.printHere(E.tradeInitOut, "----ABR2-----", ec, " Assets.barter tradeInitOut term=" + inOffer.getTerm());
 
     Offer myIn = cur.barter(inOffer);
     // if exit trade exit cur
     if (cur.myTrade == null) {
-      eM.printHere("----ABR3----", ec, " myTrade null, delete CashFlow");
+      if(E.debugBarterOut)eM.printHere("----ABR3----", ec, " myTrade null, delete CashFlow");
       doNullCur(" Assets Barter");
       if (ec.clearHist()) {
         hist.clear();
@@ -4245,7 +4248,7 @@ public class Assets {
           EM.wasHere6 += " sqrtVal=" + EM.mf(sqrtVal);
           Double sqrtv = Math.sqrt(sqrtVal);
           EM.wasHere6 += " sqrtv=" + EM.mf(sqrtv);
-          if (E.debugEfficiency && sqrtv.isNaN()) {
+          if (E.debugEfficiencyOut && sqrtv.isNaN()) {
             eM.printHere("----CEF----", ec, EM.wasHere6);
             ec.doubleTrouble(KnowledgeMaintMultiplier.values[i], "kMMultiplier");
             ec.doubleTrouble(sqrtVal,
@@ -4287,7 +4290,9 @@ public class Assets {
         partner.invMaintEfficiency.set(invMaintEfficiency);
         partner.groEfficiency.set(groEfficiency);
         partner.maintEfficiency.set(maintEfficiency);
+        if(E.debugEfficiencyOut){
         eM.printHere("----SCEa---", ec, " age=" + ec.age + " invGroEfficiency[0]= " + EM.mf(invGroEfficiency.get(0)) + " rsefficencyGMin=" + EM.mf(rsefficiencyGMin.get(0)) + " groEfficiency=" + EM.mf(groEfficiency.get(0)) + " invMEfficiency=" + EM.mf(invMEfficiency.get(0)));//groEfficiency
+        }
         assert invGroEfficiency.get(0) > 0.0 : "invGroEfficiency.get(0) <= 0.0 =" + EM.mf(invGroEfficiency.get(0));
         assert invMEfficiency.get(0) > 0.0 : "invMEfficiency.get(0) <= 0.0 =" + EM.mf(invMEfficiency.get(0));
 
@@ -8517,6 +8522,7 @@ public class Assets {
   double prevPrevStrategicGoal = 0, prevPrevStrategicValue = 0., prevPrevGoodFrac = 0.;
        */
       // set up prev values for saveAIKey
+      /*
       prevPrevAIScore = prevAIScore;
       prevAIScore = aiScore;
       aiScore =EM.myScore[clan];
@@ -8562,12 +8568,14 @@ public class Assets {
       //prevSliderValc = sliderValc;
       //prevSliderVald = sliderVald;
       //int sliderVala=-15,prevSliderVala=-17,sliderValb=-9,prevSliderValb=-19;
-
+*/
       //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA, int scorePos,int PrevScPos, double score) {//Assets.CashFlow
       saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos, prevAIPos, EM.myScore[clan]);
       Random rand = new Random();
       rIn = -7;
-      ranInt = rand.nextInt(5);
+      ranInt = rand.nextInt(7);
+      int ran2 = ranInt%2;
+      double ranMult = .7 + .5 * Math.random();
       double aiV = -7.7;
       boolean y = true;
       // only nudge 2 out of 5 econs per year
@@ -8578,7 +8586,8 @@ public class Assets {
         // rIn over 2 is negative
         // clan and pors defined in Assets
         // aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
-        aiNudges[ranInt][pors] = aiV = rIn < 3 ? aiNudges[ranInt][rIn + 2] : -aiNudges[ranInt][rIn - 1];
+        //randomize the
+        aiNudges[ran2][pors] = aiV = ranMult * (rIn < 4 ? aiNudges[ran2][rIn + 3] : -aiNudges[ran2][rIn - 1]);
         //int sliderVal = eM.getAIVal(vv, pors, clan,ec,ranInt);
         //   res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
       }
@@ -8609,7 +8618,7 @@ public class Assets {
       String valNudgea = EM.mf(aiNudges[0][pors]);
       String valNudgeb = EM.mf(aiNudges[1][pors]);
       String valaiV = EM.mf(aiV);
-        String valNudge5 = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][pors] : -11.3);
+      String valNudge5 = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][pors] : -11.3);
       String pValIxaVal = EM.mf(E.AILimsC[pValIxa]);
       String pValIxbVal = EM.mf(E.AILimsC[pValIxb]);
       if (E.debugAIOut2) {
@@ -8822,11 +8831,11 @@ public class Assets {
         s.cumUnitBonus.add(s1, deteriorationReduce1);
         // do costs and report
         r.cost3((rc1 = balances.get(2, r1) * reduce1), r1, 0);  // apply costs to P and S
-        setStat("rCatCosts", pors, clan, rc1, 1);
+        setStat(EM.CATASTRCOST, pors, clan, rc1, 1);
         s.cost3((sc2 = balances.get(4, s1) * reduce2), s1, 0);
-        setStat("sCatCosts", pors, clan, sc2, 1);
+        setStat(EM.CATASTSCOST, pors, clan, sc2, 1);
         r.cost3((rc3 = balances.get(2, r2) * reduce3), r2, 0);
-        setStat("rCatCosts", pors, clan, rc3, 1);
+        setStat(EM.CATASTRCOST, pors, clan, rc3, 1);
 
         r.bonusYears.add(bonusX1, bonusYrs1);             // both P & S
         r.bonusYears.add(bonusX2, bonusYrs2);
@@ -9317,7 +9326,7 @@ public class Assets {
         int newTerm = entryTerm; // until barter runs, then post barter value
         int ehist = 0;
         if (E.debugBarterOut) {
-          eM.printHere("---CBAaa---", ec, "Assets.CashFlow.barter Enter " + (tradeAccepted ? " tradeAccepted" : " !tradeAc") + (tradeRejected ? " tradeRejected" : " !tradeRe") + (tradeLost ? " tradeLost" : " !tradeLo") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
+          eM.printHere("---CBAaa---", ec, "Assets.CashFlow.barter Term" + entryTerm  + ":" + (tradeAccepted ? " tradeAccepted" : " !tradeAc") + (tradeRejected ? " tradeRejected" : " !tradeRe") + (tradeLost ? " tradeLost" : " !tradeLo") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
         }
         hist.add(new History(aPre, 5, "entr CashFlow barter", (eTrad == null ? " !eTrad" : " eTrad"), "entryTerm=", wh(entryTerm), "$=" + EM.mf(sumTotWorth), "l=" + hist.size() + "======================<<<<<<<<<<"));
         int lhist = hist.size();
@@ -9366,12 +9375,13 @@ public class Assets {
         }//end other name not equal
         // now set up for a barter by Trades.barter
         btW = new DoTotalWorths(); // Assets.CashFlow.barter before trade
-        if (myTrade != null && entryTerm > 0) {
+     //   if (myTrade != null && entryTerm > 0) {
+        if (myTrade != null ) {
           hist.add(new History(aPre, 5, " " + name + "cashFlow barter", " term=" + inOffer.getTerm(), " trades"));
           inOffer.setMyIx(ec);  //Assets.CashFlow.barter
 
-          // now barter =====================================
-          retOffer = myTrade.barter(inOffer); // get entryTerm-1, 0, -1
+          // now barter ======entryTerm>0 ...=======================
+          retOffer = entryTerm>0? myTrade.barter(inOffer): inOffer; // get entryTerm-1, 0, -1
 
           newTerm = retOffer.getTerm();
           oClan = retOffer.getOClan();
@@ -9399,12 +9409,12 @@ public class Assets {
         } // end entryTerm > 0
         // check for ending this trade //Assets.CashFlow.barter
         fav = (eM.fav[oClan][oPors][clan]);
-        eM.printHere("----CBt----", ec, " newTerm" + newTerm + " entryTerm" + entryTerm + " tradedShipOrdinal" + tradedShipOrdinal);
+        eM.printHere("----CBt----", ec, " newTerm" + newTerm + " entryTerm" + entryTerm + "  other:" + retOffer.getOtherName() + " tradedShipOrdinal" + tradedShipOrdinal);
         // may enter barter terminating process
         if (newTerm < 1) {
           if (myTrade != null) {
             myTrade.xitTrade(); // term= 0 mytrade,-1 my reject,-2 other traded,-3 reject
-            System.out.println("----CBt2----" + as.name + " xitTrade term=" + retOffer.getTerm());
+            System.out.println("----CBt2----" + as.name + " xitTrade term=" + retOffer.getTerm() + "  other:" + retOffer.getOtherName());
           }
           double criticalStrategicRequestsPercentTWorth = 100. * sumCriticalStrategicRequests / startYrSumWorth;
           double criticalStrategicRequestsPercentFirst = 100. * criticalStrategicRequestsFirst / startYrSumWorth;
@@ -9440,7 +9450,7 @@ public class Assets {
             tradeMissed = tradeRejected = tradeLost = false;
             lastAcceptedYear = yearTradeAccepted = EM.year;
             if (E.debugBarterOut) {
-              eM.printHere("---CBA1---", ec, "Assets.CashFlow.barter set TradeAccepted true");
+              eM.printHere("---CBA1---", ec, "Assets.CashFlow.barter set TradeAccepted true"+ "  other:" + retOffer.getOtherName());
             }
             EM.tradedCnt++;
             if (firstVisit) {
@@ -9495,7 +9505,7 @@ public class Assets {
               retOffer.setTerm(-2); // other so no more return
             }            // else leave retOffer.term 0 for the other cn
             else if (newTerm == -2 || entryTerm == -2) {  // the other ship traded
-              retOffer.setTerm(-5); // other so no more return
+              retOffer.setTerm(-7); // other so no more return
             }
           }
           else if (newTerm == -2 || entryTerm == -2) {  // skipped the other ship traded
@@ -9504,7 +9514,7 @@ public class Assets {
             tradeAccepted = true;
             tradeMissed = tradeRejected = tradeLost = false;
             if (E.debugBarterOut) {
-              eM.printHere("---CBA0---", ec, "Assets.CashFlow.barter set Also TradeAccepted true");
+              eM.printHere("---CBA0---", ec, "Assets.CashFlow.barter set Also TradeAccepted true"+ "  other:" + retOffer.getOtherName());
             }
             lastAcceptedYear = yearTradeAccepted = EM.year;
             EM.tradedCnt++;
@@ -9518,6 +9528,27 @@ public class Assets {
             setStat(EM.TradeAlsoCriticalBidRequestsFirst, sumCriticalBidRequestsFirst, 1);
             setStat(EM.TradeAlsoBidRequests, sumBidRequests, 1);
             setStat(EM.TradeAlsoCriticalBidRequests, sumCriticalBidRequests, 1);
+            setStat(EM.TRADENOMINALGAVE, pors, clan, nominalOffers, 1);
+            setStat(EM.TRADESTRATFIRSTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicOffersFirst), 1);
+            setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, totalStrategicOffers, 1);
+            setStat(EM.TRADESTRATFIRSTRECEIVE, pors, clan, totalStrategicRequestsFirst, 1);
+            setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, totalStrategicRequests, 1);
+            // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);
+            // setStat(EM.AFTERTRADEWORTH, pors, clan, tWTotWorth, 1);
+            setStat(EM.TRADEWORTHINCR, pors, clan, worthIncr, 1);
+            setStat(EM.TRADERCSGINCR, pors, clan, rcsgIncr, 1);
+            setStat(EM.TradeFirstStrategicGoal, pors, clan, firstStrategicGoal, 1);
+            setStat(EM.TradeFirstStrategicValue, pors, clan, firstStrategicValue, 1);
+            setStat(EM.TradeLastStrategicValue, pors, clan, strategicValue, 1);
+            setStat(EM.TradeStrategicValueLastPercentFirst, pors, clan, calcPercent(firstStrategicValue, strategicValue), 1);
+            setStat(EM.TradeNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
+            setMax(EM.MaxNominalReceivePercentNominalOffer, calcPercent(nominalOffers, nominalRequests));
+            setMin(EM.MinNominalReceivePercentNominalOffer, pors, clan, calcPercent(nominalOffers, nominalRequests), 1);
+            setStat(EM.TradeStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
+            setMax(EM.MaxStrategicReceivePercentStrategicOffer, calcPercent(strategicOffers, strategicRequests));
+            setMin(EM.MinStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
+            setStat(EM.TRADELASTGAVE, pors, clan, offers, 1);
+            setStat(EM.TRADEALSOLASTGAVE, pors, clan, offers, 1);
             setStat(EM.TRADEFIRSTRECEIVE, calcPercent(btWrcsgSum, requestsFirst), 1);
             setStat(EM.TRADELASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, requests), 1);
             setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
@@ -10249,6 +10280,7 @@ public class Assets {
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, Math.sqrt(initialSumWorth), 1);
+        setStat(EM.WINNERYEARS, pors, clan, EM.myScoreClanPos[clan]==4?1.:0., 1);
         setStat(EM.WORTHINCR, pors, clan, percentYearWorthIncr, 1);
         setStat(EM.KNOWLEDGEW, pors, clan, fyW.sumKnowledgeWorth, 1);
         setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
@@ -11211,26 +11243,13 @@ public class Assets {
         // E.pPrevScP pPrevScW
        
         putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos, E.AILims123, "score pos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevScore pos", ifPrint);
-         putValueChar(EM.psClanChars[pors][clan], E.pScW, aiScore, E.AILims1, "last aiScore", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevoPerW, prevAIOper, E.AILims1, "prevAIOperW", ifPrint);
-        // putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims1, "prevEconScore", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, prevAIERScore, E.AILims1, "prevEconRScoreWorth", ifPrint);
+         putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims1, "prevEconScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, prevAIERScore, E.AILims1, "prevEconRScore", ifPrint);
 
 
-        if (prevProspects2 != null) {
-          //putValueChar(EM.psClanChars[pors][clan], E.pPrevP, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-        //  putValueChar(EM.psClanChars[pors][clan], E.pLastProsM, prosM, E.AILims1, "rawProspects2.min", ifPrint);
-          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIProspAve, E.AILims, "rawProspects2.ave", ifPrint);
-          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevO, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-         // putValueChar(EM.psClanChars[pors][clan], E.pPrevO, prevAIOffers, E.AILims, "prevAIOffers", ifPrint);
-          // putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prevAIWorth", ifPrint);
-          //  putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-          // putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevProspects2.curAve(), E.AILims, "rawProspects2.ave", ifPrint);
-
-        }
         // ifPrint = false;
        // putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prewAIWorth", ifPrint);
         // putValueChar(EM.psClanChars[pors][clan], E.pPrevPrevW, prevPrevAIWorth, E.AILims, "prewPrevAIWorth", ifPrint);
@@ -11277,7 +11296,7 @@ public class Assets {
         eM.setCntAr(str, val,false,true, true);  //doSet 1 of the
         } // 
         if (E.debugAIOut || (aWaits++ % 5) == 0) {
-          eM.printHere("----SAI2s----", ec, " put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " lastScore" + EM.mf(EM.myScore[clan]) + "\n" + ":mC" + val[E.aValCnts] + "mY" + val[E.aValYear] + ":mA" + val[E.aValAge] + " scoreIx" + val[E.aValIxMyScore] + " Size=" + EM.myAIlearnings.size() + " mapYears" + EM.mapYears+ " setCnt" + EM.setCnt + " key=" + str);
+          eM.printHere("----SAI2s----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " lastScore" + EM.mf(EM.myScore[clan]) + " allCnt" + EM.ars[1][EM.iaAllCnt] + "\n" + ":mC" + val[E.aValCnts] + "mY" + val[E.aValYear] + ":mA" + val[E.aValAge] + " scoreIx" + val[E.aValIxMyScore] + " Size=" + EM.myAIlearnings.size() + " mapYears" + EM.mapYears+ " setCnt" + EM.setCnt + " key=" + str);
           // eM.seeCntArrays(); //update the map arrays
           EM.seeArrays[0] = putValStr;
         }

@@ -1525,7 +1525,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         cn[0].hist.add(new History(History.loopMinorConditionals5, "T" + aOffer.getTerm() + " " + cn[bb].getName() + " loop>>>>> ", "T=" + termLoop, "bb=" + bb1, "cur name=", cn[bb1].getName(), "ship=", ship.getName(), "planet=", planet.getName(), "<<<<<<"));
         cn[1].hist.add(new History(History.loopMinorConditionals5, "T=" + aOffer.getTerm(), "T=" + termLoop, "bb=" + bb1, "name=", cn[bb1].getName(), "ship=", ship.getName(), "planet=", planet.getName(), "<<<<<<<<<"));
         eM.setCurEcon(cn[bb1]);  // starts at planet
-        if (termLoop < 5 || termLoop > eM.barterStart - 2) {
+        if (E.debugBarterOut &&  (termLoop < 5 || termLoop > eM.barterStart - 2)) {
           eM.printHere("----ESTa---", cn[bb1], " sStartTrade .barter term=" + termLoop);
         }
         aOffer = cn[bb1].barter(aOffer, cn[bb], termLoop); //bb1 starts at 0
@@ -1576,7 +1576,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     try {
     // keep a list of all the visited ships, even if barter failed
     nowName = name;
-    if (visitedShipNext < 0 || visitedShipList[visitedShipNext] != otherEcon && term > eM.barterStart - 2) {
+    if (E.debugBarterOut && (visitedShipNext < 0 || visitedShipList[visitedShipNext] != otherEcon && term > eM.barterStart - 2)) {
      eM.printHere("---EBa--=",this,"econ.barter term=" + term + ", visitor=" + otherEcon.name  + " visitedShipNext=" + visitedShipNext);
       if (visitedShipNext < 0) {
     //    myFirstBarterTime = new Date().getTime();

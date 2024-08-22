@@ -80,7 +80,7 @@ public class E {
   // static final boolean noAsserts = false; // false expect -ea in call
   static boolean ifassert = false; // preset for later test
   //Use preyears in heavy development, to skip the settings wait
-  static int PREYEARS = 7; // number of years run as part of run
+  static int PREYEARS = 9; // number of years run as part of run
   static final boolean debugfalse = false;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   //static final boolean resetOut = debugOutput;  //change out, err to
@@ -96,11 +96,11 @@ public class E {
   static final boolean debugListNewE = outputFewer && debugOutput; //list known econs
   static final boolean debugSetMyIx = outputFewer && debugOutput; //listsetMyIx
   static final boolean debugCalcRawCosts = outputFewer && debugOutput; //calcRawCosts
-  static final boolean debugBarterOut = debugOutput; //Barter
+  static final boolean debugBarterOut = outputFewer && debugOutput; //Barter
   static final boolean debugPutValByteOut = debugOutput; //PutValByte
   static final boolean debugCreateOut = debugOutput; //output messages Assets
   static final boolean debugCreateNullOut = debugOutput; //did not choose died Econ
-  static final boolean debugAssetsOut = debugOutput; //output messages Assets
+  static final boolean debugAssetsOut = outputFewer && debugOutput; //output messages Assets
   static final boolean debugEconOut = debugOutput; //output messages in Econ
   static final boolean debugCashFlowOut = debugOutput; //output messages in CashFlow
   static final boolean debugTradesOut = debugOutput; //output messages in Trades
@@ -111,6 +111,7 @@ public class E {
   static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt
   static final boolean debugNegGrowth = debugMaster; // neg Growth made negCosts
   static final boolean debugEfficiency = debugMaster; // efficiency has double trouble
+  static final boolean debugEfficiencyOut = debugMaster && outputFewer; // efficiency has double trouble
   static final boolean debugNegCosts = debugMaster; // checking for neg Costs
   static final boolean debugFutureFund = debugMaster; // checking for errors with future funds
   static final boolean debugNoTerm = debugMaster; // term undefined in assets, find whyu
@@ -121,28 +122,29 @@ public class E {
   static final boolean debugResumP = debugMaster && outputFewer; //rc == r + c  sg == s + g add || set
   static final boolean debugCosts = debugMaster;  // check that cost processing ok
   static final boolean debugDouble = debugMaster; //doubleTrouble and infinity or NaN
-  static final boolean debugTradeRecord = debugMaster; // or outputFewer
-  static final boolean debugTradeBarter = debugMaster; // in barter process
+  static final boolean debugTradeRecord = debugMaster && outputFewer; // or outputFewer
+  static final boolean debugTradeBarter = debugMaster && outputFewer; // in barter process
   static final boolean debugTradeSetup = debugMaster; // distance, location etc
   static final boolean debugSwaps = debugMaster; // doloops other swap tests
   static final boolean debugDidEconYearEnd = debugMaster; // StarTrader.doYear() doYearEdn
   static final boolean debugAssetsStats = debugMaster && outputFewer; // why stats aren't showing
-  static final boolean debugStats = debugMaster; // why stats aren't showing
-  static final boolean debugStatsOut = debugOutput; // stats output
+  static final boolean debugStats = debugMaster && outputFewer; // why stats aren't showing
+  static final boolean debugStatsOut = debugOutput  && outputFewer; // stats output
   static final boolean debugScannerOut = debugOutput && outputFewer; // scanner output
   static final boolean debugMisc = debugMaster; // other debug tests
   static final boolean debugCanTrade = debugMaster; // planet can trade
   static final boolean debugDisplayTrade = debugMaster; // Trade System.out msgs
-  static final boolean tradeDebugTerms = debugMaster;
+  static final boolean tradeDebugTerms = debugMaster && outputFewer;
   static final boolean debugSettingsTab = debugMaster; //errors from settings doValx
-  static final boolean debugSettingsTabOut = debugMaster; //errors from settings doValx
+  static final boolean debugSettingsTabOut = debugMaster && outputFewer; //errors from settings doValx
   static final boolean debugSettingsTab2 = debugMaster; //errors from settings doValx
-  static boolean debugDoRes = debugMaster; //errors from settings doValx
+  
   static final boolean SWAPTRADESYSTEMOUT = debugOutput;  //Swap outputs
   static final boolean PAINTDISPLAYOUT = debugOutput || true; //outputs from StarTrader displays
   static final boolean DEBUGCALCGROWTH = outputFewer && debugMaster;
   static final boolean tradeInitOut = debugOutput;
   static final boolean DEBUGASSETSOUT = debugMaster;
+  static final boolean DebugSetCntArOut = debugOutput;
   static final boolean debugPutValue = debugMaster; //test putValue processing
   static final boolean debugPutValue1 = outputFewer; //test putValue processing
   static final boolean debugPutValue2 = outputFewer; //test putValue processing
@@ -162,7 +164,7 @@ public class E {
   static final boolean debugRsOut = debugOutput && outputFewer; // EM rs output
   static final boolean debugFFOut = debugOutput && outputFewer; // EM Assets.CashFlow.calcForwardFund output
   static final boolean debugStatsOut1 = debugOutput && outputFewer; // stats output1
-  static final boolean debugStatsOut2 = debugOutput && outputFewer; // stats output1
+  static final boolean debugStatsOut2 = debugOutput && outputFewer; // stats output2
   static final boolean debugLiveOut = debugOutput && outputFewer; // list names output1
   static final boolean debugYcalcCosts = debugMaster;
   static final boolean debugPriorityOut = debugOutput && outputFewer;
@@ -170,14 +172,15 @@ public class E {
   static final boolean debugPutRowsOutUnset = debugOutput && outputFewer; //put out warnings of unset stats
 
   static final boolean debugDoStartYear = debugMaster && outputFewer; // output lines
-  static final int ssMax = 21; // max setStats printed;
+ 
   static final boolean debugThreadsOut = debugOutput; // threads output
   static final boolean debugThreadsOut1 = debugOutput; // threads output1
   static final boolean errEconInit = debugMaster;
   static final boolean debugDoYearEndOut = debugOutput || true; //output messages re yearEnd
   static final boolean debugAtJavaOut = debugOutput && outputFewer; // output at java locations
   static boolean doCalcCatastrophy = true; //temp disable
-
+  static  boolean debugDoRes = debugMaster; //errors from settings doValx
+ static final int ssMax = 21; // max setStats printed;
   /* AI pointers moved from Assets here to permit easy back and forth with Assets.CashFlow.yearEnd
    static final int ptype = 0, pacct = 1, ppors = 2, pclan = 3, pPrevP=4;
   static final int pPrevW=5, pPrevKW=6, pPrevRInc=7,pPrevSinc=8,pPrevKinc=9;
@@ -330,20 +333,20 @@ public class E {
   static private int aiPcntr = 0;
   static final int ptype = aiPcntr++; // 0 type
    static final int ppors = aiPcntr++; // 1 pOrS
-   static final int pLastScP = aiPcntr++; // 2 Prev score position
-   static final int pPrevScP = aiPcntr++; // 3 Prev score position
-  static final int pPrevProsM = aiPcntr++; //4 rawProspects2 min
-  static final int pNudge0 = aiPcntr++; // 5 the nudge0
-  static final int pNudge1 = aiPcntr++; // 6 the nudge1
-  static final int pPrevEScW = aiPcntr++; // 7 prev econ score worth
-  static final int pPrevERScW = aiPcntr++; // 8 prev econ score worth
-  static final int pPrevEScI = aiPcntr++; // 9 prev econ score Inc
-   static final int pPrevOW = aiPcntr++; // 10 prev Offer worth
-   static final int pPrevOI = aiPcntr++; // 11 prev Offer Inc
-   static final int pPrevoPerW = ++aiPcntr; // 12 prev oPerW
-   static final int pPrevScW = aiPcntr++; // 13 prev score Worth
-   static final int pScW = aiPcntr++; // 13 last score Worth
-   static final int pPrevScI = aiPcntr++; // 14 prev score Inc
+ //  static final int pLastScP = aiPcntr++; // 2 Prev score position
+   static final int pPrevScP = aiPcntr++; // 2 Prev score position
+  static final int pPrevProsM = aiPcntr++; //3 rawProspects2 min
+  static final int pNudge0 = aiPcntr++; // 4 the nudge0
+  static final int pNudge1 = aiPcntr++; // 5 the nudge1
+  static final int pPrevEScW = aiPcntr++; // 6 prev econ score worth
+  static final int pPrevERScW = aiPcntr++; // 7 prev econ Rscore worth
+  static final int pPrevEScI = aiPcntr++; // 8 prev econ score Inc
+   static final int pPrevOW = aiPcntr++; // 9prev Offer worth
+   static final int pPrevOI = aiPcntr++; // 10 prev Offer Inc
+   static final int pPrevoPerW = ++aiPcntr; // 11 prev oPerW
+   static final int pPrevScW = aiPcntr++; // 12 prev score Worth
+ // static final int pScW = aiPcntr++; // 13 last score Worth
+   static final int pPrevScI = aiPcntr++; // 13 prev score Inc
  // static final int pPrevResil = aiPcntr++; // last resilience worth
  // static final int pLastScW = aiPcntr++; // 6 last score Worth
  // static final int pLastEScW = aiPcntr++; // 7 last econ score worth
@@ -406,8 +409,9 @@ public class E {
   static volatile int bValsEnd = EM.vvend + bValsStart; // end of key
 
   // for use by Assets.putValueByte()
+ 
   static final double[] AILims = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static final double[] AILims1 = {-99999999., -10., -5.0 - 1, -0.8, -0.5, -0.3, -0.25, -.02, -0.15, -0.1, -0.08, -.06, -.04, -.02, -0.01, 0.0, 0.01, 0.05, 0.06, 0.1, .3, 0.5, .8, 1., 1.3, 1.5, 1.8, 2., 3., 4., 5., 10., 20., 50., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 1300., 1700., 2000., 2300., 2700., 3000., 3500., 4000., 4750, 5500., 6000., 6500., 7000., 10000., 25000., 30000., 37000., 45000., 633000., 1300000., 7000000., 11000000., 15000000., 17000000., 19000000., 65000000.,};
+  static final double[] AILims1 = {-99999999., -10., -5.0 - 1, -0.8, -0.5, -0.3, -0.25, -.02, -0.15, -0.1, -0.08, -.06, -.04, -.02, -0.01, 0.0,.003,.005,.007,.009, 0.01, 0.05, 0.06, 0.1, .3,0.5, .8, 1., 1.3, 1.5, 1.8, 2., 3., 4., 5., 10., 20., 50., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 1300., 1700., 2000., 2300., 2700., 3000., 3500., 4000., 4750, 5500., 6000., 6500., 7000., 10000., 25000., 30000., 37000., 45000., 633000., 1300000., 7000000., 11000000., 15000000., 17000000., 19000000., 65000000.,};
   static final double[] AILims2 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 100000., 250000., 450000., 633000., 950000., 1200000., 1900000., 3500000., 7000000., 15000000., 30000000., 45000000., 65000000., 130000000., 720000000.,
     1500000000.,
     15000000000.,
@@ -432,11 +436,11 @@ public class E {
     1500000000000000000000000000000.,
     15000000000000000000000000000000.,
     150000000000000000000000000000000.};
-  static final double[] AILims3 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static final double[] AILims4 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 32., 34., 36., 38., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99.99999999};
+  static final double[] AILims3 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300.,320.,340.,360.,370.,380.,390., 400., 500., 600., 700., 800., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILims4 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, .3, .35,.4,.43,.47,0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 32., 34., 36., 38., 40., 41., 41.3,41,7,42.,42,3,42.5, 42.8,43.,43.5, 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99.99999999};
   static final double[] AILims123 = {-99999999., -4., -3., -2., -1., 0., 1., 2., 3., 4., 5., 6., 7., 8., 9.};
-  static final double AILimss[][] = {AILims, AILimsC, AILims123, AILims1, AILims2, AILims3, AILims4};
+   static final double AILimss[][]={ AILims,AILims1,AILims2, AILims3, AILims4,AILimsC ,AILims123};//7
 
 
   //static final int pPrevoPerW = ++aiPcntr;
@@ -2128,7 +2132,7 @@ public class E {
   }
 
   public static boolean sysmsgDone = false;
-  static public int dmsgs = 5900;
+  static public int dmsgs = 105900;
   static public int msgs = dmsgs;
   static public int msgcnt = 0;
 
