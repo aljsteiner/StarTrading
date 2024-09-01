@@ -119,7 +119,8 @@ public class Assets {
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
-  boolean acct = false; // saveAI set this to the last year tradeAccepted
+  Boolean acct = false; // saveAI set this to the last year tradeAccepted
+  Boolean y=true;
   // values without prefix prev are last years values
   double aiOffer = -10.,prevAIOffer=-11.,prevPrevAIOffer=-11.,prevAIOfferI;
   double aiProsM = -12., aiProsA = -15., aiProsI=-3.,aiProsAI=-9.,aiProsMI=-9.;
@@ -8565,20 +8566,38 @@ public class Assets {
       prevStrategicGoal = strategicGoal;
       prevSliderVala = sliderVala;
       prevSliderValb = sliderValb;
+      Boolean y = true;
       //prevSliderValc = sliderValc;
       //prevSliderVald = sliderVald;
       //int sliderVala=-15,prevSliderVala=-17,sliderValb=-9,prevSliderValb=-19;
+       static final int pporsklan = aiPcntr++; // 2 pOrS *5+ clan
+      static final int pLastScP = aiPcntr++; // 3  Prev score position
 */
-      //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA, int scorePos,int PrevScPos, double score) {//Assets.CashFlow
-      saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos, prevAIPos, EM.myScore[clan]);
+    
+
+      //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
+      saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScore[clan]);
+      boolean []doNudges={y,y};
+      // only clan blue get smart start
+       if(EM.myAIlearnings.size() > 100 && clan == 4 ){
+       String aKey = new String(EM.psClanChars[pors][clan]);
+       Integer[] aVal =  EM.myAIlearnings.get(aKey);
+       // assume the ars arrays are set, and set them, but not EM.myAIlearnings
+       double newTF =eM.setCntAr(aKey, aVal, "44&prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,false,false,y, y);
+       tradeFracNudge[pors] = newTF - EM.tradeFrac[pors][clan];
+      eM.setCntAr(aKey, aVal, false,false,false);//update ars arrays
+      doNudges[0] = false;
+        //eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]
+      //EM.tradeFrac[pors][clan] + tradeFracNudge[pors]
+       }
       Random rand = new Random();
       rIn = -7;
       ranInt = rand.nextInt(7);
       int ran2 = ranInt%2;
       double ranMult = .7 + .5 * Math.random();
       double aiV = -7.7;
-      boolean y = true;
       // only nudge 2 out of 5 econs per year
+    
       if (ranInt > -1 && ranInt < aiNudges.length) {
         rIn = rand.nextInt(6);// select sign and value of nudge
         //ranInt==1 rIn==5: aiNudges[ranInt][pors] = -aiNudges[ranInt][2.5+1.5=4]
@@ -8587,18 +8606,24 @@ public class Assets {
         // clan and pors defined in Assets
         // aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
         //randomize the
-        aiNudges[ran2][pors] = aiV = ranMult * (rIn < 4 ? aiNudges[ran2][rIn + 3] : -aiNudges[ran2][rIn - 1]);
+        if(doNudges[ran2]){
+          aiNudges[ran2][pors] = aiV = ranMult * (rIn < 4 ? aiNudges[ran2][rIn + 3] : -aiNudges[ran2][rIn - 1]);
+          doNudges[ran2] = false;
+          }
         //int sliderVal = eM.getAIVal(vv, pors, clan,ec,ranInt);
         //   res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
       }
-      else {
+   
         //zero all aiNudges
         for (int ranInta = 0; ranInta < aiNudges.length; ranInta++) {
+          if(doNudges[ranInta]){
           for (int rIna = 0; rIna < 2; rIna++) {
             aiNudges[ranInta][rIna] = 0.0;
           }
+          doNudges[ranInta] = false;
+          }
         }
-      }//if else
+
       // now install the nudge pointers even if nudge=0,0
 
       int vva = eM.valAIN[0];// nudge to vv array
@@ -8607,20 +8632,27 @@ public class Assets {
         prevSliderVala = eM.getAIVal(vva, pors, clan, ec, 0);
         prevSliderValb = eM.getAIVal(vvb, pors, clan, ec, 0);
       }
-      // set values for next year
+      // start to  set values for next year
       sliderVala = eM.getAIVal(vva, pors, clan, ec, 1);
       sliderValb = eM.getAIVal(vvb, pors, clan, ec, 2);
       //use last years value, as in saveAI
       putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
       putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
-      int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);
-      int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);
+         //String str = new String(EM.psClanChars[pors][clan]);
+       // Integer val[] = EM.myAIlearnings.get(str);
+     
+     
+      int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
+      int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
       String valNudgea = EM.mf(aiNudges[0][pors]);
       String valNudgeb = EM.mf(aiNudges[1][pors]);
       String valaiV = EM.mf(aiV);
       String valNudge5 = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][pors] : -11.3);
       String pValIxaVal = EM.mf(E.AILimsC[pValIxa]);
       String pValIxbVal = EM.mf(E.AILimsC[pValIxb]);
+      //use last years value, as in saveAI
+      putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
+      putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
       if (E.debugAIOut2) {
         System.err.println("-----SAIs3----StartYearAI ranInt" + ranInt + " pors" + pors + " rIn" + rIn + ":" + valNudge5 + ":" + valaiV + " A=" + vva + " sv:" + sliderVala + " psv:" + prevSliderVala + " nv:" + valNudgea + " pv:" + pValIxaVal + " at" + E.pNudge0 + " B=" + vvb + " sv:" + sliderValb + " psv:" + prevSliderValb + " nv:" + valNudgeb + " pv:" + pValIxbVal + " at" + E.pNudge1);
         }
@@ -11204,8 +11236,8 @@ public class Assets {
     /**
      * routine to build and save the AI memory the previous year in mapfile This
      * builds the key and a value for this pors clan and saves it in mapFile, It
-     * only starts saving in the second year with year 1 values It uses values
-     * save in saveAI. It update the "year" value to the current previous year
+     * only starts saving in the third year with year 2 values It uses values
+     * saved in saveAI. It update the "year" value to the current previous year
      * of for this key
      *
      * @param acct true if prev trade was accepted
@@ -11213,12 +11245,10 @@ public class Assets {
      * @param offer the last offer of the trade
      * @param prosM last prospects min
      * @param prosA last ave prospects2
-     * @param scorePos position of this clan in last Winner position
-     * @param prevScorePos
      * @param score last score worth;
      *
      */
-    void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA, int scorePos, int prevScorePos, double score) {//Assets.CashFlow
+    void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
       // saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos,prevAIPos, EM.myScore[clan]);
       aiOper = offers / worth;
       if (ec.age > 2) {  // skip age 1 and 2 use prev values,this is before Y2 prev files exist
@@ -11241,9 +11271,12 @@ public class Assets {
 
            EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(unused)
         // E.pPrevScP pPrevScW
-       
+         //finsh building the key
+        aiPos = EM.myScoreClanPos[clan]; // last years position
+       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILimsC, "lastaiPos", y);
+       putValueChar(EM.psClanChars[pors][clan],E.pporsklan, pors*5+clan, E.AILimsC, "pors*5+clan", y);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevScore pos", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevAIpos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevoPerW, prevAIOper, E.AILims1, "prevAIOperW", ifPrint);
          putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims1, "prevEconScore", ifPrint);

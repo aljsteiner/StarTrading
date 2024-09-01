@@ -3904,7 +3904,7 @@ onceAgain:
    * @param printDeb print output to System.out
    * @param p2 whether to add the row entries to seeArrays the row entries
    *
-   * @return the best value for the selected ars and seeArrays
+   * @return the best value for the that the setting +nudge should be set
    */
   double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3, double[] myAILim4, int lX4, double llX4, double luX4, boolean setAll,boolean doSet,boolean printDeb, boolean p2) {
 //static final int mostIa = 0, iaAllSum = 1, iaMySum = 2, iaAllCnt = 3, iaCntedCnt = 4, firstIa = 5, topIa = 6,   //skippedCnt = 7, negIas = 8,undef=8,missing=9,inactive=10,died=11,econDiedI=-1,notActiveI=-2,missingI=-3,undefI=-4, //strtIas = 12, lenIa = 91; // holds 91=12+77+2 spare
