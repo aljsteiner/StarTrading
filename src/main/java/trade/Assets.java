@@ -115,7 +115,7 @@ public class Assets {
   double aiWorth=-11., prevAIWorth=-12.,prevPrevAIWorth=-13.;
   double prevAIWorthI = -14., aiWorthI=-11.;
   double tradeFracNudge[] = {0., 0., 0.007,0.014, 0.021, 0.028,0.035};//tradeFrac dif .1--.8 .007
-  double ffTFracNudge[] = {0., 0.,0.014, 0.028, .042, 0.056,0.070};  //futureFundTransferFrac3.0--5.4  014
+  double ffTFracNudge[] = {0., 0.,0.014, 0.028, .042, 0.056,0.070};  //futureFundTransferFrac 3.0--5.4  014
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
@@ -8015,9 +8015,10 @@ public class Assets {
       int wasTerm = -200;
 
       /**
-       * calculate the strategic Goal of received over sent include history of
+       * calculate the clan strategic Goal of received over sent include history of
        * trade success or failure, myFavor, otherFavor, number of offers (term)
        * and possible SOS
+       * Also note the number of accepted,rejected and lost trades to modify goal
        *
        * @return strategicGoal = desired totalReceipts/totalSend
        */
@@ -8026,10 +8027,11 @@ public class Assets {
 //        oClan = myOffer.getOClan();
         aPre = "S$";
         ttype = pors;
-        thAccept = eM.getCumulativeClanUnits(EM.TradeLastStrategicGoal, pors, clan);
+        // look at previous goals
+        thAccept = eM.getCumulativeClanUnits(EM.TRADESTRATLASTGAVE, pors, clan);
         thReject = eM.getCumulativeClanUnits(EM.TradeRejectedStrategicGoal, pors, clan);
         thLost = eM.getCumulativeClanUnits(EM.TradeLostStrategicGoal, pors, clan);
-        thSum = thAccept + thReject + thLost;
+        thSum = thAccept + thReject + thLost;  // sum of trades
         // history fraction change to goal fail lower goal, accept raise goal of profits
         // thFrac = 1.0 - (thReject+thLost)*.01 + thAccept *.002;
         thFrac = 1.0 + Math.max(-.96, (-thReject * EM.rejectBias[pors][clan] - thLost * EM.lostBias[pors][clan] + thAccept) * EM.historyBias[pors][clan]);
@@ -8061,6 +8063,7 @@ public class Assets {
         assert oFavFrac > E.PPZERO : " ILLEGAL oFavFrac=" + EM.mf(oFavFrac) + ", myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV);
         double sosMin = .80;
         double sosFrac = Math.max(sosMin, sosFrac1);
+        // predict facs at various terms
         gtBias = EM.goalTermBias[pors]; // reduce goal at each barter (term)
         termFrac02 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.) * (gtBias + EM.barterStart - 0.));
         termFrac03 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.));
@@ -8068,7 +8071,7 @@ public class Assets {
         // amount of reduction of goal per term
         termFrac2 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term) * (gtBias + EM.barterStart - term));
         termFrac3 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term));
-        termFrac = (EM.barterStart) / ((gtBias + EM.barterStart - term));
+        termFrac = (EM.barterStart) / ((gtBias + EM.barterStart - term));//1.=>.5
         tfrac = EM.tradeFrac[pors][clan] + tradeFracNudge[pors];
         // rGoalFrac = EM.tradeFrac[pors][clan] * randFrac * myFavFrac * oFavFrac * sosFrac;
         rGoalFrac = Math.min(EM.goalMaxBias[pors][0] * tfrac, tfrac * myFavFrac * oFavFrac * sosFrac * thFrac);
@@ -8076,7 +8079,7 @@ public class Assets {
         rGoal0 = rGoalFrac * termFrac0;  // the goal after doing all the barters
         EM.wasHere = "before History clan=" + clan + " oClan=" + oClan + " term=" + term;
         EM.wasHere2 = " (EM.fav[clan][pors][oClan])=" + EM.mf(EM.fav[clan][pors][oClan]);
-        assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + ", oFavFrac=" + EM.mf(oFavFrac) + ", myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac) + ", tFrac=" + EM.mf(tfrac);
+        assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + "\n" + name + "Y" + EM.year + "CP" + (clan*2+pors) + " nudge" + EM.mf(tradeFracNudge[pors])  + " tFrac=" + EM.mf(tfrac) + " , oFavFrac=" + EM.mf(oFavFrac) + " myFavFrac=" + EM.mf(myFavFrac) + " sosFrac1=" + EM.mf(sosFrac1) + "\n sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac);
         hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF" + EM.mf(EM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc" + EM.mf(EM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF =" + EM.mf(EM.tradeFrac[pors][clan] + tradeFracNudge[pors]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
         hist.add(new History(aPre, 5, "2T" + term, "*rnd=" + EM.mf(tfrac), "*tF=" + EM.mf(termFrac), "goal=", EM.mf(frac), "gtb", EM.mf(gtBias), "<<<<<<<"));
         return strategicGoal = frac;
@@ -8570,7 +8573,7 @@ public class Assets {
       //prevSliderValc = sliderValc;
       //prevSliderVald = sliderVald;
       //int sliderVala=-15,prevSliderVala=-17,sliderValb=-9,prevSliderValb=-19;
-       static final int pporsklan = aiPcntr++; // 2 pOrS *5+ clan
+       static final int pclanpors = aiPcntr++; // 2 pOrS *5+ clan
       static final int pLastScP = aiPcntr++; // 3  Prev score position
 */
     
@@ -8578,18 +8581,29 @@ public class Assets {
       //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
       saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScore[clan]);
       boolean []doNudges={y,y};
+      int vva = eM.valAIN[0];// nudge to vv array traderFrac
       // only clan blue get smart start
-       if(EM.myAIlearnings.size() > 100 && clan == 4 ){
+       if( EM.myAIlearnings.size() > 100 && clan == 4 ){
        String aKey = new String(EM.psClanChars[pors][clan]);
        Integer[] aVal =  EM.myAIlearnings.get(aKey);
+       // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
        // assume the ars arrays are set, and set them, but not EM.myAIlearnings
-       double newTF =eM.setCntAr(aKey, aVal, "44&prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,false,false,y, y);
-       tradeFracNudge[pors] = newTF - EM.tradeFrac[pors][clan];
+       double sliderTF = eM.setCntAr(aKey, aVal, "44&prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
+       double tfLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
+       double tfHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
+       double prevTF =  EM.tradeFrac[pors][clan];
+       double newTF = ((tfHigh -tfLow) *.01 * sliderTF) + tfLow;
+       //double newTF = eM.sliderToVal(sliderTF,EM.valD[vva][EM.gameLim][pors][EM.vLowLim], EM.valD[vva][EM.gameLim][pors][EM.vHighLim]);
+       tradeFracNudge[pors] = newTF -prevTF;
+       if(E.debugAIOut)System.out.println("-----SAIy0----" + " prevTradeFrac=" + EM.mf(prevTF) + "+" +" nudge=" + EM.mf(tradeFracNudge[pors]) + "=>"  + EM.mf(newTF) + "==" + " sliderTF=" + EM.mf(sliderTF) );
+
       eM.setCntAr(aKey, aVal, false,false,false);//update ars arrays
-      doNudges[0] = false;
+      ///doNudges[0] = false;   // true gets it overwrittent by the default
         //eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]
       //EM.tradeFrac[pors][clan] + tradeFracNudge[pors]
        }
+
+       // now the default start
       Random rand = new Random();
       rIn = -7;
       ranInt = rand.nextInt(7);
@@ -8626,7 +8640,7 @@ public class Assets {
 
       // now install the nudge pointers even if nudge=0,0
 
-      int vva = eM.valAIN[0];// nudge to vv array
+     vva = eM.valAIN[0];// nudge to vv array traderFrac
       int vvb = eM.valAIN[1];// nudge to vv array
       if (prevSliderVala < 0) { //for age0
         prevSliderVala = eM.getAIVal(vva, pors, clan, ec, 0);
@@ -11274,7 +11288,7 @@ public class Assets {
          //finsh building the key
         aiPos = EM.myScoreClanPos[clan]; // last years position
        putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILimsC, "lastaiPos", y);
-       putValueChar(EM.psClanChars[pors][clan],E.pporsklan, pors*5+clan, E.AILimsC, "pors*5+clan", y);
+       putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors, E.AILimsC, "pors*5+clan", y);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevAIpos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);

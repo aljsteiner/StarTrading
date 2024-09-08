@@ -333,7 +333,7 @@ public class E {
   static private int aiPcntr = 0;
   static final int ptype = aiPcntr++; // 0 type
    static final int ppors = aiPcntr++; // 1 pOrS
-   static final int pporsklan = aiPcntr++; // 2 pOrS *5+ clan
+   static final int pclanpors = aiPcntr++; // 2 pOrS *5+ clan
    static final int pLastScP = aiPcntr++; // 3  Prev score position
    static final int pPrevScP = aiPcntr++; // 4 Prev score position
   static final int pPrevProsM = aiPcntr++; //5 rawProspects2 min

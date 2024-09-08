@@ -814,7 +814,7 @@ public class Econ {
 
   /**
    * get a preassigned random value at randx % rand, reduce randomicity by mRand
-   * ; 1.0
+   * the random is +- the random center of 1.0
    *
    * @param randx index folded into the length of array trand so for length=50
    * randx 55 = 5
@@ -1908,7 +1908,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         moreTimes[1] = etTimes[1] - etTimes[0]; // imWaiting time
         moreTimes[2] = etTimes[2] - etTimes[1]; //imCounted time
         //long msecs = EM.doYearTime - etTimes[1];
-        EM.wasHere2 = atList[0] = "\n---ETLb---ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6] + "\n";
+        EM.wasHere2 = atList[0] = "\n---ETLb---ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + "Y" + year + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6] + "\n";
         sETList[ixETList = ++ixETList < lETList ? ixETList : 0] = atList[0];
       }
 
