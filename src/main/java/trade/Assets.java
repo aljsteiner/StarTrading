@@ -10326,7 +10326,7 @@ public class Assets {
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, Math.sqrt(initialSumWorth), 1);
-        setStat(EM.WINNERYEARS, pors, clan, EM.myScoreClanPos[clan]==4?1.:0., 1);
+        setStat(EM.WINNERYEARS, pors, clan, EM.orderScorePosByIncrClan[clan]==4?1.:0., 1);
         setStat(EM.WORTHINCR, pors, clan, percentYearWorthIncr, 1);
         setStat(EM.KNOWLEDGEW, pors, clan, fyW.sumKnowledgeWorth, 1);
         setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.CUMULATIVEUNITDEPRECIATIONIX), 1);
@@ -11286,7 +11286,7 @@ public class Assets {
            EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(unused)
         // E.pPrevScP pPrevScW
          //finsh building the key
-        aiPos = EM.myScoreClanPos[clan]; // last years position
+        aiPos = EM.orderScorePosByIncrClan[clan]; // last years position
        putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILimsC, "lastaiPos", y);
        putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors, E.AILimsC, "pors*5+clan", y);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
@@ -11372,7 +11372,7 @@ public class Assets {
        prevPrevAIScore = prevAIScore;
       prevAIScore = EM.myScore[clan]; // start game value
     //  aiScore = EM.myScore[clan]; //
-      prevAIPos = EM.myScoreClanPos[clan];
+      prevAIPos = EM.orderScorePosByIncrClan[clan];
       prevPrevAIPos = prevAIPos;
 
       aiProsM = rawProspects2.min(); // these are last values

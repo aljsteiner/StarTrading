@@ -3672,12 +3672,12 @@ onceAgain:
           }
         }
         // now do the output
-        seeArrays[0]  = " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0];
+        seeArrays[0]  = " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + orderClanPosByIncrScore[4] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[0];
         System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + "Y" + year + " lKey" + lKey + " key" + bKey + seeArrays[0]);
         if(entryCnt>0)setCntAr(aKey, aVal,false, false, true);
         // seeCntArrays(entryCnt, cntsCnt, rKeysIx);
         //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
-        seeArrays[0] =  " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0];
+        seeArrays[0] =  " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + orderClanPosByIncrScore[4] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[0];
         System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);
 
       }
@@ -3711,8 +3711,8 @@ onceAgain:
    * @return
    */
   String seeCntArrays(int entryCnt, int cntsCnt, int lRemove) {
-    String ll = seeArrays[0] = "seeCntArrays " + " Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + lRemove + "winr" + myScorePosClan[0] + myScorePosClan[1] + myScorePosClan[2] + myScorePosClan[3] + myScorePosClan[4];// //seeArrays[0] =
-    // seeArrays[0] = " seeCntArrays Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + myScorePosClan[4] + myScorePosClan[3] + myScorePosClan[2] + myScorePosClan[1] + myScorePosClan[0];
+    String ll = seeArrays[0] = "seeCntArrays " + " Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + lRemove + "winr" + orderClanPosByIncrScore[0] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[4];// //seeArrays[0] =
+    // seeArrays[0] = " seeCntArrays Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + orderClanPosByIncrScore[4] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[0];
 /*
     boolean set=false,pr=true;
      setCntAr(aKey, aVal, "44&lastAIScoreW", 2, 1, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 4., 5.,set , pr, y);
@@ -7999,8 +7999,8 @@ onceAgain:
       //move the score and positions to prev...
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
         prevMyScore[ixClan] = myScore[ixClan];
-        prevMyScoreClanPos[ixClan] = myScoreClanPos[ixClan];
-        prevMyScorePosClan[ixClan] = myScorePosClan[ixClan];
+        prevMyScoreClanPos[ixClan] = orderScorePosByIncrClan[ixClan];
+        prevMyScorePosClan[ixClan] = orderClanPosByIncrScore[ixClan];
       }
       lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx  vvend
        if (myAIlearnings == null) {
@@ -10387,9 +10387,9 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   static double relScore[] = {400., 400., 400., 400., 400.};
   static double prevRelScore[] = {400., 400., 400., 400., 400.};
   // what clan in position
-  static int myScorePosClan[] = {0, 1, 2, 3, 4};//score min-max pos4 has clan2
+  static int orderClanPosByIncrScore[] = {0, 1, 2, 3, 4};//score min-max pos4 has clan2
   // what position is clan
-  static int myScoreClanPos[] = {0, 1, 2, 3, 4};//clan 3 has score pos 4highest value
+  static int orderScorePosByIncrClan[] = {0, 1, 2, 3, 4};//clan 3 has score pos 4highest value
   static double myScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double prevScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double relScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
@@ -10414,8 +10414,8 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
     curDif = year < 2 ? winDif[0][0] : curDif;
     difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;
     for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-      myScorePosClan[ixClan] = ixClan;
-      myScoreClanPos[ixClan] = ixClan;
+      orderClanPosByIncrScore[ixClan] = ixClan;
+      orderScorePosByIncrClan[ixClan] = ixClan;
       myScore[ixClan] = 4000.;  // allow negatives to reduce it
       myScorePorSClan[0][ixClan] = myScorePorSClan[1][ixClan] = 2000.;
     }
@@ -10455,52 +10455,56 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
       }
 
       int min = 0, prevMin = 0,next=0,ix=0,ix2=0;
-      // static int myScorePosClan[] = {0,1,2,3,4};// which clan does the value have
-      //static int myScoreClanPos[] = {0,1,2,3,4}; // which value does the clan have
-      for (ix = 1; ixClan < E.LCLANS; ixClan++) {
-      //  myScorePosClan[ix] = ix; // which clan does pos ix have
-        // going from least PosValClan to most PosValClan
-        if (myScore[myScorePosClan[ix - 1]] < myScore[myScorePosClan[ix]]) {
-          // is score for  value ix-1(0) < score for value ix(1) sc0 < sc1
-          // ixClan=2 1<2 and  0<1<2
-          myScoreClanPos[ix] = ix;// set clan at ix to score pos ix
-          myScoreClanPos[ix-1] = ix-1;//  set clan at ix-1 to score pos ix-1
+      // static int orderClanPosByIncrScore[] = {0,1,2,3,4};// val score pos has which clan == orderClanPosByIncrScore
+      //static int orderScorePosByIncrClan[] = {0,1,2,3,4}; // clan has which score pos==orderScorePosByIncrClan
+      // ix moves min to max value position
+      for (ix = 1; ix < E.LCLANS; ix++) {
+        //start with preset values for each array
+      //  orderClanPosByIncrScore[ix] = ix; // which clan does pos ix have
+        // going from least value PosValClan to most PosValClan
+        if (myScore[orderClanPosByIncrScore[ix - 1]] < myScore[orderClanPosByIncrScore[ix]]) {
+          // ix-1=0 val pos has clan 0 from the preset values of posclan and clanpos
+          // ix=2 1<2 and  0<1<2
+          min = ix-1;// min val pos
+          next = ix;// next val pos
+         // orderClanByIncrScore    orderScoreByIncrClan
+          orderScorePosByIncrClan[ix-1] = min;//  set clan at ix-1 to score pos min
+          orderScorePosByIncrClan[ix] = next;// set clan at ix to score pos next
         }
         else { //1 < 0  or 2 < reverse them
-          min = myScorePosClan[ix];// least posVal
-          next = myScorePosClan[ix - 1];
+          min = orderClanPosByIncrScore[ix];// min val pos  min val pos  0->3
+          next = orderClanPosByIncrScore[ix - 1]; // next val pos 1->0
           // flip the lower score pos val up to current ixClan
-          myScorePosClan[ix] = next;//  2 to 1
-          myScorePosClan[ix - 1]= min;
-          //now set clan ixClan to its new higher score position
-        //  myScoreClanPos[myScorePosClan[ixClan]] = ixClan;
-          // set one less score pos to the prev clan (ixClan)
-        //  myScorePosClan[ixClan - 1] = min; //2
-          // clan 2 moved to score 1, set clan2 to 1
-         // myScoreClanPos[myScorePosClan[ixClan - 1]] = ixClan - 1;
-          //Than move the new clan score down the array as needed
+          orderClanPosByIncrScore[ix] = next;//  2 to 1
+          orderClanPosByIncrScore[ix - 1]= min;
+          orderScorePosByIncrClan[ix-1] = min;//  set clan at ix-1 to score pos min
+          orderScorePosByIncrClan[ix] = next;// set clan at ix to score pos next
+          //now move min as low as necessary
           for (ix2 = ix- 1; ix2 > 0; ix2--) { //1 => 0, 2 => 1
-            if (myScore[myScorePosClan[ix2 - 1]] < myScore[myScorePosClan[ix2]]) {
-              // already in order do nothing
+            if (myScore[orderClanPosByIncrScore[ix2 - 1]] < myScore[orderClanPosByIncrScore[ix2]]) {
+               // ix-1=0 val pos has clan 0 from the preset values of posclan and clanpos
+              // ix=2 1<2 and  0<1<2
+              min = ix2-1;// min val pos
+              next = ix2;// next val pos
+              orderScorePosByIncrClan[ix2-1] = min;// min val pos  0->3
+              orderScorePosByIncrClan[ix2] = next;// next val pos 1->0
             }
             else {
-              min = ix2; // save current score clan position
-              next= ix2 - 1;
-              // flip the next 2 lower PosClan
-              myScorePosClan[ix2] = next;//  2 to 1
-              myScorePosClan[ix2 - 1]= min;
-             // myScorePosClan[ixC2] = myScorePosClan[ix - 1];
-              //now set clan ixC2 to its new higher score position
-             // myScoreClanPos[myScorePosClan[ixC2]] = ixC2;
-              // now save the ixC2 clan into the lower score position
-            //  myScorePosClan[ixC2 - 1] = min; //2  now in least pos
-              // clan 2 moved to score 1, set clan2 to 1
-             // myScoreClanPos[myScorePosClan[ixC2 - 1]] = ixC2 - 1;
+               min = orderClanPosByIncrScore[ix2];// min val pos  0->3
+                next = orderClanPosByIncrScore[ix2 - 1]; // next val pos 1->0
+                // flip the lower score pos val up to current ixClan
+                orderClanPosByIncrScore[ix2] = next;//  2 to 1
+                orderClanPosByIncrScore[ix2 - 1]= min;
+                orderScorePosByIncrClan[ix2-1] = min;//   min val pos  0->3
+                orderScorePosByIncrClan[ix2] = next;// next val pos 1->0
             } // else ix2
           } // ix2
         }// else ixClan
       }// ix
-      winner = myScoreClanPos[4]; //clan at Pos4
+      for(ix=0;ix<E.LCLANS;ix++){
+        orderScorePosByIncrClan[orderClanPosByIncrScore[ix]] = ix;//30142=>12403
+      }
+      winner = orderClanPosByIncrScore[4]; //clan at  valPos 4
 
       double dif = 0.0, wDif = 0.0;
       // dif = max - myScore.ave
@@ -10521,7 +10525,10 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
         curDif -= (curDif - curDif * difMult) > 0.0 ? curDif * difMult : 0.0;
       }
 
-      System.out.println("getWinner " + resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner + (badbad ? " illegal winner=" + prevWinner : ""));
+      System.out.println("-----WNRa----getWinner " + ( isWinner? "++isWinner":"--isWinner") + " posClan" 
+                         + orderClanPosByIncrScore[0] +orderClanPosByIncrScore[1] +orderClanPosByIncrScore[2] +orderClanPosByIncrScore[3] + orderClanPosByIncrScore[4]  + ":"  + orderScorePosByIncrClan[0]  + orderScorePosByIncrClan[1]  + orderScorePosByIncrClan[2]  + orderScorePosByIncrClan[3]  + orderScorePosByIncrClan[4] + "::" + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4])  +  resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", winner=" + winner + (badbad ? " --winner=" + prevWinner : ""));
+
+ 
       return winner;
     }
     catch (Exception | Error ex) {
