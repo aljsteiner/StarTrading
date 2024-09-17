@@ -114,8 +114,8 @@ public class Assets {
   double aiScoreI = -5., prevAIScoreI = -5., prevPrevAIScoreI = -3.;
   double aiWorth=-11., prevAIWorth=-12.,prevPrevAIWorth=-13.;
   double prevAIWorthI = -14., aiWorthI=-11.;
-  double tradeFracNudge[] = {0., 0., 0.007,0.014, 0.021, 0.028,0.035};//tradeFrac dif .1--.8 .007
-  double ffTFracNudge[] = {0., 0.,0.014, 0.028, .042, 0.056,0.070};  //futureFundTransferFrac 3.0--5.4  014
+  double tradeFracNudge[] = {0., 0., 0.021, 0.028,0.035, 0.042,0.049};//tradeFrac dif .1--.8   *.007
+  double ffTFracNudge[] = {0., 0., 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
@@ -883,10 +883,10 @@ public class Assets {
     }
     res[bias] = ret;
     putValStr = " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias =" + bias + ":" + retIx + "=" + ret + " V:" + EM.mf(value) + " putValCnt" + putValCnt;
-    if ((ifPrint && (++putValCnt % 47) == 0) || bias == E.pPrevEScW) {
+    if ((ifPrint && (++putValCnt % 47) == 0) || bias == E.pPrevEScW || bias == E.pPrevERScW) {
       String ss = new String(res);
       char rr = ret;
-      System.out.println("----PVB3---- putValByte what=" + what + " bias =" + bias + " char=" + retIx + "=" + ret + " value=" + EM.mf(value) + ":" + EM.mf(tests[retIx]) + " putValCnt" + putValCnt + " key.length" + res.length + " key=" + ss);
+      System.out.println("----PVB3---- putValByte what=" + what + " bias =" + bias + " char=" + retIx + "=" + ret + " value=" + value + " VV" + EM.mf(value) + "Vx" + EM.mf(tests[retIx]) + " putValCnt" + putValCnt + " key.length" + res.length + " key=" + ss);
     }
     return retIx;
   }
@@ -8606,22 +8606,25 @@ public class Assets {
        // now the default start
       Random rand = new Random();
       rIn = -7;
-      ranInt = rand.nextInt(7);
-      int ran2 = ranInt%2;
-      double ranMult = .7 + .5 * Math.random();
+      ranInt = rand.nextInt(7);// 0-6
+      int ran2 = ranInt%aiNudges.length; // 0-1
+      int rInMax=5; // number of nudge values
+      rInMax = aiNudges[0].length-2; // currently 5
+        rIn = rand.nextInt(rInMax*2);// select sign and value of nudges 5
+      double ranMult = .7 + .6 * Math.random();// .7 - 1.3
       double aiV = -7.7;
       // only nudge 2 out of 5 econs per year
     
       if (ranInt > -1 && ranInt < aiNudges.length) {
-        rIn = rand.nextInt(6);// select sign and value of nudge
+
         //ranInt==1 rIn==5: aiNudges[ranInt][pors] = -aiNudges[ranInt][2.5+1.5=4]
         //ranInt==1 rIn==4: aiNudges[rnInt][pors] = -aiNudges[ranInt][
         // rIn over 2 is negative
         // clan and pors defined in Assets
         // aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
-        //randomize the
+        //randomize the applied values
         if(doNudges[ran2]){
-          aiNudges[ran2][pors] = aiV = ranMult * (rIn < 4 ? aiNudges[ran2][rIn + 3] : -aiNudges[ran2][rIn - 1]);
+          aiNudges[ran2][pors] = aiV = ranMult * (rIn < rInMax ? aiNudges[ran2][rIn+2] : -aiNudges[ran2][rIn-rInMax+2]);
           doNudges[ran2] = false;
           }
         //int sliderVal = eM.getAIVal(vv, pors, clan,ec,ranInt);
@@ -8631,10 +8634,10 @@ public class Assets {
         //zero all aiNudges
         for (int ranInta = 0; ranInta < aiNudges.length; ranInta++) {
           if(doNudges[ranInta]){
-          for (int rIna = 0; rIna < 2; rIna++) {
-            aiNudges[ranInta][rIna] = 0.0;
-          }
-          doNudges[ranInta] = false;
+            for (int rIna = 0; rIna < 2; rIna++) {
+              aiNudges[ranInta][rIna] = 0.0;
+            }
+            doNudges[ranInta] = false;
           }
         }
 
@@ -11294,8 +11297,8 @@ public class Assets {
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevoPerW, prevAIOper, E.AILims1, "prevAIOperW", ifPrint);
          putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims1, "prevEconScore", ifPrint);
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, prevAIERScore, E.AILims1, "prevEconRScore", ifPrint);
-
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, 30.*prevAIERScore, E.AILimsC, "prevEconRScore", ifPrint);
+       putValueChar(EM.psClanChars[pors][clan], E.pLastERScW, 30.*aiERScore, E.AILimsC, "lastEconRScore", ifPrint);
 
         // ifPrint = false;
        // putValueChar(EM.psClanChars[pors][clan], E.pPrevW, prevAIWorth, E.AILims, "prewAIWorth", ifPrint);
@@ -11389,7 +11392,7 @@ public class Assets {
       prevPrevAIERScoreI = prevAIERScoreI;
        prevAIERScoreI = aiERScoreI;
       aiERScoreI = (aiERScore - prevAIERScore) / prevAIERScore;
-      aiERScore = aiEScore/fyW.sumRCSGBal;
+      aiERScore = aiEScore/EM.aiEScoreAve;
       aiOper = aiOffer / aiWorth;
       acct = tradeAccepted;
       prevAIEScoreI = aiEScoreI;
@@ -11425,11 +11428,13 @@ public class Assets {
       prevStrategicGoal = strategicGoal;
       prevSliderVala = sliderVala;
       prevSliderValb = sliderValb;
+      setStat(EM.ESCORE, pors, clan, aiEScore, 1);
+      setStat(EM.RELSCORE, pors, clan, aiERScore, 1);
       if (ec.age > 1) {  // you prev values
         EM.wasHere8 = "---ELa7--- Assets AI set has lock";
         int cIx = 7;
         int much = 7;
-
+        
         boolean ifPrint = true;
         aWaits++;
         ifPrint = aWaits > 5;
@@ -11446,27 +11451,27 @@ public class Assets {
           cumOffersPerWorth += cumOffers / cumBTWorth;
           cumOffersPS[pors] += cumOffersPS[pors] / cumBTWorthPS[pors];
           cumOffersClan[pors][clan] += cumOffersClan[pors][clan] / cumBTWorthClan[pors][clan];
-          if (E.debugAIOut && (aWaits > 5)) {
+           aType = 0;
+          if (false && E.debugAIOut && (aWaits > 5)) {
             String str = new String(EM.psClanChars[pors][clan]);
             System.out.println("----BAI1----  len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size() + " put key=" + str + "");
           }
-          //       fyWAIWorth = fyW.sumTotWorth;
+       // if (E.debugAIOut || (++aWaits % 5) == 0) {
+       if (E.debugAIOut) {
+         String str = new String(EM.psClanChars[pors][clan]);
+          System.out.println("----SAI2----" + " " + name + " saveAI put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + " put key=" + str + " TreeMap size=" + EM.myAIlearnings.size());
+           //  aiERScore = aiEScore/EM.aiEScoreAve;
+          System.out.println("----SAI3----" + " " + name + " saveAI aiEScore " + EM.mf(aiEScore)+ " EM.aiEScoreAve" + EM.mf(EM.aiEScoreAve) + "aiERScore " + EM.mf(aiERScore));
         }
-        else if (dead) { // process dead never seen in saveAIKey
+       } else if (dead) { // process dead never seen in saveAIKey
           aType = 2;
         }
-
-        if (E.debugAIOut || (++aWaits % 5) == 0) {
-          eM.printHere("----BAI2----", ec, " put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + " TreeMap size=" + EM.myAIlearnings.size());
-
-        }
-        aType = 0;
         // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
         //aMany = EM.myAIlearnings.get(str); // force valid number if null
         // aMany = aMany == null ? 1 : aMany + 1;
         // EM.myAIlearnings.put(str, aMany);
         if (false) {
-          //   eM.printHere("----BAI4----", ec, " put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
+          //   eM.printHere("----SAI4----", ec, " put key=" + str + " , =" + aMany + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed") + " aType" + aType + " acct" + acct + " pors" + pors + " clan" + clan);
         }
 
       }// end if year

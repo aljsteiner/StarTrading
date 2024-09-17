@@ -1297,7 +1297,7 @@ class EM {
   }
 
   static boolean mfShort = false;
-  static boolean test5 = true; // temp to test funcionss
+  static boolean test5 = false; // temp to test funcionss
 
   /**
    * format the Double value to a x char string if myWidth > 1800 make max 15
@@ -1307,6 +1307,9 @@ class EM {
    * @return value as a string
    */
   static public String mf(Double v) {
+      if (test5) {
+          System.err.printf("----MFT1a---test5 enter mf  v= %15.5f, myWidth =" + myWidth + "\n", v);
+      }
     double tmp = v < 0.0 ? (-v % 1.0) : v % 1.0; // remainder from 1.0
     if (v.isNaN()) {
       return "# " + v;
@@ -1399,7 +1402,7 @@ class EM {
         dFrac.setMaximumFractionDigits(1);
         return dFrac.format(v);
       }
-      else if ((v > -9999999. && v < 0.0) || (v > .001 && v < 99999999.)) { //8 9
+      else if ((v > -9999999999. && v < 0.0) || (v > .001 && v < 99999999999.)) { //8 9
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
         return dFrac.format(v);
@@ -1427,22 +1430,22 @@ class EM {
         dFrac.setMaximumFractionDigits(9);
         return dFrac.format(v);
       }
-      else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 999999.)) { // 6 6 13 12
+      else if ((v > -999999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 6 6 13 12
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         return dFrac.format(v);
       }
-      else if ((v > -9999999. && v < -0.0) || (v > .001 && v < 99999999.)) { // 7 8 13 13
+      else if ((v > -9999999999. && v < -0.0) || (v > .001 && v < 99999999999.)) { // 7 8 13 13
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(2);
         return dFrac.format(v);
       }
-      else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 8 8 13 13
+      else if ((v > -99999999999. && v < -0.0) || (v >= 0.0 && v < 99999999999.)) { // 8 8 13 13
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
         return dFrac.format(v);
       }
-      else if ((v > -99999999. && v < -0.00) || (v >= 0.0 && v < 99999999.)) {// 8 8  12 11
+      else if ((v > -99999999999. && v < -0.00) || (v >= 0.0 && v < 99999999999.)) {// 8 8  12 11
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
         return dFrac.format(v);
@@ -1453,11 +1456,11 @@ class EM {
     }
     else if (myWidth > 1500) { // 15 characters
       if (test5) {
-        System.err.printf("----MFT9--- v= %15.9e\n", v);
+        System.err.printf("----MFT9--- myWidth=" + myWidth + " v= %15.9e\n", v);
       }
-      if ((v > -999999999999. && v < 0.0 && tmp < .000000001 && tmp > E.PPZERO) || (v >= 0.0 && v < 9999999999999. && tmp < .000000001 && tmp > E.PPZERO)) {  //12 13 whole number with a remainder less than 9 digits after . more than 13 digits after . and less than a  number up to 12 digits, anything large goes to the exp format
+      if ((v > -99999999999999. && v < 0.0 && tmp < .000000001 && tmp > E.PPZERO) || (v >= 0.0 && v < 999999999999999. && tmp < .000000001 && tmp > E.PPZERO)) {  //15 15 whole number with a remainder less than 9 digits after . more than 13 digits after . and less than a  number up to 12 digits, anything large goes to the exp format
         if (test5) {
-          System.err.printf("----MFT9a--- v= %15.9e, %9.3e remainder %9.3e " + exp.format(v) + " \n", v, tmp, v, E.PPZERO);
+          System.err.printf("----MFT9a--- myWidth=" + myWidth + " v= %15.9e, %9.3e remainder %9.3e " + exp.format(v) + " \n", v, tmp, v, E.PPZERO);
         }
         return exp.format(v);
       }
@@ -1478,7 +1481,7 @@ class EM {
         }
         return dFrac.format(v);
       }
-      else if ((v > -999999. && v < -0.0) || (v >= 0.0 && v < 9999999.)) { // 6 7
+      else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 8 8
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(5);
         if (test5) {
@@ -1486,7 +1489,7 @@ class EM {
         }
         return dFrac.format(v);
       }
-      else if ((v > -9999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 7 8
+      else if ((v > -999999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 9 9
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(4);
         if (test5) {
@@ -1494,7 +1497,7 @@ class EM {
         }
         return dFrac.format(v);
       }
-      else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 8 9
+      else if ((v > -99999999999. && v < -0.0) || (v >= 0.0 && v < 99999999999.)) { //11 11
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(3);
         if (test5) {
@@ -1502,7 +1505,7 @@ class EM {
         }
         return dFrac.format(v);
       }
-      else if ((v > -9999999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 9 9
+      else if ((v > -999999999999. && v < -0.0) || (v >= 0.0 && v < 999999999999.)) { // 12 12
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(2);
         if (test5) {
@@ -1510,7 +1513,7 @@ class EM {
         }
         return dFrac.format(v);
       }
-      else if ((v > -9999999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 9 8
+      else if ((v > -9999999999999. && v < -0.0) || (v >= 0.0 && v < 9999999999999.)) { // 9 13
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
         if (test5) {
@@ -1518,7 +1521,7 @@ class EM {
         }
         return dFrac.format(v);
       }
-      else if ((v > -99999999999. && v < -0.00) || (v >= 0.0 && v < 99999999999.)) {//11 11
+      else if ((v > -99999999999999. && v < -0.00) || (v >= 0.0 && v < 99999999999999.)) {//14 14
         dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(0);
         if (test5) {
@@ -3756,10 +3759,10 @@ onceAgain:
     //  pick the econ input values that produced winner
 
   //  setCntAr(aKey, aVal, "44&prevAIScoreW", 2, 1, E.AILimss[1], E.pPrevScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
-   setCntAr(aKey, aVal, "44&prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
-    setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
-    setCntAr(aKey, aVal, "44&prevAIEScore", 5, 4, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
-   // setCntAr(aKey, aVal, "prevEconRScore", 7, 6, E.AILimss[1], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
+   setCntAr(aKey, aVal, "prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
+ //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
+    setCntAr(aKey, aVal, "prevAIEScore", 3, 3, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
+    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
     setCntAr(aKey, aVal, "FutFTFrac", 7, 6, E.AILimsC, E.pNudge1, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
 
     //   setCntAr(aKey, aVal, "23&prevAIScoreW", 2, 2, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3..,setAll, doSet, pr, no);
@@ -3768,105 +3771,6 @@ onceAgain:
     // setCntAr(aKey, aVal, "44&lastAIScoreW", 9, 5, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pLastScP, 4., 4..,setAll, doSet, pr, y);
   }
   int setCntSee = 0;
-  /**
-   * put into ars[arn] count array ar pX1 counts limited by the limit * value
-   * from lX1 Find the value with most count for pX1
-   *
-   * @param aKey the key for this setting
-   * @param aVal The value part for the counting
-   * @param what describe what is seen
-   * @parm aarn number of ars array to use for un selected keys
-   * @parm arn number of ars array to use for pX1
-   * @param myAILim the values array for this pX1
-   * @param pX1 The main Value aKey character must that is being counted
-   * @param myAILim1 the values array for lX1 lower and upper, match setting of
-   * lX1
-   * @param lX1 The first limit aKey character index for the character index sum
-   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
-   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
-     * @param setAll add the full count for entry.aVal
-   * @parm doSet if not setAll add the 1 to new entries in the key otherwise add 0.
-   * @param printDeb print output to System.out
-   * @param p2 whether to add the row entries to seeArrays the row entries
-   *
-   * @return the best value for the selected ars and seeArrays
-   */
-  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, boolean setAll, boolean doSet,boolean printDeb, boolean p2) {
-    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim, -2, 0, 0, myAILim, -3, 0., 0., myAILim, -4, 0., 0., setAll, doSet, printDeb, p2);
-    return bb;
-  }
-
-  /**
-   * put into ars[arn] count array ar pX1 counts limited by the limit * value
-   * from lX1 Find the value with most count for pX1
-   *
-   * @param aKey the key for this setting
-   * @param aVal The value part for the counting
-   * @param what describe what is seen
-   * @parm aarn number of ars array to use for un selected keys
-   * @parm arn number of ars array to use for pX1
-   * @param myAILim the values array for this pX1
-   * @param pX1 The main Value aKey character must that is being counted
-   * @param myAILim1 the values array for lX1 lower and upper, match setting of
-   * lX1
-   * @param lX1 The first limit aKey character index for the character index sum
-   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
-   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
-   * @param myAILim2 the values array for lX2 lower and upper, match setting of
-   * lX2
-   * @param lX2 The 2nd limit aKey character index for the character index sum
-   * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
-   * @param luX2 lX2 iupper limit only accept keys with lX2 &le; luX2
-      * @param setAll add the full count for entry.aVal
-   * @parm doSet if not setAll add the 1 to new entries in the key otherwise add 0.
-   * @param printDeb print output to System.out
-   * @param p2 whether to add the row entries to seeArrays the row entries
-   *
-   * @return the best value for the selected ars and seeArrays
-   */
-  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2,boolean setAll,boolean doSet, boolean printDeb, boolean p2) {
-    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim2, -3, 0., 0., myAILim2, -4, 0., 0.,setAll,doSet, printDeb, p2);
-    return bb;
-  }
-
-    /**
-     * put into ars[arn] count array ar pX1 counts limited by the limit * value
-     * from lX1 Find the value with most count for pX1
-     *
-     * @param aKey the key for this setting
-     * @param aVal The value part for the counting
-     * @param what describe what is seen
-     * @parm aarn number of ars array to use for un selected keys
-     * @parm arn number of ars array to use for pX1
-     * @param myAILim the values array for this pX1
-     * @param pX1 The main Value aKey character must that is being counted
-     * @param myAILim1 the values array for lX1 lower and upper, match setting
-     * of lX1
-     * @param lX1 The first limit aKey character index for the character index
-     * sum
-     * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
-     * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
-     * @param myAILim2 the values array for lX2 lower and upper, match setting
-     * of lX2
-     * @param lX2 The 2nd limit aKey character index for the character index sum
-     * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
-     * @param luX2 lX2 iupper limit only accept keys with lX2 &le; luX2
-     * @param myAILim3 the values array for lX1 lower and upper, match setting
-     * of lX3
-     * @param lX3 The 3rd limit aKey character index for the character index sum
-     * @param llX3 lX3 lower limit only accept keys with lX3 &ge; llX3
-     * @param luX3 lX3 upper limit only accept keys with lX3 &le; luX3
-      * @param setAll add the full count for entry.aVal
-   * @parm doSet if not setAll add the 1 to new entries in the key otherwise add 0.
-   * @param printDeb print output to System.out
-   * @param p2 whether to add the row entries to seeArrays the row entries
-     *
-     * @return the best value for the selected ars and seeArrays
-     */
-  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3,boolean setAll,boolean doSet, boolean printDeb, boolean p2) {
-    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim3, lX3, llX3, luX3, myAILim3, -4, 0., 0.,setAll,doSet, printDeb, p2);
-    return bb;
-  }
 
     /**
    * put into ars[arn] count array ar pX1 counts limited by the limit * value
@@ -4010,9 +3914,9 @@ onceAgain:
      
       ars[arn][vvIa] += vvIaC = setAll?aVal[E.aValCnts]:doSet?1:0;  // up cnts all and limited
       // avoid -0 values
-      ars[arn][firstIa] = ars[arn][firstIa] >= strtLow ? ars[arn][firstIa] : strtLow;
-      ars[arn][mostIa] = ars[arn][mostIa] >= strtLow ? ars[arn][mostIa] : strtLow;
-      ars[arn][topIa] = ars[arn][topIa] >= strtLow ? ars[arn][topIa] : strtLow;
+     // ars[arn][firstIa] = ars[arn][firstIa] >= strtLow ? ars[arn][firstIa] : strtLow;
+     // ars[arn][mostIa] = ars[arn][mostIa] >= strtLow ? ars[arn][mostIa] : strtLow;
+     //ars[arn][topIa] = ars[arn][topIa] >= strtLow ? ars[arn][topIa] : strtLow;
       cLim = ars[arn][iaLimCnt];
       cAll = ars[arn][iaAllCnt]+= vvIaC = setAll?aVal[E.aValCnts]:doSet?1:0;  // sum of all
       cAllSum = ars[arn][iaAllSum] += vvIaC * pValIx;//+= pValIx; //
@@ -4050,15 +3954,15 @@ onceAgain:
           //ars[arn][vvIa] += vvIaC = setAll?aVal[E.aValCnts]:doSet?1:0; ; //done above
           // possibly change firstIa, topIa, mostIa
           // test counts
-          if (ars[arn][mostIa] < strtLow || ars[arn][vvIa] > ars[arn][ars[arn][mostIa]]) { //ar[IX] of most count
+          if (ars[arn][mostIa] < strtLow || ars[arn][mostIa] == strtLow || ars[arn][vvIa] > ars[arn][ars[arn][mostIa]]) { //ar[IX] of most count
             ars[arn][mostIa] = vvIa; // move  to a new mostIa
           }
         //  ars[arn][firstIa] =ars[arn][firstIa] < strtLow ? vvIa: ars[arn][firstIa] ;
         //  ars[arn][firstIa] =ars[arn][firstIa] > vvIa? vvIa: ars[arn][firstIa] ;
-          if (ars[arn][firstIa] < strtLow || ars[arn][firstIa] > vvIa) { //firstIa too high
+          if (ars[arn][firstIa] < strtLow || ars[arn][firstIa] == strtLow || ars[arn][firstIa] > vvIa) { //firstIa too high
             ars[arn][firstIa] = vvIa; //lower firstIa it must be lowest
           }
-          if (ars[arn][topIa] < strtLow || ars[arn][topIa] < vvIa) { //the highest value
+          if (ars[arn][topIa] < strtLow || ars[arn][  topIa] == strtLow || ars[arn][topIa] < vvIa) { //the highest value
             ars[arn][topIa] = vvIa;// raise topIa it must be highest
           }
           firstIxN = ars[arn][firstIa]-strtIas;  //index to myAILim
@@ -4192,17 +4096,18 @@ onceAgain:
           ars[aarn][skippedCnt] += (setAll?aVal[E.aValCnts]:doSet?1:0);
         }
         else { // if pValIx >= 0 && pValIx <= 76 accepted numbers
-          ars[arn][firstIa] = ars[arn][firstIa] < strtLow ? ars[arn][firstIa] : strtLow;
-          ars[arn][mostIa] = ars[arn][mostIa] < strtLow ? ars[arn][mostIa] : strtLow;
-          ars[arn][topIa] = ars[arn][topIa] < strtLow ? ars[arn][topIa] : strtLow;
+        //  ars[aarn][vvIa] += vvIaC = setAll?aVal[E.aValCnts]:doSet?1:0;  // up cnts all and limited
+         // ars[aarn][firstIa] = ars[aarn][firstIa] < strtLow ? ars[aarn][firstIa] : strtLow;
+         // ars[aarn][mostIa] = ars[aarn][mostIa] < strtLow ? ars[aarn][mostIa] : strtLow;
+          ars[aarn][topIa] = ars[aarn][topIa] < strtLow ? ars[aarn][topIa] : strtLow;
            // possibly change firstIa, topIa, mostIa
-          if (ars[aarn][mostIa] < strtLow || ars[aarn][vvIa] > ars[aarn][ars[aarn][mostIa]]) { //ar[IX] of most count
+          if (ars[aarn][mostIa] < strtLow|| ars[aarn][mostIa] == strtLow || ars[aarn][vvIa] > ars[aarn][ars[aarn][mostIa]]) { //ar[IX] of most count
             ars[aarn][mostIa] = vvIa; // move  to a new mostIa
           }
-          if (ars[aarn][firstIa] < strtLow || ars[aarn][firstIa] > vvIa) { //firstIa too high
+          if (ars[aarn][firstIa] < strtLow|| ars[aarn][firstIa] == strtLow || ars[aarn][firstIa] > vvIa) { //firstIa too high
             ars[aarn][firstIa] = vvIa; //lower firstIa it must be lowest
           }
-          if (ars[aarn][topIa] < strtLow || ars[aarn][topIa] < vvIa) { //the highest value
+          if (ars[aarn][topIa] < strtLow|| ars[aarn][topIa] == strtLow || ars[aarn][topIa] < vvIa) { //the highest value
             ars[aarn][topIa] = vvIa;// raise topIa it must be highest
           }
           firstIxN = ars[aarn][firstIa]-strtIas;
@@ -4243,7 +4148,7 @@ onceAgain:
           mostIaN = ars[aarn][mostIa];
         }
 
-          ret = "RESTA" + aarn  + ret0a + " ::limN" + cLim + "S:" + cLimSum + " Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < laiLim ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
+          ret = "A" + aarn + "REST " + ret0a + " ::limN" + cLim + "S:" + cLimSum + " Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < laiLim ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
         ret2 = (" firstNx" + (myNn=(myN = ars[aarn][firstIa])-strtIas) + ":" + ars[aarn][(myN)] + ":V");
         //eee = myAILim[myNn];
          ret2 += mf(myAILim[myNn]) ;
@@ -4366,6 +4271,106 @@ onceAgain:
       return bestVal;  //sum of vals/cnt
     }
     return bestVal;
+  }
+
+    /**
+   * put into ars[arn] count array ar pX1 counts limited by the limit * value
+   * from lX1 Find the value with most count for pX1
+   *
+   * @param aKey the key for this setting
+   * @param aVal The value part for the counting
+   * @param what describe what is seen
+   * @parm aarn number of ars array to use for un selected keys
+   * @parm arn number of ars array to use for pX1
+   * @param myAILim the values array for this pX1
+   * @param pX1 The main Value aKey character must that is being counted
+   * @param myAILim1 the values array for lX1 lower and upper, match setting of
+   * lX1
+   * @param lX1 The first limit aKey character index for the character index sum
+   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
+   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
+     * @param setAll add the full count for entry.aVal
+   * @parm doSet if not setAll add the 1 to new entries in the key otherwise add 0.
+   * @param printDeb print output to System.out
+   * @param p2 whether to add the row entries to seeArrays the row entries
+   *
+   * @return the best value for the selected ars and seeArrays
+   */
+  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, boolean setAll, boolean doSet,boolean printDeb, boolean p2) {
+    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim, -2, 0, 0, myAILim, -3, 0., 0., myAILim, -4, 0., 0., setAll, doSet, printDeb, p2);
+    return bb;
+  }
+
+  /**
+   * put into ars[arn] count array ar pX1 counts limited by the limit * value
+   * from lX1 Find the value with most count for pX1
+   *
+   * @param aKey the key for this setting
+   * @param aVal The value part for the counting
+   * @param what describe what is seen
+   * @parm aarn number of ars array to use for un selected keys
+   * @parm arn number of ars array to use for pX1
+   * @param myAILim the values array for this pX1
+   * @param pX1 The main Value aKey character must that is being counted
+   * @param myAILim1 the values array for lX1 lower and upper, match setting of
+   * lX1
+   * @param lX1 The first limit aKey character index for the character index sum
+   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
+   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
+   * @param myAILim2 the values array for lX2 lower and upper, match setting of
+   * lX2
+   * @param lX2 The 2nd limit aKey character index for the character index sum
+   * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
+   * @param luX2 lX2 iupper limit only accept keys with lX2 &le; luX2
+      * @param setAll add the full count for entry.aVal
+   * @parm doSet if not setAll add the 1 to new entries in the key otherwise add 0.
+   * @param printDeb print output to System.out
+   * @param p2 whether to add the row entries to seeArrays the row entries
+   *
+   * @return the best value for the selected ars and seeArrays
+   */
+  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2,boolean setAll,boolean doSet, boolean printDeb, boolean p2) {
+    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim2, -3, 0., 0., myAILim2, -4, 0., 0.,setAll,doSet, printDeb, p2);
+    return bb;
+  }
+
+    /**
+     * put into ars[arn] count array ar pX1 counts limited by the limit * value
+     * from lX1 Find the value with most count for pX1
+     *
+     * @param aKey the key for this setting
+     * @param aVal The value part for the counting
+     * @param what describe what is seen
+     * @parm aarn number of ars array to use for un selected keys
+     * @parm arn number of ars array to use for pX1
+     * @param myAILim the values array for this pX1
+     * @param pX1 The main Value aKey character must that is being counted
+     * @param myAILim1 the values array for lX1 lower and upper, match setting
+     * of lX1
+     * @param lX1 The first limit aKey character index for the character index
+     * sum
+     * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
+     * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
+     * @param myAILim2 the values array for lX2 lower and upper, match setting
+     * of lX2
+     * @param lX2 The 2nd limit aKey character index for the character index sum
+     * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
+     * @param luX2 lX2 iupper limit only accept keys with lX2 &le; luX2
+     * @param myAILim3 the values array for lX1 lower and upper, match setting
+     * of lX3
+     * @param lX3 The 3rd limit aKey character index for the character index sum
+     * @param llX3 lX3 lower limit only accept keys with lX3 &ge; llX3
+     * @param luX3 lX3 upper limit only accept keys with lX3 &le; luX3
+      * @param setAll add the full count for entry.aVal
+   * @parm doSet if not setAll add the 1 to new entries in the key otherwise add 0.
+   * @param printDeb print output to System.out
+   * @param p2 whether to add the row entries to seeArrays the row entries
+     *
+     * @return the best value for the selected ars and seeArrays
+     */
+  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3,boolean setAll,boolean doSet, boolean printDeb, boolean p2) {
+    double bb = setCntAr(aKey, aVal, what, aarn, arn, myAILim, pX1, myAILim1, lX1, llX1, luX1, myAILim2, lX2, llX2, luX2, myAILim3, lX3, llX3, luX3, myAILim3, -4, 0., 0.,setAll,doSet, printDeb, p2);
+    return bb;
   }
 
   int SCACnt = 0;
@@ -5644,6 +5649,8 @@ onceAgain:
   // now star the list of numbered dores names
   static int e4 = -1;
   static final int SCORE = ++e4;
+  static final int SCORE2 = ++e4;
+  static final int ESCORE = ++e4; // for econ score
   static final int RELSCORE = ++e4;
   static final int WINNERYEARS = ++e4;
   static final int STARTWORTH = ++e4;
@@ -6154,7 +6161,9 @@ onceAgain:
   void defRes() {
 
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
-    doRes(RELSCORE, "Score", "Relative score toward winning", 3, 3, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | BOTH, 0, 0, 0);
+    doRes(SCORE2, "myScore", "Score values for each clan", 1, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(ESCORE, "Econ Score", "Econ Score for each econ in each clan", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUMAVE | BOTH, 0, 0, 0);
+    doRes(RELSCORE, "Rel Score", "Relative score toward winning", 2,1, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE | CUM | BOTH, 0, 0, 0);
     doRes(WINNERYEARS, "Winner Years", "Number of years this Economy has been a winner", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | CUM | CUMUNITS | BOTH, 0, 0, 0);
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | CUMUNITS | BOTH, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
@@ -7334,8 +7343,8 @@ onceAgain:
       //move the score and positions to prev...
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
         prevMyScore[ixClan] = myScore[ixClan];
-        prevMyScoreClanPos[ixClan] = orderScorePosByIncrClan[ixClan];
-        prevMyScorePosClan[ixClan] = orderClanPosByIncrScore[ixClan];
+        prevOrderScorePosByIncrClan[ixClan] = orderScorePosByIncrClan[ixClan];
+        prevOrderClanPosByIncrScore[ixClan] = orderClanPosByIncrScore[ixClan];
       }
       lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx  vvend
        if (myAIlearnings == null) {
@@ -9731,9 +9740,10 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   static double prevRelScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double myScoreSum = 0.0;
   static double prevMyScore[] = {400., 400., 400., 400., 400.};
-  static int prevMyScorePosClan[] = {0, 1, 2, 3, 4};//prev score pos4 has clan2
-  static int prevMyScoreClanPos[] = {0, 1, 2, 3, 4};//prev clan 3 has score pos 4
+  static int prevOrderClanPosByIncrScore[] = {0, 1, 2, 3, 4};//prev score pos4 has clan2
+  static int prevOrderScorePosByIncrClan[] = {0, 1, 2, 3, 4};//prev clan 3 has score pos 4
   static double prevMyScoreSum = 0.0;
+  static double aiEScoreAve = 0.0;
   static int isV = 0;
   static int isI = 1;
   static int isScoreAve = 2;
@@ -9769,6 +9779,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
       // double econScore = lastOffer * EM.wGiven[0][0] + liveWorth*EM.wLiveWorthScore[0][0];
       // winner = scoreVals(getStatrN("WTRADEDINCRMULT"), wYearTradeI, ICUR0, isI);
       resI[SCORE][ICUR0][CCONTROLD][ISSET] = 1;
+      resI[SCORE2][ICUR0][CCONTROLD][ISSET] = 1;
       myScoreSum = 0.0;
       //set the resV and resI for score to new values from above
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
@@ -9777,7 +9788,12 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
         resV[SCORE][ICUR0][1][ixClan] = myScore[ixClan];
         resI[SCORE][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
         resI[SCORE][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
+        resV[SCORE2][ICUR0][0][ixClan] = myScore[ixClan];
+        resV[SCORE2][ICUR0][1][ixClan] = myScore[ixClan];
+        resI[SCORE2][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
+        resI[SCORE2][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
       }
+      aiEScoreAve = getCurCumPorsClanAve(ESCORE, ICUM, 1, E.P, E.S+1,0,E.LCLANS);
       double myScoreAve = myScoreSum * E.invL2secs; //  inv 14
       double invMyScoreAve = 1. / myScoreAve;
       // now convert sum to a frac relative to the ave of myScoreSum
@@ -10297,7 +10313,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
         }
       } // mPors
 
-      return units > 0 ? sum / units : 0.;
+      return sumUnits > 0 ? sum / sumUnits : 0.;
     }
   }
 

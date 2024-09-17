@@ -334,7 +334,7 @@ public class E {
   static final int ptype = aiPcntr++; // 0 type
    static final int ppors = aiPcntr++; // 1 pOrS
    static final int pclanpors = aiPcntr++; // 2 pOrS *5+ clan
-   static final int pLastScP = aiPcntr++; // 3  Prev score position
+   static final int pLastScP = aiPcntr++; // 3  Last score position
    static final int pPrevScP = aiPcntr++; // 4 Prev score position
   static final int pPrevProsM = aiPcntr++; //5 rawProspects2 min
   static final int pNudge0 = aiPcntr++; // 6 the nudge0
@@ -346,7 +346,8 @@ public class E {
    static final int pPrevOI = aiPcntr++; // 12 prev Offer Inc
    static final int pPrevoPerW = ++aiPcntr; // 13 prev oPerW
    static final int pPrevScW = aiPcntr++; // 14 prev score Worth
-   static final int pPrevScI = aiPcntr++; // 15 prev score Inc
+    static final int pLastERScW = aiPcntr++; // 15 last ai ER score worth
+  // static final int pPrevScI = aiPcntr++; // 15 prev score Inc
     // static final int pScW = aiPcntr++; // 13 last score Worth
  // static final int pPrevResil = aiPcntr++; // last resilience worth
  // static final int pLastScW = aiPcntr++; // 6 last score Worth
@@ -439,7 +440,7 @@ public class E {
     150000000000000000000000000000000.};
   static final double[] AILims3 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300.,320.,340.,360.,370.,380.,390., 400., 500., 600., 700., 800., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
   static final double[] AILims4 = {-99999999., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, .3, .35,.4,.43,.47,0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
-  static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 32., 34., 36., 38., 40., 41., 41.3,41,7,42.,42,3,42.5, 42.8,43.,43.5, 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99.99999999};
+  static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12.,  14.,  16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 32., 34., 36., 38., 40., 41., 41.3,41,7,42.,42,3,42.5, 42.8,43.,43.5, 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99.99999999};
   static final double[] AILims123 = {-99999999., -4., -3., -2., -1., 0., 1., 2., 3., 4., 5., 6., 7., 8., 9.};
    static final double AILimss[][]={ AILims,AILims1,AILims2, AILims3, AILims4,AILimsC ,AILims123};//7
 

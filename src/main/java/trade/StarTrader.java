@@ -6157,8 +6157,8 @@ public class StarTrader extends javax.swing.JFrame {
   public void starTrader2() {
     try {
       stateConst = CONSTRUCTING;
-      Double a1 = 2.00003;
-      Double a2 = -2.000077;
+      Double a1 = 222222222.00003;
+      Double a2 = -222222222222.000077;
       double a01 = 1.0;
       double a3 = a1 % a01;
       double a4 = a2 % -1.0;
@@ -6166,8 +6166,9 @@ public class StarTrader extends javax.swing.JFrame {
       double a6 = -5.0000000002;
 
       boolean test5p = true;
-      EM.test5 = test5p;
-      System.err.printf("----ST2----a1=%7.5f, a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n", a1, a01, a3, a6, a5);
+      EM.test5 = true;
+      EM.myWidth = myWidth = 1800;
+      System.err.printf("----ST2----a1=%7.5f" + EM.mf(a1) + " a2=" + EM.mf(a2) + ", a01=%7.5f,a3=%7.5f a6=%10.5f=" + EM.mf(a6) + " a5=%10.8f=" + EM.mf(a5) + "\n", a1, a01, a3, a6, a5);
       EM.test5 = false;
       this.eE = new E();
       this.eM = new EM(eE, this);
