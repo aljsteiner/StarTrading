@@ -1581,7 +1581,7 @@ public class Assets {
       b = -5;
       curm = 0;
       int lResI = eM.resI[rn].length;
-      if (lResI > eM.STATSSHORTLEN) {
+      if (lResI > eM.STATSSHORTLEN) {  //did it have ages
         for (a = 1; a < 6 && b < 0; a++) {
           //AGESTARTS   0,   4,   8,    16,    32,   999999};
           //  CUM CUR0  CUR1 CUR2  CUR3  CUR4  CUR5
@@ -1592,6 +1592,7 @@ public class Assets {
         }
         if (b > 0) {
           curm = eM.ICUR0 + eM.MAXDEPTH * b;//age < 4 makes ageIx=1 curm>0 0 of age group
+          // curm =1 + 7*b = 1 8 15 22 29 36 43
         }
       } // end if
       // select an object only big enough to work for the code for all sub objects that could be changed
@@ -1602,12 +1603,16 @@ public class Assets {
       int ICUR0 = eM.ICUR0;
       int CCONTROLD = eM.CCONTROLD;
       // calculate the needed changes for ICUM  ICUR0  and possible ICURx
-      double[] resVCum = eM.resV[rn][ICUM][pors]; //array object
-      double resVCumC = resVCum[clan]; // value in
-      resVCumC += v; // doesn't change resVCum[clan]
+      double[] resVCum = eM.resV[rn][ICUM][pors]; //clan array object
+      double prevResVCumC = resVCum[clan] + 0.; // don't point into array
+      double nextResVCumC = resVCum[clan] + 0. + v; // don't point into array
+     // resVCumC += v; // doesn't change resVCum[clan]
       long[] resICum = resI[rn][ICUM][pors];
-      double[] resVCur = resV[rn][ICUR0][pors];
+    //  long resICumP = resICum[clan] + 0;
+      double[] resVCur = resV[rn][ICUR0][pors];// clan array
+    //  double resVCur0P = resVCur[clan]+0;
       long[] resICur = resI[rn][ICUR0][pors];
+      long resICur0P = resICur[clan];
       long[] resICurCC = resI[rn][ICUR0][CCONTROLD];
       long[] resICumCC = resI[rn][ICUM][CCONTROLD];
       /* now set the values in the appropriate age group */
@@ -1628,6 +1633,7 @@ public class Assets {
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           StackTraceElement[] stks = Thread.currentThread().getStackTrace();
           lstk = stks.length - 1;
+          // do stack element history
           for (ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
             if (stks[ste + 1] != null) {
               prevCalls[ste] = stks[ste + 1];
@@ -1662,8 +1668,9 @@ public class Assets {
           resICurmCC[ISSET] += 1;
         }
 
-        if (E.debugStatsOut && cntStatsPrints++ > E.ssMax) {
-           if (E.debugStatsOut)cntStatsPrints = 0;
+       // if (E.debugStatsOut && cntStatsPrints++ > E.ssMax) {
+           if (E.debugStatsOut) {
+           cntStatsPrints = 0;
           if (rn > 0) {
             long endSt = (new Date()).getTime();
             long moreTT = endSt - doYearTime;
@@ -1671,6 +1678,7 @@ public class Assets {
             int yrsIx = 1;
             int yrsIxj = 1;
             long resICumClan = resI[rn][ICUM][pors][clan];
+            double resVCumClan = resV[rn][ICUM][pors][clan];
             long resIcur0Clan = resI[rn][ICUR0][pors][clan];
             double resVcur0Clan = resV[rn][ICUR0][pors][clan];
             EM.wasHere4 = "setStat rn=" + rn + " curm=" + curm + " pors=" + pors + " clan=" + clan;
@@ -1683,15 +1691,15 @@ public class Assets {
             long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
 
             long isset1 = (yrsIx - 1 + yrsIxj < resI[rN].length ? resI[rN][yrsIx - 1 + yrsIxj] != null ? resI[rN][yrsIx - 1 + yrsIxj][CCONTROLD][ISSET] : -1 : -2);
-
-            if(E.debugStatsOut){
-            eM.printHere("---SSTat---", ec, resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " " + (EM.myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + EM.myAIlearnings.size()) + ", " + " resIcum=" + resICumClan + ", age" + age + ", Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumSet=" + resICumIsset + ", curClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
+            EM.mfShort = false;
+         //   if(E.debugStatsOut){
+            System.out.println("---SSTat--- " + " "+  resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " " + name + "Y" + EM.year + " " + (EM.myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + EM.myAIlearnings.size())  + " age" + age + " Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumISet=" + resICumIsset + " V=" + EM.mf(v)+ " prevResVcum=" + EM.mf(prevResVCumC)+ " nextResVcum=" + EM.mf(nextResVCumC) + "\n" + "+++SSTat+ resVcum=" + EM.mf(resVCumClan) + "::" +  resVCumClan + " resIcum=" + resICumClan + ", cur0ClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
             /*      System.out.println(
                       "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
 
               System.out.flush();
              */
-            }
+           // }
           }
         }
    //   } // end of lock on res..[rn]
@@ -2489,10 +2497,11 @@ public class Assets {
    *
    */
   void yearEnd() {  //trade.Assets
+    EM.mfShort = false;
     if (cur == null) {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
-      EM.isHere("--CEYEa--", ec, " before CashFlow.yearEnd aaadd1 " + aaadd1++);
+     System.out.println("--CEYEa--  before CashFlow.yearEnd " + name + " aaadd1 " + aaadd1++);
       if (E.debugEconCnt) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           throw new MyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -2501,8 +2510,9 @@ public class Assets {
       }
     }
     cur.yearEnd();
-    eM.printHere("-----YEDPm ----", ec, " near end " + (dead ? "DEAD" : "LIVE") + " in Assets.yearEnd() ");
 
+    System.out.println("-----YEDPm ---- in Assets.yearEnd() near end "  + name + (dead ? " DEAD" : " LIVE") + " myWidth" + EM.myWidth + (EM.mfShort? " ++mfShort":" --mfShort"));
+    EM.mfShort = false;
     assert cur.c.balance == bals.A[2 + 1] : getName() + " c != bals.A[3], c=" + EM.mf(cur.c.balance.sum()) + " != bals c=" + EM.mf(bals.A[1 + 2].sum());
     if (false && E.debugMisc && !dead && !EM.dfe() && syW != null) {
       EM.newError = true;
@@ -11429,7 +11439,7 @@ public class Assets {
       prevSliderVala = sliderVala;
       prevSliderValb = sliderValb;
       setStat(EM.ESCORE, pors, clan, aiEScore, 1);
-      setStat(EM.RELSCORE, pors, clan, aiERScore, 1);
+      setStat(EM.RELESCORE, pors, clan, aiERScore, 1);
       if (ec.age > 1) {  // you prev values
         EM.wasHere8 = "---ELa7--- Assets AI set has lock";
         int cIx = 7;
@@ -11461,8 +11471,10 @@ public class Assets {
          String str = new String(EM.psClanChars[pors][clan]);
           System.out.println("----SAI2----" + " " + name + " saveAI put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + " put key=" + str + " TreeMap size=" + EM.myAIlearnings.size());
            //  aiERScore = aiEScore/EM.aiEScoreAve;
-          System.out.println("----SAI3----" + " " + name + " saveAI aiEScore " + EM.mf(aiEScore)+ " EM.aiEScoreAve" + EM.mf(EM.aiEScoreAve) + "aiERScore " + EM.mf(aiERScore));
+          System.out.println("----SAI3----" + " " + name + " saveAI aiEScore " + EM.mf(aiEScore)+ " EM.aiEScoreAve" + EM.mf(EM.aiEScoreAve) + " aiERScore " + EM.mf(aiERScore));
         }
+       assert EM.aiEScoreAve > 0:"saveAI error EM.aiEScoreAve <= 0. is" + EM.mf(EM.aiEScoreAve);
+       assert aiERScore > 0:"saveAI error aiERScore <= 0. is" + EM.mf(aiERScore);
        } else if (dead) { // process dead never seen in saveAIKey
           aType = 2;
         }

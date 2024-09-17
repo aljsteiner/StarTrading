@@ -5651,6 +5651,7 @@ onceAgain:
   static final int SCORE = ++e4;
   static final int SCORE2 = ++e4;
   static final int ESCORE = ++e4; // for econ score
+   static final int RELESCORE = ++e4; // for econ score
   static final int RELSCORE = ++e4;
   static final int WINNERYEARS = ++e4;
   static final int STARTWORTH = ++e4;
@@ -6162,8 +6163,9 @@ onceAgain:
 
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
     doRes(SCORE2, "myScore", "Score values for each clan", 1, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(ESCORE, "Econ Score", "Econ Score for each econ in each clan", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUMAVE | BOTH, 0, 0, 0);
-    doRes(RELSCORE, "Rel Score", "Relative score toward winning", 2,1, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE | CUM | BOTH, 0, 0, 0);
+    doRes(ESCORE, "EScore", "Econ Score for each econ in each clan divided by cumaverage ESCORE ", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUMAVE | CUM  | BOTH, 0, 0, 0);
+    doRes(RELESCORE, "RelEScore", "Econ Score for each econ in each clan", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE | CUM  | BOTH, 0, 0, 0);
+    doRes(RELSCORE, "Rel Score", "Relative score toward winning", 2,1, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE| BOTH, 0, 0, 0);
     doRes(WINNERYEARS, "Winner Years", "Number of years this Economy has been a winner", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | CUM | CUMUNITS | BOTH, 0, 0, 0);
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | CUMUNITS | BOTH, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
