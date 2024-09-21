@@ -257,9 +257,9 @@ class EM {
 //  negIas = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
   static final int iaLimSum = 2, iaLimCnt = 4, ixlimCnt = 4; // holds 91=12+77+2 spare
   static int mapYears = 0;
-  static final int nars = 17;
+  static final int nars = 20;
   static int[][] ars;
-  static String seeArrays[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};//17
+  static String seeArrays[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};//20 nars
   static int entryCnt = 0, cntsCnt = 0,mSize=0, setCnt=0;
   static int lremove = 0;
   // each subarray = ar#,pMain#,pLim1,low,upper,pLim2,low,upper,pLim3,low,upper lenghts 5,8,11
@@ -653,9 +653,9 @@ class EM {
       System.out.println("---INem1--- Y" + year + "counts at init EM doVal vvend=" + vvend + ", doRes rend4=" + rende4 + ", assiged doRes arrays rende3=" + rende3);
     
 
-      //initialize the ai Map array files
+      //EM.init() initialize the ai Map array files
       int ix = 0, ix2 = 0;
-      ars = new int[nars][]; // 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
+      ars = new int[nars][]; // 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14...20
       for (ix = 0; ix < nars; ix++) {
         ars[ix] = new int[lenIa];
         for (ix2 = 0; ix2 < lenIa; ix2++) {
@@ -666,8 +666,8 @@ class EM {
       // each year rebuild psClanChars
       lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx  vvend
       for (ixPS = 0; ixPS < 2; ixPS++) {
-        psClanChars[ixPS] = new char[5][];
-        psClanMasks[ixPS] = new char[5][];// rebuild keys and masks each year
+        psClanChars[ixPS] = new char[E.LCLANS][];
+        psClanMasks[ixPS] = new char[E.LCLANS][];// rebuild keys and masks each year
         for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
           psClanChars[ixPS][ixClan] = new char[lRes];
           psClanMasks[ixPS][ixClan] = new char[lRes];
@@ -1315,6 +1315,9 @@ class EM {
       return "# " + v;
     }
     // infinite returns inf sign
+     if (v.isInfinite()) {
+      return "?? " + v;
+    }
     NumberFormat dFrac = NumberFormat.getNumberInstance();
     NumberFormat whole = NumberFormat.getNumberInstance();
     NumberFormat exp = new DecimalFormat("0.######E0");
@@ -2479,8 +2482,8 @@ class EM {
   // tradeFrac is initial goal of requests/offers
   // ships get much more to survive and grow with planets
   // the fracs get reduced as the trades continue
-  static final double mTradeFrac[][] = {{.1, .8}, {.1, 0.8}};
-  static double[][] tradeFrac = {{.4, .4, .4, .4, .4}, {.22, .22, .22, .22, .22}, ssFrac[0]};
+  static final double mTradeFrac[][] = {{.35, .65}, {.2, 0.5}};
+  static double[][] tradeFrac = {{.41, .41, .41, .41, .41}, {.22, .22, .22, .22, .22}, ssFrac[0]};
   // termFrac = (goalTermBias )/(goalTermBias + barterStart - term)
   //    gtb=18 t=18  18/18 = 1;  t=9  18/(18 + 18-9=27) = .6666; t=`0 18/36 = .5
   // related to decrement per term
@@ -3762,7 +3765,8 @@ onceAgain:
    setCntAr(aKey, aVal, "prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
  //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
     setCntAr(aKey, aVal, "prevAIEScore", 3, 3, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
-    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
+//    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
+    setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
     setCntAr(aKey, aVal, "FutFTFrac", 7, 6, E.AILimsC, E.pNudge1, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
 
     //   setCntAr(aKey, aVal, "23&prevAIScoreW", 2, 2, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3..,setAll, doSet, pr, no);
@@ -6164,7 +6168,7 @@ onceAgain:
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
     doRes(SCORE2, "myScore", "Score values for each clan", 1, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(ESCORE, "EScore", "Econ Score for each econ in each clan divided by cumaverage ESCORE ", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUMAVE | CUM  | BOTH, 0, 0, 0);
-    doRes(RELESCORE, "RelEScore", "Econ Score for each econ in each clan", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE | CUM  | BOTH, 0, 0, 0);
+    doRes(RELESCORE, "RelEScore", "Econ Score/aiEScoreAve for each econ in each clan", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE | CUM  | BOTH, 0, 0, 0);
     doRes(RELSCORE, "Rel Score", "Relative score toward winning", 2,1, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE| BOTH, 0, 0, 0);
     doRes(WINNERYEARS, "Winner Years", "Number of years this Economy has been a winner", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | CUM | CUMUNITS | BOTH, 0, 0, 0);
     doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | CUMUNITS | BOTH, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
@@ -9745,7 +9749,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   static int prevOrderClanPosByIncrScore[] = {0, 1, 2, 3, 4};//prev score pos4 has clan2
   static int prevOrderScorePosByIncrClan[] = {0, 1, 2, 3, 4};//prev clan 3 has score pos 4
   static double prevMyScoreSum = 0.0;
-  static double aiEScoreAve = 0.0;
+  static Double aiEScoreAve = 0.0;
   static int isV = 0;
   static int isI = 1;
   static int isScoreAve = 2;

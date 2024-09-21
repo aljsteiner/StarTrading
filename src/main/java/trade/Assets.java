@@ -106,15 +106,16 @@ public class Assets {
   /* now add some AI variables for this economy */
   // consolidate key's reading adding cnt, greatest age up to 51, greates scoreIx
   int cnts[] = new int[3]; // cnt=occurrances,age>>age of Econ,scoreIx>>scoreix
-  double aiERScore = 2., prevAIERScore = -3, prevPrevAIERScore = -4.;
-  double aiERScoreI = -5., prevAIERScoreI = -5., prevPrevAIERScoreI = -3.;
-   double aiEScore = 2., prevAIEScore = -3, prevPrevAIEScore = -4.;
-  double aiEScoreI = -5., prevAIEScoreI = -5., prevPrevAIEScoreI = -3.;
-  double aiScore = 2., prevAIScore = -3, prevPrevAIScore = -4.;
-  double aiScoreI = -5., prevAIScoreI = -5., prevPrevAIScoreI = -3.;
-  double aiWorth=-11., prevAIWorth=-12.,prevPrevAIWorth=-13.;
-  double prevAIWorthI = -14., aiWorthI=-11.;
-  double tradeFracNudge[] = {0., 0., 0.021, 0.028,0.035, 0.042,0.049};//tradeFrac dif .1--.8   *.007
+  // use Double to catch infinity and nan
+  Double aiERScore = 2., prevAIERScore = -3., prevPrevAIERScore = -4.;
+  Double aiERScoreI = -5., prevAIERScoreI = -5., prevPrevAIERScoreI = -3.;
+   Double aiEScore = 2., prevAIEScore = -3., prevPrevAIEScore = -4.;
+  Double aiEScoreI = -5., prevAIEScoreI = -5., prevPrevAIEScoreI = -3.;
+  Double aiScore = 2., prevAIScore = -3., prevPrevAIScore = -4.;
+  Double aiScoreI = -5., prevAIScoreI = -5., prevPrevAIScoreI = -3.;
+  Double aiWorth=-11., prevAIWorth=-12.,prevPrevAIWorth=-13.;
+  Double prevAIWorthI = -14., aiWorthI=-11.;
+  double tradeFracNudge[] = {0., 0.,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
   double ffTFracNudge[] = {0., 0., 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
@@ -1559,10 +1560,12 @@ public class Assets {
    *
    * @return v
    */
-  double setStat(int rn, int pors, int clan, double v, int cnt, int age
+  double setStat(int rn, int pors, int clan, Double v, int cnt, int age
   ) {
     try {
       //long resLock[][][] = resI[rn];
+      assert !v.isInfinite():"setStat error infinite v=" + v;
+      assert !v.isNaN():"setStat error nan v=" + v;
       int le = eM.lStatsWaitList;
       int prevIx = eM.ixStatsWaitList;
       eM.ixStatsWaitList = (++eM.ixStatsWaitList) % eM.lStatsWaitList;
@@ -8511,8 +8514,8 @@ public class Assets {
       /*
   double aiScore = 2., prevAIScore = -3, prevPrevAIScore = -4.;
   double incAIScore = -5.,prevIncAIScore = -5.,prevPrevIncAIScore = -3.;
-  double tradeFracNudge[] = {0., 0., 0.014, 0.021, 0.028};//dif .1--.8
-  double ffTFracNudge[] = {0., 0., 0.028, .042, 0.056};  //3.0--5.4  014
+  double tradeFracNudge[] = {0., 0.,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
+  double ffTFracNudge[] = {0., 0., 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int prevAIPos = 4, prevPrevAIPos = 4;
@@ -8592,20 +8595,32 @@ public class Assets {
       saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScore[clan]);
       boolean []doNudges={y,y};
       int vva = eM.valAIN[0];// nudge to vv array traderFrac
-      // only clan blue get smart start
+      int vvb = eM.valAIN[0];// nudge to vv array ffTFracNudge
+
+      // only clan blue get smart start after at least 100 keys so
        if( EM.myAIlearnings.size() > 100 && clan == 4 ){
        String aKey = new String(EM.psClanChars[pors][clan]);
        Integer[] aVal =  EM.myAIlearnings.get(aKey);
        // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
        // assume the ars arrays are set, and set them, but not EM.myAIlearnings
-       double sliderTF = eM.setCntAr(aKey, aVal, "44&prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
+       double sliderTF = eM.setCntAr(aKey, aVal, "prevTradeFrac1", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
        double tfLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
        double tfHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
        double prevTF =  EM.tradeFrac[pors][clan];
        double newTF = ((tfHigh -tfLow) *.01 * sliderTF) + tfLow;
        //double newTF = eM.sliderToVal(sliderTF,EM.valD[vva][EM.gameLim][pors][EM.vLowLim], EM.valD[vva][EM.gameLim][pors][EM.vHighLim]);
        tradeFracNudge[pors] = newTF -prevTF;
+       doNudges[0] = false;// prevent random reset of nudge 0
        if(E.debugAIOut)System.out.println("-----SAIy0----" + " prevTradeFrac=" + EM.mf(prevTF) + "+" +" nudge=" + EM.mf(tradeFracNudge[pors]) + "=>"  + EM.mf(newTF) + "==" + " sliderTF=" + EM.mf(sliderTF) );
+        double sliderFFT = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge1, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
+       double fftLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
+       double fftHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
+       double prevFFT =  EM.futureFundTransferFrac[pors][clan];
+       double newFFT = ((fftHigh -fftLow) *.01 * sliderFFT) + tfLow;
+       //double newTF = eM.sliderToVal(sliderTF,EM.valD[vva][EM.gameLim][pors][EM.vLowLim], EM.valD[vva][EM.gameLim][pors][EM.vHighLim]);
+       ffTFracNudge[pors] = newFFT -prevFFT;
+       doNudges[1] = false; // prevent random reset of nudge 1
+       if(E.debugAIOut)System.out.println("-----SAIy1----" + " prevFFTransferFrac=" + EM.mf(prevFFT) + "+" +" nudge=" + EM.mf(ffTFracNudge[pors]) + "=>"  + EM.mf(newFFT) + "==" + " sliderTF=" + EM.mf(sliderFFT) );
 
       eM.setCntAr(aKey, aVal, false,false,false);//update ars arrays
       ///doNudges[0] = false;   // true gets it overwrittent by the default
@@ -8613,7 +8628,7 @@ public class Assets {
       //EM.tradeFrac[pors][clan] + tradeFracNudge[pors]
        }
 
-       // now the default start
+       // now the default start, set some variations if not prest
       Random rand = new Random();
       rIn = -7;
       ranInt = rand.nextInt(7);// 0-6
@@ -8653,8 +8668,8 @@ public class Assets {
 
       // now install the nudge pointers even if nudge=0,0
 
-     vva = eM.valAIN[0];// nudge to vv array traderFrac
-      int vvb = eM.valAIN[1];// nudge to vv array
+      vva = eM.valAIN[0];// nudge to vv array traderFrac
+      vvb = eM.valAIN[1];// nudge to vv array
       if (prevSliderVala < 0) { //for age0
         prevSliderVala = eM.getAIVal(vva, pors, clan, ec, 0);
         prevSliderValb = eM.getAIVal(vvb, pors, clan, ec, 0);
@@ -11278,7 +11293,11 @@ public class Assets {
     void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
       // saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos,prevAIPos, EM.myScore[clan]);
       aiOper = offers / worth;
-      if (ec.age > 2) {  // skip age 1 and 2 use prev values,this is before Y2 prev files exist
+
+      if (ec.age > 2 && prevAIERScore > 0. && aiERScore>0.) {  // skip age 1 and 2 use prev values,this is before Y2 prev files exist
+       assert EM.aiEScoreAve > 0:"saveAI error EM.aiEScoreAve <= 0. is" + EM.mf(EM.aiEScoreAve);
+       assert aiERScore > 0:"saveAI error aiERScore <= 0. is" + EM.mf(aiERScore);
+       assert prevAIERScore > 0:"saveAI error prevAIERScore <= 0. is" + EM.mf(prevAIERScore);
         int cIx = 7;
         int much = 7;
         int aType = acct ? 1 : 0;
@@ -11299,6 +11318,7 @@ public class Assets {
            EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(unused)
         // E.pPrevScP pPrevScW
          //finsh building the key
+      
         aiPos = EM.orderScorePosByIncrClan[clan]; // last years position
        putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILimsC, "lastaiPos", y);
        putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors, E.AILimsC, "pors*5+clan", y);
@@ -11395,6 +11415,8 @@ public class Assets {
       prevPrevAIEScore = prevAIEScore;
       prevAIEScore = aiEScore;
       aiEScore = getScore(aiOffer, aiWorth);
+      assert !aiEScore.isInfinite():"aiEScore ia indinirw";
+      assert !aiEScore.isNaN():"aiEScore ia nan";
       prevAIEScoreI = aiEScoreI;
       aiEScoreI = (aiEScore - prevAIEScore) / prevAIEScore;
       prevPrevAIERScore = prevAIERScore;
@@ -11402,7 +11424,9 @@ public class Assets {
       prevPrevAIERScoreI = prevAIERScoreI;
        prevAIERScoreI = aiERScoreI;
       aiERScoreI = (aiERScore - prevAIERScore) / prevAIERScore;
-      aiERScore = aiEScore/EM.aiEScoreAve;
+      if(ec.age >2)aiERScore = aiEScore/EM.aiEScoreAve;
+      assert !aiERScore.isInfinite():"saveAI infinite val, aiEScore=" + EM.mf(aiEScore) + " EM.aiEScoreAve=" + EM.mf(EM.aiEScoreAve) + " aiERScore=" + aiERScore;
+      assert !aiERScore.isNaN():"saveAI NaN val, aiEScore=" + EM.mf(aiEScore) + " EM.aiEScoreAve=" + EM.mf(EM.aiEScoreAve) + " aiERScore=" + aiERScore;
       aiOper = aiOffer / aiWorth;
       acct = tradeAccepted;
       prevAIEScoreI = aiEScoreI;
@@ -11439,8 +11463,8 @@ public class Assets {
       prevSliderVala = sliderVala;
       prevSliderValb = sliderValb;
       setStat(EM.ESCORE, pors, clan, aiEScore, 1);
-      setStat(EM.RELESCORE, pors, clan, aiERScore, 1);
-      if (ec.age > 1) {  // you prev values
+      if(ec.age >2)setStat(EM.RELESCORE, pors, clan, aiERScore, 1);
+      if (ec.age > 2) {  // do yea rthree
         EM.wasHere8 = "---ELa7--- Assets AI set has lock";
         int cIx = 7;
         int much = 7;
@@ -13771,12 +13795,13 @@ public class Assets {
             hist.add(new History(aPre, History.loopIncrements3, nTitle("Pre") + cmd.name() + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
             // a pretest for problems with putValue and cost2
             if ((balances.get(ixWRSrc * 2 + 3, srcIx) - dstCst) < NZERO) {
-              E.myTest(true, "incr " + srcIx + " cost too high, balance=" + EM.mf(balances.getRow(ixWRSrc).get(srcIx)) + " -cost " + EM.mf(dstCst) + " => " + EM.mf((balances.getRow(ixWRSrc).get(srcIx) - dstCst)));
+              E.myTest(true, "incr " + srcIx + " cost too high, balance=" + EM.mf(balances.getRow(ixWRSrc).get(srcIx)) + " -cost " + EM.mf(dstCst) + " => " + EM.mf((balances.getRow(ixWRS
+                      1c).get(srcIx) - dstCst)));
             }
             if (ixWRSrc == 0) {
-              setStat("swapRIncr", pors, clan, 100. * mov / bals.getRow(0).sum(), 1);
+               if( bals.getRow(0Z a`q212).sum() > 0.0)setStat("swapRIncr", pors, clan, 100. * mov / bals.getRow(0).sum(), 1);
             }
-            else {
+            else if( bals.getRow(1).sum() > 0.0){
               setStat("swapSIncr", pors, clan, 100. * mov / bals.getRow(1).sum(), 1);
             }
             source.putValue(balances, mov, srcIx, destIx, dest, 0, 0.);
