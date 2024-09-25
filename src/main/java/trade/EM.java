@@ -2897,8 +2897,9 @@ class EM {
     return vv;
   }
 
+
   /**
-   * doVal flag to put in key determine type from the arrays at vaddr with vaddr
+   * doAIVal flag to put in key determine type from the arrays at vaddr with vaddr
    * full double   * val[][p,s] = {{.5}} or {{.5},{.5}} gc vone val[vv][0]{val}, valD {{val}} gc
    * vtwo val[vv][0][pors] {pVal,sVal}, valD {{pVal,sVal}} gc vthree
    * val[vv][0][val1] {{val}}, valD {{val}} same as vone gc vfour
@@ -4812,7 +4813,7 @@ onceAgain:
 
   /**
    * get value from valD and turn it into a slider int between 0-100 This is
-   * used to generate the slider window
+   * used to generate the slider window for buildAIVals
    *
    * @param vv The entry being set to a slider to show its value in slider
    * @param pors 0,1 planet or ship being set
@@ -4868,6 +4869,40 @@ onceAgain:
     return 50;
   }
 
+
+  /**
+   * getSettingsVal from the gc type gc vone val[vv][0]{val}, valD {{val}} gc gc
+   * vtwo val[vv][0][pors] {pVal,sVal}, valD {{pVal,sVal}} gc vthree
+   * val[vv][0][val1] {{val}}, valD {{val}} same as vone
+   * gc vfour val[vv][pors][val1] {{pVal},{sVal}}. valD {{pVal},{sVal}}
+   * gc vfive val[vv][0][val5] {{1,2,3,4,5}}, valD{{1,2,3,4,5}};
+   * gc vten valD[vv][0][pors][val5] {{1,2,3,4,5},{6,7,8,9,10}}
+   *
+   * @param vv index to the val setting in valD, valS, valI
+   * @param pors econ is planet 0 or ship 1
+   * @param klan econ belongs to clan klan
+   * @return the value in settings for this vv
+   */
+   static double getSettingsVal(int vv,int pors, int klan){
+     int gc = valI[vv][modeC][0][0];
+     double val = 0.;//valD[vv][gameAddrC][0][pors];
+     if(gc == vone || gc == vthree){
+       val = valD[vv][gameAddrC][0][0];
+     } else if(gc == vtwo){
+        val = valD[vv][gameAddrC][0][pors];
+     } else if(gc == vfour){
+       val = valD[vv][gameAddrC][pors][0];
+     } else if(gc == vfive && klan >= 0 && klan <= E.LCLANS){
+       val = valD[vv][gameAddrC][0][klan];
+     } else if(gc == vten && klan >= 0 && klan <= E.LCLANS){
+       val = valD[vv][gameAddrC][pors][klan];
+     } else {
+       String tError = "getVa; illegal clan=" + clan + " klan=" + klan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
+        doMyErr(tError);
+      }
+     return val;
+  }
+
   /**
    * get value from valD and turn it into a slider int between 0-100 This is
    * used to generate the slider window
@@ -4876,25 +4911,48 @@ onceAgain:
    * @param pors 0,1 planet or ship being set
    * @param clan 0-4,5 5 means a game value, 0-4 are the 5 clans
    * @param ec reference the Econ then Assets for this value
-   * @param nudge accept a nudge 0==0 nudge value value, 1==nudge[0],2==nudge[1]
+   * @param nudge accept a nudge 0.0 < 0 nudge value value, 0==nudge[0],1==nudge[1]
    * ...
    * @return the value to set in the slider
    */
-  static int getAIVal(int vv, int pors, int clan, Econ ec, int nudge) {
+  static int getAIVal(int vv, int clan, Econ ec, int nudge) {
     int slider1 = -1;
-    int klan = clan % 5;
+    int klan = ec.clan;
+    int pors = ec.pors;
+    vv = nudge > -1?eM.valAIN[nudge]:vv;
     int gc = valI[vv][modeC][0][0];
+    int val =0;
     try {
-      double nudgeV = nudge > 0 ? ec.as.aiNudges[nudge - 1][ec.pors] : 0.0;
+      double aSet = getSettingsVal(vv,pors,clan);
+      double nudgeV = nudge > -1 ? ec.as.aiNudges[nudge][Assets.nudV] : 0.0;
+      val = valToSlider(aSet + nudgeV, valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
+      if(nudge > -1){
+        ec.as.aiNudges[nudge][Assets.nudSet]   = aSet;
+        ec.as.aiNudges[nudge][Assets.nudBoth] = val;
+        
+      }
+
+      /*
       if (gc <= vfour) {
-        if (gc == vone || gc == vthree) {
+     if ((gc == vone && pors == E.P) || gc == vtwo) {
+        return valToSlider(valD[vv][gameAddrC][0][pors], valD[vv][gameLim][pors][lowC], valD[vv][gameLim][pors][highC]);
+      }
+      else if ((gc == vthree && pors == E.P) || gc == vfour) {
+        return valToSlider(valD[vv][gameAddrC][pors][0], valD[vv][gameLim][pors][lowC], valD[vv][gameLim][pors][highC]);
+
+      }
+      else if (gc == vseven) { // ignored
+        return valToSlider(valD[vv][gameAddrC][vFill][valI[vv][sevenC][vFill][vFill]], valD[vv][gameLim][vFill][lowC], valD[vv][gameLim][vFill][highC]);
+      }
+
+        if ((gc == vone || gc == vthree) && pors >= 0 && pors <= 1) { //{12.} or {{12.}}
           return valToSlider(valD[vv][gameAddrC][0][0] + nudgeV, valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
         }
         else if (gc == vtwo) {
-          return valToSlider(valD[vv][gameAddrC][0][1] + nudgeV, valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+          return valToSlider(valD[vv][gameAddrC][0][pors] + nudgeV, valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
         }
-        else if (gc == vfour) {
-          return valToSlider(valD[vv][gameAddrC][1][0] + nudgeV, valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
+        else if ((gc == vthree  && pors == E.P ||gc == vfour) && pors >= 0 && pors <= 1) {
+          return valToSlider(valD[vv][gameAddrC][pors][0] + nudgeV, valD[vv][gameLim][1][lowC], valD[vv][gameLim][1][highC]);
         }
         else if (E.debugSettingsTab) {  //problem with clan == 5, unknown gc
 
@@ -4913,6 +4971,7 @@ onceAgain:
         tError = "getVa; illegal clan=" + clan + " klan=" + klan + " with gc=" + gc + ", desc=" + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors;
         doMyErr(tError);
       }
+*/
     }
     catch (Exception | Error ex) {
       firstStack = secondStack + "";

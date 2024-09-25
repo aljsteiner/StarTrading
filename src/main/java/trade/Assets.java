@@ -70,6 +70,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
+import static trade.EM.modeC;
+import static trade.EM.valI;
 
 /**
  *
@@ -115,8 +117,12 @@ public class Assets {
   Double aiScoreI = -5., prevAIScoreI = -5., prevPrevAIScoreI = -3.;
   Double aiWorth=-11., prevAIWorth=-12.,prevPrevAIWorth=-13.;
   Double prevAIWorthI = -14., aiWorthI=-11.;
-  double tradeFracNudge[] = {0., 0.,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
-  double ffTFracNudge[] = {0., 0., 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
+  static final int nudV = 0;
+  static final int nudSet = 1;
+  static final int nudBoth = 2;
+  static final int nudStrt = 3;
+  double tradeFracNudge[] = {0., 0.,.0,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
+  double ffTFracNudge[] = {0., 0.,.0, 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
@@ -8085,15 +8091,15 @@ public class Assets {
         termFrac2 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term) * (gtBias + EM.barterStart - term));
         termFrac3 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term));
         termFrac = (EM.barterStart) / ((gtBias + EM.barterStart - term));//1.=>.5
-        tfrac = EM.tradeFrac[pors][clan] + tradeFracNudge[pors];
+        tfrac =  tradeFracNudge[nudBoth];
         // rGoalFrac = EM.tradeFrac[pors][clan] * randFrac * myFavFrac * oFavFrac * sosFrac;
         rGoalFrac = Math.min(EM.goalMaxBias[pors][0] * tfrac, tfrac * myFavFrac * oFavFrac * sosFrac * thFrac);
         sf = strategicGoal = frac = rGoalFrac * termFrac;
         rGoal0 = rGoalFrac * termFrac0;  // the goal after doing all the barters
         EM.wasHere = "before History clan=" + clan + " oClan=" + oClan + " term=" + term;
         EM.wasHere2 = " (EM.fav[clan][pors][oClan])=" + EM.mf(EM.fav[clan][pors][oClan]);
-        assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + "\n" + name + "Y" + EM.year + "CP" + (clan*2+pors) + " nudge" + EM.mf(tradeFracNudge[pors])  + " tFrac=" + EM.mf(tfrac) + " , oFavFrac=" + EM.mf(oFavFrac) + " myFavFrac=" + EM.mf(myFavFrac) + " sosFrac1=" + EM.mf(sosFrac1) + "\n sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac);
-        hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF" + EM.mf(EM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc" + EM.mf(EM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF =" + EM.mf(EM.tradeFrac[pors][clan] + tradeFracNudge[pors]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
+        assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + "\n" + name + "Y" + EM.year + "CP" + (clan*2+pors) + " nudge" + EM.mf(tradeFracNudge[nudV])  + " tFrac=" + EM.mf(tfrac) + " , oFavFrac=" + EM.mf(oFavFrac) + " myFavFrac=" + EM.mf(myFavFrac) + " sosFrac1=" + EM.mf(sosFrac1) + "\n sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac);
+        hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF" + EM.mf(EM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc" + EM.mf(EM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF =" + EM.mf(tradeFracNudge[nudBoth]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
         hist.add(new History(aPre, 5, "2T" + term, "*rnd=" + EM.mf(tfrac), "*tF=" + EM.mf(termFrac), "goal=", EM.mf(frac), "gtb", EM.mf(gtBias), "<<<<<<<"));
         return strategicGoal = frac;
       }// Assets.CashFlow.Trades.calcStrategicGoal
@@ -8592,40 +8598,52 @@ public class Assets {
     
 
       //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
-      saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScore[clan]);
+      saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScore[clan]);//save last year values
       boolean []doNudges={y,y};
       int vva = eM.valAIN[0];// nudge to vv array traderFrac
       int vvb = eM.valAIN[0];// nudge to vv array ffTFracNudge
-
+      int gca = EM.valI[vva][EM.modeC][0][0];
+      int gcb = EM.valI[vvb][EM.modeC][0][0];
+      /*
+       static final int nudV = 0; // value of nudge
+  static final int nudSet = 1; // settings value of vv
+  static final int nudBoth = 2;// value of settings value + nudge value
+  static final int nudStrt = 3;
+*/
       // only clan blue get smart start after at least 100 keys so
        if( EM.myAIlearnings.size() > 100 && clan == 4 ){
-       String aKey = new String(EM.psClanChars[pors][clan]);
+       String aKey = new String(EM.psClanChars[pors][clan]);  //should have a key left from saveAIKey
        Integer[] aVal =  EM.myAIlearnings.get(aKey);
        // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
        // assume the ars arrays are set, and set them, but not EM.myAIlearnings
+       int cursliderVala = eM.getAIVal(vva,  clan, ec, 0);
        double sliderTF = eM.setCntAr(aKey, aVal, "prevTradeFrac1", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
        double tfLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
        double tfHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
        double prevTF =  EM.tradeFrac[pors][clan];
        double newTF = ((tfHigh -tfLow) *.01 * sliderTF) + tfLow;
        //double newTF = eM.sliderToVal(sliderTF,EM.valD[vva][EM.gameLim][pors][EM.vLowLim], EM.valD[vva][EM.gameLim][pors][EM.vHighLim]);
-       tradeFracNudge[pors] = newTF -prevTF;
-       doNudges[0] = false;// prevent random reset of nudge 0
-       if(E.debugAIOut)System.out.println("-----SAIy0----" + " prevTradeFrac=" + EM.mf(prevTF) + "+" +" nudge=" + EM.mf(tradeFracNudge[pors]) + "=>"  + EM.mf(newTF) + "==" + " sliderTF=" + EM.mf(sliderTF) );
+       tradeFracNudge[nudV] = newTF -prevTF;
+       sliderVala = eM.getAIVal(vva,  clan, ec, 0);
+       doNudges[0] = false;// prevent random reset of nudge 0  sliderVala
+       if(E.debugAIOut)System.out.println("-----SAIy0----" + name + "Y" +   EM.year + "P" + pors + "C" + clan + ", prev slidera=" + prevSliderVala + ", cur slidera=" + cursliderVala  + ", slidera=" + sliderVala + " prevTradeFrac=" + EM.mf(prevTF) + "+" +" nudge=" + EM.mf(tradeFracNudge[nudV]) + "=>"  + EM.mf(newTF) + "==" + " sliderTF=" + EM.mf(sliderTF) );
+       int cursliderValb = eM.getAIVal(vva,  clan, ec, 1);
         double sliderFFT = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge1, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
        double fftLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
        double fftHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
        double prevFFT =  EM.futureFundTransferFrac[pors][clan];
        double newFFT = ((fftHigh -fftLow) *.01 * sliderFFT) + tfLow;
        //double newTF = eM.sliderToVal(sliderTF,EM.valD[vva][EM.gameLim][pors][EM.vLowLim], EM.valD[vva][EM.gameLim][pors][EM.vHighLim]);
-       ffTFracNudge[pors] = newFFT -prevFFT;
+       ffTFracNudge[nudV] = newFFT -prevFFT;
+       sliderValb = eM.getAIVal(vva,  clan, ec, 1);
        doNudges[1] = false; // prevent random reset of nudge 1
-       if(E.debugAIOut)System.out.println("-----SAIy1----" + " prevFFTransferFrac=" + EM.mf(prevFFT) + "+" +" nudge=" + EM.mf(ffTFracNudge[pors]) + "=>"  + EM.mf(newFFT) + "==" + " sliderTF=" + EM.mf(sliderFFT) );
+        if(E.debugAIOut)System.out.println("-----SAIy1----" + name + "Y" +   EM.year + "P" + pors + "C" + clan + ", prev sliderb=" + prevSliderValb + ", cur sliderb=" + cursliderValb + ", sliderb=" + sliderValb + " prevTradeFrac=" + EM.mf(prevFFT) + "+" +" nudge=" + EM.mf(ffTFracNudge[nudV]) + "=>"  + EM.mf(newFFT) + "==" + " sliderFFT=" + EM.mf(sliderFFT) );
+       if(false)System.out.println("-----SAIy1----" + " prevFFTransferFrac=" + EM.mf(prevFFT) + "+" +" nudge=" + EM.mf(ffTFracNudge[nudV]) + "=>"  + EM.mf(newFFT) + "==" + " sliderTF=" + EM.mf(sliderFFT) );
 
       eM.setCntAr(aKey, aVal, false,false,false);//update ars arrays
       ///doNudges[0] = false;   // true gets it overwrittent by the default
-        //eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]
-      //EM.tradeFrac[pors][clan] + tradeFracNudge[pors]
+        //eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[nudV]
+      //EM.tradeFrac[pors][clan] + tradeFracNudge[nudV]
        }
 
        // now the default start, set some variations if not prest
@@ -8649,7 +8667,7 @@ public class Assets {
         // aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
         //randomize the applied values
         if(doNudges[ran2]){
-          aiNudges[ran2][pors] = aiV = ranMult * (rIn < rInMax ? aiNudges[ran2][rIn+2] : -aiNudges[ran2][rIn-rInMax+2]);
+          aiNudges[ran2][nudV] = aiV = ranMult * (rIn < rInMax ? aiNudges[ran2][rIn+nudStrt] : -aiNudges[ran2][rIn-rInMax+nudStrt]);
           doNudges[ran2] = false;
           }
         //int sliderVal = eM.getAIVal(vv, pors, clan,ec,ranInt);
@@ -8671,12 +8689,12 @@ public class Assets {
       vva = eM.valAIN[0];// nudge to vv array traderFrac
       vvb = eM.valAIN[1];// nudge to vv array
       if (prevSliderVala < 0) { //for age0
-        prevSliderVala = eM.getAIVal(vva, pors, clan, ec, 0);
-        prevSliderValb = eM.getAIVal(vvb, pors, clan, ec, 0);
+        prevSliderVala = eM.getAIVal(vva,  clan, ec, 0);
+        prevSliderValb = eM.getAIVal(vvb,  clan, ec, 0);
       }
       // start to  set values for next year
-      sliderVala = eM.getAIVal(vva, pors, clan, ec, 1);
-      sliderValb = eM.getAIVal(vvb, pors, clan, ec, 2);
+      sliderVala = eM.getAIVal(vva,  clan, ec, 1);
+      sliderValb = eM.getAIVal(vvb, clan, ec, 2);
       //use last years value, as in saveAI
       putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
       putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
@@ -8686,15 +8704,15 @@ public class Assets {
      
       int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
       int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
-      String valNudgea = EM.mf(aiNudges[0][pors]);
-      String valNudgeb = EM.mf(aiNudges[1][pors]);
+      String valNudgea = EM.mf(aiNudges[0][nudV]);
+      String valNudgeb = EM.mf(aiNudges[1][nudV]);
       String valaiV = EM.mf(aiV);
-      String valNudge5 = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][pors] : -11.3);
+      String valNudge5 = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][nudV] : -11.3);
       String pValIxaVal = EM.mf(E.AILimsC[pValIxa]);
       String pValIxbVal = EM.mf(E.AILimsC[pValIxb]);
-      //use last years value, as in saveAI
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
+      //use last years value, as in saveAI done before
+   //   putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
+    //  putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
       if (E.debugAIOut2) {
         System.err.println("-----SAIs3----StartYearAI ranInt" + ranInt + " pors" + pors + " rIn" + rIn + ":" + valNudge5 + ":" + valaiV + " A=" + vva + " sv:" + sliderVala + " psv:" + prevSliderVala + " nv:" + valNudgea + " pv:" + pValIxaVal + " at" + E.pNudge0 + " B=" + vvb + " sv:" + sliderValb + " psv:" + prevSliderValb + " nv:" + valNudgeb + " pv:" + pValIxbVal + " at" + E.pNudge1);
         }
@@ -9055,7 +9073,7 @@ public class Assets {
           }
           if (E.debugFFOut) {
             System.out.println("----A---" + name + " doing remainingFF m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
-                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
         }
         else // now initial test for dues,
@@ -9087,18 +9105,18 @@ public class Assets {
           }
           if (E.debugFFOut) {
             System.out.println("-----B---" + name + " doing excessForFF=" + EM.mf(excessForFF) + " sourceIx" + sourceIx
-                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
         } // now check for at upto 3 neg prospects, reduce max avail sector
         else if (E.ffSwapNs.contains(n) && (rawProsp = rawProspects2.curMin(2 - (n > 30 ? 0 : n > 20 ? 1 : 2))) < -0.0) {
           srcIx = mtgAvails6.curMaxIx(0);
           ixWRSrc = (int) srcIx / E.LSECS;
           srcIx = srcIx % E.LSECS;
-          val = Math.min(mtgAvails6.getRow(ixWRSrc).get(srcIx) * .55, balances.getRow(ixWRSrc).get(srcIx) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(mtgAvails6.getRow(ixWRSrc).get(srcIx) * .55, balances.getRow(ixWRSrc).get(srcIx) * (ffTFracNudge[nudBoth]));
           resTypeName = "EmergFF1";
           doing = val > 200 ? true : false;
           if (E.debugFFOut) {
-            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac",  ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
         } // now check if resources balances too much bigger than staff,
         // swaps cannot solve  this problem
@@ -9114,9 +9132,9 @@ public class Assets {
           resTypeName = "REmergFF1";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * mDif * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * mDif * (ffTFracNudge[nudBoth]));
           // limit the size of transferby largest balance* future fund trans limit
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * ( ffTFracNudge[nudBoth]));
           doing = true;
         } // now check available funds s too more r or r too more s
         // is s.sum() to greater r.sum()
@@ -9124,9 +9142,9 @@ public class Assets {
           resTypeName = "SEmergFF1";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * mDif * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * mDif * (ffTFracNudge[nudBoth]));
           // limit the size of transfer
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * ( ffTFracNudge[nudBoth]));
 
           doing = true;
         }
@@ -9135,9 +9153,9 @@ public class Assets {
           resTypeName = "REmergFF2";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * .5 * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * .5 * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[nudBoth]));
           // limit the size of transfer
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (ffTFracNudge[nudBoth]));
 
           doing = true;
         }
@@ -9145,9 +9163,9 @@ public class Assets {
           resTypeName = "SEmergFF2";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * mDif * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * mDif * (ffTFracNudge[nudBoth]));
           // limit the size of transfer
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (ffTFracNudge[nudBoth]));
 
           doing = true;
         } // now compare balances
@@ -9156,9 +9174,9 @@ public class Assets {
           resTypeName = "RcEmergFF2";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * mDif * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * mDif * (ffTFracNudge[nudBoth]));
           // limit the size of transfer
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (ffTFracNudge[nudBoth]));
 
           doing = true;
         } // max1 = sg.sum
@@ -9169,9 +9187,9 @@ public class Assets {
           resTypeName = "SgEmergFF2";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * mDif * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * mDif * (ffTFracNudge[nudBoth]));
           // limit the size of transfer
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (ffTFracNudge[nudBoth]));
 
           doing = true;
         }
@@ -9179,9 +9197,9 @@ public class Assets {
           resTypeName = "RcEmergFF2";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * tmp1 * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * tmp1 * (ffTFracNudge[nudBoth]));
           // limit the size of transfer
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (ffTFracNudge[nudBoth]));
 
           doing = true;
         }// (sg -rc /sg) * .7 > cFFE2
@@ -9189,10 +9207,10 @@ public class Assets {
           resTypeName = "SgEmergFF2";
           // val1 is the surpluss of dif1 over staff
           // ..TransferFrac limits fraction of surpluss to transfer
-          val1 = (dif1 * tmp1 * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val1 = (dif1 * tmp1 * (ffTFracNudge[nudBoth]));
           srcIx = bals.getRow(ixWRSrc).maxIx();
           // limit the size of transfer
-          val2 = Math.min(val1, bals.get(ixWRSrc, srcIx) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]));
+          val2 = Math.min(val1, bals.get(ixWRSrc, srcIx) * (ffTFracNudge[nudBoth]));
           //prevent taking more than balance - emergency reserve
           val = Math.min(val2, bals.get(ixWRSrc, srcIx) * (1.0 - E.emergReserve[ixWRSrc][pors][clan]));
 
@@ -9204,7 +9222,7 @@ public class Assets {
           destIx = srcIx;
           if (E.debugFFOut) {
             System.out.println("-----D---FF unNeeded " + name + " m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
-                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
           return m > 0;
         } // did nothing do rest of swap
@@ -9218,11 +9236,11 @@ public class Assets {
           rsval = val * eM.nominalRSWealth[ixWRSrc][pors];
           if (E.debugFFOut) {
             System.out.println("-----DFFa---FF unNeeded " + name + " m" + m + " mMax" + mMax + " n" + n + " sourceIx" + sourceIx + " sourceIx" + sourceIx
-                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
           //    srcIx = bals.getRow(ixWRSrc).maxIx();
           // limit the size of transfer
-          //rsval2 = Math.min(rsval1, bals.get(sourceIx) (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors])* eM.nominalRSWealth[ixWRSrc][pors]);
+          //rsval2 = Math.min(rsval1, bals.get(sourceIx) (ffTFracNudge[nudBoth])* eM.nominalRSWealth[ixWRSrc][pors]);
           //prevent taking more than balance - emergency reserve
           //rsval = Math.min(rsval2,
           //        Math.min(bals.get(sourceIx), bals.get(sourceIx) * (1.0 - E.emergReserve[ixWRSrc][pors][clan])));
@@ -9241,7 +9259,7 @@ public class Assets {
           assert rsval >= 0. : "Error neg val" + EM.mf(val) + " type=" + resTypeName + " source" + sourceIx; //String.format("Error neg val=%9.4f, resTypeName=%s, ixWRSrc=%d, srcIx=%d", val, resTypeName, ixWRSrc, srcIx));
           double sourcSum = bals.get(2 + 2 * ixWRSrc, srcIx) + bals.get(3 + 2 * ixWRSrc, srcIx);
           //  assert E.PZERO > Math.abs(bals.get(sourceIx) - sourcSum) : "err rs sum" + EM.mf(bals.get(sourceIx)) + " != sourcSum" + EM.mf(sourcSum);
-          assert bals.get(sourceIx) * eM.nominalRSWealth[ixWRSrc][pors] >= rsval / eM.nominalRSWealth[ixWRSrc][pors] : ("-----DFFE---rsval too big for working + reserve" + EM.mf(rawProsp) + " rsval" + EM.mf(rsval) + " source" + EM.mf(bals.get(sourceIx)) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+          assert bals.get(sourceIx) * eM.nominalRSWealth[ixWRSrc][pors] >= rsval / eM.nominalRSWealth[ixWRSrc][pors] : ("-----DFFE---rsval too big for working + reserve" + EM.mf(rawProsp) + " rsval" + EM.mf(rsval) + " source" + EM.mf(bals.get(sourceIx)) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           if (E.debugFutureFund) {
             if (rsval.isNaN() || rsval.isInfinite()) {
               E.myTestDouble(rsval, "val", "the value to move passed from previous tests, prevval bals %s%d =%7.2f", rcsg[2 * ixWRSrc], srcIx, bals.get(2 * ixWRSrc, srcIx));
@@ -9252,7 +9270,7 @@ public class Assets {
             }
             // if val exceeds the sum of the working and reserve values of resource or staff
             if (E.noAsserts && bals.get(2 + 2 * ixWRSrc, srcIx) + bals.get(3 + 2 * ixWRSrc, srcIx) - val < E.NZERO) {
-              EM.doMyErr(String.format("calcFutureFund error name=%7s, %s%d = %7.2f, %s%d=%7.2f sum=%7.2f less than val=%7.2f * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors])= %7.2f bals*eM=%7.2f", resTypeName, aChar[2 * ixWRSrc], srcIx, bals.get(2 + 2 * ixWRSrc, srcIx), aChar[1 + 2 * ixWRSrc], srcIx, bals.get(3 + 2 * ixWRSrc, srcIx), bals.get(ixWRSrc, srcIx), val, eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors], bals.get(ixWRSrc, srcIx) * (eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors])));
+              EM.doMyErr(String.format("calcFutureFund error name=%7s, %s%d = %7.2f, %s%d=%7.2f sum=%7.2f less than val=%7.2f * (ffTFracNudge[nudBoth])= %7.2f bals*eM=%7.2f", resTypeName, aChar[2 * ixWRSrc], srcIx, bals.get(2 + 2 * ixWRSrc, srcIx), aChar[1 + 2 * ixWRSrc], srcIx, bals.get(3 + 2 * ixWRSrc, srcIx), bals.get(ixWRSrc, srcIx), val, ffTFracNudge[nudBoth], bals.get(ixWRSrc, srcIx) * (ffTFracNudge[nudBoth])));
             }
           } // end of the 3 tests of value
 
@@ -9268,7 +9286,7 @@ public class Assets {
                                "s" + EM.mf(bals.getRow(1).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<<"));
           if (E.debugFFOut) {
             System.out.println("-----FF22---" + name + "Y" + EM.year + " did rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
-                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+                               + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
           // only count first FutureFund of each type of this year
           int thisYr = (resTypeName.contains("merg") ? emergeFutureFund : excessFutureFund) > 0.0 ? 0 : 1;
@@ -9289,7 +9307,7 @@ public class Assets {
           //   E.sysmsg("did transfer val=%5.0f, name=%5s, m=%d",val,resTypeName,m);
           if (E.debugFFOut) {
             System.out.println("-----FF23---" + name + "Y" + EM.year + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx
-                               + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3) + " maxF4=" + EM.mf(maxF4));
+                               + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(ffTFracNudge[nudBoth]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3) + " maxF4=" + EM.mf(maxF4));
           }
 
           yCalcCosts(aPre, lightYearsTraveled, eM.tradeHealth[pors][clan], eM.tradeGrowth[pors][clan]);
@@ -9301,14 +9319,14 @@ public class Assets {
           swapType = 3;
           if (E.debugFFOut) {
             System.out.println("-----FF24---" + name + "Y" + EM.year + " all done rawProspects2" + EM.mf(rawProsp) + " sourceIx" + sourceIx
-                               + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
+                               + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(ffTFracNudge[nudBoth]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
           }
           return m > 0;
         }
       } // end doing|xcess
       if (E.debugFFOut) {
         System.out.println("-----FF26---" + name + "Y" + EM.year + " all done rawProspects2" + EM.mf(rawProsp) + " sourceIx" + sourceIx
-                           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[pors]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
+                           + " m" + m + " mMax" + mMax + " n" + n + ", remainingFF=" + EM.mf(remainingFF) + " val" + EM.mf(val) + " ixWSrc" + ixWSrc + " rsval" + EM.mf(rsval) + " maxFutureTrans" + EM.mf(maxFutureTrans) + " FFTransFrac" + EM.mf(ffTFracNudge[nudBoth]) + " reservMult" + EM.mf(reservMult) + " maxF0=" + EM.mf(maxF0) + " maxFa=" + EM.mf(maxFa) + " maxF1=" + EM.mf(maxF1) + " maxF2=" + EM.mf(maxF2) + " maxF3=" + EM.mf(maxF3));
       }
       //  E.sysmsg("in calcFutureFund end m=%d",m);
       destIx = srcIx;
@@ -11307,21 +11325,24 @@ public class Assets {
         ifPrint = aWaits > 5;
 
           if (E.debugAIOut && ifPrint) {
-            String str = new String(EM.psClanChars[pors][clan]);
+            String str = new String(EM.psClanChars[pors][clan]);  // string from char
             System.out.println("----BAI1----  len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size() + " put key=" + str + "");
           }
           //       fyWAIWorth = fyW.sumTotWorth;
          // now process the rejected, lost, missed counts
 
-        EM.psClanChars[pors][clan][E.ptype] = E.getAIResChar(aType);//from acct
+        EM.psClanChars[pors][clan][E.ptype] = E.getAIResChar(aType);//from acct work on your key char
 
            EM.psClanChars[pors][clan][E.ppors] = E.getAIResChar(pors);//(unused)
         // E.pPrevScP pPrevScW
          //finsh building the key
       
         aiPos = EM.orderScorePosByIncrClan[clan]; // last years position
-       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILimsC, "lastaiPos", y);
-       putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors, E.AILimsC, "pors*5+clan", y);
+       putValueChar(EM.psClanChars[pors][clan], E.ppors, pors , E.AILims123, "pors", y);
+       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILims123, "lastaiPos", y);
+       putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors,E.AILims123, "pors*5+clan", y);
+        putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
+        putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevAIpos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);
@@ -13795,11 +13816,10 @@ public class Assets {
             hist.add(new History(aPre, History.loopIncrements3, nTitle("Pre") + cmd.name() + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
             // a pretest for problems with putValue and cost2
             if ((balances.get(ixWRSrc * 2 + 3, srcIx) - dstCst) < NZERO) {
-              E.myTest(true, "incr " + srcIx + " cost too high, balance=" + EM.mf(balances.getRow(ixWRSrc).get(srcIx)) + " -cost " + EM.mf(dstCst) + " => " + EM.mf((balances.getRow(ixWRS
-                      1c).get(srcIx) - dstCst)));
+              E.myTest(true, "incr " + srcIx + " cost too high, balance=" + EM.mf(balances.getRow(ixWRSrc).get(srcIx)) + " -cost " + EM.mf(dstCst) + " => " + EM.mf((balances.getRow(ixWRSrc).get(srcIx) - dstCst)));
             }
             if (ixWRSrc == 0) {
-               if( bals.getRow(0Z a`q212).sum() > 0.0)setStat("swapRIncr", pors, clan, 100. * mov / bals.getRow(0).sum(), 1);
+               if( bals.getRow(0).sum() > 0.0)setStat("swapRIncr", pors, clan, 100. * mov / bals.getRow(0).sum(), 1);
             }
             else if( bals.getRow(1).sum() > 0.0){
               setStat("swapSIncr", pors, clan, 100. * mov / bals.getRow(1).sum(), 1);
