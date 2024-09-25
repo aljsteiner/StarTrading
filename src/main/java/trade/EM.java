@@ -3763,7 +3763,8 @@ onceAgain:
     //  pick the econ input values that produced winner
 
   //  setCntAr(aKey, aVal, "44&prevAIScoreW", 2, 1, E.AILimss[1], E.pPrevScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
-   setCntAr(aKey, aVal, "prevTradeFrac", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
+   setCntAr(aKey, aVal, "prevTradeFracP", 1, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
+    setCntAr(aKey, aVal, "prevTradeFracS", 2, 2, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
  //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
     setCntAr(aKey, aVal, "prevAIEScore", 3, 3, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
 //    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);

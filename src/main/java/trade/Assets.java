@@ -8610,14 +8610,15 @@ public class Assets {
   static final int nudBoth = 2;// value of settings value + nudge value
   static final int nudStrt = 3;
 */
-      // only clan blue get smart start after at least 100 keys so
+      // only help clan blue get smart start after at least 100 keys so
+      // we want to separate planets and ships, but each Assets instance belongs to just one of them
        if( EM.myAIlearnings.size() > 100 && clan == 4 ){
        String aKey = new String(EM.psClanChars[pors][clan]);  //should have a key left from saveAIKey
        Integer[] aVal =  EM.myAIlearnings.get(aKey);
        // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
        // assume the ars arrays are set, and set them, but not EM.myAIlearnings
        int cursliderVala = eM.getAIVal(vva,  clan, ec, 0);
-       double sliderTF = eM.setCntAr(aKey, aVal, "prevTradeFrac1", 2, 1, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
+       double sliderTF = eM.setCntAr(aKey, aVal, "prevTradeFrac1",pors+1,pors+ 1, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,E.ppors, pors+0., pors+0., E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
        double tfLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
        double tfHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
        double prevTF =  EM.tradeFrac[pors][clan];
@@ -8627,6 +8628,7 @@ public class Assets {
        sliderVala = eM.getAIVal(vva,  clan, ec, 0);
        doNudges[0] = false;// prevent random reset of nudge 0  sliderVala
        if(E.debugAIOut)System.out.println("-----SAIy0----" + name + "Y" +   EM.year + "P" + pors + "C" + clan + ", prev slidera=" + prevSliderVala + ", cur slidera=" + cursliderVala  + ", slidera=" + sliderVala + " prevTradeFrac=" + EM.mf(prevTF) + "+" +" nudge=" + EM.mf(tradeFracNudge[nudV]) + "=>"  + EM.mf(newTF) + "==" + " sliderTF=" + EM.mf(sliderTF) );
+      
        int cursliderValb = eM.getAIVal(vva,  clan, ec, 1);
         double sliderFFT = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge1, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
        double fftLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];

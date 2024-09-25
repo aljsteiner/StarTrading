@@ -191,41 +191,45 @@ public class E {
    */
   // aVal[] = <cnts><year><ixMyScore>
   static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValPClan = 3, aValIxMyScore = 4, aValSize = 5;
-  static final char startC = 'a';
-  static final char nextC = '0';
+  static final char startC = 'a';//97
+  static final char nextC = '%';//37
   static final char maskC = '@';
   static final char lessStart = (char) ('a' - 1); // gt lessNext
   static final char lessNext = (char) ('A' - 1); //
-  static final char econDiedC = '!';
+ // static final char econDiedC = '!';
   static final int econDiedI = -1;
-  static final char notActiveC = '#';
+  static final char econDiedC = nextC + econDiedI;
+  //static final char notActiveC = '#';
   static final int notActiveI = -2;
-  static final char missingC = '-';
+  static final char notActiveC = nextC + notActiveI;
+ // static final char missingC = '-';
   static final int missingI = -3;
-  static final char undefC = '*';
+  static final char missingC = nextC + missingI;
+ // static final char undefC = '*';
   static final int undefI = -4;
+  static final char undefC = nextC + undefI;
   /**
    * get char for AI key
    *
    * @param ix int index of char for results includes some punctuaton but not
    * space or eq
-   * @return return (0-29)startC a-~,(30-76)nextC A-` else econDied, notActive,
+   * @return return (0-29)startC a-~,(33-96)nextC %-` else econDied, notActive,
    * missing or undef C
    */
   static char getAIResChar(int ix) {
-    //30=startC='a'97-'~'126 end
-    //nextC 30-95 48=ascii ='0'48 -'^'95+1  78=30+48
+    //30=startC='a'97-'~'127 end
+    //nextC 37-96 48=ascii ='0'48 -'^'95+1  78=30+48
     if (ix < 0) {
       return ix == econDiedI ? econDiedC : ix == notActiveI ? notActiveC
               : ix == missingI ? missingC : undefC;
     }
-    if (ix > 77) {
+    if (ix > 91) {  //60 +31
       return undefC;
     }
-    if (ix > 29) { //30-77=48
-      return (char) (nextC + ix - 30); //'0'
+    if (ix > 31) { //30-77=48 127-96 = 31
+      return (char) (nextC + ix - 32); //'%' 37-96=60
     }
-    return (char) (startC + ix); //'a' 0-29 =30
+    return (char) (startC + ix); //'a' 0-31 =32
   }
 
   /**
@@ -236,7 +240,7 @@ public class E {
    * @param a100 the slider value for a given setting 0-100
    * @return a * for illegal value, or the char for getAIResChar
    */
-  static char getAISetChar(int a100) {
+  static char getAISetCharNot(int a100) {
     if (a100 < 0) {
       return undefC;
     }
@@ -271,14 +275,14 @@ public class E {
     if (aa == econDiedC) {
       return econDiedI;
     }
-    if ((aa > (startC - 1)) && (aa < (127))) { //30=startC='a'97-'~'126 end
-      return aa - startC; // aa - 'a' 4 =e101 - a97
+    if ((aa > (lessStart)) && (aa < (128))) { //30=startC='a'97-'del'127 = 31
+      return aa - startC; // aa - 'a' 97=0
+    } else
+    //nextC 30-95 48=ascii ='%'37 ->'`'96 = 60  =31+60 =91
+    if ((aa > (lessNext)) && (aa < (startC))) { //60=96->37 ascii '%'37 -'a'97-1 = 60
+      return aa - nextC + 31; // otherWise aa - '%' +31 may be -1 for maskC
     }
-    //nextC 30-95 48=ascii ='0'48 -'^'95+1  78=30+48
-    if ((aa > (nextC - 1)) && (aa < (nextC + 48))) { //48=96-48 ascii '0'48 -'^'95
-      return aa - nextC + 30; // otherWise aa - '0' +30 may be -1 for maskC
-    }
-    return undefI; //something undefined
+    return undefI; //something undefined >91
   }
   /**
    * get the key char value at location bias
