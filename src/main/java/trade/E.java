@@ -193,9 +193,9 @@ public class E {
   static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValPClan = 3, aValIxMyScore = 4, aValSize = 5;
   static final char startC = 'a';//97
   static final char nextC = '%';//37
-  static final char maskC = '@';
-  static final char lessStart = (char) ('a' - 1); // gt lessNext
-  static final char lessNext = (char) ('A' - 1); //
+  static final char maskC =  (char)5; //'ENQ';
+  static final char lessStart = (char) (startC - 1); // gt lessNext
+  static final char lessNext = (char) (nextC - 1); //
  // static final char econDiedC = '!';
   static final int econDiedI = -1;
   static final char econDiedC = nextC + econDiedI;
