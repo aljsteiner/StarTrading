@@ -5144,7 +5144,7 @@ public class StarTrader extends javax.swing.JFrame {
   Color redish = new Color(255, 153, 153);
 
   /**
-   * stop core execution by callin setFatalError(Color);
+   * stop core execution by calling setFatalError(Color);
    *
    */
   void setFatalError() {
@@ -5170,8 +5170,9 @@ public class StarTrader extends javax.swing.JFrame {
    *
    * @param rrr color to set in log table and other tab views
    */
-  void setFatalError(Color rrr) {
+  void setFatalError(Color rrr){
     boolean hadFatalError = false;
+    try {
     if (!EM.dfe()) {
       getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
     }
@@ -5247,6 +5248,7 @@ public class StarTrader extends javax.swing.JFrame {
       EM.flushes();
       EM.flushes();
       EM.flushes();
+      Thread.sleep(1000);
       //    E.sysmsg("CF construct " + E.ROYGB.charAt(clan) + " " + name + " at " + a4.getMethodName() + ", " + a3.getMethodName() + ", " + a2.getMethodName() + " wealth=" + EM.mf(wealth));
       //  displayPanel2.setBackground(rrr);
       // displayPanel1EconName.setBackground(rrr);
@@ -5272,6 +5274,17 @@ public class StarTrader extends javax.swing.JFrame {
     EM.flushes();
     // throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
     //  controlPanels.setSelectedComponent(log);
+    }
+    catch (Exception | Error ex) {
+      eM.firstStack = eM.secondStack + "";
+      ex.printStackTrace(eM.pw);
+      eM.secondStack = eM.sw.toString();
+      System.out.flush();
+      System.err.flush();
+      System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      ex.printStackTrace(System.err);
+      throw new WasFatalError(eM.tError);
+    }
   }
 
   //obsolete

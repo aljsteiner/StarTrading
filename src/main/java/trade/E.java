@@ -191,28 +191,34 @@ public class E {
    */
   // aVal[] = <cnts><year><ixMyScore>
   static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValPClan = 3, aValIxMyScore = 4, aValSize = 5;
+ static final int startCStrt = 0;// beginning X
   static final char startC = 'a';//97
-  static final char nextC = '%';//37
-  static final char maskC =  (char)5; //'ENQ';
-  static final char lessStart = (char) (startC - 1); // gt lessNext
-  static final char lessNext = (char) (nextC - 1); //
- // static final char econDiedC = '!';
+  static final char startCnd = '~';//126
+  static final int startL = startCnd-startC+1; // x0->29 = 29+1=30
+  static final char nextC = '&';//38
+  static final char nextCnd = '[';//91 avoid \
+  static final int nextL = nextCnd-nextC+1;//91-38= 53+1 = 54
+  static final int nextCStrt = startL; // next beginning X 30
+  static final char moreC = ']';//93
+  static final char moreCnd= '`'; //96
+  static final int moreCStrt = startL +nextL; // 30+54=84
+  static final int moreL = moreCnd -moreC+1;//96-93=3+1=4
+  static final int keysXMax = startL + nextL + moreL;//30+54+4=88?
   static final int econDiedI = -1;
   static final char econDiedC = nextC + econDiedI;
-  //static final char notActiveC = '#';
   static final int notActiveI = -2;
   static final char notActiveC = nextC + notActiveI;
- // static final char missingC = '-';
   static final int missingI = -3;
   static final char missingC = nextC + missingI;
- // static final char undefC = '*';
   static final int undefI = -4;
   static final char undefC = nextC + undefI;
+   static final char maskC =  (char)(nextC - 5);// '!'
   /**
    * get char for AI key
    *
    * @param ix int index of char for results includes some punctuaton but not
    * space or eq
+   * avoid characters
    * @return return (0-29)startC a-~,(33-96)nextC %-` else econDied, notActive,
    * missing or undef C
    */
@@ -223,15 +229,59 @@ public class E {
       return ix == econDiedI ? econDiedC : ix == notActiveI ? notActiveC
               : ix == missingI ? missingC : undefC;
     }
-    if (ix > 91) {  //60 +31
+    if (ix > keysXMax) {  //see above
       return undefC;
     }
-    if (ix > 31) { //30-77=48 127-96 = 31
+    /*
+    if (ix > startCnd) {
       return (char) (nextC + ix - 32); //'%' 37-96=60
     }
     return (char) (startC + ix); //'a' 0-31 =32
   }
-
+    */
+      if (ix >= moreCStrt) {  //84
+      return (char) (ix - moreCStrt + moreC ); //  x85-88 c']'93->'`'96
+    }
+      else if(ix >= nextCStrt) { //30
+        return (char)(ix - nextCStrt  + nextC); // x31->84 c'&'38->'['91
+      }
+      // must be >= 0 <
+    return (char) (startC + ix); // x0->30  c'a'97->'`'126 97
+  }
+  /**
+   * for a given char in the AIKey return the index into the AILimss
+   *
+   * @param aa character from the key
+   * @return the int index
+   */
+  static int getAIMuch(char aa) {
+    if (aa == undefC) {
+      return undefI;
+    }
+    if (aa == missingC) {
+      return missingI;
+    }
+    if (aa == notActiveC) {
+      return notActiveI;
+    }
+    if (aa == econDiedC) {
+      return econDiedI;
+    }
+     if (aa >= startC && aa <= startCnd) {  //if >='a'97 to aa<= '`'126
+      return aa - startC + startCStrt ; //x 0-29 +0 < 30
+    } else if( aa >= nextC && aa <= (nextCnd)){ //if aa>='&'38 to aa <= '['91
+      return aa-nextC + nextCStrt;// aa - '&'38 + 30 < 84
+    } else if(aa>= (moreC) && aa <= (moreCnd+1)){ //if aa>= ']'93 to aa <= '`'96
+      return aa - moreC + moreCStrt;//aa - ']'93 + 84 < 88
+    }
+    /*
+    //nextC 30-95 48=ascii ='%'37 ->'`'96 = 60  =31+60 =91
+    if ((aa > (lessNext)) && (aa < (startC))) { //60=96->37 ascii '%'37 -'a'97-1 = 60
+      return aa - nextC + 31; // otherWise aa - '%' +31 may be -1 for maskC
+       }
+    */
+    return undefI; //something undefined not chosen above
+  }
   /**
    * get char for the settings input This concentrates single number changes for
    * values 40-60 The values <40 or >60 are divided by 3 to give a result of
@@ -256,34 +306,7 @@ public class E {
     return undefC; // value too high
   }
 
-  /**
-   * for a given settings char in the AIKey return the number of the value
-   *
-   * @param aa character from the key
-   * @return the int index
-   */
-  static int getAIMuch(char aa) {
-    if (aa == undefC) {
-      return undefI;
-    }
-    if (aa == missingC) {
-      return missingI;
-    }
-    if (aa == notActiveC) {
-      return notActiveI;
-    }
-    if (aa == econDiedC) {
-      return econDiedI;
-    }
-    if ((aa > (lessStart)) && (aa < (128))) { //30=startC='a'97-'del'127 = 31
-      return aa - startC; // aa - 'a' 97=0
-    } else
-    //nextC 30-95 48=ascii ='%'37 ->'`'96 = 60  =31+60 =91
-    if ((aa > (lessNext)) && (aa < (startC))) { //60=96->37 ascii '%'37 -'a'97-1 = 60
-      return aa - nextC + 31; // otherWise aa - '%' +31 may be -1 for maskC
-    }
-    return undefI; //something undefined >91
-  }
+
   /**
    * get the key char value at location bias
    *

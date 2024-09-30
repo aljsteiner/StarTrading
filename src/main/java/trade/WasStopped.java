@@ -28,5 +28,14 @@ public class WasStopped extends RuntimeException {
 
   WasStopped(String message) {
     super(message);
+    /*
+    System.err.flush();
+   System.err.flush();
+   System.err.flush();
+   System.err.flush();
+   System.err.flush();System.err.flush();
+   System.err.flush();
+   System.exit(-22);
+*/
   }
 }

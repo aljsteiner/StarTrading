@@ -3763,13 +3763,13 @@ onceAgain:
     //  pick the econ input values that produced winner
 
   //  setCntAr(aKey, aVal, "44&prevAIScoreW", 2, 1, E.AILimss[1], E.pPrevScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
-   setCntAr(aKey, aVal, "prevTradeFracP", 1, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
-    setCntAr(aKey, aVal, "prevTradeFracS", 2, 2, E.AILimsC, E.pNudge0, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
- //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
-    setCntAr(aKey, aVal, "prevAIEScore", 3, 3, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
+   setCntAr(aKey, aVal, "prevTradeFracP", 1, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
+    setCntAr(aKey, aVal, "prevTradeFracS", 2, 2, E.AILimsC, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
+ //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
+    setCntAr(aKey, aVal, "prevAIEScore", 3, 3, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
 //    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
-    setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,-4, 0., 9, E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
-    setCntAr(aKey, aVal, "FutFTFrac", 7, 6, E.AILimsC, E.pNudge1, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
+    setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge0, E.AILimss[6],E.pLastScP,4., 4.,setAll, doSet,pr, y);
+    setCntAr(aKey, aVal, "FutFTFrac", 7, 6, E.AILimsC, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4., setAll, doSet, pr, y);
 
     //   setCntAr(aKey, aVal, "23&prevAIScoreW", 2, 2, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3..,setAll, doSet, pr, no);
     //  setCntAr(aKey, aVal, "01&prevAIScoreW", 3, 3, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 3.,setAll., doSet, pr, no);
@@ -3908,6 +3908,11 @@ onceAgain:
       vvIa = vvIa >= strtLow ? vvIa : strtLow; // protect index
 ;
     try {
+      assert myAILim.length <= E.keysXMax: "myAILim values array is too long=" + myAILim.length + ">=" + E.keysXMax;
+      assert myAILim1.length <= E.keysXMax: "myAILim1 is too long=" + myAILim1.length + ">" + E.keysXMax;
+      assert myAILim2.length <= E.keysXMax: "myAILim2 is too long=" + myAILim2.length + ">" + E.keysXMax;
+      assert myAILim3.length <= E.keysXMax: "myAILim3 is too long=" + myAILim3.length + ">" + E.keysXMax;
+      assert myAILim4.length <= E.keysXMax: "myAILim4 is too long=" + myAILim4.length + ">" + E.keysXMax;
       if(E.DebugSetCntArOut && pr1 )System.out.println("---SCNTA2---setCntArCnt=" + setCntSee + "A" + arn + "Y" + year + "AG" + curEconAge + " lL" + laiLim + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + pValIx + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[arn].length < lenIa ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length) + "\n" + limV + " ignore" + s1 + s2 + s3 + s4 + " true" + t1 + t2 + t3 + t4 + " key" + aKey + (setAll? " ++setAll": " --setAll") + (doSet ? " ++doSetl": " --doSet")  + (printDeb ? " ++printDeb" : " --printDeb") + (p2 ? " ++p2" : " --p2"));
 
       if (pValIx < E.undefI || pValIx > 76) {
@@ -4915,6 +4920,8 @@ onceAgain:
    * @param nudge accept a nudge 0.0 < 0 nudge value value, 0==nudge[0],1==nudge[1]
    * ...
    * @return the value to set in the slider
+   * set aiNudges[nudge][Assets.nudSet] to the current value of the setting for this pors and clan
+   * set ec.as.aiNudges[nudge][Assets.nudBoth] to the ec.as.aiNudges[nudge][Assets.nudV]+ec.as.aiNudges[nudge][Assets.nudSet]
    */
   static int getAIVal(int vv, int clan, Econ ec, int nudge) {
     int slider1 = -1;
@@ -4929,7 +4936,7 @@ onceAgain:
       val = valToSlider(aSet + nudgeV, valD[vv][gameLim][0][lowC], valD[vv][gameLim][0][highC]);
       if(nudge > -1){
         ec.as.aiNudges[nudge][Assets.nudSet]   = aSet;
-        ec.as.aiNudges[nudge][Assets.nudBoth] = val;
+        ec.as.aiNudges[nudge][Assets.nudBoth] = aSet + nudgeV;
         
       }
 

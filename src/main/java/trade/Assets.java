@@ -845,6 +845,7 @@ public class Assets {
    *
    */
   static void putValueChar(char[] res, int bias, double value, double[] tests) {
+    assert  tests.length <= E.keysXMax: " tests values array is too long=" +  tests.length + ">" + E.keysXMax;
     int ix = 0, rix = 0;
     char ret = E.getAIResChar(ix);
     int testsLen = tests.length;
@@ -875,6 +876,7 @@ public class Assets {
    * test
    */
   static int putValueChar(char[] res, int bias, double value, double[] tests, String what, boolean ifPrint) {
+    assert  tests.length <= E.keysXMax: " tests values array is too long=" +  tests.length + ">" + E.keysXMax;
     //byte ret[] = {'A'};
     char ret = E.getAIResChar(0);
     int ix = 0;
@@ -889,11 +891,14 @@ public class Assets {
       }
     }
     res[bias] = ret;
-    putValStr = " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias =" + bias + ":" + retIx + "=" + ret + " V:" + EM.mf(value) + " putValCnt" + putValCnt;
+    int againx = E.getAIMuch(ret);
+
+    EM.wasHere6 = " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias =" + bias + ":" + retIx + "=" + ret + " V:" + EM.mf(value) + " putValCnt" + putValCnt;
+    assert againx == retIx:"----PVe---error againx" + againx + " not equal to original" + retIx + " value=" + EM.mf(value) ;
     if ((ifPrint && (++putValCnt % 47) == 0) || bias == E.pPrevEScW || bias == E.pPrevERScW) {
       String ss = new String(res);
       char rr = ret;
-      System.out.println("----PVB3---- putValByte what=" + what + " bias =" + bias + " char=" + retIx + "=" + ret + " value=" + value + " VV" + EM.mf(value) + "Vx" + EM.mf(tests[retIx]) + " putValCnt" + putValCnt + " key.length" + res.length + " key=" + ss);
+      System.out.println("----PVB3---- putValByte what=" + " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias =" + bias + ":" + retIx + "=" + ret + " V:" + EM.mf(value) + " putValCnt" + putValCnt+ "Vx" + EM.mf(tests[retIx]) + " putValCnt" + putValCnt + " key.length" + res.length + " key=" + ss);
     }
     return retIx;
   }
@@ -907,6 +912,7 @@ public class Assets {
    * @return
    */
   static int getTestVal(double value, double[] tests, String what) {
+    assert  tests.length <= E.keysXMax: " tests values array is too long=" +  tests.length + ">" + E.keysXMax;
     int ret = 0;
     int ix = 0;
     int testsLen = tests.length;
@@ -8677,7 +8683,8 @@ public class Assets {
        // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
        // assume the ars arrays are set, and set them, but not EM.myAIlearnings
        int cursliderVala = eM.getAIVal(vva,  clan, ec, 0);
-       double sliderTF = eM.setCntAr(aKey, aVal, "prevTradeFrac1",pors+1,pors+ 1, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,E.ppors, pors+0., pors+0., E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
+       String prevTradeFracss[] = { "prevTradeFracP","prevTradeFracS"};
+       double sliderTF = eM.setCntAr(aKey, aVal, prevTradeFracss[pors],pors+0,pors+ 0, E.AILimsC, E.pNudge0, E.AILimss[6], -4, 0., 9., E.AILims123,E.ppors, pors+0., pors+0., E.AILimss[6], -4, 0., 9, E.AILimss[6], -4, 0., 9.,false,false,y, y);
        double tfLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
        double tfHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
        double prevTF =  EM.tradeFrac[pors][clan];
@@ -9868,7 +9875,7 @@ public class Assets {
         System.err.println(eM.tError = ("----CBAf----ERROR Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
         //     ex.printStackTrace(System.err);
         st.setFatalError();
-        throw new WasFatalError(eM.tError);
+        throw new WasStopped(eM.tError);
       }
     }
 
