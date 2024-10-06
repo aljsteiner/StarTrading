@@ -3679,12 +3679,12 @@ onceAgain:
           }
         }
         // now do the output
-        seeArrays[0]  = " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + orderClanPosByIncrScore[4] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[0];
+        seeArrays[0]  = " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + whichClanPosByIncrScore[4] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[0];
         System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + "Y" + year + " lKey" + lKey + " key" + bKey + seeArrays[0]);
         if(entryCnt>0)setCntAr(aKey, aVal,false, false, true);
         // seeCntArrays(entryCnt, cntsCnt, rKeysIx);
         //  seeArrays[0] = " DWM2 " + seeArrays[0] + "\n" + seeArrays[1] + "\n" + seeArrays[2] + "\n" + seeArrays[3] + "\n";
-        seeArrays[0] =  " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + orderClanPosByIncrScore[4] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[0];
+        seeArrays[0] =  " doWriteMapfile Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + whichClanPosByIncrScore[4] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[0];
         System.err.println("---DWM8---now wrote mapfile year" + year + " out=" + seeArrays[0]);
 
       }
@@ -3718,8 +3718,8 @@ onceAgain:
    * @return
    */
   String seeCntArrays(int entryCnt, int cntsCnt, int lRemove) {
-    String ll = seeArrays[0] = "seeCntArrays " + " Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + lRemove + "winr" + orderClanPosByIncrScore[0] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[4];// //seeArrays[0] =
-    // seeArrays[0] = " seeCntArrays Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + orderClanPosByIncrScore[4] + orderClanPosByIncrScore[3] + orderClanPosByIncrScore[2] + orderClanPosByIncrScore[1] + orderClanPosByIncrScore[0];
+    String ll = seeArrays[0] = "seeCntArrays " + " Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + lRemove + "winr" + whichClanPosByIncrScore[0] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[4];// //seeArrays[0] =
+    // seeArrays[0] = " seeCntArrays Keys" + entryCnt + " setCnt" + setCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + whichClanPosByIncrScore[4] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[0];
 /*
     boolean set=false,pr=true;
      setCntAr(aKey, aVal, "44&lastAIScoreW", 2, 1, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 3., 4., E.AILims123, E.pPrevScP, 4., 5.,set , pr, y);
@@ -3762,13 +3762,14 @@ onceAgain:
     //  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean setAll, boolean doSet,boolean printDeb, boolean p2)
     //  pick the econ input values that produced winner
 
-  //  setCntAr(aKey, aVal, "44&prevAIScoreW", 2, 1, E.AILimss[1], E.pPrevScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll,doSet, pr, y);
-   setCntAr(aKey, aVal, "prevTradeFracP", 1, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
-    setCntAr(aKey, aVal, "prevTradeFracS", 2, 2, E.AILimsC, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
+    setCntAr(aKey, aVal, "prevAIERScoreWA", 4, 4, E.AILims1, E.pPrevERScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
+   setCntAr(aKey, aVal, "prevAIERScoreWB", 5, 5, E.AILims1, E.pPrevERScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
+   setCntAr(aKey, aVal, "prevTradeFracA", 1, 1, E.AILimsC, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
+    setCntAr(aKey, aVal, "prevTradeFracB", 2, 2, E.AILimsC, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
  //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
     setCntAr(aKey, aVal, "prevAIEScore", 3, 3, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
 //    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
-    setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge0, E.AILimss[6],E.pLastScP,4., 4.,setAll, doSet,pr, y);
+   // setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge1 , E.AILimss[6],E.pLastScP,4., 4.,setAll, doSet,pr, y);
     setCntAr(aKey, aVal, "FutFTFrac", 7, 6, E.AILimsC, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4., setAll, doSet, pr, y);
 
     //   setCntAr(aKey, aVal, "23&prevAIScoreW", 2, 2, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3..,setAll, doSet, pr, no);
@@ -3837,9 +3838,11 @@ onceAgain:
     int pValIxx = pValIx > 0?pValIx: 0;
     int pValIa = pValIx + strtIas;
     int laiLim = myAILim.length;
+    int laiLim1 = myAILim1.length;
+    int laiLim2 = myAILim2.length;
     //if lX1 < 0 ignore it i1==true use 0 value
     int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(i1 ? 0 : lX1)); // ix lim1 in myAILim1
-    double l1Vald = myAILim1[l1ValIx]; // double value of lim1
+    double l1Vald = myAILim1[l1ValIx]; // get double value of lim1
     String l1Valv = mf(l1Vald); // view value of lim1
     double l11Vald = llX1;// "lx1 double lower limit";
     String l11Valv = mf(l11Vald);// "lx1 String lower limit";
@@ -3854,7 +3857,9 @@ onceAgain:
     String lu2Valv = mf(lu2Vald);// "lx2 String upper limit";
     boolean l1 = i1 || l1Vald >= l11Vald && l1Vald <= lu1Vald;
     boolean l2 = i2 || l2Vald >= l12Vald && l2Vald <= lu2Vald;
-    String l1V = (l1 ? " ++l1" : " --l1");
+    String l1Vm = (l1 ? " ++l1" : " --l1")  + " " + l11Valv + "<= " +  "Pl1="  + lX1 + "C"+ ch1 + "V" + l1Valv + " <=" + lu1Valv;
+    String l2Vm = (l2 ? " ++l2" : " --l2") + " " + l12Valv + "<= " +  "Pl2="  + lX2 + "C" + ch2 + "V" + l2Valv + " <=" + lu2Valv;
+    String l1V = (l1 ? " ++l1" : " --l1") ;
     String l2V = (l2 ? " ++l2" : " --l2");
     int l3ValIx = E.getAIMuch(ch3 = aKey.charAt(i3 ? 0 : lX3)); // ix lim1 in myAILim1
     double l3Vald = myAILim3[l3ValIx]; // double value of lim3
@@ -3940,10 +3945,10 @@ onceAgain:
       Boolean doBest=true,doComma=false;
       String retb = "\n" + "best ";
       String ret0 =   "A" + arn  ;
-      String ret0a =   " " + what + " " + "Y" + year + "AG" + curEconAge + "lL" + laiLim + " stE" + st.cntInit + " EME" + cntInit + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + "XX" + pValIxx  + "xA" + vvIa  + "xC" + vvIaC + " allC:" + ars[arn][iaAllCnt] + " ave" + cAllAve + "V:" + (cAllAve > 0 && cAllAve < laiLim ? mf(myAILim[cAllAve]) : " cAllAve=" + cAllAve);
-      String ret0b = "\n" + limV + l1V + " lx1N:" + lX1 + ":" + ch1 + ":X" + l1ValIx + ":V";
-      String ret0c = l1Valv + ">=" + l11Valv + ":" + mf(llX1) + "<=" + lu1Valv + ":" + mf(luX1) + " lX2N:" + lX2 + ":" + ch2 + ":X" + l2ValIx + ":V" + l2Valv + ">=" + l12Valv + ":" + mf(llX2) + "<=" + lu2Valv + ":" + mf(luX2) + l2V + limV ;
-       String ret0d = "\n" + ars[arn][iaLimCnt] + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2");
+      String ret0a =   " " + what + ":" + limV + " " + "Y" + year + "AG" + curEconAge + "lL" + laiLim + " stE" + st.cntInit + " EME" + cntInit + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + "XX" + pValIxx  + "xA" + vvIa  + "xC" + vvIaC + " allC:" + ars[arn][iaAllCnt] + " ave" + cAllAve + "V:" + (cAllAve > 0 && cAllAve < laiLim ? mf(myAILim[cAllAve]) : " cAllAve=" + cAllAve + " AIlims lengths=" + E.LAILims + " " + E.LAILims1 + " "  + E.LAILims2 + " "  +E. LAILims3  + " " +E. LAILims4  + " " +E.LAILimsC + " " + E.LAILims123   );
+      String ret0b = "\n" + "limC" + ars[arn][iaLimCnt] + limV + l1V + "D"+ l11Valv + "<=" + " lx1N:" + lX1 + "C" + ch1 + ":X" + l1ValIx + "L" + laiLim1 + ":V";
+      String ret0c = l1Valv + "<=" + lu1Valv + "::" + l2V + "D" + l12Valv + "<=" + " lX2N:" + lX2 + "C" + ch2 + ":X" + l2ValIx + "L" + laiLim2 + ":V" + l2Valv + ":" + mf(llX2) + "<=" + lu2Valv  ;
+       String ret0d = "\n" + (printDeb ? " printDeb" : " !printDeb") + (p2 ? " p2" : " !p2") + " aKey=" + aKey;
       if(pr1 || true )System.out.println("---SCNTA3---setCntArCnt=" + setCntSee++ + ret0 + ret0a+ ret0b + ret0c + ret0d);
       /*  int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
     int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix lim1 in myAILim1
@@ -3997,7 +4002,7 @@ onceAgain:
 
         } //undefI
 // now put seeArrays value
-        ret = ret0  + ret0a + " ::limN" + cLim + "S:" + cLimSum + " Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < laiLim ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
+        ret = ret0  + ret0a + " ::limC" + cLim + "S:" + cLimSum + " Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < laiLim ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
         ret2 = (" firstNx" + (myNn=(myN = ars[arn][firstIa])-strtIas) + "A" + myN + "C" + ars[arn][(myN)] + ":V");
         //eee = myAILim[myNn];
         ret2 += mf(myAILim[myNn]) ;
@@ -4037,7 +4042,7 @@ onceAgain:
               bsum += ars[arn][fRange] * (fRange - strtIas);// sum ix values mult
               bVal += bmul =ars[arn][fRange] * myAILim[fRange - strtIas];// sum raw values mult
               if(doBest){ 
-                retb += (doComma?"; " : " ") + "Nx" + (fRange - strtIas) + "C" + ars[arn][fRange] +  (nzCnt < 6?"X" + mf2(bsum/bcnt) : "") + "V" + mf2(bVal/bcnt);
+                retb += (doComma?"; " : " ") + "Nx" + (fRange - strtIas) + "C" + ars[arn][fRange] +  (nzCnt < 6?"X" + mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf2(bcnt>0?bVal/bcnt:0.0);
                 doComma=true;
               }
             }
@@ -4052,15 +4057,15 @@ onceAgain:
               bsum += ars[arn][tRange] * (tRange - strtIas);
               bVal += bmul =ars[arn][tRange] * myAILim[tRange - strtIas];
               if(doBest){
-                retb += (doComma?"; " : " ") + "Nx" + (tRange - strtIas) + "C" + ars[arn][tRange] +  (nzCnt < 4?"X" + mf(bsum/bcnt) : "") + "V" + mf(bVal/bcnt);
+                retb += (doComma?"; " : " ") + "Nx" + (tRange - strtIas) + "C" + ars[arn][tRange] +  (nzCnt < 4?"X" +  mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf(bcnt>0?bVal/bcnt:0.0);
               }
           }
           }
         } //rCnt
         //now get best value  for regular
-        sBest = bsum/bcnt;  // a little less then best
+        sBest = bcnt > 0?bsum/bcnt:-99999999.;  // a little less then best
         sBestV = mf(sBest); //string shorter number
-        bestVal = bVal/bcnt;// return
+        bestVal = bcnt > 0?bVal/bcnt:-99999999.;// return
         bValV = mf(bestVal); //string return possible best value
         if(!doBest) retb = "";
         //best = (int) (bsum / bcnt);
@@ -4083,8 +4088,9 @@ onceAgain:
           for (ia = fRange; ia <= tRange && nzCnt < nzMax; ia++) {
             // see value Ix, entryCnt at that value, value at that value Ix
             if (ars[arn][ia] > 0) {
+              nzCnt++;
               ret3 += ((doComma ? "; " : " ") + "Nx" + (myN = ia-strtIas) + "C" + ars[arn][ia] + "V" + mf(myAILim[myN]));
-              doComma = true;nzCnt++;
+              doComma = true;
             }
             
           }// ia
@@ -4159,7 +4165,7 @@ onceAgain:
           mostIaN = ars[aarn][mostIa];
         }
 
-          ret = "A" + aarn + "REST " + ret0a + " ::limN" + cLim + "S:" + cLimSum + " Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < laiLim ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
+          ret = "A" + aarn + "REST " + ret0a + " ::limC" + cLim + "S:" + cLimSum + " Ave:" + cLimAve + "V:" + (cLimAve > 0 && cLimAve < laiLim ? mf(myAILim[cLimAve]) : " cLimAve=" + cLimAve);
         ret2 = (" firstNx" + (myNn=(myN = ars[aarn][firstIa])-strtIas) + ":" + ars[aarn][(myN)] + ":V");
         //eee = myAILim[myNn];
          ret2 += mf(myAILim[myNn]) ;
@@ -7416,8 +7422,8 @@ onceAgain:
       //move the score and positions to prev...
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
         prevMyScore[ixClan] = myScore[ixClan];
-        prevOrderScorePosByIncrClan[ixClan] = orderScorePosByIncrClan[ixClan];
-        prevOrderClanPosByIncrScore[ixClan] = orderClanPosByIncrScore[ixClan];
+        prevOrderScorePosByIncrClan[ixClan] = whichScorePosByIncrClan[ixClan];
+        prevOrderClanPosByIncrScore[ixClan] = whichClanPosByIncrScore[ixClan];
       }
       lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx  vvend
        if (myAIlearnings == null) {
@@ -9804,9 +9810,9 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   static double relScore[] = {400., 400., 400., 400., 400.};
   static double prevRelScore[] = {400., 400., 400., 400., 400.};
   // what clan in position
-  static int orderClanPosByIncrScore[] = {0, 1, 2, 3, 4};//score min-max pos4 has clan2
+  static int whichClanPosByIncrScore[] = {0, 1, 2, 3, 4};//score min-max pos4 has clan2
   // what position is clan
-  static int orderScorePosByIncrClan[] = {0, 1, 2, 3, 4};//clan 3 has score pos 4highest value
+  static int whichScorePosByIncrClan[] = {0, 1, 2, 3, 4};//clan 3 has score pos 4highest value
   static double myScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double prevScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
   static double relScorePorSClan[][] = {{0, 1, 2, 3, 4}, {0, 1, 2, 3, 4}};
@@ -9832,8 +9838,8 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
     curDif = year < 2 ? winDif[0][0] : curDif;
     difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;
     for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-      orderClanPosByIncrScore[ixClan] = ixClan;
-      orderScorePosByIncrClan[ixClan] = ixClan;
+      whichClanPosByIncrScore[ixClan] = ixClan;
+      whichScorePosByIncrClan[ixClan] = ixClan;
       myScore[ixClan] = 4000.;  // allow negatives to reduce it
       myScorePorSClan[0][ixClan] = myScorePorSClan[1][ixClan] = 2000.;
     }
@@ -9879,56 +9885,56 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
       }
 
       int min = 0, prevMin = 0,next=0,ix=0,ix2=0;
-      // static int orderClanPosByIncrScore[] = {0,1,2,3,4};// val score pos has which clan == orderClanPosByIncrScore
-      //static int orderScorePosByIncrClan[] = {0,1,2,3,4}; // clan has which score pos==orderScorePosByIncrClan
+      // static int whichClanPosByIncrScore[] = {0,1,2,3,4};// val score pos has which clan == whichClanPosByIncrScore
+      //static int whichScorePosByIncrClan[] = {0,1,2,3,4}; // clan has which score pos==whichScorePosByIncrClan
       // ix moves min to max value position
       for (ix = 1; ix < E.LCLANS; ix++) {
         //start with preset values for each array
-      //  orderClanPosByIncrScore[ix] = ix; // which clan does pos ix have
+      //  whichClanPosByIncrScore[ix] = ix; // which clan does pos ix have
         // going from least value PosValClan to most PosValClan
-        if (myScore[orderClanPosByIncrScore[ix - 1]] < myScore[orderClanPosByIncrScore[ix]]) {
+        if (myScore[whichClanPosByIncrScore[ix - 1]] < myScore[whichClanPosByIncrScore[ix]]) {
           // ix-1=0 val pos has clan 0 from the preset values of posclan and clanpos
           // ix=2 1<2 and  0<1<2
           min = ix-1;// min val pos
           next = ix;// next val pos
          // orderClanByIncrScore    orderScoreByIncrClan
-          orderScorePosByIncrClan[ix-1] = min;//  set clan at ix-1 to score pos min
-          orderScorePosByIncrClan[ix] = next;// set clan at ix to score pos next
+          whichScorePosByIncrClan[ix-1] = min;//  set clan at ix-1 to score pos min
+          whichScorePosByIncrClan[ix] = next;// set clan at ix to score pos next
         }
         else { //1 < 0  or 2 < reverse them
-          min = orderClanPosByIncrScore[ix];// min val pos  min val pos  0->3
-          next = orderClanPosByIncrScore[ix - 1]; // next val pos 1->0
+          min = whichClanPosByIncrScore[ix];// min val pos  min val pos  0->3
+          next = whichClanPosByIncrScore[ix - 1]; // next val pos 1->0
           // flip the lower score pos val up to current ixClan
-          orderClanPosByIncrScore[ix] = next;//  2 to 1
-          orderClanPosByIncrScore[ix - 1]= min;
-          orderScorePosByIncrClan[ix-1] = min;//  set clan at ix-1 to score pos min
-          orderScorePosByIncrClan[ix] = next;// set clan at ix to score pos next
+          whichClanPosByIncrScore[ix] = next;//  2 to 1
+          whichClanPosByIncrScore[ix - 1]= min;
+          whichScorePosByIncrClan[ix-1] = min;//  set clan at ix-1 to score pos min
+          whichScorePosByIncrClan[ix] = next;// set clan at ix to score pos next
           //now move min as low as necessary
           for (ix2 = ix- 1; ix2 > 0; ix2--) { //1 => 0, 2 => 1
-            if (myScore[orderClanPosByIncrScore[ix2 - 1]] < myScore[orderClanPosByIncrScore[ix2]]) {
+            if (myScore[whichClanPosByIncrScore[ix2 - 1]] < myScore[whichClanPosByIncrScore[ix2]]) {
                // ix-1=0 val pos has clan 0 from the preset values of posclan and clanpos
               // ix=2 1<2 and  0<1<2
               min = ix2-1;// min val pos
               next = ix2;// next val pos
-              orderScorePosByIncrClan[ix2-1] = min;// min val pos  0->3
-              orderScorePosByIncrClan[ix2] = next;// next val pos 1->0
+              whichScorePosByIncrClan[ix2-1] = min;// min val pos  0->3
+              whichScorePosByIncrClan[ix2] = next;// next val pos 1->0
             }
             else {
-               min = orderClanPosByIncrScore[ix2];// min val pos  0->3
-                next = orderClanPosByIncrScore[ix2 - 1]; // next val pos 1->0
+               min = whichClanPosByIncrScore[ix2];// min val pos  0->3
+                next = whichClanPosByIncrScore[ix2 - 1]; // next val pos 1->0
                 // flip the lower score pos val up to current ixClan
-                orderClanPosByIncrScore[ix2] = next;//  2 to 1
-                orderClanPosByIncrScore[ix2 - 1]= min;
-                orderScorePosByIncrClan[ix2-1] = min;//   min val pos  0->3
-                orderScorePosByIncrClan[ix2] = next;// next val pos 1->0
+                whichClanPosByIncrScore[ix2] = next;//  2 to 1
+                whichClanPosByIncrScore[ix2 - 1]= min;
+                whichScorePosByIncrClan[ix2-1] = min;//   min val pos  0->3
+                whichScorePosByIncrClan[ix2] = next;// next val pos 1->0
             } // else ix2
           } // ix2
         }// else ixClan
       }// ix
       for(ix=0;ix<E.LCLANS;ix++){
-        orderScorePosByIncrClan[orderClanPosByIncrScore[ix]] = ix;//30142=>12403
+        whichScorePosByIncrClan[whichClanPosByIncrScore[ix]] = ix;//30142=>12403
       }
-      winner = orderClanPosByIncrScore[4]; //clan at  valPos 4
+      winner = whichClanPosByIncrScore[4]; //clan at  valPos 4
 
       double dif = 0.0, wDif = 0.0;
       // dif = max - myScore.ave
@@ -9950,7 +9956,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
       }
 
       System.out.println("-----WNRa----getWinner " + ( isWinner? "++isWinner":"--isWinner") + " posClan" 
-                         + orderClanPosByIncrScore[0] +orderClanPosByIncrScore[1] +orderClanPosByIncrScore[2] +orderClanPosByIncrScore[3] + orderClanPosByIncrScore[4]  + ":"  + orderScorePosByIncrClan[0]  + orderScorePosByIncrClan[1]  + orderScorePosByIncrClan[2]  + orderScorePosByIncrClan[3]  + orderScorePosByIncrClan[4] + "::" + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4])  +  resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", winner=" + winner + (badbad ? " --winner=" + prevWinner : ""));
+                         + whichClanPosByIncrScore[0] +whichClanPosByIncrScore[1] +whichClanPosByIncrScore[2] +whichClanPosByIncrScore[3] + whichClanPosByIncrScore[4]  + ":"  + whichScorePosByIncrClan[0]  + whichScorePosByIncrClan[1]  + whichScorePosByIncrClan[2]  + whichScorePosByIncrClan[3]  + whichScorePosByIncrClan[4] + "::" + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4])  +  resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", winner=" + winner + (badbad ? " --winner=" + prevWinner : ""));
 
  
       return winner;
