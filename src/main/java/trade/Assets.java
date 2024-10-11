@@ -121,8 +121,11 @@ public class Assets {
   static final int nudSet = 1;
   static final int nudBoth = 2;
   static final int nudStrt = 3;
+  static final int nudChgs=5;
+  static final int nudLen=8;
   double tradeFracNudge[] = {0., 0.,.0,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
   double ffTFracNudge[] = {0., 0.,.0, 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
+
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
@@ -594,6 +597,8 @@ public class Assets {
     dFrac = NumberFormat.getNumberInstance();
     whole = NumberFormat.getNumberInstance();
     dfo = dFrac;
+   assert tradeFracNudge.length == nudLen : "error tradeFracNudge length=" + tradeFracNudge.length + " not=" + nudLen;
+   assert ffTFracNudge.length == nudLen : "error ffTFracNudge length=" + ffTFracNudge.length + " not=" + nudLen;
     // define aClanEntries only once before any use, ignore clan
     /*
    static final int nTypes = 2;
@@ -2705,8 +2710,8 @@ public class Assets {
       cur.aStartCashFlow(this);
     }
     if(E.debugBarterOut)eM.printHere(E.tradeInitOut, "----ABR2-----", ec, " Assets.barter tradeInitOut term=" + inOffer.getTerm());
-
     Offer myIn = cur.barter(inOffer);
+    if(EM.dfe())return inOffer;
     // if exit trade exit cur
     if (cur.myTrade == null) {
       if(E.debugBarterOut)eM.printHere("----ABR3----", ec, " myTrade null, delete CashFlow");
@@ -6305,6 +6310,7 @@ public class Assets {
 
           //   listDifBid(History.valuesMajor6, "xit", oprevGoods);
           enforceStrategicGoal();
+          if(EM.dfe()) return prevOffer;
           assert sumCriticalStrategicRequestsFirst > 0.0 : "error zero term=" + term + ",  sumCriticalStrategicRequestsFirst=" + EM.mf(sumCriticalStrategicRequestsFirst) + ", sumCriticalStrategicRequests=" + EM.mf(sumCriticalStrategicRequests) + ", sumBidRequests=" + EM.mf(sumBidRequests) + ", goodC.plusSum=" + EM.mf(goodC.plusSum()) + ", goodC.negSum=" + EM.mf(goodC.negSum());
           assert sumCriticalBidRequestsFirst > 0.0 : " error zero: sumCriticalBidRequestsFirst=" + EM.mf(sumCriticalBidRequestsFirst);
           myOffer.set2Values(bids, offers, requests, totalSend, totalReceipts, strategicGoal, strategicValue); // save for selectPlanet
@@ -6360,6 +6366,7 @@ public class Assets {
           // calculate the next barter
           //if(term < EM.barterStart)enforceStrategicGoal(); // sf1, sv1, sf,sv,excessOffers
           enforceStrategicGoal(); // sf1, sv1, sf,sv,excessOffers
+          if(EM.dfe()) return myOffer;
           myOffer.set2Values(bids, offers, requests, totalSend, totalReceipts, strategicGoal, strategicValue); // save for selectPlanet
           hist.add(new History(aPre, lRes, "T" + term + " " + name + " CONT" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
           ec.addOHist(ohist, new History(aPre, 3, "T" + term + " " + name + " CONT" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
@@ -6827,6 +6834,7 @@ public class Assets {
        */
       double calcStrategicSums() {// Assets.CashFlow.Trades
         sf = calcStrategicGoal();  // reduced after each barteer
+        if(EM.dfe()) return 0.;
         totalStrategicRequests = totalStrategicOffers = totalStrategicFrac = sumCriticalStrategicRequests = criticalStrategicOffers = criticalStrategicFrac = lowStrategicOffers = strategicRequests = sumCriticalNominalRequests = strategicOffers = 0.;
         nominalRequests = nominalOffers = nominalFrac = 0.;
         criticalNominalRequests = criticalNominalOffers = criticalNominalFrac = 0.;
@@ -7450,6 +7458,7 @@ public class Assets {
         // allow a little extra
         // do the first calculation
         calcStrategicSums(); //  sv,excessOffers
+        if(EM.dfe()) return;
         sv1 = sv;  // sf,requests,offers,excessOffers
         sf1 = sf;  // save the first sf as sf1, sv as sv1
 
@@ -8056,6 +8065,7 @@ public class Assets {
       double calcStrategicGoal() {// Assets.CashFlow.Trades.calcStrategicGoal
         //       term = myOffer.getTerm();  // use class term
 //        oClan = myOffer.getOClan();
+          try {
         aPre = "S$";
         ttype = pors;
         // look at previous goals
@@ -8113,6 +8123,22 @@ public class Assets {
         assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + "\n" + name + "Y" + EM.year + "CP" + (clan*2+pors) + " nudge" + EM.mf(tradeFracNudge[nudV])  + " tFrac=" + EM.mf(tfrac) + " , oFavFrac=" + EM.mf(oFavFrac) + " myFavFrac=" + EM.mf(myFavFrac) + " sosFrac1=" + EM.mf(sosFrac1) + "\n sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac);
         hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF" + EM.mf(EM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc" + EM.mf(EM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF =" + EM.mf(tradeFracNudge[nudBoth]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
         hist.add(new History(aPre, 5, "2T" + term, "*rnd=" + EM.mf(tfrac), "*tF=" + EM.mf(termFrac), "goal=", EM.mf(frac), "gtb", EM.mf(gtBias), "<<<<<<<"));
+         }
+      catch (Exception | Error ex) {
+        eM.firstStack = eM.secondStack + "";
+        ex.printStackTrace(eM.pw);
+        ex.printStackTrace(System.err);
+        eM.secondStack = eM.sw.toString();
+        System.out.flush();
+        System.err.flush();
+        System.err.println(eM.tError = ("----CSGf----ERROR Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+        EM.newError = true;
+        //     ex.printStackTrace(System.err);
+         System.out.flush();
+        System.err.flush();
+        st.setFatalError();
+        throw new WasStopped(eM.tError);
+      }
         return strategicGoal = frac;
       }// Assets.CashFlow.Trades.calcStrategicGoal
 
@@ -8623,50 +8649,26 @@ public class Assets {
       }
       int vvat = eM.valAIN[0];// nudge to vv array traderFrac
       int vvbt = eM.valAIN[1];// nudge to vv array
-      if (prevSliderVala < 0) { //initial declared values are negative
-        prevSliderVala = eM.getAIVal(vvat,  clan, ec, 0);
-        prevSliderValb = eM.getAIVal(vvbt,  clan, ec, 1);
-      }
-      // start to  set last years values for next year
-      sliderVala = eM.getAIVal(vvat,  clan, ec, 0);
-      sliderValb = eM.getAIVal(vvbt, clan, ec, 1);
+
       //use last years value, as in saveAI
-    //  putValueChar(EM.psClanChars[pors][clan], E.pNudge0, sliderVala, E.AILimsC, "Nudged value0", y);
-     // putValueChar(EM.psClanChars[pors][clan], E.pNudge1, sliderValb, E.AILimsC, "Nudged value1", y);
+
       aKey = new String(EM.psClanChars[pors][clan]);
       //aVal[] = EM.myAIlearnings.get(aKey);
 
-      eM.setCntAr(aKey, aVal,false,false, true);  //reset the listing in display with previous values
+    //  eM.setCntAr(aKey, aVal,false,false, true);  //reset the listing in display with previous values
       int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
       int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
-      String valNudgea = EM.mf(aiNudges[0][nudV]);
-      String valNudgeb = EM.mf(aiNudges[1][nudV]);
+     // String valNudgea = EM.mf(aiNudges[0][nudV]);
+     // String valNudgeb = EM.mf(aiNudges[1][nudV]);
       char ccc[] = {'a',EM.psClanChars[pors][clan][E.pNudge0]};
       int iii = (int) EM.psClanChars[pors][clan][E.pNudge0];
       String ssa = new String(ccc);
-      String sss = new String(EM.psClanChars[pors][clan]);
+      String preAKey = new String(EM.psClanChars[pors][clan]);
        Double vvva = E.AILimsC[pValIxa];
        String vvav =  EM.mf("TFval",tradeFracNudge[nudBoth]);
        String vvvv = EM.mf("value of Xa",vvva);
-      System.err.println("-----SAIs2----StartYearAI vvat=" +vvat +  " prevSliderVala=" + EM.mf(prevSliderVala) +" =" + EM.psClanChars[pors][clan][E.pNudge0] + "X" + iii + "::"  + ssa +" ="  + pValIxa  + " E.pNudge0=" +  E.pNudge0 + vvvv + vvav +  " prevSliderValb=" + EM.mf(prevSliderValb)  +"  pValIxb="  +  EM.mf(pValIxb)  + " E.pNudge1=" +  E.pNudge1 + " sss=" + sss + " pre aiNudges=" + EM.mf(myAINudges[0][nudV] ) + ":" + EM.mf(myAINudges[0][nudSet] ) + ":" + EM.mf(myAINudges[0][nudBoth] ) );
+      System.err.println("-----SAIs2----StartYearAI vvat=" +vvat +  " prevSliderVala=" + prevSliderVala +" =CC" + EM.psClanChars[pors][clan][E.pNudge0] + "X" + iii + "::"  + ssa +" ="  + pValIxa  + " E.pNudge0=" +  E.pNudge0 + vvvv + vvav +  " prevSliderValb=" + EM.mf(prevSliderValb)  +"  pValIxb="  +  EM.mf(pValIxb)  + " E.pNudge1=" +  E.pNudge1 + " preAKey=" + preAKey + " pre aiNudges=" + EM.mf(myAINudges[0][nudV] ) + ":" + EM.mf(myAINudges[0][nudSet] ) + ":" + EM.mf(myAINudges[0][nudBoth] ) );
 
-    /*  System.err.println("more1");
-       System.err.println("more2");
-        System.err.println("more3");
-         System.err.println("more4");
-          System.err.println("more5");
-           System.err.println("more6");
-            System.err.println("more7");
-             System.err.println("more8");
-      System.err.flush();
-      System.err.flush();
-      System.err.flush();
-      System.err.flush();
-      System.err.flush();
-      System.err.flush();
-
-      System.exit(-35);
-      */
     }
       // now use values from last year to save last the key for last year
       //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
@@ -8674,59 +8676,57 @@ public class Assets {
       boolean []doNudges={y,y};
       int vva = eM.valAIN[0];// nudge to vv array traderFrac
       int vvb = eM.valAIN[1];// nudge to vv array ffTFracNudge
-      int gca = EM.valI[vva][EM.modeC][0][0];
-      int gcb = EM.valI[vvb][EM.modeC][0][0];
+      //set the nuduge 3 values per current nudV
+      double vala=  eM.getAIVal(vva,  clan, ec, 0),valb= eM.getAIVal(vva,  clan, ec, 0);
+   //   int gca = EM.valI[vva][EM.modeC][0][0];
+   ///   int gcb = EM.valI[vvb][EM.modeC][0][0];
       /*
        static final int nudV = 0; // value of nudge
   static final int nudSet = 1; // settings value of vv
   static final int nudBoth = 2;// value of settings value + nudge value
   static final int nudStrt = 3;
+     putValueChar(EM.psClanChars[pors][clan], E.ppors, pors , E.AILims123, "EconPors", y); //1
+       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILims123, "lastaiPos", y);//2
+       putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors,E.AILims123, "clan*2+pors", y);//3
+       putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, "Nudged value0", y);//6
+       putValueChar(EM.psClanChars[pors][clan], E.pNudge1,ffTFracNudge[nudBoth], E.AILims1, "Nudged value1", y);//7
 */
+      //be sure these are set
+       putValueChar(EM.psClanChars[pors][clan], E.ppors, pors , E.AILims123, "EconPors", y);
+       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, 4. , E.AILims123, "lastaiPos", y);//force valid lim
+       putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors,E.AILims123, "clan*2+pors", y);
       // only help clan blue get smart start after at least 100 keys so
       // we want to separate planets and ships, but each Assets instance belongs to just one of them
-       if( EM.myAIlearnings.size() > 100 && clan == 4 ){
+      // charAt(1) E.ppors if set is 'f' or 'g'
+      aKey = new String(EM.psClanChars[pors][clan]);
+       if( EM.myAIlearnings.size() > 100 && clan == 4 && aKey.charAt(1) != 'a'){
          // use aKey and aVal left by saveAIKey
-   //    aKey = new String(EM.psClanChars[pors][clan]);  //should have a key left from saveAIKey
-     //  aVal =  EM.myAIlearnings.get(aKey);
        // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
        // assume the ars arrays are set, use those settings to derive new nudges
-       int cursliderVala = eM.getAIVal(vva,  clan, ec, 0);
+       double prevNudv = tradeFracNudge[nudV];
+       double prevVal = tradeFracNudge[nudBoth];
+       double curVal = eM.getAIVal(vva,  clan, ec, 0); // sum of setting and nudge
        String prevTradeFracss[] = { "prevTradeFracp","prevTradeFracs"};
-       double sliderTF = eM.setCntAr(aKey, aVal, prevTradeFracss[pors],pors+1,pors+ 1, E.AILimsC, E.pNudge0, E.AILimss[6],E.pLastScP, 4., 4., E.AILims123,E.ppors, pors+0., pors+0.,false,false,y, y);
-       double tfLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
-       double tfHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
-       double prevTF =  EM.tradeFrac[pors][clan];
-       double newTF = ((tfHigh -tfLow) *.01 * sliderTF) + tfLow;
-       //double newTF = eM.sliderToVal(sliderTF,EM.valD[vva][EM.gameLim][pors][EM.vLowLim], EM.valD[vva][EM.gameLim][pors][EM.vHighLim]);
-       if(sliderTF  >-99. ){
-       tradeFracNudge[nudV] = newTF -prevTF;
-       sliderVala = eM.getAIVal(vva,  clan, ec, 0);
+       // get the best value, not a slider value
+       double sliderTF = eM.setCntAr(aKey, aVal, prevTradeFracss[pors],pors+1,pors+ 1, E.AILims1, E.pNudge0, E.AILims123,E.pLastScP, 4., 4., E.AILims123,E.ppors, pors+0., pors+0.,false,false,y, y);
+       double prevTF= tradeFracNudge[nudSet] =  EM.tradeFrac[pors][clan]; // settings value
+       tradeFracNudge[nudV] = sliderTF -prevTF;
+       tradeFracNudge[nudBoth]=tradeFracNudge[nudV] + tradeFracNudge[nudSet];
        doNudges[0] = false;// prevent random reset of nudge 0  sliderVala
-         }
-       if(E.debugAIOut)System.out.println("-----SAIy0----" + name + "Y" +   EM.year + "P" + pors + "C" + clan + ", prev slidera=" + prevSliderVala + ", cur slidera=" + cursliderVala  + ", slidera=" + sliderVala + " prevTradeFrac=" + EM.mf(prevTF) + "+" +" nudge=" + EM.mf(tradeFracNudge[nudV]) + "=>"  + EM.mf(newTF) + "==" + " sliderTF=" + EM.mf(sliderTF) );
+       if(E.debugAIOut)System.out.println("-----SAIy0----" + name + "Y" +   EM.year + "P" + pors + "C" + clan  + EM.mf( "prevNudv",prevNudv)  + EM.mf( "setTradeFrac",tradeFracNudge[nudSet]) + "=>" + EM.mf( "nudBoth",tradeFracNudge[nudBoth])  );
 
-       int cursliderValb = eM.getAIVal(vva,  clan, ec, 1);
-        double sliderFFT = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4.,false,false,y, y);
-       double fftLow = EM.valD[vva][EM.gameLim][pors][EM.vLowLim];
-       double fftHigh = EM.valD[vva][EM.gameLim][pors][EM.vHighLim];
-       double prevFFT =  EM.futureFundTransferFrac[pors][clan];
-       double newFFT = ((fftHigh -fftLow) *.01 * sliderFFT) + tfLow;
-       //double newTF = eM.sliderToVal(sliderTF,EM.valD[vva][EM.gameLim][pors][EM.vLowLim], EM.valD[vva][EM.gameLim][pors][EM.vHighLim]);
-       if(sliderFFT > -99.){
-       ffTFracNudge[nudV] = newFFT -prevFFT;
-       sliderValb = eM.getAIVal(vva,  clan, ec, 1);
+       prevNudv = ffTFracNudge[nudV];
+       prevVal = ffTFracNudge[nudBoth];
+       double prevFFT = ffTFracNudge[nudSet]=  EM.futureFundTransferFrac[pors][clan];
+       curVal = eM.getAIVal(vva,  clan, ec, 1); // sum of setting and nudge
+        double newFFT = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",4,4, E.AILims1, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4.,false,false,y, y);
+        ffTFracNudge[nudV] = newFFT -prevFFT;
+        ffTFracNudge[nudBoth]=ffTFracNudge[nudV] + ffTFracNudge[nudSet];
        doNudges[1] = false; // prevent random reset of nudge 1
-       }
-        if(E.debugAIOut)System.out.println("-----SAIy1----" + name + "Y" +   EM.year + "P" + pors + "C" + clan + ", prev sliderb=" + prevSliderValb + ", cur sliderb=" + cursliderValb + ", sliderb=" + sliderValb + " prevTradeFrac=" + EM.mf(prevFFT) + "+" +" nudge=" + EM.mf(ffTFracNudge[nudV]) + "=>"  + EM.mf(newFFT) + "==" + " sliderFFT=" + EM.mf(sliderFFT) );
-       if(false)System.out.println("-----SAIy1----" + " prevFFTransferFrac=" + EM.mf(prevFFT) + "+" +" nudge=" + EM.mf(ffTFracNudge[nudV]) + "=>"  + EM.mf(newFFT) + "==" + " sliderTF=" + EM.mf(sliderFFT) );
-
-     // eM.setCntAr(aKey, aVal, false,false,y);//update ars arrays
-      ///doNudges[0] = false;   // true gets it overwrittent by the default
-        //eM.futureFundTransferFrac[pors][clan] + ffTFracNudge[nudV]
-      //EM.tradeFrac[pors][clan] + tradeFracNudge[nudV]
+        if(E.debugAIOut)System.out.println("-----SAIy1----" + name + "Y" +   EM.year + "P" + pors + "C" + clan  + EM.mf( "prevNudv",prevNudv)  + EM.mf( "set EM.futureFundTransferFrac",EM.futureFundTransferFrac[pors][clan])   + "=>"    + EM.mf( "nudBoth",tradeFracNudge[nudBoth])  );
        }
 
-       // now the default start, set some variations if not prest
+       // now possibly introduce random nudges
       Random rand = new Random();
       rIn = -7;
       ranInt = rand.nextInt(7);// 0-6
@@ -8738,7 +8738,7 @@ public class Assets {
       double aiV = -7.7;
       // only nudge 2 out of 5 econs per year
     
-      if (ranInt > -1 && ranInt < aiNudges.length) {
+      if (ranInt >= 0 && ranInt < aiNudges.length) {
 
         //ranInt==1 rIn==5: aiNudges[ranInt][pors] = -aiNudges[ranInt][2.5+1.5=4]
         //ranInt==1 rIn==4: aiNudges[rnInt][pors] = -aiNudges[ranInt][
@@ -8754,7 +8754,7 @@ public class Assets {
         //   res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
       }
    
-        //zero all aiNudges
+        //zero all unset aiNudges
         for (int ranInta = 0; ranInta < aiNudges.length; ranInta++) {
           if(doNudges[ranInta]){
             for (int rIna = 0; rIna < 2; rIna++) {
@@ -8766,24 +8766,17 @@ public class Assets {
 
       // now install the nudge pointers even if nudge=0,0
 
-      vva = eM.valAIN[0];// nudge to vv array traderFrac
-      vvb = eM.valAIN[1];// nudge to vv array
-      if (prevSliderVala < 0) { //for age0
-        prevSliderVala = eM.getAIVal(vva,  clan, ec, 0);
-        prevSliderValb = eM.getAIVal(vvb,  clan, ec, 0);
-      }
-      // start to  set values for next year
-      sliderVala = eM.getAIVal(vva,  clan, ec, 0);
-      sliderValb = eM.getAIVal(vvb, clan, ec, 1);
-      //use last years value, as in saveAI
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
-         //String str = new String(EM.psClanChars[pors][clan]);
-       // Integer val[] = EM.myAIlearnings.get(str);
-     
-     
+     // vva = eM.valAIN[0];// nudge to vv array traderFrac
+     // vvb = eM.valAIN[1];// nudge to vv array
+       eM.getAIVal(vva,  clan, ec, 0);
+       eM.getAIVal(vvb,  clan, ec, 0);
+
+      //use this years value, as in saveAI
+      putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, "Nudged value0", y);
+      putValueChar(EM.psClanChars[pors][clan], E.pNudge1,ffTFracNudge[nudBoth], E.AILims1, "Nudged value1", y);
+
       int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
-      int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
+      int  pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
       String valNudgea = EM.mf(aiNudges[0][nudV]);
       String valNudgeaS = EM.mf(aiNudges[0][nudSet]);
       String valNudgeaB = EM.mf(aiNudges[0][nudBoth]);
@@ -8794,8 +8787,8 @@ public class Assets {
      
       String valaiV = EM.mf(aiV);
       String valNudge5 = EM.mf(ranInt < aiNudges.length && ranInt > -1 ? aiNudges[ranInt][nudV] : -11.3);
-      String pValIxaVal = EM.mf(E.AILimsC[pValIxa]);
-      String pValIxbVal = EM.mf(E.AILimsC[pValIxb]);
+      String pValIxaVal = EM.mf(E.AILims1[pValIxa]);
+      String pValIxbVal = EM.mf(E.AILims1[pValIxb]);
       //use last years value, as in saveAI done before
    //   putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
     //  putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
@@ -9533,15 +9526,16 @@ public class Assets {
           preTradeSum4 = bals.sum4();
           hist.add(new History(aPre, 5, " " + name + " now instantiate", ">>>>>>>", " a new", " trades", "<<<<<<<"));
           myTrade = new Trades();
+          if(EM.dfe())return inOffer;
           inOffer.setMyIx(ec);
           myTrade.initTrade(inOffer, this);
+          if(EM.dfe())return inOffer;
           hist.add(new History(aPre, 5, " " + name + " after init", ">>>>>>", " a new", " trades"));
         } // end myTrade == null
         // test for a new visitor
         if (!inOffer.getOName().equals(tradingShipName) && entryTerm > 0 && myTrade != null) {
           tradingShipName = inOffer.getOName();
           inOffer.setMyIx(ec);
-          // myTrade.initTrade(inOffer, this);
           hist.add(new History(aPre, 5, " " + name + " after init2", ">>>>>>>", ">>>>>>>", " a new", " trades"));
           aPre = "c&";
           hist.add(new History(aPre, 5, name + " cur.Bar R", resource.balance));
@@ -9557,10 +9551,10 @@ public class Assets {
         if (myTrade != null ) {
           hist.add(new History(aPre, 5, " " + name + "cashFlow barter", " term=" + inOffer.getTerm(), " trades"));
           inOffer.setMyIx(ec);  //Assets.CashFlow.barter
-
+          if(EM.dfe()) return inOffer;
           // now barter ======entryTerm>0 ...=======================
           retOffer = entryTerm>0? myTrade.barter(inOffer): inOffer; // get entryTerm-1, 0, -1
-
+          if(EM.dfe()) return inOffer;
           newTerm = retOffer.getTerm();
           oClan = retOffer.getOClan();
           Econ oEcon = retOffer.getOEcon();
@@ -11436,8 +11430,10 @@ public class Assets {
        putValueChar(EM.psClanChars[pors][clan], E.ppors, pors , E.AILims123, "EconPors", y);
        putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILims123, "lastaiPos", y);
        putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors,E.AILims123, "clan*2+pors", y);
-        putValueChar(EM.psClanChars[pors][clan], E.pNudge0, sliderVala, E.AILimsC, "Nudged value0", y);
-        putValueChar(EM.psClanChars[pors][clan], E.pNudge1, sliderValb, E.AILimsC, "Nudged value1", y);
+       putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, "Nudged value0", y);
+       putValueChar(EM.psClanChars[pors][clan], E.pNudge1,ffTFracNudge[nudBoth], E.AILims1, "Nudged value1", y);
+      //  putValueChar(EM.psClanChars[pors][clan], E.pNudge0, sliderVala, E.AILimsC, "Nudged value0", y);
+        //putValueChar(EM.psClanChars[pors][clan], E.pNudge1, sliderValb, E.AILimsC, "Nudged value1", y);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevAIpos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);

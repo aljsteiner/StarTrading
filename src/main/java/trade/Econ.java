@@ -1334,6 +1334,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       wildS += " selected:" + r + " :" + wilda[r].name;
       eM.printHere("----ESh----", this, " startTrade in selectPlanet=" + wilda[n].getName());
       sStartTrade(this, ret = wilda[r]);
+      if(EM.dfe())return this;
     } else { // no Econs
      eM.printHere("----ESi----", this, " no planet found in selectPlanet");
       ret = null;
@@ -1532,8 +1533,9 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         // aOffer = cn[bb1].as.barter(aOffer); // first barter with planet
         //   ship.hist.add(new History(3,"Env finish ship Trade"));
         //   planet.hist.add(new History(3,"Env oofinish planet Trade"));
-
+        if(EM.dfe())return;
       } // end  termLoops
+      if(EM.dfe())return;
       if (clearHist()) {
         hist.clear();
       } // for the ship
@@ -1585,6 +1587,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       visitedShipList[++visitedShipNext] = otherEcon;
     }
     Offer ret = as.barter(aOffer);
+    if(EM.dfe())return ret;
     int retTerm = ret.getTerm();
     if(E.debugTradeBarter){ eM.printHere("----EB----",this," before mergeLists length=" + planetList.size() + " term =" + retTerm);
     if (retTerm == 0 || retTerm == -2) {
@@ -1908,7 +1911,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
         moreTimes[1] = etTimes[1] - etTimes[0]; // imWaiting time
         moreTimes[2] = etTimes[2] - etTimes[1]; //imCounted time
         //long msecs = EM.doYearTime - etTimes[1];
-        EM.wasHere2 = atList[0] = "\n---ETLb---ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + "Y" + year + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6] + "\n";
+        EM.wasHere2 = atList[0] = "--ETLb---ecT=" + ecThreadName + " pri" + ecThreadPriority + " dyT=" + dyThreadName + " pri" + dyThreadPriority + " YearEnd " + nowName + "Y" + year + " doYE=" + moreTimes[0] + ":" + iWaited + ":" + moreTimes[1] + " bfor yearEnd + " + moreTimes[2] + " aftr yearEnd +" + moreTimes[6] + "\n";
         sETList[ixETList = ++ixETList < lETList ? ixETList : 0] = atList[0];
       }
 

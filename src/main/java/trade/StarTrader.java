@@ -5300,7 +5300,7 @@ public class StarTrader extends javax.swing.JFrame {
 
   /**
    * class of the animation thread call runYears2 which starts the background
-   * thread the calls doYear then continues with animation depending on the
+   * thread that calls doYear then continues with animation depending on the
    * stateConst
    *
    */
@@ -5345,6 +5345,18 @@ public class StarTrader extends javax.swing.JFrame {
       System.out.flush();
       System.err.flush();
       getGameValues(curVals, gamePanels, gameTextFields, gameSlidersP, gameSlidersS);
+       // psClanChars[ixPS] = new byte[2][][];
+       // only at init doReadMapfile and rezero the ars arrays
+      // each run year0 rebuild psClanChars
+      for (int ixPS = 0; ixPS < 2; ixPS++) {
+        EM.psClanChars[ixPS] = new char[5][];
+        EM.psClanMasks[ixPS] = new char[5][];// rebuild keys and masks each year
+        for (int ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+          EM.psClanChars[ixPS][ixClan] = new char[EM.lRes];
+          EM.psClanMasks[ixPS][ixClan] = new char[EM.lRes];
+          EM.buildAICvals(ixPS, ixClan, "preset", EM.psClanChars[ixPS][ixClan], EM.psClanMasks[ixPS][ixClan], EM.vvAx);
+        }
+      }
       stateConst = RUNNING;
       yearsToRun = nYears;
       EM.runYearsTime = (new Date()).getTime();
@@ -5628,6 +5640,7 @@ public class StarTrader extends javax.swing.JFrame {
       }
       aaTime = (new Date()).getTime();      // this goes in error
       runAYear();
+      if(EM.dfe())return;
     } // nn end loop
     setEconState(STATS);
     paintCurDisplay(EM.curEcon);
@@ -6576,6 +6589,7 @@ public class StarTrader extends javax.swing.JFrame {
     // all restarts after user input go to doYear keeping yearly variables
     if (!doStop && !eM.stopExe && !EM.dfe()) {
       doYear();
+      if(EM.dfe())return;
       //stateConst = STATS;
 
       for (int y = yearsL - 1; y > 0; y--) {
@@ -6894,6 +6908,7 @@ public class StarTrader extends javax.swing.JFrame {
             foundTradablePlanets = getWildCurs(shipCnt, cur1, nTradablePlanets, tradablePlanets);
             if (foundTradablePlanets > 0) {
               Econ cur2 = eM.curEcon.selectPlanet(tradablePlanets, foundTradablePlanets);
+              if(EM.dfe())return;
               EM.econCountsTest();
               if (cur2 != null) {
                 //  System.out.println(" @@@@@@Ship=" + eM.curEcon.getName() + ", loop select planet=" + cur2.getName() + " distance=" + eM.curEcon.mf(calcLY(eM.curEcon,cur2)));
