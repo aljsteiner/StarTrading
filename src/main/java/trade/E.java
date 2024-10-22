@@ -54,7 +54,7 @@ public class E {
   static final public String statsButton12Tip = "12: list by ages trades missed, rejected, lost";
   static final public String statsButton13Tip = "13: list by ages affects with growths depreciation";
   static final public String statsButton14Tip = "14: list by ages affects with catastrophies, forwardFunds ";
-  static final public String statsButton15Tip = "15: list by ages KWorths";
+  static final public String statsButton15Tip = "15: list by ages live trades";
   static final public String statsButton16Tip = "16: list by ages RCSG worths, work,faculty,research interns";
   static final public String statsButton17Tip = "17: list by ages helps, creations ";
   static final public String statsButton18Tip = "18: Swaps years xfer skips, redos and dos";

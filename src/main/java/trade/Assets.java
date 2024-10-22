@@ -9575,6 +9575,8 @@ public class Assets {
             setStat(EM.TRADENOMINALGAVE, pors, clan, nominalOffers, 1);
             setStat(EM.TRADESTRATFIRSTGAVE, oPors, oClan, calcPercent(btWrcsgSum, totalStrategicOffersFirst), 1);
             setStat(EM.TRADESTRATLASTGAVE, oPors, oClan, totalStrategicOffers, 1);
+            //setStat(EM.TRADESTRATGOAL, oPors, oClan, strategicGoal, 1);
+            //setStat(EM.TRADESTRATVALUE, oPors, oClan, strategicValue, 1);
             setStat(EM.TRADESTRATFIRSTRECEIVE, pors, clan, totalStrategicRequestsFirst, 1);
             setStat(EM.TRADESTRATLASTRECEIVE, pors, clan, totalStrategicRequests, 1);
             // setStat(EM.BEFORETRADEWORTH, pors, clan, btWTotWorth, 1);

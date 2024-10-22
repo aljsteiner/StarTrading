@@ -2020,7 +2020,8 @@ class EM {
   int growthCostTabRow[] = {0, 0, 7, 7};
   int travelCostTabRow[] = {0, 0, 7, 7};
 
-  static double[] multReqMaintC = {.7, .2}; // mult ReqM costs p,s
+  static double[] multReqMaintC = {.7, .4}; // mult ReqM costs p,s 241019
+ // static double[] multReqMaintC = {.7, .2}; // mult ReqM costs p,s
   // static double[] multReqMaintC = {1.5, .5}; // mult ReqM costs p,s
   static final double[][] mmult5Ctbl = {{.2, 2.2}, {.2, 2.2}}; // limits all 5
   static double[] multReqGrowthC = multReqMaintC;
@@ -3900,7 +3901,7 @@ onceAgain:
     int best = 0, bcnt = 0, bcsum = 0, best2 = 0, bc = 0, bmax = 7;
     double bVal = 0.,dBest = 0.,bsum=0.,bestVal=-33,bStrt=5.;
     int sBest=0;
-    String bValV = "", sBestV = "";
+    String bValV = "", sBestX = "";
     int cLim = ars[arn][iaLimCnt];
     int cAll = ars[arn][iaAllCnt];//+= setAll?aVal[E.aValCnts]:doSet?1:0; // sum of all
     int cAllSum = 0;//0ars[arn][iaAllSum];// += pValIx * (setAll?aVal[E.aValCnts]:doSet?1:0);  //
@@ -3910,7 +3911,7 @@ onceAgain:
     String allAveVal = "";//mf(myAILim[cAllAve]);
     String callAveVal = "",retRow="";
     Boolean doBest=true,doComma=false;
-    String retBesta =" best",retBestb="";
+    String retBesta =" best",retBestb="",bestft="f1,t2";;
     int nzCnt = 0, rCnt = 0, fRange = firstIxN, tRange = topIxN, ix = 0,ia=0,lrCnt=0,urCnt=0;
     int rMax=10;
     int nzMax=9;
@@ -4032,7 +4033,7 @@ onceAgain:
         doComma = false;doBest=true;
         fRange = firstIaN;  // preset to >=13 avoid a -11
         tRange = topIaN;
-        retBesta = " best  ";
+        retBesta = "  bestX";
         nzCnt = 0; rCnt = 0;  ix = 0;lrCnt=0;urCnt=0;
         rMax=8;//greatest row range 2 * rMax
         nzMax=7;// most nz row ellements
@@ -4041,16 +4042,17 @@ onceAgain:
         for (rCnt = 0; rCnt < rMax && nzCnt < nzMax; rCnt++) {
           //find the first lowest N for this range 1 more lower than higher
           if (((ia = mostIaN - rCnt-1) >= firstIaN) && ia > strtLow && ars[arn][ia] > 0) {
+            ix = ia- strtIas;
             nzCnt++;
              fRange = ia;
              lrCnt=rCnt-1;
             if (bc < bmax && rCnt < urCnt+4) {
               bcnt += ars[arn][fRange];
               bc++;
-              bsum += ars[arn][fRange] * (fRange - strtIas);// sum ix values mult
-              bVal += bmul =ars[arn][fRange] * myAILim[fRange - strtIas];// sum raw values mult
+              bsum += ars[arn][fRange] * ix;// sum ix values mult
+              bVal += bmul =ars[arn][fRange] * myAILim[ix];// sum raw values mult
               if(doBest){ 
-                retBestb += (doComma?"; " : " ") + "Nx" + (fRange - strtIas) + "C" + ars[arn][fRange] +  (nzCnt < 6?"X" + mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf2(bcnt>0?bVal/bcnt:0.0);
+                retBestb += (doComma?"; " : " ") + "Nx" + (ix) + "C" + ars[arn][fRange] +  (nzCnt < 6?"X" + mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf2(bcnt>0?bVal/bcnt:0.0);
                 doComma=true;
               }
             }
@@ -4062,20 +4064,21 @@ onceAgain:
             urCnt=rCnt;
             if (bc < bmax && rCnt < lrCnt+4 ) {
               bcnt += ars[arn][tRange];
-              bsum += ars[arn][tRange] * (tRange - strtIas);
-              bVal += bmul =ars[arn][tRange] * myAILim[tRange - strtIas];
+              bsum += ars[arn][tRange] * ix;
+              bVal += bmul =ars[arn][tRange] * myAILim[ix];
               if(doBest){
-                retBestb += (doComma?"; " : " ") + "Nx" + (tRange - strtIas) + "C" + ars[arn][tRange] +  (nzCnt < 4?"X" +  mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf2(bcnt>0?bVal/bcnt:0.0);
+                retBestb += (doComma?"; " : " ") + "Nx" + ix + "C" + ars[arn][tRange] +  (nzCnt < 4?"X" +  mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf2(bcnt>0?bVal/bcnt:0.0);
               }
           }
           }
         } //for rCnt
         //now get best value  for regular
+
         sBest = (int)(dBest = bcnt > 0?bsum/bcnt:-99999999.);  // a little less then best
-        sBestV = " " + sBest; //string shorter number
+        retBesta = " BestX " + sBest+"f" + fRange + "t" + tRange; //string shorter number
         bestVal = bcnt > 0?bVal/bcnt:-99999999.;// return
-        bValV = mf2(bestVal); //string list return possible best value
-        if(!doBest) retBestb = retBesta = "";
+       retBesta += "xV" + bValV + mf2(bestVal); //string list return possible best value
+        if(!doBest) {retBestb =""; retBesta = "";}
         //best = (int) (bsum / bcnt);
         //best2 = best >=  1 ? best : 1;//case of 0 best
         //The N values are the lowest array value higher than the test value so
@@ -4086,7 +4089,7 @@ onceAgain:
        //                + myAILim[best2 - 1] * ars[arn][best2+strtIas - 1])
        //               / (bcsum = ars[arn][best2+strtIas] + ars[arn][best2+strtIas - 1]);
       //  bcsum = (int) (bcsum * .5);
-              retLimCnts += " best:" + sBestV + "V" + bValV;
+              retLimCnts += " bestX:" + sBestX +"f" + fRange + "t" + tRange + "V" + bValV;
      //  if (true || (pr1  && E.DebugSetCntArOut)){
           if (true ){
         //  System.out.println("---SCNTA4---setCntAr Cnt=" + setCntSee + "A" + arn + "Y" + year + "L" + laiLim + " what=" + what  + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + "XX" + pValIxx  + "xA" + vvIa +"::" + ret + "\n" + retLimCnts + retBesta  + retRow);
@@ -4100,6 +4103,7 @@ onceAgain:
            bStrt = mostIaN-rMax/2;
           for (ia = fRange; ia <= tRange && nzCnt < nzMax; ia++) {
             // see value Ix, entryCnt at that value, value at that value Ix
+            ix = ia-strtIas;
             if (ars[arn][ia] > 0) {
               nzCnt++;
               if (doBest && ia > bStrt && rCnt < rMax ) {
@@ -4107,10 +4111,10 @@ onceAgain:
               bcnt += ars[arn][ia];
               bsum += ars[arn][ia] * (ia - strtIas);
               bVal += bmul =ars[arn][ia] * myAILim[ia - strtIas];
-                retRow += (doComma?"; " : " ") + "Nx" + ia + "C" + ars[arn][ia] +  (nzCnt < 4?"X" +  mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf2(bcnt>0?bVal/bcnt:0.0);
+                retRow += (doComma?"; " : " ") + "Nx" + ix + "C" + ars[arn][ia] +  (nzCnt < 4?"bV" + mf2(bcnt>0?bVal/bcnt:0.0)+ "xV" + mf2(myAILim[ix]) : "xV" + mf2(myAILim[ix])) ;
               
-          } else {
-              retRow += ((doComma ? "; " : " ") + "Nx" + (myNa = ia-strtIas) + "C" + ars[arn][ia] + "V" + mf2(myAILim[myNa]));
+              } else {
+                retRow += ((doComma ? "; " : " ") + "Nx" +ix + "C" + ars[arn][ia] + "xV" + mf2(myAILim[ix]));
             }
              doComma = true;
             }//ars[arn][ia] > 0
@@ -4129,14 +4133,12 @@ onceAgain:
 
       //do the REST only if aarn != arn and the last 3 limits are true
      if (notLim && pValIx >= 0 && pValIx <= 76) { // now list the rest unselected
-        if (pValIx < 0 && pValIx >= E.undefI) {
-          ars[aarn][pValIx + strtIas] += (setAll?aVal[E.aValCnts]:doSet?1:0);
-        }
+         vvIa = pValIxx+strtIas;
         // if pValIx >= 0 && pValIx <= 76 accepted numbers
          cLim = ars[aarn][iaLimCnt] += vvIaC ; // sum of all limited
-          ars[aarn][iaLimSum] += pValIxx* (vvIaC); //cnt * pX1N
-          vvIa = pValIxx+strtIas;
-          //ars[aarn][vvIa] += vvIaC = setAll?aVal[E.aValCnts]:doSet?1:0; ; //done above
+         ars[aarn][iaLimSum] += pValIxx* (vvIaC); //cnt * pX1N
+
+
     // now deal with
           // possibly change firstIa, topIa, mostIa
           // test counts  Change counts only is something counted
@@ -4212,7 +4214,7 @@ onceAgain:
         bVal=0.;
         sBest = 0;
         doComma = false;doBest=true;
-        retBesta =  "B ";
+        retBesta =  "B ";retBestb="";
         fRange = firstIaN;
         tRange = topIaN;
         nzCnt = 0; rCnt = 0;ix = 0;lrCnt=0;urCnt=0;
@@ -4222,16 +4224,17 @@ onceAgain:
         for (rCnt = 0; rCnt < rMax && nzCnt < nzMax; rCnt++) {
           //find the first lowest N for this range 1 more lower than higher
           if (((ia = mostIaN - rCnt-1) >= firstIaN) && ia > strtLow && ars[aarn][ia] > 0) {
+           ix = ia-strtIas;
             nzCnt++;
              fRange = ia;
              lrCnt=rCnt-1;
             if (bc < bmax && rCnt < urCnt+4) {
               bcnt += ars[aarn][fRange];
               bc++;
-              bsum += ars[aarn][fRange] * (fRange - strtIas);// sum ix values mult
-              bVal += bmul =ars[aarn][fRange] * myAILim[fRange - strtIas];// sum raw values mult
+              bsum += ars[aarn][fRange] * ix;// sum ix values mult
+              bVal += bmul =ars[aarn][fRange] * myAILim[ix];// sum raw values mult
               if(doBest){
-                retBesta += (doComma?"; " : " ") + "Nx" + (fRange - strtIas) + "C" + ars[aarn][fRange] +  (nzCnt < 6?"X" + mf2(bsum/bcnt) : "") + "V" + mf2(bVal/bcnt);
+                retBestb += (doComma?"; " : " ") + "Nx" + ix + "C" + ars[aarn][fRange] +  (nzCnt < 6?"X" + mf2(bsum/bcnt) : "") + "V" + mf2(bVal/bcnt);
                 doComma=true;
               }
             }
@@ -4243,31 +4246,25 @@ onceAgain:
             urCnt=rCnt;
             if (bc < bmax && rCnt < lrCnt+4 ) {
               bcnt += ars[aarn][tRange];
-              bsum += ars[aarn][tRange] * (tRange - strtIas);
-              bVal += bmul =ars[aarn][tRange] * myAILim[tRange - strtIas];
+              bsum += ars[aarn][tRange] * ix;
+              bVal += bmul =ars[aarn][tRange] * myAILim[ix];
               if(doBest){
-                retBesta += (doComma?"; " : " ") + "Nx" + (tRange - strtIas) + "C" + ars[aarn][tRange] +  (nzCnt < 4?"X" + mf2(bsum/bcnt) : "") + "V" + mf2(bVal/bcnt);
+                retBestb += (doComma?"; " : " ") + "Nx" + ix+ "C" + ars[aarn][tRange] +  (nzCnt < 4?"X" + mf2(bsum/bcnt) : "") + "V" + mf2(bVal/bcnt);
               }
           }
           }
         } //rCnt
         //now get best value  for regular
         double sBest2 = bsum/bcnt;  // a little less then best
-        String sBestV2 = mf2(sBest2); //string shorter number
+        String sBestX2 = "bX" + mf2(sBest2); //string shorter number
         double bestVal2 = bVal/bcnt;// return
-        String bValV2 = mf2(bestVal); //string return possible best value
-        if(!doBest) retBesta = "";
-        //best = (int) (bsum / bcnt);
-        //best2 = best >=  1 ? best : 1;//case of 0 best
+        String bValV2 = "bV" + mf2(bestVal); //string return possible best value
+        if(!doBest) {retBesta = "";retBestb="";}
         //The N values are the lowest array value higher than the test value so
         //the actual value is somewhere less than the best value and greater than
         //the best-1 value, this chooses a value bases on an average of 2 sets
         // of values, probably somewhat high
-       // bVal = (myAILim[best2] * ars[aarn][best2+strtIas]
-       //                + myAILim[best2 - 1] * ars[aarn][best2+strtIas - 1])
-       //               / (bcsum = ars[aarn][best2+strtIas] + ars[aarn][best2+strtIas - 1]);
-      //  bcsum = (int) (bcsum * .5);
-        retLimCnts += " best:" + sBestV2 + "V" + bValV2 + retBesta;
+        retLimCnts +=  sBestX2 +  bValV2 + retBesta;
         if (p2) {
           retRow = " rowN";
            doComma = false;
@@ -4277,17 +4274,17 @@ onceAgain:
            bStrt = mostIaN-rMax/2;
           for (ia = fRange; ia <= tRange && nzCnt < nzMax; ia++) {
             // see value Ix, entryCnt at that value, value at that value Ix
+            ix = ix -strtIas;
             if (ars[aarn][ia] > 0) {
               nzCnt++;
               if (doBest && ia > bStrt && rCnt < rMax ) {
                 rCnt++;
               bcnt += ars[aarn][ia];
-              bsum += ars[aarn][ia] * (ia - strtIas);
-              bVal += bmul =ars[aarn][ia] * myAILim[ia - strtIas];
-                retRow += (doComma?"; " : " ") + "Nx" + ia + "C" + ars[aarn][ia] +  (nzCnt < 4?"X" +  mf2(bcnt>0?bsum/bcnt:0.0) : "") + "V" + mf2(bcnt>0?bVal/bcnt:0.0);
-
+              bsum += ars[aarn][ia] * ix;
+              bVal += bmul =ars[aarn][ia] * myAILim[ix];
+                retRow += (doComma?"; " : " ") + "Nx" + ix + "C" + ars[aarn][ia] +  (nzCnt < 4?"bX" +  mf2(bcnt>0?bsum/bcnt:0.0) + "bV" + mf2(bcnt>0?bVal/bcnt:0.0): "xV" + mf2(myAILim[ix]));
           } else {
-              retRow += ((doComma ? "; " : " ") + "Nx" + (myNa = ia-strtIas) + "C" + ars[aarn][ia] + "V" + mf2(myAILim[myNa]));
+              retRow += ((doComma ? "; " : " ") + "Nx" + ix+ "C" + ars[aarn][ia] + "xV" + mf2(myAILim[ix]));
             }
              doComma = true;
             }//ars[aarn][ia] > 0
@@ -4468,7 +4465,7 @@ onceAgain:
     int rMax=10;
     int nzMax=11;
     double bVal = 0.,sBest=0.;
-    String sBestV ="";
+    String sBestX ="";
     try {
       System.err.println("----SCA1---- seeCntArray enters pX1=" + pX1 + " SCACnt" + SCACnt + "Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < arn ? " ars too Small" : ars[arn].length < lenIa ? " err ars Len=" + ars[arn].length : " ars ok len=" + ars[arn].length));
       SCACnt++; //count seeCntArray entry
@@ -4542,7 +4539,7 @@ onceAgain:
                       / (bcSum = ars[arn][best2+strtIas] + ars[arn][best2+strtIas - 1]);
         sBest = bVal;
         bcSum = (int) (bcSum * .5);
-        sBestV = mf(bVal);
+        sBestX = mf(bVal);
         /*
       double bsum = 0.;
       best = 0;
@@ -4597,7 +4594,7 @@ onceAgain:
         ret += " limAveV:" + limAveVal + " allAveV:" + allAveVal;
         ret += (myIx = " mostN") + (myN = mostIxN) + "C" + ars[arn][(myN)];
         ret += "V" + mf(myAILim[myNn = myN - strtIas]);
-        ret += (myIx = " bestN") + (myN = best2) + "V" + sBestV;
+        ret += (myIx = " bestN") + (myN = best2) + "V" + sBestX;
 
         if (p2) {
           ret2 = " rowN";
@@ -5664,7 +5661,8 @@ onceAgain:
   TreeMap<String, Integer> valMap = new TreeMap<String, Integer>();
   TreeMap<String, Integer> resMap = new TreeMap<String, Integer>();
 //                                    -1         0           1            2             3
-  static final double[] MAX_PRINT = {0., 10000000., 100000000., 1000000000., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
+   static final double[] MAX_PRINT = {0., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
+ // static final double[] MAX_PRINT = {0., 10000000., 100000000., 1000000000., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
   static final double[] MULT_PRINT = {0., 10, 100, 1000, 10000, 100000, 1000000, 10000000., 100000000., 1000000000., 10000000000., 100000000000., 1000000000000., 10000000000000., 100000000000000., 1000000000000000., 10000000000000000., 100000000000000000., 1000000000000000000., 10000000000000000000., 100000000000000000000., 1000000000000000000000., 10000000000000000000000., 100000000000000000000000., 1.E99};
   static int abc;
   //static String[][] resS;  // [RN][rDesc,rDetail] result string values
@@ -5787,6 +5785,8 @@ onceAgain:
   static final int LIVEWORTH = ++e4;
   static final int RCSGWORTH = ++e4; //
   static final int KNOWLEDGEW = ++e4; //
+  static final int TradeLastStrategicValue = ++e4;
+  static final int TradeLastStrategicGoal = ++e4;
   /*
 
   static final int NEWKW = ++e4; //
@@ -5892,9 +5892,9 @@ onceAgain:
   static final int RAWCUGROWTH = ++e4;
   static final int RAWSUGROWTH = ++e4;
   static final int RAWGUGROWTH = ++e4;
-
   static final int TRADESTRATLASTGAVE = ++e4;
-
+  static final int TRADESTRATVALUE = ++e4;
+  static final int TRADESTRATGOAL = ++e4;
   static final int WTRADEDINCRMULT = ++e4;
   static final int TRADELOW = ++e4;
   static final int TRADESOS0 = ++e4;
@@ -6011,9 +6011,9 @@ onceAgain:
   static final int TRADELASTRECEIVE = ++e4;
   static final int TRADESTRATLASTRECEIVE = ++e4;
   static final int TRADERECEIVELASTPERCENTFIRST = ++e4;
-  static final int TradeLastStrategicValue = ++e4;
+  
   static final int AlsoTradeLastStrategicValue = ++e4;
-  static final int TradeLastStrategicGoal = ++e4;
+
   static final int TradeStrategicValueLastPercentFirst = ++e4;
   static final int rejectNegRequests = ++e4;
   static final int rejectNegRequestsTerm = ++e4;
@@ -6295,39 +6295,24 @@ onceAgain:
     doRes(ESCORE, "EScore", "Econ Score for each econ in each clan divided by cumaverage ESCORE ", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUMAVE | CUM  | BOTH, 0, 0, 0);
     doRes(RELESCORE, "RelEScore", "Econ Score/aiEScoreAve for each econ in each clan", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE | CUM  | BOTH, 0, 0, 0);
     doRes(RELSCORE, "Rel Score", "Relative score toward winning", 2,1, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEARUNITS | THISYEAR | CUMUNITS | CUMAVE| BOTH, 0, 0, 0);
-    doRes(WINNERYEARS, "Winner Years", "Number of years this Economy has been a winner", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | CUM | CUMUNITS | BOTH, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | CUR | CUMUNITS | BOTH, LIST0 | LIST6 | LIST7 | LIST8 | THISYEARUNITS | BOTH, ROWS1 | LIST6 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, 0);
+    doRes(WINNERYEARS, "Winner Years", "Number of years this Economy has been a winner", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUR | CUM | CUMUNITS | BOTH, 0, 0, 0);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUM | BOTH, LIST1 |  CUR | BOTH, 0, 0);
     doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds");
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge");
+    
     doRes(RCSGWORTH, "RCSGWorth", "worth of RCSG ", 1, 2, 0, 0, LIST0 | LIST16 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge");
     doRes(KNOWLEDGEW, "Knowledge Worth", "worth of knowledge ", 1, 2, 0, 0, LIST0 | LIST16 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    /*
-     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CURAVE | BOTH | SKIPUNSET, 0, 0);
- 
-    static final int RCSGWORTH = ++e4; //
-  static final int KNOWLEDGEW = ++e4; //
-  static final int NEWKW = ++e4; //
-  static final int COMMONKW = ++e4; //
-  static final int MANUALSW = ++e4; //
-  static final int KWPERCENT = ++e4; //
-  static final int NEWKWPERCENT = ++e4; //
-  static final int COMMONKWPERCENT = ++e4; //
-  static final int MANUALSWPERCENT = ++e4; //
-  static final int RCSGWPERCENT = ++e4; //
-     */
-    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST8 | CURAVE | CUMAVE | CURUNITS | BOTH | SKIPUNSET, 0, 0, 0L);
-     doRes(TRADEALSOLASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST8 | CURAVE | CUMAVE | CURUNITS | BOTH | SKIPUNSET, 0, 0, 0L);
-    doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth of trade goods given");
-    doRes(TRADELASTDIVRCSG, "Given last/Worth", "Percent goods given per sum final trade offer over sum Worth", 1, 2, 1, LIST0 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
-    doRes(TRADELASTDIVFGAVE, "Given last/first", "Percent goods given per sum final trade offer over first offer", 1, 2, 1, LIST0 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
-    doRes(TRADESTRATLASTGAVE, "trade Given", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST0 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+  
+    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST8 | CURAVE | CUM | BOTH | SKIPUNSET, 0, 0, 0L);
+     doRes(TRADEALSOLASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST8 | CURAVE | CUM |  BOTH | SKIPUNSET, 0, 0, 0L);
+
+    doRes(TRADELASTDIVRCSG, "Given last/Worth", "Percent goods given per sum final trade offer over sum Worth", 1, 2, 1, LIST8 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(TRADELASTDIVFGAVE, "Given last/first", "Percent goods given per sum final trade offer over first offer", 1, 2, 1, LIST8 | CURAVE | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+     doRes(TRADENOMINALGAVE, "TradeNominalGiven", "Nominal worth of trade goods given");
+    doRes(TRADESTRATVALUE, "Strat Value", "Trade Strategic Value final received/given", 1, 2, 0, LIST0 | CUR | CUM | BOTH | SKIPUNSET, 0, 0, 0L);
+   doRes(TRADESTRATGOAL, "Strat Goal", "Trade strategic goal last received/given goal", 1, 2, 0, LIST0 | CUR | CUM | BOTH | SKIPUNSET, 0, 0, 0L);
+   doRes(TRADESTRATLASTGAVE, "trade Given%", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST15 | CURAVE | CUM | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
     doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 | CURUNITS | CUMUNITS | BOTH, 0, 0, 0);
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
@@ -6722,9 +6707,9 @@ onceAgain:
     doRes(TradeRejectValuePerGoal, "RejectValue%Goal", "Rejected percent value per goal");
     doRes(TradeLostValuePerGoal, "LostValue%Goal", "Lost percent value per goal");
     doRes(TradeFirstStrategicGoal, "FirstStrategicGoal", "First Strategic Goal", 2, 3, 2, LIST21 | CURAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
-    doRes(TradeLastStrategicGoal, "LastStrategicGoal", "Strategic Goal after trade");
+    doRes(TradeLastStrategicGoal, "StrategicGoal", "Strategic Goal after trade", 2, 2, 2, LIST0 | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
     doRes(TradeFirstStrategicValue, "FirstStrategicValue", "First Strategic Value", 2, 3, 2, LIST21 | THISYEARAVE | CUMAVE | BOTH | SKIPUNSET, ROWS1 | LIST21 | LIST11 | CURAVE | BOTH | SKIPUNSET, 0, 0L);
-    doRes(TradeLastStrategicValue, "StrategicValue", "Strategic-Value strategic receive/strategic gave at trade", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
+    doRes(TradeLastStrategicValue, "StrategicValue", "Strategic-Value strategic receive/strategic gave at trade", 2, 2, 2, LIST0 | CUMAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
     doRes(TradeStrategicValueLastPercentFirst, "Last%FirstStrategicValue", "LastStrategic Value percent of First Strategic Value just before trade");
     doRes(AlsoTradeLastStrategicValue, "AlsoStrategicValue", "AlsoLast strategic Value strategic receive/strategic gave at trade", 1, 2, 2, LIST1 | THISYEARAVE | BOTH | SKIPUNSET, ROWS2 | CURAVE | BOTH, LIST1 | ROWS2 | LIST21 | CUMAVE | BOTH, 0L);
     doRes(AlsoTradeStrategicValueLastPercentFirst, "Also%FirstStratVal", "LastStrategic Value percent of First Strategic Value just before trade");
@@ -6740,17 +6725,17 @@ onceAgain:
     doRes(TradeDeadStrategicGoal, "DeadStrategicGoal", "Strategic Goal after trade then died");
     doRes(TradeDeadRejectedStrategicValue, "DeadRejectedStrategicValue", "Strategic Value after trade rejected then died");
     doRes(TradeDeadStrategicValue, "DeadStrategicValue", "Strategic Value after trade then died");
-    doRes(ISLOW, "lowProspects", "Low result value", 1, 2, 2, LIST0 | LIST1 | LIST13 | CURUNITS | BOTH | SKIPUNSET, 0L, 0L, 0L);
+     doRes(ISLOW, "lowProspects", "Low result value", 1, 2, 2, LIST12 | LIST11  | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(ISSOS0, "SOS0", "starting with SOS0");
     doRes(ISSOS1, "SOS1", "starting with SOS1");
     doRes(ISSOS2, "SOS2", " starting with SOS2");
     doRes(ISSOS3, "SOS3", " starting with SOS3");
-    doRes(TRADELOW, "lowProspects", "Low result value", 1, 2, 2, LIST0 | LIST1 | LIST13 | CURUNITS | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(TRADELOW, "lowProspects", "Low result value", 1, 2, 2, LIST12 | LIST11  | CUMUNITS  | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(TRADESOS0, "SOS0", "starting with SOS0");
     doRes(TRADESOS1, "SOS1", "starting with SOS1");
     doRes(TRADESOS2, "SOS2", " starting with SOS2");
     doRes(TRADESOS3, "SOS3", " starting with SOS3");
-    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST5 | LIST13 | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
+    doRes(TRADEOSOS0, "HlptdS1Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS1", 2, 3, 2, LIST5 | LIST13 | CUMUNITS | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(TRADEOSOS1, "HlptdS0Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS0");
     doRes(TRADEOSOS2, "HlptdS2Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS2");
     doRes(TRADEOSOS3, "HlptdS3Acc%IncW", "Helped Successful trade percent incr worth after starting with SOS3");
