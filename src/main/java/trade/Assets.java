@@ -125,7 +125,8 @@ public class Assets {
   static final int nudLen=8;
   double tradeFracNudge[] = {0., 0.,.0,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
   double ffTFracNudge[] = {0., 0.,.0, 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
-
+  static final double bMin= 11..; //if bCnt is less than bCnt<bMax?-999999:bVal/bCnt
+  static final double bSmall = -9999.;// if setCntDr < bSmall treat as invalid
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
@@ -1656,7 +1657,7 @@ public class Assets {
    //   synchronized (resL) {
         EM.wasHere8 = "---ELa3--- Assets res has lock";
         if (E.debugStatsOut) {
-          String sList = "----SSLa----setStat " + name + "Y" + EM.year + " in thread " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+          String sList = "----SSLa----setStat " + name + "Y" + EM.year + " in  " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
           StackTraceElement[] prevCalls = new StackTraceElement[le];
           StackTraceElement[] stks = Thread.currentThread().getStackTrace();
           lstk = stks.length - 1;
@@ -8555,11 +8556,10 @@ public class Assets {
       eM.printHere("----CFSa---", ec, EM.wasHere);
     }  //Assets.CashFlow.aStartCashFlow
 
+
     void startAIYear() {
-
-
+      try {
           // now makel the nudge pointers to install even if nudge=0,0
-
            // start system test
       int nudx1L = aiNudges.length;
       int nudx2L = aiNudges[0].length;
@@ -8628,30 +8628,41 @@ public class Assets {
        if( EM.myAIlearnings.size() > 100 && clan == 4 && aKey.charAt(1) != 'a'){
          // use aKey and aVal left by saveAIKey
        // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
-       // assume the ars arrays are set, use those settings to derive new nudges
+       // assume the drs arrays are set, use those settings to derive new nudges
+       //-----------------EM.tradeFrac[pors][clan]-------------------
        double prevNudv = tradeFracNudge[nudV];
        double prevVal = tradeFracNudge[nudBoth];
        double curVal = eM.getAIVal(vva,  clan, ec, 0); // sum of setting and nudge
+       double prevTF= tradeFracNudge[nudSet] =  EM.tradeFrac[pors][clan]; // settings P .41, S.22
        String prevTradeFracss[] = { "prevTradeFracp","prevTradeFracs"};
        // get the best value, not a slider value
-       double newTF = eM.setCntAr(aKey, aVal, prevTradeFracss[pors],pors+1,pors+ 1, E.AILims1, E.pNudge0, E.AILims123,E.pLastScP, 4., 4., E.AILims123,E.ppors, pors+0., pors+0.,false,false,y, y);
-       assert newTF > 0.:"Error newTF value negative=" + EM.mf2("newTF",newTF);
-       double prevTF= tradeFracNudge[nudSet] =  EM.tradeFrac[pors][clan]; // settings P .41, S.22
+      // double newTFa = eM.setCntAr(aKey, aVal, prevTradeFracss[pors],pors+1,pors+ 1, E.AILims1, E.pNudge0, E.AILims123,E.pLastScP, 4., 4., E.AILims123,E.ppors, pors+0., pors+0.,false,false,y, y);
+        double newTF1 = eM.setCntDr(aKey, aVal, prevTradeFracss[pors], pors+1, pors+1, E.AILims1, E.pNudge0,0., E.AILims1, -1,1., E.AILims1,-1,1.,E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.ppors, pors+0., pors+0.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,false,false, y, y);
+      boolean notNew = newTF1 < Assets.bSmall;
+      double newTF = newTF1 < Assets.bSmall?prevTF:newTF1;
        tradeFracNudge[nudV] = newTF -prevTF;
        tradeFracNudge[nudBoth]=tradeFracNudge[nudV] + tradeFracNudge[nudSet];
-       doNudges[0] = false;// prevent random reset of nudge 0  sliderVala
-       if(E.debugAIOut)System.out.println("-----SAIy0----" + name + "Y" + EM.year + "C" + clan  + EM.mf2( "prevNudv",prevNudv) + EM.mf2( "newTF",newTF) + EM.mf2( "newNudv",tradeFracNudge[nudV] )  + EM.mf2( "setTradeFrac",tradeFracNudge[nudSet]) + "=>" + EM.mf2( "nudBoth",tradeFracNudge[nudBoth])  );
-
+       doNudges[0] = notNew;// prevent random reset of nudge 0  if not notNew
+       String sss =  name + "Y" +   EM.year  + "C" + clan  + ( notNew?  "no Change" + EM.mf2( "prevNudv",prevNudv) : EM.mf2( "prevNudv",prevNudv)  + EM.mf2( "newTF",newTF) + EM.mf2( "newNudv",tradeFracNudge[nudV] )  + EM.mf2( "setTradeFrac",tradeFracNudge[nudSet]) + "=>" + EM.mf2( "nudBoth",tradeFracNudge[nudBoth]));
+       if(E.debugAIOut)System.out.println("-----SAIy0----" + sss);
+       Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;
+               assert newTF > 0.:"Error newTF value negative=" + EM.mf2("newTF",newTF) + EM.mf2("prevNudv",prevNudv);
+    //-----------------------   EM.futureFundTransferFrac[pors][clan]---------
        prevNudv = ffTFracNudge[nudV];
        prevVal = ffTFracNudge[nudBoth];
        double prevFFT = ffTFracNudge[nudSet]=  EM.futureFundTransferFrac[pors][clan];
        curVal = eM.getAIVal(vva,  clan, ec, 1); // sum of setting and nudge
-        double newFFT = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",4,4, E.AILims1, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4.,false,false,y, y);
-        assert newFFT > 0.:"Error newFFT value negative=" + EM.mf2("newFFT",newFFT);
+       // double newFFTa = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",4,4, E.AILims1, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4.,false,false,y, y);
+        double newFFT1 =  eM.setCntDr(aKey, aVal,  "prevFFTransferFrac", 4,4, E.AILims1, E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1.,E.AILims123, E.pLastScP, 4., 4., E.AILims123, -1, pors+0., pors+1.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,false,false, y, y);
+        notNew = newFFT1 < Assets.bSmall;
+        double newFFT = newFFT1 < Assets.bSmall?prevFFT:newFFT1;
         ffTFracNudge[nudV] = newFFT -prevFFT;
         ffTFracNudge[nudBoth]=ffTFracNudge[nudV] + ffTFracNudge[nudSet];
-       doNudges[1] = false; // prevent random reset of nudge 1
-        if(E.debugAIOut)System.out.println("-----SAIy1----" + name + "Y" +   EM.year + "P" + pors + "C" + clan  + EM.mf2( "prevNudv",prevNudv)  + EM.mf2( "set EM.futureFundTransferFrac",EM.futureFundTransferFrac[pors][clan])   + "=>"    + EM.mf2( "nudBoth",tradeFracNudge[nudBoth])  );
+       doNudges[1] = notNew; // // prevent random reset of nudge 1  if not notNew
+       sss =  name + "Y" +   EM.year  + "C" + clan  +  ( notNew?  "no Change " +EM.mf2( "prevNudv",prevNudv) : EM.mf2( "prevNudv",prevNudv) + EM.mf2( "set EM.futureFundTransferFrac",EM.futureFundTransferFrac[pors][clan])   + "=>"    + EM.mf2( "nudBoth",tradeFracNudge[nudBoth]));
+         Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;
+        if(E.debugAIOut)System.out.println("-----SAIy1----" +sss);
+        assert newFFT > -2.0:"Error newFFT value negative=" + EM.mf2("newFFT",newFFT);
        }
 
        // now possibly introduce random nudges
@@ -8715,8 +8726,20 @@ public class Assets {
         System.err.println("-----SAIs3----StartYearAI after puts ranInt" + ranInt + " " + name + "Y" + EM.year + " rIn" + rIn + ":"  + ":" + " A=" + EM.mf2(" aiNudges[0][nudV]",aiNudges[0][nudV]) + EM.mf2(" aiNudges[0][nudSet]",aiNudges[0][nudSet]) + EM.mf2(" aiNudges[0][nudBoth]",aiNudges[0][nudBoth])  + EM.mf2(" E.AILims1[pValIxa]]",E.AILims1[pValIxa]) + EM.mf2(" aiNudges[1][nudV]",aiNudges[1][nudV]) + EM.mf2(" aiNudges[1][nudSet]",aiNudges[1][nudSet]) + EM.mf2(" aiNudges[1][nudBoth]",aiNudges[1][nudBoth]) + EM.mf2(" E.AILims1[pValIxb])",E.AILims1[pValIxb]));
         }
         //EM.psClanChars[pors][clan][E.pNudge0 + nX] = E.getAISetChar(sliderVal);
-
     }
+     catch (Exception | Error ex) {
+        eM.firstStack = eM.secondStack + "";
+        ex.printStackTrace(eM.pw);
+        ex.printStackTrace(System.err);
+        eM.secondStack = eM.sw.toString();
+        System.out.flush();
+        System.err.flush();
+        System.err.println(eM.tError = ("----SYAf----ERROR startAIYear Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+        //     ex.printStackTrace(System.err);
+        st.setFatalError();
+        throw new WasStopped(eM.tError);
+      }
+    }//startAIYear
     /**
      * return the current value of loop n
      *
@@ -11361,10 +11384,10 @@ public class Assets {
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevAIpos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevoPerW, prevAIOper, E.AILims1, "prevAIOperW", ifPrint);
-         putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims1, "prevEconScore", ifPrint);
+         putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims3, "prevEconScore", ifPrint);
          // this is skipped if aiERScore or prevAIERScore are <= 0
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, 30.*prevAIERScore, E.AILims1, "prevEconRScore", ifPrint);
-       putValueChar(EM.psClanChars[pors][clan], E.pLastERScW, 30.*aiERScore, E.AILims1, "lastEconRScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, 30.*prevAIERScore, E.AILims2, "prevEconRScore", ifPrint);
+       putValueChar(EM.psClanChars[pors][clan], E.pLastERScW, 30.*aiERScore, E.AILims2, "lastEconRScore", ifPrint);
 
         aKey = new String(EM.psClanChars[pors][clan]);
         aVal= EM.myAIlearnings.get(aKey);

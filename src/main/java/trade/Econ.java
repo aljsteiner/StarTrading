@@ -90,7 +90,10 @@ public class Econ {
   static final int lImWaitingList = 10;
   // try to have the previous and the current string
   static String imWaitingList[] = new String[lImWaitingList];
-  static volatile int ixImWaitingList;
+  static volatile int ixImWaitingList=0;
+  static final int lKeyList=10;
+  static String keyList[] = new String[lKeyList];
+  static volatile int ixKeyList=0;
   //int prev2ImwIx = 0, prevImwIx = 0;
   volatile boolean okEconCnt = false;
 //  protected E D
@@ -1670,7 +1673,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
 
   EM.econCountsTest();
     //.  ixImWaitingList = ++ixImWaitingList % lImWaitingList;
-    String sss = EM.wasHere2 = "---IMWa---imWaiting in thread " + Thread.currentThread().getName() + " name=" + name + " Since doYear" + eM.year + "=" + imMore + " doEndYearCnt" + doEndYearCnt[0] + " econNames=";
+    String sss = EM.wasHere2 = "---IMWa---imWaiting in " + Thread.currentThread().getName() + " " + name + "Y" + eM.year + "="  + " doEndYearCnt" + doEndYearCnt[0] + " econNames=";
     boolean doComma=false;
       for(int ix=0; ix< maxEndYears-1;ix++){
         if (econNames[ix] != null) {
@@ -1690,7 +1693,7 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
       atCnt++;
     }//for
     EM.wasHere2 = sss += " for " + name + "Y" + EM.year + " " + why + " haveing " + what[0] + " with limit=" + limit;
-    // ixImWaitingList = ++ixImWaitingList < lImWaitingList ? ixImWaitingList : 0;
+ 
     imWaitingList[ixImWaitingList = ++ixImWaitingList < lImWaitingList ? ixImWaitingList : 0] = sss;
     // }//if
 
