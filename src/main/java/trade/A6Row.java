@@ -38,7 +38,7 @@ public class A6Row extends A6Rowa {
 
  // EM eM = EM.eM;
   //Econ ec = EM.curEcon;
-
+static final Integer lock=0;
   // int blev = History.debuggingMinor11;
 //  int lev = History.debuggingMinor11;
   // String titl = "aName";

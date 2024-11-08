@@ -41,6 +41,7 @@ public class ABalRows extends A6Rowa {
   static final int TBAL = A6Row.tbal;
   static final int RIX = 0, CIX = 1, SIX = 2, GIX = 3, SGIX = -1, RCIX = -2;
   // static int rcIx = -2;
+  static final Integer lock=0;
   static final int RCIX2 = -2;
   static final int BALS = 0;
   //static final int BALANCESIX = E.lsums; // L4

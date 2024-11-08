@@ -125,7 +125,7 @@ public class Assets {
   static final int nudLen=8;
   double tradeFracNudge[] = {0., 0.,.0,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
   double ffTFracNudge[] = {0., 0.,.0, 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
-  static final double bMin= 11..; //if bCnt is less than bCnt<bMax?-999999:bVal/bCnt
+  static final double bMin= 11.; //if bCnt is less than bCnt<bMax?-999999:bVal/bCnt
   static final double bSmall = -9999.;// if setCntDr < bSmall treat as invalid
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
@@ -1681,7 +1681,10 @@ public class Assets {
             } // !null
             atCnt++;
           }//for
-          EM.addStatsWaitList(sList);
+          //Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0]
+         synchronized(ARow.lock){
+           EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;}
+          //EM.addStatsWaitList(sList);
         }//if debugStatsOut
         resVCum[clan] += v;
         resICum[clan] += ycnt;
@@ -1785,7 +1788,9 @@ public class Assets {
           }
           atCnt++;
         }//for
-        EM.addStatsWaitList(sList);
+        synchronized(ARow.lock){
+           EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;}
+       // EM.addStatsWaitList(sList);
       }//if out
 
       //  int sClan = curEcon.clan;
@@ -1957,7 +1962,8 @@ public class Assets {
           }
           atCnt++;
         }//for
-        EM.addStatsWaitList(sList);
+        synchronized(ARow.lock){
+           EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;}
       }//if out
 
       //  int sClan = curEcon.clan;
@@ -8637,7 +8643,9 @@ public class Assets {
        String prevTradeFracss[] = { "prevTradeFracp","prevTradeFracs"};
        // get the best value, not a slider value
       // double newTFa = eM.setCntAr(aKey, aVal, prevTradeFracss[pors],pors+1,pors+ 1, E.AILims1, E.pNudge0, E.AILims123,E.pLastScP, 4., 4., E.AILims123,E.ppors, pors+0., pors+0.,false,false,y, y);
-        double newTF1 = eM.setCntDr(aKey, aVal, prevTradeFracss[pors], pors+1, pors+1, E.AILims1, E.pNudge0,0., E.AILims1, -1,1., E.AILims1,-1,1.,E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.ppors, pors+0., pors+0.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,false,false, y, y);
+       // double newTF1 = eM.setCntDr(aKey, aVal, prevTradeFracss[pors], pors+1, pors+1, E.AILims1, E.pNudge0,0., E.AILims1, -1,1., E.AILims1,-1,1.,E.AILims123, E.pLastScP, 4., 4., E.AILims123, E.ppors, pors+0., pors+0.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,false,false, y, y);
+       //  double newTF1 = eM.setCntDr(aKey, aVal, prevTradeFracss[pors],  pors+1, pors+1, E.AILims1, E.pNudge0,0., E.AILims3, E.pPrevEScW,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, .3, 4., E.AILims3, E.pPrevEScW, 7000.,99999999999.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,false,false, y, y);
+       double newTF1 = eM.tradeFracSetCntDr(aKey, aVal, prevTradeFracss, false,false, y);
       boolean notNew = newTF1 < Assets.bSmall;
       double newTF = newTF1 < Assets.bSmall?prevTF:newTF1;
        tradeFracNudge[nudV] = newTF -prevTF;
@@ -8645,15 +8653,17 @@ public class Assets {
        doNudges[0] = notNew;// prevent random reset of nudge 0  if not notNew
        String sss =  name + "Y" +   EM.year  + "C" + clan  + ( notNew?  "no Change" + EM.mf2( "prevNudv",prevNudv) : EM.mf2( "prevNudv",prevNudv)  + EM.mf2( "newTF",newTF) + EM.mf2( "newNudv",tradeFracNudge[nudV] )  + EM.mf2( "setTradeFrac",tradeFracNudge[nudSet]) + "=>" + EM.mf2( "nudBoth",tradeFracNudge[nudBoth]));
        if(E.debugAIOut)System.out.println("-----SAIy0----" + sss);
-       Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;
-               assert newTF > 0.:"Error newTF value negative=" + EM.mf2("newTF",newTF) + EM.mf2("prevNudv",prevNudv);
+       synchronized (A6Row.lock){
+       Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;}
+        assert newTF > 0.:"Error newTF value negative=" + EM.mf2("newTF",newTF) + EM.mf2("prevNudv",prevNudv);
     //-----------------------   EM.futureFundTransferFrac[pors][clan]---------
        prevNudv = ffTFracNudge[nudV];
        prevVal = ffTFracNudge[nudBoth];
        double prevFFT = ffTFracNudge[nudSet]=  EM.futureFundTransferFrac[pors][clan];
        curVal = eM.getAIVal(vva,  clan, ec, 1); // sum of setting and nudge
        // double newFFTa = eM.setCntAr(aKey, aVal, "prevFFTransferFrac",4,4, E.AILims1, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4.,false,false,y, y);
-        double newFFT1 =  eM.setCntDr(aKey, aVal,  "prevFFTransferFrac", 4,4, E.AILims1, E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1.,E.AILims123, E.pLastScP, 4., 4., E.AILims123, -1, pors+0., pors+1.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,false,false, y, y);
+        //double newFFT1 =  eM.setCntDr(aKey, aVal,  "prevFFTransferFrac", 4,4, E.AILims1, E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1.,E.AILims123, E.pLastScP, 4., 4., E.AILims123, -1, pors+0., pors+1.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,false,false, y, y);
+        double newFFT1 =  eM.fFTransferFracSetCntDr(aKey,  aVal, "prevaFFTransferFrac",false,false, y);
         notNew = newFFT1 < Assets.bSmall;
         double newFFT = newFFT1 < Assets.bSmall?prevFFT:newFFT1;
         ffTFracNudge[nudV] = newFFT -prevFFT;

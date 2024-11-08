@@ -123,7 +123,7 @@ class EM {
    *
    * @param ss The line to be added to the list
    */
-  static synchronized void addStatsWaitList(String ss) {
+  static synchronized void addStatsWaitListnot(String ss) {
     //ixStatsWaitList++;
     // ixStatsWaitList = ixStatsWaitList % lStatsWaitList;
     //ixStatsWaitList = ixStatsWaitList < lStatsWaitList ? ixStatsWaitList :lStatsWaitList-1;
@@ -233,7 +233,7 @@ class EM {
   static final double[][] mLimitEcons = {{100., 300.}, {100., 300.}};
   static String tError = " empty tError";
   static volatile Econ curEcon;  //eM only changes at the end a a year run, EM.curEcon
-  static volatile String curEconName = "no Econ name";
+  static volatile String curEconName = " no Econ name ";
   static volatile String curEconClan = "A";
   static volatile long curEconTime = 0; // time of this econ
   static volatile int curEconAge = 0;
@@ -1292,6 +1292,25 @@ class EM {
   /**
    * format the Double value to a 7 char String
    *
+   * @param fl fraction length of the
+   * @param desc description of format
+   * @param v value to format
+   * @return desc + mf(v)
+   */
+  static public String mf2(int fl,String desc, Double v) {
+    int mfll = mfb;
+    mfb=fl;
+    boolean t = mfShort;
+    mfShort = true;
+    String rt = " " + desc + mf(v);
+    mfShort = t;
+    mfb = mfll;
+    return rt;
+  }
+
+   /**
+   * format the Double value to a 7 char String
+   *
    *
    * @param desc description of format
    * @param v value to format
@@ -1321,6 +1340,7 @@ class EM {
   }
 
   static boolean mfShort = false;
+  static int mfb=3;
   static boolean test5 = false; // temp to test funcionss
 
   /**
@@ -1362,17 +1382,17 @@ class EM {
       else if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) { //6 7
         dFrac.setMinimumFractionDigits(0);
        //  dFrac.setMaximumFractionDigits(5);
-        dFrac.setMaximumFractionDigits(3);
+        dFrac.setMaximumFractionDigits(mfb);
         return dFrac.format(v);
       }
       else if (!mfShort && (v > -999. && v < -0.00) || (v > .001 && v < 999.)) {
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(3);
+        dFrac.setMaximumFractionDigits(mfb);
         return dFrac.format(v);
       }
       else if ((v > -9999. && v < -0.0) || (v > .001 && v < 9999.)) {
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(2);
+        dFrac.setMaximumFractionDigits(mfb < 2? mfb:2);
         return dFrac.format(v);
       }
       else if ((v > -99999. && v < -0.0) || (v > .001 && v < 99999.)) {
@@ -2343,7 +2363,7 @@ class EM {
   static final double[][] mCargoGrowth = {{0.00000001, 0.00009}, {0.0000000001, 0.0000009}};
   // cargo depreciation use resourceGrowthDepreciation
   static double[] staffGrowth = {3.7, .0002}; // growth per work
-  static final double[][] mStaffGrowth = {{0.00002, 6.}, {0.00002, 2.9}};
+  static final double[][] mStaffGrowth = {{.01, 6.}, {0.00002, 2.9}};
   static double[] staffGrowthDepreciation = {.0006, .0006}; //per unit
   static final double[][] mStaffGrowthDepreciation = {{.00003, .009}, {.00003, .009}};
   static double[] yearsDepreciation = {20., 20.};
@@ -3800,8 +3820,94 @@ onceAgain:
     // setCntAr(aKey, aVal, "44&lastAIScoreW", 9, 5, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pLastScP, 4., 4..,setAll, doSet, pr, y);
   }
 
+  /** define the fFTransferFrac setCntDr settings used to set another key which may be new,
+   * this is to define entries in a history map saved between succesive games
+   * to eventually be used by a setCntDr call
+   * to give a new value for a setting that will give the Econ a good
+   * possibility of a winning (high score) result in Assets.CashFlow.yearEnd()
+   * This sets up an array drs[arn] with a significance for different values of a setting
+   * This array is eventually used in a setCntDr call to find the best value for an EM Econ setting
+   * that gives a higher possibility of a winning Econ score in the current year
+   *
+   * @param aKey the key for this setting
+   * @param aVal The value part for the counting
+   * @param what describe what is seen
+   * @parm aarn number of drs array and seeArray to use for the not selected keys
+   * @parm arn number of drs array and seeArrayto use for pX1 selected keys
+   * @param setAll add the full count from entry.aVal
+   * @param doSet if set add just 1 to  entries in the key if setAll add 0
+   * @param printDeb print output to System.out
+   * @param p2 if set add the row entries to seeArrays the row entries
+   *
+   * @return the best value for the that the setting +nudge should be set
+   */
+   double fFTransferFracSetCntDr(String aKey, Integer[] aVal, String what,  boolean setAll,boolean doSet,boolean pr){
+   return setCntDr(aKey, aVal, what,7, 6, E.AILimsC,  E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,  E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4.,setAll,doSet, pr, y);
+
+  }
+   String[] whatA = {"prevTradeFracA","prevTradeFracB"};
+   String[] whata = {"prevTradeFraca","prevTradeFracb"};
+   String[] what0 = {"prevTradeFrac0","prevTradeFrac1"};
+    /** define the  tradeFrac setCntDr settings used to set another key which may be new,
+   * this is to define entries in a history map saved between succesive games
+   * to eventually be used by a setCntDr call
+   * to give a new value for a setting that will give the Econ a good
+   * possibility of a winning (high score) result in Assets.CashFlow.yearEnd()
+   * This sets up an array drs[arn] with a significance for different values of a setting
+   * This array is eventually used in a setCntDr call to find the best value for an EM Econ setting
+   * that gives a higher possibility of a winning Econ score in the current year
+   *
+   * @param aKey the key for this setting
+   * @param aVal The value part for the counting
+   * @param what describe what is seen indexed by pors in aKey
+   * @parm aarn number of drs array and seeArray to use for the not selected keys
+   * @parm arn number of drs array and seeArrayto use for pX1 selected keys
+   * @param porsl pors lower limit only accept keys with pors value &ge; porsl
+   * @param porsu pors upper limit only accept keys with pors value &le; porsu
+   * @param setAll add the full count from entry.aVal
+   * @param doSet if set add just 1 to  entries in the key if setAll add 0
+   * @param printDeb print output to System.out
+   * @param p2 if set add the row entries to seeArrays the row entries
+   *
+   * @return the best value for the that the setting +nudge should be set
+   */
+  double tradeFracSetCntDr(String aKey, Integer[] aVal, String[] what, int aarn,int arn, double porsl, double porsu, boolean setAll,boolean doSet,boolean pr){
+     int pValIx = E.getAIMuch(aKey.charAt(E.ppors)); //ix value in myAILim
+    double x1M = E.AILims123[pValIx];
+    int pors = (int)x1M;
+   return setCntDr(aKey, aVal, what[pors], aarn, arn, E.AILims1, E.pNudge0,0., E.AILims3, E.pPrevEScW,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, .3, 4., E.AILims3, E.pPrevEScW, 7000.,99999999999., E.AILims123, E.ppors, porsl, porsu,  E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
+  }
+
+     /** define the  tradeFrac setCntDr settings used to set another key which may be new,
+   * this is to define entries in a history map saved between succesive games
+   * to eventually be used by a setCntDr call
+   * to give a new value for a setting that will give the Econ a good
+   * possibility of a winning (high score) result in Assets.CashFlow.yearEnd()
+   * This sets up an array drs[arn] with a significance for different values of a setting
+   * This array is eventually used in a setCntDr call to find the best value for an EM Econ setting
+   * that gives a higher possibility of a winning Econ score in the current year
+   * uses key pors value for aarn,arn and porsl,porsu either 0 or 1
+   *
+   * @param aKey the key for this setting
+   * @param aVal The value part for the counting
+   * @param what describe what is seen indexed by pors in aKey
+   * @param setAll add the full count from entry.aVal
+   * @param doSet if set add just 1 to  entries in the key if setAll add 0
+   * @param printDeb print output to System.out
+   * @param p2 if set add the row entries to seeArrays the row entries
+   *
+   * @return the best value for the that the setting +nudge should be set
+   */
+  double tradeFracSetCntDr(String aKey, Integer[] aVal, String[] what,  boolean setAll,boolean doSet,boolean pr){
+     int pValIx = E.getAIMuch(aKey.charAt(E.ppors)); //ix value in myAILim
+    double x1M = E.AILims123[pValIx];
+    int pors = (int)x1M;
+   return setCntDr(aKey, aVal, what[pors], pors+1,pors+1, E.AILims1, E.pNudge0,0., E.AILims3, E.pPrevEScW,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, .3, 4., E.AILims3, E.pPrevEScW, 7000.,99999999999., E.AILims123, E.ppors, pors, pors,  E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
+  }
     /**
-   * define the set of seeArrays to be set by this routine
+   * define the set of setCntDr settings used to set another key which may be new, this is to define entries in a map
+   * to eventually be used by a setCntDr call to give a new value for a setting that will give the Econ a good
+   * possibility of a winning (high score) result in Assets.CashFlow.yearEnd()
    *
    * @param aKey the current key
    * @param aVal the array of values for that key
@@ -3814,17 +3920,19 @@ onceAgain:
     boolean no = false, y = true;
     //  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean setAll, boolean doSet,boolean printDeb, boolean p2)
     //  pick the econ input values that produced winner
-
-      setCntDr(aKey, aVal, "prevTradeFracA", 2, 1, E.AILims1, E.pNudge0,0., E.AILims2, E.pPrevERScW,400., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
-   // setCntDr(aKey, aVal, "prevTradeFracB", 2, 2, E.AILims1, E.pNudge0,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
+    //  double tradeFracSetCntDr(String aKey, Integer[] aVal, String[] what,  boolean setAll,boolean doSet,boolean pr)
+    tradeFracSetCntDr(aKey, aVal, whatA, setAll,doSet, pr);//aarn,arn =0 or 1dpending on pors value
     setCntDr(aKey, aVal, "prevAIEScore", 3, 3,E.AILims3,E.pPrevEScW,0., E.AILims1, -1,1.,E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
      setCntDr(aKey, aVal, "prevAIERScoreW", 5, 4,E.AILims2, E.pPrevERScW,0., E.AILims1, -1,1.,E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
-   //   setCntDr(aKey, aVal, "prevAIERScoreWB", 5, 5, E.AILims1, E.pPrevERScW,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,  E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4.,setAll,doSet, pr, y);
-      setCntDr(aKey, aVal, "prevFFTransferFrac", 7, 6, E.AILimsC,  E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,  E.AILimss[6], E.pLastScP, 4., 4., E.AILimss[6], E.pLastScP, 4., 4.,setAll,doSet, pr, y);
+     fFTransferFracSetCntDr(aKey,  aVal, "prevFFTransferFrac", setAll,doSet, pr);//7,6, 
+ //     setCntDr(aKey, aVal, "prevFFTransferFrac", 7, 6, E.AILimsC,  E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,  E.AILimss[6], E.pLastScP, 4., 4., E.AILimss[6], E.pLastScP, 4., 4.,setAll,doSet, pr, y);
   //  setCntAr(aKey, aVal, "prevAIERScoreWA", 4, 4, E.AILims1, E.pPrevERScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
  //  setCntAr(aKey, aVal, "prevAIERScoreWB", 5, 5, E.AILims1, E.pPrevERScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
+   //   setCntDr(aKey, aVal, "prevAIERScoreWB", 5, 5, E.AILims1, E.pPrevERScW,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,  E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4.,setAll,doSet, pr, y);
   // setCntAr(aKey, aVal, "prevTradeFracA", 1, 1, E.AILims1 ,E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
-    
+  //tradeFracSetCntDr(aKey, aVal, "prevTradeFracB", 2,2,1.,1.,setAll,doSet, pr);
+    //  setCntDr(aKey, aVal, "prevTradeFracA", 2, 1, E.AILims1, E.pNudge0,0., E.AILims3, E.pPrevEScW,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, .3, 4., E.AILims3, E.pPrevEScW, 7000.,99999999999.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
+   // setCntDr(aKey, aVal, "prevTradeFracB", 2, 2, E.AILims1, E.pNudge0,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
   //  setCntAr(aKey, aVal, "prevTradeFracB", 2, 2, E.AILims1, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
  //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
 
@@ -3840,54 +3948,61 @@ onceAgain:
     // setCntAr(aKey, aVal, "44&lastAIScoreW", 9, 5, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pLastScP, 4., 4..,setAll, doSet, pr, y);
   }
   int setCntSee = 0;
-  /**
-   * add into the drs[arn] double significance array key at the index for char pX1 ix value sector value
-   * from the myAILim array add a significance calculalted from the count in aVal times the value of mX1
-   * if pX2 is &ge; 0 use that key value index to choose a value from the myAILima array to multiply
+  /** define the setCntDr settings used to set another key which may be new,
+   * this is to define entries in a history map saved between succesive games
+   * to eventually be used by a setCntDr call
+   * to give a new value for a setting that will give the Econ a good
+   * possibility of a winning (high score) result in Assets.CashFlow.yearEnd()
+   * This sets up an array drs[arn] with a significance for different values of a setting
+   * This array is eventually used in a setCntDr call to find the best value for an EM Econ setting
+   * that gives a higher possibility of a winning Econ score in the current year
+   * if pX2 is &ge; 0 use that key value index to choose the value from the myAILima array to multiply
    * the previous significance and multiply by mX2
-   * if pX3 is &ge; 0 use that key value index to choose a value from the myAILimb array to multiply
+   * if pX3 is &ge; 0 use that key value index to choose the value from the myAILimb array to multiply
    * the previous significance and multiply by mX3
    *
    * @param aKey the key for this setting
    * @param aVal The value part for the counting
    * @param what describe what is seen
-   * @parm aarn number of drs array and seeArray to use for un selected keys
-   * @parm arn number of drs array and seeArrayto use for pX1
+   * @parm aarn number of drs array and seeArray to use for the not selected keys
+   * @parm arn number of drs array and seeArrayto use for pX1 selected keys
    * @param myAILim the values array for this pX1
-   * @param pX1 The main Value aKey character index this is being counted
+   * @param pX1 the index of the character in the key that is being counted
    * @param mX1 The multiplier for X1 value
    * The myAILim.. entries must always be valid
-   * The pX2 pX3 lX1 lX2 lX3 lX4 are ignored if negative less than 0
+   * The pXa pXb lX1 lX2 lX3 lX4 are ignored if negative less than 0
    * @param myAILima the values array for this pX2
-   * @param pX2 The main Value aKey character must that is being counted
-   * @param mX2 The multiplier for X2 value
-   * @param myAILimb the values array for this pX1
-   * @param pX3 The main Value aKey character must that is being counted
-   * @param mX3 The multiplier for X1 value
-   * @param myAILim1 the values array for lX1 values array,
-   * @param lX1 The first limit aKey character index tested for match
-   * @param llX1 lX1 lower limit only accept keys with lX1 &ge; llX1
-   * @param luX1 lX1 upper limit only accept keys with lX1 &le; luX1
+   * @param pXa the index of the character in the key that selects a multiplier index in myAIlima
+   * @param mXa The multiplier for X2 value adding to the significance
+   * @param myAILimb the values array for this pX3
+   * @param pXb the index of the character in the key that selects a multiplier index in myAIlimb
+   * @param mXbThe multiplier for X3 value adding to the significance
+   * lX1,lX2,lX3,lX4 if all true add the above values to the pX1 value position in drs
+   * if one of the above is negative it is always true without a test
+   * @param myAILim1 the values array for limit lX1 values array,
+   * @param lX1 the index of the character in the key that tests whether pX1 is accepted to count
+   * @param llX1 lX1 lower limit only accept keys with lX1 array value &ge; llX1
+   * @param luX1 lX1 upper limit only accept keys with lX1 array value &le; luX1
    * @param myAILim2 the values array for lX2 values array,
-   * @param lX2 The second limit aKey character index tested for match
-   * @param llX2 lX2 lower limit only accept keys with lX2 &ge; llX2
-   * @param luX2 lX2 upper limit only accept keys with lX2 &le; luX2
+   * @param lX2 the second index of the character in the key that tests whether pX1 is accepted to count
+   * @param llX2 lX2 lower limit only accept keys with lX2 array value &ge; llX2
+   * @param luX2 lX2 upper limit only accept keys with lX2 array value &le; luX2
    * @param myAILim3 the values array for lX3 values array,
-   * @param lX3 The third limit aKey character index tested for match
-   * @param llX3 lX3 lower limit only accept keys with lX3 &ge; llX3
-   * @param luX3 lX3 upper limit only accept keys with lX3 &le; luX3
-    * @param myAILim4 the values array for lX4 values array,
-   * @param lX4 The fourth limit aKey character index tested for match
-   * @param llX4 lX4 lower limit only accept keys with lX4 &ge; llX2
-   * @param luX4 lX4 upper limit only accept keys with lX4 &le; luX2
-   * @param setAll add the full count for entry.aVal
-   * @param doSet if not setAll add the 1 to new entries in the key otherwise add 0.
+   * @param lX3 the third index of the character in the key that tests whether pX1 is accepted to count
+   * @param llX3 lX3 lower limit only accept keys with lX3 array value &ge; llX3
+   * @param luX3 lX3 upper limit only accept keys with lX3 array value &le; luX3
+   * @param myAILim4 the values array for lX4 values array,
+   * @param lX4 The fourth index of the character in the key that tests whether pX1 is accepted to count
+   * @param llX4 lX4 lower limit only accept keys with lX4 array value &ge; llX2
+   * @param luX4 lX4 upper limit only accept keys with lX4 array value &le; luX2
+   * @param setAll add the full count from entry.aVal
+   * @param doSet if set add just 1 to  entries in the key if setAll add 0
    * @param printDeb print output to System.out
-   * @param p2 whether to add the row entries to seeArrays the row entries
+   * @param p2 if set add the row entries to seeArrays the row entries
    *
    * @return the best value for the that the setting +nudge should be set
    */
-  double setCntDr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1,double mX1,double[] myAILima, int pX2, double mX2, double[] myAILimb, int pX3, double mX3, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3, double[] myAILim4, int lX4, double llX4, double luX4, boolean setAll,boolean doSet,boolean printDeb, boolean p2) {
+  double setCntDr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1,double mX1,double[] myAILima, int pXa, double mXa, double[] myAILimb, int pXb, double mXb, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, double[] myAILim3, int lX3, double llX3, double luX3, double[] myAILim4, int lX4, double llX4, double luX4, boolean setAll,boolean doSet,boolean printDeb, boolean p2) {
 //static final int mostIa = 0, iaAllSum = 1, iaMySum = 2, iaAllCnt = 3, iaCntedCnt = 4, firstIa = 5, topIa = 6,   //skippedCnt = 7, negIas = 8,undef=8,missing=9,inactive=10,died=11,econDiedI=-1,notActiveI=-2,missingI=-3,undefI=-4, //strtIas = 12, lenIa = 91; // holds 91=12+77+2 spare
 //  negIas = E.econDiedI = -1;E.notActiveI = -2;E.missingI = -3;E.undefI = -4;
     //static final int iaLimSum = 2, iaLimCnt = 4; // holds 91=12+77+2 spare
@@ -3915,20 +4030,22 @@ onceAgain:
     assert pX1 < laKey:"Error setCntD pX1> Max pX1=" + pX1 + ",max<" + laKey;
     assert pX1 >= 0 :"Error setCntD pX1< 0 pX1=" + pX1 ;
     int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
-    double x1M = mX1 == 0.?1:myAILim[pValIx] * mX1;
+    double x1M = mX1 == 0.?1:myAILim[pValIx] * mX1;// pX1 significance
     int pValIxx = pValIx > 0?pValIx: 0;
     int pValIa = pValIx + strtIas;
-     assert pX2 <laKey:"Error setCntD pX2> Max ix=" + pX2  + ",max<" + laKey;
-     boolean ipX2 = pX2 < 0;
-    int pValIxa = ipX2?1:E.getAIMuch(cha = aKey.charAt(pX2)); //ix value in myAILima
+     assert pXa<laKey:"Error setCntD pXa> Max ix=" + pXa  + ",max<" + laKey;
+     boolean ipXa= pXa < 0;
+    int pValIxa = ipXa?1:E.getAIMuch(cha = aKey.charAt(pXa)); //ix value in myAILima
     int pValIxxa = pValIxa > 0?pValIxa: 0;
-    double x2M = ipX2?0.: myAILima[pValIxa] * mX2;
+    double xaM = ipXa?0.: myAILima[pValIxa] * mXa; //x2 signigicance
     int pValIaa = pValIxxa + strtIas;
-    assert pX3 < laKey:"Error setCntD pX3> Max ix=" + pX3  + ",max<" + laKey;
-    boolean ipX3 = pX3 < 0;
-    int pValIxb = ipX3?0:E.getAIMuch(chb = aKey.charAt(pX3)); //ix value in myAILimb
+    assert pXb< laKey:"Error setCntD pXb> Max ix=" + pXb + ",max<" + laKey;
+    boolean ipXb = pXb < 0;
+    int pValIxb = ipXb?0:E.getAIMuch(chb = aKey.charAt(pXb)); //ix value in myAILimb
     int pValIxxb = pValIxb > 0?pValIxb: 0;
-    double x3M = ipX3?1.: myAILimb[pValIxb] * mX3;
+    double xbM = ipXb?0.: myAILimb[pValIxb] * mXb;
+    double xSumM = x1M + xaM + xbM;
+    String xMs = mf2(2,"xSumM",xSumM)  + mf2(2,"mX1",mX1) + mf2(2,"x1M",x1M)  + mf2(2,"mXa",mXa)+ mf2(2,"xaM",xaM)  + mf2(2,"mXb",mXb)+ mf2(2,"xbM",xbM);
     int pValIab = pValIxxb + strtIas;
     assert lX1 < laKey:"Error setCntD lX1> Max ix=" + lX1  + ",max<" + laKey;
     int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(i1 ? 0 : lX1)); // ix lim1 in myAILim1
@@ -3974,7 +4091,7 @@ onceAgain:
     boolean notLim = arn != aarn && !lim && l2 && l3 && l4; // drs[aarn] count the rest if true aarn first most top
     String notLimV = notLim? " ++notLim":" --notLim";  // drs[aarn] count this entry in REST limCnt first most top
     String s1 = i1 ? "1" : "", s2 = i2 ? "2" : "", s3 = i3 ? "3" : "";
-    String s4 = i4 ? "4" : "",sa=ipX2?"a":"",sb=ipX3?"b":"";// ignore or skip
+    String s4 = i4 ? "4" : "",sa=ipXa?"a":"",sb=ipXb?"b":"";// ignore or skip
     String t1 = l1 ? "1" : "", t2 = l2 ? "2" : "", t3 = l3 ? "3" : "";
     String t4 = l4 ? "4" : "";//trues
     String r1 = l1 ? "1" : "", r2 = l2 ? "2" : "", r3 = l3 ? "3" : "";
@@ -3982,7 +4099,7 @@ onceAgain:
     myNa = 0;
     myNx = 0;
     String myIx = " ???";
-    int mostIaN= strtLow,topIaN= strtLow,firstIaN= strtLow;// pointers in drs[arn]
+    int mostIaN= strtLow,topIaN= strtLow,firstIaN= strtLow;// pointers into drs[arn]
     int mostIxN = 0, topIxN = 0, firstIxN = 0;
     int lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
     int lastIa = (mostIaN + 5) > topIaN ? topIaN : mostIaN + 5;// highest drs[arn] index
@@ -4006,7 +4123,8 @@ onceAgain:
     int nzMax=9;
     int vvIa = strtIas + pValIxx; // drs index
          vvIa = vvIa >= strtLow ? vvIa : strtLow; // protect index
-    double vvIaC = (x1M +  x2M +x3M) * (setAll?aVal[E.aValCnts]:doSet?1:0);
+    double vvIaC = (x1M +  xaM +xbM) * (setAll?aVal[E.aValCnts]:doSet?1.:0.);
+    String vvIaCS = mf2("+CvvIaC",vvIaC);
 
     try {
       assert myAILim.length <= E.keysXMax: "myAILim values array is too long=" + myAILim.length + ">=" + E.keysXMax;
@@ -4017,7 +4135,7 @@ onceAgain:
       assert myAILima.length <= E.keysXMax: "myAILima is too long=" + myAILima.length + ">" + E.keysXMax;
       assert myAILimb.length <= E.keysXMax: "myAILimb is too long=" + myAILimb.length + ">" + E.keysXMax;
 
-      if(E.DebugSetCntArOut && pr1 ){System.out.println("---SCNTD2---setCntDrCnt=" + setCntSee + "A" + arn + "Y" + year + "AG" + curEconAge + " lL" + laiLim + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + pValIx + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (drs == null ? " null drs" : drs.length < 5 ? " drs too Small" : drs[arn].length < lenIa ? " err drs Len=" + drs[arn].length : " drs ok len=" + drs[arn].length) + "\n" + limV + " ignore" + s1 + s2 + s3 + s4 + sa + sb+ " true" + t1 + t2 + t3 + t4 + " key" + aKey + (setAll? " ++setAll": " --setAll") + (doSet ? " ++doSetl": " --doSet")  + (printDeb ? " ++printDeb" : " --printDeb") + (p2 ? " ++p2" : " --p2"));}
+      if(E.DebugSetCntArOut && pr1 ){System.out.println("---SCNTD2---setCntDrCnt=" + setCntSee + " A" + arn + "Y" + year + "AG" + curEconAge + " lL" + laiLim + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + pValIx + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (drs == null ? " null drs" : drs.length < 5 ? " drs too Small" : drs[arn].length < lenIa ? " err drs Len=" + drs[arn].length : " drs ok len=" + drs[arn].length) + "\n" + limV + " ignore" + s1 + s2 + s3 + s4 + sa + sb+ " true" + t1 + t2 + t3 + t4 + " key" + aKey + (setAll? " ++setAll": " --setAll") + (doSet ? " ++doSetl": " --doSet")  + (printDeb ? " ++printDeb" : " --printDeb") + (p2 ? " ++p2" : " --p2"));}
 
       assert pValIx>=0: "ERROR input pValIx illegal small =" + pValIx;
       assert pValIx < E.keysXMax:"Error pValIx>= E.keysXMax ix=" + ix + ",max=" + (E.keysXMax-1);
@@ -4025,31 +4143,26 @@ onceAgain:
       pValIxx = pValIx >= 0 ? pValIx : 0;
       vvIa = strtIas + pValIxx; // drs index
       vvIa = vvIa >= strtLow ? vvIa : strtLow; // protect index
-      // l1ValIx = l1ValIx > 0 ? l1ValIx : 0;
-     //define vvIaC counts for this drs[arn]b done above
-     // drs[arn][vvIa] += vvIaC;  // up cnts all and limited
-      // avoid -0 values
-     // drs[arn][firstIa] = drs[arn][firstIa] >= strtLow ? drs[arn][firstIa] : strtLow;
-     // drs[arn][mostIa] = drs[arn][mostIa] >= strtLow ? drs[arn][mostIa] : strtLow;
-     //drs[arn][topIa] = drs[arn][topIa] >= strtLow ? drs[arn][topIa] : strtLow;
       cLim = drs[arn][iaLimCnt];
       cAll = drs[arn][iaAllCnt]+= vvIaC ;  // sum of all
       cAllSum = drs[arn][iaAllSum] += vvIaC * pValIxx;//+= pValIx; //
-      //cLimSum = drs[arn][iaLimSum];
-      //cLimAve = cLim < 1 ? cLimSum : (int) ((cLimSum / cLim)- strtIas); //
       cAllAve = cAll < E.pzero ? 1 : (int) (cAllSum / cAll);
       cAllAve = cAllAve < myAILim.length? cAllAve:(myAILim.length-1);
       allAveVal = mf2(myAILim[(int)cAllAve ]);
       // : mf2(myAILim[(int) (drs[arn][iaAllSum] / drs[arn][iaAllCnt])]); // all values this val
       // then these accepted by the limits
-      String ret0 =   "A" + arn + "L" + laiLim ;
-      String retWhat =   " " + what + ":" + limV + " "  + " pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + "XX" + pValIxx  + "xA" + vvIa  + "xC" + vvIaC + " allC:" + drs[arn][iaAllCnt] + " ave" + cAllAve ;
-      String retCall =  "allCAv:" + (cAllAve > 0 && cAllAve < laiLim ? mf2(myAILim[(int)cAllAve]) : " cAllAve=" + mf2(cAllAve));
+      String ret0 =   " A" + arn + "L" + laiLim ;
+      String retPX1 =  " "  +" pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + "XX" + pValIxx  + "xA" + vvIa   + vvIaCS + mf2(2,"aC",drs[arn][vvIa]) ;
+      String retPXa =  " "  +" pXaN:" + pXa + ":" + cha + ":X" + pValIxa + "XX" + pValIxxa  + "xA" + (strtIas + pValIxxa)  + mf2(2,"aC",drs[arn][(int)(strtIas + pValIxxa)]) ;
+      String retPXb =  " "  +" pX1N:" + pX1 + ":" + ch0 + ":X" + pValIx + "XX" + pValIxx  + "xA" + (strtIas + pValIxxb)+ mf2(2,"aC",drs[arn][(int)(strtIas + pValIxxb)]) ;
+      String retWhat =   " " + what + ":" + limV ;
+
+      String retCall =   mf2(2,"allC", drs[arn][iaAllCnt]) + mf2(2,"ave" ,cAllAve)  + mf2(2,"allCAv",(cAllAve > 0 && cAllAve < laiLim ? myAILim[(int)cAllAve] : -99999));
       String retLengths = " keysXMax"+ E.keysXMax +" AIlims lengths=" + E.LAILims + " " + E.LAILims1 + " "  + E.LAILims2 + " "  +E. LAILims3  + " " +E. LAILims4  + " " +E.LAILimsC + " " + E.LAILims123 ;
-      String retLimC =  "limC" + mf2(drs[arn][iaLimCnt] );
+      String retLimC =    mf2(2,"limC",drs[arn][iaLimCnt] );
       String retLimTests = l1V + "D"+ l11Valv + "<=" + " lx1N:" + lX1 + "C" + ch1 + ":X" + l1ValIx + "L" + laiLim1 + ":V" + l1Valv + "<=" + lu1Valv + "::" + l2V + "D" + l12Valv + "<=" + " lX2N:" + lX2 + "C" + ch2 + ":X" + l2ValIx + "L" + laiLim2 + ":V" + l2Valv + ":" + mf2(llX2) + "<=" + lu2Valv  ;
        String retFlags =  "Y" + year + "AG" + curEconAge + "lL" + laiLim + " stE" + st.cntInit + " EME" + cntInit +(printDeb ? " ++printDeb" : " --printDeb") + (p2 ? " ++p2" : " --p2") + " aKey=" + aKey;
-      if(pr1 || true ){System.out.println("---DCNTA3---setCntDrCnt=" + setCntSee++ + curEconName + ret0 + retWhat+ retLimC + retLimTests + retLengths + retFlags);}
+      if(pr1 || true ){System.out.println("---DCNTA3---setCntDrCnt=" + setCntSee++ + curEconName + ret0 + retWhat + "\n"  + retPX1+ retPXa+ retPXb + xMs+ retLimC + retLimTests + "\n" + retLengths + retFlags);}
       /*  int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
     int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix lim1 in myAILim1
     double l1Vald = myAILim1[l1ValIx]; // double value of lim1
@@ -4174,12 +4287,12 @@ onceAgain:
        // bVal = (myAILim[best2] * drs[arn][best2+strtIas]
 
        //       retLimCnts += " bestX:" + sBestX +"f" + fRange + "t" + tRange + "V" + bValV;
-        if (p2) {
+        if (true) {
           retRow = " rowN";
            doComma = false;nzCnt=0;nzMax=7;
            // do rowN out rCnt = 0; rCnt < rMax && nzCnt < nzMax; rCnt++
            bCnt=0;bsum=0;bVal=0;bc=0;rCnt=0;
-           bStrt = mostIaN;
+           bStrt = (fRange+ tRange - rMax)/2;// rMax/2 less than the middle
           for (ia = fRange; ia <= tRange && nzCnt < nzMax; ia++) {
             // see value Ix, entryCnt at that value, value at that value Ix
             ix = ia-strtIas;
@@ -4208,7 +4321,7 @@ onceAgain:
           retRow = "";
         }
         if (true || (pr1  && E.DebugSetCntArOut)){
-          System.out.println("---dCAP4---setCntDr Cnt=" + setCntSee + curEconName + ret0 + retWhat+ retLimC + retLimTests + retFlags + "\n" + retLimCnts + retBesta  + retRow);
+          System.out.println("---dCAP4---setCntDr Cnt=" + setCntSee + curEconName + ret0 + retWhat + "\n" + retPX1+ retPXa+ retPXb + retLimC + retLimTests + retFlags + "\n" + retLimCnts + retBesta  + retRow);
         }
         // skip retBestb
         seeArrays[arn] = ret0 + retWhat + retCall + retLimC  + retLimCnts + retBesta + retRow ;
@@ -6412,16 +6525,19 @@ onceAgain:
   static int e4 = -1;
   static final int SCORE = ++e4;
   static final int SCORE2 = ++e4;
-  static final int ESCORE = ++e4; // for econ score
-   static final int RELESCORE = ++e4; // for econ score
-  static final int RELSCORE = ++e4;
-  static final int WINNERYEARS = ++e4;
   static final int STARTWORTH = ++e4;
   static final int LIVEWORTH = ++e4;
-  static final int RCSGWORTH = ++e4; //
+
+  static final int DIED = ++e4;
+  static final int RELSCORE = ++e4;
+  static final int WINNERYEARS = ++e4;
+  static final int ESCORE = ++e4; // for econ score
+  static final int RELESCORE = ++e4; // for econ score
+   static final int RCSGWORTH = ++e4; //
   static final int KNOWLEDGEW = ++e4; //
   static final int TradeLastStrategicValue = ++e4;
   static final int TradeLastStrategicGoal = ++e4;
+
   /*
 
   static final int NEWKW = ++e4; //
@@ -6463,7 +6579,7 @@ onceAgain:
   static final int ISSOS1 = ++e4;
   static final int ISSOS2 = ++e4;
   static final int ISSOS3 = ++e4;
-  static final int DIED = ++e4;
+
   static final int WORTHIFRAC = ++e4;
   static final int RGROWTH1 = ++e4;
   static final int RGROWTH2 = ++e4;
@@ -6949,7 +7065,7 @@ onceAgain:
    doRes(TRADESTRATGOAL, "Strat Goal", "Trade strategic goal last received/given goal", 1, 2, 0, LIST0 | CUR | CUM | BOTH | SKIPUNSET, 0, 0, 0L);
    doRes(TRADESTRATLASTGAVE, "trade Given%", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST15 | CURAVE | CUM | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
-    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 | CURUNITS | CUMUNITS | BOTH, 0, 0, 0);
+    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3,  LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 |  CUMUNITS | BOTH, LIST13 | LIST14 | CURUNITS | BOTH,  LIST0 |  CUMUNITS | BOTH, 0);
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);

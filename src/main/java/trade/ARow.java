@@ -49,6 +49,7 @@ public class ARow {
   volatile int savCnt = -10;
   private EM eM = EM.eM;
   private E eE = EM.eE;
+  static final Integer lock=0;
   // the following initizlized by the constructor
   Econ ec;
   private Assets as;
