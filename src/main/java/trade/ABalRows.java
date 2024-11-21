@@ -153,7 +153,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * constructor assuming 15 ARows, balance, History.informationMajor8,bals
+   * constructor assuming BALSLENGTH ARows, balance, History.informationMajor8, "bals"
    *
    */
   ABalRows(Econ ec) {
@@ -194,7 +194,7 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * copy the values from 4 rows starting at b to rows starting at c
+   * copy the values ref from 4 rows starting at b to rows starting at c
    *
    * @param b bias of source rows
    * @param c bias of destination rows
@@ -335,7 +335,7 @@ public class ABalRows extends A6Rowa {
   public void set2(int bias, A2Row b) {
     for (int rowIx : I01) {
       for (int secIx : E.ASECS) {
-        A[rowIx + bias].values[secIx] = b.A[rowIx].values[secIx];
+        A[rowIx + bias].set(secIx, b.A[rowIx].values[secIx]);
       }
     }
   }
@@ -361,12 +361,12 @@ public class ABalRows extends A6Rowa {
    * set 4 rows in ABalRows from an A6Row 2-5 starting at bias
    *
    * @param bias index of the start of rows in an ABalRows
-   * @param b A10 row add respective SubAssets for each bias+rowIx
+   * @param b A6Rows row ix set value SubAssets for each bias+rowIx
    */
   public void set4(int bias, A6Row b) {
     for (int subIx : I03) {
       for (int secIx : E.ASECS) {
-        A[subIx + bias].values[secIx] = b.A[2 + subIx].values[secIx];
+        A[subIx + bias].values[secIx] = 0. +  b.A[2 + subIx].values[secIx]; //copy value not ref of value
         //A[subIx + bias].add(secIx, b.A[sumIx * 4 + 2 + subIx].get(secIx));
       }
     }
@@ -439,7 +439,7 @@ public class ABalRows extends A6Rowa {
    */
   public void set1(int bias, int ix, A6Row b) {
     for (int secIx : E.ASECS) {
-      A[ix + bias].values[secIx] = b.A[2 + ix].values[secIx];
+      A[ix + bias].set(secIx, b.A[2 + ix].values[secIx]);
     }
   }
 
@@ -454,7 +454,8 @@ public class ABalRows extends A6Rowa {
   public void set1(int bias, int ix, A10Row b) {
 
     for (int secIx : E.ASECS) {
-      A[ix + bias].values[secIx] = b.A[2 + ix].values[secIx] + b.A[6 + ix].values[secIx];
+     // A[ix + bias].values[secIx] = b.A[2 + ix].values[secIx] + b.A[6 + ix].values[secIx];
+      A[ix + bias].set(secIx,b.A[2 + ix].values[secIx] + b.A[6 + ix].values[secIx]);
     }
   }
 
@@ -467,13 +468,12 @@ public class ABalRows extends A6Rowa {
    */
   public void set1(int bias, int ix, ARow b) {
     for (int secIx : E.ASECS) {
-      A[ix + bias].values[secIx]
-              = b.values[secIx];
+      A[ix + bias].set(secIx , b.values[secIx]);
     }
   }
 
   /**
-   * set the A[bias] to the reference for the ARow
+   * for A[bias] use the reference for the ARow
    *
    * @param bias the bias to the row in this
    * @param b the ARow reference to be set into this.A[bias]

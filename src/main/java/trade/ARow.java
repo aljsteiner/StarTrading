@@ -215,7 +215,7 @@ public class ARow {
       return doubleTrouble(values[ix]);
     }
     else {
-      return values[ix];
+      return values[ix] + 0.; // force return value not ref
     }
   }
 
@@ -314,10 +314,10 @@ public class ARow {
     }
     setCnt++;
     if (E.debugDouble) {
-      values[ix] = ec.doubleTrouble(val, " ix=" + ix);
+      values[ix] = 0. + ec.doubleTrouble(val, " ix=" + ix);
     }
     else {
-      values[ix] = val;
+      values[ix] = 0. + val; //save value not ref
     }
     return val;
   }

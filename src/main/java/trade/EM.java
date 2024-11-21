@@ -876,25 +876,30 @@ class EM {
    */
   static String andWaiting() {
     String rtn = "";
- // list from earliest to latest
-    for (int ii = Econ.ixImWaitingList+1; ii < Econ.lImWaitingList; ii++) {
+ // list last to oldest
+ synchronized (ARow.lock){
+    for (int ii = Econ.ixImWaitingList; ii >=0; ii--) {
       rtn += Econ.imWaitingList[ii] == null || Econ.imWaitingList[ii].isEmpty() ? "" : " :" + Econ.imWaitingList[ii] + "\n";
     }
-    for(int ii=0;ii < Econ.ixImWaitingList+1;ii++){
+    // top down to one before the index
+    for(int ii=Econ.lImWaitingList-1;ii >Econ.ixImWaitingList;ii--){
       rtn += Econ.imWaitingList[ii] == null || Econ.imWaitingList[ii].isEmpty() ? "" : " :" + Econ.imWaitingList[ii] + "\n";
     }
+ }
     return rtn;
   }
 
    static String andKeyList() {
     String rtn = "";
- // list from earliest to latest
-    for (int ii = Econ.ixKeyList+1; ii < Econ.lKeyList; ii++) {
+ // list last to oldest
+ synchronized (A6Row.lock){
+    for (int ii = Econ.ixKeyList; ii >=0 ; ii--) {
       rtn += Econ.keyList[ii] == null || Econ.keyList[ii].isEmpty() ? "" : " :" + Econ.keyList[ii] + "\n";
     }
-    for(int ii=0;ii < Econ.lKeyList+1;ii++){
+    for(int ii=Econ.lKeyList-1;ii > Econ.ixKeyList;ii--){
       rtn += Econ.keyList[ii] == null || Econ.keyList[ii].isEmpty() ? "" : " :" + Econ.keyList[ii] + "\n";
     }
+ }
     return rtn;
   }
   /**
@@ -3578,8 +3583,8 @@ onceAgain:
                 myVal[E.aValCnts] = s.nextInt();
                 myVal[E.aValAge] = s.nextInt();
                 myVal[E.aValYear] = s.nextInt();
-                // now age the last time this key was updated
-                myVal[E.aValYear] = myVal[E.aValYear] > -500 ? myVal[E.aValYear] - 50 : myVal[E.aValYear];
+                // now age the last time this key was updated unless < -290
+                myVal[E.aValYear] = myVal[E.aValYear] > -290 ? myVal[E.aValYear] - 50- (int)(myVal[E.aValYear]>100? myVal[E.aValYear] /2 : 0) : myVal[E.aValYear];
                 myVal[E.aValPClan] = s.nextInt();
                 myVal[E.aValIxMyScore] = s.nextInt();
                 rtn++;
@@ -3697,7 +3702,7 @@ onceAgain:
               }
 
               // remove and don't write keys of little value
-              if (mSize > 6000 && rKeysIx < mostRKeys && ((EM.year - aVal[E.aValYear]) > 25) && aVal[E.aValCnts] < 4) {
+              if (mSize > 10000 && rKeysIx < mostRKeys && ((EM.year - aVal[E.aValYear]) > 25) && aVal[E.aValCnts] < 4) {
                 System.err.println("----DWMr1--- save remove key=" + aKey + " :" + aVal[E.aValCnts] + " Y" + aVal[E.aValYear] + " age" + (EM.year - aVal[E.aValYear]));
                 lremove++;
                 rKeys[rKeysIx++] = aKey;
@@ -3713,6 +3718,7 @@ onceAgain:
 
           for (int keysIx = 0; keysIx < rKeysIx; keysIx++) {
             aKey = rKeys[keysIx];
+            myAIlearnings.remove(aKey);
             System.err.println("----DWMr2--- remove key" + keysIx + " : " + aKey);
           }
           if (bMapFw != null) {
