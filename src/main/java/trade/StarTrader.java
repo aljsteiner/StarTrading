@@ -52,6 +52,7 @@ import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 import java.util.TreeMap;
@@ -67,6 +68,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import static trade.EM.mapInitSize;
+import static trade.EM.mapLoadFactor;
+import static trade.EM.myAIlearnings;
 
 /**
  * see if these imports stay here // import
@@ -8726,6 +8730,8 @@ public class StarTrader extends javax.swing.JFrame {
       testing = true; // flag in testing mode
       st.setVisible(true);
       bbtime = new Date().getTime();
+      //When testing throw away any existing map entries
+      myAIlearnings = new HashMap(mapInitSize,mapLoadFactor);
       Runnable tests1 = new Runnable() {
         public void run() {  //tests1.run
           try {

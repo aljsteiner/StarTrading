@@ -11,6 +11,13 @@
       <maven.compiler.target>1.8</maven.compiler.target>
       <java.version>8</java.version>
       <junit-jupiter.version>5.5.2</junit-jupiter.version>
+
+      <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs} -Klint</exec.args>
+      <exec.executable>java</exec.executable>
+      <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
+      <exec.appArgs>"none"</exec.appArgs>
+      <exec.mainClass>trade.StarTrader</exec.mainClass>
+
     </properties>
     <reporting>
       <plugins>
@@ -40,7 +47,6 @@
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
         <version>5.5.2</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
 
@@ -54,7 +60,7 @@
           <version>3.0.0-M3</version>
           <configuration>
             <includes>
-              <include>**/*Test*.java</include>
+              <include>**/*Tess*.java</include>
             </includes>
           </configuration>
         </plugin>
@@ -72,7 +78,8 @@
               <configuration>
                 <skipTests>false</skipTests>
                 <includes>
-                  <include>**/StarTraderTestIT.java</include>
+                  <include>**/StarTraderTess.java</include>
+                  <include>**/StarTraderTessIT.java</include>
                 </includes>
               </configuration>
             </execution>

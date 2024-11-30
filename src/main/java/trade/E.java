@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This is an extension of the StarTrader main class. It contains data for
@@ -109,7 +110,7 @@ public class E {
   static final boolean debugCheckBalances = debugMaster && outputFewer; //check balances in loops
   static final boolean debugEconCnt = debugMaster && outputFewer; // econCnt = porsCnt0 + porsCnt1
   static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt
-  static final boolean debugNegGrowth = debugMaster; // neg Growth made negCosts
+  static final boolean debugNegGrowth = false; // just fix neg Growth made negCosts
   static final boolean debugEfficiency = debugMaster; // efficiency has double trouble
   static final boolean debugEfficiencyOut = debugMaster && outputFewer; // efficiency has double trouble
   static final boolean debugNegCosts = debugMaster; // checking for neg Costs

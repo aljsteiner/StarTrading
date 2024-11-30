@@ -27,7 +27,7 @@ package trade;
  * during each year process by mulling the CashFlow, SubAsset and Trqde
  * subClasse. The essential ARow's are kept and organized in ABalRows. Many of
  * the processes in A6Row class also appear in a similar for here. There are a
- * number of naming conventions: "setRef..." implies that ARow references are
+ * number of naming conventions: "useRef..." implies that ARow references are
  * preserved "set..." implies new reference but the values are saved "use..."
  * implies using ABalRow ARow instances in a new A6Row or A10Row
  *
@@ -64,34 +64,34 @@ public class ABalRows extends A6Rowa {
   static final int MCOSTSIX = balz += 1; // space for NewKnowledge
   static final int TCOSTSIX = balz += LSUBS;  //10
   static final int GROWTHSIX = balz += LSUBS; //
-
   static final int PREVGROWTHSIX = balz += LSUBS; //
   static final int PREVWORTHSIX = balz += LSUBS; //
   static final int GROWTHWORTHSIX = balz += LSUBS; //
   static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
   static final int INITIALASSETSWORTHSIX = balz += LSUBS; //16  WORTH VALUES
-  static final int BONUSWHORTHIX = balz += LSUBS; //16 L4
-  static final int BONUSYEARSIX = balz += LSUBS; //16 L4
+  static final int CUMULATIVEBONUSWHORTHIX = balz += LSUBS; //limited bonus worth increase
+  static final int BONUSYEARSIX = balz += LSUBS; //16 L4 years bonus wor
   static final int BONUSUNITSIX = balz += LSUBS;//24 L4
   static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
-  static final int CUMBONUSWORTHIX = balz += LSUBS;//32 L4
-  static final int CUMUNITBONUSIX = balz += LSUBS;//32 L4
+  //static final int CUMULATIVEBONUSIX = balz += LSUBS;//32 L4
+  static final int CUMULATIVEUNITBONUSIX = balz += LSUBS;//32 L4 bonus applied to growth
+  static final int UNITDEPRECIATIONREDUCTIONIX = balz += 2;// r,s only not c,q
   static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS;
-  static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
-  static final int CUMULATIVEUNITDEPRECIATION3IX = balz += LSUBS; //
-  static final int SURPLUSCUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; //
-  static final int SURPLUSCUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
+ // static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
+  //static final int CUMULATIVEUNITDEPRECIATION3IX = balz += LSUBS; //
+  static final int SURPLUSCUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; // removed too much
+  //static final int SURPLUSCUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
+  static final int NEWUNITDEPRECIATIONIX = balz += LSUBS; //year depreciation from prevgrowth
+ // static final int NEWUNITDEPRECIATION2IX = balz += LSUBS; //
+ // static final int NEWUNITDEPRECIATION3IX = balz += LSUBS; //
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTYEARENDNULLIX = balz + LSUBS; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
   // the following rows can be nulled after yearEnd. but kept between yearStart and yearEnd
-  static final int YEARLYBONUSSUMGROWTHFRACIX = balz += LSUBS; //aStartCashFlow zero fills
+  static final int YEARLYBONUSSUMGROWTHVALIX = balz += LSUBS; //aStartCashFlow zero fills
   static final int INVMEFFICIENCYIX = balz += LSUBS;
   static final int INVGEFFICIENCYIX = balz += LSUBS;
   static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth
-  static final int NEWUNITDEPRECIATIONIX = balz += LSUBS; //
-  static final int NEWUNITDEPRECIATION2IX = balz += LSUBS; //
-  static final int NEWUNITDEPRECIATION3IX = balz += LSUBS; //
   static final int SWAPPEDGROWTHSIX = balz += LSUBS; //
   static final int POORHEALTHEFFECTIX = balz += LSUBS; //FIRST SEC OF ROW ONLY
   static final int POORKNOWLEDGEEFFECTIX = balz += 1; //FIRST SED OF ROW ONLY
@@ -99,8 +99,7 @@ public class ABalRows extends A6Rowa {
   static final int MTGCOSTSWORTHSIX = balz += LSUBS; //
   static final int COSTWORTHSIX = balz += LSUBS; //
   static final int MTGCOSTSIX = balz = balz += LSUBS; //
-
-  static final int STARTCURENDNULLIX = balz + LSUBS; // Assets.CashFlow null cur zeros up to BALSLENGTH
+  static final int STARTCURENDNULLIX = balz + LSUBS; // Assets.CashFlow null  up to BALSLENGTH
   static final int TRADEDGROWTHSIX = balz += LSUBS; //
   static final int MTCOSTS2IX = balz += LSUBS; //
   static final int MTECCOSTS2IX = balz += 2; //
@@ -116,10 +115,10 @@ public class ABalRows extends A6Rowa {
   static final int FERTILITYGROWTHCOSTSIX = balz += LSUBS; //
   static final int GROWTHCOSTSIX = FERTILITYGROWTHCOSTSIX; //
   static final int GROWTHCOSTSYIX = balz += LSUBS; //
-  static final int GROWTHCOSTSYYIX = balz += LSUBS; //
+  static final int GROWTHCOSTSYYIX = balz += LSUBS; // a later calculation
   static final int STARETYEARWORTHSIX = balz += LSUBS; // WORTH VALUES
-  static final int GROWTHS1IX = balz += LSUBS; //
-  static final int GROWTHS2IX = balz += LSUBS; //
+ static final int GROWTHS1IX = balz += LSUBS; //represent succesive values calculating growth
+static final int GROWTHS2IX = balz += LSUBS; //
   static final int GROWTHS3IX = balz += LSUBS; //
   static final int GROWTHS4IX = balz += LSUBS; //
   static final int GROWTHS5IX = balz += LSUBS; //
@@ -130,8 +129,8 @@ public class ABalRows extends A6Rowa {
   static final int BALSLENGTH = balz += 2; //
   static int balancesSums[] = {BALANCESIX + RCIX, BALANCESIX + SGIX};
   static int balancesSubSum1[] = {BALANCESIX + RIX, BALANCESIX + CIX};
-  static int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
-  static int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
+ // static int balancesSubSum2[] = {BALANCESIX + SIX, BALANCESIX + GIX};
+//  static int balancesSubSums[][] = {balancesSubSum1, balancesSubSum2};
   // end of index values for bals
   static final String[] titls = {" bals rc ", " bals sg ", " bals r ", " bals c ", " bals s", " bals g "};
 
@@ -359,6 +358,7 @@ public class ABalRows extends A6Rowa {
 
   /**
    * set 4 rows in ABalRows from an A6Row 2-5 starting at bias
+   * do not copy ref
    *
    * @param bias index of the start of rows in an ABalRows
    * @param b A6Rows row ix set value SubAssets for each bias+rowIx
@@ -366,20 +366,21 @@ public class ABalRows extends A6Rowa {
   public void set4(int bias, A6Row b) {
     for (int subIx : I03) {
       for (int secIx : E.ASECS) {
-        A[subIx + bias].values[secIx] = 0. +  b.A[2 + subIx].values[secIx]; //copy value not ref of value
+        A[subIx + bias].set(secIx,b.A[2 + subIx].values[secIx]); //copy value not ref of value
         //A[subIx + bias].add(secIx, b.A[sumIx * 4 + 2 + subIx].get(secIx));
       }
     }
   }
 
   /**
-   * set references to bals this starting at row bias to rows 2-5 of an A6
+   * set references to bals this starting at row bias from rows 2-5 of an A6
+   * use useRef4
    *
    * @param bias
    * @param a an A6
    *
    */
-  void setRef(int bias, A6Row a) {
+  void use4Refnot(int bias, A6Row a) {
     A[bias] = a.A[2];
     A[bias + 1] = a.A[3];
     A[bias + 2] = a.A[4];
@@ -418,12 +419,12 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * set the references from A6Row 2-5 into ABalRows[bias+0-3]
+   * use the references from A6Row 2-5 into ABalRows[bias+0-3]
    *
    * @param bias index into the start of rows in ABalRows
    * @param b A6Row from which which reference for row2-5 are moved
    */
-  public void setRef4(int bias, A6Row b) {
+  public void useRef4(int bias, A6Row b) {
     for (int rowIx : A03) {
       A[bias + rowIx] = b.A[2 + rowIx];
     }
@@ -461,6 +462,7 @@ public class ABalRows extends A6Rowa {
 
   /**
    * set values of a row bias+ix in ABalRows from an ARow
+   * does not copy the ref
    *
    * @param bias index of the start of rows in an ABalRows
    * @param ix an index added to bias
@@ -478,7 +480,7 @@ public class ABalRows extends A6Rowa {
    * @param bias the bias to the row in this
    * @param b the ARow reference to be set into this.A[bias]
    */
-  public void setRef(int bias, ARow b) {
+  public void useRef(int bias, ARow b) {
     A[bias] = b;
   }
 
@@ -548,12 +550,12 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * put 1 row of values from rows biasA to biasB
+   * copy 1 row of values from rows biasA to biasB
    *
    * @param biasA the index of the row of the sources
    * @param biasB the index of the row of targets
    */
-  void put1AtoB(int biasA, int biasB) {
+  void copy1AtoB(int biasA, int biasB) {
     for (int secIx : E.ASECS) {
       // A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
       A[biasB].values[secIx] = A[biasA].values[secIx];
@@ -753,12 +755,12 @@ public class ABalRows extends A6Rowa {
   }
 
   /**
-   * Trim each sector in A by max and move any surplus above max in A to B
+   * Trim each sector in row A+rowIx by max and move any surplus above max in A to B+rowIx
    *
    * @param max the max values for all sectors
-   * @param rowIx the index of which SubAsset row in each bias
+   * @param rowIx the index(0-3) of which SubAsset row with each bias
    * @param biasA The start of a 4row set of rows to be trimed to max
-   * @param biasB the start of a 4row set of ARows of surplussed   * A
+   * @param biasB the surplus at the start of a 4row set of ARows of surplussed   * A
    */
   void moveMaxSurplusWithIxA4ToB(double max, int rowIx, int biasA, int biasB) {
     for (int secIx : E.ASECS) {

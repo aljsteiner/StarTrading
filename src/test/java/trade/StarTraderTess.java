@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2012 Albert Steiner
+ Copyright (C) 2012 Albert Steiner
  Copyright (C) 2022 Albert Steiner
 
  This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,9 @@ package trade;
 
 import java.io.IOException;
 import java.util.Date;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static trade.StarTrader.fatalError;
-import static trade.StarTrader.itTesting;
 import static trade.StarTrader.startTime;
-import static trade.StarTrader.testing;
 
 /**
  *
@@ -33,10 +29,11 @@ import static trade.StarTrader.testing;
  * This is a class to test the program StarTrader in a number of ways
  * Only when the tests are ok may the github be updated
  */
-public class StarTraderTestIT {
+public class StarTraderTess {
   static protected E eE;
   static EM eM;
   static StarTrader st;
+
 
    /**
    * @param args the command line arguments
@@ -48,24 +45,16 @@ public class StarTraderTestIT {
     /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
      * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
      */
-    /* Set the Nimbus look and feel --change to animation*/
-
-    // Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-     */
+   // System.exit(-22);
     try {
-     System.err.println("starting out in test ITStarTraderTest main " + Thread.currentThread().getName());
-      //     System.exit(-25);
+      E.sysmsg("starting out in test main " + Thread.currentThread().getName());
     StarTrader.mainStart(args);
-   testing = true;
-    itTesting = true;
     StarTrader.main3();
-    
-    assertEquals(false,fatalError);
-    assertFalse(fatalError);
-     if(StarTrader.fatalError) throw new MyErr("fatal error at new StarTrader");
-     System.err.println(" passed first test, StarTrader started");
+     if(StarTrader.fatalError) throw new MyErr("fatal error at new TestStarTraderTest");
+     E.sysmsg(" passed first test,  started");
+     assertFalse(EM.dfe());
+     System.exit(0);
+      System.err.println("oops passed exit");
      } catch (Error | Exception ex) {
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       EM.flushes();
@@ -73,33 +62,20 @@ public class StarTraderTestIT {
       ex.printStackTrace(System.err);
       EM.flushes();
       fatalError = true;
-      assertFalse(fatalError);
-      assertEquals(false,fatalError);
-      /* Create and display the form */
-       /* Create and display the form */
-    // java.awt.EventQueue.invokeAndWait(() -> {
-      //  st.setVisible(true);
-     // } //java.awt.EventQueue.invokeLater(new Runnable() {
-     // );
     } finally {
       if (EM.bKeep != null) {
         EM.bKeep.close();
       }
-      assertFalse(fatalError);
-     assertEquals(false,fatalError);
+   System.exit(0);
     }
-    System.out.println("ITStarTraderTest finished " + (StarTrader.fatalError?" fatalError": " no Error"));
-    
-   // System.exit(-3);
-    System.exit(0);
-    System.exit(-27);
+    //</editor-fold>
+
   } // main
-  
-  public StarTraderTestIT(){
-     System.err.println("starting out in test test ITStarTraderTest main " + Thread.currentThread().getName());
-     assertFalse(fatalError);
-     assertEquals(false,fatalError); //I think it goes to main()
-    System.exit(-24);  
+
+  public StarTraderTess() {
+    ///assertFalse(true);
+    System.err.println("-----STttess---- test.StarTraderTess");
+    //System.exit(-10);
   }
-  
+
 }

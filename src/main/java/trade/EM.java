@@ -116,6 +116,8 @@ class EM {
   static volatile int ixPS = 0; //for P or S
   static volatile int ixClan = 0;
   static volatile int ixC2 = 0;
+  static final int mapInitSize=7000;
+  static final float mapLoadFactor= .80f;
 
   /**
    * synchronize the adding of an entry to the statsWaitList avoid an error
@@ -2384,6 +2386,7 @@ class EM {
   static final double[][] mfracBiasInGrowth = {{.1, .3}, {.1, .3}};
   static final double[][] mfracPriorityInGrowth = {{.3, .7}, {.3, .7}};  //mult priority in growth calc and percent to frac
   static double maxFracBonusGrowth[] = {1.5, 1.5}; // limit size of bonus growth so rawUnitGrow - depreciation + bonus growth is less than assetsUnitGrowth * maxFracGonusGrowth
+  static double maxFracUnitGrowth[] = {1.5, 1.5}; // limit size of unit growth so rawUnitGrow - depreciation + bonus growth is less than assetsUnitGrowth * maxFracUnitGrowth
   static final double[][] mMaxFracBonusGrowth = {{.5, 2.5}, {.5, 2.5}};
   static double[][] clanFutureFundEmerg2 = {{.15, .15, .15, .15, .15}, {.15, .15, .15, .15, .15}};
   static final double[][] mClanFutureFundEmerg = {{.01, .3}, {.01, .3}};
@@ -3565,9 +3568,9 @@ onceAgain:
 
                   if (myAIlearnings == null) {
                     if (E.debugAIOut) {
-                      System.out.println("------DRM3-----EM.doReadMapFile null TreeMap new TreeMap year=" + year);
+                      System.out.println("------DRM3-----EM.doReadMapFile null HashMap new HashMap year=" + year);
                     }
-                    myAIlearnings = new TreeMap();
+                    myAIlearnings = new HashMap(mapInitSize,mapLoadFactor);
                   }
                 }
                 else {
@@ -4167,8 +4170,8 @@ onceAgain:
       String retLengths = " keysXMax"+ E.keysXMax +" AIlims lengths=" + E.LAILims + " " + E.LAILims1 + " "  + E.LAILims2 + " "  +E. LAILims3  + " " +E. LAILims4  + " " +E.LAILimsC + " " + E.LAILims123 ;
       String retLimC =    mf2(2,"limC",drs[arn][iaLimCnt] );
       String retLimTests = l1V + "D"+ l11Valv + "<=" + " lx1N:" + lX1 + "C" + ch1 + ":X" + l1ValIx + "L" + laiLim1 + ":V" + l1Valv + "<=" + lu1Valv + "::" + l2V + "D" + l12Valv + "<=" + " lX2N:" + lX2 + "C" + ch2 + ":X" + l2ValIx + "L" + laiLim2 + ":V" + l2Valv + ":" + mf2(llX2) + "<=" + lu2Valv  ;
-       String retFlags =  "Y" + year + "AG" + curEconAge + "lL" + laiLim + " stE" + st.cntInit + " EME" + cntInit +(printDeb ? " ++printDeb" : " --printDeb") + (p2 ? " ++p2" : " --p2") + " aKey=" + aKey;
-      if(pr1 || true ){System.out.println("---DCNTA3---setCntDrCnt=" + setCntSee++ + curEconName + ret0 + retWhat + "\n"  + retPX1+ retPXa+ retPXb + xMs+ retLimC + retLimTests + "\n" + retLengths + retFlags);}
+       String retFlags =  " Y" + year + "AG" + curEconAge + "lL" + laiLim + " stE" + st.cntInit + " EME" + cntInit +(printDeb ? " ++printDeb" : " --printDeb") + (p2 ? " ++p2" : " --p2") + " aKey=" + aKey;
+      if(pr1 || true ){System.out.println("---DCNTA3---setCntDrCnt=" + setCntSee++ +" " + curEconName + ret0 + retWhat + "\n"  + retPX1+ retPXa+ retPXb + xMs+ retLimC + retLimTests + "\n" + retLengths + retFlags);}
       /*  int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
     int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix lim1 in myAILim1
     double l1Vald = myAILim1[l1ValIx]; // double value of lim1
@@ -4327,7 +4330,7 @@ onceAgain:
           retRow = "";
         }
         if (true || (pr1  && E.DebugSetCntArOut)){
-          System.out.println("---dCAP4---setCntDr Cnt=" + setCntSee + curEconName + ret0 + retWhat + "\n" + retPX1+ retPXa+ retPXb + retLimC + retLimTests + retFlags + "\n" + retLimCnts + retBesta  + retRow);
+          System.out.println("---dCAP4---setCntDr Cnt=" + setCntSee +" " + curEconName + ret0 + retWhat + "\n" + retPX1+ retPXa+ retPXb + retLimC + retLimTests + retFlags + "\n" + retLimCnts + retBesta  + retRow);
         }
         // skip retBestb
         seeArrays[arn] = ret0 + retWhat + retCall + retLimC  + retLimCnts + retBesta + retRow ;
@@ -5576,9 +5579,9 @@ onceAgain:
     try {
       if (myAIlearnings == null) {
         if (E.debugAIOut) {
-          System.out.println("------BIC1-----EM.buildAICvals null TreeMap new TreeMap year=" + year);
+          System.out.println("------BIC1-----EM.buildAICvals null HashMap new HashMap year=" + year);
         }
-        myAIlearnings = new TreeMap();
+        myAIlearnings = new HashMap(mapInitSize,mapLoadFactor);
       }
 
       // String aa = "", bb = "bb";
@@ -6559,7 +6562,7 @@ onceAgain:
   static final int RDEPRECIATIONP = ++e4;  //r depreciation
   static final int RDEPRECIATION2P = ++e4;  //r depreciation before add
   static final int RDEPRECIATION3P = ++e4;  //r max depreciation
-  static final int RSURPLUSDEPRECIATIONP = ++e4;  //r surplusdepreciation
+ // static final int RSURPLUSDEPRECIATIONP = ++e4;  //r surplusdepreciation
   static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
   static final int RNEWDEPRECIATION2P = ++e4;// RNewDepreciation2
   static final int BONUSGROWTH = ++e4;// %of raw yearly growth
@@ -7125,7 +7128,7 @@ onceAgain:
     doRes(RDEPRECIATION3P, "rMaxDepreciation3%", "MaxDepreciation in R ");
     doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation before newDepreciation added in R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(BONUSGROWTH, "%bonusGrowth", "Yearly catastrophy Growth % of rawUnitGrowth ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(RSURPLUSDEPRECIATIONP, "rSurplusDepreciation%", "surplus depreciation removed because too largein R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+ //   doRes(RSURPLUSDEPRECIATIONP, "rSurplusDepreciation%", "surplus depreciation removed because too largein R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RNEWDEPRECIATIONP, "r newDepreciation%", "new Depreciation in R as the % of unitGrowth");
 
     doRes(RNEWDEPRECIATION2P, "r newMaxDepreciation2%", "new MaxDepreciation in R as the % of unitGrowth");
@@ -8222,10 +8225,10 @@ onceAgain:
       lRes = E.bValsEnd = E.bValsStart + vvAx;//vvAx  vvend
        if (myAIlearnings == null) {
         if (E.debugAIOut) {
-          System.out.println("------DSY11-----EM.doStartYear null myAIlearnings new TreeMap year=" + year);
+          System.out.println("------DSY11-----EM.doStartYear null myAIlearnings new HashMap year=" + year);
         }
         //myAIlearnings = new HashMap(25000);
-        myAIlearnings = new TreeMap();
+        myAIlearnings = new HashMap(mapInitSize,mapLoadFactor);
       }
      
  if (false && year == 0) {

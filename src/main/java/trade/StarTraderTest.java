@@ -57,6 +57,7 @@ public class StarTraderTest {
      */
     try {
       //E.sysmsg("starting out in test main " + Thread.currentThread().getName());
+      System.err.println("----STst2--- src.StarTraderTest");
     StarTrader.mainStart(args);
     StarTrader.main3();
       if (StarTrader.fatalError) {
