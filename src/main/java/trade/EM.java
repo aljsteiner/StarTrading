@@ -7125,7 +7125,10 @@ onceAgain:
     doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
     doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
     doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(RDEPRECIATION3P, "rMaxDepreciation3%", "MaxDepreciation in R ");
+    doRes(RDEPRECIATION3P, "rMaxDepreciation30%", "MaxDepreciation0 in R ");
+    doRes(RDEPRECIATION3P + 1, "rMaxDepreciation31%", "MaxDepreciation1 in R ");
+    doRes(RDEPRECIATION3P + 2, "rMaxDepreciation32%", "MaxDepreciation2 in R ");
+    doRes(RDEPRECIATION3P + 3, "rMaxDepreciation33%", "MaxDepreciation3 in R ");
     doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation before newDepreciation added in R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(BONUSGROWTH, "%bonusGrowth", "Yearly catastrophy Growth % of rawUnitGrowth ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
  //   doRes(RSURPLUSDEPRECIATIONP, "rSurplusDepreciation%", "surplus depreciation removed because too largein R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);

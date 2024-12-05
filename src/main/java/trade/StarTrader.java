@@ -7330,8 +7330,8 @@ public class StarTrader extends javax.swing.JFrame {
       int rNAlsoTraded = EM.TRADEALSOLASTGAVE;
       int rNRejected = EM.TradeRejectedStrategicValue;
       int rNLost = EM.TradeLostStrategicValue;
-      int rNDepreciation = EM.RDEPRECIATIONP;// largest
-      int rNBONUSGROWTH = EM.BONUSGROWTH;
+      int rNDepreciation = EM.RDEPRECIATIONP;// cum ave
+      int rNBONUSGROWTH = EM.BONUSGROWTH;//cum ave
       int rNHlpdLow = EM.ISLOW;// largest
       int rNHlpdSos0 = EM.ISSOS0;
       int rNHlpdSos1 = EM.ISSOS1;

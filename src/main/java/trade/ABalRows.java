@@ -49,6 +49,7 @@ public class ABalRows extends A6Rowa {
   static final int LSUMS = E.lsums;
   static final int lsubs = E.lsubs;
   static final int LSUBS = E.lsubs;
+  static final int A01[] = {0, 1};
   static final int A02[] = {0, 2};
   static final int A03[] = {0, 1, 2, 3};
   static int balz = 0;
@@ -72,10 +73,11 @@ public class ABalRows extends A6Rowa {
   static final int CUMULATIVEBONUSWHORTHIX = balz += LSUBS; //limited bonus worth increase
   static final int BONUSYEARSIX = balz += LSUBS; //16 L4 years bonus wor
   static final int BONUSUNITSIX = balz += LSUBS;//24 L4
-  static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
+  //static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
   //static final int CUMULATIVEBONUSIX = balz += LSUBS;//32 L4
-  static final int CUMULATIVEUNITBONUSIX = balz += LSUBS;//32 L4 bonus applied to growth
-  static final int UNITDEPRECIATIONREDUCTIONIX = balz += 2;// r,s only not c,q
+  static final int CUMULATIVESECTORBONUSIX = balz += LSUBS;//32 L4 bonus applied to growth
+  //static final int UNITDEPRECIATIONREDUCTIONIX = balz += 2;// r,s only not c,q
+  static final int CUMULATIVEUNITREPRECIATIONIX = balz += 2;
   static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS;
  // static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
   //static final int CUMULATIVEUNITDEPRECIATION3IX = balz += LSUBS; //
@@ -86,6 +88,7 @@ public class ABalRows extends A6Rowa {
  // static final int NEWUNITDEPRECIATION3IX = balz += LSUBS; //
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
+  static final int MAXRAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTYEARENDNULLIX = balz + LSUBS; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
   // the following rows can be nulled after yearEnd. but kept between yearStart and yearEnd
   static final int YEARLYBONUSSUMGROWTHVALIX = balz += LSUBS; //aStartCashFlow zero fills
@@ -585,7 +588,7 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @param biasB dividend row
    * @return sumB * 100/sumA
    */
-  double getPercentSum4SumAofB(int biasA, int biasB) {
+  double getPercentSum4AofB(int biasA, int biasB) {
     double sumA = 0., sumB = 0.;
     for (int rowIx : A03) {
       for (int secIx : E.ASECS) {
@@ -593,9 +596,40 @@ static final int GROWTHS2IX = balz += LSUBS; //
         sumB += A[biasB + rowIx].get(secIx);
       }
     }
-    return sumB * 100. / sumA;
+    return sumA * 100. / sumB;
   }
 
+  /**
+   * Sum the 4 rows starting with bias
+   *
+   * @param bias first of 4 rows to sum
+   * @return sum of each value in the 4 rows starting at bias
+   */
+  double sum4(int bias) {
+    double sum = 0.;
+    for (int rowIx : A03) {
+      for (int secIx : E.ASECS) {
+        sum += A[bias + rowIx].get(secIx);
+      }
+    }
+    return sum;
+  }
+
+  /**
+   * Sum the 2 rows starting with bias
+   *
+   * @param bias first of 2 rows to sum
+   * @return sum of each value in the 4 rows starting at bias
+   */
+  double sum2(int bias) {
+    double sum = 0.;
+    for (int rowIx : A03) {
+      for (int secIx : E.ASECS) {
+        sum += A[bias + rowIx].get(secIx);
+      }
+    }
+    return sum;
+  }
   /**
    * zero m & t costs internally
    *
