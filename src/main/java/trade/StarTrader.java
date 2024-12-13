@@ -5272,9 +5272,9 @@ public class StarTrader extends javax.swing.JFrame {
     EM.flushes();
     EM.flushes();
     if (hadFatalError) {
-      //System.exit(-19);
+      System.exit(-19);
     }
-    //System.exit(-18); be able to see the error
+      System.exit(-18);// be able to see the error
     EM.flushes();
     // throw new WasFatalError("setFatalError threw WasFatalError" + EM.lfe() + "\n" + EM.secondStack);
     //  controlPanels.setSelectedComponent(log);
@@ -5285,9 +5285,17 @@ public class StarTrader extends javax.swing.JFrame {
       eM.secondStack = eM.sw.toString();
       System.out.flush();
       System.err.flush();
-      System.err.println(eM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName() + eM.andMore()));
+      EM.tError = ("Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName());
+      System.err.println(EM.tError + EM.andMore());
       ex.printStackTrace(System.err);
-      throw new WasFatalError(eM.tError);
+      EM.flushes();
+      EM.flushes();
+      EM.flushes();
+      EM.flushes();
+      EM.flushes();
+      System.exit(-27);
+
+      //  throw new WasFatalError(eM.tError);
     }
   }
 
@@ -5460,7 +5468,8 @@ public class StarTrader extends javax.swing.JFrame {
       prevEconName = EM.curEconName;
       prevWasHere = EM.wasHere == null ? "no Was Here" : EM.wasHere; // move the reference
       stateCnt = 0;
-      if (E.debugThreadsOut && (stateConstA != stateConst || prevState != stateConst) && (stateConstA == CREATING || stateConstA == STATS || stateConstA == TRADING || prevState == RUNSDONE || stateConst == STATS || stateConst == RUNSDONE || prevState == STATS)) {
+      // if (E.debugThreadsOut && (stateConstA != stateConst || prevState != stateConst) && (stateConstA == CREATING || stateConstA == STATS || stateConstA == TRADING || prevState == RUNSDONE || stateConst == STATS || stateConst == RUNSDONE || prevState == STATS)) {
+      if (E.debugThreadsOut && (stateConstA == RUNSDONE)) {
         System.out.println(EM.wasHere5 + EM.threadsStacks());
       }
       pprevState = prevState;
@@ -7164,16 +7173,6 @@ public class StarTrader extends javax.swing.JFrame {
       EM.wasHere = "at end of doYear try";
 
     } // try
-    catch (WasFatalError ex) {
-      ex.printStackTrace(EM.pw);
-      EM.thirdStack = EM.sw.toString();
-      EM.flushes();
-      System.err.println("do Year aWasFatalError=" + ex.toString() + " " + since() + " " + EM.curEconName + " " + Econ.nowThread + EM.andMore());
-      EM.flushes();
-      //System.exit(-21);
-      //ex.printStackTrace(System.err);
-      // go to finally
-    }
     catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";
       ex.printStackTrace(EM.pw);
@@ -7181,12 +7180,13 @@ public class StarTrader extends javax.swing.JFrame {
       ex.printStackTrace(System.err);
       EM.newError = true;
       EM.flushes();
-      System.err.println(EM.tError = ("-----BBB----doYear bException=" + ex.toString() + " " + since() + " " + EM.curEconName + " " + Econ.nowThread + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
-      // ex.printStackTrace(System.err);
+      EM.tError = ("-----BBB----doYear bException=" + ex.toString() + " " + since() + " " + EM.curEconName + " " + Econ.nowThread + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage());
+      System.err.println( EM.tError + " " + EM.andMore());
       EM.flushes();
       //System.exit(-25);
       setFatalError();
-      throw new WasFatalError(EM.tError);
+      // throw new WasFatalError(EM.tError);
+      return;
     }
     finally {
       setEconState(RUNSDONE);
@@ -8750,6 +8750,7 @@ public class StarTrader extends javax.swing.JFrame {
                 assert cntr1 < 11 : "stuck round1 " + stateStringNames[stateConst] + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + "  at cntr1=" + cntr1;
                 if (E.noAsserts && cntr1 > 10) {
                   eM.doMyErr("stuck at cntr1 > 10");
+                  return;
                 }
                 Thread.sleep(500);  // one second
               } // while
@@ -8768,6 +8769,7 @@ public class StarTrader extends javax.swing.JFrame {
                 assert cntr1 < 81 : " stuck at wait round3 cntr1=" + cntr1;
                 if (E.noAsserts && cntr1 > 40) {
                   eM.doMyErr("stuck at cntr > 40");
+                  return;
                 }
                 Thread.sleep(1000);
               }
@@ -8789,6 +8791,7 @@ public class StarTrader extends javax.swing.JFrame {
                   assert cntr1 < 81 : " stuck waiting in round5 " + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + " cntr1=" + cntr1;
                   if (E.noAsserts && cntr1 > 80) {
                     eM.doMyErr(" stuck waiting in round5 " + ", times" + EM.since(bbtime) + ":" + EM.since(ttime) + ":" + EM.since(startTime) + EM.mem() + " cntr1=" + cntr1);
+                    return;
                   }
                   Thread.sleep(1000);  //1 sec
                 }
@@ -8857,12 +8860,13 @@ public class StarTrader extends javax.swing.JFrame {
             ex.printStackTrace(EM.pw);
             EM.secondStack = EM.sw.toString();
             EM.newError = true;
-            System.err.println(EM.tError = ("Main3 test1 Error " + ex.toString() + " " + EM.curEconName + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
+            EM.tError = ("Main3 test1 Error " + ex.toString() + " " + EM.curEconName + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage());
+            System.err.println(EM.tError + " " + EM.andMore());
             // ex.printStackTrace(System.err);
             eM.flushes();
             eM.flushes();
             st.setFatalError();
-            throw new WasFatalError(EM.tError);
+            //throw new WasFatalError(EM.tError);
           }
         } //tests1.run
       }; // end tests1
@@ -8883,6 +8887,7 @@ public class StarTrader extends javax.swing.JFrame {
         EM.wasHere8 = "--rnda lcnt=" + (90 - cntra) + " rtime" + EM.since(rtime) + EM.mem();
         if (E.noAsserts && cntr1 > 40) {
           eM.doMyErr("stuck at cntr > 40");
+          return;
         }
         Thread.sleep(4000);
       }
@@ -9060,7 +9065,8 @@ public class StarTrader extends javax.swing.JFrame {
       EM.firstStack = EM.secondStack + "";
       EM.newError = true;
       java.util.logging.Logger.getLogger(StarTrader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-      System.err.println(EM.tError = ("Main3 Error " + ex.toString() + " " + EM.curEconName + EM.mem() + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage() + " " + EM.andMore()));
+      EM.tError = ("Main3 Error " + ex.toString() + " " + EM.curEconName + EM.mem() + " " + Thread.currentThread().getName() + ", cause=" + ex.getCause() + ",  message=" + ex.getMessage());
+      System.err.println(EM.tError + " " + EM.andMore());
       // ex.printStackTrace(System.err);
       eM.flushes();
       st.setFatalError();

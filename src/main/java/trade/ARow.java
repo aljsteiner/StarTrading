@@ -520,6 +520,30 @@ public class ARow {
   }
 
   /**
+   * set ARow to A, copying A values
+   *
+   * @param A ARow to doubleTrouble copy into the calling object row
+   * @param titl ignore title of the A6Rowa
+   * @return this
+   */
+  ARow set(ARow A, String titl) {
+    assert A != null : "row to set is null";
+    // E.myTest(A == null, "input to set is null");
+    double d;
+    setCnt++;
+    for (int i = 0; i < E.lsecs; i++) {
+      if (E.debugDouble) {
+        d = ec.doubleTrouble(A.get(i), " A[" + i + "] " + titl);
+      }
+      else {
+        d = A.get(i);
+      }
+      set(i, d, titl);
+    }
+    return this;
+  }
+
+  /**
    * copy ARow to ret,
    *
    * @return new array with all values copied

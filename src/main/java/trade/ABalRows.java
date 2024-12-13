@@ -66,16 +66,17 @@ public class ABalRows extends A6Rowa {
   static final int TCOSTSIX = balz += LSUBS;  //10
   static final int GROWTHSIX = balz += LSUBS; //
   static final int PREVGROWTHSIX = balz += LSUBS; //
+  static final int SECTORRAWGROWTHSIX = balz += LSUBS; //
   static final int PREVWORTHSIX = balz += LSUBS; //
   static final int GROWTHWORTHSIX = balz += LSUBS; //
   static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
   static final int INITIALASSETSWORTHSIX = balz += LSUBS; //16  WORTH VALUES
+  static final int CUMULATIVESECTORBONUSIX = balz += LSUBS;//32 L4 bonus applied to growth
   static final int CUMULATIVEBONUSWHORTHIX = balz += LSUBS; //limited bonus worth increase
   static final int BONUSYEARSIX = balz += LSUBS; //16 L4 years bonus wor
-  static final int BONUSUNITSIX = balz += LSUBS;//24 L4
+  static final int BONUSUNITSIX = balz += LSUBS;// current bonus,before limits
   //static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
   //static final int CUMULATIVEBONUSIX = balz += LSUBS;//32 L4
-  static final int CUMULATIVESECTORBONUSIX = balz += LSUBS;//32 L4 bonus applied to growth
   //static final int UNITDEPRECIATIONREDUCTIONIX = balz += 2;// r,s only not c,q
   static final int CUMULATIVEUNITREPRECIATIONIX = balz += 2;
   static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS;
@@ -87,6 +88,7 @@ public class ABalRows extends A6Rowa {
  // static final int NEWUNITDEPRECIATION2IX = balz += LSUBS; //
  // static final int NEWUNITDEPRECIATION3IX = balz += LSUBS; //
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //
+  static final int RAWPRIORITYUNITGROWTHSIX = balz += LSUBS; //
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int MAXRAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTYEARENDNULLIX = balz + LSUBS; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
@@ -170,6 +172,41 @@ static final int GROWTHS2IX = balz += LSUBS; //
   ABalRows(Econ ec, int aLev) {
     super(ec, BALSLENGTH, tbal, aLev, "bals");
   }
+  /**
+   * copy the values from ABalRows prev to this but do not change any
+   * references. This is used for swap redo and must not change the references
+   * of this
+   *
+   * @param prev new values from a HSwaps previous value
+   * @return the revised values for this with no this references changed
+   */
+  public ABalRows copyValues(ABalRows prev) {
+    int m = 0;
+    for (m = 0; m < BALSLENGTH; m++) {
+      if (A[m] != null) {
+        if (prev.A[m] == null) {
+          prev.A[m] = new ARow(ec);
+        }
+        for (int n : E.ASECS) {
+          {
+            //  A[m].set(n, prev.A[m].get(n));
+            if (prev.A[m] != null) {
+              this.A[m].values[n] = prev.A[m].values[n];
+            }
+          }
+        }
+      }
+    }// end m
+    // ABalRows always has these grades define with some values
+    for (int i = 2; i < 4; i++) {
+      for (m = 0; m < LSECS; m++) {
+        for (int n = 0; n < LGRADES; n++) {
+          this.gradesA[i][m][n] = prev.gradesA[i][m][n];
+        }
+      }
+    }// end i
+    return this;
+  }
 
   /**
    * copy first 6 rows of ABalRows object to an new A6Row object , b is a new
@@ -193,46 +230,6 @@ static final int GROWTHS2IX = balz += LSUBS; //
       }
     }
     return rtn;
-  }
-
-  /**
-   * copy the values ref from 4 rows starting at b to rows starting at c
-   *
-   * @param b bias of source rows
-   * @param c bias of destination rows
-   */
-  public void copy4BtoC(int b, int c) {
-    for (int rowIx : A03) {
-      for (int secIx : E.ASECS) {
-        this.A[c + rowIx].values[secIx] = this.A[b + rowIx].values[secIx];
-
-      }
-    }
-  }
-  /**
-   * copy the values from ABalRows prev to this but do not change any
-   * references. This is used for swap redo and must not change the references
-   * of this
-   *
-   * @param prev new values from a HSwaps previous value
-   * @return the revised values for this with no this references changed
-   */
-  public ABalRows copyValues(ABalRows prev) {
-    for (int m = 0; m < BALSLENGTH; m++) {
-      for (int n = 0; n < E.LSECS; n++) {
-        //  A[m].set(n, prev.A[m].get(n));
-        this.A[m].values[n] = prev.A[m].values[n];
-      }
-    }// end m
-    // ABalRows always has these grades define with some values
-    for (int i = 2; i < 4; i++) {
-      for (int m = 0; m < LSECS; m++) {
-        for (int n = 0; n < LGRADES; n++) {
-          this.gradesA[i][m][n] = prev.gradesA[i][m][n];
-        }
-      }
-    }// end i
-    return this;
   }
 
   /**
@@ -309,8 +306,11 @@ static final int GROWTHS2IX = balz += LSUBS; //
    */
   public void set2(int bias, A10Row b) {
     for (int rowIx : I01) {
+      if (this.A[rowIx + bias] == null) {
+        this.A[rowIx + bias] = new ARow(ec);
+      }
       for (int secIx : E.ASECS) {
-        A[rowIx + bias].set(secIx, b.A[rowIx].get(secIx));
+        this.A[rowIx + bias].set(secIx, b.A[rowIx].get(secIx));
       }
     }
   }
@@ -336,8 +336,11 @@ static final int GROWTHS2IX = balz += LSUBS; //
    */
   public void set2(int bias, A2Row b) {
     for (int rowIx : I01) {
+      if (this.A[rowIx + bias] == null) {
+        this.A[rowIx + bias] = new ARow(ec);
+      }
       for (int secIx : E.ASECS) {
-        A[rowIx + bias].set(secIx, b.A[rowIx].values[secIx]);
+        this.A[rowIx + bias].set(secIx, b.A[rowIx].values[secIx]);
       }
     }
   }
@@ -368,8 +371,11 @@ static final int GROWTHS2IX = balz += LSUBS; //
    */
   public void set4(int bias, A6Row b) {
     for (int subIx : I03) {
+      if (this.A[subIx + bias] == null) {
+        this.A[subIx + bias] = new ARow(ec);
+      }
       for (int secIx : E.ASECS) {
-        A[subIx + bias].set(secIx,b.A[2 + subIx].values[secIx]); //copy value not ref of value
+        this.A[subIx + bias].set(secIx, b.A[2 + subIx].values[secIx]); //copy value not ref of value
         //A[subIx + bias].add(secIx, b.A[sumIx * 4 + 2 + subIx].get(secIx));
       }
     }
@@ -388,49 +394,6 @@ static final int GROWTHS2IX = balz += LSUBS; //
     A[bias + 1] = a.A[3];
     A[bias + 2] = a.A[4];
     A[bias + 3] = a.A[5];
-  }
-
-  /**
-   * set values in 4 rows in ABalRows starting at bias from an A10Row 2-9
-   *
-   * @param bias index of the start of rows in an ABalRows
-   * @param b the A10 row form which 8 rows 2 -9 are taken
-   */
-  public void set4(int bias, A10Row b) {
-    //assert !(b == null) : "b == null";
-    // assert !(b.A == null) : "b.A == null";
-    assert !(b.A[0] == null) : "b.A[0] == null";
-    //  double ac = b.A[0].get(0);
-    // double ab = b.A[0].values[0];
-    for (int subIx : I03) {
-      for (int secIx : E.ASECS) {
-        assert !(b.A[6 + subIx] == null) : "b.A[6 + subIx] == null";
-        // assert !(A == null) : "A == null";
-        // assert !(A[subIx + bias] == null) : "A[subIx + bias] == null";
-        //assert (A[subIx + bias].values[secIx] = 0.0) == 0.0 : "not A[subIx + bias].values[secIx] = 0.";
-        double aa, bb, cc;
-        assert ((aa = b.A[2 + subIx].values[secIx]) == aa) : " not (aa = b.A[2 + subIx].values[secIx]) == aa";
-        // assert ((aa = b.A[2 + subIx].values[secIx]) == aa) : " not (aa = b.A[2 + subIx].values[secIx]) == aa";
-        // assert ((bb = b.A[6 + subIx].values[secIx]) == bb) : " not (bb = b.A[6 + subIx].values[secIx]) == bb";
-        double k
-                = b.A[2 + subIx].values[secIx]
-                  + b.A[6 + subIx].values[secIx];
-        A[subIx + bias].values[secIx]
-                = k;
-      }
-    }
-  }
-
-  /**
-   * use the references from A6Row 2-5 into ABalRows[bias+0-3]
-   *
-   * @param bias index into the start of rows in ABalRows
-   * @param b A6Row from which which reference for row2-5 are moved
-   */
-  public void useRef4(int bias, A6Row b) {
-    for (int rowIx : A03) {
-      A[bias + rowIx] = b.A[2 + rowIx];
-    }
   }
 
   /**
@@ -472,6 +435,9 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @param b ARow used
    */
   public void set1(int bias, int ix, ARow b) {
+    if (this.A[bias + ix] == null) {
+      this.A[bias + ix] = new ARow(ec);
+    }
     for (int secIx : E.ASECS) {
       A[ix + bias].set(secIx , b.values[secIx]);
     }
@@ -510,8 +476,10 @@ static final int GROWTHS2IX = balz += LSUBS; //
    */
   public double sum(int bias) {
     double sum = 0.;
+    if (this.A[bias] != null) {
     for (int secIx : E.ASECS) {
-      sum += A[bias].values[secIx];
+        sum += this.A[bias].values[secIx];
+      }
     }
     return sum;
   }
@@ -543,6 +511,7 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @param biasA the index of the first row of the sources
    * @param biasB the index of the second row of targets
    */
+  /*
   void put4AtoB(int biasA, int biasB) {
     for (int rowIx : A03) {
       for (int secIx : E.ASECS) {
@@ -551,19 +520,7 @@ static final int GROWTHS2IX = balz += LSUBS; //
       }
     }
   }
-
-  /**
-   * copy 1 row of values from rows biasA to biasB
-   *
-   * @param biasA the index of the row of the sources
-   * @param biasB the index of the row of targets
-   */
-  void copy1AtoB(int biasA, int biasB) {
-    for (int secIx : E.ASECS) {
-      // A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
-      A[biasB].values[secIx] = A[biasA].values[secIx];
-    }
-  }
+*/
 
   /**
    * get the percent of sum of row biasA over sum of row biasB
@@ -599,37 +556,6 @@ static final int GROWTHS2IX = balz += LSUBS; //
     return sumA * 100. / sumB;
   }
 
-  /**
-   * Sum the 4 rows starting with bias
-   *
-   * @param bias first of 4 rows to sum
-   * @return sum of each value in the 4 rows starting at bias
-   */
-  double sum4(int bias) {
-    double sum = 0.;
-    for (int rowIx : A03) {
-      for (int secIx : E.ASECS) {
-        sum += A[bias + rowIx].get(secIx);
-      }
-    }
-    return sum;
-  }
-
-  /**
-   * Sum the 2 rows starting with bias
-   *
-   * @param bias first of 2 rows to sum
-   * @return sum of each value in the 4 rows starting at bias
-   */
-  double sum2(int bias) {
-    double sum = 0.;
-    for (int rowIx : A03) {
-      for (int secIx : E.ASECS) {
-        sum += A[bias + rowIx].get(secIx);
-      }
-    }
-    return sum;
-  }
   /**
    * zero m & t costs internally
    *
@@ -704,8 +630,11 @@ static final int GROWTHS2IX = balz += LSUBS; //
    */
   void setA4toBminusC(int biasA, int biasB, int biasC) {
     for (int rowIx : A03) {
+      if (this.A[rowIx + biasA] == null) {
+        this.A[rowIx + biasA] = new ARow(ec);
+      }
       for (int secIx : E.ASECS) {
-        A[rowIx + biasA].set(secIx, A[rowIx + biasB].get(secIx) - A[rowIx + biasC].get(secIx));
+        this.A[rowIx + biasA].set(secIx, A[rowIx + biasB].get(secIx) - A[rowIx + biasC].get(secIx));
       }
     }
   }

@@ -18,6 +18,8 @@
 package trade;
 
 import java.util.ArrayList;
+import static trade.ABalRows.A03;
+import static trade.ABalRows.BALSLENGTH;
 
 /**
  * 1/2018 this was created to more properly be a model for multiple related rows
@@ -49,6 +51,7 @@ public class A6Rowa {
   static final int[] I01 = d01;
   static final int[] A01 = d01;
   static final int d02[] = {0, 2};
+  static final int A02[] = d02;
   static final int I29[] = {2, 3, 4, 5, 6, 7, 8, 9};
   static final int[] ASECS = E.ASECS;
   static final int[] A2SECS = E.A2SECS;
@@ -74,7 +77,8 @@ public class A6Rowa {
   volatile int dA[] = {0, 1, 2, 3, 4, 5};
   static int d29[] = {2, 3, 4, 5, 6, 7, 8, 9};
   static int BALANCESIX = 2;
-  static final int lsums = 2;
+  static final int lsums = 2;// ??
+  static final int LSUMS = 4;//RCSG
   int lsubs = 2;
   volatile ARow[] A = new ARow[lA];
   // reqCosts for r,c,s,g   or rHealth sHealth rFertility sFertility
@@ -169,7 +173,9 @@ public class A6Rowa {
     titl = atitl;
     gradesA = new double[4][][]; // only 2 && 3 should have grades
 
-    for (int n = 0; n < lA; n++) {
+    // try leaving the rest empty until used
+    int ll = lA;
+    for (int n = 0; n < ll; n++) {
       dA[n] = n;
       A[n] = new ARow(ec).zero();
       aCnt[n] = -11;
@@ -228,14 +234,16 @@ public class A6Rowa {
     costs = t == tcost;
     return t;
   }
-/** make sure all values are slightly more than zero
-   * set only values < UNZERO to UNZERO
- * 
- * @param tit
- * @param start
- * @param number
- * @return 
- */
+
+  /**
+   * make sure all values are slightly more than zero set only values < UNZERO
+   * to UNZERO
+   *
+   * @param tit
+   * @param start
+   * @param number
+   * @return
+   */
   A6Rowa unzero(String tit, int start, int number) {
     for (int rowIx = 0; rowIx < number; rowIx++) {
       String tt = tit + start + rowIx;
@@ -835,6 +843,9 @@ public class A6Rowa {
   int findMinIx(int x) {
     checkIx(0);
     for (int m : IA2SECS) {
+      if (A[m] == null) {
+        A[m] = new ARow(ec);
+      }
       if (x == iix[0][m]) {
         return m;
       }
@@ -852,6 +863,9 @@ public class A6Rowa {
   int findMinIx(double x) {
     checkIx(0);
     for (int m : IA2SECS) {
+      if (A[m] == null) {
+        A[m] = new ARow(ec);
+      }
       if (x == curGet(iix[0][m])) {
         return m;
       }
@@ -863,15 +877,15 @@ public class A6Rowa {
   /**
    * get the index of a ordered A2Row: cur
    *
-   * @param n the n'th from minimum
+   * @param nn the n'th from minimum
    * @return min+ix of the selected orderedpair
    */
-  int get01Ix(int n) {
+  int get01Ix(int nn) {
     checkIx(0);
-    return iix[0][n];
+    return iix[0][nn];
   }
 
-    /**
+  /**
    * check for some screwup that loses the connection to real balances and
    * grades
    *
@@ -880,7 +894,7 @@ public class A6Rowa {
   public void checkBalances(Assets.CashFlow cr) {
     E.myTest(cr.r.balance != A[2], "r connection lost");
     E.myTest(cr.r.balance != cr.as.bals.A[2], "bals r connection lost");
-    E.myTest(cr.c.balance !=  cr.as.bals.A[3], "bals c connection lost");
+    E.myTest(cr.c.balance != cr.as.bals.A[3], "bals c connection lost");
     E.myTest(cr.c.balance != A[3], "c connection lost");
     E.myTest(cr.s.balance != A[4], "s connection lost");
     E.myTest(cr.s.balance != cr.as.bals.A[4], "bals s connection lost");
@@ -894,17 +908,18 @@ public class A6Rowa {
     double[][][] bb = as.bals.gradesA;
     if (E.debugSumGrades) {
       if (as.bals.gradesA[2]
-              != as.cur.s.grades) {
+          != as.cur.s.grades) {
         throw new MyErr(String.format("bals grades != s.grades, term%d, i%d, j%d, m%d, n%d", as.term, as.i, as.j, as.m, as.n));
       }
       if (as.bals.gradesA[3]
-              != as.cur.g.grades) {
+          != as.cur.g.grades) {
         throw new MyErr(String.format("bals grades != g.grades, term%d, i%d, j%d, m%d, n%d", as.term, as.i, as.j, as.m, as.n));
       }
       as.cur.s.checkSumGrades();
       as.cur.g.checkSumGrades();
     }
   }
+
   /**
    * sum of rows 0,1
    *
@@ -976,14 +991,71 @@ public class A6Rowa {
   double sum4(int bias) {
     double sum = 0;
     for (int m : d03) {
+      if (A[bias + m] != null) {
       for (int n : ASECS) {
         sum += get(bias + m, n);
+        }
       }
     }
     return sum;
   }
-  
-   /**
+
+  /**
+   * copy the values ref from 4 rows starting at b to rows starting at c
+   *
+   * @param b bias of source rows
+   * @param c bias of destination rows
+   */
+  public void copy4BtoC(int b, int c) {
+    for (int rowIx : A03) {
+      if (this.A[b + rowIx] != null) {
+        if (this.A[c + rowIx] == null) {
+          this.A[c + rowIx] = new ARow(ec);
+        }
+        for (int secIx : E.ASECS) {
+          this.A[c + rowIx].values[secIx] = this.A[b + rowIx].values[secIx];
+        }
+      }
+    }
+  }
+
+  /**
+   * copy the values from ABalRows prev to this but do not change any
+   * references. This is used for swap redo and must not change the references
+   * of this
+   *
+   * @param prev new values from a HSwaps previous value
+   * @return the revised values for this with no this references changed
+   */
+  public A6Rowa copyValues(ABalRows prev) {
+    int m = 0;
+    for (m = 0; m < BALSLENGTH; m++) {
+      if (A[m] != null) {
+        if (prev.A[m] == null) {
+          prev.A[m] = new ARow(ec);
+        }
+        for (int n : E.ASECS) {
+          {
+            //  A[m].set(n, prev.A[m].get(n));
+            if (prev.A[m] != null) {
+              this.A[m].values[n] = prev.A[m].values[n];
+            }
+          }
+        }
+      }
+    }// end m
+    // ABalRows always has these grades define with some values
+    for (int i = 2; i < 4; i++) {
+      for (m = 0; m < LSECS; m++) {
+        for (int n = 0; n < LGRADES; n++) {
+          this.gradesA[i][m][n] = prev.gradesA[i][m][n];
+        }
+      }
+    }// end i
+    return this;
+  }
+
+  /**
    * sum the unit balances rc sg all sectors returns the same value as curSum,
    * but always sums the individual SubAsset balances
    *
@@ -1012,6 +1084,19 @@ public class A6Rowa {
   }
 
   /**
+   * copy 1 row of values from rows biasA to biasB
+   *
+   * @param biasA the index of the row of the sources
+   * @param biasB the index of the row of targets
+   */
+  void copy1AtoB(int biasA, int biasB) {
+    for (int secIx : E.ASECS) {
+      // A[biasB + rowIx].set(secIx, A[biasA + rowIx].get(secIx));
+      A[biasB].values[secIx] = A[biasA].values[secIx];
+    }
+  }
+
+  /**
    * get the n'th value from rows 0 and 1 row1 0-6, row2 7-13
    *
    * @param nn
@@ -1019,6 +1104,9 @@ public class A6Rowa {
    */
   double get01(int nn) {
     int m = (nn / E.lsecs) % 2;
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     int n = nn % E.lsecs;
     return get(m, n);
   }
@@ -1031,6 +1119,9 @@ public class A6Rowa {
    */
   double curGet(int nn) {
     int m = (nn / E.lsecs) % 2;
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     resum(m);
     int n = nn % E.lsecs;
     return get(m, n);
@@ -1132,6 +1223,9 @@ public class A6Rowa {
    * @return reference to ARow n
    */
   public ARow getRow(int m) {
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     resum(m);
     return A[m];
   }
@@ -1144,6 +1238,9 @@ public class A6Rowa {
    * @return A[n].get(m)
    */
   public double get(int m, int n) {
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     if (m > 1) {
       if (E.debugDouble) {
         return doubleTrouble(A[m].values[n]);
@@ -1218,6 +1315,9 @@ public class A6Rowa {
    * @return the value of value n in the selected row
    */
   public double gett(int m, int n) {
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     if (m > 1) {
       if (E.debugDouble) {
         return doubleTrouble(A[m].values[n]);
@@ -1253,6 +1353,9 @@ public class A6Rowa {
    * @return the value of value n in the selected row
    */
   public double gett1(int m, int n) {
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     if (balances) {
       resum((m % 2 * 2) + 2);
       return get((m % 2 * 2) + 2, n); //0r = 2,s1 = 4;
@@ -1271,6 +1374,9 @@ public class A6Rowa {
    * @return the value of value n in the selected row
    */
   public double gett2(int m, int n) {
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     if (balances) {
       resum((m % 2 * 2) + 3);
       return get((m % 2 * 2) + 3, n); // 0r =4,1s=5
@@ -1313,9 +1419,6 @@ public class A6Rowa {
     }
     return this;
   }
-  
-  
-          
 
   /**
    * set an A6Rowa instance to the references r0-r5, use this for worths, use
@@ -1363,8 +1466,54 @@ public class A6Rowa {
   public ARow set2(int rowIx, ARow b) {
     if (rowIx < 6) {
       assert rowIx > 1 : "tried to set" + rowIx + " sum balance not working or reserve";
+      if (A[rowIx] == null) {
+        A[rowIx] = new ARow(ec);
+      }
+      return A[rowIx].set2(b, this.titl, rowIx);
+    }
+    if (A[rowIx] == null) {
+      A[rowIx] = new ARow(ec);
     }
     return A[rowIx].set2(b, this.titl, rowIx);
+  }
+
+  /**
+   * set values in 4 rows in ABalRows starting at bias from an A10Row 2-9
+   *
+   * @param bias index of the start of rows in an ABalRows
+   * @param b the A10 row form which 8 rows 2 -9 are taken
+   */
+  public void set4(int bias, A10Row b) {
+    assert (b.A[0] != null) : "b.A[0] == null";
+    for (int subIx : I03) {
+      if (this.A[bias + subIx] == null) {
+        this.A[bias + subIx] = new ARow(ec);
+      }
+      for (int secIx : E.ASECS) {
+        assert (b.A[6 + subIx] != null) : "b.A[6 + subIx] == null";
+        double aa, bb, cc;
+        assert ((aa = b.A[2 + subIx].values[secIx]) == aa) : " not (aa = b.A[2 + subIx].values[secIx]) == aa";
+        // assert ((aa = b.A[2 + subIx].values[secIx]) == aa) : " not (aa = b.A[2 + subIx].values[secIx]) == aa";
+        // assert ((bb = b.A[6 + subIx].values[secIx]) == bb) : " not (bb = b.A[6 + subIx].values[secIx]) == bb";
+        double k
+                = b.A[2 + subIx].values[secIx]
+                  + b.A[6 + subIx].values[secIx];
+        A[subIx + bias].values[secIx]
+                = k;
+      }
+    }
+  }
+
+  /**
+   * use the references from A6Row 2-5 into ABalRows[bias+0-3]
+   *
+   * @param bias index into the start of rows in ABalRows
+   * @param b A6Row from which which reference for row2-5 are moved
+   */
+  public void useRef4(int bias, A6Row b) {
+    for (int rowIx : A03) {
+      A[bias + rowIx] = b.A[2 + rowIx];
+    }
   }
 
   /**
@@ -1387,11 +1536,15 @@ public class A6Rowa {
 
   /**
    * set internal ARow bias, sector n to val if balances && m <%lt; 6 then
-   * assert m   * %gt; 1 and do resum @param m selector of row numbe
+   * assert m * %gt; 1 and do resum @param m selector of row numbe
    *
    * r
    * @param bias selector of entry in row * @param val value to be tested as a
-   * Double then
+   * Double
+   *
+   * t
+   *
+   * hen
    *
    * stored
    * @param n sector to set
@@ -1399,9 +1552,14 @@ public class A6Rowa {
    */
   public double set(int bias, int n, Double val) {
     ec.doubleTrouble(val, "in A6Rowa title=" + this.titl + "A[" + bias + "][" + n + "]");
+    if (A[bias] == null) {
+      A[bias] = new ARow(ec);
+    }
+    int m = bias;
     int al = A.length;
-    int mm = bias < 2 ? bias : (bias - lsums) / lsubs; // find proper rc or sg
-    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances && costs10) || bias < 0 || costs10 ? bias > 9 : balances ? bias > 5 : false;
+    // decide whether to add to  0 or 1=mm
+    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 8) / lsubs; // find proper rc or sg
+    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances || costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
     double bal1 = 0.;
     double both = 0.;
     if (E.debugResumP && !ignoreIf && !noChecking) {
@@ -1418,15 +1576,11 @@ public class A6Rowa {
     }
     // change the actual value, set updates that row setCnt
     double ret = A[bias].set(n, val);
-
-    if (noChecking) {
-      noChecking = true;
-    }
-    else //if a legal class also set the row 0 or 1 row
-    if (!ignoreIf && false) { // skip for now
-      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
-      // add in the 10row if needed
-      both += costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+    if (!ignoreIf) {
+      //both is sum for 0 or 1  first 2345 =>0 1
+      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
+      // if A10Row add in the 6789 => 0 1
+      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
       A[mm].set(n, both);
     }
     return ret;
@@ -1437,8 +1591,13 @@ public class A6Rowa {
    * %gt; 1 and do resum @param m selector of row numbe
    *
    * r
-   * @param n selector of entry in row
-   * @param val value to be tested as a Double then stored
+   * @param n selector of entry in row @param val value to be tested as a Double
+   * th
+   *
+
+   *
+   * e
+   * n stored
    * @param desc description of set
    * @return val
    */
@@ -1447,7 +1606,8 @@ public class A6Rowa {
   }
 
   /**
-   * set internal ARow m, sector n to val, evaluate m as 0 or 1
+   * set internal ARow m, sector n to val, evaluate m as 0 or 1 do not test for
+   * previous error in sum of 0,1
    *
    * @param m
    * @param n
@@ -1456,10 +1616,22 @@ public class A6Rowa {
    */
   public double sett(int m, int n, double val) {
     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
-    int mm = m < 2 ? m : (m - 2) / 2; // find proper rc or sg
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
+    int al = A.length;
+    // decide whether to add to  0 or 1=mm
+    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 8) / lsubs; // find proper rc or sg
     double ret = A[m].set(n, val);
-    // do a local resum
-    //A[mm].set(n,get(lsums + mm*2,n) + get(3+mm*2,n));
+    // test not set 0,`1
+    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances || costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
+    if (!ignoreIf) {
+      //both is sum for 0 or 1  first 2345 =>0 1
+      double both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
+      // if A10Row add in the 6789 => 0 1
+      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
+      A[mm].set(n, both);
+    }
     return ret;
   }
 
@@ -1475,37 +1647,45 @@ public class A6Rowa {
   double add(int m, int n, double val) {
     //  E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
     E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
     int al = A.length;
-    int mm = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
+    // decide whether to add to  0 or 1=mm
+    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 8) / lsubs; // find proper rc or sg
+    // if don't add to 0 or 1
     boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances || costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
     double bal1 = 0.;
     double both = 0.;
+    // is test ignored
     if (E.debugResumP && !ignoreIf && !noChecking) {
-      bal1 = gett(mm, n);
-      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
-      // add in the 10row if needed
-      both += ignoreIf ? 0.0 : costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
-      // ignore test if ignoreIf is true
-
-      double dif = bal1 - both;
-      boolean badDif = E.PZERO < dif || E.NZERO > -dif; // trouble if true
+      bal1 = gett(mm, n);//get 0 or 1
+      //both is sum for 0 or 1  first 2345 =>0 1
+      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
+      // if A10Row add in the 6789 => 0 1
+      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
+      double dif = bal1 - both; // 01 - both
+      boolean badDif = E.PZERO < dif || E.NZERO > -dif; // dif too much
       // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
       assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
     }
+
     double ret = A[m].add(n, val);
     if (noChecking) {
       noChecking = true;
     }
-    else //if a legal class also set the row 0 or 1 row
-    if (!ignoreIf & false) {
-      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
-      // add in the 10row if needed
-      both += costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+    else //IGNORED if a legal class also set the row 0 or 1 row
+    if (!ignoreIf) {
+      //both is sum for 0 or 1  first 2345 =>0 1
+      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
+      // if A10Row add in the 6789 => 0 1
+      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
       A[mm].set(n, both);
     }
     return ret;
 
   }
+
   /**
    * multiply raw growth by a fertility
    *
@@ -1576,12 +1756,16 @@ public class A6Rowa {
   public A6Rowa setMin(A6Rowa B, A6Rowa C) {
     noChecking = true;
     double b = 1., c = 1.;
+
     int al = A.length;
     for (int m = 0; m < al; m++) {
       for (int n = 0; n < E.LSECS; n++) {
         // do the rr,rs,sr,ss sets first
         b = doubleTrouble(B.get(m, n));
         c = doubleTrouble(C.get(m, n));
+        if (A[m] == null) {
+          A[m] = new ARow(ec);
+        }
         A[m].set(n, b < c ? b : c);
         if (balances && m < 6) {
           if (m == 5) { //the last balance row
@@ -1608,11 +1792,15 @@ public class A6Rowa {
   public A6Rowa setMax(A6Rowa B, A6Rowa C) {
     noChecking = true;
     double b = 1., c = 1.;
+
     for (int m = 2; m < lA; m++) {
       for (int n : ASECS) {
         // do the rr,rs,sr,ss sets first
         b = doubleTrouble(B.get(m, n));
         c = doubleTrouble(C.get(m, n));
+        if (A[m] == null) {
+          A[m] = new ARow(ec);
+        }
         A[m].set(n, b > c ? b : c);
         if (balances && m < 6) {
           if (m == 5) { //the last balance row
@@ -1646,6 +1834,9 @@ public class A6Rowa {
         ab = doubleTrouble(a.get(m, n)) > doubleTrouble(b.get(m, n)) ? doubleTrouble(a.get(m, n)) : doubleTrouble(b.get(m, n));
         abc = ab > doubleTrouble(c.get(m, n)) ? ab : doubleTrouble(c.get(m, n));
         //set(m, n, abc);
+        if (A[m] == null) {
+          A[m] = new ARow(ec);
+        }
         A[m].set(n, abc);
         if (balances && m < 6) {
           if (m == 5) { //the last balance row
@@ -1680,6 +1871,9 @@ public class A6Rowa {
         ab = doubleTrouble(a.get(m, n)) > doubleTrouble(b.get(m, n)) ? doubleTrouble(a.get(m, n)) : doubleTrouble(b.get(m, n));
         abc = ab > doubleTrouble(c.get(m, n)) ? ab : doubleTrouble(c.get(m, n));
         abcd = abc > doubleTrouble(d.get(m, n)) ? abc : doubleTrouble(d.get(m, n));
+        if (A[m] == null) {
+          A[m] = new ARow(ec);
+        }
         set(m, n, abcd);
       }
     }
@@ -1706,6 +1900,9 @@ public class A6Rowa {
         b = B.get(m, n);
         c = C.get(m, n);
         d = D.get(m, n);
+        if (A[m] == null) {
+          A[m] = new ARow(ec);
+        }
         set(m, n, b < c ? b : c < d ? c : d);
       }
     }

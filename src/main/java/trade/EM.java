@@ -72,6 +72,7 @@ class EM {
   static StarTrader st;
   public static boolean myTestDone = false;
 
+
   // The following is a start of the capability to save and instance of
   // a game at the current level with new referents for arrays etc.
   // the cureent game could continue or another EM instance could be made active
@@ -516,6 +517,8 @@ class EM {
   static final double[][] mDifficultyByPriorityMult = {{1., 6.}, {1., 6.}}; //
   static volatile double[][] randFrac = {{0.5}, {0.4}};  // game risk
   static final double[][] mRandFrac = {{0.0, .9}, {0.0, .9}};  // range 0. - .9,.7
+  static volatile double[][] aicnt = {{30}};
+  static final double[][] maicnt = {{0.0, 99.}, {0.0, 99.}};  // range 0. - 99.
   static volatile double[][] clanRisk = {{.4, .4, .4, .4, .4}, {.4, .4, .4, .4, .4}};  //risk taken with assets
   static final double[][] mClanRisk = {{.0, .7}, {.0, .7}};
   static volatile double[][] gameClanRiskMult = {{1.}, {1.}};  // range .0 - .6
@@ -748,7 +751,8 @@ class EM {
    * @return return string of active threads
    */
   protected static String threadsStacks() {
-    String ret = "\n----THs---- " + curEconName + " Start ThreadStacks stacks by " + Thread.currentThread().getName() + since() + sinceDoYear() + "\n" + mem() + lfe() + "\n tError=" + tError + "\n";
+    String ifErr = dfe() ? " --ERR--" : " --OK--";
+    String ret = "\n----THs---- " + curEconName + " Start ThreadStacks stacks by " + Thread.currentThread().getName() + since() + sinceDoYear() + "\n" + mem() + lfe() + " tError=" + tError;
 
     Thread[] tarray = new Thread[10];
     Thread.enumerate(tarray);
@@ -758,15 +762,16 @@ class EM {
         StackTraceElement[] stk = th.getStackTrace();
         // Map<Thread,StackTraceElement[]> tMap = Thread.getAllStackTraces();
         // for(StackTraceElement[] val:tMap.values()){
-        ret += ("\nthreadStacks thread=" + th.getName() + " P" + th.getPriority() + " L" + stk.length + "\n");
+        ret += ("\n----threadStacks-----" + ifErr + " =" + th.getName() + " P" + th.getPriority() + " L" + stk.length + "\n");
         for (StackTraceElement elem : stk) {
           ret += ("at " + elem.getClassName() + "." + elem.getMethodName() + "(" + elem.getFileName() + ":" + elem.getLineNumber() + ")" + "\n");
           //ret += elem.toString();
         }
-        ret += "\n****end ThreadsStacks thread****\n";
+        ret += "----end-- " + th.getName() + ifErr;
         // System.err.println(ret);
       }
     }
+    ret += "\n----end Threadstacks: " + lfe();
     return ret;
   }
 
@@ -3674,8 +3679,8 @@ onceAgain:
         System.out.println("----DWM3---- initialized ars files");
       };
 */
-      
-      if (true && myAIlearnings != null) {
+      //only write if doing ai from aicnt
+      if (aicnt[0][0] > 24 && myAIlearnings != null) {
         //    String rOut = "New Game " + dateString + "\r\n";
         ll = "version " + st.versionText  + " mapYears "+ (mapYears + year -2)  + " setCnt " + setCnt + " : "  + mSize + " " + dateString + vString + "\r\n";
         bMapFw.write(ll, 0, ll.length());
@@ -6111,7 +6116,8 @@ onceAgain:
   void runVals() throws IOException {
     doVal("difficulty", difficultyPercent, mDifficultyPercent, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the difficulty for ships as well as  Planets ,more difficulty increases costs of  resources and staff each year, increases the probability of ship and planet deaths.  More difficulty probably requires more clan-master expertise.");
     doVal("maxEcons", econLimits3, mEconLimits3, "Increase the max number of econs (planets+ships) in this game, it maxEcons too large the game will blow up out of memory, depending on your available memory");
-    doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year by about 30%.");
+    //   doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year by about 30%.");
+    doVal("Artificial Int", aicnt, maicnt, "AI options, below 25, no AI,25-49 user blue 4 AI learned values, 50-74 users bllue 4 and green 3, 75-99 users blue 4, green 3, yellow 2 all get learned values help");
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
     doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
     doVal("clanRisks", clanRisk, mClanRisk, "increase slider: ncreases the random multipliers for your clan for many of the prioities set by clan-masters.");
@@ -6548,7 +6554,6 @@ onceAgain:
   static final int TradeLastStrategicGoal = ++e4;
 
   /*
-
   static final int NEWKW = ++e4; //
   static final int COMMONKW = ++e4; //
   static final int MANUALSW = ++e4; //
@@ -6559,37 +6564,40 @@ onceAgain:
   static final int RCSGWPERCENT = ++e4; //
    */
   static final int WORTHINCR = ++e4; //
+  static final int NEWDEPRECIATION = ++e4; // ADDED THIS YEAR
+  static final int DEPRECIATION = ++e4; // CUMULATIVE DEPRECIATION
+  static final int NEWREPRECIATION = ++e4; // REPRECIATION THIS YEAR
+  static final int REPRECIATION = ++e4; // CUM REPRECIATION
+  static final int NEWPRECIATION = ++e4; // THIS YEAR DEPRECIATION - REPRECIATION
+  static final int PRECIATION = ++e4; // CUM DEPRECIATION - REPRECIATION
+  static final int NEWBONUSGROWTH = ++e4;// THIS YEAR raw bonus growth
+  static final int BONUSGROWTH = ++e4;// raw bonus growth
+  static final int BONUSGROWTHEFF = ++e4;// effect of growth
+  static final int RAWYEARLYUNITGROWTH = ++e4;//into EM->calcGrowths
+  static final int MAXRAWUNITGROWTH = ++e4;//into EM->calcGrowths
+  static final int GROWTHPRECIATED = ++e4;// after depreciate,repreciate,bonus,staffsize
+
+  static final int GROWTHSRAW = ++e4; //out of calcGrowths
+  static final int GROWTHS = ++e4;  // after needs before swaps
+  static final int GROWTHSEFF = ++e4; //after swaps, endyear
+  static final int GROWTHCOSTS = ++e4;//THIS YEAR
+
+  static final int DGROWTHSN1 = ++e4;
+  static final int DGROWTHSN2 = ++e4;
+  static final int DGROWTHSN3 = ++e4;
+  static final int DFERTILITYSN0 = ++e4;
+  static final int DFERTILITYSN1 = ++e4;
+  static final int DFERTILITYSN2 = ++e4;
+  static final int DFERTILITYSN3 = ++e4;
+  /*
+  static final int GROWTHCOSTSY = ++e4;
+  static final int GROWTHCOSTSYY = ++e4;
   static final int RDEPRECIATIONP = ++e4;  //r depreciation
   static final int RDEPRECIATION2P = ++e4;  //r depreciation before add
   static final int RDEPRECIATION3P = ++e4;  //r max depreciation
  // static final int RSURPLUSDEPRECIATIONP = ++e4;  //r surplusdepreciation
-  static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
+   static final int RNEWDEPRECIATIONP = ++e4;// RNewDepreciation
   static final int RNEWDEPRECIATION2P = ++e4;// RNewDepreciation2
-  static final int BONUSGROWTH = ++e4;// %of raw yearly growth
-  static final int GROWTHS = ++e4;
-  static final int GROWTHSP = ++e4;
-  static final int GRADESUP = ++e4;
-  static final int GROWTHCOSTS = ++e4;
-  static final int GROWTHCOSTSY = ++e4;
-  static final int GROWTHCOSTSYY = ++e4;
-  static final int REQMINFRAC2S = ++e4;
-  static final int REQGFRAC2S = ++e4;
-  static final int REQMFRAC2S = ++e4;
-  static final int FERTILITYGROWTHS = ++e4;
-  static final int FERTILITYGROWTHCOSTS = ++e4;
-  static final int RAWPROSPECTS = ++e4;
-  static final int MTGCOSTS = ++e4;
-  static final int COSTWORTHDECR = ++e4;
-  static final int POORHEALTHEFFECT = ++e4;//CATASTRCOST
-  static final int CATASTRCOST = ++e4;//CATASTRCOST
-  static final int CATASTSCOST = ++e4;//CATASTRCOST
-  static final int ISLOW = ++e4;
-  static final int ISSOS0 = ++e4;
-  static final int ISSOS1 = ++e4;
-  static final int ISSOS2 = ++e4;
-  static final int ISSOS3 = ++e4;
-
-  static final int WORTHIFRAC = ++e4;
   static final int RGROWTH1 = ++e4;
   static final int RGROWTH2 = ++e4;
   static final int RGROWTH3 = ++e4;
@@ -6598,38 +6606,7 @@ onceAgain:
   static final int RGROWTH6 = ++e4;
   static final int RGROWTH7 = ++e4;
   static final int RGROWTH8 = ++e4;
-  static final int TRADELASTDIVFGAVE = ++e4;
-  static final int TRADELASTDIVRCSG = ++e4;
-  static final int TRADELASTGAVE = ++e4;
-  static final int TRADEALSOLASTGAVE = ++e4;
-  static final int TRADENOMINALGAVE = ++e4;
-  static final int PREVGROWTH = ++e4; //
-  static final int NEWDEPRECIATION = ++e4; //NEWDEPRECIATION
-  static final int DEPRECIATION = ++e4; //DEPRECIATION
-  static final int PREVGROWTHP = ++e4; //
-  static final int NEWDEPRECIATIONP = ++e4; //NEWDEPRECIATION
-  static final int DEPRECIATIONP = ++e4; //DEPRECIATION
-  static final int RAWYEARLYUNITGROWTH = ++e4;
-
-  static final int RRAWYEARLYUNITGROWTH = ++e4;
-  static final int CRAWYEARLYUNITGROWTH = ++e4;
-  static final int SRAWYEARLYUNITGROWTH = ++e4;
-  static final int GRAWYEARLYUNITGROWTH = ++e4;
-  static final int RAWYEARLYUNITGROWTHs[] = {RRAWYEARLYUNITGROWTH, CRAWYEARLYUNITGROWTH, SRAWYEARLYUNITGROWTH, GRAWYEARLYUNITGROWTH};
-  static final int RAWUNITGROWTHS = ++e4;
-  static final int RAWGROWTHS = ++e4;
-  static final int RAWGROWTHSP = ++e4;
-  static final int POSTSWAP = ++e4;
-
-  static final int CATWORTHINCR = ++e4;
-  static final int CUMCATWORTH = ++e4;
-  static final int TRADEWORTH = ++e4;
-  static final int TRADEWORTHINCR = ++e4;
-  static final int TRADERCSGINCR = ++e4;
-  static final int GROWTHWORTHINCR = ++e4;
-  static final int POSTSWAPRCSG = ++e4;
-  static final int SWAPRINCRWORTH = ++e4;
-  static final int RGROWTHV = ++e4;
+    static final int RGROWTHV = ++e4;
   static final int CGROWTHV = ++e4;
   static final int SGROWTHV = ++e4;
   static final int GGROWTHV = ++e4;
@@ -6652,6 +6629,87 @@ onceAgain:
   static final int RAWCUGROWTH = ++e4;
   static final int RAWSUGROWTH = ++e4;
   static final int RAWGUGROWTH = ++e4;
+  static final int GROWTHSN0 = ++e4;
+  static final int GROWTHSN2 = ++e4;
+  static final int GROWTHSN1 = ++e4;
+    static final int RAWUNITGROWTHS = ++e4;
+  static final int RAWGROWTHS = ++e4;
+  static final int RAWGROWTHSP = ++e4;
+ 
+  static final int PREVGROWTHP = ++e4; //
+  static final int DEPRECIATIONP = ++e4; //DEPRECIATION
+   static final int CNEWDEPRECIATIONP = ++e4;  //
+  static final int SNEWDEPRECIATIONP = ++e4;
+  static final int GNEWDEPRECIATIONP = ++e4;
+  static final int[] NEWDEPRECIATIONPs = {RNEWDEPRECIATIONP, CNEWDEPRECIATIONP, SNEWDEPRECIATIONP, GNEWDEPRECIATIONP};
+  static final int CDEPRECIATIONP = ++e4;  // sll svvrpyrf
+  static final int SDEPRECIATIONP = ++e4;
+  static final int GDEPRECIATIONP = ++e4;
+  static final int CDEPRECIATION2P = ++e4;  // sll svvrpyrf
+  static final int SDEPRECIATION2P = ++e4;
+  static final int GDEPRECIATION2P = ++e4;
+  static final int CDEPRECIATION3P = ++e4;  // sll svvrpyrf
+  static final int SDEPRECIATION3P = ++e4;
+  static final int GDEPRECIATION3P = ++e4;
+  static final int RDADEPRECIATIONP = ++e4;
+  static final int CDADEPRECIATIONP = ++e4;  // sll svvrpyrf
+  static final int SDADEPRECIATIONP = ++e4;
+  static final int GDADEPRECIATIONP = ++e4;
+  static final int RDDEPRECIATIONP = ++e4;
+  static final int CDDEPRECIATIONP = ++e4;  // sll svvrpyrf
+  static final int SDDEPRECIATIONP = ++e4;
+  static final int GDDEPRECIATIONP = ++e4;
+  static final int[] DEPRECIATIONPs = {RDEPRECIATIONP, CDEPRECIATIONP, SDEPRECIATIONP, GDEPRECIATIONP};
+  static final int[] DEPRECIATION3Ps = {RDEPRECIATION3P, CDEPRECIATION3P, SDEPRECIATION3P, GDEPRECIATION3P};
+  
+
+  static final int RRAWYEARLYUNITGROWTH = ++e4;
+  static final int CRAWYEARLYUNITGROWTH = ++e4;
+  static final int SRAWYEARLYUNITGROWTH = ++e4;
+  static final int GRAWYEARLYUNITGROWTH = ++e4;
+  static final int RAWYEARLYUNITGROWTHs[] = {RRAWYEARLYUNITGROWTH, CRAWYEARLYUNITGROWTH, SRAWYEARLYUNITGROWTH, GRAWYEARLYUNITGROWTH};
+    static final int GROWTHSN3 = ++e4;
+   static final int GROWTHWORTHINCR = ++e4;
+  static final int PREVGROWTH = ++e4; //
+  
+  
+
+    static final int INCRRCSG = ++e4;
+  static final int INCRGROWRCSG = ++e4;
+   */
+  static final int REQMINFRAC2S = ++e4;
+  static final int REQGFRAC2S = ++e4;
+  static final int REQMFRAC2S = ++e4;
+  static final int FERTILITYGROWTHS = ++e4;
+  static final int FERTILITYGROWTHCOSTS = ++e4;
+  static final int RAWPROSPECTS = ++e4;
+  static final int MTGCOSTS = ++e4;
+  static final int COSTWORTHDECR = ++e4;
+  static final int POORHEALTHEFFECT = ++e4;//CATASTRCOST
+  static final int CATASTRCOST = ++e4;//CATASTRCOST
+  static final int CATASTSCOST = ++e4;//CATASTRCOST
+  static final int ISLOW = ++e4;
+  static final int ISSOS0 = ++e4;
+  static final int ISSOS1 = ++e4;
+  static final int ISSOS2 = ++e4;
+  static final int ISSOS3 = ++e4;
+  static final int WORTHIFRAC = ++e4;
+
+  static final int TRADELASTDIVFGAVE = ++e4;
+  static final int TRADELASTDIVRCSG = ++e4;
+  static final int TRADELASTGAVE = ++e4;
+  static final int TRADEALSOLASTGAVE = ++e4;
+  static final int TRADENOMINALGAVE = ++e4;
+
+  static final int POSTSWAP = ++e4;
+  //static final int CATWORTHINCR = ++e4;
+  //static final int CUMCATWORTH = ++e4;
+  static final int TRADEWORTH = ++e4;
+  static final int TRADEWORTHINCR = ++e4;
+  static final int TRADERCSGINCR = ++e4;
+
+  static final int POSTSWAPRCSG = ++e4;
+  static final int SWAPRINCRWORTH = ++e4;
   static final int TRADESTRATLASTGAVE = ++e4;
   static final int TRADESTRATVALUE = ++e4;
   static final int TRADESTRATGOAL = ++e4;
@@ -6663,8 +6721,7 @@ onceAgain:
   static final int TRADESOS3 = ++e4;
   static final int BOTHCREATE = ++e4;
   static final int LIVERCSG = ++e4;
-  static final int INCRRCSG = ++e4;
-  static final int INCRGROWRCSG = ++e4;
+
   static final int INITRCSG = ++e4;
   static final int HIGHRCSG = ++e4;
   static final int LOWRCSG = ++e4;
@@ -6677,15 +6734,12 @@ onceAgain:
   static final int WORTHINCRN2 = ++e4;
   static final int WORTHINCRN3 = ++e4;
 
-  static final int GROWTHSN0 = ++e4;
   static final int FERTILITYSN0 = ++e4;
   static final int RCSGINCRN0 = ++e4;
 
-  static final int GROWTHSN1 = ++e4;
   static final int FERTILITYSN1 = ++e4;
   static final int RCSGINCRN1 = ++e4;
 
-  static final int GROWTHSN2 = ++e4;
   static final int FERTILITYSN2 = ++e4;
   static final int RCSGINCRN2 = ++e4;
   static final int DPOSTSWAP = ++e4;
@@ -6694,25 +6748,17 @@ onceAgain:
   static final int DNPOSTSWAP = ++e4;
   static final int DNPOSTSWAPRCSG = ++e4;
   static final int DNSWAPRINCRWORTH = ++e4;
-  static final int GROWTHSN3 = ++e4;
+
   static final int FERTILITYSN3 = ++e4;
   static final int RCSGINCRN3 = ++e4;
   static final int DWORTHINCRN0 = ++e4;
   static final int DGROWTHSN0 = ++e4;
-  static final int DFERTILITYSN0 = ++e4;
   static final int DRCSGINCRN0 = ++e4;
   static final int DWORTHINCRN1 = ++e4;
-  static final int DGROWTHSN1 = ++e4;
-
-  static final int DFERTILITYSN1 = ++e4;
   static final int DRCSGINCRN1 = ++e4;
   static final int DWORTHINCRN2 = ++e4;
-  static final int DGROWTHSN2 = ++e4;
-  static final int DFERTILITYSN2 = ++e4;
   static final int DRCSGINCRN2 = ++e4;
   static final int DWORTHINCRN3 = ++e4;
-  static final int DGROWTHSN3 = ++e4;
-  static final int DFERTILITYSN3 = ++e4;
   static final int DRCSGINCRN3 = ++e4;
   static final int HIGHWORTH = ++e4;
   static final int LOWWORTH = ++e4;
@@ -6804,29 +6850,6 @@ onceAgain:
   static final int INCRAVAILFRACa = ++e4;
   static final int INCRAVAILFRACb = ++e4;
 
-  static final int CNEWDEPRECIATIONP = ++e4;  //
-  static final int SNEWDEPRECIATIONP = ++e4;
-  static final int GNEWDEPRECIATIONP = ++e4;
-  static final int[] NEWDEPRECIATIONPs = {RNEWDEPRECIATIONP, CNEWDEPRECIATIONP, SNEWDEPRECIATIONP, GNEWDEPRECIATIONP};
-  static final int CDEPRECIATIONP = ++e4;  // sll svvrpyrf
-  static final int SDEPRECIATIONP = ++e4;
-  static final int GDEPRECIATIONP = ++e4;
-  static final int CDEPRECIATION2P = ++e4;  // sll svvrpyrf
-  static final int SDEPRECIATION2P = ++e4;
-  static final int GDEPRECIATION2P = ++e4;
-  static final int CDEPRECIATION3P = ++e4;  // sll svvrpyrf
-  static final int SDEPRECIATION3P = ++e4;
-  static final int GDEPRECIATION3P = ++e4;
-  static final int RDADEPRECIATIONP = ++e4;
-  static final int CDADEPRECIATIONP = ++e4;  // sll svvrpyrf
-  static final int SDADEPRECIATIONP = ++e4;
-  static final int GDADEPRECIATIONP = ++e4;
-  static final int RDDEPRECIATIONP = ++e4;
-  static final int CDDEPRECIATIONP = ++e4;  // sll svvrpyrf
-  static final int SDDEPRECIATIONP = ++e4;
-  static final int GDDEPRECIATIONP = ++e4;
-  static final int[] DEPRECIATIONPs = {RDEPRECIATIONP, CDEPRECIATIONP, SDEPRECIATIONP, GDEPRECIATIONP};
-  static final int[] DEPRECIATION3Ps = {RDEPRECIATION3P, CDEPRECIATION3P, SDEPRECIATION3P, GDEPRECIATION3P};
   static final int DeadNegN = ++e4;
   static final int DeadLt5 = ++e4;
   static final int DeadLt10 = ++e4;
@@ -7074,24 +7097,28 @@ onceAgain:
    doRes(TRADESTRATGOAL, "Strat Goal", "Trade strategic goal last received/given goal", 1, 2, 0, LIST0 | CUR | CUM | BOTH | SKIPUNSET, 0, 0, 0L);
    doRes(TRADESTRATLASTGAVE, "trade Given%", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST15 | CURAVE | CUM | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
-    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3,  LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 |  CUMUNITS | BOTH, LIST13 | LIST14 | CURUNITS | BOTH,  LIST0 |  CUMUNITS | BOTH, 0);
+    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 | CUMUNITS | BOTH, LIST23 | CURUNITS | BOTH, 0, 0);
     doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(INCRGROWRCSG, "incrGrowRCSG", "this years incr rcsg Value  after grow rcsg - before grow rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(INCRRCSG, "%incrGrowrcsg", "this years incr rcsg Value  end year rcsg - start year rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
+    /*
+    doRes(INCRGROWRCSG, "incrGrowRCSG", "this years incr rcsg Value  after grow rcsg - before grow rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(INCRRCSG, "%incrGrowrcsg", "this years incr rcsg Value  end year rcsg - start year rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
+     */
+    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
     doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
-    doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by catastrophies", 2, 2, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 1, 1, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
+    //doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by cat//astrophies", 2, 2, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    // doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 1, 1, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(GROWTHS, "growths", "growth for this year after depreciation before cost reduction", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
-    doRes(GROWTHSP, "%growths", "growth percwent o start year balance for this year after depreciation before cost reduction", 2, 3, 0, ROWS3 | LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
+    //  doRes(GROWTHSP, "%growths", "growth percwent o start year balance for this year after depreciation before cost reduction", 2, 3, 0, ROWS3 | LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
+    /*
     doRes(GRADESUP, "gradesUp", "number of times some grades up done", 1, 1, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
     doRes(PREVGROWTH, "prevgrowth", "growth at the start of this year", 1, 1, 2, ROWS3 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | CUMAVE | BOTH, 0L, 0L, 0L);
     doRes(PREVGROWTHP, "%prevgrowth", "growth percent of year start balance at the start of this year", 2, 6, 2, ROWS1 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
+    /*
     doRes(RGROWTH1, "rgrowt1h", "growth at the start of this year", 1, 1, 2, ROWS1 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(RGROWTH2, "rgrowth2", "growth at the start of this year");
     doRes(RGROWTH3, "rgrowth3", "growth at the start of this year");
@@ -7100,15 +7127,24 @@ onceAgain:
     doRes(RGROWTH6, "rgrowth6", "growth at the start of this year");
     doRes(RGROWTH7, "rgrowth7", "growth at the start of this year");
     doRes(RGROWTH8, "rgrowth8", "growth at the start of this year");
+     */
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year");
-    doRes(NEWDEPRECIATION, "NewDepreciation", "new depreciation this year");
+    doRes(NEWDEPRECIATION, "NewDepreciation", "depreciation this year");
     doRes(DEPRECIATION, "Depreciation", "Cumulative depreciation this year");
+    doRes(NEWREPRECIATION, "NewRepreciation", "repreciation this year");
+    doRes(REPRECIATION, "Depreciation", "Cumulative repreciation this year");
+    doRes(NEWPRECIATION, "NewDepreciation", "depreciation - repreciation this year");
+    doRes(PRECIATION, "Depreciation", "Cumulative depreciation - repreciation ");
+    /*
     doRes(NEWDEPRECIATIONP, "%NewDepreciation", "%new depreciation of growth this year", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
     doRes(DEPRECIATIONP, "%Depreciation", "%Cumulative depreciation of growth this year", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
+     */
     doRes(RAWYEARLYUNITGROWTH, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction");
+    doRes(MAXRAWUNITGROWTH, "rawYrUnitGrowth", "Max Raw year unit growth  before rawUnitGrowth this year before cost reduction");
     doRes(RAWUNITGROWTHS, "rawUnitGrowth", "Raw unit growth after depreciation this year before cost reduction");
     doRes(RAWGROWTHS, "rawGrowth", "Raw growth after depreciation this year before cost reduction");
     doRes(RAWGROWTHSP, "%rawGrowth", "Raw growth percent of start year balance after depreciation this year before cost reduction");
+     */
     doRes(RAWPROSPECTS, "rawProspects", "Raw prospects after depreciation this year after cost reduction");
     doRes(GROWTHCOSTS, "growthCst3", "growth costs also fertility growth costs inside getNeeds");
     doRes(GROWTHCOSTSY, "growthCst1", "growth costs at end of calcRawCosts");
@@ -7123,6 +7159,7 @@ onceAgain:
     doRes(POSTSWAP, "postSwap", "worth after swap");
     doRes(POSTSWAPRCSG, "postSwapRCSG", "RCSG units after swap");
     doRes(SWAPRINCRWORTH, "swaIncWorth", "worth increase or decrease after Swaps");
+    /*
     doRes(GROWTHWORTHINCR, "GrothIncWorth", "worth increase this year from growth before cost reduction");
     doRes(RDEPRECIATIONP, "rDepreciation%", "Depreciation in R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RDEPRECIATION3P, "rMaxDepreciation30%", "MaxDepreciation0 in R ");
@@ -7130,7 +7167,11 @@ onceAgain:
     doRes(RDEPRECIATION3P + 2, "rMaxDepreciation32%", "MaxDepreciation2 in R ");
     doRes(RDEPRECIATION3P + 3, "rMaxDepreciation33%", "MaxDepreciation3 in R ");
     doRes(RDEPRECIATION2P, "rDepreciation2%", "Depreciation before newDepreciation added in R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
-    doRes(BONUSGROWTH, "%bonusGrowth", "Yearly catastrophy Growth % of rawUnitGrowth ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+     */
+    doRes(BONUSGROWTH, "bonusGrowth", "cum catastrophy Growth ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(NEWBONUSGROWTH, "new bonusGrowth", "Yearly catastrophy Growth", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(BONUSGROWTHEFF, "eff bonusGrowth", "Effective catastrophy Growth ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    /*
  //   doRes(RSURPLUSDEPRECIATIONP, "rSurplusDepreciation%", "surplus depreciation removed because too largein R ", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(RNEWDEPRECIATIONP, "r newDepreciation%", "new Depreciation in R as the % of unitGrowth");
 
@@ -7178,6 +7219,7 @@ onceAgain:
     doRes(GROWTHSN1, "noAcc1Growths", "yearly growth if trade not accepted for 1 year", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(GROWTHSN2, "noAcc2Growths", "yearly growth if trade not accepted for 2 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(GROWTHSN3, "noAcc3Growths", "yearly growth if trade not accepted for 3 years", 2, 2, 2, LIST12 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+     */
     doRes(WORTHINCRN0, "AccWorthIncr", "%yearly increase in worth if trade accepted", 1, 1, 1, LIST0 | LIST16 | CURAVE | BOTH, 0L, 0L, 0L);
     doRes(WORTHINCRN1, "noAcc1WorInc", "%yearly increase in worth if trade not accepted for 1 year");
     doRes(WORTHINCRN2, "noAcc2WorInc", "%yearly increase in worth if trade not accepted for 2 years");
@@ -7224,10 +7266,11 @@ onceAgain:
     doRes(MISCDIEDPERCENT, "NT DIED %", "Percent planets or ships died no trade accepted", 2, 2, 3, LIST0 | LIST2 | LIST3 | LIST4 | LIST10 | THISYEARAVE | BOTH, ROWS2 | LIST3 | LIST4 | CUMAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(MISCHIGHDIEDPERCENT, "MHIDIED %", "HI worth Percent planets or ships died no trade accepted", 2, 2, 3, ROWS1 | LIST2 | LIST3 | LIST4 | LIST10 | THISYEARAVE | BOTH, ROWS2 | LIST3 | LIST4 | LIST10 | CUMAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(MISCLOWDIEDPERCENT, "MLODIED %", "LO worth Percent planets or ships died no trade accepted", 2, 2, 3, ROWS1 | LIST2 | LIST3 | LIST4 | LIST10 | THISYEARAVE | BOTH, ROWS2 | LIST3 | LIST4 | LIST10 | CUMAVE | BOTH | SKIPUNSET, 0, 0);
-
+    /*
     doRes(CGROWTH, "c growth", "cargo gowth as perscent of balance");
     doRes(SGROWTH, "s growth", "staff gowth as perscent of balance");
     doRes(GGROWTH, "g growth", "guest gowth as perscent of balance");
+     */
     doRes("swapRIncr", "swapRIncr", "Uses of R Incr Swap percent of RC", 1, 2, 0, list8 | CUMUNITS | CURUNITS | both | SKIPUNSET, 0, 0, 0);
     doRes("swapSIncr", "swapSIncr", "Uses of S Incr Swap percent of SG");
     doRes("swapSDecr", "swapSDecr", "Uses of S Decr Swap percent of SG");
@@ -7382,7 +7425,7 @@ onceAgain:
     doRes(DEADSWAPSMOVED, "diedSwapMoves", "died,average Swap Moves at death");
     doRes(DEADSWAPSCOSTS, "diedSwapCosts", "died,average SwapCosts at death");
     doRes(DEADTRADED, "diedTraded", "died,even after trading");
-
+    /*
     doRes(RDDEPRECIATIONP, "r DDepreciation%", "Notaccepted Died Depreciation in R as the % of unitGrowth");
     doRes(CDDEPRECIATIONP, "c DDepreciation%", "Notaccepted Died Depreciation in C as the % of unitGrowth");
     doRes(SDDEPRECIATIONP, "s DDepreciation%", "Notaccepted Died Depreciation in S as the % of unitGrowth");
@@ -7391,7 +7434,7 @@ onceAgain:
     doRes(CDADEPRECIATIONP, "c DADepreciation%", "Accepted Died Depreciation in C as the % of unitGrowth");
     doRes(SDADEPRECIATIONP, "s DADepreciation%", "Accepted Died Depreciation in S as the % of unitGrowth");
     doRes(GDADEPRECIATIONP, "g DADepreciation%", "Accepted Died Depreciation in G as the % of unitGrowth");
-
+*/
     doRes(RCMTGC, "%RCmtgCosts", "RC Maintenance,Travel,Growth Costs / RCSGBal", 1, 1, 1, LIST8 | LIST20 | CURAVE | both | SKIPUNSET, 0, 0, 0);
     doRes(RRAWMC, "%RMaintCosts", "R Maintenance Costs/ RCSGBal");
 

@@ -66,6 +66,7 @@ public class Econ {
   static EM eM = EM.eM;
   static StarTrader st = EM.st;
   static E eE = EM.eE;
+  static ABalRows rem;// = new ABalRows(this, ABalRows.BALSLENGTH, ABalRows.tbal, History.valuesMajor6, "rem");
   Econ ec = this;
   String aPre = "&V";
   Boolean dead = false;
@@ -192,7 +193,9 @@ public class Econ {
     this.dead = false;
     this.age = 0; // reset age if using a dead econ
     dyear =-5;
-
+    if (rem == null) {
+      rem = new ABalRows(ec, ABalRows.BALSLENGTH, ABalRows.tbal, History.valuesMajor6, "rem");
+    }
     planetList = new ArrayList<TradeRecord>();
     //double res1 = 1.0, tworth2 = 0.;
     tworth = initWorth;
