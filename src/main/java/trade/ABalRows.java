@@ -64,36 +64,32 @@ public class ABalRows extends A6Rowa {
   static final int INITIALNEWKNOWLEDGEIX = balz += 1; //16
   static final int MCOSTSIX = balz += 1; // space for NewKnowledge
   static final int TCOSTSIX = balz += LSUBS;  //10
-  static final int GROWTHSIX = balz += LSUBS; //
-  static final int PREVGROWTHSIX = balz += LSUBS; //
+  static final int GROWTHSEFFIX = balz += LSUBS; //AFTER SWAPS
+  static final int PREVGROWTHSIX = balz += LSUBS; // copy of last year growth
   static final int SECTORRAWGROWTHSIX = balz += LSUBS; //
   static final int PREVWORTHSIX = balz += LSUBS; //
-  static final int GROWTHWORTHSIX = balz += LSUBS; //
-  static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
-  static final int INITIALASSETSWORTHSIX = balz += LSUBS; //16  WORTH VALUES
+
   static final int CUMULATIVESECTORBONUSIX = balz += LSUBS;//32 L4 bonus applied to growth
   static final int CUMULATIVEBONUSWHORTHIX = balz += LSUBS; //limited bonus worth increase
   static final int BONUSYEARSIX = balz += LSUBS; //16 L4 years bonus wor
   static final int BONUSUNITSIX = balz += LSUBS;// current bonus,before limits
-  //static final int LIMTEDBONUSYEARLYUNITGROWTHIX = balz += LSUBS;// 28 L4
-  //static final int CUMULATIVEBONUSIX = balz += LSUBS;//32 L4
-  //static final int UNITDEPRECIATIONREDUCTIONIX = balz += 2;// r,s only not c,q
-  static final int CUMULATIVEUNITREPRECIATIONIX = balz += 2;
-  static final int CUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS;
- // static final int CUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
-  //static final int CUMULATIVEUNITDEPRECIATION3IX = balz += LSUBS; //
+  static final int REPRECIATIONIX = balz += LSUBS;  //cumulative repreciation
+  static final int DEPRECIATIONIX = balz += LSUBS;  // cumulative depreciation
+  static final int PRECIATIONIX = balz += LSUBS;  // cumulative depreciation -repreciation
   static final int SURPLUSCUMULATIVEUNITDEPRECIATIONIX = balz += LSUBS; // removed too much
-  //static final int SURPLUSCUMULATIVEUNITDEPRECIATION2IX = balz += LSUBS; //
-  static final int NEWUNITDEPRECIATIONIX = balz += LSUBS; //year depreciation from prevgrowth
- // static final int NEWUNITDEPRECIATION2IX = balz += LSUBS; //
- // static final int NEWUNITDEPRECIATION3IX = balz += LSUBS; //
   static final int RAWUNITGROWTHSIX = balz += LSUBS; //
   static final int RAWPRIORITYUNITGROWTHSIX = balz += LSUBS; //
   static final int RAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int MAXRAWYEARLYUNITGROWTHSIX = balz += LSUBS;
   static final int STARTYEARENDNULLIX = balz + LSUBS; // Assets.CashFlow.yearEnd zeros up to BALSLENGTH
   // the following rows can be nulled after yearEnd. but kept between yearStart and yearEnd
+  // they are zerod when restored at Assets.CashFlow.aStartCashFlow
+  static final int NEWDEPRECIATIONIX = balz += LSUBS; //this year depreciation from prevgrowth
+  static final int NEWREPRECIATIONIX = balz += LSUBS; //this year depreciation from prevgrowth
   static final int YEARLYBONUSSUMGROWTHVALIX = balz += LSUBS; //aStartCashFlow zero fills
+  static final int GROWTHWORTHSIX = balz += LSUBS; //
+  static final int CURWORTHSIX = balz += LSUBS; //16 L4 WORTH VALUES
+  static final int INITIALASSETSWORTHSIX = balz += LSUBS; //16  WORTH VALUES
   static final int INVMEFFICIENCYIX = balz += LSUBS;
   static final int INVGEFFICIENCYIX = balz += LSUBS;
   static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth
@@ -827,7 +823,7 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @return a mew A6Row using the growths section of bals
    */
   A6Row getGrowths(int lev, String titl) {
-    return use4(GROWTHSIX, lev, titl);
+    return use4(GROWTHSEFFIX, lev, titl);
   }
 
   /**
@@ -837,8 +833,9 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @return growth ARow for index m
    */
   ARow getGrowthsRow(int m) {
-    return A[GROWTHSIX + m];
+    return A[GROWTHSEFFIX + m];
   }
+
 
   /**
    * list the growths rows in bals
@@ -848,7 +845,7 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @param alev level of listed rows
    */
   void listGrowths(int blev, String apre, int alev) {
-    sendHist(GROWTHSIX, GROWTHSIX + 3, blev, apre, alev);
+    sendHist(GROWTHSEFFIX, GROWTHSEFFIX + 3, blev, apre, alev);
   }
 
   /**
@@ -923,7 +920,7 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @return the selected bals references in an A6Row
    */
   A6Row getCumDepreciation(int lev, String titl) {
-    return use4(CUMULATIVEUNITDEPRECIATIONIX, lev, titl);
+    return use4(DEPRECIATIONIX, lev, titl);
   }
 
   /**
@@ -934,17 +931,17 @@ static final int GROWTHS2IX = balz += LSUBS; //
    * @param alev level of listed rows
    */
   void listCumDepreciation(int blev, String apre, int alev) {
-    sendHist(CUMULATIVEUNITDEPRECIATIONIX, CUMULATIVEUNITDEPRECIATIONIX + 3, blev, apre, alev);
+    sendHist(DEPRECIATIONIX, DEPRECIATIONIX + 3, blev, apre, alev);
   }
 
   /**
    * get reference to a single ARow of CumulativeUnitDepreciation corresponding
    * to the index
    *
-   * @param m index of the CumulativeUnitDepreciation ARow s
-   * @return growth ARow for index m
+   * @param m index of the CumulativeUnitDepreciation ARow r c s g
+   * @return gdepreciation ARow for index m
    */
   ARow getCumDepreciationRow(int m) {
-    return A[CUMULATIVEUNITDEPRECIATIONIX + m];
+    return A[DEPRECIATIONIX + m];
   }
 }

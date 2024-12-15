@@ -696,9 +696,9 @@ public class E {
   static protected double[] cStartNewEnv = {2000., 2000., 2000., 2000., 2000.};
   static int hcnt = 9; // count of history values for assetsYr layaway ...
   /**
-   * layaway is the cash available to buy new ships or planets resources and
-   * staff are converted to cash at their nominal value layaway may be used in
-   * swaps to reduce high value sectors and reduce costs so that health and
+   * forwardFund is the cash available to buy new ships or planets resources and
+   * staff are converted to cash at their nominal value forwardFund may be used
+   * in   * swaps to reduce high value sectors and reduce costs so that health and
    * fertility can be increased
    */
   /**
