@@ -68,6 +68,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import static trade.EM.POSTSWAPRCSG;
+import static trade.EM.RAWYEARLYUNITGROWTH;
 import static trade.EM.mapInitSize;
 import static trade.EM.mapLoadFactor;
 import static trade.EM.myAIlearnings;
@@ -5246,13 +5248,14 @@ public class StarTrader extends javax.swing.JFrame {
         eer += " \nThere should be a StarTraderOutput and StarTraderError file in the same folder as you *.exe game file.  Attach these files in the email you send about the error.";
       }
       eer += "\nYou can send and email to aljsteiner@gmail.com \nSubject StarTrader error exit notes\nwPlease include your notes about the crash, and any comments about the game.";
+      stateConst = FATALERR;
       displayPanel0Text.setText(eer);
       System.err.println(eer);
       System.err.println(EM.threadsStacks());
       EM.flushes();
       EM.flushes();
       EM.flushes();
-      Thread.sleep(1000);
+      Thread.sleep(1000000);
       //    E.sysmsg("CF construct " + E.ROYGB.charAt(clan) + " " + name + " at " + a4.getMethodName() + ", " + a3.getMethodName() + ", " + a2.getMethodName() + " wealth=" + EM.mf(wealth));
       //  displayPanel2.setBackground(rrr);
       // displayPanel1EconName.setBackground(rrr);
@@ -5458,7 +5461,7 @@ public class StarTrader extends javax.swing.JFrame {
     if (sameState && sameName && sameWh
         && stateConstA != STATS && stateConstA != RUNSDONE && stateConstA != STOPPED && stateConstA != FATALERR) {
       sameEconState++;
-      assert sameEconState < 151 : "STUCK at runYears2.setEconState Year" + EM.year + sinceRY2() + sinceRY3() + sinceEcon() + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
+      assert sameEconState < 151 || EM.dfe() : "STUCK at runYears2.setEconState Year" + EM.year + sinceRY2() + sinceRY3() + sinceEcon() + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", sameEconStatecnt=" + sameEconState + " main3 testing" + " cntr1=" + cntr1 + " cntr2=" + cntr2 + " cntr3=" + cntr3 + " cntr4=" + cntr4 + " cntr5=" + cntr5 + " cntr6=" + cntr6 + " cntr7=" + cntr7 + " cntr8=" + cntr8 + " cntr9=" + cntr9;
       if (false && E.debugStuck && sameEconState > 50) {
         eM.doMyErr("STUCK at:doYear" + eM.year + myNow + " " + stateStringNames[stateConstA] + " " + EM.curEconName + ", cnt=" + sameEconState + " millisecs=" + (new Date().getTime() - startEconState));
       }
@@ -7330,7 +7333,7 @@ public class StarTrader extends javax.swing.JFrame {
       int rNAlsoTraded = EM.TRADEALSOLASTGAVE;
       int rNRejected = EM.TradeRejectedStrategicValue;
       int rNLost = EM.TradeLostStrategicValue;
-      int rNDepreciation = EM.RDEPRECIATIONP;// cum ave
+      int rNDepreciation = EM.DEPRECIATION;// cum ave
       int rNBONUSGROWTH = EM.BONUSGROWTH;//cum ave
       int rNHlpdLow = EM.ISLOW;// largest
       int rNHlpdSos0 = EM.ISSOS0;
@@ -7537,10 +7540,11 @@ public class StarTrader extends javax.swing.JFrame {
                  + "GameYrs    " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNLiveWorth, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                 
                  + "TradedGame " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " also:" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.S + 1, 0, 5) + " rej:" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.S + 1, 0, 5) + " lost:" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUR0, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.P, E.P + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNAlsoTraded, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNRejected, EM.ICUM, E.S, E.S + 1, 0, 5) + " :" + eM.getCurCumPorsClanUnitSum(rNLost, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
-                 + (EM.seeArrays[0].isEmpty() ? "" : "Map notes  " + EM.seeArrays[0] + "\n" + (EM.seeArrays[1].isEmpty() ? "" : EM.seeArrays[1] + "\n") + (EM.seeArrays[2].isEmpty() ? "" : EM.seeArrays[2] + "\n") + (EM.seeArrays[3].isEmpty() ? "" : EM.seeArrays[3] + "\n") + (EM.seeArrays[4].isEmpty() ? "" : EM.seeArrays[4] + "\n") + (EM.seeArrays[5].isEmpty() ? "" : EM.seeArrays[5] + "\n") + (EM.seeArrays[6].isEmpty() ? "" : EM.seeArrays[6] + "\n") + (EM.seeArrays[7].isEmpty() ? "" : EM.seeArrays[7] + "\n"))
+;
                  //   + "BothCreated " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0, E.P, E.S + 1, 0, 5) + " , " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  //  + "GameCreated" + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0, E.P, E.S + 1, 0, 5) + " , " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNyCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  //   + "FutCreated  " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUR0, E.P, E.S + 1, 0, 5) + " , " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUR0, E.P, E.P + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUR0, E.S, E.S + 1, 0, 5) + ", " + eM.getCurCumPorsClanUnitSum(rNFutCreated, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
+                 /*
                  + "GCatastrophies " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.S + 1, 0, 5) + " Planets " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNCrisis, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine
                  + "Difficulty" + EM.mf(EM.difficultyPercent[0]) + " DiedGame "
                  + eM.getCurCumPorsClanUnitSum(rNDied, EM.ICUR0, E.P, E.S + 1, 0, 5) + ", "
@@ -7557,16 +7561,46 @@ public class StarTrader extends javax.swing.JFrame {
                  + ":" + eM.getCurCumPorsClanUnitSum(rNDRej, EM.ICUM, E.S, E.S + 1, 0, 5)
                  + ":" + eM.getCurCumPorsClanUnitSum(rNDLost, EM.ICUM, E.S, E.S + 1, 0, 5)
                  + newLine;
+                 */
         int tmp1;
+        int ps=0;
+        int rnsos = EM.POSTSWAPRCSG;
+        int rngro = EM.RAWYEARLYUNITGROWTH;
+        int rnDep = EM.DEPRECIATION;
+        int rnBon = EM.BONUSGROWTHEFF;
+        int rnLrcsg = EM.LIVERCSG;
         // int rNDepreciation = eM.RDEPRECIATIONP;// largest
         // int rNBONUSGROWTH = eM.BONUSGROWTH;
-        int rnsos = EM.BONUSGROWTH;
-        if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        rnsos = EM.STARTRCSG;
+        ps = 0;// planets
+        if ((tmp1 = eM.getCurCumPorsClanUnitSum(EM.STARTRCSG, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+          disp1 += "Planets"
+                   + " bal " + eM.getSCurCumPorsClanAve(EM.STARTRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " agro " + eM.getSCurCumPorsClanAve(rngro, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " depreciation " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " bonus " + eM.getSCurCumPorsClanAve(rnBon, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " bgro " + eM.getSCurCumPorsClanAve(EM.GROWTHSEFF, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " costs " + eM.getSCurCumPorsClanAve(EM.MTGCOSTS, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " Lbal " + eM.getSCurCumPorsClanAve(rnLrcsg, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + newLine;
+          ps = 1; // ships now
+          disp1 += "Ships"
+                   + " bal " + eM.getSCurCumPorsClanAve(EM.STARTRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " agro " + eM.getSCurCumPorsClanAve(rngro, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " depreciation " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " bonus " + eM.getSCurCumPorsClanAve(rnBon, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " bgro " + eM.getSCurCumPorsClanAve(EM.GROWTHSEFF, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " costs " + eM.getSCurCumPorsClanAve(EM.MTGCOSTS, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " Lbal " + eM.getSCurCumPorsClanAve(rnLrcsg, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + newLine;
+        }
+          rnsos = EM.BONUSGROWTH;
+          if (false && (tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "CatastrophyGrowth " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
-        rnsos = EM.RDEPRECIATIONP;
-        if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "depreciation " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
+        rnsos = EM.DEPRECIATION;
+          if (false && (tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+          disp1 += "depreciation " + eM.getSCurCumPorsClanAve(rnsos, EM.ICUR0,1, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanValSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
         rnsos = EM.ISLOW;
         if (false && (tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
@@ -7581,7 +7615,7 @@ public class StarTrader extends javax.swing.JFrame {
           disp1 += "wrnSOS1 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
         rnsos = EM.ISSOS2;
-        if ((tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
+        if (false && (tmp1 = eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "dieSOS2 " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S + 1, 0, 5) * invY) + " Planets " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.P, E.S, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.P, E.S, 0, 5) * invY) + " Ships " + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUR0, E.S, E.S + 1, 0, 5) + ":" + eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) + " /Y" + (int) (eM.getCurCumPorsClanUnitSum(rnsos, EM.ICUM, E.S, E.S + 1, 0, 5) * invY) + newLine;
         }
         rnsos = EM.ISSOS3;
@@ -7607,6 +7641,7 @@ public class StarTrader extends javax.swing.JFrame {
         else if (false && (tmp1 = eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS3 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
+        disp1 += (EM.seeArrays[0].isEmpty() ? "" : "Map notes  " + EM.seeArrays[0] + "\n" + (EM.seeArrays[1].isEmpty() ? "" : EM.seeArrays[1] + "\n") + (EM.seeArrays[2].isEmpty() ? "" : EM.seeArrays[2] + "\n") + (EM.seeArrays[3].isEmpty() ? "" : EM.seeArrays[3] + "\n") + (EM.seeArrays[4].isEmpty() ? "" : EM.seeArrays[4] + "\n") + (EM.seeArrays[5].isEmpty() ? "" : EM.seeArrays[5] + "\n") + (EM.seeArrays[6].isEmpty() ? "" : EM.seeArrays[6] + "\n") + (EM.seeArrays[7].isEmpty() ? "" : EM.seeArrays[7] + "\n"));
         disp1 += "year" + eM.year + " Threads=" + Econ.getThreadCnt() + ":" + Thread.activeCount() + " " + EM.wasHere8 + " " + since() + " " + sinceRunYear() + "  " + newLine;
         disp1 += "more " + EM.wasHere8 + EM.mem() + newLine;
 

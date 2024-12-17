@@ -507,7 +507,7 @@ public class ARow {
     // E.myTest(A == null, "input to set is null");
     double d;
     setCnt++;
-    for (int i = 0; i < E.lsecs; i++) {
+    for (int i : E.ASECS) {
       if (E.debugDouble) {
         d = ec.doubleTrouble(A.get(i), " A[" + i + "] " + titl);
       }
@@ -531,7 +531,7 @@ public class ARow {
     // E.myTest(A == null, "input to set is null");
     double d;
     setCnt++;
-    for (int i = 0; i < E.lsecs; i++) {
+    for (int i : E.ASECS) {
       if (E.debugDouble) {
         d = ec.doubleTrouble(A.get(i), " A[" + i + "] " + titl);
       }
@@ -554,7 +554,7 @@ public class ARow {
     // the presets in ARow() force reindex etc
     double d;
     ret.setCnt = setCnt + 1;
-    for (int i = 0; i < E.lsecs; i++) {
+    for (int i : E.ASECS) {
       d = ec.doubleTrouble(get(i), " self[" + i + "]");
       ret.set(i, d);
     }
@@ -570,7 +570,7 @@ public class ARow {
   ARow newCopy(EM newEM) {
     ARow ret = new ARow(ec);
     double d;
-    for (int i = 0; i < E.lsecs; i++) {
+    for (int i : E.ASECS) {
       d = ec.doubleTrouble(get(i), "newCopy");
       ret.set(i, d);
       ret.ix[i] = ix[i];
@@ -594,8 +594,8 @@ public class ARow {
    * @return this
    */
   ARow flip() {
-    for (int n : E.alsecs) {
-      set(n, doubleTrouble(-get(n), " self[" + n + "]"));
+    for (int i : E.ASECS) {
+      set(i, doubleTrouble(-get(i), " self[" + i + "]"));
     }
     return this;
   }
@@ -606,12 +606,12 @@ public class ARow {
    * @return this
    */
   ARow flip(ARow prev) {
-    for (int n : E.alsecs) {
+    for (int i : E.ASECS) {
       if (E.debugDouble) {
-        set(n, ec.doubleTrouble(-prev.get(n), "flip"));
+        set(i, ec.doubleTrouble(-prev.get(i), "flip"));
       }
       else {
-        set(n, -prev.get(n));
+        set(i, -prev.get(i));
       }
     }
     return this;
@@ -623,7 +623,7 @@ public class ARow {
    * @param A double[]
    */
   ARow set(double[] A) {
-    for (int i = 0; i < E.lsecs; i++) {
+    for (int i : E.ASECS) {
       if (E.debugDouble) {
         set(i, ec.doubleTrouble(A[i], "set"));
       }
@@ -640,7 +640,7 @@ public class ARow {
    * @param A double
    */
   ARow set(double A) {
-    for (int i = 0; i < E.lsecs; i++) {
+    for (int i : E.ASECS) {
       set(i, ec.doubleTrouble(A, "set"));
     }
     return this;
@@ -653,9 +653,9 @@ public class ARow {
    * @param B ARow subtracted
    */
   ARow setAsubB(ARow A, ARow B) {
-    for (int m = 0; m < E.lsecs; m++) {
-      set(m, ec.doubleTrouble(A.get(m), " A[" + m + "]")
-             - doubleTrouble(B.get(m), " B[" + m + "]"));
+    for (int i : E.ASECS) {
+      set(i, ec.doubleTrouble(A.get(i), " A[" + i + "]")
+             - doubleTrouble(B.get(i), " B[" + i + "]"));
     }
     return this;
   }

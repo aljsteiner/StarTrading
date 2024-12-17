@@ -3303,6 +3303,7 @@ public class Assets {
       double sumTotWorth = sumRCWorth + sumSGWorth + cash + sumKnowledgeWorth + sumManualsWorth;
       double myResilience = resilience; // isolate from Assets
       double myHope = hope;
+      //   double costs =
       // int aLev = History.valuesMinor7;
       //  A6Row myGrowths = bals.getGrowths(History.valuesMinor7, "myGrowths");
       //  A6Row myGrowths = growths.copy(ec);
@@ -4514,7 +4515,7 @@ public class Assets {
           double dYrPotentialUnitGrowth = dRawYearlyUnitGrowth * dGrowthFrac;
           setStat(EM.RAWYEARLYUNITGROWTH, dYrPotentialUnitGrowth, secCnt);
           double dRawSumGrowth = dYrPotentialUnitGrowth - depreciation.get(secIx) + dBonusYearUnitGrowth;
-          setStat(EM.GROWTHPRECIATED, dRawSumGrowth, secCnt);
+          //   setStat(EM.GROWTHPRECIATED, dRawSumGrowth, secCnt);
           //surplus bonus, if bonus pushes growth over max
           double dSurplusBonusGrowth = dRawSumGrowth > dMaxRawYearlyUnitGrowth ? dRawSumGrowth - dMaxRawYearlyUnitGrowth : 0.0;
           double dRawUnitGrowth = dRawSumGrowth - dSurplusBonusGrowth;
@@ -4522,7 +4523,7 @@ public class Assets {
           dBonusYearUnitGrowth -= dSurplusBonusGrowth;//CUMULATIVESECTORBONUSIX
           bals.add(ABalRows.CUMULATIVESECTORBONUSIX + sIx, secIx, dBonusYearUnitGrowth);
           ec.rem.add(ABalRows.CUMULATIVESECTORBONUSIX + sIx, secIx, dBonusYearUnitGrowth);
-
+          setStat(EM.GROWTHPRECIATED, dBonusYearUnitGrowth, secCnt);
           //rawUnitGrowth.set(secIx, dRawUnitGrowth);//RAWUNITGROWTHSIX + sIx
           bals.set(ABalRows.RAWUNITGROWTHSIX + sIx, secIx, dRawUnitGrowth);//RAWUNITGROWTHSIX + sIx
           //  now calc priority and growthEfficiency(from knowledge)
@@ -10433,6 +10434,7 @@ public class Assets {
         //  setStat(EM.RCSG, pors, clan, syW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
        // setStat(EM.INCRRCSG, sumYearRCSGincr);
         setStat(EM.LIVERCSG, fyW.getSumRCSGBal());
+        setStat(EM.STARTRCSG, syW.getSumRCSGBal());
         setStat(EM.INITRCSG, iyW.getSumRCSGBal());
         setMax(EM.MAXRCSG, fyW.getSumRCSGBal());
         setMin(EM.MINRCSG, pors, clan, fyW.getSumRCSGBal(), 1);

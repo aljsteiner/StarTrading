@@ -83,7 +83,6 @@ public class A10Row extends A6Rowa {
     balances = false;
     costs = true;
     costs10 = true;
-    lsubs = 4;
     dResums = dResumsa;
     mResum = mResuma;
   }
@@ -267,7 +266,7 @@ public class A10Row extends A6Rowa {
      return  A[1].values[n] = A[6].values[n] + A[7].values[n] + A[8].values[n] + A[9].values[n]; 
        }
     } else {
-    int mm = m < 2? m: (m-lsums)/lsubs; // find proper rc or sg
+         int mm = m < 2 ? m : (m - lsubs) / lsubs; // find proper rc or sg
     double ret;
     if(E.debugDouble){
     ret = doubleTrouble(A[m].get(n));

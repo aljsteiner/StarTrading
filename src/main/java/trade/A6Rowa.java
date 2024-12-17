@@ -77,9 +77,10 @@ public class A6Rowa {
   volatile int dA[] = {0, 1, 2, 3, 4, 5};
   static int d29[] = {2, 3, 4, 5, 6, 7, 8, 9};
   static int BALANCESIX = 2;
-  static final int lsums = 2;// ??
-  static final int LSUMS = 4;//RCSG
-  int lsubs = 2;
+  // static final int lsums = 2;// ??
+  // static final int LSUMS = 4;//RCSG
+  static final int lsubs = 2;
+  static final int LSUBS = lsubs;
   volatile ARow[] A = new ARow[lA];
   // reqCosts for r,c,s,g   or rHealth sHealth rFertility sFertility
   volatile double sum[] = {0., 0., 0., 0., 0.}, plusSum[] = {0., 0., 0., 0., 0.}, negSum[] = {0., 0., 0., 0., 0.};
@@ -667,7 +668,7 @@ public class A6Rowa {
    * @param startIx //location of in this AxRow, 2 if this is A6Row
    * @param aLev // new A6Row level
    * @param aTitl // new A6Row title
-   * @return
+   * @return A6Row with 0,1 fixed
    */
   A6Row copy6(int startIx, int aLev, String aTitl) {
     A6Row rtn = new A6Row(ec, aLev, aTitl).zero();
@@ -676,13 +677,13 @@ public class A6Rowa {
     rtn.lev = aLev;
     rtn.balances = true;
 
-    for (int m = 0; m < 4; m++) {
-      for (int n = 0; n < E.LSECS; n++) {
+    for (int m : A03) {
+      for (int n : E.ASECS) {
         if (E.debugDouble) {
-          rtn.A[m / 2].add(n, rtn.A[lsums + m].set(n, doubleTrouble(A[startIx + m].get(n))));
+          rtn.A[m + LSUBS].set(n, doubleTrouble(this.A[startIx + m].get(n)));
         }
         else {
-          rtn.A[m / 2].add(n, rtn.A[lsums + m].set(n, A[startIx + m].get(n)));
+          rtn.A[m + LSUBS].set(n, this.A[startIx + m].get(n));
         }
       }
     }
@@ -783,7 +784,7 @@ public class A6Rowa {
     if (A[m] == null) {
       A[m] = new ARow(ec);
     }
-    int ma = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
+    int ma = m < 2 ? m : (m - lsubs) / lsubs; // find proper rc or sg
     for (int mm : dResums) { // iterate over arrays of iX values and ARows
       if (mm == ma) {
         // check for a change since the last calculation of mResum[mm]
@@ -1268,16 +1269,16 @@ public class A6Rowa {
     else {
       int al = A.length;
       assert m < A.length : "get(m,n) error m" + m + " indexes more than length" + al;
-      int mm = m < 2 ? m : (m - lsums) / lsubs; // find proper rc or sg
+      int mm = m < 2 ? m : (m - lsubs) / lsubs; // find proper rc or sg
       resum(m);
       boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances && costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
       double bal1 = 0.;
       double both = 0.;
       if (E.debugResumP && !ignoreIf && !noChecking) {
         bal1 = gett(mm, n);
-        both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
+        both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsubs + 1 + mm * lsubs, n);
         // add in the 10row if needed
-        both += ignoreIf ? 0.0 : costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
+        both += ignoreIf ? 0.0 : costs10 ? gett(lsubs + 2 + mm * lsubs, n) + gett(lsubs + 3 + mm * lsubs, n) : 0.0;
         // ignore test if ignoreIf is true
 
         double dif = bal1 - both;
@@ -1558,30 +1559,28 @@ public class A6Rowa {
     int m = bias;
     int al = A.length;
     // decide whether to add to  0 or 1=mm
-    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 8) / lsubs; // find proper rc or sg
+    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 6) / lsubs; //  0:rc or 1:sg
+    // if don't add to 0 or 1
     boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances || costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
     double bal1 = 0.;
     double both = 0.;
+    // is test ignored
+    double ret = A[m].set(n, val);
     if (E.debugResumP && !ignoreIf && !noChecking) {
-      bal1 = gett(mm, n);
-      both = gett(lsums + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);
-      // add in the 10row if needed
-      both += ignoreIf ? 0.0 : costs10 ? gett(lsums + 2 + mm * lsubs, n) + gett(lsums + 3 + mm * lsubs, n) : 0.0;
-      // ignore test if ignoreIf is true
-
-      double dif = bal1 - both;
-      boolean badDif = E.PZERO < dif || E.NZERO > -dif; // trouble if true
-      // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
-      assert !badDif : "resum error sector" + n + " length" + al + " bias" + bias + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
-    }
-    // change the actual value, set updates that row setCnt
-    double ret = A[bias].set(n, val);
-    if (!ignoreIf) {
+      bal1 = gett(mm, n);//get 0 or 1
       //both is sum for 0 or 1  first 2345 =>0 1
-      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
+      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsubs + 1 + mm * lsubs, n);//23 or 45
       // if A10Row add in the 6789 => 0 1
-      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
-      A[mm].set(n, both);
+      both += (!costs10) ? 0.0 : gett(6 + mm * lsubs, n) + gett(7 + mm * lsubs, n); //67 or 89
+      boolean c10 = costs10;
+      double dif = bal1 - both; // 01 - both
+      boolean badDif = E.PZERO < dif || E.NZERO > -dif; // dif too much
+      // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
+      assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "="
+                       + EM.mf2(bal1, "bal1")
+                       + EM.mf2(dif, "dif") + EM.mf2(both, "both") + EM.mf2(gett(2, n), "pr") + EM.mf2(gett(3, n), "pc") + EM.mf2(gett(4, n), "ps") + EM.mf2(gett(5, n), "pg")
+                       + (c10 ? EM.mf2(gett(6, n), "sr") + EM.mf2(gett(7, n), "sc") + EM.mf2(gett(8, n), "ss") + EM.mf2(gett(9, n), "sg") : "");
+      A[mm].set(both);
     }
     return ret;
   }
@@ -1615,24 +1614,7 @@ public class A6Rowa {
    * @return val
    */
   public double sett(int m, int n, double val) {
-    E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "][" + n + "]");
-    if (A[m] == null) {
-      A[m] = new ARow(ec);
-    }
-    int al = A.length;
-    // decide whether to add to  0 or 1=mm
-    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 8) / lsubs; // find proper rc or sg
-    double ret = A[m].set(n, val);
-    // test not set 0,`1
-    boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances || costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
-    if (!ignoreIf) {
-      //both is sum for 0 or 1  first 2345 =>0 1
-      double both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
-      // if A10Row add in the 6789 => 0 1
-      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
-      A[mm].set(n, both);
-    }
-    return ret;
+    return set(m, n, val);
   }
 
   /**
@@ -1650,37 +1632,35 @@ public class A6Rowa {
     if (A[m] == null) {
       A[m] = new ARow(ec);
     }
+    double ret = A[m].add(n, val);
     int al = A.length;
     // decide whether to add to  0 or 1=mm
-    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 8) / lsubs; // find proper rc or sg
+    int mm = m < 2 ? m : m < 6 ? (m - lsubs) / lsubs : (m - 6) / lsubs; //  0:rc or 1:sg
     // if don't add to 0 or 1
     boolean ignoreIf = !(al == 6 || al == ABalRows.BALSLENGTH || al == 10) || !(balances || costs10) || m < 0 || costs10 ? m > 9 : balances ? m > 5 : false;
     double bal1 = 0.;
     double both = 0.;
     // is test ignored
     if (E.debugResumP && !ignoreIf && !noChecking) {
+      add(mm, n, val);// add to rc or sg
       bal1 = gett(mm, n);//get 0 or 1
       //both is sum for 0 or 1  first 2345 =>0 1
-      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
+      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsubs + 1 + mm * lsubs, n);//23 or 45
       // if A10Row add in the 6789 => 0 1
-      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
+      both += (!costs10) ? 0.0 : gett(6 + mm * lsubs, n) + gett(7 + mm * lsubs, n); //67 or 89
+      boolean c10 = costs10;
       double dif = bal1 - both; // 01 - both
       boolean badDif = E.PZERO < dif || E.NZERO > -dif; // dif too much
       // assert error only if ignoreIf is false and badDif is true , costs10 both has 4 values
-      assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "=" + EM.mf(bal1) + " noteq dif" + dif + " both" + EM.mf(both) + (costs10 ? " r" + EM.mf(gett(2 + mm * lsubs, n)) + " c" + EM.mf(gett(3 + mm * lsubs, n)) + " s" + EM.mf(gett(4 + mm * lsubs, n)) + " g" + EM.mf(gett(5 + mm * lsubs, n)) : " working" + EM.mf(gett(2 + mm * lsubs, n)) + " reserve" + EM.mf(gett(3 + mm * 2, n)));
+      assert !badDif : "resum error sector" + n + " length" + al + " m" + m + " mm" + mm + "="
+                       + EM.mf2(bal1, "bal1")
+                       + EM.mf2(dif, "dif") + EM.mf2(both, "both") + EM.mf2(gett(2, n), "pr") + EM.mf2(gett(3, n), "pc") + EM.mf2(gett(4, n), "ps") + EM.mf2(gett(5, n), "pg")
+                       + (c10 ? EM.mf2(gett(6, n), "sr") + EM.mf2(gett(7, n), "sc") + EM.mf2(gett(8, n), "ss") + EM.mf2(gett(9, n), "sg") : "");
+      A[mm].set(both);
     }
 
-    double ret = A[m].add(n, val);
     if (noChecking) {
       noChecking = true;
-    }
-    else //IGNORED if a legal class also set the row 0 or 1 row
-    if (!ignoreIf) {
-      //both is sum for 0 or 1  first 2345 =>0 1
-      both = gett(lsubs + 0 + mm * lsubs, n) + gett(lsums + 1 + mm * lsubs, n);//23 or 45
-      // if A10Row add in the 6789 => 0 1
-      both += (!costs10) ? 0.0 : gett(lsums + 6 + mm * lsubs, n) + gett(lsums + 7 + mm * lsubs, n); //67 or 89
-      A[mm].set(n, both);
     }
     return ret;
 
@@ -1696,16 +1676,16 @@ public class A6Rowa {
   public A6Rowa setAmultF(A6Row a, A2Row f) {
     noChecking = true;
     noChecking = true;
-    for (int n : ASECS) {
-      for (int m : A01) {
-        for (int mm : A01) {
-          sett(2 + 2 * m + mm, n, a.get(2 + 2 * m + mm, n) * f.get(m, n));
-        }
+    int mm;
+    for (int m : A25) {
+      mm = (m - LSUBS) / LSUBS;//23=0,45=1
+      for (int n : ASECS) {
+        this.set(m, n, a.get(m, n) * f.get(mm, n));
       }
     }
     noChecking = false;
-    resum(0);
-    resum(1);
+    //   resum(0);
+    //  resum(1);
     return this;
   }
 

@@ -1339,6 +1339,21 @@ class EM {
   /**
    * format the Double value to a 7 char String
    *
+   * @param v value to format
+   * @param desc description of format
+   * @return desc + mf(v)
+   */
+  static public String mf2(Double v, String desc) {
+    boolean t = mfShort;
+    mfShort = true;
+    String rt = " " + desc + mf(v);
+    mfShort = t;
+    return rt;
+  }
+
+  /**
+   * format the Double value to a 7 char String
+   *
    *
    * @param v value to format
    * @return mf(v)
@@ -2974,6 +2989,50 @@ class EM {
     return rt;
   }
 
+  /**
+   * doAIVal flag to put in key determine type from the arrays at vaddr with
+   * vaddr full double * val[][p,s] = {{.5}} or {{.5},{.5}} gc vone
+   * val[vv][0]{val}, valD {{val}} gc vtwo val[vv][0][pors] {pVal,sVal}, valD
+   * {{pVal,sVal}} gc vthree val[vv][0][val1] {{val}}, valD {{val}} same as vone
+   * gc vfour val[vv][pors][val1] {{pVal},{sVal}}. valD {{pVal},{sVal}} gc vfive
+   * val[vv][0][val5] {{1,2,3,4,5}}, valD{{1,2,3,4,5}}; gc vten
+   * valD[vv][0][pors][val5] {{1,2,3,4,5},{6,7,8,9,10}}
+   *
+   * @param vdesc title of the input
+   * @param vaddr address of the input
+   * @param lims limits of the input
+   * @param vdetail details about the input
+   * @return vv the number of the input in valI,valD,valS
+   */
+  int doAIVal(String vdesc, double[] vaddr, double[][] lims, String vdetail) throws IOException {
+    int rt = doVal(vdesc, vaddr, lims, vdetail);
+    valAI[vvAx++] = rt;
+    return rt;
+  }
+
+  /**
+   * doVal flag to put in key determine type from the arrays at vaddr with vaddr
+   * Set the nudge value for this given vvAx; full double * val[][p,s] = {{.5}}
+   * or {{.5},{.5}} gc vone val[vv][0]{val}, valD {{val}} gc vtwo
+   * val[vv][0][pors] {pVal,sVal}, valD {{pVal,sVal}} gc vthree val[vv][0][val1]
+   * {{val}}, valD {{val}} same as vone gc vfour val[vv][pors][val1]
+   * {{pVal},{sVal}}. valD {{pVal},{sVal}} gc vfive val[vv][0][val5]
+   * {{1,2,3,4,5}}, valD{{1,2,3,4,5}}; gc vten valD[vv][0][pors][val5]
+   * {{1,2,3,4,5},{6,7,8,9,10}}
+   *
+   * @param nX index to the nudge values
+   * @param vdesc title of the input
+   * @param vaddr address of the input
+   * @param lims limits of the input
+   * @param vdetail details about the input
+   * @return vv the number of the input in valI,valD,valS
+   */
+  int doAIVal(int nX, String vdesc, double[] vaddr, double[][] lims, String vdetail) throws IOException {
+    int rt = doVal(vdesc, vaddr, lims, vdetail);
+    valAIN[nX] = rt; // pointers to vv with nudges
+    //valAI[vvAx++] = rt; //do these as special nudge0,nudge1...
+    return rt;
+  }
   /**
    * doVal flag to put in key determine type from the arrays at vaddr with vaddr
    * Set the nudge value for this given vvAx; full double * val[][p,s] = {{.5}}
@@ -5584,7 +5643,7 @@ onceAgain:
     try {
       if (myAIlearnings == null) {
         if (E.debugAIOut) {
-          System.out.println("------BIC1-----EM.buildAICvals null HashMap new HashMap year=" + year);
+          System.out.println("------BIC1-----EM.buildAICvals null HashMap new HashMap " + curEconName + "Y" + year);
         }
         myAIlearnings = new HashMap(mapInitSize,mapLoadFactor);
       }
@@ -5596,7 +5655,8 @@ onceAgain:
       int lRes = res.length; // use length given
       int ix = 0, ixa = 0, vv = 0;
       if (E.debugAIOut) {
-        System.out.println("------BIC2-----EM.buildAICvals Y" + year + " key.len" + lRes + ":" + E.bValsStart + ":" + vvAx + " pClan" + (ixPS * 5 + ixClan) + " aiNudges=2");
+        System.out.println("------BIC2-----EM.buildAICvals " + curEconName + "Y" + year + " key.len" + lRes + ":" + E.bValsStart + ":" + vvAx + " pClan" + (ixPS * 5 + ixClan)
+                           + " aiNudges[].length =" + 2);
       }
       //res = new byte[lRes];// set Res to a new right length
       //uMasked = new byte[lRes];
@@ -5614,7 +5674,7 @@ onceAgain:
           uMasked[ixa] = E.maskC; // set mask for each user val
         }
       }// ix
-    }//
+    }//try
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
@@ -5891,7 +5951,7 @@ onceAgain:
         int prevSlider = valI[vv][prevSliderC][vFill][pors] = valI[vv][sliderC][vFill][pors];
         valI[vv][sliderC][vFill][pors] = slider; // a new value for slider
         if (E.debugPutValue && E.debugDoRes) {
-          System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
+          System.out.println("----PVL2----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
         }
         doWriteKeepVals(vv, vFill, pors, val1, val0, slider, prevSlider, prev2Slider);
         return 1;
@@ -5900,7 +5960,7 @@ onceAgain:
       else if ((gc == vthree && pors == E.P) || gc == vfour) {
         if (slider == (va  = valI[vv][sliderC][pors][vFill])) {
           if (E.debugPutValue2 && E.debugDoRes) {
-            System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + "no change");
+            System.out.println("-----PVL3-----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + "no change");
           }
           return 0; // no change
         }
@@ -5911,7 +5971,7 @@ onceAgain:
         int prevSlider = valI[vv][prevSliderC][pors][vFill] = valI[vv][sliderC][pors][vFill];
         valI[vv][sliderC][pors][vFill] = slider; // a new value for slider
         if (E.debugPutValue && E.debugDoRes) {
-          System.out.println("----PV3----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
+          System.out.println("----PVl4----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
         }
         doWriteKeepVals(vv, pors, vFill, val1, val0, slider, prevSlider, prev2Slider);
         return 1;
@@ -5919,7 +5979,7 @@ onceAgain:
       else if (gc == vseven) {
         if (slider == (va  = valI[vv][sliderC][pors][vFill])) {
           if (E.debugPutValue2 && E.debugDoRes) {
-            System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + " no change");
+            System.out.println("-----PVL5-----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + " no change");
           }
           return 0; // no change
         }
@@ -5932,7 +5992,7 @@ onceAgain:
         int prevSlider = valI[vv][prevSliderC][vFill][valI[vv][sevenC][vFill][vFill]] = valI[vv][sliderC][vFill][valI[vv][sevenC][vFill][vFill]];
         valI[vv][sliderC][vFill][valI[vv][sevenC][vFill][vFill]] = slider; // a new value for slider
         if (E.debugPutValue && E.debugDoRes) {
-          System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
+          System.out.println("----PVL6----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
         }
         doWriteKeepVals(vv, pors, valI[vv][sevenC][vFill][vFill], val1, val0, slider, prevSlider, prev2Slider);
         return 1;
@@ -5941,11 +6001,11 @@ onceAgain:
     else if ((gc == vten || gc == vfive)) {
       va  = valI[vv][sliderC][pors][klan];
       if (E.debugPutValue2 && E.debugDoRes) {
-        System.out.print(" old slider=" + va  + ", new slider=" + slider);
+        System.out.print("----PVL7----old slider=" + va  + ", new slider=" + slider);
       }
       if (slider == va) {
         if (E.debugPutValue2 && E.debugDoRes) {
-          System.out.println("no change");
+          System.out.println("----PVL7a----no change");
         }
         return 0; // no change
       }
@@ -5957,16 +6017,16 @@ onceAgain:
       int prevSlider = valI[vv][prevSliderC][pors][clan] = valI[vv][sliderC][pors][clan];
       valI[vv][sliderC][pors][clan] = slider; // a new value for slider
       if (E.debugPutValue && E.debugDoRes) {
-        System.out.println("EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
+        System.out.println("----PVL8----EM putVal gc=" + gc + " " + ", vv=" + vv + " " + valS[vv][0] + ", " + E.cna[pors] + ", clan=" + clan + ":" + klan + ", was=" + mf(val0) + ", to=" + mf(val1) + " sliders " + prev2Slider + " => " + prevSlider + " => " + slider);
       }
       doWriteKeepVals(vv, pors, clan, val1, val0, slider, prevSlider, prev2Slider);
       return 1;
     }
     else if (E.debugSettingsTab) {  //problem with gc
       if (E.debugPutValue2 && E.debugDoRes) {
-        System.out.println("gc oops =" + valS[vv][0] + ", old slider=" + va  + ", new slider=" + slider + ", gc=" + gc + ", pors=" + pors + ", clan=" + clan);
+        System.out.println("----PVL9-----gc oops =" + valS[vv][0] + ", old slider=" + va  + ", new slider=" + slider + ", gc=" + gc + ", pors=" + pors + ", clan=" + clan);
       }
-      String verr = "putval illegal gc=" + gc + "  " + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors + ", klan=" + klan;
+      String verr = "----PVLERR----putval illegal gc=" + gc + "  " + valS[vv][vDesc] + ", vv=" + vv + ",  pors=" + pors + ", klan=" + klan;
       doMyErr(verr);
     }
     return 1;
@@ -6114,9 +6174,9 @@ onceAgain:
    * also run settings adjustments at the end
    */
   void runVals() throws IOException {
-    doVal("difficulty", difficultyPercent, mDifficultyPercent, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the difficulty for ships as well as  Planets ,more difficulty increases costs of  resources and staff each year, increases the probability of ship and planet deaths.  More difficulty probably requires more clan-master expertise.");
+    doAIVal("difficulty", difficultyPercent, mDifficultyPercent, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the difficulty for ships as well as  Planets ,more difficulty increases costs of  resources and staff each year, increases the probability of ship and planet deaths.  More difficulty probably requires more clan-master expertise.");
     doVal("maxEcons", econLimits3, mEconLimits3, "Increase the max number of econs (planets+ships) in this game, it maxEcons too large the game will blow up out of memory, depending on your available memory");
-    //   doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year by about 30%.");
+    doVal("Threads", maxThreads, mmaxThreads, "Increase the number of possible threads. If your computer supports more than 1 cpu, more threads may decrease the total time per year by about 30%.");
     doVal("Artificial Int", aicnt, maicnt, "AI options, below 25, no AI,25-49 user blue 4 AI learned values, 50-74 users bllue 4 and green 3, 75-99 users blue 4, green 3, yellow 2 all get learned values help");
     doVal("randomActions", randFrac, mRandFrac, "Normally, the named change in effect is dependent on a increase in the value of the slider.  Increase the random effects, increases possibility of gain, and of loss, inccreasing possibility of deaths");
     doVal("clanRiskMult", gameClanRiskMult, mGameClanRiskMult, "increase slider: increase effect of clan risk settings");
@@ -6571,6 +6631,7 @@ onceAgain:
   static final int REPRECIATION = ++e4; // CUM REPRECIATION
   static final int NEWPRECIATION = ++e4; // THIS YEAR DEPRECIATION - REPRECIATION
   static final int PRECIATION = ++e4; // CUM DEPRECIATION - REPRECIATION
+  static final int STARTRCSG = ++e4;// START REAR
   static final int NEWBONUSGROWTH = ++e4;// THIS YEAR raw bonus growth
   static final int BONUSGROWTH = ++e4;// raw bonus growth
   static final int BONUSGROWTHEFF = ++e4;// effect of bonus on growth
@@ -6585,7 +6646,9 @@ onceAgain:
   static final int GROWTHSEFF = e4 += 4; //after swaps sum4 of actual year growth done
   static final int RGROWTHSEFF = ++e4; //r c s g after swaps sum4 of actual year growth done
   static final int GROWTHCOSTS = e4 += 4;//THIS YEAR costs per unit GROWTHSEFF
+  static final int MTGCOSTS = ++e4;
   static final int RGROWTHCOSTS = ++e4;//R C S G THIS YEAR costs per unit GROWTHSEFF
+  static final int POSTSWAPRCSG = ++e4;
   //static final int GROWTHCOSTSY = e4 += 4;// PREV HEAR GROWTHCOSTS
   // static final int GROWTHCOSTSYY = ++e4;//PREVPREV YEAR GROWTHCOSTS
   static final int DGROWTHSN0 = ++e4; //sum4 growths at year of death
@@ -6679,7 +6742,7 @@ onceAgain:
   static final int FERTILITYGROWTHS = ++e4;
   static final int FERTILITYGROWTHCOSTS = ++e4;
   static final int RAWPROSPECTS = ++e4;
-  static final int MTGCOSTS = ++e4;
+
   static final int COSTWORTHDECR = ++e4;
   static final int POORHEALTHEFFECT = ++e4;//CATASTRCOST
   static final int CATASTRCOST = ++e4;//CATASTRCOST
@@ -6704,7 +6767,6 @@ onceAgain:
   static final int TRADEWORTHINCR = ++e4;
   static final int TRADERCSGINCR = ++e4;
 
-  static final int POSTSWAPRCSG = ++e4;
   static final int SWAPRINCRWORTH = ++e4;
   static final int TRADESTRATLASTGAVE = ++e4;
   static final int TRADESTRATVALUE = ++e4;
@@ -6717,7 +6779,7 @@ onceAgain:
   static final int TRADESOS3 = ++e4;
   static final int BOTHCREATE = ++e4;
   static final int LIVERCSG = ++e4;
-
+  ;
   static final int INITRCSG = ++e4;
   static final int HIGHRCSG = ++e4;
   static final int LOWRCSG = ++e4;
@@ -7093,7 +7155,8 @@ onceAgain:
    doRes(TRADESTRATLASTGAVE, "trade Given%", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST15 | CURAVE | CUM | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
     doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 | CUMUNITS | BOTH, LIST23 | CURUNITS | BOTH, 0, 0);
-    doRes(INITRCSG, "init rcsg", "Initial rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(INITRCSG, "init rcsg", "Initial rcsg Value ", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(STARTRCSG, "startRCSG", "Start year rcsg Value ", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
     /*
@@ -7114,7 +7177,7 @@ onceAgain:
     doRes(GRADESUP, "gradesUp", "number of times some grades up done", 1, 1, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
     
     doRes(PREVGROWTHP, "%prevgrowth", "growth percent of year start balance at the start of this year", 2, 6, 2, ROWS1 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
-
+*/
     doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 1, 2, 2, ROWS1 | LIST8 | CUMAVE | BOTH, LIST13 | CURAVE | BOTH, 0L, 0L);
     doRes(NEWDEPRECIATION, "NewDepreciation", "depreciation this year", 1, 2, 2, ROWS1 | LIST8 | CUMAVE | BOTH, LIST13 | CURAVE | BOTH, 0L, 0L);
     doRes(RNEWDEPRECIATION, "R newDepreciation", "new Depreciation in R");
@@ -7135,7 +7198,11 @@ onceAgain:
     // doRes(RAWYEARLYUNITGROWTH, "rawYrUnitGrowth", "Raw year unit growth  before rawUnitGrowth this year before cost reduction", 1, 3, 2, LIST1 | LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L)
 
     doRes(RAWPROSPECTS, "rawProspects", "Raw prospects after depreciation this year after cost reduction");
-    doRes(GROWTHCOSTS, "growthCst3", "growth costs also fertility growth costs inside getNeeds");
+    doRes(GROWTHCOSTS, "Costs", "costs at year end");
+    doRes(RGROWTHCOSTS, "R Costs", "R costs at year end");
+    doRes(RGROWTHCOSTS + 1, "C Costs", "C costs at year end");
+    doRes(RGROWTHCOSTS + 2, "S Costs", "S costs at year end");
+    doRes(RGROWTHCOSTS + 3, "G Costs", "G costs at year end");
     //doRes(GROWTHCOSTSY, "growthCst1", "growth costs at end of calcRawCosts");
     //doRes(GROWTHCOSTSYY, "growthCst2", "growth costs before getNeeds");
     doRes(FERTILITYGROWTHCOSTS, "fertGrowthCosts", "fertility growth costs this year", 1, 1, 2, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
@@ -7151,6 +7218,7 @@ onceAgain:
     doRes(BONUSGROWTH, "bonusGrowth", "cum catastrophy Growth ", 1, 1, 1, LIST8 | LIST14 | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(NEWBONUSGROWTH, "new bonusGrowth", "Yearly catastrophy Growth", 1, 1, 1, LIST8 | LIST14 | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(BONUSGROWTHEFF, "eff bonusGrowth", "Effective catastrophy Growth ", 1, 1, 1, LIST8 | LIST14 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(GROWTHPRECIATED, "eff bonusGrowth", "sum of depreciated and catastrophy Growth ", 1, 1, 1, LIST8 | LIST14 | CURAVE | BOTH | SKIPUNSET, 0, 0, 0);//GROWTHPRECIATED
     doRes(RAWGROWTHS, "Raw growth", "R rawgrowth before cost reduction");
     doRes(NEWGROWTHS, "newGro", "new raw growth since the start year balance", 1, 2, 3, LIST13 | CURAVE | CUMAVE | SKIPUNSET, 0, 0, 0);
     doRes(RNEWGROWTH, "R newGro", "resource R raw growth since the start year balance");
@@ -11187,6 +11255,23 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   }
 
   /**
+   * get a val sum from the stats database, it could be for the current year or
+   * for the cunulative sum of all the years
+   *
+   * @param rN the index into the stats database<br>
+   * use getStatrN(name) as rN to select by string name
+   * @param curCum either ICUM or ICUR0 from EM
+   * @param porsStart 0:start with planets, 1 start with ships
+   * @param porsEnd 1. 0:1 sum just planets, 2. 0:2 sum planets & ships
+   * @param clanStart 0-4 sum of the clan to start with
+   * @param clanEnd 1-5 end of clan sum, 0:1,1:2 etc. 1 clan<br>
+   * 0:5 sum all of the clans
+   * @return the sum of values as filtered by the selectors
+   */
+  String getSCurCumPorsClanValSum(int rn, int curCum, int porsStart, int porsEnd, int clanStart, int clanEnd) {
+    return mf2(getCurCumPorsClanValSum(rn, curCum, porsStart, porsEnd, clanStart, clanEnd));
+  }
+  /**
    * get an average from the stats database, it could be for the current year or
    * for the cunulative sum of all the years, or some of the saved years
    *
@@ -11248,6 +11333,26 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
       return sumUnits > 0 ? sum / sumUnits : 0.;
     }
   }
+  /**
+   * get an String average from the stats database, it could be for the current
+   * year or for the cunulative sum of all the years, or some of the saved years
+   *
+   * @param rN the index into the stats database<br>
+   * use getStatrN(name) as rN to select by string name
+   * @param curCum either ICUM or ICUR0 thrue ICUR6 from EM
+   * @param nYears number of years in area to sum units and vals
+   * @param porsStart 0:start with planets, 1 start with ships
+   * @param porsEnd 1. 0:1 sum just planets, 2. 0:2 sum planets & ships
+   * @param clanStart 0-4 sum of the clan to start with
+   * @param clanEnd 1-5 end of clan sum, 0:1,1:2 etc. 1 clan<br>
+   * 0:5 sum all of the clans
+   * @return the String average of values/units as filtered by the selectors
+   */
+  String getSCurCumPorsClanAve(int rn, int curCum, int nYears, int porsStart, int porsEnd, int clanStart, int clanEnd) {
+    return mf2(getCurCumPorsClanAve(rn, curCum, nYears, porsStart, porsEnd, clanStart, clanEnd));
+  }
+
+  ;
 
   /**
    * get a val min from the stats database, it could be for the current year or
