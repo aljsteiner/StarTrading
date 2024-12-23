@@ -93,7 +93,8 @@ public class ABalRows extends A6Rowa {
   static final int INVMEFFICIENCYIX = balz += LSUBS;
   static final int INVGEFFICIENCYIX = balz += LSUBS;
   static final int RAWGROWTHSIX = balz += LSUBS; // rawGrowth in calcGrowth
-  static final int SWAPPEDGROWTHSIX = balz += LSUBS; //
+  static final int SWAPPEDGROWTHSIX = balz += LSUBS; //?? growths after swap
+  static final int SWAPPEDRCSGSUMIX = balz += 1; //?? RCSG SUM after swap
   static final int POORHEALTHEFFECTIX = balz += LSUBS; //FIRST SEC OF ROW ONLY
   static final int POORKNOWLEDGEEFFECTIX = balz += 1; //FIRST SED OF ROW ONLY
   static final int YEARINCRWORTHSIX = balz += 1; //lsub

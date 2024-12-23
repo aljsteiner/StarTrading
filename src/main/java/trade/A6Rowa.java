@@ -1536,19 +1536,31 @@ public class A6Rowa {
   }
 
   /**
+   * set row of A6Rowa at row bias to value v for all elements
+   *
+   * @param bias
+   * @param v
+   * @return
+   */
+  A6Rowa set(int bias, Double v) {
+    if (A[bias] == null) {
+      A[bias] = new ARow(ec);
+    }
+    for (int secIx : E.ASECS) {
+      A[bias].set(secIx, v);
+    }
+      return this;
+    }
+    /**
    * set internal ARow bias, sector n to val if balances && m <%lt; 6 then
    * assert m * %gt; 1 and do resum @param m selector of row numbe
    *
    * r
    * @param bias selector of entry in row * @param val value to be tested as a
    * Double
-   *
-   * t
-   *
-   * hen
-   *
-   * stored
-   * @param n sector to set
+     *
+     * then stored
+     * @param n sector to set
    * @return val
    */
   public double set(int bias, int n, Double val) {
@@ -1663,9 +1675,28 @@ public class A6Rowa {
       noChecking = true;
     }
     return ret;
-
   }
 
+  /**
+   * add to row m, each sector value val test for Double problems and if
+   * balances   * set row 0 or 1
+   *
+   * @param m row to object to be set
+   * @param val
+   * @return return the result as a reference to the ABalRows
+   */
+  A6Rowa add(int m, double val) {
+    //  E.myTestDouble(val, "in A6Rowa " + this.titl, " A[%1d][%1d] ", m, n);
+    E.myTestDouble(val, "in A6Rowa title=" + this.titl + "A[" + m + "]");
+    if (A[m] == null) {
+      A[m] = new ARow(ec);
+    }
+    //  double ret = A[m].add(n, val);
+    for (int secIx : E.ASECS) {
+      A[m].add(secIx, val);
+    }
+    return this;
+  }
   /**
    * multiply raw growth by a fertility
    *

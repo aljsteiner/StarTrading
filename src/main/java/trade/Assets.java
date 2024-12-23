@@ -70,7 +70,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
-import static trade.EM.RGROWTHSEFF;
+import static trade.EM.NEWREPRECIATION;
 
 /**
  *
@@ -102,7 +102,7 @@ public class Assets {
   static final int[] alock3 = {0};
 
   //Assets AI pointers into   //Assets AI pointers into  moved to EM
- // static int pTradeFrac = -1;
+  // static int pTradeFrac = -1;
   static int pUserCatastrophyFreq = -1;
   /* now add some AI variables for this economy */
   // consolidate key's reading adding cnt, greatest age up to 51, greates scoreIx
@@ -110,33 +110,33 @@ public class Assets {
   // use Double to catch infinity and nan
   Double aiERScore = 2., prevAIERScore = -3., prevPrevAIERScore = -4.;
   Double aiERScoreI = -5., prevAIERScoreI = -5., prevPrevAIERScoreI = -3.;
-   Double aiEScore = 2., prevAIEScore = -3., prevPrevAIEScore = -4.;
+  Double aiEScore = 2., prevAIEScore = -3., prevPrevAIEScore = -4.;
   Double aiEScoreI = -5., prevAIEScoreI = -5., prevPrevAIEScoreI = -3.;
   Double aiScore = 2., prevAIScore = -3., prevPrevAIScore = -4.;
   Double aiScoreI = -5., prevAIScoreI = -5., prevPrevAIScoreI = -3.;
-  Double aiWorth=-11., prevAIWorth=-12.,prevPrevAIWorth=-13.;
-  Double prevAIWorthI = -14., aiWorthI=-11.;
+  Double aiWorth = -11., prevAIWorth = -12., prevPrevAIWorth = -13.;
+  Double prevAIWorthI = -14., aiWorthI = -11.;
   static final int nudV = 0;
   static final int nudSet = 1;
   static final int nudBoth = 2;
   static final int nudStrt = 3;
-  static final int nudChgs=5;
-  static final int nudLen=8;
-  double tradeFracNudge[] = {0., 0.,.0,.009,.012,0.015, 0.018,0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
-  double ffTFracNudge[] = {0., 0.,.0, 0.042, 0.056,0.070,0.084,0.098};  //futureFundTransferFrac 3.0--5.4  014
-  static final double bMin= 11.; //if bCnt is less than bCnt<bMax?-999999:bVal/bCnt
+  static final int nudChgs = 5;
+  static final int nudLen = 8;
+  double tradeFracNudge[] = {0., 0., .0, .009, .012, 0.015, 0.018, 0.021};//tradeFrac dif  .43-.73::.2--.5   *.003
+  double ffTFracNudge[] = {0., 0., .0, 0.042, 0.056, 0.070, 0.084, 0.098};  //futureFundTransferFrac 3.0--5.4  014
+  static final double bMin = 11.; //if bCnt is less than bCnt<bMax?-999999:bVal/bCnt
   static final double bSmall = -.0999;// if setCntDr < bSmall treat as invalid
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
   int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
   Boolean acct = false; // saveAI set this to the last year tradeAccepted
-  Boolean y=true;
+  Boolean y = true;
   // values without prefix prev are last years values
-  double aiOffer = -10.,prevAIOffer=-11.,prevPrevAIOffer=-11.,prevAIOfferI;
-  double aiProsM = -12., aiProsA = -15., aiProsI=-3.,aiProsAI=-9.,aiProsMI=-9.;
+  double aiOffer = -10., prevAIOffer = -11., prevPrevAIOffer = -11., prevAIOfferI;
+  double aiProsM = -12., aiProsA = -15., aiProsI = -3., aiProsAI = -9., aiProsMI = -9.;
   double prevAIProsM = -8., prevAIProsA = -11., prevAIProsI = -11., prevAIProsMI = -7.;
-  double prevAIProsAI = -7.,prevPrevAIProsM = -8., prevAIPrevProsA = -11.;
-   double  prevPrevAIProsI = -7.;
+  double prevAIProsAI = -7., prevPrevAIProsM = -8., prevAIPrevProsA = -11.;
+  double prevPrevAIProsI = -7.;
   int sliderVala = -15, prevSliderVala = -17, sliderValb = -9, prevSliderValb = -19;
   double aiOper = -7., prevAIOper = -9.;
 
@@ -176,7 +176,7 @@ public class Assets {
   static int aType = 0, aPorS = 0, aClan = 0, aSize = 0, aMuch = 0, aCnts = 0;
   static int aKeys = 0, aNums = 0;
   String aKey = "";
-  Integer aVal[] = {1,-0,0,0};
+  Integer aVal[] = {1, -0, 0, 0};
   static final int nTypes = 3; //accepted/also,rejected/lost,missed
   static final int nMuches = 9;
   static final int nSVals = 4; // n source values Wealth, other off/w,prevStratGoal
@@ -598,8 +598,8 @@ public class Assets {
     dFrac = NumberFormat.getNumberInstance();
     whole = NumberFormat.getNumberInstance();
     dfo = dFrac;
-   assert tradeFracNudge.length == nudLen : "error tradeFracNudge length=" + tradeFracNudge.length + " not=" + nudLen;
-   assert ffTFracNudge.length == nudLen : "error ffTFracNudge length=" + ffTFracNudge.length + " not=" + nudLen;
+    assert tradeFracNudge.length == nudLen : "error tradeFracNudge length=" + tradeFracNudge.length + " not=" + nudLen;
+    assert ffTFracNudge.length == nudLen : "error ffTFracNudge length=" + ffTFracNudge.length + " not=" + nudLen;
     // define aClanEntries only once before any use, ignore clan
     /*
    static final int nTypes = 2;
@@ -853,7 +853,7 @@ public class Assets {
    *
    */
   static void putValueChar(char[] res, int bias, double value, double[] tests) {
-    assert  tests.length <= E.keysXMax: " tests values array is too long=" +  tests.length + ">" + E.keysXMax;
+    assert tests.length <= E.keysXMax : " tests values array is too long=" + tests.length + ">" + E.keysXMax;
     int ix = 0, rix = 0;
     char ret = E.getAIResChar(ix);
     int testsLen = tests.length;
@@ -865,12 +865,13 @@ public class Assets {
       }
     }
     int againx = E.getAIMuch(ret);
-    assert againx == rix:"----PVe---error againx" + againx + " not equal to original" + rix + " value=" + EM.mf(value) ;
+    assert againx == rix : "----PVe---error againx" + againx + " not equal to original" + rix + " value=" + EM.mf(value);
     res[bias] = ret;
 
   }
   static int putValCnt = 0;
   static String putValStr = "coming soon";
+
   /**
    * put a char value from a series of tests to put into res[bias+ix]; called in
    * buildAICvals and in Assets.CashFlow.yearEnd() with tests specified in
@@ -883,21 +884,21 @@ public class Assets {
    * @param what a descriptor string for this value
    * @param ifPrint print message to System.out if true
    * @return ix index greatest value of test, put resChar into res[bias] an
-     * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
+   * 'b'+0 if greater that the smallest test 'a' if equal or less than smallest
    * test
    */
   static int putValueChar(char[] res, int bias, double value, double[] tests, String what, boolean ifPrint) {
-    assert  tests.length <= E.keysXMax: " tests values array is too long=" +  tests.length + ">" + E.keysXMax;
+    assert tests.length <= E.keysXMax : " tests values array is too long=" + tests.length + ">" + E.keysXMax;
     //byte ret[] = {'A'};
     char ret = E.getAIResChar(0);
     int ix = 0;
-    int retIx = 0,retIu=0;
+    int retIx = 0, retIu = 0;
     int testsLen = tests.length;
-    int testsLess = testsLen-1; //largest index
+    int testsLess = testsLen - 1; //largest index
     //go greatest to smallest value, if not found then ix =0 = E.getAIResChar(0)
     for (ix = testsLen - 2; ix > -1; ix--) { // skip highest value
       if (value > tests[ix]) {
-        retIx = ix + 1 ; //avoid ix larger than largest value testsLen-1
+        retIx = ix + 1; //avoid ix larger than largest value testsLen-1
         retIu = ix;
         ret = E.getAIResChar(retIx);
         ix = -2; // exit test loop
@@ -906,12 +907,12 @@ public class Assets {
     res[bias] = ret;
     int againx = E.getAIMuch(ret);
 
-    EM.wasHere6 = " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias" + bias + "V" + EM.mf(value)+ ":" + retIx  + ":" + retIu+ "C" + ret + "L" + testsLen  + " putValCnt" + putValCnt;
-    assert againx == retIx:"----PVe---error againx" + againx + " not equal to original" + retIx + " value=" + EM.mf(value) ;
+    EM.wasHere6 = " entryCnt" + aEntries[0] + "  size" + EM.myAIlearnings.size() + "   what=" + what + "  bias" + bias + "V" + EM.mf(value) + ":" + retIx + ":" + retIu + "C" + ret + "L" + testsLen + " putValCnt" + putValCnt;
+    assert againx == retIx : "----PVe---error againx" + againx + " not equal to original" + retIx + " value=" + EM.mf(value);
     if ((ifPrint && (++putValCnt % 47) == 0) || bias == E.pPrevEScW || bias == E.pPrevERScW) {
       String ss = new String(res);
       char rr = ret;
-      System.out.println("----PVB3---- putValByte what=" + what + " bias =" + bias+ "V" + EM.mf(value) + ":" + retIx + "C" + ret + "L" + testsLen  + "Vx" + EM.mf2(tests[retIx]) + "->" + EM.mf2(tests[retIu]) + ", putValCnt" + putValCnt + " key.length" + res.length + " entryCnt" + aEntries[0] + "  keys=" + EM.myAIlearnings.size() + " key=" + ss);
+      System.out.println("----PVB3---- putValByte what=" + what + " bias =" + bias + "V" + EM.mf(value) + ":" + retIx + "C" + ret + "L" + testsLen + "Vx" + EM.mf2(tests[retIx]) + "->" + EM.mf2(tests[retIu]) + ", putValCnt" + putValCnt + " key.length" + res.length + " entryCnt" + aEntries[0] + "  keys=" + EM.myAIlearnings.size() + " key=" + ss);
     }
     return retIx;
   }
@@ -925,7 +926,7 @@ public class Assets {
    * @return
    */
   static int getTestVal(double value, double[] tests, String what) {
-    assert  tests.length <= E.keysXMax: " tests values array is too long=" +  tests.length + ">" + E.keysXMax;
+    assert tests.length <= E.keysXMax : " tests values array is too long=" + tests.length + ">" + E.keysXMax;
     int ret = 0;
     int ix = 0;
     int testsLen = tests.length;
@@ -936,7 +937,6 @@ public class Assets {
       }
     }
     return ret;
-
 
   }
 
@@ -1589,8 +1589,8 @@ public class Assets {
   ) {
     try {
       //long resLock[][][] = resI[rn];
-      assert !v.isInfinite():"setStat error infinite v=" + v;
-      assert !v.isNaN():"setStat error nan v=" + v;
+      assert !v.isInfinite() : "setStat error infinite v=" + v;
+      assert !v.isNaN() : "setStat error nan v=" + v;
       int le = eM.lStatsWaitList;
       int prevIx = eM.ixStatsWaitList;
       eM.ixStatsWaitList = (++eM.ixStatsWaitList) % eM.lStatsWaitList;
@@ -1634,11 +1634,11 @@ public class Assets {
       double[] resVCum = eM.resV[rn][ICUM][pors]; //clan array object
       double prevResVCumC = resVCum[clan] + 0.; // don't point into array
       double nextResVCumC = resVCum[clan] + 0. + v; // don't point into array
-     // resVCumC += v; // doesn't change resVCum[clan]
+      // resVCumC += v; // doesn't change resVCum[clan]
       long[] resICum = resI[rn][ICUM][pors];
-    //  long resICumP = resICum[clan] + 0;
+      //  long resICumP = resICum[clan] + 0;
       double[] resVCur = resV[rn][ICUR0][pors];// clan array
-    //  double resVCur0P = resVCur[clan]+0;
+      //  double resVCur0P = resVCur[clan]+0;
       long[] resICur = resI[rn][ICUR0][pors];
       long resICur0P = resICur[clan];
       long[] resICurCC = resI[rn][ICUR0][CCONTROLD];
@@ -1654,86 +1654,87 @@ public class Assets {
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
       //only one thread at a time gets resLock  and can enter this code
       //volatile flag tells execution must not save value in cpu memory only, all cpu's see values
-   //   synchronized (resL) {
-        EM.wasHere8 = "---ELa3--- Assets res has lock";
-        if (E.debugStatsOut) {
-          String sList = "----SSLa----setStat " + name + "Y" + EM.year + " in  " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
-          StackTraceElement[] prevCalls = new StackTraceElement[le];
-          StackTraceElement[] stks = Thread.currentThread().getStackTrace();
-          lstk = stks.length - 1;
-          // do stack element history
-          for (ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
-            if (stks[ste + 1] != null) {
-              prevCalls[ste] = stks[ste + 1];
-              if (prevCalls[ste].getMethodName() != null
-                  && prevCalls[ste].getFileName() != null
-                  && prevCalls[ste].getLineNumber() != 0
-                  && !prevCalls[ste].getMethodName().contentEquals("setStat")) {
-                if (atCnt == 0) {
-                  sList += prevCalls[ste].getMethodName() + " ";
-                }
-                String pcs = prevCalls[ste].getFileName();
-                int pci = prevCalls[ste].getLineNumber();
-                sList += " " + " at "
-                         + pcs
-                         + "." + pci;
-              } // parts !null
-            } // !null
-            atCnt++;
-          }//for
-          //Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0]
-         synchronized(ARow.lock){
-           EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;}
-          //EM.addStatsWaitList(sList);
-        }//if debugStatsOut
-        resVCum[clan] += v;
-        resICum[clan] += ycnt;
-        resVCur[clan] += v;
-        resICur[clan] += ycnt;
-        resICurCC[ISSET] += 1;
-        resICumCC[ISSET] += 1;
-        if (curm > 0) {
-          /* now set the values in the appropriate age group */
-          resVCurm[clan] += v;
-          resICurm[clan] += ycnt;
-          resICurmCC[ISSET] += 1;
+      //   synchronized (resL) {
+      EM.wasHere8 = "---ELa3--- Assets res has lock";
+      if (E.debugStatsOut) {
+        String sList = "----SSLa----setStat " + name + "Y" + EM.year + " in  " + Thread.currentThread().getName() + " sinceDoYear " + moreT + " at ";
+        StackTraceElement[] prevCalls = new StackTraceElement[le];
+        StackTraceElement[] stks = Thread.currentThread().getStackTrace();
+        lstk = stks.length - 1;
+        // do stack element history
+        for (ste = 1; ste < le && atCnt < 5 && ste < lstk; ste++) {
+          if (stks[ste + 1] != null) {
+            prevCalls[ste] = stks[ste + 1];
+            if (prevCalls[ste].getMethodName() != null
+                && prevCalls[ste].getFileName() != null
+                && prevCalls[ste].getLineNumber() != 0
+                && !prevCalls[ste].getMethodName().contentEquals("setStat")) {
+              if (atCnt == 0) {
+                sList += prevCalls[ste].getMethodName() + " ";
+              }
+              String pcs = prevCalls[ste].getFileName();
+              int pci = prevCalls[ste].getLineNumber();
+              sList += " " + " at "
+                       + pcs
+                       + "." + pci;
+            } // parts !null
+          } // !null
+          atCnt++;
+        }//for
+        //Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0]
+        synchronized (ARow.lock) {
+          EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;
         }
+        //EM.addStatsWaitList(sList);
+      }//if debugStatsOut
+      resVCum[clan] += v;
+      resICum[clan] += ycnt;
+      resVCur[clan] += v;
+      resICur[clan] += ycnt;
+      resICurCC[ISSET] += 1;
+      resICumCC[ISSET] += 1;
+      if (curm > 0) {
+        /* now set the values in the appropriate age group */
+        resVCurm[clan] += v;
+        resICurm[clan] += ycnt;
+        resICurmCC[ISSET] += 1;
+      }
 
-       // if (E.debugStatsOut && cntStatsPrints++ > E.ssMax) {
-           if (E.debugStatsOut) {
-           cntStatsPrints = 0;
-          if (rn > 0) {
-            long endSt = (new Date()).getTime();
-            long moreTT = endSt - doYearTime;
-            int rN = rn;
-            int yrsIx = 1;
-            int yrsIxj = 1;
-            long resICumClan = resI[rn][ICUM][pors][clan];
-            double resVCumClan = resV[rn][ICUM][pors][clan];
-            long resIcur0Clan = resI[rn][ICUR0][pors][clan];
-            double resVcur0Clan = resV[rn][ICUR0][pors][clan];
-            EM.wasHere4 = "setStat rn=" + rn + " curm=" + curm + " pors=" + pors + " clan=" + clan;
-            EM.wasHere4 += " resI len=" + resI[rn].length; // prev value is saved
-            EM.wasHere4 += " resI[rn][curm]L=" + resI[rn][curm].length;
-            EM.wasHere4 += " +porsL=" + resI[rn][curm][pors].length;
-            long resICurmClan = resI[rn][curm][pors][clan];
-            double resVCurmClan = resV[rn][curm][pors][clan];
-            long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
-            long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
+      // if (E.debugStatsOut && cntStatsPrints++ > E.ssMax) {
+      if (E.debugStatsOut) {
+        cntStatsPrints = 0;
+        if (rn > 0) {
+          long endSt = (new Date()).getTime();
+          long moreTT = endSt - doYearTime;
+          int rN = rn;
+          int yrsIx = 1;
+          int yrsIxj = 1;
+          long resICumClan = resI[rn][ICUM][pors][clan];
+          double resVCumClan = resV[rn][ICUM][pors][clan];
+          long resIcur0Clan = resI[rn][ICUR0][pors][clan];
+          double resVcur0Clan = resV[rn][ICUR0][pors][clan];
+          EM.wasHere4 = "setStat rn=" + rn + " curm=" + curm + " pors=" + pors + " clan=" + clan;
+          EM.wasHere4 += " resI len=" + resI[rn].length; // prev value is saved
+          EM.wasHere4 += " resI[rn][curm]L=" + resI[rn][curm].length;
+          EM.wasHere4 += " +porsL=" + resI[rn][curm][pors].length;
+          long resICurmClan = resI[rn][curm][pors][clan];
+          double resVCurmClan = resV[rn][curm][pors][clan];
+          long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
+          long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
 
-            long isset1 = (yrsIx - 1 + yrsIxj < resI[rN].length ? resI[rN][yrsIx - 1 + yrsIxj] != null ? resI[rN][yrsIx - 1 + yrsIxj][CCONTROLD][ISSET] : -1 : -2);
-            EM.mfShort = false;
-         //   if(E.debugStatsOut){
-            System.out.println("---SSTat--- " + " "+  resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " " + name + "Y" + EM.year + " " + (EM.myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + EM.myAIlearnings.size())  + " age" + age + " Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumISet=" + resICumIsset + " V=" + EM.mf(v)+ " prevResVcum=" + EM.mf(prevResVCumC)+ " nextResVcum=" + EM.mf(nextResVCumC) + "\n" + "+++SSTat+ resVcum=" + EM.mf(resVCumClan) + "::" +  resVCumClan + " resIcum=" + resICumClan + ", cur0ClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
-            /*      System.out.println(
+          long isset1 = (yrsIx - 1 + yrsIxj < resI[rN].length ? resI[rN][yrsIx - 1 + yrsIxj] != null ? resI[rN][yrsIx - 1 + yrsIxj][CCONTROLD][ISSET] : -1 : -2);
+          EM.mfShort = false;
+          //   if(E.debugStatsOut){
+          System.out.println("---SSTat--- " + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " " + name + "Y" + EM.year + " " + (EM.myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + EM.myAIlearnings.size()) + " age" + age + " Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumISet=" + resICumIsset + " V=" + EM.mf(v) + " prevResVcum=" + EM.mf(prevResVCumC) + " nextResVcum=" + EM.mf(nextResVCumC) + "\n" + "+++SSTat+ resVcum=" + EM.mf(resVCumClan) + "::" + resVCumClan + " resIcum=" + resICumClan + ", cur0ClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
+          /*      System.out.println(
                       "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
 
               System.out.flush();
-             */
-           // }
-          }
+           */
+          // }
         }
-   //   } // end of lock on res..[rn]
+      }
+      //   } // end of lock on res..[rn]
       long[][][] resii = resI[rn];  //for values if using debug
       double[][][] resvv = resV[rn];
       return v;
@@ -1791,9 +1792,10 @@ public class Assets {
           }
           atCnt++;
         }//for
-        synchronized(ARow.lock){
-           EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;}
-       // EM.addStatsWaitList(sList);
+        synchronized (ARow.lock) {
+          EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;
+        }
+        // EM.addStatsWaitList(sList);
       }//if out
 
       //  int sClan = curEcon.clan;
@@ -1833,73 +1835,73 @@ public class Assets {
       long[] resICurmCC = resI[rn][curm][CCONTROLD];
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
       //synchronized (resL) {
-        EM.wasHere8 = "---ELa4--- Assets resMax has lock";
-        if (resICumCC[ISSET] < 1) {
+      EM.wasHere8 = "---ELa4--- Assets resMax has lock";
+      if (resICumCC[ISSET] < 1) {
+        for (int m = 0; m < 2; m++) {
+          double aresVC[] = resV[rn][ICUM][m];
+          for (int n = 0; n < E.LCLANS; n++) {
+            aresVC[n] = -999999999999.;
+          }
+        }
+      }
+      resVCum[clan] = v > resVCum[clan] ? v : resVCum[clan];
+      resICum[clan] += ycnt;
+      if (resICurCC[ISSET] < 1) {
+        for (int m = 0; m < 2; m++) {
+          double aresVC[] = resV[rn][ICUR0][m];
+          for (int n = 0; n < E.LCLANS; n++) {
+            aresVC[n] = -999999999999.;
+          }
+        }
+      }
+      resVCur[clan] = v > resVCur[clan] ? v : resVCur[clan];
+      resICur[clan] += ycnt;
+      resICurCC[ISSET] = 1;
+      resICumCC[ISSET] = 1;
+      if (curm > 0) {
+        if (resICurmCC[ISSET] < 1) {
           for (int m = 0; m < 2; m++) {
-            double aresVC[] = resV[rn][ICUM][m];
+            double aresVC[] = resV[rn][curm][m];
             for (int n = 0; n < E.LCLANS; n++) {
               aresVC[n] = -999999999999.;
             }
           }
         }
-        resVCum[clan] = v > resVCum[clan] ? v : resVCum[clan];
-        resICum[clan] += ycnt;
-        if (resICurCC[ISSET] < 1) {
-          for (int m = 0; m < 2; m++) {
-            double aresVC[] = resV[rn][ICUR0][m];
-            for (int n = 0; n < E.LCLANS; n++) {
-              aresVC[n] = -999999999999.;
-            }
+        /* now set the values in the appropriate age group */
+        resVCurm[clan] = v > resVCurm[clan] ? v : resVCurm[clan];
+        resICurm[clan] += ycnt;
+        resICurmCC[ISSET] = 1;
+      }
+
+      if (E.debugStatsOut) {
+        if (rn > 0) {
+          long endSt = (new Date()).getTime();
+          long moreTT = endSt - doYearTime;
+          int rN = rn;
+          int jj = 1;
+          int jjj = 1;
+          long resICumClan = resI[rn][ICUM][pors][clan];
+          long resIcur0Clan = resI[rn][ICUR0][pors][clan];
+          double resVcur0Clan = resV[rn][ICUR0][pors][clan];
+          long resICurmClan = resI[rn][curm][pors][clan];
+          double resVCurmClan = resV[rn][curm][pors][clan];
+          long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
+          long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
+
+          long isset1 = (jj - 1 + jjj < resI[rN].length ? resI[rN][jj - 1 + jjj] != null ? resI[rN][jj - 1 + jjj][CCONTROLD][ISSET] : -1 : -2);
+
+          if (E.debugStatsOut) {
+            if (cntStatsPrints < E.ssMax) {
+              cntStatsPrints += 1;
+              System.out.println("---SMXb---"
+                                 + "EM.setMaxStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+              System.out.flush();
+            } //ssMax
           }
-        }
-        resVCur[clan] = v > resVCur[clan] ? v : resVCur[clan];
-        resICur[clan] += ycnt;
-        resICurCC[ISSET] = 1;
-        resICumCC[ISSET] = 1;
-        if (curm > 0) {
-          if (resICurmCC[ISSET] < 1) {
-            for (int m = 0; m < 2; m++) {
-              double aresVC[] = resV[rn][curm][m];
-              for (int n = 0; n < E.LCLANS; n++) {
-                aresVC[n] = -999999999999.;
-              }
-            }
-          }
-          /* now set the values in the appropriate age group */
-          resVCurm[clan] = v > resVCurm[clan] ? v : resVCurm[clan];
-          resICurm[clan] += ycnt;
-          resICurmCC[ISSET] = 1;
-        }
 
-        if (E.debugStatsOut) {
-          if (rn > 0) {
-            long endSt = (new Date()).getTime();
-            long moreTT = endSt - doYearTime;
-            int rN = rn;
-            int jj = 1;
-            int jjj = 1;
-            long resICumClan = resI[rn][ICUM][pors][clan];
-            long resIcur0Clan = resI[rn][ICUR0][pors][clan];
-            double resVcur0Clan = resV[rn][ICUR0][pors][clan];
-            long resICurmClan = resI[rn][curm][pors][clan];
-            double resVCurmClan = resV[rn][curm][pors][clan];
-            long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
-            long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
-
-            long isset1 = (jj - 1 + jjj < resI[rN].length ? resI[rN][jj - 1 + jjj] != null ? resI[rN][jj - 1 + jjj][CCONTROLD][ISSET] : -1 : -2);
-
-            if (E.debugStatsOut) {
-              if (cntStatsPrints < E.ssMax) {
-                cntStatsPrints += 1;
-                System.out.println("---SMXb---"
-                                   + "EM.setMaxStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
-                System.out.flush();
-              } //ssMax
-            }
-
-          };
-        } //E.debugStatsOut1
-    //  } // end of lock on res..[rn]
+        };
+      } //E.debugStatsOut1
+      //  } // end of lock on res..[rn]
       long[][][] resii = resI[rn];  //for values if using debug
       double[][][] resvv = resV[rn];
       return v;
@@ -1968,8 +1970,9 @@ public class Assets {
           }
           atCnt++;
         }//for
-        synchronized(ARow.lock){
-           EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;}
+        synchronized (ARow.lock) {
+          EM.statsWaitList[EM.ixStatsWaitList = ++EM.ixStatsWaitList < EM.lStatsWaitList ? EM.ixStatsWaitList : 0] = sList;
+        }
       }//if out
 
       //  int sClan = curEcon.clan;
@@ -2009,73 +2012,73 @@ public class Assets {
       long[] resICurmCC = resI[rn][curm][CCONTROLD];
       //wasHere = "inSetStat rn=" + rn + " desc=" + desc + " pors=" + pors + " clan=" + clan + " ";
       //synchronized (resL) {
-        EM.wasHere8 = "---ELa5 --- Assets res Min has lock";
-        if (resICumCC[ISSET] < 1) {
+      EM.wasHere8 = "---ELa5 --- Assets res Min has lock";
+      if (resICumCC[ISSET] < 1) {
+        for (int m = 0; m < 2; m++) {
+          double aresVC[] = resV[rn][ICUM][m];
+          for (int n = 0; n < E.LCLANS; n++) {
+            aresVC[n] = 999999999999999999999999.;
+          }
+        }
+      }
+      resVCum[clan] = v < resVCum[clan] ? v : resVCum[clan];
+      resICum[clan] += ycnt;
+      if (resICurCC[ISSET] < 1) {
+        for (int m = 0; m < 2; m++) {
+          double aresVC[] = resV[rn][ICUR0][m];
+          for (int n = 0; n < E.LCLANS; n++) {
+            aresVC[n] = 999999999999999999999999.;
+          }
+        }
+      }
+      resVCur[clan] = v < resVCur[clan] ? v : resVCur[clan];
+      resICur[clan] += ycnt;
+      resICurCC[ISSET] = 1;
+      resICumCC[ISSET] = 1;
+      if (curm > 0) {
+        /* now set the values in the appropriate age group */
+        if (resICurmCC[ISSET] < 1) {
           for (int m = 0; m < 2; m++) {
-            double aresVC[] = resV[rn][ICUM][m];
+            double aresVC[] = resV[rn][curm][m];
             for (int n = 0; n < E.LCLANS; n++) {
               aresVC[n] = 999999999999999999999999.;
             }
           }
         }
-        resVCum[clan] = v < resVCum[clan] ? v : resVCum[clan];
-        resICum[clan] += ycnt;
-        if (resICurCC[ISSET] < 1) {
-          for (int m = 0; m < 2; m++) {
-            double aresVC[] = resV[rn][ICUR0][m];
-            for (int n = 0; n < E.LCLANS; n++) {
-              aresVC[n] = 999999999999999999999999.;
-            }
+        resVCurm[clan] = v < resVCurm[clan] || resICurmCC[ISSET] < 1 ? v : resVCurm[clan];
+        resICurm[clan] += ycnt;
+        resICurmCC[ISSET] = 1;
+      }
+
+      if (E.debugStatsOut) {
+        if (rn > 0) {
+          long endSt = (new Date()).getTime();
+          long moreTT = endSt - doYearTime;
+          int rN = rn;
+          int jj = 1;
+          int jjj = 1;
+          long resICumClan = resI[rn][ICUM][pors][clan];
+          long resIcur0Clan = resI[rn][ICUR0][pors][clan];
+          double resVcur0Clan = resV[rn][ICUR0][pors][clan];
+          long resICurmClan = resI[rn][curm][pors][clan];
+          double resVCurmClan = resV[rn][curm][pors][clan];
+          long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
+          long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
+
+          long isset1 = (jj - 1 + jjj < resI[rN].length ? resI[rN][jj - 1 + jjj] != null ? resI[rN][jj - 1 + jjj][CCONTROLD][ISSET] : -1 : -2);
+
+          if (E.debugStatsOut1) {
+            if (cntStatsPrints < E.ssMax) {
+              cntStatsPrints += 1;
+              System.out.println("---SMINLc---"
+                                 + "EM.setMinStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
+              System.out.flush();
+            } //ssMax
           }
-        }
-        resVCur[clan] = v < resVCur[clan] ? v : resVCur[clan];
-        resICur[clan] += ycnt;
-        resICurCC[ISSET] = 1;
-        resICumCC[ISSET] = 1;
-        if (curm > 0) {
-          /* now set the values in the appropriate age group */
-          if (resICurmCC[ISSET] < 1) {
-            for (int m = 0; m < 2; m++) {
-              double aresVC[] = resV[rn][curm][m];
-              for (int n = 0; n < E.LCLANS; n++) {
-                aresVC[n] = 999999999999999999999999.;
-              }
-            }
-          }
-          resVCurm[clan] = v < resVCurm[clan] || resICurmCC[ISSET] < 1 ? v : resVCurm[clan];
-          resICurm[clan] += ycnt;
-          resICurmCC[ISSET] = 1;
-        }
 
-        if (E.debugStatsOut) {
-          if (rn > 0) {
-            long endSt = (new Date()).getTime();
-            long moreTT = endSt - doYearTime;
-            int rN = rn;
-            int jj = 1;
-            int jjj = 1;
-            long resICumClan = resI[rn][ICUM][pors][clan];
-            long resIcur0Clan = resI[rn][ICUR0][pors][clan];
-            double resVcur0Clan = resV[rn][ICUR0][pors][clan];
-            long resICurmClan = resI[rn][curm][pors][clan];
-            double resVCurmClan = resV[rn][curm][pors][clan];
-            long resIcur0Isset = resI[rn][ICUR0][CCONTROLD][ISSET];
-            long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
-
-            long isset1 = (jj - 1 + jjj < resI[rN].length ? resI[rN][jj - 1 + jjj] != null ? resI[rN][jj - 1 + jjj][CCONTROLD][ISSET] : -1 : -2);
-
-            if (E.debugStatsOut1) {
-              if (cntStatsPrints < E.ssMax) {
-                cntStatsPrints += 1;
-                System.out.println("---SMINLc---"
-                                   + "EM.setMinStat " + name + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
-                System.out.flush();
-              } //ssMax
-            }
-
-          };
-        }
-    //  } // end of lock on res..[rn]
+        };
+      }
+      //  } // end of lock on res..[rn]
       long[][][] resii = resI[rn];  //for values if using debug
       double[][][] resvv = resV[rn];
       return v;
@@ -2473,11 +2476,11 @@ public class Assets {
     tradedNominalRequests = 0.;// 2-3 least strategic value traded
     tradedNominalOffers = 0.; // 2-3 real costs of trades
     tradedOffers = 0.; // 2-3 real costs (offers) of trades
-   // tradedPrevOffers = 0.; // prev real costs (offers) of trades
-   // tradedPrevPrevOffers = 0.; // prev prev real costs (offers) of trades
+    // tradedPrevOffers = 0.; // prev real costs (offers) of trades
+    // tradedPrevPrevOffers = 0.; // prev prev real costs (offers) of trades
     tradedManualsWorths = 0.; // worth of manuals received in trades
     strategicGoal = 0;
-   // prevStrategicGoal = strategicGoal; // from a trade
+    // prevStrategicGoal = strategicGoal; // from a trade
     //   lightYearsTraveled = lYears;
     if (E.tradeInitOut) {
 
@@ -2543,7 +2546,7 @@ public class Assets {
     if (cur == null) {
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
-     System.out.println("--CEYEa--  before CashFlow.yearEnd " + name + " aaadd1 " + aaadd1++);
+      System.out.println("--CEYEa--  before CashFlow.yearEnd " + name + " aaadd1 " + aaadd1++);
       if (E.debugEconCnt) {
         if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
           throw new MyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -2553,7 +2556,7 @@ public class Assets {
     }
     cur.yearEnd();
 
-    System.out.println("-----YEDPm ---- in Assets.yearEnd() near end "  + name + (dead ? " DEAD" : " LIVE") + " myWidth" + EM.myWidth + (EM.mfShort? " ++mfShort":" --mfShort"));
+    System.out.println("-----YEDPm ---- in Assets.yearEnd() near end " + name + (dead ? " DEAD" : " LIVE") + " myWidth" + EM.myWidth + (EM.mfShort ? " ++mfShort" : " --mfShort"));
     EM.mfShort = false;
     assert cur.c.balance == bals.A[2 + 1] : getName() + " c != bals.A[3], c=" + EM.mf(cur.c.balance.sum()) + " != bals c=" + EM.mf(bals.A[1 + 2].sum());
     if (false && E.debugMisc && !dead && !EM.dfe() && syW != null) {
@@ -2718,19 +2721,27 @@ public class Assets {
     // lastAcceptedYear = eM.year; moved to Assets.CashFlow
     if (cur == null) {
 
-      if(E.debugBarterOut)eM.printHere("----ABR----", ec, " AsBarter create CashFlow");
+      if (E.debugBarterOut) {
+        eM.printHere("----ABR----", ec, " AsBarter create CashFlow");
+      }
       cur = new CashFlow(this);
       cur.aStartCashFlow(this);
     }
     if (!didCashFlowStart) {
       cur.aStartCashFlow(this);
     }
-    if(E.debugBarterOut)eM.printHere(E.tradeInitOut, "----ABR2-----", ec, " Assets.barter tradeInitOut term=" + inOffer.getTerm());
+    if (E.debugBarterOut) {
+      eM.printHere(E.tradeInitOut, "----ABR2-----", ec, " Assets.barter tradeInitOut term=" + inOffer.getTerm());
+    }
     Offer myIn = cur.barter(inOffer);
-    if(EM.dfe())return inOffer;
+    if (EM.dfe()) {
+      return inOffer;
+    }
     // if exit trade exit cur
     if (cur.myTrade == null) {
-      if(E.debugBarterOut)eM.printHere("----ABR3----", ec, " myTrade null, delete CashFlow");
+      if (E.debugBarterOut) {
+        eM.printHere("----ABR3----", ec, " myTrade null, delete CashFlow");
+      }
       doNullCur(" Assets Barter");
       if (ec.clearHist()) {
         hist.clear();
@@ -4356,8 +4367,8 @@ public class Assets {
         partner.invMaintEfficiency.set(invMaintEfficiency);
         partner.groEfficiency.set(groEfficiency);
         partner.maintEfficiency.set(maintEfficiency);
-        if(E.debugEfficiencyOut){
-        eM.printHere("----SCEa---", ec, " age=" + ec.age + " invGroEfficiency[0]= " + EM.mf(invGroEfficiency.get(0)) + " rsefficencyGMin=" + EM.mf(rsefficiencyGMin.get(0)) + " groEfficiency=" + EM.mf(groEfficiency.get(0)) + " invMEfficiency=" + EM.mf(invMEfficiency.get(0)));//groEfficiency
+        if (E.debugEfficiencyOut) {
+          eM.printHere("----SCEa---", ec, " age=" + ec.age + " invGroEfficiency[0]= " + EM.mf(invGroEfficiency.get(0)) + " rsefficencyGMin=" + EM.mf(rsefficiencyGMin.get(0)) + " groEfficiency=" + EM.mf(groEfficiency.get(0)) + " invMEfficiency=" + EM.mf(invMEfficiency.get(0)));//groEfficiency
         }
         assert invGroEfficiency.get(0) > 0.0 : "invGroEfficiency.get(0) <= 0.0 =" + EM.mf(invGroEfficiency.get(0));
         assert invMEfficiency.get(0) > 0.0 : "invMEfficiency.get(0) <= 0.0 =" + EM.mf(invMEfficiency.get(0));
@@ -4395,17 +4406,19 @@ public class Assets {
       }
 
       /**
-       * calculate rawSectorGrowth of each SubAsset.sectors less cumulativeDeterioration plus bonusUnits
-       * staff are limited by maxStaff
-       * rawSectorGrowth is always 0.0 or greater never negative
-       * rawSectorGrowth is always less that rawUnitGrowth*maxFracUnitGrowth
-       * cumulativeDeterioration is the sum of newUnitDeterioration a fraction of prevYearGrowth
-       * cumulativeDeterioration is also reduced by a Catastrophy and may become negative
+       * calculate rawSectorGrowth of each SubAsset.sectors less
+       * cumulativeDeterioration plus bonusUnits staff are limited by maxStaff
+       * rawSectorGrowth is always 0.0 or greater never negative rawSectorGrowth
+       * is always less that rawUnitGrowth*maxFracUnitGrowth
+       * cumulativeDeterioration is the sum of newUnitDeterioration a fraction
+       * of prevYearGrowth cumulativeDeterioration is also reduced by a
+       * Catastrophy and may become negative
        *
        * priority resources are limited by cumulative unit deterioration,
        * efficiency, priority and random values, cumulative unit deterioration
-       * rawUnitGrowth becomes growth in Assets.CashFlow.calcRawCosts thenAssets.CashFlow.getNeeds()
-       * growth is applied to SubAssets in Assets.CashFlow.yearEnd
+       * rawUnitGrowth becomes growth in Assets.CashFlow.calcRawCosts
+       * thenAssets.CashFlow.getNeeds() growth is applied to SubAssets in
+       * Assets.CashFlow.yearEnd
        */
       void calcGrowth() { // Assets.CashFlow.SubAsset.calcGrowth
         splus = spluss[sIx];
@@ -4450,15 +4463,14 @@ public class Assets {
         if (sIx == 0 && ec.getAge() > 1) { // after one yeaEnd with growth
           assert growth.get(0) > 0.0 : " growth.get(0) <= 0.0=" + EM.mf(growth.get(0)) + " Y" + EM.year + " name=" + ec.name + " EM.curEconName=" + EM.curEconName + " age" + ec.getAge();
         }
-        prevGrowth.set(growth);
+        //  prevGrowth.set(growth);
 
-       // bals.set1(ABalRows.GROWTHS1IX, sIx, prevGrowth);
-       // bals.set1(ABalRows.PREVGROWTHSIX, sIx, prevGrowth);
+        // bals.set1(ABalRows.GROWTHS1IX, sIx, prevGrowth);
+        // bals.set1(ABalRows.PREVGROWTHSIX, sIx, prevGrowth);
         ARow zeroVals = new ARow(ec);
         depreciation = bals.getRow(ABalRows.DEPRECIATIONIX + sIx);
         //SubAssets C,G have no Repreciations
-        repreciation = sIx == 0 ? bals.getRow(ABalRows.REPRECIATIONIX)
-                : sIx == 2 ? bals.getRow(ABalRows.REPRECIATIONIX + 2) : zeroVals;
+        repreciation = bals.getRow(ABalRows.NEWREPRECIATIONIX);
         // growthsix includes the catstrophy benefits from last year
         if (sIx == 2) {
           aChar[sIx] = "s";  // sometimes got lost
@@ -4476,6 +4488,7 @@ public class Assets {
 
           // use SubAsset.add and ABalRows
           depreciation.add(newDepreciation); // add subasset and ABalRows
+
           double ds0depreciation = depreciation.get(0);
           EM.wasHere6 += "\n ds0CumulativeUnitDepreciation sum value" + EM.mf(ds0depreciation);
           //s0SumUnitDepreciation = new + cum double sumed
@@ -4499,9 +4512,14 @@ public class Assets {
         // find growth fraction, less as the balance sum increases until large maxStaffGrowth
         // calculate each sector raw unit growth
         for (int secIx : E.ASECS) { // each 7 sectors
-          secCnt = secIx == (E.LSECS - 1) ? 1 : 0; // cnt for setStat
-          setStat(EM.NEWDEPRECIATION, bals.get(ABalRows.NEWDEPRECIATIONIX + sIx, secIx), secCnt
-          );
+          secCnt = (secIx == (E.LSECS - 1)) && sIx == 3 ? 1 : 0; // cnt for setStat
+          double dSecDepreciation = depreciation.get(secIx);//newDepreciation already added
+          double dDifDepreciation = dSecDepreciation - dUnitGrowth;//?? too big
+          dSecDepreciation -= dDifDepreciation > 0.0 ? dDifDepreciation : 0.0;
+          dSecDepreciation = dSecDepreciation - bals.get(ABalRows.NEWREPRECIATIONIX, secIx);
+          // ?? too small
+          dSecDepreciation = dSecDepreciation < 0.0 ? 0.0 : dSecDepreciation;
+          bals.set(ABalRows.DEPRECIATIONIX + sIx, secIx, dSecDepreciation);
           //limit staff growth by eM.maxStaffGrowth[pors] less growth as larger
           // apply size limit to staff
           dGrowthFrac = fracGrowths.set(secIx, sstaff ? (EM.maxStaffGrowth[pors] - balance.get(secIx)) / EM.maxStaffGrowth[pors] : 1.0);
@@ -4514,17 +4532,17 @@ public class Assets {
           double dMaxRawYearlyUnitGrowth = bals.set(ABalRows.MAXRAWYEARLYUNITGROWTHSIX + sIx, secIx, 1.5 * (dRawYearlyUnitGrowth * dGrowthFrac));
           double dYrPotentialUnitGrowth = dRawYearlyUnitGrowth * dGrowthFrac;
           setStat(EM.RAWYEARLYUNITGROWTH, dYrPotentialUnitGrowth, secCnt);
-          double dRawSumGrowth = dYrPotentialUnitGrowth - depreciation.get(secIx) + dBonusYearUnitGrowth;
+          double dRawSumGrowth = dYrPotentialUnitGrowth - dSecDepreciation + dBonusYearUnitGrowth;
           //   setStat(EM.GROWTHPRECIATED, dRawSumGrowth, secCnt);
           //surplus bonus, if bonus pushes growth over max
           double dSurplusBonusGrowth = dRawSumGrowth > dMaxRawYearlyUnitGrowth ? dRawSumGrowth - dMaxRawYearlyUnitGrowth : 0.0;
           double dRawUnitGrowth = dRawSumGrowth - dSurplusBonusGrowth;
           setStat(EM.NEWGROWTHS, dRawUnitGrowth, secCnt);
-          dBonusYearUnitGrowth -= dSurplusBonusGrowth;//CUMULATIVESECTORBONUSIX
+          dBonusYearUnitGrowth -= dSurplusBonusGrowth;//
           bals.add(ABalRows.CUMULATIVESECTORBONUSIX + sIx, secIx, dBonusYearUnitGrowth);
           ec.rem.add(ABalRows.CUMULATIVESECTORBONUSIX + sIx, secIx, dBonusYearUnitGrowth);
           setStat(EM.GROWTHPRECIATED, dBonusYearUnitGrowth, secCnt);
-          //rawUnitGrowth.set(secIx, dRawUnitGrowth);//RAWUNITGROWTHSIX + sIx
+
           bals.set(ABalRows.RAWUNITGROWTHSIX + sIx, secIx, dRawUnitGrowth);//RAWUNITGROWTHSIX + sIx
           //  now calc priority and growthEfficiency(from knowledge)
           rawSectorPriorityUnitGrowth.set(secIx, (rawUnitGrowth.get(secIx) * eM.fracPriorityInGrowth[pors] * ySectorPriorityYr.get(secIx)) * groEfficiency.get(secIx) * cRand(3 * sIx + secIx + 30));
@@ -4547,8 +4565,8 @@ public class Assets {
                 && bonusUnitGrowth.get(secIx) > 0.) {
               // reduce bonusUnitGrowth for next year
               double dBonusUnitGrowth = bonusUnitGrowth.add(secIx, -(dRawGrowthFrac + dUnitGrowth) * .04); //subtract the sum/25
-              if( dBonusUnitGrowth < 0.){  // zero growth and years
-                bonusYears.set(secIx,0.);
+              if (dBonusUnitGrowth < 0.) {  // zero growth and years
+                bonusYears.set(secIx, 0.);
                 bonusUnitGrowth.set(secIx, 0.); //updates
               }
             }
@@ -4562,7 +4580,7 @@ public class Assets {
             }
             else {
               // only if was < 0.0 set to min growth
-              rawGrowth.set(secIx,0.0);
+              rawGrowth.set(secIx, 0.0);
             }
 
           }
@@ -4880,10 +4898,11 @@ public class Assets {
             c.worth.setAmultV(balance, eM.nominalWealthPerResource[pors] * eM.cargoWorthBias[0]);
           }
         }
-        else {
+        else {  //S G
           /* facultyEquiv = makeZero(facultyEquiv);
            researcherEquiv = makeZero(researcherEquiv);
-           manualToKnowledgeEquiv = makeZero(manualToKnowledgeEquiv);*/
+           manualToKnowledgeEquiv = makeZero(manualToKnowledgeEquiv);
+           */
 
           moreK = makeZero(moreK);
           lessM = makeZero(lessM);
@@ -5720,400 +5739,400 @@ public class Assets {
       void initTrade(Offer inOffer, CashFlow ar) { // Assets.CashFlow.Trades
         histTitles("initTrade");
         try {
-        ohist = inOffer.getOtherHist();
-        oEcon = inOffer.getOEcon();
-        stratV.zero();
-        stratCriticalRequests.zero(); // critical strat values
-        stratF.zero(); // stratFraction*stratWeight
-        nominalV.zero();
-        nominalCV.zero();
-        nominalCF.zero();
-        goodC.zero();
-        stratCF.zero();// sF * critW
-        nominalF.zero(); // nF * normW
-        availOfrs.zero();
-        maxReqs.zero();
-        needReq.zero();
-        fneedReq.zero();
-        emergOfrs.zero();
-        cMovedTrade.zero();
-        gMovedTrade.zero();
-        movedTrades.zero();
-        //     futRemnants = new A2Row(r.tFutRemnant, s.tFutRemnant);
-        didGood.zero(); // seet flags doneA2Row movedTrades = new A2Row(cMovedTrade, gMovedTrade);
-        multF.zero(); //sum of stratF,normF, ?stratCF
-        multV.zero(); //sum of stratV,normV ?stratC
-        if (ec.dead) {
-          return;
-        }
-        inOffer.setC(ar.c.balance);  // check c == c
-        if (oTradedEconsNext < lTradedEcons - 1) {
-          oTradedEcons[oTradedEconsNext++] = oEcon;
-        }
-        ec.blev1 = oBlev = eM.trade2HistOutputs ? -1 : History.dl; //blev of other lines
-        lightYearsTraveled = ec.distanceMoved; // set in sStartTrade
-        lightYearsTraveled = ((lightYearsTraveled < .2)) ? eM.initTravelYears[pors][0] : lightYearsTraveled;
-        //initialize for the growth and efficiency
-        eM.printHere("----TINa----", ec, "initTrade... before calcEfficiency loop");
-        if (!didCashFlowStart && !ec.dead) {
-          if (E.doCalcCatastrophy) {
-            calcCatastrophy(0);
+          ohist = inOffer.getOtherHist();
+          oEcon = inOffer.getOEcon();
+          stratV.zero();
+          stratCriticalRequests.zero(); // critical strat values
+          stratF.zero(); // stratFraction*stratWeight
+          nominalV.zero();
+          nominalCV.zero();
+          nominalCF.zero();
+          goodC.zero();
+          stratCF.zero();// sF * critW
+          nominalF.zero(); // nF * normW
+          availOfrs.zero();
+          maxReqs.zero();
+          needReq.zero();
+          fneedReq.zero();
+          emergOfrs.zero();
+          cMovedTrade.zero();
+          gMovedTrade.zero();
+          movedTrades.zero();
+          //     futRemnants = new A2Row(r.tFutRemnant, s.tFutRemnant);
+          didGood.zero(); // seet flags doneA2Row movedTrades = new A2Row(cMovedTrade, gMovedTrade);
+          multF.zero(); //sum of stratF,normF, ?stratCF
+          multV.zero(); //sum of stratV,normV ?stratC
+          if (ec.dead) {
+            return;
+          }
+          inOffer.setC(ar.c.balance);  // check c == c
+          if (oTradedEconsNext < lTradedEcons - 1) {
+            oTradedEcons[oTradedEconsNext++] = oEcon;
+          }
+          ec.blev1 = oBlev = eM.trade2HistOutputs ? -1 : History.dl; //blev of other lines
+          lightYearsTraveled = ec.distanceMoved; // set in sStartTrade
+          lightYearsTraveled = ((lightYearsTraveled < .2)) ? eM.initTravelYears[pors][0] : lightYearsTraveled;
+          //initialize for the growth and efficiency
+          eM.printHere("----TINa----", ec, "initTrade... before calcEfficiency loop");
+          if (!didCashFlowStart && !ec.dead) {
+            if (E.doCalcCatastrophy) {
+              // do after AI start  calcCatastrophy(0);
+            }
+
+          }
+          if (ec.dead) {
+            return;
+          }
+          rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
+          if (false && !didDepreciation) { //only in aStartCashFlow
+            for (k = 0; k < 4 && !ec.dead; k++) {
+              sys[k].calcEfficiency();
+              sys[k].calcGrowth();
+            }
+            didDepreciation = true;
           }
 
-        }
-        if (ec.dead) {
-          return;
-        }
-        rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
-        if (false && !didDepreciation) { //only in aStartCashFlow
-          for (k = 0; k < 4 && !ec.dead; k++) {
-            sys[k].calcEfficiency();
-            sys[k].calcGrowth();
+          for (int i = 0; i < E.L2SECS; i++) {
+            valueChangesTried[i] = 0;
+            oraisedBid[i] = 0;
           }
-          didDepreciation = true;
-        }
 
-        for (int i = 0; i < E.L2SECS; i++) {
-          valueChangesTried[i] = 0;
-          oraisedBid[i] = 0;
-        }
+          // always recalculate costs
+          String ttype = yphase.toString() + " ";
+          lTitle
+                  = "trd " + inOffer.cnName[1] + " " + inOffer.cnName[0];
+          histTitles(lTitle);
+          hist.add(new History("**", History.loopIncrements3, lTitle, " >>>>>>> initiate trade" + inOffer.cnName[1] + " " + inOffer.cnName[0] + " <<<<<<"));
+          swapped = true;
+          n = 0;
+          prevn = n;
+          inOffer.setCash(cash);
+          myOffer = inOffer; // give reference an additional name
+          fracN = n / eM.maxn[pors];
+          nextN = 2.;
+          blev = History.dl;
+          aPre = "Ta";
+          bals.unzero("bals", BALANCESIX, 4);
+          ifSearch = yphase == yrphase.SEARCH ? 0 : 1; // search or barter
+          hcntr = (int) eM.criticalNumbers[ifSearch][pors][clan];
+          sumCriticalNeeds = 0.0;
+          for (int ixStrat = 0; ixStrat < hcntr; ixStrat++) {
+            int ix2 = stratVars.curMaxIx(ixStrat);
+            sumCriticalNeeds = bals.get(ix2) * stratVars.curMax(ixStrat);
+          }
+          bals.sendHist(blev, aPre);
+          //    hist.add(new History(aPre, 7, name + "r balance", r.balance));
+          //   hist.add(new History(aPre, 7, name + " s balance", s.balance));
 
-        // always recalculate costs
-        String ttype = yphase.toString() + " ";
-        lTitle
-                = "trd " + inOffer.cnName[1] + " " + inOffer.cnName[0];
-        histTitles(lTitle);
-        hist.add(new History("**", History.loopIncrements3, lTitle, " >>>>>>> initiate trade" + inOffer.cnName[1] + " " + inOffer.cnName[0] + " <<<<<<"));
-        swapped = true;
-        n = 0;
-        prevn = n;
-        inOffer.setCash(cash);
-        myOffer = inOffer; // give reference an additional name
-        fracN = n / eM.maxn[pors];
-        nextN = 2.;
-        blev = History.dl;
-        aPre = "Ta";
-        bals.unzero("bals", BALANCESIX, 4);
-        ifSearch = yphase == yrphase.SEARCH ? 0 : 1; // search or barter
-        hcntr = (int) eM.criticalNumbers[ifSearch][pors][clan];
-        sumCriticalNeeds = 0.0;
-        for (int ixStrat = 0; ixStrat < hcntr; ixStrat++) {
-          int ix2 = stratVars.curMaxIx(ixStrat);
-          sumCriticalNeeds = bals.get(ix2) * stratVars.curMax(ixStrat);
-        }
-        bals.sendHist(blev, aPre);
-        //    hist.add(new History(aPre, 7, name + "r balance", r.balance));
-        //   hist.add(new History(aPre, 7, name + " s balance", s.balance));
+          // ------- set reserves --------------
+          // set reserve to the enter trade value, before recalc costs
+          // set large values higher and small least reserve
+          if (true) {
+            histTitles("setReserves " + name);
+            balances.checkBalances(ar);
+            ARow rcRow = bals.getRow(BALANCESIX + RCIX);
+            ARow sgRow = bals.getRow(BALANCESIX + SGIX);
+            ARow rcOld = rcRow;
+            ARow sgOld = sgRow;
+            double rcAve = rcRow.ave();
+            double sgAve = sgRow.ave();
+            ARow cOld = bals.getRow(BALANCESIX + CIX);
+            ARow gOld = bals.getRow(BALANCESIX + GIX);
+            ARow rOld = bals.getRow(BALANCESIX + RIX);
+            ARow sOld = bals.getRow(BALANCESIX + SIX);
+            double cPre, gPre, rPre, sPre, sgPre, rcPre;
 
-        // ------- set reserves --------------
-        // set reserve to the enter trade value, before recalc costs
-        // set large values higher and small least reserve
-        if (true) {
-          histTitles("setReserves " + name);
-          balances.checkBalances(ar);
-          ARow rcRow = bals.getRow(BALANCESIX + RCIX);
-          ARow sgRow = bals.getRow(BALANCESIX + SGIX);
-          ARow rcOld = rcRow;
-          ARow sgOld = sgRow;
-          double rcAve = rcRow.ave();
-          double sgAve = sgRow.ave();
-          ARow cOld = bals.getRow(BALANCESIX + CIX);
-          ARow gOld = bals.getRow(BALANCESIX + GIX);
-          ARow rOld = bals.getRow(BALANCESIX + RIX);
-          ARow sOld = bals.getRow(BALANCESIX + SIX);
-          double cPre, gPre, rPre, sPre, sgPre, rcPre;
+            // the frac values in EM represent the fracs to be reserved
+            // after costs are calculated, they we be evaluated again
+            double cFrac, cFrac1, gFrac, gFrac1, tifrac = eM.tradeReserveIncFrac[pors][clan];
+            double rFrac = 1. - (cFrac = eM.startTradeCFrac[searchTrade][pors][clan]);
+            double sFrac = 1. - (gFrac = eM.startTradeGFrac[searchTrade][pors][clan]);
 
-          // the frac values in EM represent the fracs to be reserved
-          // after costs are calculated, they we be evaluated again
-          double cFrac, cFrac1, gFrac, gFrac1, tifrac = eM.tradeReserveIncFrac[pors][clan];
-          double rFrac = 1. - (cFrac = eM.startTradeCFrac[searchTrade][pors][clan]);
-          double sFrac = 1. - (gFrac = eM.startTradeGFrac[searchTrade][pors][clan]);
+            //     double cGoal = rcRow.sum() * eM.startTradeCFrac[0][pors][clan];
+            //     double gGoal = sgRow.sum() * eM.startTradeGFrac[0][pors][clan];
+            int maxN = E.LSECS;
+            double nFrac = 1. / (6 + maxN); // 1/13 =.076923
+            double dif;
+            inOffer.setC(c.balance); // check cargo again
+            for (int ix = 0; ix < E.LSECS; ix++) {
+              int nn = rcRow.maxIx(ix);//rc MaxIx(0,1,2,3,4,5,6)
+              rcPre = rcOld.get(nn);
+              sgPre = sgOld.get(nn);
+              cPre = cOld.get(nn);
+              rPre = rOld.get(nn);
+              gPre = gOld.get(nn);
+              sPre = sOld.get(nn);
+              tifrac = eM.tradeReserveIncFrac[pors][clan];
 
-          //     double cGoal = rcRow.sum() * eM.startTradeCFrac[0][pors][clan];
-          //     double gGoal = sgRow.sum() * eM.startTradeGFrac[0][pors][clan];
-          int maxN = E.LSECS;
-          double nFrac = 1. / (6 + maxN); // 1/13 =.076923
-          double dif;
-          inOffer.setC(c.balance); // check cargo again
-          for (int ix = 0; ix < E.LSECS; ix++) {
-            int nn = rcRow.maxIx(ix);//rc MaxIx(0,1,2,3,4,5,6)
-            rcPre = rcOld.get(nn);
-            sgPre = sgOld.get(nn);
-            cPre = cOld.get(nn);
-            rPre = rOld.get(nn);
-            gPre = gOld.get(nn);
-            sPre = sOld.get(nn);
-            tifrac = eM.tradeReserveIncFrac[pors][clan];
-
-            // calculate the desired units in r less for larger rc
-            //                              .6    + .14  * (7-0 - 1=6)=.86
-            //   E.sysmsg("initTrade start loop1 %s%d=%7.2f, %s%d=%7.2f,%s%d=%7.2f,%s%d=%7.2f,rcsg=%b,%b,%b,%b",r.aschar,ix,r.balance.get(ix),c.aschar,ix,c.balance.get(ix),s.aschar,ix,s.balance.get(ix),g.aschar,ix,g.balance.get(ix),bals.A[2] == r.balance,bals.A[3] == c.balance,bals.A[4] == s.balance, bals.A[5] == g.balance);
-            // (1-.076923 *ix) (ix=0,1,2,3...),
-            // cFrac1 = cFra*1,.92,.84.... cVal decrement by ix
-            double cVal = rcPre * (cFrac1 = cFrac * (1. - nFrac * ix));
-            double gVal = sgPre * (gFrac1 = gFrac * (1. - nFrac * ix));
-            // cval = desired value of c
-            // calculate move for the desired units in r
-            mov = cPre - cVal;
-            double wReservFrac = 1.0 - cFrac;
-            double cReservFrac = cFrac;
-            double rdif = 0., sdif = 0.;
-            if (E.debugResumP) {
-              if ((rdif = (dif = rcPre - rPre - cPre) / rcPre) > E.PZERO || rdif < E.NZERO) {
-                EM.doMyErr(String.format("in initTrade resum Failure dif=%E,rcPre=%7.3f != rPre = %7.3f - cPre=%7.3f = %7.3f ix=%2d, nn=%2d", dif, rcPre, rPre, cPre, rPre + cPre, ix, nn));
+              // calculate the desired units in r less for larger rc
+              //                              .6    + .14  * (7-0 - 1=6)=.86
+              //   E.sysmsg("initTrade start loop1 %s%d=%7.2f, %s%d=%7.2f,%s%d=%7.2f,%s%d=%7.2f,rcsg=%b,%b,%b,%b",r.aschar,ix,r.balance.get(ix),c.aschar,ix,c.balance.get(ix),s.aschar,ix,s.balance.get(ix),g.aschar,ix,g.balance.get(ix),bals.A[2] == r.balance,bals.A[3] == c.balance,bals.A[4] == s.balance, bals.A[5] == g.balance);
+              // (1-.076923 *ix) (ix=0,1,2,3...),
+              // cFrac1 = cFra*1,.92,.84.... cVal decrement by ix
+              double cVal = rcPre * (cFrac1 = cFrac * (1. - nFrac * ix));
+              double gVal = sgPre * (gFrac1 = gFrac * (1. - nFrac * ix));
+              // cval = desired value of c
+              // calculate move for the desired units in r
+              mov = cPre - cVal;
+              double wReservFrac = 1.0 - cFrac;
+              double cReservFrac = cFrac;
+              double rdif = 0., sdif = 0.;
+              if (E.debugResumP) {
+                if ((rdif = (dif = rcPre - rPre - cPre) / rcPre) > E.PZERO || rdif < E.NZERO) {
+                  EM.doMyErr(String.format("in initTrade resum Failure dif=%E,rcPre=%7.3f != rPre = %7.3f - cPre=%7.3f = %7.3f ix=%2d, nn=%2d", dif, rcPre, rPre, cPre, rPre + cPre, ix, nn));
+                }
+                if ((sdif = (dif = sgPre - sPre - gPre) / sgPre) > E.PZERO || sdif < E.NZERO) {
+                  EM.doMyErr(String.format("in initTrade resum Failure dif=%E  sgPre=%7.3f - sPre= %7.3f - gPre=%7.3f = %7.3f, ix=%2d,  nn=%2d", dif, sgPre, sPre, gPre, sPre + gPre, ix, nn));
+                }
               }
-              if ((sdif = (dif = sgPre - sPre - gPre) / sgPre) > E.PZERO || sdif < E.NZERO) {
-                EM.doMyErr(String.format("in initTrade resum Failure dif=%E  sgPre=%7.3f - sPre= %7.3f - gPre=%7.3f = %7.3f, ix=%2d,  nn=%2d", dif, sgPre, sPre, gPre, sPre + gPre, ix, nn));
+              if (mov < E.NNZERO) { // c too small,  move some r to c
+                mov = Math.min(-mov, Math.min(rcPre * tifrac, Math.min(rcPre * wReservFrac, rPre)));
+                hist.add(new History(aPre, 7, " r->c" + nn + "=" + EM.mf(mov), "preC=" + EM.mf(cPre), "=>c " + EM.mf(cPre + mov), "preR=" + EM.mf(rPre), "=>R " + EM.mf(rPre - mov), "cFrac=" + EM.mf(cFrac), "cFr1=" + EM.mf(cFrac1)));
+                EM.addlErr = "r->c" + nn + "=" + EM.mf(mov) + ", preC=" + EM.mf(cPre) + "->c " + EM.mf(cPre + mov) + ", preR=" + EM.mf(rPre) + ", ->R " + EM.mf(rPre - mov);
+                r.putValue(balances, mov, nn, nn, c, 0, .0001);
+                inOffer.setC(c.balance);
               }
-            }
-            if (mov < E.NNZERO) { // c too small,  move some r to c
-              mov = Math.min(-mov, Math.min(rcPre * tifrac, Math.min(rcPre * wReservFrac, rPre)));
-              hist.add(new History(aPre, 7, " r->c" + nn + "=" + EM.mf(mov), "preC=" + EM.mf(cPre), "=>c " + EM.mf(cPre + mov), "preR=" + EM.mf(rPre), "=>R " + EM.mf(rPre - mov), "cFrac=" + EM.mf(cFrac), "cFr1=" + EM.mf(cFrac1)));
-              EM.addlErr = "r->c" + nn + "=" + EM.mf(mov) + ", preC=" + EM.mf(cPre) + "->c " + EM.mf(cPre + mov) + ", preR=" + EM.mf(rPre) + ", ->R " + EM.mf(rPre - mov);
-              r.putValue(balances, mov, nn, nn, c, 0, .0001);
-              inOffer.setC(c.balance);
-            }
-            else if (mov > E.PZERO) {  // c too large put some to r
-              mov = Math.min(mov, cPre);
-              hist.add(new History(aPre, 7, " c=>r" + nn + "=" + EM.mf(mov), "preC=" + EM.mf(cPre), "=>C " + EM.mf(cPre + mov), "preR" + EM.mf(rPre), "=>R " + EM.mf(rPre - mov), "cVal=" + EM.mf(cVal), "cFrac=" + EM.mf(cFrac), "rFr1=" + EM.mf(cFrac1)));
-              EM.addlErr = "c->r" + nn + "=" + EM.mf(mov) + ", preC=" + EM.mf(cPre) + "->c " + EM.mf(cPre + mov) + ", preR=" + EM.mf(rPre) + ", ->R " + EM.mf(rPre - mov);
-              c.putValue(balances, mov, nn, nn, r, 0, .0001);
-              inOffer.setC(c.balance);
-            }
+              else if (mov > E.PZERO) {  // c too large put some to r
+                mov = Math.min(mov, cPre);
+                hist.add(new History(aPre, 7, " c=>r" + nn + "=" + EM.mf(mov), "preC=" + EM.mf(cPre), "=>C " + EM.mf(cPre + mov), "preR" + EM.mf(rPre), "=>R " + EM.mf(rPre - mov), "cVal=" + EM.mf(cVal), "cFrac=" + EM.mf(cFrac), "rFr1=" + EM.mf(cFrac1)));
+                EM.addlErr = "c->r" + nn + "=" + EM.mf(mov) + ", preC=" + EM.mf(cPre) + "->c " + EM.mf(cPre + mov) + ", preR=" + EM.mf(rPre) + ", ->R " + EM.mf(rPre - mov);
+                c.putValue(balances, mov, nn, nn, r, 0, .0001);
+                inOffer.setC(c.balance);
+              }
 
-            // initTrade now process the g moves
-            mov = gPre - gVal;
-            wReservFrac = 1. - gFrac;
-            double gReservFrac = gFrac;
-            if (mov < E.NNZERO) {  // g too small SKIP move  s=>g
-              mov = Math.min(-mov, Math.min(sgPre * tifrac, Math.min(sgPre * wReservFrac, sPre)));
-              hist.add(new History(aPre, 7, "s=>g" + nn + "=" + EM.mf(mov), "preG=" + EM.mf(gPre), "=>C " + EM.mf(gPre + mov), "preS=" + EM.mf(sPre), "=>S " + EM.mf(sPre - mov)));
-              EM.addlErr = "s->g" + nn + "=" + EM.mf(mov) + ", m2=" + EM.mf(mov2) + ", m1=" + EM.mf(mov1) + ", preG=" + EM.mf(gPre) + "->g " + EM.mf(gPre + mov) + ", preS=" + EM.mf(sPre) + ", ->S " + EM.mf(sPre - mov);
-              s.putValue(balances, mov, nn, nn, g, 0, wReservFrac);
-              inOffer.setG(g.balance, as.getGuestGrades());
+              // initTrade now process the g moves
+              mov = gPre - gVal;
+              wReservFrac = 1. - gFrac;
+              double gReservFrac = gFrac;
+              if (mov < E.NNZERO) {  // g too small SKIP move  s=>g
+                mov = Math.min(-mov, Math.min(sgPre * tifrac, Math.min(sgPre * wReservFrac, sPre)));
+                hist.add(new History(aPre, 7, "s=>g" + nn + "=" + EM.mf(mov), "preG=" + EM.mf(gPre), "=>C " + EM.mf(gPre + mov), "preS=" + EM.mf(sPre), "=>S " + EM.mf(sPre - mov)));
+                EM.addlErr = "s->g" + nn + "=" + EM.mf(mov) + ", m2=" + EM.mf(mov2) + ", m1=" + EM.mf(mov1) + ", preG=" + EM.mf(gPre) + "->g " + EM.mf(gPre + mov) + ", preS=" + EM.mf(sPre) + ", ->S " + EM.mf(sPre - mov);
+                s.putValue(balances, mov, nn, nn, g, 0, wReservFrac);
+                inOffer.setG(g.balance, as.getGuestGrades());
 
+              }
+              else if (mov > E.PZERO) {  //g too large move g=>s
+                mov = Math.min(mov, gPre);
+                hist.add(new History(aPre, 7, "g=>s" + nn + "=" + EM.mf(mov), "preG=" + EM.mf(gPre), "=>G " + EM.mf(gPre - mov), "preS=" + EM.mf(sPre), "=>S " + EM.mf(sPre + mov)));
+                EM.addlErr = "g->s" + nn + "=" + EM.mf(mov) + ", preG=" + EM.mf(gPre) + "->g " + EM.mf(gPre - mov) + ", preS=" + EM.mf(sPre) + ", ->S " + EM.mf(sPre + mov);
+                g.putValue(balances, mov, nn, nn, s, 0, .0001);
+                inOffer.setG(g.balance, as.getGuestGrades());
+              }
+              //       E.sysmsg("initTrade  end first loop %s%d=%7.2f, %s%d=%7.2f,%s%d=%7.2f,%s%d=%7.2f,rcsg=%b,%b,%b,%b",r.aschar,ix,r.balance.get(ix),c.aschar,ix,c.balance.get(ix),s.aschar,ix,s.balance.get(ix),g.aschar,ix,g.balance.get(ix),bals.A[2] == r.balance,bals.A[3] == c.balance,bals.A[4] == s.balance, bals.A[5] == g.balance);
             }
-            else if (mov > E.PZERO) {  //g too large move g=>s
-              mov = Math.min(mov, gPre);
-              hist.add(new History(aPre, 7, "g=>s" + nn + "=" + EM.mf(mov), "preG=" + EM.mf(gPre), "=>G " + EM.mf(gPre - mov), "preS=" + EM.mf(sPre), "=>S " + EM.mf(sPre + mov)));
-              EM.addlErr = "g->s" + nn + "=" + EM.mf(mov) + ", preG=" + EM.mf(gPre) + "->g " + EM.mf(gPre - mov) + ", preS=" + EM.mf(sPre) + ", ->S " + EM.mf(sPre + mov);
-              g.putValue(balances, mov, nn, nn, s, 0, .0001);
-              inOffer.setG(g.balance, as.getGuestGrades());
-            }
-            //       E.sysmsg("initTrade  end first loop %s%d=%7.2f, %s%d=%7.2f,%s%d=%7.2f,%s%d=%7.2f,rcsg=%b,%b,%b,%b",r.aschar,ix,r.balance.get(ix),c.aschar,ix,c.balance.get(ix),s.aschar,ix,s.balance.get(ix),g.aschar,ix,g.balance.get(ix),bals.A[2] == r.balance,bals.A[3] == c.balance,bals.A[4] == s.balance, bals.A[5] == g.balance);
-          }
-        } // end first set reserves before get travel cost
+          } // end first set reserves before get travel cost
 
-        EM.addlErr = ""; // wipe error info
-        EM.wasHere = "in trade init & set Reserves, before calcCosts travel";
-        aPre = "#b";
-        bals.sendHist(hist, aPre);
-        inOffer.setC(c.balance);
-        //       hist.add(new History(aPre, 7, name + "r balance", r.balance));
+          EM.addlErr = ""; // wipe error info
+          EM.wasHere = "in trade init & set Reserves, before calcCosts travel";
+          aPre = "#b";
+          bals.sendHist(hist, aPre);
+          inOffer.setC(c.balance);
+          //       hist.add(new History(aPre, 7, name + "r balance", r.balance));
 //        hist.add(new History(aPre, 7, name + " s balance", s.balance));
-        // prepare for trade
-        //   CashFlow.AssetsFlow asf = new CashFlow.AssetsFlow(as);
-        //      asf.init(as, as.cur);
-        aPre = "#c";
-        //     balances.sendHist4(hist, History.aux2Info, aPre, 7, "iniT r", "iniT c", "iniT S", "iniT G");
-        // recalc costs with the new r s values
-        n = 0;
-        // only use the m + t costs here to represent the travel
-        histTitles("calcTravel " + ec.name);
-        yCalcCosts(aPre, lightYearsTraveled, eM.tradeHealth[pors][clan], eM.tradeGrowth[pors][clan]);
-        if (!didInitRawProspects) {
-          initRawProspects2 = rawProspects2.copy();
-          didInitRawProspects = true;
-        }
-        // save for CashFlows.barter
-        preTradeMtgAvails6 = mtgAvails6.copy(History.valuesMajor6, "preTMAvails6");
-        preTradeBalances = balances.copy(History.valuesMajor6, "preTBalances");
-        //save how bad the entry Prospects were: level of SOS
-        if (!didCashFlowStart) {
-          tradedFirstNegProspectsSum = rawProspects2.negSum();
-        }
-        didCashFlowStart = true;
-        // record the start of next year
-        if (as.endYearEnd) {
-          syW = new DoTotalWorths();
-        }
-
-        // in Assets.CashFlow.Trades.initTrade
-        // Save the maint & travel for when lightYearsTraveled was used in yCalcCosts
-        if (pors == E.S && newTradeYear1) {
-          tradeTravelCosts10 = travelCosts10.copy10();
-          tradeTravelMaintCosts10 = maintCosts10.copy10();
-          sumTradeTravelCosts = tradeTravelCosts10.curSum();
-          sumTradeTravelMaintCosts = tradeTravelMaintCosts10.curSum();
-          as.sumTrade1YearTravelMaintCosts = (sumTradeTravelCosts + sumTradeTravelMaintCosts) / lightYearsTraveled;
-          newTradeYear1 = false;
-          newTradeYear2 = true; // use Maint&travel in yrawCalcCosts
-        }
-        tradeStrategicVars = stratVars;
-        preTradeAvail = -mtgNeeds6.curSum();
-        preTradeSum4 = bals.sum4();
-        hEmerg = rawProspects2.curMin() < .1;
-        //   histStart = hist.size();  // for rehist to start here
-        btW = new DoTotalWorths();
-        btWTotWorth = btW.getTotWorth(); // Assets.CashFlow.Trades.initTrade
-        aPre = "#d";
-        //pbal.setTitle("preInitBal");
-        pbal.sendHist(hist, aPre);
-        bals.sendHist2(History.loopMinorConditionals5, aPre);
-        // emergOfrs.titl = "emergOfrs";
-        // availOfrs.titl = "availOfrs";
-        // needReq.titl = "needReq";
-        // fneedReq.titl = "fneedReq";
-
-        inOffer.setC(c.balance);
-        calcTrades();
-        inOffer.setC(c.balance);
-
-        int gix = stratVars.maxIx();
-        ARow gradeCost4 = new ARow(ec).zero();
-        ARow gmov = new ARow(ec).zero();
-        aPre = "$b";
-        if (History.dl > History.valuesMajor6) {
-          balances.sendHist4(hist, History.aux2Info, aPre, 7, " r bal3", " c bal3", " s bal3", " g bal3");
-        }
-        if (History.dl > History.valuesMinor7 && E.debugLogsOut) {
-          emergOfrs.sendHist(hist, aPre);
-          availOfrs.sendHist(hist, aPre);
-          needReq.sendHist(hist, aPre);
-          fneedReq.sendHist(hist, aPre);
-          maxReqs.sendHist(hist, aPre);
-          stratVars.sendHist(hist, aPre);
-        }
-        // now set C and G to the emergOfrs amounts
-        // the idea is to have a significant set of units to trade
-        // loop financial sectors 0 - 6
-        inOffer.setMyIx(ec);
-        for (int ix = 0; ix < E.LSECS; ix++) {
-          double cbal = balances.get(BALANCESIX + CIX, ix);
-          double gbal = balances.get(BALANCESIX + GIX, ix);
-          double rbal = balances.get(BALANCESIX + RIX, ix);
-          double sbal = balances.get(BALANCESIX + SIX, ix);
-          double tifrac = eM.tradeReserveIncFrac[pors][clan];
-          double rcbal = balances.get(BALANCESIX + RCIX, ix);
-          double sgbal = balances.get(BALANCESIX + SGIX, ix);
-          // prevent subtracting more than cbal or gbal have
-          double cet = emergOfrs.get(0, ix);
-          double get = emergOfrs.get(1, ix);
-          double cFrac = eM.startTradeCFrac[doingSearchOrTrade][pors][clan];//.5
-          double gFrac = eM.startTradeGFrac[doingSearchOrTrade][pors][clan];
-          // calc amount to decrease C, neg means increase
-          double cdif = cet > PZERO ? cet - cbal : 0.;// add to c from r
-          // limit by amount of r available after reserve is kept
-          // 1.-reserve is the amount available
-          cdif = Math.min(cdif, rcbal * (1. - eM.tradeReservFrac[pors]));// 1.-.15 = .85
-          // the avail frac here is only .3 of the previous reserve
-          double rReservFrac = (1. - cFrac) * .3;  //even smailer (.5)*.3
-          double rAvail = rbal - rcbal * rReservFrac; // rb-rc*.15
-          cdif = Math.min(cdif, rAvail);// muist leave rc*..15
-          double gdif = get > PZERO ? get - gbal : 0; // g to get from s
-          gdif = Math.min(gdif, sbal * (1. - eM.tradeReservFrac[pors]));
-          double sReservFrac = (1. - gFrac) * .3;
-          double sAvail = sbal - sgbal * sReservFrac;
-          gdif = Math.min(gdif, sAvail);  // may be negative
-
-          //  limit moves by Trade Reserve Increase Frac
-          double maxRmov = rbal > rcbal * tifrac ? rcbal * tifrac : rbal;
-          double maxSmov = sbal > sgbal * tifrac ? sgbal * tifrac : sbal;
-          // move only remaining balance from resource to cargo
-          cdif = Math.min(cdif, maxRmov);
-          if (cdif > E.PZERO) {  // cargo is short, needs some from resource
-            // limit by reserve against rc
-            E.myTest(rbal < cdif, "emergOfrs err ix=%d rbal %5.2f < cdif %5.2f, emergOfrs %5.2f, cbal %5.2f, rcbal=%5.2f", ix, rbal, cdif, cet, cbal, rcbal);
-            //       cMovedTrade.set(m, mov)
-            r.putValue(balances, cdif, ix, ix, cargo, 0, 0.);
-            E.myTest((rbal = bals.get(BALANCESIX + RIX, ix)) < NZERO, "ERROR: r=%4.2f less than zero", rbal);
-            emergOfrs.set(0, ix, bals.get(BALANCESIX + CIX, ix)); // set to cargo bal
-            hist.add(new History(aPre, 7, "r=>c" + ix + "=" + EM.mf(cdif), "r=" + EM.mf(rbal), "=>" + EM.mf(bals.get(2, ix)), "c=" + EM.mf(cbal), "=>" + EM.mf(bals.get(3, ix)), "cet=" + EM.mf(cet), "cdif=" + EM.mf(cdif)));
-            inOffer.setC(c.balance);
-            // else cargo is -cdif more than is available to trade
+          // prepare for trade
+          //   CashFlow.AssetsFlow asf = new CashFlow.AssetsFlow(as);
+          //      asf.init(as, as.cur);
+          aPre = "#c";
+          //     balances.sendHist4(hist, History.aux2Info, aPre, 7, "iniT r", "iniT c", "iniT S", "iniT G");
+          // recalc costs with the new r s values
+          n = 0;
+          // only use the m + t costs here to represent the travel
+          histTitles("calcTravel " + ec.name);
+          yCalcCosts(aPre, lightYearsTraveled, eM.tradeHealth[pors][clan], eM.tradeGrowth[pors][clan]);
+          if (!didInitRawProspects) {
+            initRawProspects2 = rawProspects2.copy();
+            didInitRawProspects = true;
           }
-          else if (cdif < NZERO && false) { // don't put r back
-            cdif = Math.min(-cdif, cbal);
-            c.putValue(balances, cdif, ix, ix, r, 0, .0000);
-            E.myTest((rbal) < NZERO, "ERROR r=%4.2f less than zero", rbal);
-            emergOfrs.set(0, ix, bals.get(BALANCESIX + CIX, ix)); // set to cargo bal
-            hist.add(new History(aPre, 7, "c=>r" + ix + "=" + EM.mf(cdif), "c=" + EM.mf(cbal), "=>" + EM.mf(bals.get(3, ix)), "r=" + EM.mf(rbal), "=>" + EM.mf(bals.get(2, ix)), "cet=" + EM.mf(cet), "cdif=" + EM.mf(cdif)));
-            E.sysmsg("initTrade loop2 end %s%d=%7.2f, %s%d=%7.2f,%s%d=%7.2f,%s%d=%7.2f,rcsg=%b,%b,%b,%b", r.aschar, ix, r.balance.get(ix), c.aschar, ix, c.balance.get(ix), s.aschar, ix, s.balance.get(ix), g.aschar, ix, g.balance.get(ix), bals.A[2] == r.balance, bals.A[3] == c.balance, bals.A[4] == s.balance, bals.A[5] == g.balance);
+          // save for CashFlows.barter
+          preTradeMtgAvails6 = mtgAvails6.copy(History.valuesMajor6, "preTMAvails6");
+          preTradeBalances = balances.copy(History.valuesMajor6, "preTBalances");
+          //save how bad the entry Prospects were: level of SOS
+          if (!didCashFlowStart) {
+            tradedFirstNegProspectsSum = rawProspects2.negSum();
           }
-          if (gdif > PZERO) {  // guests is short, needs some from resource
-            gdif = Math.min(gdif, Math.min(sgbal * tifrac, sbal));
-            emergOfrs.set(1, ix, bals.get(5, ix)); // set to guests bal
-            E.myTest(sbal < gdif, "emerg Ofrs %5.2f err ix=%d, sbal %5.2f < gdif %5.2f gbal %5.2f, sgbal %5.2f", get, ix, sbal, gdif, gbal, sgbal);
-            //       cMovedTrade.set(m, mov);
-            // move balance from resource to cargo
-            s.putValue(balances, gdif, ix, ix, g, 0, 0.);
-            E.myTest((sbal = bals.get(BALANCESIX + SIX, ix)) < NZERO, "ERROR: sbal=%4.2f less than zero", sbal);
-            hist.add(new History(aPre, 7, "s=>g" + ix + "=" + EM.mf(gdif), "s=" + EM.mf(sbal), "=>" + EM.mf(bals.get(4, ix)), "g=" + EM.mf(gbal), "=>" + EM.mf(bals.get(5, ix)), "get=" + EM.mf(get), "gdif=" + EM.mf(gdif), "<<<<<<<<<<<<<<<<"));
-            // else cargo is -cdif more than is available to trade
-          }
-          else if (gdif < NZERO && false) { // nothing back to s
-            gdif = Math.min(-gdif, gbal);;
-            g.putValue(balances, gdif, ix, ix, s, 0, .000);
-            E.myTest((sbal = bals.get(4, ix)) < NZERO, "sbal=%7.2f less than zero", sbal);
-            hist.add(new History(aPre, 7, "s!=>g" + ix, "s=" + EM.mf(sbal), "g=" + EM.mf(gbal), "=>" + EM.mf(g.balance.get(ix)), "get=" + EM.mf(get), "gdif=" + EM.mf(gdif), "****"));
+          didCashFlowStart = true;
+          // record the start of next year
+          if (as.endYearEnd) {
+            syW = new DoTotalWorths();
           }
 
-          // now revise the trades to abide by the cbal and gbal
-          emergOfrs.set(0, ix, Math.min(emergOfrs.get(0, ix), cargo.balance.get(ix)));
-          availOfrs.set(0, ix, Math.min(availOfrs.get(0, ix), cargo.balance.get(ix)));
-          emergOfrs.set(1, ix, Math.min(emergOfrs.get(1, ix), guests.balance.get(ix)));
-          availOfrs.set(1, ix, Math.min(availOfrs.get(1, ix), guests.balance.get(n)));
-        }
+          // in Assets.CashFlow.Trades.initTrade
+          // Save the maint & travel for when lightYearsTraveled was used in yCalcCosts
+          if (pors == E.S && newTradeYear1) {
+            tradeTravelCosts10 = travelCosts10.copy10();
+            tradeTravelMaintCosts10 = maintCosts10.copy10();
+            sumTradeTravelCosts = tradeTravelCosts10.curSum();
+            sumTradeTravelMaintCosts = tradeTravelMaintCosts10.curSum();
+            as.sumTrade1YearTravelMaintCosts = (sumTradeTravelCosts + sumTradeTravelMaintCosts) / lightYearsTraveled;
+            newTradeYear1 = false;
+            newTradeYear2 = true; // use Maint&travel in yrawCalcCosts
+          }
+          tradeStrategicVars = stratVars;
+          preTradeAvail = -mtgNeeds6.curSum();
+          preTradeSum4 = bals.sum4();
+          hEmerg = rawProspects2.curMin() < .1;
+          //   histStart = hist.size();  // for rehist to start here
+          btW = new DoTotalWorths();
+          btWTotWorth = btW.getTotWorth(); // Assets.CashFlow.Trades.initTrade
+          aPre = "#d";
+          //pbal.setTitle("preInitBal");
+          pbal.sendHist(hist, aPre);
+          bals.sendHist2(History.loopMinorConditionals5, aPre);
+          // emergOfrs.titl = "emergOfrs";
+          // availOfrs.titl = "availOfrs";
+          // needReq.titl = "needReq";
+          // fneedReq.titl = "fneedReq";
 
-        aPre = "T#";
-        if (History.dl > 5) {
-          hist.add(h1 = new History(aPre, 5, name + " initTrade R", resource.balance));
-          hist.add(h2 = new History(aPre, 5, name + " initTrade S", staff.balance));
-          hist.add(h3 = new History(aPre, 5, name + " initTrade C", c.balance));
-          hist.add(h4 = new History(aPre, 5, name + " initTrade G", g.balance));
-          emergOfrs.sendHist(hist, aPre);
-          availOfrs.sendHist(hist, aPre);
-        }
-        myIx = inOffer.setMyIx(ec); // set myIx in Offer
-        oIx = (myIx + 1) % 2;
+          inOffer.setC(c.balance);
+          calcTrades();
+          inOffer.setC(c.balance);
 
-        g.checkSumGrades();
-        A2Row cg = new A2Row(c.balance, g.balance);
+          int gix = stratVars.maxIx();
+          ARow gradeCost4 = new ARow(ec).zero();
+          ARow gmov = new ARow(ec).zero();
+          aPre = "$b";
+          if (History.dl > History.valuesMajor6) {
+            balances.sendHist4(hist, History.aux2Info, aPre, 7, " r bal3", " c bal3", " s bal3", " g bal3");
+          }
+          if (History.dl > History.valuesMinor7 && E.debugLogsOut) {
+            emergOfrs.sendHist(hist, aPre);
+            availOfrs.sendHist(hist, aPre);
+            needReq.sendHist(hist, aPre);
+            fneedReq.sendHist(hist, aPre);
+            maxReqs.sendHist(hist, aPre);
+            stratVars.sendHist(hist, aPre);
+          }
+          // now set C and G to the emergOfrs amounts
+          // the idea is to have a significant set of units to trade
+          // loop financial sectors 0 - 6
+          inOffer.setMyIx(ec);
+          for (int ix = 0; ix < E.LSECS; ix++) {
+            double cbal = balances.get(BALANCESIX + CIX, ix);
+            double gbal = balances.get(BALANCESIX + GIX, ix);
+            double rbal = balances.get(BALANCESIX + RIX, ix);
+            double sbal = balances.get(BALANCESIX + SIX, ix);
+            double tifrac = eM.tradeReserveIncFrac[pors][clan];
+            double rcbal = balances.get(BALANCESIX + RCIX, ix);
+            double sgbal = balances.get(BALANCESIX + SGIX, ix);
+            // prevent subtracting more than cbal or gbal have
+            double cet = emergOfrs.get(0, ix);
+            double get = emergOfrs.get(1, ix);
+            double cFrac = eM.startTradeCFrac[doingSearchOrTrade][pors][clan];//.5
+            double gFrac = eM.startTradeGFrac[doingSearchOrTrade][pors][clan];
+            // calc amount to decrease C, neg means increase
+            double cdif = cet > PZERO ? cet - cbal : 0.;// add to c from r
+            // limit by amount of r available after reserve is kept
+            // 1.-reserve is the amount available
+            cdif = Math.min(cdif, rcbal * (1. - eM.tradeReservFrac[pors]));// 1.-.15 = .85
+            // the avail frac here is only .3 of the previous reserve
+            double rReservFrac = (1. - cFrac) * .3;  //even smailer (.5)*.3
+            double rAvail = rbal - rcbal * rReservFrac; // rb-rc*.15
+            cdif = Math.min(cdif, rAvail);// muist leave rc*..15
+            double gdif = get > PZERO ? get - gbal : 0; // g to get from s
+            gdif = Math.min(gdif, sbal * (1. - eM.tradeReservFrac[pors]));
+            double sReservFrac = (1. - gFrac) * .3;
+            double sAvail = sbal - sgbal * sReservFrac;
+            gdif = Math.min(gdif, sAvail);  // may be negative
 
-        inOffer.setC(c.balance);
-        inOffer.setG(g.balance, g.grades);
-        double pz = PZERO;
-        double rNeed = PZERO;
-        double aOffer = PZERO;
-        double fNeed = PZERO;
-        double need = fNeed > rNeed ? fNeed : rNeed;
-        double eOffer = PZERO;
-        double offer = aOffer > PZERO ? aOffer : 0.;
-        int sv = 0;
-        int ifSearch = yphase == yrphase.SEARCH ? 0 : 1; // search or barter
-        double criticalNumber = (int) eM.criticalNumbers[ifSearch][pors][clan];
-        bids = makeZero(bids, "bids");
-        // make a copy of bids which is not used
-        for (m = 0; m < E.L2SECS; m++) {
-          // go from the most needed to least needed
-          int ix = stratVars.maxIx(m);//highest sv need, lowest bal
-          rNeed = needReq.get(ix);
-          aOffer = availOfrs.get(ix);
-          fNeed = fneedReq.get(ix);
-          need = fNeed > rNeed ? fNeed : rNeed;
-          eOffer = emergOfrs.get(ix);  // used only in barter
-          offer = aOffer > E.PZERO ? aOffer : 0.;
-          // sv <  6 least strategic value, so most to give away, but fneed>0, so need not offer
-          // if hot need and aOffer (avail) > 0, than save as an offer but not tEmerg offer
-          bids.set(ix, m < criticalNumber ? need > E.PZERO ? -need : offer : offer > E.PZERO ? offer : need > E.PZERO ? -need : 0.);
-        }
-        tradeGoodsNeeds = bids.copy();
-        //  initGoods = E.copy(bids);
-        myxitGoods = bids.copy();
-        myxit1Goods = myxit2Goods = myxit3Goods = myxitGoods;
-        hist.add(new History("ti", History.valuesMinor7, name + "initTrade" + ">>>>>>>>>>", "myIx" + inOffer.myIx, "c " + (inOffer.cargos[inOffer.myIx] == c.balance ? "c == cargos" : " c not cargos"), "<<<<<<<<<<<<<"));
-        //       inOffer.resetIx();
-        listBids(aPre, 3);
+            //  limit moves by Trade Reserve Increase Frac
+            double maxRmov = rbal > rcbal * tifrac ? rcbal * tifrac : rbal;
+            double maxSmov = sbal > sgbal * tifrac ? sgbal * tifrac : sbal;
+            // move only remaining balance from resource to cargo
+            cdif = Math.min(cdif, maxRmov);
+            if (cdif > E.PZERO) {  // cargo is short, needs some from resource
+              // limit by reserve against rc
+              E.myTest(rbal < cdif, "emergOfrs err ix=%d rbal %5.2f < cdif %5.2f, emergOfrs %5.2f, cbal %5.2f, rcbal=%5.2f", ix, rbal, cdif, cet, cbal, rcbal);
+              //       cMovedTrade.set(m, mov)
+              r.putValue(balances, cdif, ix, ix, cargo, 0, 0.);
+              E.myTest((rbal = bals.get(BALANCESIX + RIX, ix)) < NZERO, "ERROR: r=%4.2f less than zero", rbal);
+              emergOfrs.set(0, ix, bals.get(BALANCESIX + CIX, ix)); // set to cargo bal
+              hist.add(new History(aPre, 7, "r=>c" + ix + "=" + EM.mf(cdif), "r=" + EM.mf(rbal), "=>" + EM.mf(bals.get(2, ix)), "c=" + EM.mf(cbal), "=>" + EM.mf(bals.get(3, ix)), "cet=" + EM.mf(cet), "cdif=" + EM.mf(cdif)));
+              inOffer.setC(c.balance);
+              // else cargo is -cdif more than is available to trade
+            }
+            else if (cdif < NZERO && false) { // don't put r back
+              cdif = Math.min(-cdif, cbal);
+              c.putValue(balances, cdif, ix, ix, r, 0, .0000);
+              E.myTest((rbal) < NZERO, "ERROR r=%4.2f less than zero", rbal);
+              emergOfrs.set(0, ix, bals.get(BALANCESIX + CIX, ix)); // set to cargo bal
+              hist.add(new History(aPre, 7, "c=>r" + ix + "=" + EM.mf(cdif), "c=" + EM.mf(cbal), "=>" + EM.mf(bals.get(3, ix)), "r=" + EM.mf(rbal), "=>" + EM.mf(bals.get(2, ix)), "cet=" + EM.mf(cet), "cdif=" + EM.mf(cdif)));
+              E.sysmsg("initTrade loop2 end %s%d=%7.2f, %s%d=%7.2f,%s%d=%7.2f,%s%d=%7.2f,rcsg=%b,%b,%b,%b", r.aschar, ix, r.balance.get(ix), c.aschar, ix, c.balance.get(ix), s.aschar, ix, s.balance.get(ix), g.aschar, ix, g.balance.get(ix), bals.A[2] == r.balance, bals.A[3] == c.balance, bals.A[4] == s.balance, bals.A[5] == g.balance);
+            }
+            if (gdif > PZERO) {  // guests is short, needs some from resource
+              gdif = Math.min(gdif, Math.min(sgbal * tifrac, sbal));
+              emergOfrs.set(1, ix, bals.get(5, ix)); // set to guests bal
+              E.myTest(sbal < gdif, "emerg Ofrs %5.2f err ix=%d, sbal %5.2f < gdif %5.2f gbal %5.2f, sgbal %5.2f", get, ix, sbal, gdif, gbal, sgbal);
+              //       cMovedTrade.set(m, mov);
+              // move balance from resource to cargo
+              s.putValue(balances, gdif, ix, ix, g, 0, 0.);
+              E.myTest((sbal = bals.get(BALANCESIX + SIX, ix)) < NZERO, "ERROR: sbal=%4.2f less than zero", sbal);
+              hist.add(new History(aPre, 7, "s=>g" + ix + "=" + EM.mf(gdif), "s=" + EM.mf(sbal), "=>" + EM.mf(bals.get(4, ix)), "g=" + EM.mf(gbal), "=>" + EM.mf(bals.get(5, ix)), "get=" + EM.mf(get), "gdif=" + EM.mf(gdif), "<<<<<<<<<<<<<<<<"));
+              // else cargo is -cdif more than is available to trade
+            }
+            else if (gdif < NZERO && false) { // nothing back to s
+              gdif = Math.min(-gdif, gbal);;
+              g.putValue(balances, gdif, ix, ix, s, 0, .000);
+              E.myTest((sbal = bals.get(4, ix)) < NZERO, "sbal=%7.2f less than zero", sbal);
+              hist.add(new History(aPre, 7, "s!=>g" + ix, "s=" + EM.mf(sbal), "g=" + EM.mf(gbal), "=>" + EM.mf(g.balance.get(ix)), "get=" + EM.mf(get), "gdif=" + EM.mf(gdif), "****"));
+            }
+
+            // now revise the trades to abide by the cbal and gbal
+            emergOfrs.set(0, ix, Math.min(emergOfrs.get(0, ix), cargo.balance.get(ix)));
+            availOfrs.set(0, ix, Math.min(availOfrs.get(0, ix), cargo.balance.get(ix)));
+            emergOfrs.set(1, ix, Math.min(emergOfrs.get(1, ix), guests.balance.get(ix)));
+            availOfrs.set(1, ix, Math.min(availOfrs.get(1, ix), guests.balance.get(n)));
+          }
+
+          aPre = "T#";
+          if (History.dl > 5) {
+            hist.add(h1 = new History(aPre, 5, name + " initTrade R", resource.balance));
+            hist.add(h2 = new History(aPre, 5, name + " initTrade S", staff.balance));
+            hist.add(h3 = new History(aPre, 5, name + " initTrade C", c.balance));
+            hist.add(h4 = new History(aPre, 5, name + " initTrade G", g.balance));
+            emergOfrs.sendHist(hist, aPre);
+            availOfrs.sendHist(hist, aPre);
+          }
+          myIx = inOffer.setMyIx(ec); // set myIx in Offer
+          oIx = (myIx + 1) % 2;
+
+          g.checkSumGrades();
+          A2Row cg = new A2Row(c.balance, g.balance);
+
+          inOffer.setC(c.balance);
+          inOffer.setG(g.balance, g.grades);
+          double pz = PZERO;
+          double rNeed = PZERO;
+          double aOffer = PZERO;
+          double fNeed = PZERO;
+          double need = fNeed > rNeed ? fNeed : rNeed;
+          double eOffer = PZERO;
+          double offer = aOffer > PZERO ? aOffer : 0.;
+          int sv = 0;
+          int ifSearch = yphase == yrphase.SEARCH ? 0 : 1; // search or barter
+          double criticalNumber = (int) eM.criticalNumbers[ifSearch][pors][clan];
+          bids = makeZero(bids, "bids");
+          // make a copy of bids which is not used
+          for (m = 0; m < E.L2SECS; m++) {
+            // go from the most needed to least needed
+            int ix = stratVars.maxIx(m);//highest sv need, lowest bal
+            rNeed = needReq.get(ix);
+            aOffer = availOfrs.get(ix);
+            fNeed = fneedReq.get(ix);
+            need = fNeed > rNeed ? fNeed : rNeed;
+            eOffer = emergOfrs.get(ix);  // used only in barter
+            offer = aOffer > E.PZERO ? aOffer : 0.;
+            // sv <  6 least strategic value, so most to give away, but fneed>0, so need not offer
+            // if hot need and aOffer (avail) > 0, than save as an offer but not tEmerg offer
+            bids.set(ix, m < criticalNumber ? need > E.PZERO ? -need : offer : offer > E.PZERO ? offer : need > E.PZERO ? -need : 0.);
+          }
+          tradeGoodsNeeds = bids.copy();
+          //  initGoods = E.copy(bids);
+          myxitGoods = bids.copy();
+          myxit1Goods = myxit2Goods = myxit3Goods = myxitGoods;
+          hist.add(new History("ti", History.valuesMinor7, name + "initTrade" + ">>>>>>>>>>", "myIx" + inOffer.myIx, "c " + (inOffer.cargos[inOffer.myIx] == c.balance ? "c == cargos" : " c not cargos"), "<<<<<<<<<<<<<"));
+          //       inOffer.resetIx();
+          listBids(aPre, 3);
         }
         catch (Exception | Error ex) {
           eM.firstStack = eM.secondStack + "";
@@ -6319,7 +6338,9 @@ public class Assets {
 
           //   listDifBid(History.valuesMajor6, "xit", oprevGoods);
           enforceStrategicGoal();
-          if(EM.dfe()) return prevOffer;
+          if (EM.dfe()) {
+            return prevOffer;
+          }
           assert sumCriticalStrategicRequestsFirst > 0.0 : "error zero term=" + term + ",  sumCriticalStrategicRequestsFirst=" + EM.mf(sumCriticalStrategicRequestsFirst) + ", sumCriticalStrategicRequests=" + EM.mf(sumCriticalStrategicRequests) + ", sumBidRequests=" + EM.mf(sumBidRequests) + ", goodC.plusSum=" + EM.mf(goodC.plusSum()) + ", goodC.negSum=" + EM.mf(goodC.negSum());
           assert sumCriticalBidRequestsFirst > 0.0 : " error zero: sumCriticalBidRequestsFirst=" + EM.mf(sumCriticalBidRequestsFirst);
           myOffer.set2Values(bids, offers, requests, totalSend, totalReceipts, strategicGoal, strategicValue); // save for selectPlanet
@@ -6375,7 +6396,9 @@ public class Assets {
           // calculate the next barter
           //if(term < EM.barterStart)enforceStrategicGoal(); // sf1, sv1, sf,sv,excessOffers
           enforceStrategicGoal(); // sf1, sv1, sf,sv,excessOffers
-          if(EM.dfe()) return myOffer;
+          if (EM.dfe()) {
+            return myOffer;
+          }
           myOffer.set2Values(bids, offers, requests, totalSend, totalReceipts, strategicGoal, strategicValue); // save for selectPlanet
           hist.add(new History(aPre, lRes, "T" + term + " " + name + " CONT" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
           ec.addOHist(ohist, new History(aPre, 3, "T" + term + " " + name + " CONT" + changes, "sv=" + EM.mf(sv1), "->" + EM.mf(sv), "sf=" + EM.mf(sf1), "->" + EM.mf(sf), "ofr=" + EM.mf(offers), EM.mf(bids.curPlusSum()), "rqst=" + EM.mf(requests), EM.mf(bids.curNegSum()), "exOf" + EM.mf(excessOffers), "x/of" + EM.mf(excessOffers / offers), "<<<<<<<"));
@@ -6843,7 +6866,9 @@ public class Assets {
        */
       double calcStrategicSums() {// Assets.CashFlow.Trades
         sf = calcStrategicGoal();  // reduced after each barteer
-        if(EM.dfe()) return 0.;
+        if (EM.dfe()) {
+          return 0.;
+        }
         totalStrategicRequests = totalStrategicOffers = totalStrategicFrac = sumCriticalStrategicRequests = criticalStrategicOffers = criticalStrategicFrac = lowStrategicOffers = strategicRequests = sumCriticalNominalRequests = strategicOffers = 0.;
         nominalRequests = nominalOffers = nominalFrac = 0.;
         criticalNominalRequests = criticalNominalOffers = criticalNominalFrac = 0.;
@@ -7467,7 +7492,9 @@ public class Assets {
         // allow a little extra
         // do the first calculation
         calcStrategicSums(); //  sv,excessOffers
-        if(EM.dfe()) return;
+        if (EM.dfe()) {
+          return;
+        }
         sv1 = sv;  // sf,requests,offers,excessOffers
         sf1 = sf;  // save the first sf as sf1, sv as sv1
 
@@ -8064,92 +8091,92 @@ public class Assets {
       int wasTerm = -200;
 
       /**
-       * calculate the clan strategic Goal of received over sent include history of
-       * trade success or failure, myFavor, otherFavor, number of offers (term)
-       * and possible SOS
-       * Also note the number of accepted,rejected and lost trades to modify goal
+       * calculate the clan strategic Goal of received over sent include history
+       * of trade success or failure, myFavor, otherFavor, number of offers
+       * (term) and possible SOS Also note the number of accepted,rejected and
+       * lost trades to modify goal
        *
        * @return strategicGoal = desired totalReceipts/totalSend
        */
       double calcStrategicGoal() {// Assets.CashFlow.Trades.calcStrategicGoal
         //       term = myOffer.getTerm();  // use class term
 //        oClan = myOffer.getOClan();
-          try {
-        aPre = "S$";
-        ttype = pors;
-        // look at previous goals
-        thAccept = eM.getCumulativeClanUnits(EM.TRADESTRATLASTGAVE, pors, clan);
-        thReject = eM.getCumulativeClanUnits(EM.TradeRejectedStrategicGoal, pors, clan);
-        thLost = eM.getCumulativeClanUnits(EM.TradeLostStrategicGoal, pors, clan);
-        thSum = thAccept + thReject + thLost;  // sum of trades
-        // history fraction change to goal fail lower goal, accept raise goal of profits
-        // thFrac = 1.0 - (thReject+thLost)*.01 + thAccept *.002;
-        thFrac = 1.0 + Math.max(-.96, (-thReject * EM.rejectBias[pors][clan] - thLost * EM.lostBias[pors][clan] + thAccept) * EM.historyBias[pors][clan]);
-        assert thFrac > E.PPZERO : "Illegal thFrac=" + EM.mf(thFrac) + ", thAccept=" + thAccept + ", thReject=" + thReject + ", thLost=" + thLost;
-        //Set special ttype for ship to ship trade
-        ttype = oEcon.pors == E.S && pors == E.S ? 2 : pors;
-        //       tmpRand = cRand(15 + term, EM.randMult);
-        tmpRand = cRand(15, EM.randMult);
-        // randFrac = 1/EM.randMax < tmpRand < EM.randMax
-        randFrac = tmpRand < 1. / EM.randMax ? 1. / EM.randMax : tmpRand > EM.randMax ? EM.randMax : tmpRand;
-        oClan = myOffer.getOClan();
-        oPors = myOffer.getOPors();
-        boolean oSOS = myOffer.getOtherSOS();
-        //reduce FavFrac as favor goes higher
-        //set V from my clan favor of other clan
-        myFavV = (EM.favMult * EM.fav[clan][pors][oClan] - EM.favMult * 3.);
-        myFavFrac = 1. / (1. + myFavV); // higher favor makes lower goal
-        //
-        // and the others favor of my clan above 3
-        oFavV = (EM.favMult * (EM.fav[oClan][oPors][clan] - 3.)) * EM.oClanMult;
-        oFavFrac = 1. / (1. + oFavV);
-        // reduce goal if you accept an SOS from the other
-        //double sosFrac = 1. / (1. + (sos ? (EM.fav[clan][oClan] > 3. && EM.fav[oClan][clan] > 3.) ? EM.sosfrac[pors] : 0. : 0.));
-        double sosMore = (oSOS ? (EM.fav[clan][pors][oClan] > 3. && EM.fav[oClan][oPors][clan] > 3.) ? EM.sosfrac[pors] : 0. : 0.);
-        // assert sosMore > E.PPZERO : "ILLEGAL sosMore=" + EM.mf(sosMore) + " ," + (oSOS?" oSOS": "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac)       ;
-        double sosFrac1 = 1. / (1. + sosMore);
-        assert sosFrac1 > E.PPZERO : " ILLEGAL sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac);
-        assert myFavFrac > E.PPZERO : " ILLEGAL myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac);
-        assert oFavFrac > E.PPZERO : " ILLEGAL oFavFrac=" + EM.mf(oFavFrac) + ", myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV);
-        double sosMin = .80;
-        double sosFrac = Math.max(sosMin, sosFrac1);
-        // predict facs at various terms
-        gtBias = EM.goalTermBias[pors]; // reduce goal at each barter (term)
-        termFrac02 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.) * (gtBias + EM.barterStart - 0.));
-        termFrac03 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.));
-        termFrac0 = (EM.barterStart) / ((gtBias + EM.barterStart - 0.));
-        // amount of reduction of goal per term
-        termFrac2 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term) * (gtBias + EM.barterStart - term));
-        termFrac3 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term));
-        termFrac = (EM.barterStart) / ((gtBias + EM.barterStart - term));//1.=>.5
-        tfrac =  tradeFracNudge[nudBoth];
-        // rGoalFrac = EM.tradeFrac[pors][clan] * randFrac * myFavFrac * oFavFrac * sosFrac;
-        rGoalFrac = Math.min(EM.goalMaxBias[pors][0] * tfrac, tfrac * myFavFrac * oFavFrac * sosFrac * thFrac);
-        sf = strategicGoal = frac = rGoalFrac * termFrac;
-        rGoal0 = rGoalFrac * termFrac0;  // the goal after doing all the barters
-        EM.wasHere = "before History clan=" + clan + " oClan=" + oClan + " term=" + term;
-        EM.wasHere2 = " (EM.fav[clan][pors][oClan])=" + EM.mf(EM.fav[clan][pors][oClan]);
-        assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + "\n" + name + "Y" + EM.year + "CP" + (clan*2+pors) + " nudge" + EM.mf(tradeFracNudge[nudV])  + " tFrac=" + EM.mf(tfrac) + " , oFavFrac=" + EM.mf(oFavFrac) + " myFavFrac=" + EM.mf(myFavFrac) + " sosFrac1=" + EM.mf(sosFrac1) + "\n sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac);
-        hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF" + EM.mf(EM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc" + EM.mf(EM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF =" + EM.mf(tradeFracNudge[nudBoth]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
-        hist.add(new History(aPre, 5, "2T" + term, "*rnd=" + EM.mf(tfrac), "*tF=" + EM.mf(termFrac), "goal=", EM.mf(frac), "gtb", EM.mf(gtBias), "<<<<<<<"));
-         }
-      catch (Exception | Error ex) {
-        eM.firstStack = eM.secondStack + "";
-        ex.printStackTrace(eM.pw);
-        ex.printStackTrace(System.err);
-        eM.secondStack = eM.sw.toString();
-        System.out.flush();
-        System.err.flush();
-        EM.newError = true;
-        EM.tError = ("----CSGf----ERROR Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName());
-        System.err.println(EM.tError + EM.andMore());
-        EM.newError = true;
-        //     ex.printStackTrace(System.err);
-         System.out.flush();
-        System.err.flush();
-        st.setFatalError();
-        //throw new WasStopped(eM.tError);
-      }
+        try {
+          aPre = "S$";
+          ttype = pors;
+          // look at previous goals
+          thAccept = eM.getCumulativeClanUnits(EM.TRADESTRATLASTGAVE, pors, clan);
+          thReject = eM.getCumulativeClanUnits(EM.TradeRejectedStrategicGoal, pors, clan);
+          thLost = eM.getCumulativeClanUnits(EM.TradeLostStrategicGoal, pors, clan);
+          thSum = thAccept + thReject + thLost;  // sum of trades
+          // history fraction change to goal fail lower goal, accept raise goal of profits
+          // thFrac = 1.0 - (thReject+thLost)*.01 + thAccept *.002;
+          thFrac = 1.0 + Math.max(-.96, (-thReject * EM.rejectBias[pors][clan] - thLost * EM.lostBias[pors][clan] + thAccept) * EM.historyBias[pors][clan]);
+          assert thFrac > E.PPZERO : "Illegal thFrac=" + EM.mf(thFrac) + ", thAccept=" + thAccept + ", thReject=" + thReject + ", thLost=" + thLost;
+          //Set special ttype for ship to ship trade
+          ttype = oEcon.pors == E.S && pors == E.S ? 2 : pors;
+          //       tmpRand = cRand(15 + term, EM.randMult);
+          tmpRand = cRand(15, EM.randMult);
+          // randFrac = 1/EM.randMax < tmpRand < EM.randMax
+          randFrac = tmpRand < 1. / EM.randMax ? 1. / EM.randMax : tmpRand > EM.randMax ? EM.randMax : tmpRand;
+          oClan = myOffer.getOClan();
+          oPors = myOffer.getOPors();
+          boolean oSOS = myOffer.getOtherSOS();
+          //reduce FavFrac as favor goes higher
+          //set V from my clan favor of other clan
+          myFavV = (EM.favMult * EM.fav[clan][pors][oClan] - EM.favMult * 3.);
+          myFavFrac = 1. / (1. + myFavV); // higher favor makes lower goal
+          //
+          // and the others favor of my clan above 3
+          oFavV = (EM.favMult * (EM.fav[oClan][oPors][clan] - 3.)) * EM.oClanMult;
+          oFavFrac = 1. / (1. + oFavV);
+          // reduce goal if you accept an SOS from the other
+          //double sosFrac = 1. / (1. + (sos ? (EM.fav[clan][oClan] > 3. && EM.fav[oClan][clan] > 3.) ? EM.sosfrac[pors] : 0. : 0.));
+          double sosMore = (oSOS ? (EM.fav[clan][pors][oClan] > 3. && EM.fav[oClan][oPors][clan] > 3.) ? EM.sosfrac[pors] : 0. : 0.);
+          // assert sosMore > E.PPZERO : "ILLEGAL sosMore=" + EM.mf(sosMore) + " ," + (oSOS?" oSOS": "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac)       ;
+          double sosFrac1 = 1. / (1. + sosMore);
+          assert sosFrac1 > E.PPZERO : " ILLEGAL sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + " , myFavFrac=" + EM.mf(myFavFrac) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac);
+          assert myFavFrac > E.PPZERO : " ILLEGAL myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", oFavFrac=" + EM.mf(oFavFrac);
+          assert oFavFrac > E.PPZERO : " ILLEGAL oFavFrac=" + EM.mf(oFavFrac) + ", myFavFrac=" + EM.mf(myFavFrac) + ", sosFrac1=" + EM.mf(sosFrac1) + ", sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV);
+          double sosMin = .80;
+          double sosFrac = Math.max(sosMin, sosFrac1);
+          // predict facs at various terms
+          gtBias = EM.goalTermBias[pors]; // reduce goal at each barter (term)
+          termFrac02 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.) * (gtBias + EM.barterStart - 0.));
+          termFrac03 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - 0.));
+          termFrac0 = (EM.barterStart) / ((gtBias + EM.barterStart - 0.));
+          // amount of reduction of goal per term
+          termFrac2 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term) * (gtBias + EM.barterStart - term));
+          termFrac3 = (EM.barterStart + gtBias) / ((gtBias + EM.barterStart - term));
+          termFrac = (EM.barterStart) / ((gtBias + EM.barterStart - term));//1.=>.5
+          tfrac = tradeFracNudge[nudBoth];
+          // rGoalFrac = EM.tradeFrac[pors][clan] * randFrac * myFavFrac * oFavFrac * sosFrac;
+          rGoalFrac = Math.min(EM.goalMaxBias[pors][0] * tfrac, tfrac * myFavFrac * oFavFrac * sosFrac * thFrac);
+          sf = strategicGoal = frac = rGoalFrac * termFrac;
+          rGoal0 = rGoalFrac * termFrac0;  // the goal after doing all the barters
+          EM.wasHere = "before History clan=" + clan + " oClan=" + oClan + " term=" + term;
+          EM.wasHere2 = " (EM.fav[clan][pors][oClan])=" + EM.mf(EM.fav[clan][pors][oClan]);
+          assert rGoalFrac > E.PPZERO : " ILLEGAL rGoalFrac =" + EM.mf(rGoalFrac) + "\n" + name + "Y" + EM.year + "CP" + (clan * 2 + pors) + " nudge" + EM.mf(tradeFracNudge[nudV]) + " tFrac=" + EM.mf(tfrac) + " , oFavFrac=" + EM.mf(oFavFrac) + " myFavFrac=" + EM.mf(myFavFrac) + " sosFrac1=" + EM.mf(sosFrac1) + "\n sosMore=" + EM.mf(sosMore) + " ," + (oSOS ? " oSOS" : "!oSOS") + ", myFavV=" + EM.mf(myFavV) + ", oFavV=" + EM.mf(oFavV) + ", thFrac=" + EM.mf(thFrac);
+          hist.add(new History(aPre, 5, "T" + term + " goal=" + EM.mf(frac), "rnd" + EM.mf(tmpRand), "rF" + EM.mf(randFrac), "*myF" + EM.mf(EM.fav[clan][pors][oClan]), "=>" + EM.mf(myFavFrac), "*oFc" + EM.mf(EM.fav[oClan][oPors][clan]), "=>" + EM.mf(oFavFrac), "*sosF=" + EM.mf(sosFrac), "trdF =" + EM.mf(tradeFracNudge[nudBoth]), "*rand=" + EM.mf(tfrac), "*termF=" + EM.mf(termFrac), "goal=" + EM.mf(frac), "gtb" + EM.mf(gtBias), "<<<<<<<"));
+          hist.add(new History(aPre, 5, "2T" + term, "*rnd=" + EM.mf(tfrac), "*tF=" + EM.mf(termFrac), "goal=", EM.mf(frac), "gtb", EM.mf(gtBias), "<<<<<<<"));
+        }
+        catch (Exception | Error ex) {
+          eM.firstStack = eM.secondStack + "";
+          ex.printStackTrace(eM.pw);
+          ex.printStackTrace(System.err);
+          eM.secondStack = eM.sw.toString();
+          System.out.flush();
+          System.err.flush();
+          EM.newError = true;
+          EM.tError = ("----CSGf----ERROR Barter Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName());
+          System.err.println(EM.tError + EM.andMore());
+          EM.newError = true;
+          //     ex.printStackTrace(System.err);
+          System.out.flush();
+          System.err.flush();
+          st.setFatalError();
+          //throw new WasStopped(eM.tError);
+        }
         return strategicGoal = frac;
       }// Assets.CashFlow.Trades.calcStrategicGoal
 
@@ -8526,30 +8553,30 @@ public class Assets {
         }
 
         if (!ec.dead) {
-        rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
-        EM.wasHere = "CashFlow.init... before calcEfficiency loop eeeh" + ++eeeh;
-        for (k = 0; k < 4; k++) {
-          sys[k].calcEfficiency();
-          bals.useRef(ABalRows.INVMEFFICIENCYIX + k, sys[k].invMaintEfficiency);
-          sys[k].invMaintEfficiency = invMEfficiency.A[ABalRows.BALANCESIX + k] = bals.getRow(ABalRows.INVMEFFICIENCYIX + k);
-          sys[k].invGroEfficiency = invGEfficiency.A[ABalRows.BALANCESIX + k] = bals.getRow(ABalRows.INVGEFFICIENCYIX + k);
-          sys[k].calcGrowth();
-        }
-        didDepreciation = true; // did both calcEfficiency and calcGrowth
-        eM.printHere("---ASCF---", ec, "did calcEfficiency, calcGrowth growths.sum4=" + EM.mf(growths.sum4()));
+          rs = eM.makeClanRS(eM.rs4, eM.mult5Ctbl, ec);//may change yearly
+          EM.wasHere = "CashFlow.init... before calcEfficiency loop eeeh" + ++eeeh;
+          for (k = 0; k < 4; k++) {
+            sys[k].calcEfficiency();
+            bals.useRef(ABalRows.INVMEFFICIENCYIX + k, sys[k].invMaintEfficiency);
+            sys[k].invMaintEfficiency = invMEfficiency.A[ABalRows.BALANCESIX + k] = bals.getRow(ABalRows.INVMEFFICIENCYIX + k);
+            sys[k].invGroEfficiency = invGEfficiency.A[ABalRows.BALANCESIX + k] = bals.getRow(ABalRows.INVGEFFICIENCYIX + k);
+            sys[k].calcGrowth();
+          }
+          didDepreciation = true; // did both calcEfficiency and calcGrowth
+          eM.printHere("---ASCF---", ec, "did calcEfficiency, calcGrowth growths.sum4=" + EM.mf(growths.sum4()));
         }// !dead
 
-      rawFertilities2 = new A2Row(ec); //for DoTotalWorths
-      EM.wasHere = "CashFlow.init... after calcGrowth loop eeei" + ++eeei;
-      //  System.out.println("5631 near end CashFlow.initCashFlow");
-      //didStart = (ec.age < 1 ? false : didStart);// probably age = -1 not y0
+        rawFertilities2 = new A2Row(ec); //for DoTotalWorths
+        EM.wasHere = "CashFlow.init... after calcGrowth loop eeei" + ++eeei;
+        //  System.out.println("5631 near end CashFlow.initCashFlow");
+        //didStart = (ec.age < 1 ? false : didStart);// probably age = -1 not y0
 
-      if (!didStart) {
-        lTitle = "strtCashFlow";
-        histTitles(lTitle);
-        if (!ec.myClearHist) {
-          hist.add(new History(aPre, 5, ec.name + " CFinitYr" + EM.year, "wealth=", EM.mf(wealth), "colonists=", EM.mf(colonists), "res=", EM.mf(res), "Knowledge=", EM.mf(aknowledge), "difficulty=", EM.mf(percentDifficulty)));
-        }
+        if (!didStart) {
+          lTitle = "strtCashFlow";
+          histTitles(lTitle);
+          if (!ec.myClearHist) {
+            hist.add(new History(aPre, 5, ec.name + " CFinitYr" + EM.year, "wealth=", EM.mf(wealth), "colonists=", EM.mf(colonists), "res=", EM.mf(res), "Knowledge=", EM.mf(aknowledge), "difficulty=", EM.mf(percentDifficulty)));
+          }
           start();  // set startTotalWorth
         }
 
@@ -8566,147 +8593,151 @@ public class Assets {
       eM.printHere("----CFSa---", ec, EM.wasHere);
     }  //Assets.CashFlow.aStartCashFlow
 
-
     void startAIYear() {
       try {
-          // now makel the nudge pointers to install even if nudge=0,0
-           // start system test
-      int nudx1L = aiNudges.length;
-      int nudx2L = aiNudges[0].length;
-      //make a copy of preexisting aiNudges for this instance of Assets
-      double myAINudges[][] = new double[nudx1L][];
-      for(int nudx1=0; nudx1 < nudx1L;nudx1++){
-        myAINudges[nudx1] = new double[nudx2L];
-        for(int nudx2=0;nudx2 <  nudx2L;nudx2++){
-          myAINudges[nudx1][nudx2] =aiNudges[nudx1][nudx2];
+        // now makel the nudge pointers to install even if nudge=0,0
+        // start system test
+        int nudx1L = aiNudges.length;
+        int nudx2L = aiNudges[0].length;
+        //make a copy of preexisting aiNudges for this instance of Assets
+        double myAINudges[][] = new double[nudx1L][];
+        for (int nudx1 = 0; nudx1 < nudx1L; nudx1++) {
+          myAINudges[nudx1] = new double[nudx2L];
+          for (int nudx2 = 0; nudx2 < nudx2L; nudx2++) {
+            myAINudges[nudx1][nudx2] = aiNudges[nudx1][nudx2];
+          }
         }
-      }
-      int vvat = eM.valAIN[0];// nudge to vv array traderFrac
-      int vvbt = eM.valAIN[1];// nudge to vv array
+        int vvat = eM.valAIN[0];// nudge to vv array traderFrac
+        int vvbt = eM.valAIN[1];// nudge to vv array
 
-      //use last years value, as in saveAI
+        //use last years value, as in saveAI
+        aKey = new String(EM.psClanChars[pors][clan]);
+        //aVal[] = EM.myAIlearnings.get(aKey);
 
-      aKey = new String(EM.psClanChars[pors][clan]);
-      //aVal[] = EM.myAIlearnings.get(aKey);
-
-    //  eM.setCntAr(aKey, aVal,false,false, true);  //reset the listing in display with previous values
-      int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
-      int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
-     // String valNudgea = EM.mf(aiNudges[0][nudV]);
-     // String valNudgeb = EM.mf(aiNudges[1][nudV]);
-      char ccc[] = {'a',EM.psClanChars[pors][clan][E.pNudge0]};
-      int iii = (int) EM.psClanChars[pors][clan][E.pNudge0];
-      String ssa = new String(ccc);
-      int vva = eM.valAIN[0];// nudge to vv array traderFrac
-      int vvb = eM.valAIN[1];// nudge to vv array ffTFracNudge
-      //set the nuduge 3 values per current nudV
-      double vala=  eM.getAIVal(vva,  clan, ec, 0),valb= eM.getAIVal(vva,  clan, ec, 0);
-      String preAKey = new String(EM.psClanChars[pors][clan]);
-       Double vvva = E.AILimsC[pValIxa];
-       String vvav =  EM.mf("TFval",tradeFracNudge[nudBoth]);
+        //  eM.setCntAr(aKey, aVal,false,false, true);  //reset the listing in display with previous values
+        int pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
+        int pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
+        // String valNudgea = EM.mf(aiNudges[0][nudV]);
+        // String valNudgeb = EM.mf(aiNudges[1][nudV]);
+        char ccc[] = {'a', EM.psClanChars[pors][clan][E.pNudge0]};
+        int iii = (int) EM.psClanChars[pors][clan][E.pNudge0];
+        String ssa = new String(ccc);
+        int vva = eM.valAIN[0];// nudge to vv array traderFrac
+        int vvb = eM.valAIN[1];// nudge to vv array ffTFracNudge
+        //set the nuduge 3 values per current nudV
+        double vala = eM.getAIVal(vva, clan, ec, 0), valb = eM.getAIVal(vva, clan, ec, 0);
+        String preAKey = new String(EM.psClanChars[pors][clan]);
+        Double vvva = E.AILimsC[pValIxa];
+        String vvav = EM.mf("TFval", tradeFracNudge[nudBoth]);
         String vvvv = EM.mf("value of Xa", vvva);
         boolean[] doNudges = {y, y};
-      //System.err.println("-----SAIs2----StartYearAI vvat=" +vvat +  " prevSliderVala=" + prevSliderVala +" =CC" + EM.psClanChars[pors][clan][E.pNudge0] + "X" + iii + "::"  + ssa +" ="  + pValIxa  + " E.pNudge0=" +  E.pNudge0 + vvvv + vvav +  " prevSliderValb=" + EM.mf(prevSliderValb)  +"  pValIxb="  +  EM.mf(pValIxb)  + " E.pNudge1=" +  E.pNudge1 + " preAKey=" + preAKey + " pre aiNudges=" + EM.mf(myAINudges[0][nudV] ) + ":" + EM.mf(myAINudges[0][nudSet] ) + ":" + EM.mf(myAINudges[0][nudBoth] ) );
-  // to save any ai key from alst year via test then
+        //System.err.println("-----SAIs2----StartYearAI vvat=" +vvat +  " prevSliderVala=" + prevSliderVala +" =CC" + EM.psClanChars[pors][clan][E.pNudge0] + "X" + iii + "::"  + ssa +" ="  + pValIxa  + " E.pNudge0=" +  E.pNudge0 + vvvv + vvav +  " prevSliderValb=" + EM.mf(prevSliderValb)  +"  pValIxb="  +  EM.mf(pValIxb)  + " E.pNudge1=" +  E.pNudge1 + " preAKey=" + preAKey + " pre aiNudges=" + EM.mf(myAINudges[0][nudV] ) + ":" + EM.mf(myAINudges[0][nudSet] ) + ":" + EM.mf(myAINudges[0][nudBoth] ) );
+        // to save any ai key from alst year via test then
         // one of 3 possible clans cnt>74 ok234, 75>cnt >50 34 ,
         // 50>cnt>25 4
         if ((EM.aicnt[0][0] > 24 && clan == 4 || (EM.aicnt[0][0] > 49 && clan == 3 || (EM.aicnt[0][0] > 74 || clan == 2)))) {
-      // now use values from last year to save last the key for last year
-      //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
-      saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScore[clan]);//save last year values
+          // now use values from last year to save last the key for last year
+          //     void saveAIKey boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
+          saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, EM.myScore[clan]);//save last year values
 
-     
-      //set the nuduge 3 values per current nudV
-      vala=  eM.getAIVal(vva,  clan, ec, 0);valb= eM.getAIVal(vva,  clan, ec, 0);
-   //   int gca = EM.valI[vva][EM.modeC][0][0];
-   ///   int gcb = EM.valI[vvb][EM.modeC][0][0];
+          //set the nuduge 3 values per current nudV
+          vala = eM.getAIVal(vva, clan, ec, 0);
+          valb = eM.getAIVal(vva, clan, ec, 0);
+          //   int gca = EM.valI[vva][EM.modeC][0][0];
+          ///   int gcb = EM.valI[vvb][EM.modeC][0][0];
 
-      //be sure these are set
-       putValueChar(EM.psClanChars[pors][clan], E.ppors, pors , E.AILims123, "EconPors", y);
-       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, 4. , E.AILims123, "lastaiPos", y);//force valid lim
-       putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors,E.AILims123, "clan*2+pors", y);
-      // only help clan blue get smart start after at least 100 keys so
-      // we want to separate planets and ships, but each Assets instance belongs to just one of them
-      // charAt(1) E.ppors if set is 'f' or 'g'
-      aKey = new String(EM.psClanChars[pors][clan]);
+          //be sure these are set
+          putValueChar(EM.psClanChars[pors][clan], E.ppors, pors, E.AILims123, "EconPors", y);
+          putValueChar(EM.psClanChars[pors][clan], E.pLastScP, 4., E.AILims123, "lastaiPos", y);//force valid lim
+          putValueChar(EM.psClanChars[pors][clan], E.pclanpors, clan * 2 + pors, E.AILims123, "clan*2+pors", y);
+          // only help clan blue get smart start after at least 100 keys so
+          // we want to separate planets and ships, but each Assets instance belongs to just one of them
+          // charAt(1) E.ppors if set is 'f' or 'g'
+          aKey = new String(EM.psClanChars[pors][clan]);
 
-         // to set any ai nudge via test then
-         //require size, set char1, and one of 3 possible clans cnt>74 ok234, 75>cnt >50 34 ,
-         // 50>cnt>25 4
-         if (EM.myAIlearnings.size() > 100 && aKey.charAt(1) != 'a' && (EM.aicnt[0][0] > 24 && clan == 4 || (EM.aicnt[0][0] > 49 && clan == 3 || (EM.aicnt[0][0] > 74 || clan == 2)))) {
-         // use aKey and aVal left by saveAIKey
-       // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
-       // assume the drs arrays are set, use those settings to derive new nudges
-       //-----------------EM.tradeFrac[pors][clan]-------------------
-       double prevNudv = tradeFracNudge[nudV];
-       double prevVal = tradeFracNudge[nudBoth];
-       double curVal = eM.getAIVal(vva,  clan, ec, 0); // sum of setting and nudge
-       double prevTF= tradeFracNudge[nudSet] =  EM.tradeFrac[pors][clan]; // settings P .41, S.22
-       double tooSmall =-tradeFracNudge[tradeFracNudge.length-1]* 1.3;
-       String prevTradeFracss[] = { "prevTradeFracp","prevTradeFracs"};
-         // get the best value, not a slider value
-       double newTF1 = eM.tradeFracSetCntDr(aKey, aVal, prevTradeFracss, false,false, y);
-      boolean notNew = newTF1 < tooSmall;
-      double newTF = newTF1 < tooSmall?prevTF:newTF1;
-       tradeFracNudge[nudV] = newTF -prevTF;
-       tradeFracNudge[nudBoth]=tradeFracNudge[nudV] + tradeFracNudge[nudSet];
-       doNudges[0] = notNew;// prevent random reset of nudge 0  if not notNew
-       String sss =  name + "Y" +   EM.year  + "C" + clan  + ( notNew?  "no Change" + EM.mf2( "prevNudv",prevNudv) : EM.mf2( "prevNudv",prevNudv)  + EM.mf2( "newTF",newTF) + EM.mf2( "newNudv",tradeFracNudge[nudV] )  + EM.mf2( "setTradeFrac",tradeFracNudge[nudSet]) + "=>" + EM.mf2( "nudBoth",tradeFracNudge[nudBoth]));
-       if(E.debugAIOut)System.out.println("-----SAIy0----" + sss);
-       synchronized (A6Row.lock){
-       Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;}
-        assert newTF > 0.:"Error newTF value negative=" + EM.mf2("newTF",newTF) + EM.mf2("prevNudv",prevNudv);
-    //-----------------------   EM.futureFundTransferFrac[pors][clan]---------
-       prevNudv = ffTFracNudge[nudV];
-       prevVal = ffTFracNudge[nudBoth];
-       double prevFFT = ffTFracNudge[nudSet]=  EM.futureFundTransferFrac[pors][clan];
-       tooSmall =-ffTFracNudge[ffTFracNudge.length-1]* 1.3;
-       curVal = eM.getAIVal(vva,  clan, ec, 1); // sum of setting and nudge
+          // to set any ai nudge via test then
+          //require size, set char1, and one of 3 possible clans cnt>74 ok234, 75>cnt >50 34 ,
+          // 50>cnt>25 4
+          if (EM.myAIlearnings.size() > 100 && aKey.charAt(1) != 'a' && (EM.aicnt[0][0] > 24 && clan == 4 || (EM.aicnt[0][0] > 49 && clan == 3 || (EM.aicnt[0][0] > 74 || clan == 2)))) {
+            // use aKey and aVal left by saveAIKey
+            // double val1 = valD[vv][gameAddrC][pors][klan] = sliderToVal(slider, valD[vv][gameLim][pors][vLowLim], valD[vv][gameLim][pors][vHighLim]);
+            // assume the drs arrays are set, use those settings to derive new nudges
+            //-----------------EM.tradeFrac[pors][clan]-------------------
+            double prevNudv = tradeFracNudge[nudV];
+            double prevVal = tradeFracNudge[nudBoth];
+            double curVal = eM.getAIVal(vva, clan, ec, 0); // sum of setting and nudge
+            double prevTF = tradeFracNudge[nudSet] = EM.tradeFrac[pors][clan]; // settings P .41, S.22
+            double tooSmall = -tradeFracNudge[tradeFracNudge.length - 1] * 1.3;
+            String prevTradeFracss[] = {"prevTradeFracp", "prevTradeFracs"};
+            // get the best value, not a slider value
+            double newTF1 = eM.tradeFracSetCntDr(aKey, aVal, prevTradeFracss, false, false, y);
+            boolean notNew = newTF1 < tooSmall;
+            double newTF = newTF1 < tooSmall ? prevTF : newTF1;
+            tradeFracNudge[nudV] = newTF - prevTF;
+            tradeFracNudge[nudBoth] = tradeFracNudge[nudV] + tradeFracNudge[nudSet];
+            doNudges[0] = notNew;// prevent random reset of nudge 0  if not notNew
+            String sss = name + "Y" + EM.year + "C" + clan + (notNew ? "no Change" + EM.mf2("prevNudv", prevNudv) : EM.mf2("prevNudv", prevNudv) + EM.mf2("newTF", newTF) + EM.mf2("newNudv", tradeFracNudge[nudV]) + EM.mf2("setTradeFrac", tradeFracNudge[nudSet]) + "=>" + EM.mf2("nudBoth", tradeFracNudge[nudBoth]));
+            if (E.debugAIOut) {
+              System.out.println("-----SAIy0----" + sss);
+            }
+            synchronized (A6Row.lock) {
+              Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;
+            }
+            assert newTF > 0. : "Error newTF value negative=" + EM.mf2("newTF", newTF) + EM.mf2("prevNudv", prevNudv);
+            //-----------------------   EM.futureFundTransferFrac[pors][clan]---------
+            prevNudv = ffTFracNudge[nudV];
+            prevVal = ffTFracNudge[nudBoth];
+            double prevFFT = ffTFracNudge[nudSet] = EM.futureFundTransferFrac[pors][clan];
+            tooSmall = -ffTFracNudge[ffTFracNudge.length - 1] * 1.3;
+            curVal = eM.getAIVal(vva, clan, ec, 1); // sum of setting and nudge
 
-        double newFFT1 =  eM.fFTransferFracSetCntDr(aKey,  aVal, "prevaFFTransferFrac",false,false, y);
-        notNew = newFFT1 < tooSmall;
-        double newFFT = newFFT1 < tooSmall?prevFFT:newFFT1;
-        ffTFracNudge[nudV] = newFFT -prevFFT;
-        ffTFracNudge[nudBoth]=ffTFracNudge[nudV] + ffTFracNudge[nudSet];
-       doNudges[1] = notNew; // // prevent random reset of nudge 1  if not notNew
-       sss =  name + "Y" +   EM.year  + "C" + clan  +  ( notNew?  "no Change " +EM.mf2( "prevNudv",prevNudv) : EM.mf2( "prevNudv",prevNudv) + EM.mf2( "set EM.futureFundTransferFrac",EM.futureFundTransferFrac[pors][clan])   + "=>"    + EM.mf2( "nudBoth",tradeFracNudge[nudBoth]));
-       synchronized (A6Row.lock){
-         Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;}
-        if(E.debugAIOut)System.out.println("-----SAIy1----" +sss);
-        assert newFFT > -2.0:"Error newFFT value negative=" + EM.mf2("newFFT",newFFT);
-         }//end setting ai nudge
+            double newFFT1 = eM.fFTransferFracSetCntDr(aKey, aVal, "prevaFFTransferFrac", false, false, y);
+            notNew = newFFT1 < tooSmall;
+            double newFFT = newFFT1 < tooSmall ? prevFFT : newFFT1;
+            ffTFracNudge[nudV] = newFFT - prevFFT;
+            ffTFracNudge[nudBoth] = ffTFracNudge[nudV] + ffTFracNudge[nudSet];
+            doNudges[1] = notNew; // // prevent random reset of nudge 1  if not notNew
+            sss = name + "Y" + EM.year + "C" + clan + (notNew ? "no Change " + EM.mf2("prevNudv", prevNudv) : EM.mf2("prevNudv", prevNudv) + EM.mf2("set EM.futureFundTransferFrac", EM.futureFundTransferFrac[pors][clan]) + "=>" + EM.mf2("nudBoth", tradeFracNudge[nudBoth]));
+            synchronized (A6Row.lock) {
+              Econ.keyList[Econ.ixKeyList = ++Econ.ixKeyList < Econ.lKeyList ? Econ.ixKeyList : 0] = sss;
+            }
+            if (E.debugAIOut) {
+              System.out.println("-----SAIy1----" + sss);
+            }
+            assert newFFT > -2.0 : "Error newFFT value negative=" + EM.mf2("newFFT", newFFT);
+          }//end setting ai nudge
 
-       // now possibly introduce random nudges
-      Random rand = new Random();
-      rIn = -7;
-      ranInt = rand.nextInt(7);// 0-6
-      int ran2 = ranInt%aiNudges.length; // 0-1
-      int rInMax=5; // number of nudge values
-      rInMax = aiNudges[0].length-nudStrt; // currently 5
-        rIn = rand.nextInt(rInMax*2);// select sign and value of nudges 5
-      double ranMult = .7 + .6 * Math.random();// .7 - 1.3
-      double aiV = -7.7;
-      // only nudge 2 out of 5 econs per year
-    
-      if (ranInt >= 0 && ranInt < aiNudges.length) {
+          // now possibly introduce random nudges
+          Random rand = new Random();
+          rIn = -7;
+          ranInt = rand.nextInt(7);// 0-6
+          int ran2 = ranInt % aiNudges.length; // 0-1
+          int rInMax = 5; // number of nudge values
+          rInMax = aiNudges[0].length - nudStrt; // currently 5
+          rIn = rand.nextInt(rInMax * 2);// select sign and value of nudges 5
+          double ranMult = .7 + .6 * Math.random();// .7 - 1.3
+          double aiV = -7.7;
+          // only nudge 2 out of 5 econs per year
 
-        //ranInt==1 rIn==5: aiNudges[ranInt][pors] = -aiNudges[ranInt][2.5+1.5=4]
-        //ranInt==1 rIn==4: aiNudges[rnInt][pors] = -aiNudges[ranInt][
-        // rIn over 2 is negative
-        // clan and pors defined in Assets
-        // aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
-        //randomize the applied values
-        if(doNudges[ran2]){
-          aiNudges[ran2][nudV] = aiV = ranMult * (rIn < rInMax ? aiNudges[ran2][rIn+nudStrt] : -aiNudges[ran2][rIn-rInMax+nudStrt]);
-          doNudges[ran2] = false;
+          if (ranInt >= 0 && ranInt < aiNudges.length) {
+
+            //ranInt==1 rIn==5: aiNudges[ranInt][pors] = -aiNudges[ranInt][2.5+1.5=4]
+            //ranInt==1 rIn==4: aiNudges[rnInt][pors] = -aiNudges[ranInt][
+            // rIn over 2 is negative
+            // clan and pors defined in Assets
+            // aiV = aiNudges[ranInt][(int) ((rIn % 3) + 2)];
+            //randomize the applied values
+            if (doNudges[ran2]) {
+              aiNudges[ran2][nudV] = aiV = ranMult * (rIn < rInMax ? aiNudges[ran2][rIn + nudStrt] : -aiNudges[ran2][rIn - rInMax + nudStrt]);
+              doNudges[ran2] = false;
+            }
+            //int sliderVal = eM.getAIVal(vv, pors, clan,ec,ranInt);
+            //   res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
           }
-        //int sliderVal = eM.getAIVal(vv, pors, clan,ec,ranInt);
-        //   res[ixa = ix + E.bValsStart] = E.getAISetChar(sliderVal);
-      }
         }
         //zero all unset aiNudges
         for (int ranInta = 0; ranInta < aiNudges.length; ranInta++) {
-          if(doNudges[ranInta]){
+          if (doNudges[ranInta]) {
             for (int rIna = 0; rIna < 2; rIna++) {
               aiNudges[ranInta][rIna] = 0.0;
             }
@@ -8714,45 +8745,45 @@ public class Assets {
           }
         }
 
-      // now install the nudge pointers even if nudge=0,0
+        // now install the nudge pointers even if nudge=0,0
+        // vva = eM.valAIN[0];// nudge to vv array traderFrac
+        // vvb = eM.valAIN[1];// nudge to vv array
+        eM.getAIVal(vva, clan, ec, 0);
+        eM.getAIVal(vvb, clan, ec, 0);
 
-     // vva = eM.valAIN[0];// nudge to vv array traderFrac
-     // vvb = eM.valAIN[1];// nudge to vv array
-       eM.getAIVal(vva,  clan, ec, 0);
-       eM.getAIVal(vvb,  clan, ec, 0);
+        //use this years value, as in saveAI
+        putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, "Nudged value0", y);
+        putValueChar(EM.psClanChars[pors][clan], E.pNudge1, ffTFracNudge[nudBoth], E.AILims1, "Nudged value1", y);
 
-      //use this years value, as in saveAI
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, "Nudged value0", y);
-      putValueChar(EM.psClanChars[pors][clan], E.pNudge1,ffTFracNudge[nudBoth], E.AILims1, "Nudged value1", y);
+        pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
+        pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
 
-      pValIxa = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge0]);// get key x value of setting TradeFrac
-      pValIxb = E.getAIMuch(EM.psClanChars[pors][clan][E.pNudge1]);// key x value of setting forwFTfrac
-
-      String pValIxaVal = EM.mf(E.AILims1[pValIxa]);
-      String pValIxbVal = EM.mf(E.AILims1[pValIxb]);
-      //use last years value, as in saveAI done before
-   //   putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
-    //  putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
-      if (E.debugAIOut2) {
-        System.err.println("-----SAIs3----StartYearAI after puts ranInt" + ranInt + " " + name + "Y" + EM.year + " rIn" + rIn + ":"  + ":" + " A=" + EM.mf2(" aiNudges[0][nudV]",aiNudges[0][nudV]) + EM.mf2(" aiNudges[0][nudSet]",aiNudges[0][nudSet]) + EM.mf2(" aiNudges[0][nudBoth]",aiNudges[0][nudBoth])  + EM.mf2(" E.AILims1[pValIxa]]",E.AILims1[pValIxa]) + EM.mf2(" aiNudges[1][nudV]",aiNudges[1][nudV]) + EM.mf2(" aiNudges[1][nudSet]",aiNudges[1][nudSet]) + EM.mf2(" aiNudges[1][nudBoth]",aiNudges[1][nudBoth]) + EM.mf2(" E.AILims1[pValIxb])",E.AILims1[pValIxb]));
+        String pValIxaVal = EM.mf(E.AILims1[pValIxa]);
+        String pValIxbVal = EM.mf(E.AILims1[pValIxb]);
+        //use last years value, as in saveAI done before
+        //   putValueChar(EM.psClanChars[pors][clan], E.pNudge0, prevSliderVala, E.AILimsC, "Nudged value0", y);
+        //  putValueChar(EM.psClanChars[pors][clan], E.pNudge1, prevSliderValb, E.AILimsC, "Nudged value1", y);
+        if (E.debugAIOut2) {
+          System.err.println("-----SAIs3----StartYearAI after puts ranInt" + ranInt + " " + name + "Y" + EM.year + " rIn" + rIn + ":" + ":" + " A=" + EM.mf2(" aiNudges[0][nudV]", aiNudges[0][nudV]) + EM.mf2(" aiNudges[0][nudSet]", aiNudges[0][nudSet]) + EM.mf2(" aiNudges[0][nudBoth]", aiNudges[0][nudBoth]) + EM.mf2(" E.AILims1[pValIxa]]", E.AILims1[pValIxa]) + EM.mf2(" aiNudges[1][nudV]", aiNudges[1][nudV]) + EM.mf2(" aiNudges[1][nudSet]", aiNudges[1][nudSet]) + EM.mf2(" aiNudges[1][nudBoth]", aiNudges[1][nudBoth]) + EM.mf2(" E.AILims1[pValIxb])", E.AILims1[pValIxb]));
         }
         //EM.psClanChars[pors][clan][E.pNudge0 + nX] = E.getAISetChar(sliderVal);
-    }
-     catch (Exception | Error ex) {
+      }
+      catch (Exception | Error ex) {
         eM.firstStack = eM.secondStack + "";
         ex.printStackTrace(eM.pw);
         ex.printStackTrace(System.err);
         eM.secondStack = eM.sw.toString();
         System.out.flush();
-       System.err.flush();
-       EM.newError = true;
-       EM.tError = ("----SYAf----ERROR startAIYear Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName());
-       System.err.println(EM.tError + eM.andMore());
+        System.err.flush();
+        EM.newError = true;
+        EM.tError = ("----SYAf----ERROR startAIYear Caught " + ex.toString() + ", cause=" + ex.getCause() + " message=" + ex.getMessage() + " string=" + ex.toString() + Thread.currentThread().getName());
+        System.err.println(EM.tError + eM.andMore());
         //     ex.printStackTrace(System.err);
         st.setFatalError();
-       // throw new WasStopped(eM.tError);
+        // throw new WasStopped(eM.tError);
       }
     }//startAIYear
+
     /**
      * return the current value of loop n
      *
@@ -8873,11 +8904,11 @@ public class Assets {
      * sCatCosts</li>
      * <li>reduce a resource sector balance by a random percent statistic
      * rCatCosts  </li>
-     * <li>set a years of bonus for a resource sector statistic rCatBonusY </li>
+     * <li>set a years of bonus for a resource sector statistic catBonusY </li>
      * <li>set a value of bonus (reduces each year) for the resource sector
-     * reduce by .04 * (value + initial growth value) each year in didDepreciation
-     * statistic rCatBonusVal </li>
-     * <li>set a years of bonus for a rstaff sector statistic sCatBonusY </li>
+     * reduce by .04 * (value + initial growth value) each year in
+     * didDepreciation statistic catBonusVal </li>
+     * <li>set a years of bonus for a rstaff sector statistic catBonusY </li>
      * <li>set a value of bonus (reduces each year) for the staff sector
      * statistic sCatBonusVal </li>
      * <li>reduce the amount of deterioration for a resource , prevent a
@@ -8895,52 +8926,53 @@ public class Assets {
         return; // only 1 time per year
       }
       if (eM.randFrac[pors][0] > PZERO && ec.age > 1 && n < 2 && ((t1 = cRand(31)) < (t2 = eM.userCatastrophyFreq[pors][clan] * (cc = eM.gameUserCatastrophyMult[pors][0]) * cRand(34))) && t1 > 0.) {
-      // cc will be both user and game catastrophy values
-      // random 0.0 to 1.0,%5lt; asum of 0-.65 + 0-.65
-     // if ((t2 = eM.gameUserCatastrophyMult[pors][0]) == 0.0) {
-         // return; // skip if 0
-         //}
-        eM.printHere("----CATe1----", ec, EM.mf("enter Catastrophy t1", t1) + EM.mf(" t2", t2));
+        // cc will be both user and game catastrophy values
+        // random 0.0 to 1.0,%5lt; asum of 0-.65 + 0-.65
+        // if ((t2 = eM.gameUserCatastrophyMult[pors][0]) == 0.0) {
+        // return; // skip if 0
+        //}
 
-         if ((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] * (t2 = eM.gameUserCatastrophyMult[pors][0]))) { //.25 *.2 = .05 so very seldom
-        didCatastrophy = true; // only if actually done
-        int r1 = new Random().nextInt(7);
-        int r2 = new Random().nextInt(7);
-        int s1 = new Random().nextInt(7);
-        int s2 = new Random().nextInt(7);
-        int r3 = new Random().nextInt(7);
-        int r4 = new Random().nextInt(7);
-        int s3 = new Random().nextInt(7);
-        int s4 = new Random().nextInt(7);
-        int r5 = new Random().nextInt(7);
-        int s5 = new Random().nextInt(7);
-        //get fraction of reduction rand(0-1.) cc(0-1.3) cUR(0-1.) = (0-1.3) more small
-        double reduce1 = Math.min(.65, (cRand(14) * cc * EM.catastrophyUnitReduction[pors][0] * 1.5)); //0-1.95  min.65
-        double reduce2 = Math.min(.65, (cRand(15) * cc * EM.catastrophyUnitReduction[pors][0] * .6));
-        double reduce3 = Math.min(.65, (cRand(16) * cc * EM.catastrophyUnitReduction[pors][0] * 1.5));
-        double reduce4 = Math.min(.65, (cRand(17) * cc * EM.catastrophyUnitReduction[pors][0] * .6));
-        int bonusYrs1 = (int) (cRand(16) * cc * EM.catastrophyBonusYears[pors][0] * 2);
-        int bonusYrs2 = (int) (cRand(17) * cc * EM.catastrophyBonusYears[pors][0] * .8);
-        int bonusYrs3 = (int) (cRand(18) * cc * EM.catastrophyBonusYears[pors][0] * 2);
-        int bonusYrs4 = (int) (cRand(19) * cc * EM.catastrophyBonusYears[pors][0] * .8);
-        double bonusVal1 = cRand(20) * cc * EM.catastrophyBonusGrowthValue[pors][0] * 1.9;
-        double bonusVal2 = cRand(21) * cc * EM.catastrophyBonusGrowthValue[pors][0] * .5;
-        double bonusVal3 = cRand(22) * cc * EM.catastrophyBonusGrowthValue[pors][0] * 1.9;
-        double bonusVal4 = cRand(23) * cc * EM.catastrophyBonusGrowthValue[pors][0] * .5;
-        double deteriorationReduce1 = cRand(26) * cc * EM.growthDepreciation[2][pors] * 2.3;
-        double deteriorationReduce2 = cRand(24) * cc * EM.growthDepreciation[0][pors] * 1.1;
-        double deteriorationReduce3 = cRand(25) * cc * EM.growthDepreciation[0][pors] * .7;
-        double deteriorationReduce4 = cRand(27) * cc * EM.growthDepreciation[2][pors] * .3;
-        int bonusX1 = new Random().nextInt(7);
-        int bonusX2 = new Random().nextInt(7);
-        int bonusX3 = new Random().nextInt(7);
-        int bonusX4 = new Random().nextInt(7);
-        double bonusManuals1 = cRand(32) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
-        double bonusNewKnowledge1 = cRand(45) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
-        double bonusManuals2 = cRand(35) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
-        double bonusNewKnowledge2 = cRand(44) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
+        if ((t1 = Math.random()) < (cc = eM.userCatastrophyFreq[pors][clan] * (t2 = eM.gameUserCatastrophyMult[pors][0]))) { //.25 *2 = .5
+          eM.printHere("----CATe1----", ec, EM.mf("enter Catastrophy t1", t1) + EM.mf(" t2", t2));
 
-        /*
+          didCatastrophy = true; // only if actually done
+          int r1 = new Random().nextInt(7);
+          int r2 = new Random().nextInt(7);
+          int s1 = new Random().nextInt(7);
+          int s2 = new Random().nextInt(7);
+          int r3 = new Random().nextInt(7);
+          int r4 = new Random().nextInt(7);
+          int s3 = new Random().nextInt(7);
+          int s4 = new Random().nextInt(7);
+          int r5 = new Random().nextInt(7);
+          int s5 = new Random().nextInt(7);
+          //get fraction of reduction rand(0-1.) cc(0-1.3) cUR(0-1.) = (0-1.3) more small
+          double reduce1 = Math.min(.65, (cRand(14) * cc * EM.catastrophyUnitReduction[pors][0] * 1.5)); //0-1.95  min.65
+          double reduce2 = Math.min(.65, (cRand(15) * cc * EM.catastrophyUnitReduction[pors][0] * .6));
+          double reduce3 = Math.min(.65, (cRand(16) * cc * EM.catastrophyUnitReduction[pors][0] * 1.5));
+          double reduce4 = Math.min(.65, (cRand(17) * cc * EM.catastrophyUnitReduction[pors][0] * .6));
+          int bonusYrs1 = (int) (cRand(16) * cc * EM.catastrophyBonusYears[pors][0] * 2);
+          int bonusYrs2 = (int) (cRand(17) * cc * EM.catastrophyBonusYears[pors][0] * .8);
+          int bonusYrs3 = (int) (cRand(18) * cc * EM.catastrophyBonusYears[pors][0] * 2);
+          int bonusYrs4 = (int) (cRand(19) * cc * EM.catastrophyBonusYears[pors][0] * .8);
+          double bonusVal1 = cRand(20) * cc * EM.catastrophyBonusGrowthValue[pors][0] * 1.9;
+          double bonusVal2 = cRand(21) * cc * EM.catastrophyBonusGrowthValue[pors][0] * .5;
+          double bonusVal3 = cRand(22) * cc * EM.catastrophyBonusGrowthValue[pors][0] * 1.9;
+          double bonusVal4 = cRand(23) * cc * EM.catastrophyBonusGrowthValue[pors][0] * .5;
+          double deteriorationReduce1 = cRand(26) * cc * EM.growthDepreciation[2][pors] * 2.3;//S
+          double deteriorationReduce2 = cRand(24) * cc * EM.growthDepreciation[0][pors] * 1.1;//R
+          double deteriorationReduce3 = cRand(25) * cc * EM.growthDepreciation[0][pors] * .7;//R
+          double deteriorationReduce4 = cRand(27) * cc * EM.growthDepreciation[2][pors] * .3;//S
+          int bonusX1 = new Random().nextInt(7);// choose  sector
+          int bonusX2 = new Random().nextInt(7);
+          int bonusX3 = new Random().nextInt(7);
+          int bonusX4 = new Random().nextInt(7);
+          double bonusManuals1 = cRand(32) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
+          double bonusNewKnowledge1 = cRand(45) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
+          double bonusManuals2 = cRand(35) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.6 * knowledge.sum();
+          double bonusNewKnowledge2 = cRand(44) * cc * EM.catastrophyManualsMultSumKnowledge[pors][0] * 2.7 * knowledge.sum();
+
+          /*
   static final int CRISISRESREDUCEPERCENT = ++e4; //
   static final int CRISISSTAFFREDUCEPERCENT = ++e4; //
   static final int CRISISSTAFFGROWTHPERCENTINCR = ++e4;
@@ -8950,75 +8982,77 @@ public class Assets {
   static final int CRISISMANUALSPERCENTINCR = ++e4;
         static final int CRISISRESREDUCESURPLUSPERCENT = ++e4;
         static final int CRISISSTAFFREDUCESURPLUSPERCENT = ++e4;
-         */
-        double rc1, sc2, rc3, rreduced, sreduced;
-        yearCatastrophy = EM.year; // flag entered
-        //ABalRows.CUMULATIVEUNITDEPRECIATIONIX
-        // ARow newRUnitDepreciation = bals.getRow(ABalRows.NEWDEPRECIATIONIX + 0);
-           //ARow newSUnitDepreciation = bals.getRow(ABalRows.NEWDEPRECIATIONIX + 1);
-        r.cumSectorBonus.add(r1, deteriorationReduce3);  // do reducing deterioration
-        r.depreciation.add(r1, deteriorationReduce3);
-           r.cumSectorBonus.add(r2, deteriorationReduce2); // help those hit
-        r.depreciation.add(r2, deteriorationReduce2);
-           s.cumSectorBonus.add(s1, deteriorationReduce1);
-           s.depreciation.add(s1, deteriorationReduce1);
-        // do costs and report
-        r.cost3((rc1 = balances.get(2, r1) * reduce1), r1, 0);  // apply costs to P and S
-        setStat(EM.CATASTRCOST, pors, clan, rc1, 1);
-        s.cost3((sc2 = balances.get(4, s1) * reduce2), s1, 0);
-        setStat(EM.CATASTSCOST, pors, clan, sc2, 1);
-        r.cost3((rc3 = balances.get(2, r2) * reduce3), r2, 0);
-        setStat(EM.CATASTRCOST, pors, clan, rc3, 1);
+           */
+          double rc1, sc2, rc3, rreduced, sreduced;
+          yearCatastrophy = EM.year; // flag entered
+          //ABalRows.CUMULATIVEUNITDEPRECIATIONIX
+          // ARow newRUnitDepreciation = bals.getRow(ABalRows.NEWDEPRECIATIONIX + 0);
+          //ARow newSUnitDepreciation = bals.getRow(ABalRows.NEWDEPRECIATIONIX + 1);
 
-        r.bonusYears.add(bonusX1, bonusYrs1);             // both P & S
-        r.bonusYears.add(bonusX2, bonusYrs2);
-        setStat("rCatBonusY", pors, clan, bonusYrs1 + bonusYrs2, 2);
-        r.bonusUnitGrowth.add(bonusX1, bonusVal1);
-        r.bonusUnitGrowth.add(bonusX2, bonusVal2);
-           eM.printHere("----CATr2---", ec, "Catastrophy  rsector" + bonusX2 + "=" + EM.mf("b unit1", bonusVal2) + " sec" + bonusX1 + "=" + EM.mf("b unit2", bonusVal2));
-        setStat("rCatBonusVal", pors, clan, bonusVal1 + bonusVal2, 2);
-        s.bonusYears.add(bonusX3, bonusYrs3);
-        setStat("sCatBonusY", pors, clan, bonusYrs3, 1);
-        s.bonusUnitGrowth.add(bonusX3, bonusVal3);
-        setStat("sCatBonusVal", pors, clan, bonusVal3, 1);
-        catEffRGBen += bonusVal1 + bonusVal2;
-        catEffSGBen += bonusVal3;
-        setStat("rCatNegDepreciation", pors, clan, deteriorationReduce3 + deteriorationReduce2, 1);//
-        catEffRDepreciationBen += deteriorationReduce3 + deteriorationReduce2;
-        setStat("sCatNegDepreciation", pors, clan, deteriorationReduce1, 1);//
-        catEffSDepreciationBen += deteriorationReduce1;
-        //setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
-        // setStat(eM.CRISISRESDEPRECIATIONBONUSPERCENT, pors, clan, nd1, 1);
-        if (pors == E.P) {
-          double rcd5 = r.depreciation.get(r5);
-          // double rd5 = -rDepreciationReduce2;
-          //    rBal = r.balance.get(r5);
-          //if (-rDepreciationReduce2 > rcd5) {
-          // double rm = -rDepreciationReduce2 - rcd5;
-          //  setStat(EM.CRISISRESREDUCESURPLUSPERCENT, pors, clan, rm, 1);
-          // rd5 = rcd5;
-          // }
-          // double rd5 = -rDepreciationReduce2 > rcd5 ? rcd5*.99 : -rDepreciationReduce2;
-          // r.depreciation.add(r5, rd5);
-          //setStat("rCatNegDepreciation", pors, clan, rd5, 0);
-        }
-        else {  // ships
-          manuals.add(bonusX2, bonusManuals1);  // Adds for sectorX bonusMan
-          setStat("sCatBonusManuals", pors, clan, bonusManuals1, 1);
-          newKnowledge.add(bonusX1, bonusNewKnowledge1);
-          setStat("sCatBonusNewKnowledge", pors, clan, bonusNewKnowledge1, 1);
-          manuals.add(bonusX1, bonusManuals2);  // Adds into value of trades
-          setStat("sCatBonusManuals", pors, clan, bonusManuals2, 1);
-          newKnowledge.add(bonusX3, bonusNewKnowledge2);
-          setStat("sCatBonusNewKnowledge", pors, clan, bonusNewKnowledge2, 1);
-          catEffManualsBen += bonusManuals1 + bonusManuals2;
-          catEffKnowBen += bonusNewKnowledge1 + bonusNewKnowledge2;
-          eM.printHere("----CATc3---", ec, "Catastrophy Ship sector" + bonusX2 + "=" + EM.mf("manuals", bonusManuals1) + " sec" + bonusX1 + "=" + EM.mf("manuals", bonusManuals2));
-        }
+          r.cumSectorBonus.add(r1, deteriorationReduce3);  // do reducing deterioration
+          r.repreciation.add(r1, deteriorationReduce3);
+          r.cumSectorBonus.add(r2, deteriorationReduce2); // help those hit
+          r.repreciation.add(r2, deteriorationReduce2);
+          s.cumSectorBonus.add(s1, deteriorationReduce1);
+          s.repreciation.add(s1, deteriorationReduce1);
+          // do costs and report
 
-      }
+            r.cost3((rc1 = balances.get(2, r1) * reduce1), r1, 0);  // apply costs to P and S
+            setStat(EM.CATASTCOST, pors, clan, rc1, 0);
+            s.cost3((sc2 = balances.get(4, s1) * reduce2), s1, 0);
+          setStat(EM.CATASTCOST, pors, clan, sc2, 0);
+            r.cost3((rc3 = balances.get(2, r2) * reduce3), r2, 0);
+          setStat(EM.CATASTCOST, pors, clan, rc3, 1); //only 1 count
+
+            r.bonusYears.add(bonusX1, bonusYrs1);             // both P & S
+            r.bonusYears.add(bonusX2, bonusYrs2);
+          setStat("catBonusY", pors, clan, bonusYrs1 + bonusYrs2, 0);
+            r.bonusUnitGrowth.add(bonusX1, bonusVal1);
+            r.bonusUnitGrowth.add(bonusX2, bonusVal2);
+            eM.printHere("----CATr2---", ec, "Catastrophy  rsector" + bonusX2 + "=" + EM.mf("b unit1", bonusVal2) + " sec" + bonusX1 + "=" + EM.mf("b unit2", bonusVal2));
+          setStat("catBonusVal", pors, clan, bonusVal1 + bonusVal2, 0);
+            s.bonusYears.add(bonusX3, bonusYrs3);
+          setStat("catBonusY", pors, clan, bonusYrs3, 1);
+            s.bonusUnitGrowth.add(bonusX3, bonusVal3);
+          setStat("catBonusVal", pors, clan, bonusVal3, 1);
+            catEffRGBen += bonusVal1 + bonusVal2;
+            catEffSGBen += bonusVal3;
+          setStat(EM.NEWREPRECIATION, pors, clan, deteriorationReduce3 + deteriorationReduce2, 0);//
+          setStat(EM.NEWREPRECIATION, pors, clan, deteriorationReduce1, 1);//
+          bals.set(ABalRows.NEWREPRECIATIONIX, deteriorationReduce1 + deteriorationReduce3 + deteriorationReduce2);
+            catEffSDepreciationBen += deteriorationReduce1;
+            //setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
+            // setStat(eM.CRISISRESDEPRECIATIONBONUSPERCENT, pors, clan, nd1, 1);
+if (pors == E.P) {
+            double rcd5 = r.depreciation.get(r5);
+            // double rd5 = -rDepreciationReduce2;
+            //    rBal = r.balance.get(r5);
+            //if (-rDepreciationReduce2 > rcd5) {
+            // double rm = -rDepreciationReduce2 - rcd5;
+            //  setStat(EM.CRISISRESREDUCESURPLUSPERCENT, pors, clan, rm, 1);
+            // rd5 = rcd5;
+            // }
+            // double rd5 = -rDepreciationReduce2 > rcd5 ? rcd5*.99 : -rDepreciationReduce2;
+            // r.depreciation.add(r5, rd5);
+            //setStat("catNegDepreciation", pors, clan, rd5, 0);
+          }
+          else {  // ships
+            manuals.add(bonusX2, bonusManuals1);  // Adds for sectorX bonusMan
+            setStat("catBonusManuals", pors, clan, bonusManuals1, 0);
+            newKnowledge.add(bonusX1, bonusNewKnowledge1);
+  setStat("catBonusNewKnowledge", pors, clan, bonusNewKnowledge1, 0);
+            manuals.add(bonusX1, bonusManuals2);  // Adds into value of trades
+            setStat("catBonusManuals", pors, clan, bonusManuals2, 1);
+            newKnowledge.add(bonusX3, bonusNewKnowledge2);
+  setStat("catBonusNewKnowledge", pors, clan, bonusNewKnowledge2, 1);
+            catEffManualsBen += bonusManuals1 + bonusManuals2;
+            catEffKnowBen += bonusNewKnowledge1 + bonusNewKnowledge2;
+            eM.printHere("----CATc3---", ec, "Catastrophy Ship sector" + bonusX2 + "=" + EM.mf("manuals", bonusManuals1) + " sec" + bonusX1 + "=" + EM.mf("manuals", bonusManuals2));
+          }
+
+        }
         sumCumulativeUnitBonus = r.cumSectorBonus.sum() + s.cumSectorBonus.sum();
-      sumBonusUnitGrowth = r.bonusUnitGrowth.sum() + s.bonusUnitGrowth.sum();
+        sumBonusUnitGrowth = r.bonusUnitGrowth.sum() + s.bonusUnitGrowth.sum();
         //  sumDepreciation = r.depreciation.sum() + s.depreciation.sum();
       }
     }// calcCatastrophy
@@ -9157,7 +9191,7 @@ public class Assets {
           resTypeName = "EmergFF1";
           doing = val > 200 ? true : false;
           if (E.debugFFOut) {
-            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac",  ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
+            System.out.println("-----C---" + name + " doing rawProspects2 neg=" + EM.mf(rawProsp) + " sourceIx" + sourceIx + " m" + m + " mMax" + mMax + " n" + n + EM.mf("remainingFF", remainingFF) + EM.mf("val", val) + " ixWSrc" + ixWSrc + EM.mf("rsval", rsval) + EM.mf("maxFutureTrans", maxFutureTrans) + EM.mf("minFutureTrans", minFutureTrans) + EM.mf("FFTransFrac", ffTFracNudge[nudBoth]) + EM.mf("reservMult", reservMult) + EM.mf("maxF0", maxF0) + " maxFa=" + EM.mf(maxFa) + EM.mf("maxF1", maxF1) + EM.mf("maxF2", maxF2) + EM.mf("maxF3", maxF3) + EM.mf("maxF4", maxF4));
           }
         } // now check if resources balances too much bigger than staff,
         // swaps cannot solve  this problem
@@ -9175,7 +9209,7 @@ public class Assets {
           // ..TransferFrac limits fraction of surpluss to transfer
           val1 = (dif1 * mDif * (ffTFracNudge[nudBoth]));
           // limit the size of transferby largest balance* future fund trans limit
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * ( ffTFracNudge[nudBoth]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (ffTFracNudge[nudBoth]));
           doing = true;
         } // now check available funds s too more r or r too more s
         // is s.sum() to greater r.sum()
@@ -9185,7 +9219,7 @@ public class Assets {
           // ..TransferFrac limits fraction of surpluss to transfer
           val1 = (dif1 * mDif * (ffTFracNudge[nudBoth]));
           // limit the size of transfer
-          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * ( ffTFracNudge[nudBoth]));
+          val = Math.min(val1, bals.getRow(ixWRSrc).get(srcIx = bals.getRow(ixWRSrc).maxIx()) * (ffTFracNudge[nudBoth]));
 
           doing = true;
         }
@@ -9460,7 +9494,7 @@ public class Assets {
         int newTerm = entryTerm; // until barter runs, then post barter value
         int ehist = 0;
         if (E.debugBarterOut) {
-          eM.printHere("---CBAaa---", ec, "Assets.CashFlow.barter Term" + entryTerm  + ":" + (tradeAccepted ? " tradeAccepted" : " !tradeAc") + (tradeRejected ? " tradeRejected" : " !tradeRe") + (tradeLost ? " tradeLost" : " !tradeLo") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
+          eM.printHere("---CBAaa---", ec, "Assets.CashFlow.barter Term" + entryTerm + ":" + (tradeAccepted ? " tradeAccepted" : " !tradeAc") + (tradeRejected ? " tradeRejected" : " !tradeRe") + (tradeLost ? " tradeLost" : " !tradeLo") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
         }
         hist.add(new History(aPre, 5, "entr CashFlow barter", (eTrad == null ? " !eTrad" : " eTrad"), "entryTerm=", wh(entryTerm), "$=" + EM.mf(sumTotWorth), "l=" + hist.size() + "======================<<<<<<<<<<"));
         int lhist = hist.size();
@@ -9489,10 +9523,14 @@ public class Assets {
           preTradeSum4 = bals.sum4();
           hist.add(new History(aPre, 5, " " + name + " now instantiate", ">>>>>>>", " a new", " trades", "<<<<<<<"));
           myTrade = new Trades();
-          if(EM.dfe())return inOffer;
+          if (EM.dfe()) {
+            return inOffer;
+          }
           inOffer.setMyIx(ec);
           myTrade.initTrade(inOffer, this);
-          if(EM.dfe())return inOffer;
+          if (EM.dfe()) {
+            return inOffer;
+          }
           hist.add(new History(aPre, 5, " " + name + " after init", ">>>>>>", " a new", " trades"));
         } // end myTrade == null
         // test for a new visitor
@@ -9510,14 +9548,18 @@ public class Assets {
         }//end other name not equal
         // now set up for a barter by Trades.barter
         btW = new DoTotalWorths(); // Assets.CashFlow.barter before trade
-     //   if (myTrade != null && entryTerm > 0) {
-        if (myTrade != null ) {
+        //   if (myTrade != null && entryTerm > 0) {
+        if (myTrade != null) {
           hist.add(new History(aPre, 5, " " + name + "cashFlow barter", " term=" + inOffer.getTerm(), " trades"));
           inOffer.setMyIx(ec);  //Assets.CashFlow.barter
-          if(EM.dfe()) return inOffer;
+          if (EM.dfe()) {
+            return inOffer;
+          }
           // now barter ======entryTerm>0 ...=======================
-          retOffer = entryTerm>0? myTrade.barter(inOffer): inOffer; // get entryTerm-1, 0, -1
-          if(EM.dfe()) return inOffer;
+          retOffer = entryTerm > 0 ? myTrade.barter(inOffer) : inOffer; // get entryTerm-1, 0, -1
+          if (EM.dfe()) {
+            return inOffer;
+          }
           newTerm = retOffer.getTerm();
           oClan = retOffer.getOClan();
           Econ oEcon = retOffer.getOEcon();
@@ -9585,7 +9627,7 @@ public class Assets {
             tradeMissed = tradeRejected = tradeLost = false;
             lastAcceptedYear = yearTradeAccepted = EM.year;
             if (E.debugBarterOut) {
-              eM.printHere("---CBA1---", ec, "Assets.CashFlow.barter set TradeAccepted true"+ "  other:" + retOffer.getOtherName());
+              eM.printHere("---CBA1---", ec, "Assets.CashFlow.barter set TradeAccepted true" + "  other:" + retOffer.getOtherName());
             }
             EM.tradedCnt++;
             if (firstVisit) {
@@ -9651,7 +9693,7 @@ public class Assets {
             tradeAccepted = true;
             tradeMissed = tradeRejected = tradeLost = false;
             if (E.debugBarterOut) {
-              eM.printHere("---CBA0---", ec, "Assets.CashFlow.barter set Also TradeAccepted true"+ "  other:" + retOffer.getOtherName());
+              eM.printHere("---CBA0---", ec, "Assets.CashFlow.barter set Also TradeAccepted true" + "  other:" + retOffer.getOtherName());
             }
             lastAcceptedYear = yearTradeAccepted = EM.year;
             EM.tradedCnt++;
@@ -10161,7 +10203,7 @@ public class Assets {
       EM.addlErr = ""; // clear addlErr
 
       yphase = yrphase.DOLOOPS;
-      doLoop("G@", yrphase.DOLOOPS, prevns[0]);
+      doLoop("G@", yrphase.DOLOOPS, prevns[0]);//do swaps
       eM.printHere("----AEYac---", ec, " CashFlow.yearEnd just after swap doLoop");
       bals.set4(ABalRows.GROWTHS3IX, growths); //in Assets.CashFlow.yCalcRawCosts
       // sLoops[0] = 0;
@@ -10197,7 +10239,9 @@ public class Assets {
         didInitRawProspects = true;
       }
       sos = rawProspects2.min() < eM.rawHealthsSOS3[0][0];
-      bals.set4(ABalRows.GROWTHS5IX, growths);
+      bals.set4(ABalRows.GROWTHS5IX, growths);//SWAPPEDGROWTHSIX
+      bals.set4(ABalRows.SWAPPEDGROWTHSIX, growths);
+      //  bals.set(ABalRows.SWAPPEDRCSGSUMIX, gSwapW.sumRCSGBal);
       // choose only the living for these results/ deaths stats are later
       eM.printHere("----AEYag---", ec,
                    " joint live&dead before live test rawProspects2="
@@ -10325,15 +10369,15 @@ public class Assets {
         s.sumGrades(); // sets s worth
         g.sumGrades(); // sets g worth
         bals.setA4toBminusC(ABalRows.GROWTHWORTHSIX, ABalRows.CURWORTHSIX, ABalRows.PREVWORTHSIX);
-      //  bals.setA4toBmultC(ABalRows.BONUSWHORTHIX, ABalRows.GROWTHWORTHSIX, ABalRows.YEARLYBONUSSUMGROWTHVALIX);
-      //  bals.copy4BtoC( ABalRows.YEARLYBONUSSUMGROWTHVALIX,ABalRows.BONUSWHORTHIX);
-       // bals.setA4toBaddC(ABalRows.CUMBONUSWORTHIX, ABalRows.CUMBONUSWORTHIX, ABalRows.BONUSWHORTHIX);
-      //  double sumBonusWorth = bals.sum4(ABalRows.BONUSWHORTHIX);
+        //  bals.setA4toBmultC(ABalRows.BONUSWHORTHIX, ABalRows.GROWTHWORTHSIX, ABalRows.YEARLYBONUSSUMGROWTHVALIX);
+        //  bals.copy4BtoC( ABalRows.YEARLYBONUSSUMGROWTHVALIX,ABalRows.BONUSWHORTHIX);
+        // bals.setA4toBaddC(ABalRows.CUMBONUSWORTHIX, ABalRows.CUMBONUSWORTHIX, ABalRows.BONUSWHORTHIX);
+        //  double sumBonusWorth = bals.sum4(ABalRows.BONUSWHORTHIX);
 
-      //  setStat(EM.CATWORTHINCR, pors, clan, sumBonusWorth, 1);
-      //
-      //setStat(EM.CUMCATWORTH, pors, clan, bals.sum4(ABalRows.CUMBONUSWORTHIX), 1);
-      //  setStat(EM.GROWTHWORTHINCR, pors, clan, bals.sum4(ABalRows.GROWTHWORTHSIX), 1);
+        //  setStat(EM.CATWORTHINCR, pors, clan, sumBonusWorth, 1);
+        //
+        //setStat(EM.CUMCATWORTH, pors, clan, bals.sum4(ABalRows.CUMBONUSWORTHIX), 1);
+        //  setStat(EM.GROWTHWORTHINCR, pors, clan, bals.sum4(ABalRows.GROWTHWORTHSIX), 1);
         EM.wasHere = "CashFlow.endYear after doGrowth cccae" + ++cccae;
         gGrowW = new DoTotalWorths(); // worth after years growth
         sumTotWorth = gGrowW.getTotWorth();
@@ -10426,13 +10470,13 @@ public class Assets {
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, Math.sqrt(initialSumWorth), 1);
-        setStat(EM.WINNERYEARS, pors, clan, EM.whichScorePosByIncrClan[clan]==4?1.:0., 1);
+        setStat(EM.WINNERYEARS, pors, clan, EM.whichScorePosByIncrClan[clan] == 4 ? 1. : 0., 1);
         setStat(EM.WORTHINCR, pors, clan, percentYearWorthIncr, 1);
         setStat(EM.KNOWLEDGEW, pors, clan, fyW.sumKnowledgeWorth, 1);
         setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.DEPRECIATIONIX), 1);
         //setStat(EM.PREVGROWTH, pors, clan, bals.sum4(ABalRows.PREVGROWTHSIX), 1);
         //  setStat(EM.RCSG, pors, clan, syW.getSumRCSGBal(), fyW.getSumRCSGBal()), 1);
-       // setStat(EM.INCRRCSG, sumYearRCSGincr);
+        // setStat(EM.INCRRCSG, sumYearRCSGincr);
         setStat(EM.LIVERCSG, fyW.getSumRCSGBal());
         setStat(EM.STARTRCSG, syW.getSumRCSGBal());
         setStat(EM.INITRCSG, iyW.getSumRCSGBal());
@@ -10808,6 +10852,7 @@ public class Assets {
         if (eM.dfe()) {
           return 0.;
         }
+        /*
         setStat(eM.sumCatEffRBen, pors, clan, catEffRGBen, 1);
         setStat(eM.sumCatEffSBen, pors, clan, catEffSGBen, 1);
         setStat(eM.sumCatEffManualsBen, pors, clan, catEffManualsBen, 1);
@@ -10817,7 +10862,7 @@ public class Assets {
         setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
         setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
         setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
-
+*/
         if (E.debugEconCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -10927,7 +10972,7 @@ public class Assets {
               else if (sys[sIx].rawUnitGrowth.getNegCount() >= 1 && sys[sIx].rawUnitGrowth.getNegSum() > 0.) {
                 setStat(negRawUnitGrowths[sIx], sys[sIx].rawUnitGrowth.getNegSum(), 1);
               }
-*/
+               */
             } //sIx
 
             if (E.debugEconCnt) {
@@ -10953,41 +10998,47 @@ public class Assets {
               setStat(eM.DTRADEOSOSR0, oPors, oClan, worthIncrPercent, 1); // HELPER
               setStat(eM.DTRADESOSR0, pors, clan, worthIncrPercent, 1); // me
             }
-             if(EM.dfe()){EM.lfe(); return 0.;}
+            if (EM.dfe()) {
+              EM.lfe();
+              return 0.;
+            }
           }
           else { // rejected, lost, missed, not Accepted
             setStat(EM.DNSWAPRINCRWORTH, pors, clan, gSwapIncr, 1);
             setStat(EM.DNPOSTSWAP, pors, clan, gSwapWTotWorth, 1);
             setStat(EM.DNPOSTSWAPRCSG, pors, clan, gSwapW.getSumRCSGBal(), 1);
             if (false) {
-            String[] potentialGrowthStats = {"DpotentialResGrowthPercent", "DpotentialCargoGrowthPercent", "DpotentialStaffGrowthPercent", "DpotentialGuestGrowthPercent"};
-            String[] negRawUnitGrowths = {"rDNeg1RawUnitGrowth", "cDNeg1RawUnitGrowth", "sDNeg1RawUnitGrowth", "gDNeg1RawUnitGrowth"};
-            String[] neg2RawUnitGrowths = {"rDNeg2RawUnitGrowth", "cDNeg2RawUnitGrowth", "sDNeg2RawUnitGrowth", "gDNeg2RawUnitGrowth"};
+              String[] potentialGrowthStats = {"DpotentialResGrowthPercent", "DpotentialCargoGrowthPercent", "DpotentialStaffGrowthPercent", "DpotentialGuestGrowthPercent"};
+              String[] negRawUnitGrowths = {"rDNeg1RawUnitGrowth", "cDNeg1RawUnitGrowth", "sDNeg1RawUnitGrowth", "gDNeg1RawUnitGrowth"};
+              String[] neg2RawUnitGrowths = {"rDNeg2RawUnitGrowth", "cDNeg2RawUnitGrowth", "sDNeg2RawUnitGrowth", "gDNeg2RawUnitGrowth"};
               //int[] depreciations = {EM.RDDEPRECIATIONP, EM.CDDEPRECIATIONP, EM.SDDEPRECIATIONP, EM.GDDEPRECIATIONP};
 
               for (int sIx = 0; sIx < 4; sIx += 2) {
-              double tt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawGrowth.sum());
-              double ttt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].depreciation.sum());
-              if (tt > 0.0) {
-                setStat(potentialGrowthStats[sIx], calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawUnitGrowth.sum()), 1);
-              }
-              if (ttt > 0.0) {
-                // setStat(depreciations[sIx], ttt, 1);
-              }
-              if (sys[sIx].rawUnitGrowth.getNegCount() >= 2 && sys[sIx].rawUnitGrowth.getNegSum() > 0.) {
+                double tt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawGrowth.sum());
+                double ttt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].depreciation.sum());
+                if (tt > 0.0) {
+                  setStat(potentialGrowthStats[sIx], calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawUnitGrowth.sum()), 1);
+                }
+                if (ttt > 0.0) {
+                  // setStat(depreciations[sIx], ttt, 1);
+                }
+                if (sys[sIx].rawUnitGrowth.getNegCount() >= 2 && sys[sIx].rawUnitGrowth.getNegSum() > 0.) {
 
-                setStat(neg2RawUnitGrowths[sIx], sys[sIx].rawUnitGrowth.getNegSum(), 1);
-              }
-              else if (sys[sIx].rawUnitGrowth.getNegCount() >= 1 && sys[sIx].rawUnitGrowth.getNegSum() > 0.) {
+                  setStat(neg2RawUnitGrowths[sIx], sys[sIx].rawUnitGrowth.getNegSum(), 1);
+                }
+                else if (sys[sIx].rawUnitGrowth.getNegCount() >= 1 && sys[sIx].rawUnitGrowth.getNegSum() > 0.) {
 
-                setStat(negRawUnitGrowths[sIx], sys[sIx].rawUnitGrowth.getNegSum(), 1);
-              }
+                  setStat(negRawUnitGrowths[sIx], sys[sIx].rawUnitGrowth.getNegSum(), 1);
+                }
 
               }
             } //sIx
 
           }// rejected, lost, missed, not accepted
-           if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
           if (tradeLost) {
             setStat(EM.TradeDeadLostStrategicValue, pors, clan, strategicValue, 1);
           }
@@ -11019,7 +11070,10 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
-          if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
           if (fav >= 4.7) {
             // gameRes.WTRADEDINCRF5.wet(pors, clan, worthincr1, 1);
             setStat("DEADWTRADEDINCRF5", pors, clan, worthincr1, 1);
@@ -11055,7 +11109,10 @@ public class Assets {
             setStat("DEADUNTRADEDWINCR", pors, clan, worthincr1, 1);
             setStat(EM.TradeDeadMissedStrategicGoal, pors, clan, 1.0, 1);
           }
-           if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
           /*
    static final int DIEDSN4 = ++e4;
   static final int DIEDRN4 = ++e4;
@@ -11197,7 +11254,10 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
-           if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
           EM.wasHere = " CashFlow.yearEnd into deac, and dead ccch=" + ++ccch;
           if (swapsN < 0) {
             setStat(EM.DeadNegN, pors, clan, worthincr1, 1);
@@ -11216,7 +11276,10 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
-           if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
           /*
     doRes("DeadNegProsp", "DeadNegProsp", "Died either R or S had a negative",  2,2,3,  ROWS1 | LIST3 | LIST20 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 |  LIST3 | LIST20  | LIST0YRS |  CUMUNITS | BOTH | SKIPUNSET,0L, 0L);
     doRes("DeadRatioS", "DeadRatioS", "Resource  S values simply too small",  2,2,3,  ROWS1 | LIST3 | LIST20 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 |  LIST3 | LIST20  | LIST0YRS |  CUMUNITS | BOTH | SKIPUNSET,0L, 0L);
@@ -11230,24 +11293,36 @@ public class Assets {
     doRes(DEADSWAPSCOSTS, "diedSwapCosts", "dead,average SwapCosts at death",2, 2, 3,  ROWS1 | LIST0 | LIST9 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST7 | LIST8 | LIST9 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
     doRes(DEADTRADED, "diedTraded", "dead,even after trading",2, 2, 3,  ROWS1 | LIST0 | LIST3 | LIST2YRS | THISYEARUNITS | BOTH | SKIPUNSET, ROWS2 |LIST2 | LIST3 | LIST0 | CUMUNITS | LISTYRS | BOTH | SKIPUNSET,0L, 0L);
            */
-          double ts3=0.;
+          double ts3 = 0.;
           if (rawProspects2.curMin() < E.NZERO) {
             setStat(EM.DeadNegProsp, pors, clan, worthincr1, 1);
             setStat(EM.DEADFERTILITY, pors, clan, rawFertilities2.curMin(), 1);
-            if(EM.dfe()){EM.lfe(); return 0.;}
+            if (EM.dfe()) {
+              EM.lfe();
+              return 0.;
+            }
           }
-          else if ((tt3 = (ts3=bals.getRow(0).sum()) != 0.0?bals.getRow(1).sum() / ts3: 0.) > 1.5) {
+          else if ((tt3 = (ts3 = bals.getRow(0).sum()) != 0.0 ? bals.getRow(1).sum() / ts3 : 0.) > 1.5) {
             setStat(EM.DeadRatioS, pors, clan, tt3, 1);
-            setStat(EM.DEADRATIO, pors, clan,((ts3=bals.getRow(0).sum())!=0.)? bals.getRow(1).sum() / ts3:0., 1);
-             if(EM.dfe()){EM.lfe(); return 0.;}
+            setStat(EM.DEADRATIO, pors, clan, ((ts3 = bals.getRow(0).sum()) != 0.) ? bals.getRow(1).sum() / ts3 : 0., 1);
+            if (EM.dfe()) {
+              EM.lfe();
+              return 0.;
+            }
           }
-          else if ((tt3 =(ts3= bals.getRow(1).sum()) != 0.? bals.getRow(0).sum() / ts3:0.) > 1.5) {
+          else if ((tt3 = (ts3 = bals.getRow(1).sum()) != 0. ? bals.getRow(0).sum() / ts3 : 0.) > 1.5) {
             setStat(EM.DeadRatioR, pors, clan, tt3, 1);
-            setStat(EM.DEADRATIO, pors, clan, (ts3=bals.getRow(0).sum()) !=-0.?bals.getRow(1).sum() / ts3:0., 1);
-             if(EM.dfe()){EM.lfe(); return 0.;}
+            setStat(EM.DEADRATIO, pors, clan, (ts3 = bals.getRow(0).sum()) != -0. ? bals.getRow(1).sum() / ts3 : 0., 1);
+            if (EM.dfe()) {
+              EM.lfe();
+              return 0.;
+            }
           }
           setStat(EM.DEADSWAPSMOVED, pors, clan, swapsN, 1);
-           if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
           double sBal = s.balance.sum();
           if (tradeAccepted) {
             setStat("sDAWorth", calcPercent(sBal, s.worth.sum()));
@@ -11271,7 +11346,10 @@ public class Assets {
             setStat("sDResearchers", calcPercent(sBal, s.researchers.sum()));
             setStat("sDKnowledge", calcPercent(eM.nominalKnowledgeForBonus[0], knowledge.sum()));
           }
-          if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
           if (E.debugEconCnt) {
             if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -11302,9 +11380,15 @@ public class Assets {
               EM.doMyErr("Counts error, clanCnt=" + EM.clanCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
-          if(EM.dfe()){EM.lfe(); return 0.;}
+          if (EM.dfe()) {
+            EM.lfe();
+            return 0.;
+          }
         } // end of first time dead
-         if(EM.dfe()){EM.lfe(); return 0.;}
+        if (EM.dfe()) {
+          EM.lfe();
+          return 0.;
+        }
         ec.dead = dead = true;
         EM.wasHere = "CashFlow.yearEnd before many setStat ddddi=" + ++ddddi;
         eM.clanFutureFunds[clan] += yearsFutureFund;
@@ -11314,21 +11398,30 @@ public class Assets {
         EM.isHere("--EYEYdg--", ec, "end of dead stats");
       }// Join rest of yearEnd end of dead
       EM.econCountsTest();
-      if(EM.dfe()){EM.lfe(); return 0.;}
+      if (EM.dfe()) {
+        EM.lfe();
+        return 0.;
+      }
       //Assets.CashFlow.yearEnd  final cleanup for starting the next year
       if (E.debugDoYearEndOut) {
         eM.printHere("-----YEDPg ---- ", ec, " near end in Assets.CashFlow.yearEnd() " + (tradeAccepted ? " tradeAccepted" : " !tradeAccepted") + (tradeRejected ? " tradeRejected" : " !tradeRejected") + (tradeLost ? " tradeLost" : " !tradeLost") + (tradeMissed ? " tradeMissed" : " !tradeMissed"));
         saveAI(dead ? gSwapW.sumTotWorth : fyW.sumTotWorth, dead); // save the AI live info
       }
       if (!dead) {
-         if(EM.dfe()){EM.lfe(); return 0.;}
+        if (EM.dfe()) {
+          EM.lfe();
+          return 0.;
+        }
         didStart = true;
         getTradingGoods(); // pick up new trading goods
         didStart = false; // force start at next initCashFlow
         EM.econCountsTest();
       }
       EM.isHere("--EYEYaf--", ec, "end of yearEnd stats");
-       if(EM.dfe()){EM.lfe(); return 0.;}
+      if (EM.dfe()) {
+        EM.lfe();
+        return 0.;
+      }
       didGoods = false;
       n = 0;
       catastrophyBalIncr[n] = catastrophyPBalIncr[n] = 0.;
@@ -11351,17 +11444,26 @@ public class Assets {
       // syW = null; // get rid of hanging DoTotalWorths
       didDepreciation = false;  // second setting
       prevProspects2 = rawProspects2;
-       if(EM.dfe()){EM.lfe(); return 0.;}
+      if (EM.dfe()) {
+        EM.lfe();
+        return 0.;
+      }
       if (!dead) {
         EM.econCountsTest();
         EM.isHere("--EYEYag--", ec, "end of yearEnd stats");
         if (E.debugMisc && syW != null) {
           //   throw new MyErr("in CF.yearEnd end, syW != null");
         }
-         if(EM.dfe()){EM.lfe(); return 0.;}
+        if (EM.dfe()) {
+          EM.lfe();
+          return 0.;
+        }
         return health = rawProspects2.curMin();
       } // end not dead
-      if(EM.dfe()){EM.lfe(); return 0.;}
+      if (EM.dfe()) {
+        EM.lfe();
+        return 0.;
+      }
       return 0.;
     } // Assets.CashFlow.yearEnd()
 
@@ -11380,14 +11482,14 @@ public class Assets {
      * @param score last score worth;
      *
      */
-    void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA,  double score) {//Assets.CashFlow
+    void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA, double score) {//Assets.CashFlow
       // saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos,prevAIPos, EM.myScore[clan]);
       aiOper = offers / worth;
 
-      if (ec.age > 2 && prevAIERScore > 0. && aiERScore>0.) {  // skip age 1 and 2 use prev values,this is before Y2 prev files exist
-       assert EM.aiEScoreAve > 0:"saveAI error EM.aiEScoreAve <= 0. is" + EM.mf(EM.aiEScoreAve);
-       assert aiERScore > 0:"saveAI error aiERScore <= 0. is" + EM.mf(aiERScore);
-       assert prevAIERScore > 0:"saveAI error prevAIERScore <= 0. is" + EM.mf(prevAIERScore);
+      if (ec.age > 2 && prevAIERScore > 0. && aiERScore > 0.) {  // skip age 1 and 2 use prev values,this is before Y2 prev files exist
+        assert EM.aiEScoreAve > 0 : "saveAI error EM.aiEScoreAve <= 0. is" + EM.mf(EM.aiEScoreAve);
+        assert aiERScore > 0 : "saveAI error aiERScore <= 0. is" + EM.mf(aiERScore);
+        assert prevAIERScore > 0 : "saveAI error prevAIERScore <= 0. is" + EM.mf(prevAIERScore);
         int cIx = 7;
         int much = 7;
         int aType = acct ? 1 : 0;
@@ -11398,63 +11500,63 @@ public class Assets {
         aWaits++;
         ifPrint = aWaits > 5;
 
-          if (E.debugAIOut && ifPrint) {
-            
-            System.out.println("----BAI1----  len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size() + " put key=" + aKey + "");
-          }
-          //       fyWAIWorth = fyW.sumTotWorth;
+        if (E.debugAIOut && ifPrint) {
+
+          System.out.println("----BAI1----  len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size() + " put key=" + aKey + "");
+        }
+        //       fyWAIWorth = fyW.sumTotWorth;
 
         EM.psClanChars[pors][clan][E.ptype] = E.getAIResChar(aType);//from acct work on your key char
-         //finsh building a new key
-       
-         String nudge0s[] = {"Nud0p","Nud0s"};
-         String nudge1s[] = {"Nud1p","Nud1s"};
+        //finsh building a new key
+
+        String nudge0s[] = {"Nud0p", "Nud0s"};
+        String nudge1s[] = {"Nud1p", "Nud1s"};
         aiPos = EM.whichScorePosByIncrClan[clan]; // last years position
-       putValueChar(EM.psClanChars[pors][clan], E.ppors, pors , E.AILims123, "EconPors", y);
-       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos , E.AILims123, "lastaiPos", y);
-       putValueChar(EM.psClanChars[pors][clan],E.pclanpors, clan*2+pors,E.AILims123, "clan*2+pors", y);
-       putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, nudge0s[pors], y);
-       putValueChar(EM.psClanChars[pors][clan], E.pNudge1,ffTFracNudge[nudBoth], E.AILims1, nudge1s[pors], y);
-      //  putValueChar(EM.psClanChars[pors][clan], E.pNudge0, sliderVala, E.AILimsC, "Nudged value0", y);
+        putValueChar(EM.psClanChars[pors][clan], E.ppors, pors, E.AILims123, "EconPors", y);
+        putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos, E.AILims123, "lastaiPos", y);
+        putValueChar(EM.psClanChars[pors][clan], E.pclanpors, clan * 2 + pors, E.AILims123, "clan*2+pors", y);
+        putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, nudge0s[pors], y);
+        putValueChar(EM.psClanChars[pors][clan], E.pNudge1, ffTFracNudge[nudBoth], E.AILims1, nudge1s[pors], y);
+        //  putValueChar(EM.psClanChars[pors][clan], E.pNudge0, sliderVala, E.AILimsC, "Nudged value0", y);
         //putValueChar(EM.psClanChars[pors][clan], E.pNudge1, sliderValb, E.AILimsC, "Nudged value1", y);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScP, prevAIPos, E.AILims123, "prevAIpos", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevScW, prevAIScore, E.AILims1, "prevAIScore", ifPrint);
         putValueChar(EM.psClanChars[pors][clan], E.pPrevoPerW, prevAIOper, E.AILims1, "prevAIOperW", ifPrint);
-         putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims3, "prevEconScore", ifPrint);
-         // this is skipped if aiERScore or prevAIERScore are <= 0
-        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, 30.*prevAIERScore, E.AILims2, "prevEconRScore", ifPrint);
-       putValueChar(EM.psClanChars[pors][clan], E.pLastERScW, 30.*aiERScore, E.AILims2, "lastEconRScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevEScW, prevAIEScore, E.AILims3, "prevEconScore", ifPrint);
+        // this is skipped if aiERScore or prevAIERScore are <= 0
+        putValueChar(EM.psClanChars[pors][clan], E.pPrevERScW, 30. * prevAIERScore, E.AILims2, "prevEconRScore", ifPrint);
+        putValueChar(EM.psClanChars[pors][clan], E.pLastERScW, 30. * aiERScore, E.AILims2, "lastEconRScore", ifPrint);
 
         aKey = new String(EM.psClanChars[pors][clan]);
-        aVal= EM.myAIlearnings.get(aKey);
+        aVal = EM.myAIlearnings.get(aKey);
         synchronized (A6Rowa.ASECS) {
-        int vAge = ec.age - 1; // values are from last year
-        int vYear = EM.year;
-        if (aVal == null) {// no key found cnt,age,score
-          aVal = new Integer[E.aValSize];
-          aVal[E.aValCnts] = 1;
-          aVal[E.aValAge] = vAge;
-          aVal[E.aValYear] = vYear; // year of last update
-          aVal[E.aValPClan] = clan == 5 ? 11 : pors * 5 + clan;
-          aVal[E.aValIxMyScore] = getTestVal(score, E.AILims1, "prevAIScore");
-        }
-        else {
-          aVal[E.aValCnts] += 1;
-          aVal[E.aValAge] = vAge; // latest entry year and age usually
-          aVal[E.aValYear] = vYear;
-          aVal[E.aValPClan] = clan == 5 ? 11 : pors * 5 + clan;
-          aVal[E.aValIxMyScore] = getTestVal(prevAIScore, E.AILims1, "prevAIScore"); //latest
-        }
-        if (ranInt > -1 && ranInt < aiNudges.length) { // redone later
-          aiNudges[ranInt][pors] = 0.0; // zero any nudge
-        }
-        EM.myAIlearnings.put(aKey, aVal); // save last years values
-        EM.setCnt++;
-        eM.setCntAr(aKey, aVal,false,true, true);  //doSet 1 for the new key in each ars
+          int vAge = ec.age - 1; // values are from last year
+          int vYear = EM.year;
+          if (aVal == null) {// no key found cnt,age,score
+            aVal = new Integer[E.aValSize];
+            aVal[E.aValCnts] = 1;
+            aVal[E.aValAge] = vAge;
+            aVal[E.aValYear] = vYear; // year of last update
+            aVal[E.aValPClan] = clan == 5 ? 11 : pors * 5 + clan;
+            aVal[E.aValIxMyScore] = getTestVal(score, E.AILims1, "prevAIScore");
+          }
+          else {
+            aVal[E.aValCnts] += 1;
+            aVal[E.aValAge] = vAge; // latest entry year and age usually
+            aVal[E.aValYear] = vYear;
+            aVal[E.aValPClan] = clan == 5 ? 11 : pors * 5 + clan;
+            aVal[E.aValIxMyScore] = getTestVal(prevAIScore, E.AILims1, "prevAIScore"); //latest
+          }
+          if (ranInt > -1 && ranInt < aiNudges.length) { // redone later
+            aiNudges[ranInt][pors] = 0.0; // zero any nudge
+          }
+          EM.myAIlearnings.put(aKey, aVal); // save last years values
+          EM.setCnt++;
+          eM.setCntAr(aKey, aVal, false, true, true);  //doSet 1 for the new key in each ars
         } // 
         if (E.debugAIOut || (aWaits++ % 5) == 0) {
-          eM.printHere("----SAI2s----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " lastScore" + EM.mf(EM.myScore[clan]) + " allCnt" + EM.ars[1][EM.iaAllCnt] + "\n" + ":mC" + aVal[E.aValCnts] + "mY" + aVal[E.aValYear] + ":mA" + aVal[E.aValAge] + " scoreIx" + aVal[E.aValIxMyScore] + " Size=" + EM.myAIlearnings.size() + " mapYears" + EM.mapYears+ " setCnt" + EM.setCnt + " aKey was=" + prevAKey + " is=" + aKey);
+          eM.printHere("----SAI2s----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " lastScore" + EM.mf(EM.myScore[clan]) + " allCnt" + EM.ars[1][EM.iaAllCnt] + "\n" + ":mC" + aVal[E.aValCnts] + "mY" + aVal[E.aValYear] + ":mA" + aVal[E.aValAge] + " scoreIx" + aVal[E.aValIxMyScore] + " Size=" + EM.myAIlearnings.size() + " mapYears" + EM.mapYears + " setCnt" + EM.setCnt + " aKey was=" + prevAKey + " is=" + aKey);
           // eM.seeCntArrays(); //update the map arrays
           //EM.seeArrays[0] = putValStr;
         }
@@ -11470,10 +11572,10 @@ public class Assets {
 
       prevPrevAIScoreI = prevAIScoreI;
       prevAIScoreI = aiScoreI;
-      aiScoreI = (aiScore-prevAIScore)/prevAIScore;
-       prevPrevAIScore = prevAIScore;
+      aiScoreI = (aiScore - prevAIScore) / prevAIScore;
+      prevPrevAIScore = prevAIScore;
       prevAIScore = EM.myScore[clan]; // start game value
-    //  aiScore = EM.myScore[clan]; //
+      //  aiScore = EM.myScore[clan]; //
       prevAIPos = EM.whichScorePosByIncrClan[clan];
       prevPrevAIPos = prevAIPos;
 
@@ -11484,36 +11586,36 @@ public class Assets {
       prevPrevAIEScore = prevAIEScore;
       prevAIEScore = aiEScore;
       aiEScore = getScore(aiOffer, aiWorth);
-      assert !aiEScore.isInfinite():"aiEScore isInfinite";
-      assert !aiEScore.isNaN():"aiEScore isNaN";
+      assert !aiEScore.isInfinite() : "aiEScore isInfinite";
+      assert !aiEScore.isNaN() : "aiEScore isNaN";
       prevAIEScoreI = aiEScoreI;
       aiEScoreI = (aiEScore - prevAIEScore) / prevAIEScore;
       prevPrevAIERScore = prevAIERScore;
       prevAIERScore = aiERScore;
       prevPrevAIERScoreI = prevAIERScoreI;
-       prevAIERScoreI = aiERScoreI;
+      prevAIERScoreI = aiERScoreI;
       aiERScoreI = (aiERScore - prevAIERScore) / prevAIERScore;
 
-      aiERScore = EM.aiEScoreAve>0.?aiEScore/EM.aiEScoreAve:0.;
-      assert !aiERScore.isInfinite():"saveAI infinite val, aiEScore=" + EM.mf(aiEScore) + " EM.aiEScoreAve=" + EM.mf(EM.aiEScoreAve) + " aiERScore=" +  EM.mf(aiERScore);
-      assert !aiERScore.isNaN():"saveAI NaN val, aiEScore=" + EM.mf(aiEScore) + " EM.aiEScoreAve=" + EM.mf(EM.aiEScoreAve) + " aiERScore=" + aiERScore;
+      aiERScore = EM.aiEScoreAve > 0. ? aiEScore / EM.aiEScoreAve : 0.;
+      assert !aiERScore.isInfinite() : "saveAI infinite val, aiEScore=" + EM.mf(aiEScore) + " EM.aiEScoreAve=" + EM.mf(EM.aiEScoreAve) + " aiERScore=" + EM.mf(aiERScore);
+      assert !aiERScore.isNaN() : "saveAI NaN val, aiEScore=" + EM.mf(aiEScore) + " EM.aiEScoreAve=" + EM.mf(EM.aiEScoreAve) + " aiERScore=" + aiERScore;
       aiOper = aiOffer / aiWorth;
       acct = tradeAccepted;
       prevAIEScoreI = aiEScoreI;
-      aiEScoreI = (aiEScore - prevAIEScore)/prevAIEScore;
+      aiEScoreI = (aiEScore - prevAIEScore) / prevAIEScore;
       prevPrevAIWorth = prevAIWorth;
       prevAIWorth = aiWorth;
       aiWorth = worth;//lastAIworth
       prevAIWorthI = aiWorthI;
-      aiWorthI = (aiWorth - prevAIWorth)/prevAIWorth;
+      aiWorthI = (aiWorth - prevAIWorth) / prevAIWorth;
       prevPrevAIOffer = prevAIOffer;
       prevAIOffer = aiOffer;
       prevAIOfferI = (prevAIOffer - prevPrevAIOffer) / prevPrevAIOffer;
       prevPrevAIProsM = prevAIProsM;
       prevAIProsM = aiProsM;
       aiProsM = rawProspects2.min();
-     // prevPrevAIProsMI = prevAIProsMI;
-       prevAIProsMI = (aiProsM - prevAIProsM) / prevAIProsM;
+      // prevPrevAIProsMI = prevAIProsMI;
+      prevAIProsMI = (aiProsM - prevAIProsM) / prevAIProsM;
       prevPrevAIProsA = prevAIProsA;
       prevAIProsA = aiProsA;
       aiProsA = rawProspects2.ave();
@@ -11532,13 +11634,15 @@ public class Assets {
       prevStrategicGoal = strategicGoal;
       prevSliderVala = sliderVala;
       prevSliderValb = sliderValb;
-      setStat(EM.ESCORE, pors, clan, ec.age>2?aiEScore:0, ec.age>2?1:0);
-      if(ec.age >2)setStat(EM.RELESCORE, pors, clan, aiERScore, 1);
+      setStat(EM.ESCORE, pors, clan, ec.age > 2 ? aiEScore : 0, ec.age > 2 ? 1 : 0);
+      if (ec.age > 2) {
+        setStat(EM.RELESCORE, pors, clan, aiERScore, 1);
+      }
       if (ec.age > 2) {  // do yea rthree
         EM.wasHere8 = "---ELa7--- Assets AI set has lock";
         int cIx = 7;
         int much = 7;
-        
+
         boolean ifPrint = true;
         aWaits++;
         ifPrint = aWaits > 5;
@@ -11555,21 +11659,22 @@ public class Assets {
           cumOffersPerWorth += cumOffers / cumBTWorth;
           cumOffersPS[pors] += cumOffersPS[pors] / cumBTWorthPS[pors];
           cumOffersClan[pors][clan] += cumOffersClan[pors][clan] / cumBTWorthClan[pors][clan];
-           aType = 0;
+          aType = 0;
           if (false && E.debugAIOut && (aWaits > 5)) {
             String str = new String(EM.psClanChars[pors][clan]);
             System.out.println("----BAI1----  len" + EM.psClanChars[pors][clan].length + " TreeMap size=" + EM.myAIlearnings.size() + " put key=" + str + "");
           }
-       // if (E.debugAIOut || (++aWaits % 5) == 0) {
-       if (E.debugAIOut) {
-         String str = new String(EM.psClanChars[pors][clan]);
-          System.out.println("----SAI2----" + " " + name + " saveAI put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + " put key=" + str + " TreeMap size=" + EM.myAIlearnings.size());
-           //  aiERScore = aiEScore/EM.aiEScoreAve;
-          System.out.println("----SAI3----" + " " + name + " saveAI aiEScore " + EM.mf(aiEScore)+ " EM.aiEScoreAve" + EM.mf(EM.aiEScoreAve) + " aiERScore " + EM.mf(aiERScore));
+          // if (E.debugAIOut || (++aWaits % 5) == 0) {
+          if (E.debugAIOut) {
+            String str = new String(EM.psClanChars[pors][clan]);
+            System.out.println("----SAI2----" + " " + name + " saveAI put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + " put key=" + str + " TreeMap size=" + EM.myAIlearnings.size());
+            //  aiERScore = aiEScore/EM.aiEScoreAve;
+            System.out.println("----SAI3----" + " " + name + " saveAI aiEScore " + EM.mf(aiEScore) + " EM.aiEScoreAve" + EM.mf(EM.aiEScoreAve) + " aiERScore " + EM.mf(aiERScore));
+          }
+          // assert EM.aiEScoreAve > 0:"saveAI error EM.aiEScoreAve <= 0. is" + EM.mf(EM.aiEScoreAve);
+          // assert aiERScore > 0:"saveAI error aiERScore <= 0. is" + EM.mf(aiERScore);
         }
-      // assert EM.aiEScoreAve > 0:"saveAI error EM.aiEScoreAve <= 0. is" + EM.mf(EM.aiEScoreAve);
-      // assert aiERScore > 0:"saveAI error aiERScore <= 0. is" + EM.mf(aiERScore);
-       } else if (dead) { // process dead never seen in saveAIKey
+        else if (dead) { // process dead never seen in saveAIKey
           aType = 2;
         }
         // str = (EM.prosBS = EM.myChars[aType] + EM.myChars[acct] + EM.myChars[pors] + EM.myChars[clan] + EM.myAICvals) + mProspC;
@@ -13477,975 +13582,978 @@ public class Assets {
       int sr = 0, ss = 1, ps = pors;
       double t1 = 0., t2 = 0., gradeCost3 = 1., nmov = 1, gmov1 = 1., gmov = 1.;
       try {
-      // save sourceIx
-      if (n > 0 && (ixWRSrc < 0 || ixWRSrc > 1)) {
-        EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
-      }
-      if (n > 0 && (srcIx < 0 || srcIx > 6)) {
-        EM.doMyErr("srcIx=" + srcIx + " n=" + n);
-      }
-      int savIxSrc = sourceIx = ixWRSrc * E.LSECS + srcIx;
-
-      prevprevns = prevns;  // all references good for later
-      if (n > 0) { // move prevns up only if last round did something.
-        EM.wasHere = "CashFlow.swaps at entry n>0 cnt=" + ++aaaa + " n=" + n;
-        for (m = prevns.length - 1; m > 1; m--) {
-          if (prevns[m - 2] != null) {
-            prevns[m] = prevns[m - 2];
-          }
+        // save sourceIx
+        if (n > 0 && (ixWRSrc < 0 || ixWRSrc > 1)) {
+          EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
         }
-        prevns[0] = new HSwaps();
-      }
-      if (eM.dfe()) {
-        return false;
-      }
-      EM.wasHere = "CashFlow.swaps after new prevns[o] aaab=" + ++aaab + " n=" + n;
-      prevns[1].copyn(cur);
-      lTitle = " Costs " + name;
-      // add another prevns except if n==0, then no swap for results
+        if (n > 0 && (srcIx < 0 || srcIx > 6)) {
+          EM.doMyErr("srcIx=" + srcIx + " n=" + n);
+        }
+        int savIxSrc = sourceIx = ixWRSrc * E.LSECS + srcIx;
 
-      histTitles(lTitle);
-      yCalcCosts("C#", lightYearsTraveled, curGrowGoal, curMaintGoal);  //includes yinitN
-      EM.wasHere = "CashFlow.endYear.swaps after yCalcCosts before test savIxSrc too large";
-      if (n > 0 && (savIxSrc >= E.L2SECS || savIxSrc < 0)) {
-        throw new MyErr(String.format("savIxSrc " + savIxSrc + " would make ixWRSrc more than 0 or 1"));
-      }
-      ixWRSrc = (int) (savIxSrc / E.LSECS) % 2;   // restore to 0,1
-      if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
-        throw new MyErr(String.format("ixWRSrc bad=" + ixWRSrc + " n=" + n));
-      }
-      if (n > 1 && (srcIx < 0 || srcIx > 6)) {
-        throw new MyErr(String.format("srcIx bad=" + srcIx + " n=" + n));
-      }
-      srcIx = savIxSrc % E.LSECS;
-      lTitle = " Swaps " + name;
-      prevns[0].copyn(cur);
-      histTitles(lTitle);
-      int xt, maxReDo = 4, bres = n > 2 ? 8 : 0;
-      if (n > 2) { // n0 not yet, n1 first try set prevgood, n2 second set prevns,
-        bres = prevns[0].betterResult(prevgood[0]);
-      }
-      EM.wasHere = "CashFlow.endYear after resetting ixWRSrc,srcIx aaac=" + ++aaac + "  n=" + n;
+        prevprevns = prevns;  // all references good for later
+        if (n > 0) { // move prevns up only if last round did something.
+          EM.wasHere = "CashFlow.swaps at entry n>0 cnt=" + ++aaaa + " n=" + n;
+          for (m = prevns.length - 1; m > 1; m--) {
+            if (prevns[m - 2] != null) {
+              prevns[m] = prevns[m - 2];
+            }
+          }
+          prevns[0] = new HSwaps();
+        }
+        if (eM.dfe()) {
+          return false;
+        }
+        EM.wasHere = "CashFlow.swaps after new prevns[o] aaab=" + ++aaab + " n=" + n;
+        prevns[1].copyn(cur);
+        lTitle = " Costs " + name;
+        // add another prevns except if n==0, then no swap for results
 
-      if (eM.dfe()) {
-        return false;
-      }
-      // exit only if goals are met and rawProspect (worst balance problem > 0
-      // bail out if bad bres, quit if you can't fix it
-      if ((n > eM.maxn[pors] * .5 && rawProspects2.curMin() > eM.minProspects[0]) || (rawFertilities2.curMin() > curGrowGoal && rawProspects2.curMin() > curMaintGoal && rawProspects2.curMin() > eM.mtgWEmergency[pors][clan]) || (n > 2 && bres > 0 && reDo >= maxReDo && rawProspects2.curMin() < E.NZERO)) {
-        done = true;  // terminate looping
-        hist.add(new History("GR", History.loopIncrements3, nTitle("TERM ") + cmd.toString() + srcIx + "->" + destIx,
-                             "mov=" + EM.mf(mov),
-                             "src=" + (srcIx < 0 || srcIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, srcIx))),
-                             "r$=" + (rChrgIx < 0 || rChrgIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, rChrgIx))),
-                             "s$=" + (sChrgIx < 0 || sChrgIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, sChrgIx))),
-                             "dst=" + (destIx < 0 || destIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, destIx))),
-                             "Hl" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()),
-                             "HlB" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.get(rawProspects2.curMinIx())), "Ha" + "=" + EM.mf(rawProspects2.ave()),
-                             "mtgC=" + EM.mf(mtgCosts10.curSum()),
-                             "bals=" + EM.mf(bals.curSum()), "<<<<<<<"));
-        EM.wasHere = " CashFlow.swaps just before return if done n=" + n;
-        eM.printHere("---SDa---", ec, EM.wasHere);
-        return swapped = false;  // terminate looping success
-      } // exit if we have satisfied END health
+        histTitles(lTitle);
+        yCalcCosts("C#", lightYearsTraveled, curGrowGoal, curMaintGoal);  //includes yinitN
+        EM.wasHere = "CashFlow.endYear.swaps after yCalcCosts before test savIxSrc too large";
+        if (n > 0 && (savIxSrc >= E.L2SECS || savIxSrc < 0)) {
+          throw new MyErr(String.format("savIxSrc " + savIxSrc + " would make ixWRSrc more than 0 or 1"));
+        }
+        ixWRSrc = (int) (savIxSrc / E.LSECS) % 2;   // restore to 0,1
+        if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
+          throw new MyErr(String.format("ixWRSrc bad=" + ixWRSrc + " n=" + n));
+        }
+        if (n > 1 && (srcIx < 0 || srcIx > 6)) {
+          throw new MyErr(String.format("srcIx bad=" + srcIx + " n=" + n));
+        }
+        srcIx = savIxSrc % E.LSECS;
+        lTitle = " Swaps " + name;
+        prevns[0].copyn(cur);
+        histTitles(lTitle);
+        int xt, maxReDo = 4, bres = n > 2 ? 8 : 0;
+        if (n > 2) { // n0 not yet, n1 first try set prevgood, n2 second set prevns,
+          bres = prevns[0].betterResult(prevgood[0]);
+        }
+        EM.wasHere = "CashFlow.endYear after resetting ixWRSrc,srcIx aaac=" + ++aaac + "  n=" + n;
 
-      // continuing with swap., save for redo
-      //get the previous swap values and the Cost values for that swap
-      balances.checkBalances(cur);
-      double dstCst = 0;
-      double dstRCst = 0, dstSCst = 0;
-      int rlev = History.loopMinorConditionals5;
+        if (eM.dfe()) {
+          return false;
+        }
+        // exit only if goals are met and rawProspect (worst balance problem > 0
+        // bail out if bad bres, quit if you can't fix it
+        if ((n > eM.maxn[pors] * .5 && rawProspects2.curMin() > eM.minProspects[0]) || (rawFertilities2.curMin() > curGrowGoal && rawProspects2.curMin() > curMaintGoal && rawProspects2.curMin() > eM.mtgWEmergency[pors][clan]) || (n > 2 && bres > 0 && reDo >= maxReDo && rawProspects2.curMin() < E.NZERO)) {
+          done = true;  // terminate looping
+          hist.add(new History("GR", History.loopIncrements3, nTitle("TERM ") + cmd.toString() + srcIx + "->" + destIx,
+                               "mov=" + EM.mf(mov),
+                               "src=" + (srcIx < 0 || srcIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, srcIx))),
+                               "r$=" + (rChrgIx < 0 || rChrgIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, rChrgIx))),
+                               "s$=" + (sChrgIx < 0 || sChrgIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, sChrgIx))),
+                               "dst=" + (destIx < 0 || destIx > E.LSECS ? "none" : EM.mf(balances.get(ixWRSrc, destIx))),
+                               "Hl" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()),
+                               "HlB" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.get(rawProspects2.curMinIx())), "Ha" + "=" + EM.mf(rawProspects2.ave()),
+                               "mtgC=" + EM.mf(mtgCosts10.curSum()),
+                               "bals=" + EM.mf(bals.curSum()), "<<<<<<<"));
+          EM.wasHere = " CashFlow.swaps just before return if done n=" + n;
+          eM.printHere("---SDa---", ec, EM.wasHere);
+          return swapped = false;  // terminate looping success
+        } // exit if we have satisfied END health
 
-      if (n > 2 && prevns[0] == prevgood[0]) { // no test until results for n=1
-        // at n=2, prevns[1] are n=0 swap results, prevns[0] n=1 swap results
-        EM.doMyErr("prevens[0] match prevgood[0] but should not n=" + n + " prevgood[0].n=" + prevgood[0].n + " prevns[0].n=" + prevns[0].n);
-      }
-      if (n > 1 && (srcIx < 0 || srcIx > 6)) {
-        EM.doMyErr("srcIx=" + srcIx + " n=" + n);
-      }
-      if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
-        EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
-      }
-      if (n > 2) { // n0 not yet, n1 first try set prevgood, n2 second set prevns,
-        //   bres = prevns[0].betterResult(prevgood[0]);
-      }
-      if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
-        EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
-      }
-      if (n > 1 && (srcIx < 0 || srcIx > 6)) {
-        EM.doMyErr("srcIx=" + srcIx + " n=" + n);
-      }
-      if (n > 1 && (destIx < 0 || destIx > 6)) {
-        EM.doMyErr("destIx=" + destIx + " n=" + n);
-      }
-      if (n > 1) {
-        hist.add(new History("##", History.loopMinorConditionals5, n + " " + cmd + " " + E.rNsIx(ixWRSrc, srcIx), "m" + EM.mf(mov), "src" + E.rNsIx(ixWRSrc, srcIx) + EM.mf(bals.get(ixWRSrc, srcIx)), "d" + E.rNsIx(ixWRSrc, destIx) + "=" + EM.mf(bals.get(ixWRSrc, destIx)), "bres=" + bres, "reDo=" + reDo, "st=" + "<<<<<<<<<<"));
-      }
-      if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
-        EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
-      }
-      if (n > 3 && n % 5 == 4) {
-        eM.printHere("---SDb---", ec, "swapping" + n + " betterResult" + bres + " reDo" + reDo);
-      }
-      // if result not better restore the old balances and recalc
-      if (n > 2 && bres < 1 && reDo < maxReDo) { // redo bad swaps up to 4 times, than accept
-        // prevns = prevprevns; // restore the prevns
-        balances.checkBalances(this);
-        hist.add(new History("##", History.loopMinorConditionals5, n + "OLD " + cmd + " " + E.rNsIx(ixWRSrc, srcIx), "m" + EM.mf(mov), "src" + E.rNsIx(ixWRSrc, srcIx) + EM.mf(bals.get(ixWRSrc, srcIx)), "d" + E.rNsIx(ixWRSrc, destIx) + "=" + EM.mf(bals.get(ixWRSrc, destIx)), "bres=" + bres, "reDo=" + reDo, "st=" + "<<<<<<<<<<"));
-        // input is the current bad, to the current good`
-        prevns[0].restoreUpdate(cur, prevgood[0]);
-        hist.add(new History("##", History.loopIncrements3, n + "RESTORD " + cmd + " " + E.rNsIx(ixWRSrc, srcIx), "m" + EM.mf(mov), "src" + E.rNsIx(ixWRSrc, srcIx) + EM.mf(bals.get(ixWRSrc, srcIx)), "d" + E.rNsIx(ixWRSrc, destIx) + "=" + EM.mf(bals.get(ixWRSrc, destIx)), "bres=" + bres, "reDo=" + reDo, "st=" + "<<<<<<<<<<"));
-        balances.checkBalances(this);
-        // now recalculate costs, may be slightly different than original
-        yCalcCosts("X*", lightYearsTraveled, curGrowGoal, curMaintGoal);
-        // ignore the result we are overwriting
+        // continuing with swap., save for redo
+        //get the previous swap values and the Cost values for that swap
+        balances.checkBalances(cur);
+        double dstCst = 0;
+        double dstRCst = 0, dstSCst = 0;
+        int rlev = History.loopMinorConditionals5;
+
+        if (n > 2 && prevns[0] == prevgood[0]) { // no test until results for n=1
+          // at n=2, prevns[1] are n=0 swap results, prevns[0] n=1 swap results
+          EM.doMyErr("prevens[0] match prevgood[0] but should not n=" + n + " prevgood[0].n=" + prevgood[0].n + " prevns[0].n=" + prevns[0].n);
+        }
+        if (n > 1 && (srcIx < 0 || srcIx > 6)) {
+          EM.doMyErr("srcIx=" + srcIx + " n=" + n);
+        }
+        if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
+          EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
+        }
+        if (n > 2) { // n0 not yet, n1 first try set prevgood, n2 second set prevns,
+          //   bres = prevns[0].betterResult(prevgood[0]);
+        }
+        if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
+          EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
+        }
+        if (n > 1 && (srcIx < 0 || srcIx > 6)) {
+          EM.doMyErr("srcIx=" + srcIx + " n=" + n);
+        }
+        if (n > 1 && (destIx < 0 || destIx > 6)) {
+          EM.doMyErr("destIx=" + destIx + " n=" + n);
+        }
+        if (n > 1) {
+          hist.add(new History("##", History.loopMinorConditionals5, n + " " + cmd + " " + E.rNsIx(ixWRSrc, srcIx), "m" + EM.mf(mov), "src" + E.rNsIx(ixWRSrc, srcIx) + EM.mf(bals.get(ixWRSrc, srcIx)), "d" + E.rNsIx(ixWRSrc, destIx) + "=" + EM.mf(bals.get(ixWRSrc, destIx)), "bres=" + bres, "reDo=" + reDo, "st=" + "<<<<<<<<<<"));
+        }
+        if (n > 1 && (ixWRSrc < 0 || ixWRSrc > 1)) {
+          EM.doMyErr("ixWRSrc=" + ixWRSrc + " n=" + n);
+        }
+        if (n > 3 && n % 5 == 4) {
+          eM.printHere("---SDb---", ec, "swapping" + n + " betterResult" + bres + " reDo" + reDo);
+        }
+        // if result not better restore the old balances and recalc
+        if (n > 2 && bres < 1 && reDo < maxReDo) { // redo bad swaps up to 4 times, than accept
+          // prevns = prevprevns; // restore the prevns
+          balances.checkBalances(this);
+          hist.add(new History("##", History.loopMinorConditionals5, n + "OLD " + cmd + " " + E.rNsIx(ixWRSrc, srcIx), "m" + EM.mf(mov), "src" + E.rNsIx(ixWRSrc, srcIx) + EM.mf(bals.get(ixWRSrc, srcIx)), "d" + E.rNsIx(ixWRSrc, destIx) + "=" + EM.mf(bals.get(ixWRSrc, destIx)), "bres=" + bres, "reDo=" + reDo, "st=" + "<<<<<<<<<<"));
+          // input is the current bad, to the current good`
+          prevns[0].restoreUpdate(cur, prevgood[0]);
+          hist.add(new History("##", History.loopIncrements3, n + "RESTORD " + cmd + " " + E.rNsIx(ixWRSrc, srcIx), "m" + EM.mf(mov), "src" + E.rNsIx(ixWRSrc, srcIx) + EM.mf(bals.get(ixWRSrc, srcIx)), "d" + E.rNsIx(ixWRSrc, destIx) + "=" + EM.mf(bals.get(ixWRSrc, destIx)), "bres=" + bres, "reDo=" + reDo, "st=" + "<<<<<<<<<<"));
+          balances.checkBalances(this);
+          // now recalculate costs, may be slightly different than original
+          yCalcCosts("X*", lightYearsTraveled, curGrowGoal, curMaintGoal);
+          // ignore the result we are overwriting
 //        prevns[0].copyn(cur);
-      } // accept current swap as good, do the next one
-      else {
+        } // accept current swap as good, do the next one
+        else {
 // then continue the swap was good with the new setDoNot s
-        reDo = 0;
-        // doing not undo or redo, increased rawFertilities and or rawHealths
-        // things got better
-        doNot.age(); //age only once per n, reduce doNots
-        // and reduce stopped back toward 0
-        stopped[0] += stopped[0] > 0 ? -1 : stopped[0];
-        stopped[1] += stopped[1] > 0 ? -1 : stopped[1];
-        stopped[2] += stopped[2] > 0 ? -1 : stopped[2];
-        //prevgood is the record of good swaps, conflicts iwth Trades.prevgood
-        if (n > 0) { // move prevgood up.
-          for (m = prevgood.length - 1; m > 0; m--) {
-            if (prevgood[m - 1] != null) {
-              prevgood[m] = prevgood[m - 1];
+          reDo = 0;
+          // doing not undo or redo, increased rawFertilities and or rawHealths
+          // things got better
+          doNot.age(); //age only once per n, reduce doNots
+          // and reduce stopped back toward 0
+          stopped[0] += stopped[0] > 0 ? -1 : stopped[0];
+          stopped[1] += stopped[1] > 0 ? -1 : stopped[1];
+          stopped[2] += stopped[2] > 0 ? -1 : stopped[2];
+          //prevgood is the record of good swaps, conflicts iwth Trades.prevgood
+          if (n > 0) { // move prevgood up.
+            for (m = prevgood.length - 1; m > 0; m--) {
+              if (prevgood[m - 1] != null) {
+                prevgood[m] = prevgood[m - 1];
+              }
             }
           }
         }
-      }
-      if (eM.dfe()) {
-        return false;
-      }
-      if (n > 0) {
-        // save a new HSwaps from cur into prevgood[0]
-        prevgood[0] = new HSwaps();
-        prevgood[0] = prevgood[0].copyn(cur);
-      }
-      doNot.sendHist(History.loopMinorConditionals5, "g^");
-
-      //    ARow[] bwp = {r.balanceWithPartner, s.balanceWithPartner};
-      balances.checkBalances(this);
-      A2Row swapNeeds = new A2Row(ec, 7, "swapNeeds");
-      SubAsset[] sources = {resource, staff, cargo, guests};
-      String[] srcNames = {" r ", " s "};
-      //resource.balance.negError("resource.balance");
-      double src0Bal = 0., src1Bal = 0., src01Bal = 0., destBal = 0.;
-      int swap4Steps[] = {0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
-// 0,1,2,3
-      int swap7Steps[] = {0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6};
-      // loop through tests with decreasing requirements, to see if anything
-      // can be swapped
-      //for (swapLoops = 0; swapLoops < 7; swapLoops++) {
-      for (swapLoops = 0; swapLoops < swapLoopMax; swapLoops++) {
-        swap4Step = swap4Steps[swapLoops];
-        swap7Step = swap7Steps[swapLoops];
-        int swapLoop2 = swapLoops / 2;  // 0,0,1,1
-        int swapLoop1 = swapLoops % 2;  // 0,1
-        minRF = rawFertilities2.min();
-        minRFIx = rawFertilities2.curMinIx();
-        minRH = rawProspects2.min();
-        minRHIx = rawProspects2.curMinIx();
-        //double mSumRem = mtgSumRemnant;
-
-        //see description at start of swaps
-        boolean hNot1 = prevFlagm && prevFlagh;
-        if (swapLoops == 0 && n > 1) {
-
-          rawFertilities2.sendHist(hist, 20, "C", 4, "r rawF", "s rawF");
-          prevns[0].rawFertilities2.sendHist(hist, 20, "C", 4, "r prvrawF", "s prvrawF");
-          rawProspects2.sendHist(hist, 20, "C", 4, "r rawH", "s rawH");
-          prevns[0].rawProspects2.sendHist(hist, 20, "C", 4, "r prvrawH", "s prvrawH");
-          growths.sendHist2(20, "C", 4, "r G", "s G");
-          //          prevns[0].growths.sendHist2(20, "C", 4, "r prvG", "s prvrawG");
-          balances.sendHist2(20, "C", 4, "r bal", "s bal");
-          //           prevns[0].balances.sendHist2(20, "C", 4, "r prvbal", "s prvbal");
-          //           balances.set(prevns[0].balances);
-          rawFertilities2.set(prevns[0].rawFertilities2);
-          rawProspects2.set(prevns[0].rawProspects2);
-
-          doNot.sendHist();
-          //       doNot.sendHist4(hist, History.informationMinor9, "do", History.informationMinor9, "r dec doNot", "s dec doNot", "r xfr doNot", "s xfr doNot");
-          //   prevSwapResults(aPre);
-
-          if (History.dl > 40) {
-            StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
-
-            hist.add(new History(aPre, History.debuggingMinor11, ">>>>" + nTitle("swaps"), wh(a0.getLineNumber()), (failed ? "failed" : "!!!failed"), (swapped ? "swapped" : "!!!swapped"), swapLoops + "=swapLoops", "$=" + EM.mf(sumTotWorth)));
-          }
-          errHistory = null;
+        if (eM.dfe()) {
+          return false;
         }
+        if (n > 0) {
+          // save a new HSwaps from cur into prevgood[0]
+          prevgood[0] = new HSwaps();
+          prevgood[0] = prevgood[0].copyn(cur);
+        }
+        doNot.sendHist(History.loopMinorConditionals5, "g^");
 
-        //  }
-        //     calcSwapValues(aPre, lightYearsTraveled);
-        // do some calculations for a previous decr
+        //    ARow[] bwp = {r.balanceWithPartner, s.balanceWithPartner};
         balances.checkBalances(this);
-        //     swapType = 4;
-        // index on swap4Step
-        // A6Row[] avails = {mtgGoalNeeds, mtgGoalNeeds, mtgEmergNeeds, mtgNeeds6};
-        //A6Row[] avails = {mtgNeeds6, mtgNeeds6, mtgNeeds6, mtgNeeds6};
-        // A6Row[] needs = {mtggNeeds6, mtggNeeds6, mtgNeeds6, mtgNeeds6};
-        A2Row stratV = new A2Row(ec).set(stratVars);
-        A2Row aorder = new A2Row(ec);
-        mtgAvails6.sendHist2(rlev, aPre, rlev, "rc avails", "sg avails");
-        mtgNeeds6.sendHist2(rlev, aPre, rlev, "rc needs", "sg needs");
+        A2Row swapNeeds = new A2Row(ec, 7, "swapNeeds");
+        SubAsset[] sources = {resource, staff, cargo, guests};
+        String[] srcNames = {" r ", " s "};
+        //resource.balance.negError("resource.balance");
+        double src0Bal = 0., src1Bal = 0., src01Bal = 0., destBal = 0.;
+        int swap4Steps[] = {0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+// 0,1,2,3
+        int swap7Steps[] = {0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6};
+        // loop through tests with decreasing requirements, to see if anything
+        // can be swapped
+        //for (swapLoops = 0; swapLoops < 7; swapLoops++) {
+        for (swapLoops = 0; swapLoops < swapLoopMax; swapLoops++) {
+          swap4Step = swap4Steps[swapLoops];
+          swap7Step = swap7Steps[swapLoops];
+          int swapLoop2 = swapLoops / 2;  // 0,0,1,1
+          int swapLoop1 = swapLoops % 2;  // 0,1
+          minRF = rawFertilities2.min();
+          minRFIx = rawFertilities2.curMinIx();
+          minRH = rawProspects2.min();
+          minRHIx = rawProspects2.curMinIx();
+          //double mSumRem = mtgSumRemnant;
+
+          //see description at start of swaps
+          boolean hNot1 = prevFlagm && prevFlagh;
+          if (swapLoops == 0 && n > 1) {
+
+            rawFertilities2.sendHist(hist, 20, "C", 4, "r rawF", "s rawF");
+            prevns[0].rawFertilities2.sendHist(hist, 20, "C", 4, "r prvrawF", "s prvrawF");
+            rawProspects2.sendHist(hist, 20, "C", 4, "r rawH", "s rawH");
+            prevns[0].rawProspects2.sendHist(hist, 20, "C", 4, "r prvrawH", "s prvrawH");
+            growths.sendHist2(20, "C", 4, "r G", "s G");
+            //          prevns[0].growths.sendHist2(20, "C", 4, "r prvG", "s prvrawG");
+            balances.sendHist2(20, "C", 4, "r bal", "s bal");
+            //           prevns[0].balances.sendHist2(20, "C", 4, "r prvbal", "s prvbal");
+            //           balances.set(prevns[0].balances);
+            rawFertilities2.set(prevns[0].rawFertilities2);
+            rawProspects2.set(prevns[0].rawProspects2);
+
+            doNot.sendHist();
+            //       doNot.sendHist4(hist, History.informationMinor9, "do", History.informationMinor9, "r dec doNot", "s dec doNot", "r xfr doNot", "s xfr doNot");
+            //   prevSwapResults(aPre);
+
+            if (History.dl > 40) {
+              StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
+
+              hist.add(new History(aPre, History.debuggingMinor11, ">>>>" + nTitle("swaps"), wh(a0.getLineNumber()), (failed ? "failed" : "!!!failed"), (swapped ? "swapped" : "!!!swapped"), swapLoops + "=swapLoops", "$=" + EM.mf(sumTotWorth)));
+            }
+            errHistory = null;
+          }
+
+          //  }
+          //     calcSwapValues(aPre, lightYearsTraveled);
+          // do some calculations for a previous decr
+          balances.checkBalances(this);
+          //     swapType = 4;
+          // index on swap4Step
+          // A6Row[] avails = {mtgGoalNeeds, mtgGoalNeeds, mtgEmergNeeds, mtgNeeds6};
+          //A6Row[] avails = {mtgNeeds6, mtgNeeds6, mtgNeeds6, mtgNeeds6};
+          // A6Row[] needs = {mtggNeeds6, mtggNeeds6, mtgNeeds6, mtgNeeds6};
+          A2Row stratV = new A2Row(ec).set(stratVars);
+          A2Row aorder = new A2Row(ec);
+          mtgAvails6.sendHist2(rlev, aPre, rlev, "rc avails", "sg avails");
+          mtgNeeds6.sendHist2(rlev, aPre, rlev, "rc needs", "sg needs");
 //        mtggEmergNeeds.sendHist2(rlev, aPre, rlev, "rc mEmergN", "sg mggEmergN");
-        //  mtgNeeds6.sendHist2(rlev, aPre, rlev, "rc mtgN", "sg mtgN");
-        rawProspects2.sendHist(hist, 29, aPre, rlev, "rc rawProspects2", "sg rawProspects2");
+          //  mtgNeeds6.sendHist2(rlev, aPre, rlev, "rc mtgN", "sg mtgN");
+          rawProspects2.sendHist(hist, 29, aPre, rlev, "rc rawProspects2", "sg rawProspects2");
 
-        //   mNeeds.addJointBalances();
-        //balances.addJointBalances();
-        double frac1 = 0., frac2 = 0., tmp1 = 0., sum1 = 0., sum2 = 0., dif1 = 0.;
-        int minFx = rawFertilities2.curMinIx();
-        int min1Fx = rawFertilities2.curMinIx(1);
-        int minHx = rawProspects2.curMinIx();
-        int min1Hx = rawProspects2.curMinIx(1);
-        int minNx = mtgNeeds6.curMinIx();
-        int min1Nx = mtgNeeds6.curMinIx(1);
-        int maxNx = mtgNeeds6.curMaxIx(0);
-        double maxNd = mtgNeeds6.curMax(0);
-        int maxSx = stratVars.curMaxIx();
-        double maxSd = stratVars.curMax();
-        int max1Sx = stratVars.maxIx(1);
-        int minHSx = stratVars.findMinIx(minHx);
-        int min1HSx = stratVars.findMinIx(min1Hx);
-        int minFSx = stratVars.findMinIx(minFx);
-        int min1FSx = stratVars.findMinIx(min1Fx);
-        double minFd = rawFertilities2.get(minFx);
-        double min1Fd = rawFertilities2.get(min1Fx);
-        double minHd = rawProspects2.get(minHx);
-        double min1Hd = rawProspects2.get(min1Hx);
-        double minNd = mtgNeeds6.curGet(minNx);
-        double min1Nd = mtgNeeds6.curGet(min1Nx);
-        double bav = balances.getRow(0).ave();
-        double[] maxMove = {.45 * bav, .65 * bav, .75 * bav, .75 * bav};
-        // double needAvailValue = -mtgNeeds6.curMax(needIx); // value available at needIx
-        int incLeastStrategicIx[] = {6, 7, 8, 8};//most is most strategic
-        // Index into the first 2 rows
-        int stratIx = stratVars.maxIx(incLeastStrategicIx[swap4Step]);
-        double leastStrategicValue = mtgNeeds6.curMax(stratIx);
-        double theSum = bals.curSum();
+          //   mNeeds.addJointBalances();
+          //balances.addJointBalances();
+          double frac1 = 0., frac2 = 0., tmp1 = 0., sum1 = 0., sum2 = 0., dif1 = 0.;
+          int minFx = rawFertilities2.curMinIx();
+          int min1Fx = rawFertilities2.curMinIx(1);
+          int minHx = rawProspects2.curMinIx();
+          int min1Hx = rawProspects2.curMinIx(1);
+          int minNx = mtgNeeds6.curMinIx();
+          int min1Nx = mtgNeeds6.curMinIx(1);
+          int maxNx = mtgNeeds6.curMaxIx(0);
+          double maxNd = mtgNeeds6.curMax(0);
+          int maxSx = stratVars.curMaxIx();
+          double maxSd = stratVars.curMax();
+          int max1Sx = stratVars.maxIx(1);
+          int minHSx = stratVars.findMinIx(minHx);
+          int min1HSx = stratVars.findMinIx(min1Hx);
+          int minFSx = stratVars.findMinIx(minFx);
+          int min1FSx = stratVars.findMinIx(min1Fx);
+          double minFd = rawFertilities2.get(minFx);
+          double min1Fd = rawFertilities2.get(min1Fx);
+          double minHd = rawProspects2.get(minHx);
+          double min1Hd = rawProspects2.get(min1Hx);
+          double minNd = mtgNeeds6.curGet(minNx);
+          double min1Nd = mtgNeeds6.curGet(min1Nx);
+          double bav = balances.getRow(0).ave();
+          double[] maxMove = {.45 * bav, .65 * bav, .75 * bav, .75 * bav};
+          // double needAvailValue = -mtgNeeds6.curMax(needIx); // value available at needIx
+          int incLeastStrategicIx[] = {6, 7, 8, 8};//most is most strategic
+          // Index into the first 2 rows
+          int stratIx = stratVars.maxIx(incLeastStrategicIx[swap4Step]);
+          double leastStrategicValue = mtgNeeds6.curMax(stratIx);
+          double theSum = bals.curSum();
 
-        hist.add(new History("i@", History.loopMinorConditionals5, "loop data", nameXnIx("minH", rNs, minHx, minHd), nameXnIx("N", rNs, minHx, mtgNeeds6.curGet(minHx)), nameXnIx("b", rNs, minHx, balances.curGet(minHx)), nameXnIx("strat", rNs, minHSx, balances.curGet(minHSx)), nameXnIx("min1H", rNs, min1Hx, min1Hd), nameXnIx("N", rNs, min1Hx, mtgNeeds6.curGet(min1Hx)), nameXnIx("b", rNs, min1Hx, balances.curGet(min1Hx)), nameXnIx("strat", rNs, min1HSx, balances.curGet(min1HSx))));
+          hist.add(new History("i@", History.loopMinorConditionals5, "loop data", nameXnIx("minH", rNs, minHx, minHd), nameXnIx("N", rNs, minHx, mtgNeeds6.curGet(minHx)), nameXnIx("b", rNs, minHx, balances.curGet(minHx)), nameXnIx("strat", rNs, minHSx, balances.curGet(minHSx)), nameXnIx("min1H", rNs, min1Hx, min1Hd), nameXnIx("N", rNs, min1Hx, mtgNeeds6.curGet(min1Hx)), nameXnIx("b", rNs, min1Hx, balances.curGet(min1Hx)), nameXnIx("strat", rNs, min1HSx, balances.curGet(min1HSx))));
 
-        hist.add(new History("i@", History.loopMinorConditionals5, "loop data", nameXnIx("minF", rNs, minFx, minFd), nameXnIx("N", rNs, minFx, mtgNeeds6.curGet(minFx)), nameXnIx("b", rNs, minFx, balances.curGet(minFx)), nameXnIx("strat", rNs, minFSx, balances.curGet(minFSx)), nameXnIx("min1F", rNs, min1Fx, min1Fd), nameXnIx("N", rNs, min1Fx, mtgNeeds6.curGet(min1Fx)), nameXnIx("b", rNs, min1Fx, balances.curGet(min1Fx)), nameXnIx("strat", rNs, min1FSx, balances.curGet(min1FSx))));
+          hist.add(new History("i@", History.loopMinorConditionals5, "loop data", nameXnIx("minF", rNs, minFx, minFd), nameXnIx("N", rNs, minFx, mtgNeeds6.curGet(minFx)), nameXnIx("b", rNs, minFx, balances.curGet(minFx)), nameXnIx("strat", rNs, minFSx, balances.curGet(minFSx)), nameXnIx("min1F", rNs, min1Fx, min1Fd), nameXnIx("N", rNs, min1Fx, mtgNeeds6.curGet(min1Fx)), nameXnIx("b", rNs, min1Fx, balances.curGet(min1Fx)), nameXnIx("strat", rNs, min1FSx, balances.curGet(min1FSx))));
 
-        // now check for futureFund processing, loop if futureFund was given
-        if (calcFutureFund()) {
-          swapType = 3;
-          destIx = srcIx;
-          done = false;
-          EM.wasHere = "CashFlow.endYear just after calcFutureFund aaaba=" + aaaba;
-          return swapped = true;
-        }
-        /**
-         * ****************** RINCR SINCR *************************************
-         */
-        // swap   RINCR  SINCR  move reserve to working (cargo->resource,quests->staff
-        // swaploops increase avails, increase needs
-        // do charge for a swap after a trade, trade moved units all to working
-        //  boolean ncharg = yphase == yrphase.GROW && n < 10 && didTrade > 0;
-        // fraction of source balances to use in swap
-        if (stopped[0] > 0) {  // incr stopped
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.name() + ">>stopped "), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx))));
-        }
-        else {
+          // now check for futureFund processing, loop if futureFund was given
+          if (calcFutureFund()) {
+            swapType = 3;
+            destIx = srcIx;
+            done = false;
+            EM.wasHere = "CashFlow.endYear just after calcFutureFund aaaba=" + aaaba;
+            return swapped = true;
+          }
+          /**
+           * ****************** RINCR SINCR
+           * *************************************
+           */
+          // swap   RINCR  SINCR  move reserve to working (cargo->resource,quests->staff
+          // swaploops increase avails, increase needs
+          // do charge for a swap after a trade, trade moved units all to working
+          //  boolean ncharg = yphase == yrphase.GROW && n < 10 && didTrade > 0;
+          // fraction of source balances to use in swap
+          if (stopped[0] > 0) {  // incr stopped
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.name() + ">>stopped "), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx))));
+          }
+          else {
 
-          double bFrac = bals.curSum() * .33 / 14; // bFrac maxMove 1/3 of balances ave
-          double iMaxMove = bFrac;
-          // double incrBalFrac = 1.; // fraction of C or G sources to use in swap
-          double incrBalFracs[] = {.9, .92, .94, .98, 1., 1., 1., 1., 1.};
-          double incrBalFrac = incrBalFracs[swap4Step]; // fraction of R or S sources to use in swap
-          double incrAvailFracs[] = {.85, .87, .89, .91, .93, 1., 1., 1., 1.};
-          double incrAvailFrac = incrAvailFracs[swap4Step];  // fraction of C or G source to use in swap
-          double incrResrvFrac = 1. - incrAvailFrac;
-          // int ixAF = n < incrAvailFrac.length ? n : incrAvailFrac.length - 1;
+            double bFrac = bals.curSum() * .33 / 14; // bFrac maxMove 1/3 of balances ave
+            double iMaxMove = bFrac;
+            // double incrBalFrac = 1.; // fraction of C or G sources to use in swap
+            double incrBalFracs[] = {.9, .92, .94, .98, 1., 1., 1., 1., 1.};
+            double incrBalFrac = incrBalFracs[swap4Step]; // fraction of R or S sources to use in swap
+            double incrAvailFracs[] = {.85, .87, .89, .91, .93, 1., 1., 1., 1.};
+            double incrAvailFrac = incrAvailFracs[swap4Step];  // fraction of C or G source to use in swap
+            double incrResrvFrac = 1. - incrAvailFrac;
+            // int ixAF = n < incrAvailFrac.length ? n : incrAvailFrac.length - 1;
 
-          // decrease min as steps increase as n increases
-          movMin = .005 * bFrac * 3 / (3. + swap4Step) * (2 * maxn / (2 * maxn + n));  // skip INCR if move < movMin
-          // mult against incrAvail.sum()
-          double[] incrMovMult = {.15, .27, .25, .27};;
+            // decrease min as steps increase as n increases
+            movMin = .005 * bFrac * 3 / (3. + swap4Step) * (2 * maxn / (2 * maxn + n));  // skip INCR if move < movMin
+            // mult against incrAvail.sum()
+            double[] incrMovMult = {.15, .27, .25, .27};;
 
-          //Initialize variables possibly used in swaps
-          ixWRFor = forIx = srcIx = destIx = -1;
-          rchrg = schrg = osource = forRes = dest = source = null;
-          rcost = scost = mov = fmov = smov = 0;
+            //Initialize variables possibly used in swaps
+            ixWRFor = forIx = srcIx = destIx = -1;
+            rchrg = schrg = osource = forRes = dest = source = null;
+            rcost = scost = mov = fmov = smov = 0;
 
-          // set to a general incr, specific is later
-          cmd = SwpCmd.RSINCR;
-          swapType = 0;
+            // set to a general incr, specific is later
+            cmd = SwpCmd.RSINCR;
+            swapType = 0;
+            aorder = rawFertilities2;
+            if (rawProspects2.curMin() < .2) {
+              aorder = rawProspects2;
+            }
+            needIx = aorder.curMinIx();  // greatest need
+            ec.aPre = aPre = "H@";
+            // [ixWRSrc][r/scost][pors]
+            double swapCost[][][] = {{eM.swapCtoRRcost, eM.swapCtoRScost}, {eM.swapGtoSRcost, eM.swapGtoSRcost}};
+            // calculate the max move from C to R or G to S for each position
+            A2Row incrAvail0 = new A2Row(ec).setAvailableToIncr(incrBalFrac, incrAvailFrac, iMaxMove, mtgAvails6, swapCost[sr][sr][ps], swapCost[sr][ss][ps], swapCost[ss][sr][ps], swapCost[ss][ss][ps]);
+            A2Row incrAvail1 = new A2Row(ec);
+            incrAvail1 = doNot.filterByDoNot(0, incrAvail0, nFlag);
+            // Eliminate positions recently changed
+            // A2Row incrAvail1 = new A2Row(ec).set(incrAvail0);
+
+            hist.add(new History(History.valuesMajor6, "Incr vals", "movMin=", EM.mf(movMin), "iMaxMov", EM.mf(iMaxMove), "iBalFrac", EM.mf(incrBalFrac), "iAvailFrac", EM.mf(incrAvailFrac)));
+            incrAvail0.sendHist(hist, History.valuesMinor7, "inc", "r incrAvail0", "s incrAvail0");
+            incrAvail1.sendHist(hist, History.valuesMinor7, "inc", "r incrAvail1", "s incrAvail1");
+            bals.sendHist(hist, aPre);
+            //  rawFertilities2.sendHist(hist, 21, "$a", "rcFertilities", "sgFertilities");
+            ec.aPre = aPre = "I@";
+            stratVars.sendHist(hist, History.valuesMinor7, aPre, nTitle("r stratVars"), nTitle("s stratVars"));
+            rawProspects2.sendHist(hist, aPre);
+
+            // A2Row aorder1 = doNot.filterByDoNot(0,aorder,999.);
+            A2Row aStrat1 = doNot.filterByDoNot(0, stratVars, nFlag);
+            // now find a need that increment can help
+            needIx = -2;
+            mov = 999. + movMin;  // preset very large
+            int imax = incLeastStrategicIx[swap4Step];
+
+            // find r move = j = srcIx  if move greater than movMin
+            for (int i = 0; i < imax; i++) {
+              j = aStrat1.curMaxIx(i); // start with lowest val, highest strategic value
+              ixWRSrc = (int) j / LSECS;
+              destIx = srcIx = (int) j % LSECS;
+              // gradeCost3 is the max Avail mov
+              gradeCost3 = incrAvail1.get(j);
+              // nmov is the amount needed to meet all current needs
+              nmov = bals.get(3 + ixWRSrc * 2, srcIx) * incrBalFrac; // c or g.balance(srcIx)
+              mov3 = mtgAvails6.curGet(j); //rc or sg values
+              mov2 = mov3 < PZERO ? movMin * 3. : mov3;
+              // gmov is the amount needed to reach the goals
+              gmov1 = goalmtg1Needs6.curGet(j);
+              gmov = gmov1 < PZERO ? movMin * 3 : gmov1;
+
+              // may exceed nmov if prospects are good over .1
+              mov = rawProspects2.curGet(j) < eM.mtgWEmergency[pors][clan] ? Math.min(nmov, Math.min(mov2, gradeCost3)) : Math.min(nmov, Math.min(gradeCost3, Math.max(mov2, gmov)));
+              if (mov > movMin) {  // only accept moves above the min
+                break;
+              }
+            } // end for i or break
+
+            source = sources[ixWRSrc + 2]; // c or g
+            dest = source.partner; // r or s
+            destIx = srcIx;
+            rchrg = resource;
+            schrg = staff;
+            rcost = mov * swapCost[ixWRSrc][sr][pors];
+            scost = mov * swapCost[ixWRSrc][ss][pors];
+            // dstCst = mov + (ixWRSrc == 0?rcost:scost);
+            dstCst = mov + mov * swapCost[ixWRSrc][ixWRSrc][pors];
+            swapCosts.getRow(0).add(rcost);
+            swapCosts.getRow(1).add(scost);
+            prevsrc = source.balance.get(srcIx);
+            prevdest = dest.balance.get(destIx);
+            cmd = incrs[ixWRSrc][swap4Step]; //revise to detail cmd
+
+            ec.aPre = aPre = "K@";
+
+            if (mov < movMin) { //mov < movMin
+              hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(">SKIP " + cmd.name() + " too small"), "mov" + EM.mf(mov), "movMin=", EM.mf(movMin))); //
+              doNot.setDoNot(0, ixWRSrc, srcIx, 3); //disallow decrement
+            }
+            else if (mov < PZERO) { // neg move
+              hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.name() + ">SKIP " + " -mov"), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough")); //
+            }
+            else if (bals.getRow(3 + 2 * ixWRSrc).get(srcIx) < mov) {  // C too small
+              hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.name() + ">>too large "), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
+
+            }
+            else {
+              hist.add(new History(aPre = "L@", History.loopMinorConditionals5, nTitle(cmd.name()) + " " + i + "=>" + j + (j < E.lsecs ? "r" + j : "s" + (j - E.lsecs)), "bal" + EM.mf(bals.get(2 + 2 * ixWRSrc, srcIx)), "prt" + EM.mf(bals.get(3 + 2 * ixWRSrc, srcIx)), "mov" + EM.mf(mov), "min" + EM.mf(movMin), "golm" + EM.mf(gmov), "nedm" + EM.mf(nmov), "incm" + EM.mf(gradeCost3)));
+              hist.add(new History(aPre, History.loopIncrements3, nTitle("Pre") + cmd.name() + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
+              // a pretest for problems with putValue and cost2
+              if ((balances.get(ixWRSrc * 2 + 3, srcIx) - dstCst) < NZERO) {
+                E.myTest(true, "incr " + srcIx + " cost too high, balance=" + EM.mf(balances.getRow(ixWRSrc).get(srcIx)) + " -cost " + EM.mf(dstCst) + " => " + EM.mf((balances.getRow(ixWRSrc).get(srcIx) - dstCst)));
+              }
+              if (ixWRSrc == 0) {
+                if (bals.getRow(0).sum() > 0.0) {
+                  setStat("swapRIncr", pors, clan, 100. * mov / bals.getRow(0).sum(), 1);
+                }
+              }
+              else if (bals.getRow(1).sum() > 0.0) {
+                setStat("swapSIncr", pors, clan, 100. * mov / bals.getRow(1).sum(), 1);
+              }
+              source.putValue(balances, mov, srcIx, destIx, dest, 0, 0.);
+              rchrg.cost3(rcost, srcIx, .0001);
+              schrg.checkGrades();
+              schrg.cost3(scost, srcIx, .0001);
+              setStat(EM.SWAPRINCRCOST, pors, clan, rcost / bals.getRow(2).sum(), 1);
+              setStat(EM.SWAPSINCRCOST, pors, clan, scost / bals.getRow(4).sum(), 1);
+              swapType = 0;
+              rxfers = sxfers = 0;
+              // allow repeat incr of min values
+              // doNot.setDoNot(0, ixSrc, srcIx, E.doNotYears - n / 7);
+              // do not decrement ever
+              doNot.setDoNot(1, ixWRSrc, srcIx, 100);
+              hist.add(new History(aPre, History.valuesMajor6, nTitle(" INCR ") + cmd.toString() + source.aschar + srcIx + "->" + source.partner.aschar + srcIx, "mov=" + EM.mf(mov), "src=" + EM.mf(balances.get(ixWRSrc, srcIx)), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "dst=" + EM.mf(balances.get(ixWRSrc, destIx)), "Hl" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HlB" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.get(rawProspects2.curMinIx())), "Ha" + "=" + EM.mf(rawProspects2.ave()), "mtgC=" + EM.mf(mtgCosts10.curSum()), "bals=" + EM.mf(bals.curSum()), "<<<<<<<"));
+              return swapped = true;
+            }
+          }// end of stopped else
+
+          // look for null pointer errors
+          String ccc = source.aschar;
+
+          //      hist.add(new History(aPre, History.valuesMajor6, nTitle(" doNotINCR ")+source.aschar + srcIx,  prevns[0].cmd.name(), prevns[1].cmd.name(), prevns[2].cmd.name(), prevns[3].cmd.name(), prevns[4].cmd.name()));
+          hist.add(new History(aPre, History.valuesMajor6, nTitle(" DidNot INCR ") + source.aschar + srcIx, "mov" + EM.mf(mov), "mMin" + EM.mf(movMin), prevns[0].cmd.name(), prevns[1].cmd.name(), prevns[2].cmd.name(), prevns[3].cmd.name(), prevns[4].cmd.name()));
+
+
+          /*---------------------- RDECR SDECR ----------------------------*/
+          // SDECR  RDECR decrease some S or R to reduce services request
+          // use S or R with low strategic values to be swapped to G or C
+          // don't decr for small needs, it is not cost effective
+          // fraction of source -needs to use in swap
+          // use neg because bal not need is expected
+          double decrBalFrac[] = {.5, .5, .6, .7};
+          // osst balances limits
+          double[] decrResrvWRFrac = {.8, .9, .94, .95};
+          aPre = "#g";
+          // row 3 is cargo
+          double dbav = balances.curSum() * E.invL2secs;
+          double[] decrMovMin = {dbav * .0003, dbav * .00007, dbav * .000003, dbav * .000002,};
+          // [ixWRSrc][r/scost][pors]
+          double swapCostd[][][] = {{eM.swapRtoCRcost, eM.swapRtoCScost}, {eM.swapStoGRcost, eM.swapStoGScost}};
+          //    double[] dSwapRcost = {E.swapRtoCRcost[pors], E.swapStoGRcost[pors]};
+          //    double[] dSwapScost = {E.swapRtoCScost[pors], E.swapStoGScost[pors]};
+          int dR = 0, dS = 1;
+          //       mtgNeeds6.addJointBalances();
+          //      balances.addJointBalances();
+          double[] dmaxMove = {.95 * dbav, 1.4 * dbav, 1.8 * dbav, 2.3 * dbav};
+
+          A2Row decrAvail1 = new A2Row(ec, History.loopMinorConditionals5, "decrAvail1").setAvailableToDecrement(decrBalFrac[swap4Step], decrResrvWRFrac[swap4Step], dmaxMove[swap4Step], mtgAvails6, swapCostd[sr][sr][ps], swapCostd[sr][ss][ps], swapCostd[ss][sr][ps], swapCostd[ss][ss][ps]);
+          decrAvail1.sendHist(hist, History.informationMinor9, aPre = "f%", "r decrAvail1", "s decrAvail1");
+          A2Row decrAvail = doNot.filterByDoNot(1, decrAvail1, nFlag);
+          if (swapLoops < 20 && n < 20) { // try to list only 1? time per swap
+            hist.add(new History(aPre, History.informationMajor8, nTitle("4mins,4maxs"), "dbav" + EM.mf(dbav), "swap4Step=" + swap4Step, EM.mf(decrMovMin[0]), EM.mf(decrMovMin[1]), EM.mf(decrMovMin[2]), EM.mf(decrMovMin[3]), EM.mf(dmaxMove[0]), EM.mf(dmaxMove[1]), EM.mf(dmaxMove[2]), EM.mf(dmaxMove[3])));
+            stratVars.sendHist(History.loopMinorConditionals5, aPre);
+            mtgNeeds6.sendHist(History.loopMinorConditionals5, aPre);
+            decrAvail.sendHist(History.loopMinorConditionals5, aPre);
+          }
+
           aorder = rawFertilities2;
           if (rawProspects2.curMin() < .2) {
             aorder = rawProspects2;
           }
           needIx = aorder.curMinIx();  // greatest need
-          ec.aPre = aPre = "H@";
-          // [ixWRSrc][r/scost][pors]
-          double swapCost[][][] = {{eM.swapCtoRRcost, eM.swapCtoRScost}, {eM.swapGtoSRcost, eM.swapGtoSRcost}};
-          // calculate the max move from C to R or G to S for each position
-          A2Row incrAvail0 = new A2Row(ec).setAvailableToIncr(incrBalFrac, incrAvailFrac, iMaxMove, mtgAvails6, swapCost[sr][sr][ps], swapCost[sr][ss][ps], swapCost[ss][sr][ps], swapCost[ss][ss][ps]);
-          A2Row incrAvail1 = new A2Row(ec);
-          incrAvail1 = doNot.filterByDoNot(0, incrAvail0, nFlag);
-          // Eliminate positions recently changed
-          // A2Row incrAvail1 = new A2Row(ec).set(incrAvail0);
-
-          hist.add(new History(History.valuesMajor6, "Incr vals", "movMin=", EM.mf(movMin), "iMaxMov", EM.mf(iMaxMove), "iBalFrac", EM.mf(incrBalFrac), "iAvailFrac", EM.mf(incrAvailFrac)));
-          incrAvail0.sendHist(hist, History.valuesMinor7, "inc", "r incrAvail0", "s incrAvail0");
-          incrAvail1.sendHist(hist, History.valuesMinor7, "inc", "r incrAvail1", "s incrAvail1");
-          bals.sendHist(hist, aPre);
-          //  rawFertilities2.sendHist(hist, 21, "$a", "rcFertilities", "sgFertilities");
-          ec.aPre = aPre = "I@";
-          stratVars.sendHist(hist, History.valuesMinor7, aPre, nTitle("r stratVars"), nTitle("s stratVars"));
-          rawProspects2.sendHist(hist, aPre);
-
-          // A2Row aorder1 = doNot.filterByDoNot(0,aorder,999.);
-          A2Row aStrat1 = doNot.filterByDoNot(0, stratVars, nFlag);
-          // now find a need that increment can help
-          needIx = -2;
-          mov = 999. + movMin;  // preset very large
-          int imax = incLeastStrategicIx[swap4Step];
-
-          // find r move = j = srcIx  if move greater than movMin
-          for (int i = 0; i < imax; i++) {
-            j = aStrat1.curMaxIx(i); // start with lowest val, highest strategic value
-            ixWRSrc = (int) j / LSECS;
-            destIx = srcIx = (int) j % LSECS;
-            // gradeCost3 is the max Avail mov
-            gradeCost3 = incrAvail1.get(j);
-            // nmov is the amount needed to meet all current needs
-            nmov = bals.get(3 + ixWRSrc * 2, srcIx) * incrBalFrac; // c or g.balance(srcIx)
-            mov3 = mtgAvails6.curGet(j); //rc or sg values
-            mov2 = mov3 < PZERO ? movMin * 3. : mov3;
-            // gmov is the amount needed to reach the goals
-            gmov1 = goalmtg1Needs6.curGet(j);
-            gmov = gmov1 < PZERO ? movMin * 3 : gmov1;
-
-            // may exceed nmov if prospects are good over .1
-            mov = rawProspects2.curGet(j) < eM.mtgWEmergency[pors][clan] ? Math.min(nmov, Math.min(mov2, gradeCost3)) : Math.min(nmov, Math.min(gradeCost3, Math.max(mov2, gmov)));
-            if (mov > movMin) {  // only accept moves above the min
-              break;
-            }
-          } // end for i or break
-
-          source = sources[ixWRSrc + 2]; // c or g
-          dest = source.partner; // r or s
+          mov2 = mtgNeeds6.curGet(needIx);
+          movMin = decrMovMin[swap4Step];
+          forIx = needIx % E.lsecs;
+          ixWRSrc = ixWRFor = needIx / E.lsecs;  // 0,1 find row of need
+          srcIx = decrAvail.getRow(ixWRFor).maxIx();  // largest value in need row
+          maxAvail = decrAvail.get(ixWRFor, srcIx);
           destIx = srcIx;
-          rchrg = resource;
-          schrg = staff;
-          rcost = mov * swapCost[ixWRSrc][sr][pors];
-          scost = mov * swapCost[ixWRSrc][ss][pors];
-          // dstCst = mov + (ixWRSrc == 0?rcost:scost);
-          dstCst = mov + mov * swapCost[ixWRSrc][ixWRSrc][pors];
-          swapCosts.getRow(0).add(rcost);
-          swapCosts.getRow(1).add(scost);
-          prevsrc = source.balance.get(srcIx);
-          prevdest = dest.balance.get(destIx);
-          cmd = incrs[ixWRSrc][swap4Step]; //revise to detail cmd
-
-          ec.aPre = aPre = "K@";
-
-          if (mov < movMin) { //mov < movMin
-            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(">SKIP " + cmd.name() + " too small"), "mov" + EM.mf(mov), "movMin=", EM.mf(movMin))); //
-            doNot.setDoNot(0, ixWRSrc, srcIx, 3); //disallow decrement
+          maxAvail = Math.min(maxAvail, bals.get(ixWRSrc * 2 + 2, srcIx));
+          mov1 = Math.max(Math.min(Math.min(bals.get(ixWRSrc * 2 + 2, srcIx), mov2), maxAvail), PZERO);
+          mov = mov1 > PZERO && PZERO < maxAvail ? mov1 : maxAvail;
+          EM.addlErr = "";
+          // if incr just transfered from reserve to working reduce transfer prevent cycle
+          cmd = decrs[ixWRSrc][swap4Step];
+          if (swapLoops < 3) {
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" skip" + swapLoops + " < 3 " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
           }
-          else if (mov < PZERO) { // neg move
-            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.name() + ">SKIP " + " -mov"), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough")); //
+          else if (bals.get(2 + 2 * ixWRSrc, srcIx) < (bals.getRow(2 + 2 * ixWRSrc).ave() * 4)) {
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" decr too small" + swapLoops + " " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
           }
-          else if (bals.getRow(3 + 2 * ixWRSrc).get(srcIx) < mov) {  // C too small
-            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.name() + ">>too large "), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
-
+          else if (stopped[1] > 0) {
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" stop" + swapLoops + " " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
+          }
+          else if (mov < movMin) {
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" skip") + swapLoops + " " + cmd.toString() + " for" + rNs[ixWRFor] + forIx, "mov=" + EM.mf(mov), "lt" + EM.mf(decrMovMin[swap4Step])));
           }
           else {
-            hist.add(new History(aPre = "L@", History.loopMinorConditionals5, nTitle(cmd.name()) + " " + i + "=>" + j + (j < E.lsecs ? "r" + j : "s" + (j - E.lsecs)), "bal" + EM.mf(bals.get(2 + 2 * ixWRSrc, srcIx)), "prt" + EM.mf(bals.get(3 + 2 * ixWRSrc, srcIx)), "mov" + EM.mf(mov), "min" + EM.mf(movMin), "golm" + EM.mf(gmov), "nedm" + EM.mf(nmov), "incm" + EM.mf(gradeCost3)));
-            hist.add(new History(aPre, History.loopIncrements3, nTitle("Pre") + cmd.name() + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
-            // a pretest for problems with putValue and cost2
-            if ((balances.get(ixWRSrc * 2 + 3, srcIx) - dstCst) < NZERO) {
-              E.myTest(true, "incr " + srcIx + " cost too high, balance=" + EM.mf(balances.getRow(ixWRSrc).get(srcIx)) + " -cost " + EM.mf(dstCst) + " => " + EM.mf((balances.getRow(ixWRSrc).get(srcIx) - dstCst)));
+
+            // but no more than is available from forIx
+            cmd = decrs[ixWRSrc][swap4Step];
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle("check xDecr"), "forIx=" + rNs[ixWRFor] + forIx, "destIx=" + rNs[ixWRSrc] + destIx, "mov" + EM.mf(mov), "m1=" + EM.mf(mov1), "m2=" + EM.mf(mov2), " max=" + EM.mf(maxAvail), "<<<<<<<<<<<"));
+            //       hist.add(new History("dec", History.loopMinorConditionals5, nTitle(" prev swap1"), "prv0=" + prevns[0].swapType, "prv1=" + prevns[1].swapType, "prv2=" + prevns[2].swapType, "prv3=" + prevns[3].swapType, "prv4=" + prevns[4].swapType, "prv5=" + prevns[5].swapType, "dm=" + EM.mf(decrMostMaxGap), "abcdefghijklmnopqrst"));
+            //      hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" prev cmds="), "prev=", prevns[1].cmd.toString(), prevns[2].cmd.toString(), prevns[3].cmd.toString(), prevns[4].cmd.toString(), prevns[5].cmd.toString(), prevns[6].cmd.toString()));
+
+            //        hist.add(new History("d@", History.loopMinorConditionals5, nTitle(" Strategic Value !!too low "), "max=", EM.mf(maxAvail), "m2=" + EM.mf(mov2), "mov=" + EM.mf(mov), "<<<<<<"));
+            chrgIx = srcIx;
+            forRes = sources[ixWRFor];
+            source = sources[ixWRSrc];
+            osource = source.other;
+            dest = source.partner;
+            //    rcost = mov * dSwapRcost[ixWRSrc];
+            //    scost = mov * dSwapScost[ixWRSrc];
+            balances.checkBalances(cur);
+            if (E.debugDouble) {
+              EM.addlErr = String.format("mov%7.3g, swapCostd[ixWRSrc%d][sr%d][pors%d]%7.3g", mov, ixWRSrc, sr, pors, swapCostd[ixWRSrc][sr][pors]);
+              EM.wasHere = "before rcost&scost";
+              rcost = doubleTrouble(doubleTrouble(mov) * doubleTrouble(swapCostd[ixWRSrc][ss][pors]));
+              EM.addlErr = String.format("mov%7.3g, swapCostd[ixWRSrc%d][ss%d][pors%d]%7.3g", mov, ixWRSrc, ss, pors, swapCostd[ixWRSrc][ss][pors]);
+              scost = doubleTrouble(doubleTrouble(mov) * doubleTrouble(swapCostd[ixWRSrc][ss][pors]));
             }
-            if (ixWRSrc == 0) {
-               if( bals.getRow(0).sum() > 0.0)setStat("swapRIncr", pors, clan, 100. * mov / bals.getRow(0).sum(), 1);
+            else {
+              rcost = mov * swapCostd[ixWRSrc][sr][pors];
+              scost = mov * swapCostd[ixWRSrc][ss][pors];
             }
-            else if( bals.getRow(1).sum() > 0.0){
-              setStat("swapSIncr", pors, clan, 100. * mov / bals.getRow(1).sum(), 1);
+            rchrg = resource;
+            schrg = staff;
+            EM.addlErr = String.format("mov%7.3g, xcost%7.3g", mov, (ixWRSrc == 0 ? rcost : scost));
+            EM.wasHere = "before dstCst";
+            if (E.debugDouble) {
+              dstCst = doubleTrouble(mov + doubleTrouble(ixWRSrc == 0 ? rcost : scost));
             }
-            source.putValue(balances, mov, srcIx, destIx, dest, 0, 0.);
+            else {
+              dstCst = mov + (ixWRSrc == 0 ? rcost : scost);
+            }
+            EM.wasHere = "after dstCst";
+            prevsrc = source.balance.get(srcIx);
+            prevdest = dest.balance.get(destIx);
+            prevosrc = osource.balance.get(srcIx);
+            swapCosts.getRow(2).add(rcost);
+            swapCosts.getRow(3).add(scost);
+            EM.wasHere = "before setStat SWAPRDECRCOST";
+            setStat(EM.SWAPRDECRCOST, pors, clan, rcost / bals.getRow(2).sum(), 1);
+            setStat(EM.SWAPSDECRCOST, pors, clan, scost / bals.getRow(4).sum(), 1);
+            doNot.setDoNot(0, ixWRSrc, srcIx, doNotDays5);
+            balances.sendHist(hist, aPre);
+            //      decrAvail.sendHist(hist, bLev, aPre, "r decrAvail", "s decrAvail");
+            //         hist.add(new History(aPre, 3, nTitle("Pre") + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx, "mov=" + EM.mf(mov), "src=" + EM.mf(source.balance.get(srcIx)), "dst=" + EM.mf(dest.balance.get(destIx)), "Fl" + minFx + "=" + EM.mf(minFd), "Hl" + minHx + "=" + EM.mf(minHd), "Nm" + maxNx + "=" + EM.mf(maxNd), "Nl" + minNx + "=" + EM.mf(minNd), "Sm" + maxSx + "=" + EM.mf(maxSd)));
+            hist.add(new History(aPre, History.loopIncrements3, nTitle("Pre") + swapLoops + cmd.toString() + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx), "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost), "dsrc=" + EM.mf(source.balance.get(srcIx)), "=>" + EM.mf(source.balance.get(srcIx) - dstCst), "ddst=" + EM.mf(dest.balance.get(destIx)), "=>" + EM.mf(dest.balance.get(destIx) + mov)));
+            rmov1 = ixWRSrc == 0 ? mov : 0.;
+            smov1 = ixWRSrc == 0 ? 0. : mov;
+            //now test balances before doing move
+            if (bals.get(2, srcIx) < (rmov1 + rcost)) {
+              E.myTest(true, "ERR  %s, rcbal%d=%7.2g <  rmov1=%7.2g + rcost=%7.2g = rChrg=%7.5g * mov=%7.2g ,rshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), srcIx, bals.get(2, srcIx), rmov1, rcost, rChrg, mov, bals.get(2, srcIx) - rmov1 - rcost, ec.age, n, swap4Step, reDo);
+            }
+            if (bals.get(4, srcIx) < (smov1 + scost)) {
+              E.myTest(true, "ERR  %s, scbal%d=%7.2g <  smov1=%7.2g + scost=%7.2g = sChrg%7.5g * mov=%7.2g ,sshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), srcIx, bals.get(4, srcIx), smov1, scost, sChrg, mov, bals.get(4, srcIx) - smov1 - scost, ec.age, n, swap4Step, reDo);
+            }
             rchrg.cost3(rcost, srcIx, .0001);
-            schrg.checkGrades();
             schrg.cost3(scost, srcIx, .0001);
-            setStat(EM.SWAPRINCRCOST, pors, clan, rcost / bals.getRow(2).sum(), 1);
-            setStat(EM.SWAPSINCRCOST, pors, clan, scost / bals.getRow(4).sum(), 1);
-            swapType = 0;
+            source.putValue(balances, mov, srcIx, destIx, dest, E.sSwapPenalty[pors], 0.);
+            swapped = true;
             rxfers = sxfers = 0;
-            // allow repeat incr of min values
-            // doNot.setDoNot(0, ixSrc, srcIx, E.doNotYears - n / 7);
-            // do not decrement ever
-            doNot.setDoNot(1, ixWRSrc, srcIx, 100);
-            hist.add(new History(aPre, History.valuesMajor6, nTitle(" INCR ") + cmd.toString() + source.aschar + srcIx + "->" + source.partner.aschar + srcIx, "mov=" + EM.mf(mov), "src=" + EM.mf(balances.get(ixWRSrc, srcIx)), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "dst=" + EM.mf(balances.get(ixWRSrc, destIx)), "Hl" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HlB" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.get(rawProspects2.curMinIx())), "Ha" + "=" + EM.mf(rawProspects2.ave()), "mtgC=" + EM.mf(mtgCosts10.curSum()), "bals=" + EM.mf(bals.curSum()), "<<<<<<<"));
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle("POST " + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx), (swapped ? "swapped" : "!swapped"), "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost), "dsrc=" + EM.mf(prevsrc - source.balance.get(srcIx)), "ddst=" + EM.mf(dest.balance.get(destIx) - prevdest)));
+            swapType = 1;
             return swapped = true;
           }
-        }// end of stopped else
 
-        // look for null pointer errors
-        String ccc = source.aschar;
+          /*------------------XFER both, ---------------------------*/
+          // XFER both,
+          //       curSum >  clanStartFutureFundDues[pors][clan]
+          ec.aPre = aPre = "#J";
 
-        //      hist.add(new History(aPre, History.valuesMajor6, nTitle(" doNotINCR ")+source.aschar + srcIx,  prevns[0].cmd.name(), prevns[1].cmd.name(), prevns[2].cmd.name(), prevns[3].cmd.name(), prevns[4].cmd.name()));
-        hist.add(new History(aPre, History.valuesMajor6, nTitle(" DidNot INCR ") + source.aschar + srcIx, "mov" + EM.mf(mov), "mMin" + EM.mf(movMin), prevns[0].cmd.name(), prevns[1].cmd.name(), prevns[2].cmd.name(), prevns[3].cmd.name(), prevns[4].cmd.name()));
-
-
-        /*---------------------- RDECR SDECR ----------------------------*/
-        // SDECR  RDECR decrease some S or R to reduce services request
-        // use S or R with low strategic values to be swapped to G or C
-        // don't decr for small needs, it is not cost effective
-        // fraction of source -needs to use in swap
-        // use neg because bal not need is expected
-        double decrBalFrac[] = {.5, .5, .6, .7};
-        // osst balances limits
-        double[] decrResrvWRFrac = {.8, .9, .94, .95};
-        aPre = "#g";
-        // row 3 is cargo
-        double dbav = balances.curSum() * E.invL2secs;
-        double[] decrMovMin = {dbav * .0003, dbav * .00007, dbav * .000003, dbav * .000002,};
-        // [ixWRSrc][r/scost][pors]
-        double swapCostd[][][] = {{eM.swapRtoCRcost, eM.swapRtoCScost}, {eM.swapStoGRcost, eM.swapStoGScost}};
-        //    double[] dSwapRcost = {E.swapRtoCRcost[pors], E.swapStoGRcost[pors]};
-        //    double[] dSwapScost = {E.swapRtoCScost[pors], E.swapStoGScost[pors]};
-        int dR = 0, dS = 1;
-        //       mtgNeeds6.addJointBalances();
-        //      balances.addJointBalances();
-        double[] dmaxMove = {.95 * dbav, 1.4 * dbav, 1.8 * dbav, 2.3 * dbav};
-
-        A2Row decrAvail1 = new A2Row(ec, History.loopMinorConditionals5, "decrAvail1").setAvailableToDecrement(decrBalFrac[swap4Step], decrResrvWRFrac[swap4Step], dmaxMove[swap4Step], mtgAvails6, swapCostd[sr][sr][ps], swapCostd[sr][ss][ps], swapCostd[ss][sr][ps], swapCostd[ss][ss][ps]);
-        decrAvail1.sendHist(hist, History.informationMinor9, aPre = "f%", "r decrAvail1", "s decrAvail1");
-        A2Row decrAvail = doNot.filterByDoNot(1, decrAvail1, nFlag);
-        if (swapLoops < 20 && n < 20) { // try to list only 1? time per swap
-          hist.add(new History(aPre, History.informationMajor8, nTitle("4mins,4maxs"), "dbav" + EM.mf(dbav), "swap4Step=" + swap4Step, EM.mf(decrMovMin[0]), EM.mf(decrMovMin[1]), EM.mf(decrMovMin[2]), EM.mf(decrMovMin[3]), EM.mf(dmaxMove[0]), EM.mf(dmaxMove[1]), EM.mf(dmaxMove[2]), EM.mf(dmaxMove[3])));
-          stratVars.sendHist(History.loopMinorConditionals5, aPre);
-          mtgNeeds6.sendHist(History.loopMinorConditionals5, aPre);
-          decrAvail.sendHist(History.loopMinorConditionals5, aPre);
-        }
-
-        aorder = rawFertilities2;
-        if (rawProspects2.curMin() < .2) {
-          aorder = rawProspects2;
-        }
-        needIx = aorder.curMinIx();  // greatest need
-        mov2 = mtgNeeds6.curGet(needIx);
-        movMin = decrMovMin[swap4Step];
-        forIx = needIx % E.lsecs;
-        ixWRSrc = ixWRFor = needIx / E.lsecs;  // 0,1 find row of need
-        srcIx = decrAvail.getRow(ixWRFor).maxIx();  // largest value in need row
-        maxAvail = decrAvail.get(ixWRFor, srcIx);
-        destIx = srcIx;
-        maxAvail = Math.min(maxAvail, bals.get(ixWRSrc * 2 + 2, srcIx));
-        mov1 = Math.max(Math.min(Math.min(bals.get(ixWRSrc * 2 + 2, srcIx), mov2), maxAvail), PZERO);
-        mov = mov1 > PZERO && PZERO < maxAvail ? mov1 : maxAvail;
-        EM.addlErr = "";
-        // if incr just transfered from reserve to working reduce transfer prevent cycle
-        cmd = decrs[ixWRSrc][swap4Step];
-        if (swapLoops < 3) {
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" skip" + swapLoops + " < 3 " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
-        }
-        else if (bals.get(2 + 2 * ixWRSrc, srcIx) < (bals.getRow(2 + 2 * ixWRSrc).ave() * 4)) {
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" decr too small" + swapLoops + " " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
-        }
-        else if (stopped[1] > 0) {
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" stop" + swapLoops + " " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
-        }
-        else if (mov < movMin) {
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" skip") + swapLoops + " " + cmd.toString() + " for" + rNs[ixWRFor] + forIx, "mov=" + EM.mf(mov), "lt" + EM.mf(decrMovMin[swap4Step])));
-        }
-        else {
-
-          // but no more than is available from forIx
-          cmd = decrs[ixWRSrc][swap4Step];
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle("check xDecr"), "forIx=" + rNs[ixWRFor] + forIx, "destIx=" + rNs[ixWRSrc] + destIx, "mov" + EM.mf(mov), "m1=" + EM.mf(mov1), "m2=" + EM.mf(mov2), " max=" + EM.mf(maxAvail), "<<<<<<<<<<<"));
-          //       hist.add(new History("dec", History.loopMinorConditionals5, nTitle(" prev swap1"), "prv0=" + prevns[0].swapType, "prv1=" + prevns[1].swapType, "prv2=" + prevns[2].swapType, "prv3=" + prevns[3].swapType, "prv4=" + prevns[4].swapType, "prv5=" + prevns[5].swapType, "dm=" + EM.mf(decrMostMaxGap), "abcdefghijklmnopqrst"));
-          //      hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(" prev cmds="), "prev=", prevns[1].cmd.toString(), prevns[2].cmd.toString(), prevns[3].cmd.toString(), prevns[4].cmd.toString(), prevns[5].cmd.toString(), prevns[6].cmd.toString()));
-
-          //        hist.add(new History("d@", History.loopMinorConditionals5, nTitle(" Strategic Value !!too low "), "max=", EM.mf(maxAvail), "m2=" + EM.mf(mov2), "mov=" + EM.mf(mov), "<<<<<<"));
-          chrgIx = srcIx;
-          forRes = sources[ixWRFor];
-          source = sources[ixWRSrc];
-          osource = source.other;
-          dest = source.partner;
-          //    rcost = mov * dSwapRcost[ixWRSrc];
-          //    scost = mov * dSwapScost[ixWRSrc];
-          balances.checkBalances(cur);
-          if (E.debugDouble) {
-            EM.addlErr = String.format("mov%7.3g, swapCostd[ixWRSrc%d][sr%d][pors%d]%7.3g", mov, ixWRSrc, sr, pors, swapCostd[ixWRSrc][sr][pors]);
-            EM.wasHere = "before rcost&scost";
-            rcost = doubleTrouble(doubleTrouble(mov) * doubleTrouble(swapCostd[ixWRSrc][ss][pors]));
-            EM.addlErr = String.format("mov%7.3g, swapCostd[ixWRSrc%d][ss%d][pors%d]%7.3g", mov, ixWRSrc, ss, pors, swapCostd[ixWRSrc][ss][pors]);
-            scost = doubleTrouble(doubleTrouble(mov) * doubleTrouble(swapCostd[ixWRSrc][ss][pors]));
-          }
-          else {
-            rcost = mov * swapCostd[ixWRSrc][sr][pors];
-            scost = mov * swapCostd[ixWRSrc][ss][pors];
-          }
-          rchrg = resource;
-          schrg = staff;
-          EM.addlErr = String.format("mov%7.3g, xcost%7.3g", mov, (ixWRSrc == 0 ? rcost : scost));
-          EM.wasHere = "before dstCst";
-          if (E.debugDouble) {
-            dstCst = doubleTrouble(mov + doubleTrouble(ixWRSrc == 0 ? rcost : scost));
-          }
-          else {
-            dstCst = mov + (ixWRSrc == 0 ? rcost : scost);
-          }
-          EM.wasHere = "after dstCst";
-          prevsrc = source.balance.get(srcIx);
-          prevdest = dest.balance.get(destIx);
-          prevosrc = osource.balance.get(srcIx);
-          swapCosts.getRow(2).add(rcost);
-          swapCosts.getRow(3).add(scost);
-          EM.wasHere = "before setStat SWAPRDECRCOST";
-          setStat(EM.SWAPRDECRCOST, pors, clan, rcost / bals.getRow(2).sum(), 1);
-          setStat(EM.SWAPSDECRCOST, pors, clan, scost / bals.getRow(4).sum(), 1);
-          doNot.setDoNot(0, ixWRSrc, srcIx, doNotDays5);
-          balances.sendHist(hist, aPre);
-          //      decrAvail.sendHist(hist, bLev, aPre, "r decrAvail", "s decrAvail");
-          //         hist.add(new History(aPre, 3, nTitle("Pre") + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx, "mov=" + EM.mf(mov), "src=" + EM.mf(source.balance.get(srcIx)), "dst=" + EM.mf(dest.balance.get(destIx)), "Fl" + minFx + "=" + EM.mf(minFd), "Hl" + minHx + "=" + EM.mf(minHd), "Nm" + maxNx + "=" + EM.mf(maxNd), "Nl" + minNx + "=" + EM.mf(minNd), "Sm" + maxSx + "=" + EM.mf(maxSd)));
-          hist.add(new History(aPre, History.loopIncrements3, nTitle("Pre") + swapLoops + cmd.toString() + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx), "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost), "dsrc=" + EM.mf(source.balance.get(srcIx)), "=>" + EM.mf(source.balance.get(srcIx) - dstCst), "ddst=" + EM.mf(dest.balance.get(destIx)), "=>" + EM.mf(dest.balance.get(destIx) + mov)));
-          rmov1 = ixWRSrc == 0 ? mov : 0.;
-          smov1 = ixWRSrc == 0 ? 0. : mov;
-          //now test balances before doing move
-          if (bals.get(2, srcIx) < (rmov1 + rcost)) {
-            E.myTest(true, "ERR  %s, rcbal%d=%7.2g <  rmov1=%7.2g + rcost=%7.2g = rChrg=%7.5g * mov=%7.2g ,rshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), srcIx, bals.get(2, srcIx), rmov1, rcost, rChrg, mov, bals.get(2, srcIx) - rmov1 - rcost, ec.age, n, swap4Step, reDo);
-          }
-          if (bals.get(4, srcIx) < (smov1 + scost)) {
-            E.myTest(true, "ERR  %s, scbal%d=%7.2g <  smov1=%7.2g + scost=%7.2g = sChrg%7.5g * mov=%7.2g ,sshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), srcIx, bals.get(4, srcIx), smov1, scost, sChrg, mov, bals.get(4, srcIx) - smov1 - scost, ec.age, n, swap4Step, reDo);
-          }
-          rchrg.cost3(rcost, srcIx, .0001);
-          schrg.cost3(scost, srcIx, .0001);
-          source.putValue(balances, mov, srcIx, destIx, dest, E.sSwapPenalty[pors], 0.);
-          swapped = true;
-          rxfers = sxfers = 0;
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle("POST " + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx), (swapped ? "swapped" : "!swapped"), "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost), "dsrc=" + EM.mf(prevsrc - source.balance.get(srcIx)), "ddst=" + EM.mf(dest.balance.get(destIx) - prevdest)));
-          swapType = 1;
-          return swapped = true;
-        }
-
-        /*------------------XFER both, ---------------------------*/
-        // XFER both,
-        //       curSum >  clanStartFutureFundDues[pors][clan]
-        ec.aPre = aPre = "#J";
-
-        if (History.dl > 40) { // prevent listing
-          StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
-          hist.add(new History(aPre, rlev, "n" + n + " xfer crossa", wh(a0.getLineNumber()), (failed ? "" : "!") + "failed", (swapped ? "" : "!") + "swapped", swapLoops + "=swapLoops"));
-        }
-        //boolean xferCross = false;
-        int rev = 0;   // 0=not cross charged, 1=cross charged
-        /**
-         * limit using the available (-need) amount to prevent loops because of
-         * swapping too much
-         */
-        bav = balances.curSum() / 14.; //balance ave.
-        //  double xchgBalFrac[] = {.9, .95, .98, .99};
-        double xchgBalFrac[] = {.8, .85, .9, .92};
-
-        // oost balances limits
-        // double[] xchgWRReservFrac = {.95, .96, 97., 98.};
-        // double xferMaxMove[] = {.9 * bav, .9 * bav, .90 * bav, .98 * bav};
-        double[] xchgWRReservFrac = {.3, .26, .22, .17};
-        double xferMaxMove[] = {1.2 * bav, 1.8 * bav, 2.4 * bav, 3.1 * bav};
-        /**
-         * if a high need, relax the limits a little, but be careful to avoid
-         * loops
-         */
-        //---if ((yrphase.SWAPING == yphase && (rawProspects2.curMin() < .15 ))) {
-        if ((rawProspects2.curMin() < .15)) {
-          double xF[] = {.75, .80, .84, .90};
-          xchgBalFrac = xF;
-          //     double xaf[] = {1.02, 1.03, 1.05, 1.05};
-          double xaf[] = {.75, .80, .84, .90};
-          xchgWRReservFrac = xaf;
-        }
-        src1Bal = 0.;
-        //  double src2Bal = 0.;
-        //      double dest1Bal = 0.;
-        //      double dest2Bal = 0.;
-
-        double s1, r1, r2, s2;
-        int s1ix, r1ix, s2ix, r2ix;
-        maxAvail = -999;
-        A6Row[] xferAvails = {mtggNeeds6, mtggNeeds6, mtgNeeds6, mtgNeeds6};
-        double[] xchgMovMin = {balances.curSum() * .0003, balances.curSum() * .0002, balances.curSum() * .0001, balances.curSum() * .00005};
-        double xferBalMin = xferMovMin = movMin = xchgMovMin[swap4Step] * redoFrac[reDo];
-        A6Row[] xferNeeds = {mtgNeeds6, mtgNeeds6, mtgNeeds6, mtgNeeds6};
-        //  mtgNeeds6.addJointBalances();
-        // swapNeeds has no filter, it is straight stratVars
-        //    swapNeeds = stratVars;
-
-        /**
-         * force planet resource xfers if resource availability (-mtgneeds) is
-         * higher than staff availability, and resource rawHealths.min are &lt
-         * .5 and GROW rawFertilities2 &lt.5
-         */
-        double rNeedSum = mtgNeeds6.getRow(0).sum();
-        double sNeedSum = mtgNeeds6.getRow(1).sum();
-        double maxNeed = mtgNeeds6.curMax(0);
-        int maxNeedIx = mtgNeeds6.curMaxIx(0);
-        // needIx = stratVars.curMaxIx(); // highest need
-        double stratH0 = stratVars.max();
-        double stratH4 = stratVars.max(4); //high 0,1,2,3
-        double stratL3 = stratVars.min(3); //low 0,1,2
-        double stratL0 = stratVars.min();
-        double stratML0 = 0;
-        int stratML0Ix = 0;
-        int fillNeedIx = stratVars.curMinIx(); // the least need,high bal
-        double dRNeedSum = maxNeed - rNeedSum;
-        double dSNeedSum = maxNeed - sNeedSum;
-        boolean sNeedy = false; // false: force possible r xfer
-
-        double swaprr = eM.swapXRtoRRcost[pors];
-        double swaprs = eM.swapXRtoRScost[pors];
-        double swapsr = eM.swapXStoSRcost[pors];
-        double swapss = eM.swapXStoSScost[pors];
-
-        // now compute possible avails
-        // find the max stratVars
-        rawProspects2.sendHist(hist, aPre);
-        //stratV.set(stratVars); no change stratVars
-        stratV = doNot.filterByDoNot(2, stratVars, nFlag); //elim recent xfers
-        needIx = stratV.curMaxIx(); // highest need after doNot
-        ixWRSrc = needIx / E.lsecs; // 0:1
-        destIx = needIx % E.lsecs;
-
-        mov4 = Math.max(movMin + 1., mtgNeeds6.get01(needIx) * 3.);
-        // deal with -need: available, set to part of average
-        mov3 = mov4 < PZERO ? bav * .1 : mov4;
-        hist.add(new History(aPre, History.loopMinorConditionals5, name + " need" + E.rNsIx(needIx) + " =", EM.mf(mov4), EM.mf(mov3), "rH" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "r=" + EM.mf(balances.getRow(2).get(needIx % E.lsecs)), "s=" + EM.mf(balances.getRow(4).get(needIx % E.lsecs)), "mvMin=" + EM.mf(movMin), "xAF=" + EM.mf(xchgWRReservFrac[swap4Step]), "mMax" + EM.mf(xferMaxMove[swap4Step])));
-        hist.add(new History("@x", History.loopMinorConditionals5, name + " step=" + swap4Step, "MovMins", EM.mf(xchgMovMin[0]), EM.mf(xchgMovMin[1]), EM.mf(xchgMovMin[2]), EM.mf(xchgMovMin[3]), "availFracs", EM.mf(xchgWRReservFrac[0]), EM.mf(xchgWRReservFrac[1]), EM.mf(xchgWRReservFrac[2]), EM.mf(xchgWRReservFrac[3])));
-        A2Row rAvail = new A2Row(ec, History.loopMinorConditionals5, "rAvail");
-        A2Row sAvail = new A2Row(ec, History.loopMinorConditionals5, "sAvail");
-        A2Row rRevAvail = new A2Row(ec, History.loopMinorConditionals5, "rRevAvail");
-        A2Row sRevAvail = new A2Row(ec, History.loopMinorConditionals5, "sRevAvail");
-        A2Row rAvail1 = new A2Row(ec, History.loopMinorConditionals5, "rAvail1");
-        A2Row sAvail1 = new A2Row(ec, History.loopMinorConditionals5, "sAvail1");
-        A2Row rRevAvail1 = new A2Row(ec, History.loopMinorConditionals5, "rRevAvail1");
-        A2Row sRevAvail1 = new A2Row(ec, History.loopMinorConditionals5, "sRevAvail1");
-
-        //now determine size of possible moves
-        rAvail1.setAvailableToExchange(sAvail1, rRevAvail1, sRevAvail1, xchgBalFrac[swap4Step], xchgWRReservFrac[swap4Step], xferMaxMove[swap4Step], balances, xferNeeds[swap4Step], swaprr, swaprs, swapsr, swapss);
-
-        //   planet resource, staff needix in highest 4 stratVal
-        // first select staff to increase then resource
-        if (needIx < E.lsecs && pors == E.P && stratVars.get(1, needIx) > stratH4 && rawProspects2.curMin() > .1) {
-          needIx += E.lsecs;  // move needIx to a staff sector
-        }
-        ixWRSrc = needIx / E.lsecs; // =1:staff
-        destIx = needIx % E.lsecs; //sector of most need
-
-        // do not take need as a possible source
-        doNot.setDoNot(2, ixWRSrc, needIx, doNotDays2);
-        aPre = "#a";
-        doNot.sendDoNot(0, bLev, aPre, History.loopMajorConditionals4);
-        doNot.sendDoNot(1, bLev, aPre, History.loopMajorConditionals4);
-        doNot.sendDoNot(2, bLev, aPre, History.loopMajorConditionals4);
-        sAvail = doNot.filterByDoNot(2, 1, sAvail1, nFlag);
-        sRevAvail = doNot.filterByDoNot(2, 1, sRevAvail1, nFlag);
-        rAvail = doNot.filterByDoNot(2, 0, rAvail1, nFlag);
-        rRevAvail = doNot.filterByDoNot(2, 0, rRevAvail1, nFlag);
-
-        int alev = History.valuesMajor6;
-        aPre = "#a";
-        rAvail.sendHist(hist, blev, "#wa", alev, "rc rAvail", "sg rAvail");
-        rAvail1.sendHist(alev, aPre);
-        aPre = "#b";
-        sAvail.sendHist(hist, blev, aPre, alev, "rc sAvail", "sg sAvail");
-        sAvail1.sendHist(alev, aPre);
-        aPre = "#c";
-        rRevAvail.sendHist(hist, blev, aPre, alev, "rc rRevAvail", "sg rRevAvail");
-        rRevAvail1.sendHist(alev, aPre);
-        aPre = "#d";
-        sRevAvail.sendHist(hist, blev, aPre, alev, "rc sRevAvail", "sg sRevAvail");
-        sRevAvail1.sendHist(alev, aPre);
-
-        // start with default r straight
-        // r xfer
-        if (ixWRSrc < 1) {  //do r:0 option
-
-          if (false && rAvail.get(0, destIx) != nFlag) {
-            String aLine = String.format("ERROR in rAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n", needIx, destIx, nFlag, rAvail.get(0, destIx));
-            rAvail.sendHist(3, "!!");
-            //   new Throwable().printStackTrace(System.err);
-            throw new MyErr(String.format(String.format("ERROR in rAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n", needIx, destIx, nFlag, rAvail.get(0, destIx))));
-          }
-          if (false && rRevAvail.get(0, destIx) != nFlag) {
-            // System.err.format("ERROR in rRevAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n",needIx,destIx,nFlag,rRevAvail.get(0,destIx));
-            rRevAvail.sendHist(3, "!!");
-            //        new Throwable().printStackTrace(System.err);
-            throw new MyErr(String.format("ERROR in rRevAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n", needIx, destIx, nFlag, rRevAvail.get(0, destIx)));
-          }
-          //   rAvail.sendHist(hist, History.informationMinor9, "x#", "r rAvail", "s rAvail");
-          //  rRevAvail.sendHist(hist, History.informationMinor9, "x#", "r rRevA", "s rRevA");
-          r1ix = rAvail.getRow(0).maxIx();
-          r1 = rAvail.getRow(0).get(r1ix);
-          s1ix = rAvail.getRow(1).maxIx();
-          s1 = rAvail.getRow(1).get(s1ix);
-          r2ix = rRevAvail.getRow(0).maxIx();
-          r2 = rRevAvail.getRow(0).get(r2ix);
-          s2ix = rRevAvail.getRow(1).maxIx();
-          s2 = rRevAvail.getRow(1).get(s2ix);
-          aPre = "#f";
-          rAvail.sendHist(alev, aPre);
-          rRevAvail.sendHist(alev, aPre);
-          mtgNeeds6.sendHist2(alev, aPre);
-          source = dest = r;
-
-          // xfer go straight if straight is better
-          // remember avail is really size of possible move
-          //  1. straight min r avail > rev r min avail--higher max avail
-          //  2. stratVars.min r (r health) *1.1 < min s ( S health)
-          //      and rhealth better than shealth, rstrat > sstrat
-          //  3. mtgNeeds6.ave (Maxed needs) r less need than s (r avail > s avail)
-          if (Math.min(r1, s1) > Math.min(r2, s2) || stratVars.getRow(0).min() * 1.1 < stratVars.getRow(1).min() || mtgNeeds6.getRow(0).ave() * 1.1 < mtgNeeds6.getRow(1).ave()) { // do straight option
-            rev = 0;
-            srcIx = rChrgIx = rAvail.getRow(0).maxIx();
-            sChrgIx = rAvail.getRow(1).maxIx();
-            rChrg = swaprr;
-            if (false && (srcIx == destIx || rAvail.get(0, destIx) != nFlag || doNot.get(4 + 0, destIx) < doNotDays2)) {
-              System.err.format("Error3 xfer source==dest straight r, srcIx %d,destIx %d,rAvail[0][%d] %7.5g, doNot xFer,r,destIx %3.1g %n", srcIx, destIx, destIx, rAvail.get(0, destIx), doNot.get(4 + 0, destIx));
-              rAvail.sendHist(3, "!!");
-              throw new MyErr(String.format("Error3 xfer source==dest straight r, srcIx %d,destIx %d,rAvail[0][%d] %7.5g, doNot xFer,r,destIx %3.1g %n", srcIx, destIx, destIx, rAvail.get(0, destIx), doNot.get(4 + 0, destIx)));
-            }
-            dest = source = r;
-            sChrg = swaprs;
-            maxavail1 = maxAvail = Math.min(r1, s1);//max mov
-            // mov is min of the 2 max's min'd with original move
-            mov2 = Math.min(mov3, Math.min(r1, s1));
-
-          }
-          else { // r Rev Avail
-            rev = 1;// largest charge to s
-            srcIx = rChrgIx = rRevAvail.getRow(0).maxIx();
-            sChrgIx = rRevAvail.getRow(1).maxIx();
-            if (false && (srcIx == destIx || rRevAvail.get(0, destIx) != nFlag || doNot.get(4 + 0, destIx) < doNotDays2)) {
-              System.err.format("Error3 xfer source==dest strt r, srcIx %d,destIx %d,rRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, rRevAvail.get(0, destIx), doNot.get(4 + 0, destIx));
-              rRevAvail.sendHist(3, "!!");
-              new Throwable().printStackTrace(System.err);
-              throw new MyErr();
-            }
-            if (false && rRevAvail.get(1, destIx) != nFlag) {
-              rRevAvail.sendHist(3, "!!");
-              throw new MyErr(String.format("----SWPa---- xfer source==dest strt r, srcIx=%d,destIx=%d,rRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, rRevAvail.get(1, destIx), doNot.get(4 + 0, destIx)));
-            }
-            dest = source = r;
-            rChrg = swaprs;
-            sChrg = swaprr;
-            maxavail2 = maxAvail = Math.min(r2, s2);
-            // mov is min of the 2 max's min'd with original move
-            mov2 = Math.min(mov3, Math.min(r2, s2));
-          }
-          // src dest = s
-        }
-        else {  // now do the s option
-          sAvail.sendHist(hist, History.informationMinor9, "x@", "r sAvail", "s sAvail");
-          sRevAvail.sendHist(hist, History.informationMinor9, "x@", "r sRevAvail", "s sRevAvail");
-          r1 = sAvail.getRow(0).max();
-          s1 = sAvail.getRow(1).max();
-          r2 = sRevAvail.getRow(0).max();
-          s2 = sRevAvail.getRow(1).max();
-          r1ix = sAvail.getRow(0).maxIx();
-          r1 = sAvail.getRow(0).get(r1ix);
-          s1ix = sAvail.getRow(1).maxIx();
-          s1 = sAvail.getRow(1).get(s1ix);
-          r2ix = sRevAvail.getRow(0).maxIx();
-          r2 = sRevAvail.getRow(0).get(r2ix);
-          s2ix = sRevAvail.getRow(1).maxIx();
-          s2 = sRevAvail.getRow(1).get(s2ix);
-          source = dest = s;
-          // go straight if
-          //  1. straight min s avail > rev min avail
-          //  2. stratVars.max(how bad) of RC > SG
-          //  3. balances of RC * .8 > SG
-          if (Math.min(r1, s1) > Math.min(r2, s2) || stratVars.getRow(0).max() * 1.1 < stratVars.getRow(1).max() || balances.getRow(0).ave() * 1.1 < balances.getRow(1).ave()) { // do straight option
-            rev = 0;  // straight s
-            rChrgIx = sAvail.getRow(0).maxIx();
-            srcIx = sChrgIx = sAvail.getRow(1).maxIx();
-            // never xfer from the destination (should have been a INCR)
-            if (false && (srcIx == destIx || sAvail.get(1, destIx) != nFlag || doNot.get(4 + 1, destIx) < PZERO)) {
-              sAvail.sendHistcg();
-              throw new MyErr(String.format("Error3 xfer source==dest strt s, srcIx=%d,destIx=%d,sAvail[1][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, sAvail.get(1, destIx), doNot.get(4 + 1, destIx)));
-            }
-            maxavail3 = maxAvail = Math.min(r1, s1);
-            rChrg = swapsr;
-            sChrg = swapss;
-            // mov is min of the 2 max's min'd with original move
-            mov2 = Math.min(mov3, Math.min(r1, s1));
-          }
-          else {  // s  xferCross
-            rev = 1;
-            rChrgIx = sRevAvail.getRow(0).maxIx();
-            srcIx = sChrgIx = sRevAvail.getRow(1).maxIx();
-            double sMax = sRevAvail.getRow(1).get(srcIx);
-            if (false && (srcIx == destIx || sRevAvail.get(1, destIx) != nFlag || doNot.get(4 + 1, destIx) < doNotDays2)) {
-              sRevAvail.sendHistcg();
-              //  new Throwable().printStackTrace(System.err);
-              throw new MyErr(String.format("Error3 %s n=%d xfer source==dest strt s, srcIx=%d,destIx=%d,sRevAvail[1][%d] %7.5g, sMax %7.5g doNot xFer,s,destIx %3.1g, doNot[5] srcIx %3.1g doNot[1] %3.1g %n", ec.name, n, srcIx, destIx, destIx, sRevAvail.get(1, destIx), sMax, doNot.get(4 + 1, destIx), doNot.get(4 + 1, srcIx), doNot.get(1, srcIx)));
-            }
-            if (sRevAvail.get(0, destIx) != nFlag) {
-              sRevAvail.sendHistcg();
-              throw new MyErr(String.format("Error3 xfer source==dest strt s, srcIx=%d,destIx=%d,sRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, sRevAvail.get(0, destIx), doNot.get(4 + 1, destIx)));
-            }
-            maxavail4 = maxAvail = Math.min(r2, s2);
-            // mov is min of the 2 max's min'd with original move
-            mov2 = Math.min(mov3, Math.min(r2, s2));
-            rChrg = swapss;
-            sChrg = swapsr;
-
-          }// end srev type
-        } // end staff xfer
-
-        // join all 4 options
-        //     double xferMin[] = {.0001, .00005, .00001, .000003};
-        //     double xferBalMin = Math.max(balances.curSum() * xferMin[swap4Step], 1.);
-        //  movMin = xchgMovMin[swap4Step]; previously set
-        aPre = "#g";
-
-        //       xferAvail.sendHist(hist, "xfer");
-        // swapNeeds.titl = "swapNeeds";
-        stratV.sendHist(alev, aPre);
-        bals.listBalances(History.dl, aPre, History.valuesMajor6);
-        // recalculate the maxMov= min of r and s try to ignore
-        double rdiv = ixWRSrc < 1 ? 1.09 + rChrg : .09 + rChrg;
-        double sdiv = ixWRSrc < 1 ? .09 + sChrg : 1.09 + sChrg;
-        //determine index for each SubAsset
-        // srcIx means the source of move and the cost for the same sector
-        int rmIx = ixWRSrc < 1 ? srcIx : rChrgIx;
-        int smIx = ixWRSrc < 1 ? sChrgIx : srcIx;
-        rmov = xchgBalFrac[swap4Step] * bals.get(0, rmIx) / rdiv;
-        smov = xchgBalFrac[swap4Step] * bals.get(1, smIx) / sdiv;
-        double rFracC = -xchgWRReservFrac[swap4Step] * mtgNeeds6.get(0, rmIx) / rdiv;
-        double sFracC = -xchgWRReservFrac[swap4Step] * mtgNeeds6.get(1, smIx) / sdiv;
-        double rsmov = Math.min(Math.min(rmov, smov), Math.min(rFracC, sFracC));
-        // above looks right
-
-        mov1 = mov2; // no change
-        // mov1 least of both max in each case
-        mov = Math.min(mov1, bals.get(ixWRSrc, srcIx) - xchgBalFrac[swap4Step] * bals.get(ixWRSrc, srcIx));
-        // mov = Math.min(mov, (source.balance.get(srcIx) + source.partner.balance.get(srcIx)) * .5);
-
-        //determine where xfer mov is applied to r or s cost
-        rmov1 = ixWRSrc < 1 ? mov : 0.;
-        smov1 = ixWRSrc < 1 ? 0. : mov;
-        // source is from the same SubAsset as the dest
-        cmd = uxdecrs[rev][ixWRSrc][swap4Step];
-        if (E.debugDouble) {
-          rcost = doubleTrouble(
-                  doubleTrouble(mov)
-                  * doubleTrouble(rChrg));
-          scost = doubleTrouble(
-                  doubleTrouble(mov)
-                  * doubleTrouble(sChrg));
-
-        }
-        else {
-          rcost = mov * rChrg;
-          scost = mov * sChrg;
-        }
-        // 9/6/15 change to charge reserve SubAssets first
-        hist.add(new History(aPre, 4, nTitle(cmd.toString() + source.aschar + srcIx + " => " + dest.aschar + destIx),
-                             "m2=" + EM.mf(mov2), "m1=" + EM.mf(mov1), "m=" + EM.mf(mov),
-                             "r$" + rChrgIx + "=" + EM.mf(rChrg), EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(sChrg), EM.mf(scost),
-                             "rev=" + rev, "mA" + EM.mf(maxAvail), "src" + EM.mf(balances.get01(ixWRSrc, srcIx)), "<<<<<<<L"));
-        hist.add(new History(aPre, History.valuesMajor6, nTitle("more"), "movMin", EM.mf(movMin), "Nds" + (ixWRSrc == 0 ? "r" : "s") + srcIx + "=", EM.mf(mtgNeeds6.get(ixWRSrc, srcIx)), "bal" + (ixWRSrc == 0 ? "r" : "s") + srcIx + "=", EM.mf(balances.get01(ixWRSrc, srcIx)), "<<<<<<3L"));
-        balances.checkBalances(this);
-        if (stopped[2] > 0) {
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle("stop" + swapLoops + " " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
-        }
-        else if (mov < PZERO) {
-          hist.add(new History(aPre, 4, nTitle("skip" + swapLoops + " " + cmd.name() + srcIx), " mov=" + EM.mf(mov), "lt 0", "needIx=" + needIx, "nv=" + swapNeeds.max()));
-        }
-        else if (mov < movMin) {
-          hist.add(new History(aPre, 4, nTitle(" skip" + swapLoops + " " + cmd.name() + srcIx), "mov=", EM.mf(mov), "lessThan", "required", EM.mf(movMin)));
-        }
-        else if (destIx == srcIx) {
-          hist.add(new History(aPre, History.loopMajorConditionals4, nTitle("SKIP ==" + " " + cmd.name() + srcIx), "mv" + EM.mf(mov), "destIx" + destIx + "==srcIx" + srcIx, "<<<<<<<<<<"));
-        }
-        else {
-          hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd + source.aschar + srcIx + " => " + dest.aschar + destIx), " mov=" + EM.mf(mov), "rc=" + EM.mf(balances.get(0, rChrgIx)), "r$" + rChrgIx + "=" + EM.mf(rcost), "=>" + EM.mf(balances.get(0, rChrgIx) - (ixWRSrc < 1 ? rcost + mov : rcost)), "s=" + EM.mf(balances.get(1, sChrgIx)), "s$" + sChrgIx + "=" + EM.mf(scost), "=>" + EM.mf(balances.get(1, sChrgIx) - (ixWRSrc < 1 ? scost : scost + mov)), dest.aschar + destIx + "=" + EM.mf(balances.get(ixWRSrc, destIx)), "=>" + EM.mf(balances.get(ixWRSrc, destIx) + mov), "<<<<<<<<<<"));
-          resource.balance.negError("resource.balance");
-          balances.checkBalances(this);
-          // continue the join both branches
-          prevsrc = balances.get(ixWRSrc, srcIx);
-          prevdest = balances.get(ixWRSrc, destIx);
-          prevosrc = source.partner.balance.get(srcIx);
-          prevodest = dest.partner.balance.get(destIx);
-          setStat(EM.SWAPRXFERCOST, pors, clan, rcost / bals.getRow(2).sum(), 1);
-          setStat(EM.SWAPSXFERCOST, pors, clan, scost / bals.getRow(4).sum(), 1);
-          bals.sendHist(hist, aPre);
-
-          String strRS[] = {"r", "s"};
-          int tt1 = rawProspects2.curMinIx();
-          int tt2 = (int) tt1 / E.lsecs;
-          int tt3 = tt1 % E.lsecs;
-          int tt4 = rawProspects2.curMinIx(1);
-          int tt5 = (int) tt4 / E.lsecs;
-          int tt6 = tt4 % E.lsecs;
-          hist.add(new History(aPre, History.loopIncrements3, nTitle("p") + cmd + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rorss[tt2] + tt3 + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
-
-          hist.add(new History(aPre, History.loopMajorConditionals4, "n" + n + " " + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx, "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost), "dR=" + EM.mf(dstRCst), "dS=" + EM.mf(dstSCst), "dosrc=" + EM.mf(prevosrc - source.partner.balance.get(srcIx)), "dodst=" + EM.mf(dest.partner.balance.get(destIx) - prevodest)));
-
-          hist.add(new History(aPre, rlev, "n" + n + " resource" + srcIx, r.balance));
-
-          //now test balances before doing move
-          if (bals.get(0, rmIx) < (rmov1 + rcost)) {
-            throw new MyErr(String.format("---SWP3---- Err  %s, rcbal%d=%7.2g <  rmov1=%7.2g + rcost=%7.2g = rChrg=%7.5g * mov=%7.2g ,rshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), rmIx, bals.get(0, rmIx), rmov1, rcost, rChrg, mov, bals.get(0, rmIx) - rmov1 - rcost, ec.age, n, swap4Step, reDo));
-          }
-          if (bals.get(1, smIx) < (smov1 + scost)) {
-            E.myTest(true, "----SWP4---- %s, scbal%d=%7.2g <  smov1=%7.2g + scost=%7.2g = sChrg%7.5g * mov=%7.2g ,sshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), smIx, bals.get(1, smIx), smov1, scost, sChrg, mov, bals.get(1, smIx) - smov1 - scost, ec.age, n, swap4Step, reDo);
-          }
-          balances.checkBalances(this);
-          r.cost3(rcost, rChrgIx, .00);
-          hist.add(new History(aPre, rlev, "n" + n + " resource" + srcIx, r.balance));
-
-          resource.balance.negError("resource.balance");
-          s.checkGrades();
-          s.cost3(scost, sChrgIx, .00);
-          bals.sendHist(hist, "xc");
-          source.putValue(balances, mov, srcIx, destIx, dest, 1, 0.);
-
-          hist.add(new History(aPre, History.loopMinorConditionals5, "n" + n + " " + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx, "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost)));
-          bals.sendHist(hist, aPre);
-          // count successive r or s xfers
-          if (ixWRSrc == 1) {
-            rxfers++;
-            //sxfers = 0;
-          }
-          else {
-            sxfers++;
-            //  rxfers = 0;
-          }
-          swapped = true;
-          swapType = 2;
-          doNot.setDoNot(swapType, ixWRSrc, destIx, doNotDays3);
-          if (History.dl > 4) {
+          if (History.dl > 40) { // prevent listing
             StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
+            hist.add(new History(aPre, rlev, "n" + n + " xfer crossa", wh(a0.getLineNumber()), (failed ? "" : "!") + "failed", (swapped ? "" : "!") + "swapped", swapLoops + "=swapLoops"));
+          }
+          //boolean xferCross = false;
+          int rev = 0;   // 0=not cross charged, 1=cross charged
+          /**
+           * limit using the available (-need) amount to prevent loops because
+           * of swapping too much
+           */
+          bav = balances.curSum() / 14.; //balance ave.
+          //  double xchgBalFrac[] = {.9, .95, .98, .99};
+          double xchgBalFrac[] = {.8, .85, .9, .92};
 
-            hist.add(new History(aPre, rlev, ">>>>n" + n + "XFERD ", a0.getFileName(), wh(a0.getLineNumber()), (failed ? "failed" : "!!!failed"), (swapped ? "swapped" : "!!!swapped"), swapLoops + "=swapLoops", "$=" + EM.mf(sumTotWorth), "<<<<<<<<<<"));
+          // oost balances limits
+          // double[] xchgWRReservFrac = {.95, .96, 97., 98.};
+          // double xferMaxMove[] = {.9 * bav, .9 * bav, .90 * bav, .98 * bav};
+          double[] xchgWRReservFrac = {.3, .26, .22, .17};
+          double xferMaxMove[] = {1.2 * bav, 1.8 * bav, 2.4 * bav, 3.1 * bav};
+          /**
+           * if a high need, relax the limits a little, but be careful to avoid
+           * loops
+           */
+          //---if ((yrphase.SWAPING == yphase && (rawProspects2.curMin() < .15 ))) {
+          if ((rawProspects2.curMin() < .15)) {
+            double xF[] = {.75, .80, .84, .90};
+            xchgBalFrac = xF;
+            //     double xaf[] = {1.02, 1.03, 1.05, 1.05};
+            double xaf[] = {.75, .80, .84, .90};
+            xchgWRReservFrac = xaf;
+          }
+          src1Bal = 0.;
+          //  double src2Bal = 0.;
+          //      double dest1Bal = 0.;
+          //      double dest2Bal = 0.;
+
+          double s1, r1, r2, s2;
+          int s1ix, r1ix, s2ix, r2ix;
+          maxAvail = -999;
+          A6Row[] xferAvails = {mtggNeeds6, mtggNeeds6, mtgNeeds6, mtgNeeds6};
+          double[] xchgMovMin = {balances.curSum() * .0003, balances.curSum() * .0002, balances.curSum() * .0001, balances.curSum() * .00005};
+          double xferBalMin = xferMovMin = movMin = xchgMovMin[swap4Step] * redoFrac[reDo];
+          A6Row[] xferNeeds = {mtgNeeds6, mtgNeeds6, mtgNeeds6, mtgNeeds6};
+          //  mtgNeeds6.addJointBalances();
+          // swapNeeds has no filter, it is straight stratVars
+          //    swapNeeds = stratVars;
+
+          /**
+           * force planet resource xfers if resource availability (-mtgneeds) is
+           * higher than staff availability, and resource rawHealths.min are &lt
+           * .5 and GROW rawFertilities2 &lt.5
+           */
+          double rNeedSum = mtgNeeds6.getRow(0).sum();
+          double sNeedSum = mtgNeeds6.getRow(1).sum();
+          double maxNeed = mtgNeeds6.curMax(0);
+          int maxNeedIx = mtgNeeds6.curMaxIx(0);
+          // needIx = stratVars.curMaxIx(); // highest need
+          double stratH0 = stratVars.max();
+          double stratH4 = stratVars.max(4); //high 0,1,2,3
+          double stratL3 = stratVars.min(3); //low 0,1,2
+          double stratL0 = stratVars.min();
+          double stratML0 = 0;
+          int stratML0Ix = 0;
+          int fillNeedIx = stratVars.curMinIx(); // the least need,high bal
+          double dRNeedSum = maxNeed - rNeedSum;
+          double dSNeedSum = maxNeed - sNeedSum;
+          boolean sNeedy = false; // false: force possible r xfer
+
+          double swaprr = eM.swapXRtoRRcost[pors];
+          double swaprs = eM.swapXRtoRScost[pors];
+          double swapsr = eM.swapXStoSRcost[pors];
+          double swapss = eM.swapXStoSScost[pors];
+
+          // now compute possible avails
+          // find the max stratVars
+          rawProspects2.sendHist(hist, aPre);
+          //stratV.set(stratVars); no change stratVars
+          stratV = doNot.filterByDoNot(2, stratVars, nFlag); //elim recent xfers
+          needIx = stratV.curMaxIx(); // highest need after doNot
+          ixWRSrc = needIx / E.lsecs; // 0:1
+          destIx = needIx % E.lsecs;
+
+          mov4 = Math.max(movMin + 1., mtgNeeds6.get01(needIx) * 3.);
+          // deal with -need: available, set to part of average
+          mov3 = mov4 < PZERO ? bav * .1 : mov4;
+          hist.add(new History(aPre, History.loopMinorConditionals5, name + " need" + E.rNsIx(needIx) + " =", EM.mf(mov4), EM.mf(mov3), "rH" + rawProspects2.curMinIx() + "=" + EM.mf(rawProspects2.curMin()), "r=" + EM.mf(balances.getRow(2).get(needIx % E.lsecs)), "s=" + EM.mf(balances.getRow(4).get(needIx % E.lsecs)), "mvMin=" + EM.mf(movMin), "xAF=" + EM.mf(xchgWRReservFrac[swap4Step]), "mMax" + EM.mf(xferMaxMove[swap4Step])));
+          hist.add(new History("@x", History.loopMinorConditionals5, name + " step=" + swap4Step, "MovMins", EM.mf(xchgMovMin[0]), EM.mf(xchgMovMin[1]), EM.mf(xchgMovMin[2]), EM.mf(xchgMovMin[3]), "availFracs", EM.mf(xchgWRReservFrac[0]), EM.mf(xchgWRReservFrac[1]), EM.mf(xchgWRReservFrac[2]), EM.mf(xchgWRReservFrac[3])));
+          A2Row rAvail = new A2Row(ec, History.loopMinorConditionals5, "rAvail");
+          A2Row sAvail = new A2Row(ec, History.loopMinorConditionals5, "sAvail");
+          A2Row rRevAvail = new A2Row(ec, History.loopMinorConditionals5, "rRevAvail");
+          A2Row sRevAvail = new A2Row(ec, History.loopMinorConditionals5, "sRevAvail");
+          A2Row rAvail1 = new A2Row(ec, History.loopMinorConditionals5, "rAvail1");
+          A2Row sAvail1 = new A2Row(ec, History.loopMinorConditionals5, "sAvail1");
+          A2Row rRevAvail1 = new A2Row(ec, History.loopMinorConditionals5, "rRevAvail1");
+          A2Row sRevAvail1 = new A2Row(ec, History.loopMinorConditionals5, "sRevAvail1");
+
+          //now determine size of possible moves
+          rAvail1.setAvailableToExchange(sAvail1, rRevAvail1, sRevAvail1, xchgBalFrac[swap4Step], xchgWRReservFrac[swap4Step], xferMaxMove[swap4Step], balances, xferNeeds[swap4Step], swaprr, swaprs, swapsr, swapss);
+
+          //   planet resource, staff needix in highest 4 stratVal
+          // first select staff to increase then resource
+          if (needIx < E.lsecs && pors == E.P && stratVars.get(1, needIx) > stratH4 && rawProspects2.curMin() > .1) {
+            needIx += E.lsecs;  // move needIx to a staff sector
+          }
+          ixWRSrc = needIx / E.lsecs; // =1:staff
+          destIx = needIx % E.lsecs; //sector of most need
+
+          // do not take need as a possible source
+          doNot.setDoNot(2, ixWRSrc, needIx, doNotDays2);
+          aPre = "#a";
+          doNot.sendDoNot(0, bLev, aPre, History.loopMajorConditionals4);
+          doNot.sendDoNot(1, bLev, aPre, History.loopMajorConditionals4);
+          doNot.sendDoNot(2, bLev, aPre, History.loopMajorConditionals4);
+          sAvail = doNot.filterByDoNot(2, 1, sAvail1, nFlag);
+          sRevAvail = doNot.filterByDoNot(2, 1, sRevAvail1, nFlag);
+          rAvail = doNot.filterByDoNot(2, 0, rAvail1, nFlag);
+          rRevAvail = doNot.filterByDoNot(2, 0, rRevAvail1, nFlag);
+
+          int alev = History.valuesMajor6;
+          aPre = "#a";
+          rAvail.sendHist(hist, blev, "#wa", alev, "rc rAvail", "sg rAvail");
+          rAvail1.sendHist(alev, aPre);
+          aPre = "#b";
+          sAvail.sendHist(hist, blev, aPre, alev, "rc sAvail", "sg sAvail");
+          sAvail1.sendHist(alev, aPre);
+          aPre = "#c";
+          rRevAvail.sendHist(hist, blev, aPre, alev, "rc rRevAvail", "sg rRevAvail");
+          rRevAvail1.sendHist(alev, aPre);
+          aPre = "#d";
+          sRevAvail.sendHist(hist, blev, aPre, alev, "rc sRevAvail", "sg sRevAvail");
+          sRevAvail1.sendHist(alev, aPre);
+
+          // start with default r straight
+          // r xfer
+          if (ixWRSrc < 1) {  //do r:0 option
+
+            if (false && rAvail.get(0, destIx) != nFlag) {
+              String aLine = String.format("ERROR in rAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n", needIx, destIx, nFlag, rAvail.get(0, destIx));
+              rAvail.sendHist(3, "!!");
+              //   new Throwable().printStackTrace(System.err);
+              throw new MyErr(String.format(String.format("ERROR in rAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n", needIx, destIx, nFlag, rAvail.get(0, destIx))));
+            }
+            if (false && rRevAvail.get(0, destIx) != nFlag) {
+              // System.err.format("ERROR in rRevAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n",needIx,destIx,nFlag,rRevAvail.get(0,destIx));
+              rRevAvail.sendHist(3, "!!");
+              //        new Throwable().printStackTrace(System.err);
+              throw new MyErr(String.format("ERROR in rRevAvail needIx %d,destIx %d  should be nFlag %6.2g not %7.5g%n", needIx, destIx, nFlag, rRevAvail.get(0, destIx)));
+            }
+            //   rAvail.sendHist(hist, History.informationMinor9, "x#", "r rAvail", "s rAvail");
+            //  rRevAvail.sendHist(hist, History.informationMinor9, "x#", "r rRevA", "s rRevA");
+            r1ix = rAvail.getRow(0).maxIx();
+            r1 = rAvail.getRow(0).get(r1ix);
+            s1ix = rAvail.getRow(1).maxIx();
+            s1 = rAvail.getRow(1).get(s1ix);
+            r2ix = rRevAvail.getRow(0).maxIx();
+            r2 = rRevAvail.getRow(0).get(r2ix);
+            s2ix = rRevAvail.getRow(1).maxIx();
+            s2 = rRevAvail.getRow(1).get(s2ix);
+            aPre = "#f";
+            rAvail.sendHist(alev, aPre);
+            rRevAvail.sendHist(alev, aPre);
+            mtgNeeds6.sendHist2(alev, aPre);
+            source = dest = r;
+
+            // xfer go straight if straight is better
+            // remember avail is really size of possible move
+            //  1. straight min r avail > rev r min avail--higher max avail
+            //  2. stratVars.min r (r health) *1.1 < min s ( S health)
+            //      and rhealth better than shealth, rstrat > sstrat
+            //  3. mtgNeeds6.ave (Maxed needs) r less need than s (r avail > s avail)
+            if (Math.min(r1, s1) > Math.min(r2, s2) || stratVars.getRow(0).min() * 1.1 < stratVars.getRow(1).min() || mtgNeeds6.getRow(0).ave() * 1.1 < mtgNeeds6.getRow(1).ave()) { // do straight option
+              rev = 0;
+              srcIx = rChrgIx = rAvail.getRow(0).maxIx();
+              sChrgIx = rAvail.getRow(1).maxIx();
+              rChrg = swaprr;
+              if (false && (srcIx == destIx || rAvail.get(0, destIx) != nFlag || doNot.get(4 + 0, destIx) < doNotDays2)) {
+                System.err.format("Error3 xfer source==dest straight r, srcIx %d,destIx %d,rAvail[0][%d] %7.5g, doNot xFer,r,destIx %3.1g %n", srcIx, destIx, destIx, rAvail.get(0, destIx), doNot.get(4 + 0, destIx));
+                rAvail.sendHist(3, "!!");
+                throw new MyErr(String.format("Error3 xfer source==dest straight r, srcIx %d,destIx %d,rAvail[0][%d] %7.5g, doNot xFer,r,destIx %3.1g %n", srcIx, destIx, destIx, rAvail.get(0, destIx), doNot.get(4 + 0, destIx)));
+              }
+              dest = source = r;
+              sChrg = swaprs;
+              maxavail1 = maxAvail = Math.min(r1, s1);//max mov
+              // mov is min of the 2 max's min'd with original move
+              mov2 = Math.min(mov3, Math.min(r1, s1));
+
+            }
+            else { // r Rev Avail
+              rev = 1;// largest charge to s
+              srcIx = rChrgIx = rRevAvail.getRow(0).maxIx();
+              sChrgIx = rRevAvail.getRow(1).maxIx();
+              if (false && (srcIx == destIx || rRevAvail.get(0, destIx) != nFlag || doNot.get(4 + 0, destIx) < doNotDays2)) {
+                System.err.format("Error3 xfer source==dest strt r, srcIx %d,destIx %d,rRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, rRevAvail.get(0, destIx), doNot.get(4 + 0, destIx));
+                rRevAvail.sendHist(3, "!!");
+                new Throwable().printStackTrace(System.err);
+                throw new MyErr();
+              }
+              if (false && rRevAvail.get(1, destIx) != nFlag) {
+                rRevAvail.sendHist(3, "!!");
+                throw new MyErr(String.format("----SWPa---- xfer source==dest strt r, srcIx=%d,destIx=%d,rRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, rRevAvail.get(1, destIx), doNot.get(4 + 0, destIx)));
+              }
+              dest = source = r;
+              rChrg = swaprs;
+              sChrg = swaprr;
+              maxavail2 = maxAvail = Math.min(r2, s2);
+              // mov is min of the 2 max's min'd with original move
+              mov2 = Math.min(mov3, Math.min(r2, s2));
+            }
+            // src dest = s
+          }
+          else {  // now do the s option
+            sAvail.sendHist(hist, History.informationMinor9, "x@", "r sAvail", "s sAvail");
+            sRevAvail.sendHist(hist, History.informationMinor9, "x@", "r sRevAvail", "s sRevAvail");
+            r1 = sAvail.getRow(0).max();
+            s1 = sAvail.getRow(1).max();
+            r2 = sRevAvail.getRow(0).max();
+            s2 = sRevAvail.getRow(1).max();
+            r1ix = sAvail.getRow(0).maxIx();
+            r1 = sAvail.getRow(0).get(r1ix);
+            s1ix = sAvail.getRow(1).maxIx();
+            s1 = sAvail.getRow(1).get(s1ix);
+            r2ix = sRevAvail.getRow(0).maxIx();
+            r2 = sRevAvail.getRow(0).get(r2ix);
+            s2ix = sRevAvail.getRow(1).maxIx();
+            s2 = sRevAvail.getRow(1).get(s2ix);
+            source = dest = s;
+            // go straight if
+            //  1. straight min s avail > rev min avail
+            //  2. stratVars.max(how bad) of RC > SG
+            //  3. balances of RC * .8 > SG
+            if (Math.min(r1, s1) > Math.min(r2, s2) || stratVars.getRow(0).max() * 1.1 < stratVars.getRow(1).max() || balances.getRow(0).ave() * 1.1 < balances.getRow(1).ave()) { // do straight option
+              rev = 0;  // straight s
+              rChrgIx = sAvail.getRow(0).maxIx();
+              srcIx = sChrgIx = sAvail.getRow(1).maxIx();
+              // never xfer from the destination (should have been a INCR)
+              if (false && (srcIx == destIx || sAvail.get(1, destIx) != nFlag || doNot.get(4 + 1, destIx) < PZERO)) {
+                sAvail.sendHistcg();
+                throw new MyErr(String.format("Error3 xfer source==dest strt s, srcIx=%d,destIx=%d,sAvail[1][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, sAvail.get(1, destIx), doNot.get(4 + 1, destIx)));
+              }
+              maxavail3 = maxAvail = Math.min(r1, s1);
+              rChrg = swapsr;
+              sChrg = swapss;
+              // mov is min of the 2 max's min'd with original move
+              mov2 = Math.min(mov3, Math.min(r1, s1));
+            }
+            else {  // s  xferCross
+              rev = 1;
+              rChrgIx = sRevAvail.getRow(0).maxIx();
+              srcIx = sChrgIx = sRevAvail.getRow(1).maxIx();
+              double sMax = sRevAvail.getRow(1).get(srcIx);
+              if (false && (srcIx == destIx || sRevAvail.get(1, destIx) != nFlag || doNot.get(4 + 1, destIx) < doNotDays2)) {
+                sRevAvail.sendHistcg();
+                //  new Throwable().printStackTrace(System.err);
+                throw new MyErr(String.format("Error3 %s n=%d xfer source==dest strt s, srcIx=%d,destIx=%d,sRevAvail[1][%d] %7.5g, sMax %7.5g doNot xFer,s,destIx %3.1g, doNot[5] srcIx %3.1g doNot[1] %3.1g %n", ec.name, n, srcIx, destIx, destIx, sRevAvail.get(1, destIx), sMax, doNot.get(4 + 1, destIx), doNot.get(4 + 1, srcIx), doNot.get(1, srcIx)));
+              }
+              if (sRevAvail.get(0, destIx) != nFlag) {
+                sRevAvail.sendHistcg();
+                throw new MyErr(String.format("Error3 xfer source==dest strt s, srcIx=%d,destIx=%d,sRevAvail[0][%d] %7.5g, doNot xFer,s,destIx %3.1g %n", srcIx, destIx, destIx, sRevAvail.get(0, destIx), doNot.get(4 + 1, destIx)));
+              }
+              maxavail4 = maxAvail = Math.min(r2, s2);
+              // mov is min of the 2 max's min'd with original move
+              mov2 = Math.min(mov3, Math.min(r2, s2));
+              rChrg = swapss;
+              sChrg = swapsr;
+
+            }// end srev type
+          } // end staff xfer
+
+          // join all 4 options
+          //     double xferMin[] = {.0001, .00005, .00001, .000003};
+          //     double xferBalMin = Math.max(balances.curSum() * xferMin[swap4Step], 1.);
+          //  movMin = xchgMovMin[swap4Step]; previously set
+          aPre = "#g";
+
+          //       xferAvail.sendHist(hist, "xfer");
+          // swapNeeds.titl = "swapNeeds";
+          stratV.sendHist(alev, aPre);
+          bals.listBalances(History.dl, aPre, History.valuesMajor6);
+          // recalculate the maxMov= min of r and s try to ignore
+          double rdiv = ixWRSrc < 1 ? 1.09 + rChrg : .09 + rChrg;
+          double sdiv = ixWRSrc < 1 ? .09 + sChrg : 1.09 + sChrg;
+          //determine index for each SubAsset
+          // srcIx means the source of move and the cost for the same sector
+          int rmIx = ixWRSrc < 1 ? srcIx : rChrgIx;
+          int smIx = ixWRSrc < 1 ? sChrgIx : srcIx;
+          rmov = xchgBalFrac[swap4Step] * bals.get(0, rmIx) / rdiv;
+          smov = xchgBalFrac[swap4Step] * bals.get(1, smIx) / sdiv;
+          double rFracC = -xchgWRReservFrac[swap4Step] * mtgNeeds6.get(0, rmIx) / rdiv;
+          double sFracC = -xchgWRReservFrac[swap4Step] * mtgNeeds6.get(1, smIx) / sdiv;
+          double rsmov = Math.min(Math.min(rmov, smov), Math.min(rFracC, sFracC));
+          // above looks right
+
+          mov1 = mov2; // no change
+          // mov1 least of both max in each case
+          mov = Math.min(mov1, bals.get(ixWRSrc, srcIx) - xchgBalFrac[swap4Step] * bals.get(ixWRSrc, srcIx));
+          // mov = Math.min(mov, (source.balance.get(srcIx) + source.partner.balance.get(srcIx)) * .5);
+
+          //determine where xfer mov is applied to r or s cost
+          rmov1 = ixWRSrc < 1 ? mov : 0.;
+          smov1 = ixWRSrc < 1 ? 0. : mov;
+          // source is from the same SubAsset as the dest
+          cmd = uxdecrs[rev][ixWRSrc][swap4Step];
+          if (E.debugDouble) {
+            rcost = doubleTrouble(
+                    doubleTrouble(mov)
+                    * doubleTrouble(rChrg));
+            scost = doubleTrouble(
+                    doubleTrouble(mov)
+                    * doubleTrouble(sChrg));
+
+          }
+          else {
+            rcost = mov * rChrg;
+            scost = mov * sChrg;
+          }
+          // 9/6/15 change to charge reserve SubAssets first
+          hist.add(new History(aPre, 4, nTitle(cmd.toString() + source.aschar + srcIx + " => " + dest.aschar + destIx),
+                               "m2=" + EM.mf(mov2), "m1=" + EM.mf(mov1), "m=" + EM.mf(mov),
+                               "r$" + rChrgIx + "=" + EM.mf(rChrg), EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(sChrg), EM.mf(scost),
+                               "rev=" + rev, "mA" + EM.mf(maxAvail), "src" + EM.mf(balances.get01(ixWRSrc, srcIx)), "<<<<<<<L"));
+          hist.add(new History(aPre, History.valuesMajor6, nTitle("more"), "movMin", EM.mf(movMin), "Nds" + (ixWRSrc == 0 ? "r" : "s") + srcIx + "=", EM.mf(mtgNeeds6.get(ixWRSrc, srcIx)), "bal" + (ixWRSrc == 0 ? "r" : "s") + srcIx + "=", EM.mf(balances.get01(ixWRSrc, srcIx)), "<<<<<<3L"));
+          balances.checkBalances(this);
+          if (stopped[2] > 0) {
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle("stop" + swapLoops + " " + cmd.name()), "mov" + EM.mf(mov), "dest" + EM.mf(bals.getRow(3 + 2 * ixWRSrc).get(srcIx)), "src" + EM.mf(bals.getRow(2 + 2 * ixWRSrc).get(srcIx)), "nmov" + EM.mf(nmov), "gmov" + EM.mf(gmov), "dest big enough"));
+          }
+          else if (mov < PZERO) {
+            hist.add(new History(aPre, 4, nTitle("skip" + swapLoops + " " + cmd.name() + srcIx), " mov=" + EM.mf(mov), "lt 0", "needIx=" + needIx, "nv=" + swapNeeds.max()));
+          }
+          else if (mov < movMin) {
+            hist.add(new History(aPre, 4, nTitle(" skip" + swapLoops + " " + cmd.name() + srcIx), "mov=", EM.mf(mov), "lessThan", "required", EM.mf(movMin)));
+          }
+          else if (destIx == srcIx) {
+            hist.add(new History(aPre, History.loopMajorConditionals4, nTitle("SKIP ==" + " " + cmd.name() + srcIx), "mv" + EM.mf(mov), "destIx" + destIx + "==srcIx" + srcIx, "<<<<<<<<<<"));
+          }
+          else {
+            hist.add(new History(aPre, History.loopMinorConditionals5, nTitle(cmd + source.aschar + srcIx + " => " + dest.aschar + destIx), " mov=" + EM.mf(mov), "rc=" + EM.mf(balances.get(0, rChrgIx)), "r$" + rChrgIx + "=" + EM.mf(rcost), "=>" + EM.mf(balances.get(0, rChrgIx) - (ixWRSrc < 1 ? rcost + mov : rcost)), "s=" + EM.mf(balances.get(1, sChrgIx)), "s$" + sChrgIx + "=" + EM.mf(scost), "=>" + EM.mf(balances.get(1, sChrgIx) - (ixWRSrc < 1 ? scost : scost + mov)), dest.aschar + destIx + "=" + EM.mf(balances.get(ixWRSrc, destIx)), "=>" + EM.mf(balances.get(ixWRSrc, destIx) + mov), "<<<<<<<<<<"));
+            resource.balance.negError("resource.balance");
+            balances.checkBalances(this);
+            // continue the join both branches
+            prevsrc = balances.get(ixWRSrc, srcIx);
+            prevdest = balances.get(ixWRSrc, destIx);
+            prevosrc = source.partner.balance.get(srcIx);
+            prevodest = dest.partner.balance.get(destIx);
+            setStat(EM.SWAPRXFERCOST, pors, clan, rcost / bals.getRow(2).sum(), 1);
+            setStat(EM.SWAPSXFERCOST, pors, clan, scost / bals.getRow(4).sum(), 1);
+            bals.sendHist(hist, aPre);
+
+            String strRS[] = {"r", "s"};
+            int tt1 = rawProspects2.curMinIx();
+            int tt2 = (int) tt1 / E.lsecs;
+            int tt3 = tt1 % E.lsecs;
+            int tt4 = rawProspects2.curMinIx(1);
+            int tt5 = (int) tt4 / E.lsecs;
+            int tt6 = tt4 % E.lsecs;
+            hist.add(new History(aPre, History.loopIncrements3, nTitle("p") + cmd + srcIx + "->" + destIx, "mov=" + EM.mf(mov), "mMin" + EM.mf(movMin), "r$" + rChrgIx + "=" + EM.mf(rcost), "s$" + sChrgIx + "=" + EM.mf(scost), "H" + rorss[tt2] + tt3 + "=" + EM.mf(rawProspects2.curMin()), "HS" + rawProspects2.curSum(), "rS" + EM.mf(bals.getRow(0).sum()), "sS" + EM.mf(bals.getRow(1).sum()), "mtg" + EM.mf(mtgNeeds6.getRow(0).sum()), EM.mf(mtgNeeds6.getRow(1).sum()), "<<<<<<<"));
+
+            hist.add(new History(aPre, History.loopMajorConditionals4, "n" + n + " " + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx, "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost), "dR=" + EM.mf(dstRCst), "dS=" + EM.mf(dstSCst), "dosrc=" + EM.mf(prevosrc - source.partner.balance.get(srcIx)), "dodst=" + EM.mf(dest.partner.balance.get(destIx) - prevodest)));
+
+            hist.add(new History(aPre, rlev, "n" + n + " resource" + srcIx, r.balance));
+
+            //now test balances before doing move
+            if (bals.get(0, rmIx) < (rmov1 + rcost)) {
+              throw new MyErr(String.format("---SWP3---- Err  %s, rcbal%d=%7.2g <  rmov1=%7.2g + rcost=%7.2g = rChrg=%7.5g * mov=%7.2g ,rshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), rmIx, bals.get(0, rmIx), rmov1, rcost, rChrg, mov, bals.get(0, rmIx) - rmov1 - rcost, ec.age, n, swap4Step, reDo));
+            }
+            if (bals.get(1, smIx) < (smov1 + scost)) {
+              E.myTest(true, "----SWP4---- %s, scbal%d=%7.2g <  smov1=%7.2g + scost=%7.2g = sChrg%7.5g * mov=%7.2g ,sshort=%7.2g, age=%d, n=%d, swap4Step=%d, redo=%d<<<<<", cmd.toString(), smIx, bals.get(1, smIx), smov1, scost, sChrg, mov, bals.get(1, smIx) - smov1 - scost, ec.age, n, swap4Step, reDo);
+            }
+            balances.checkBalances(this);
+            r.cost3(rcost, rChrgIx, .00);
+            hist.add(new History(aPre, rlev, "n" + n + " resource" + srcIx, r.balance));
+
+            resource.balance.negError("resource.balance");
+            s.checkGrades();
+            s.cost3(scost, sChrgIx, .00);
+            bals.sendHist(hist, "xc");
+            source.putValue(balances, mov, srcIx, destIx, dest, 1, 0.);
+
+            hist.add(new History(aPre, History.loopMinorConditionals5, "n" + n + " " + cmd.toString() + " " + source.aschar + srcIx + " -> " + dest.aschar + destIx, "mov=" + EM.mf(mov), "rcst=" + EM.mf(rcost), "scst=" + EM.mf(scost)));
+            bals.sendHist(hist, aPre);
+            // count successive r or s xfers
+            if (ixWRSrc == 1) {
+              rxfers++;
+              //sxfers = 0;
+            }
+            else {
+              sxfers++;
+              //  rxfers = 0;
+            }
+            swapped = true;
+            swapType = 2;
+            doNot.setDoNot(swapType, ixWRSrc, destIx, doNotDays3);
+            if (History.dl > 4) {
+              StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
+
+              hist.add(new History(aPre, rlev, ">>>>n" + n + "XFERD ", a0.getFileName(), wh(a0.getLineNumber()), (failed ? "failed" : "!!!failed"), (swapped ? "swapped" : "!!!swapped"), swapLoops + "=swapLoops", "$=" + EM.mf(sumTotWorth), "<<<<<<<<<<"));
+            }
+
+            return true;
           }
 
-          return true;
+          // no success this loop
+        } // loop back from end on swapLoops
+        if (History.dl > History.valuesMajor6) {
+          StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
+          hist.add(new History(aPre, rlev, "n" + n + " end swaps", a0.getFileName(), wh(a0.getLineNumber()), (failed ? "failed" : "!!!failed"), (swapped ? "swapped" : "!!!swapped"), swapLoops + "=swapLoops", "$=" + EM.mf(sumTotWorth)));
         }
 
-        // no success this loop
-      } // loop back from end on swapLoops
-      if (History.dl > History.valuesMajor6) {
-        StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
-        hist.add(new History(aPre, rlev, "n" + n + " end swaps", a0.getFileName(), wh(a0.getLineNumber()), (failed ? "failed" : "!!!failed"), (swapped ? "swapped" : "!!!swapped"), swapLoops + "=swapLoops", "$=" + EM.mf(sumTotWorth)));
-      }
-
-      //  }// for swapLoops
-      swapType = -5;
+        //  }// for swapLoops
+        swapType = -5;
         return false;
       }
       catch (Exception | Error ex) {

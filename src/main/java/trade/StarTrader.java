@@ -214,10 +214,10 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.64";
+  static final public String versionText = "19.65";
   static final public int ver58more = 0;
   static final public String storyText
-          = "         StarTrader       Version 19.64\n"
+          = "         StarTrader       Version 19.65\n"
             + "“Star Trader”; “Save the Planets”; “Trade, trade, trade”; This game is about finances and economics and economic survival strategies.  It starts with many separate economies of StarTrader ships and Planets each trying to survive.  The different planets and traders are part of one of five clans.  The initial setting declares that the clan with the most generosity wins.  The most generosity is the highest cumulative some of offering of resources, staff and knowledge manuals.  Of course this implies sufficient planets and ships to offer resources in trading.\n"
             + "\n"
             + "Each economy has 2 financial sectors that are so weak they need to trade resources to survive.  Each economy has 2 financial sector that are very strong generating resource and/or staff surpluses. When an economy does not have enough of any of the seven financial sectors to pay the costs of the next year, that economy dies.  With the initial settings, about 10% of economies die each year.  Economies survive by trading.  The producer economies (planets, cities, nations) survive by trading with (ships, starships, traders with wagons) for their survival resources.  The producers trade their surplus financial goods for survival financial goods.  The ships use resources to trade and resources to grow The travel and trading is all done by robots for each planet and ship in the game.  Players adjust the rules for the robots, trying to set the adjustments that will enable them to get higher scores each year.  There are about 30 game level settings, and another 30 settings for each clan.  The players need to study the reports to see if any settings they change help their score.\n"
@@ -303,7 +303,7 @@ public class StarTrader extends javax.swing.JFrame {
             + "\n"
             + "The game-master changes overall game settings, setting rules for all ships and planets, thus the game-master can set up many different games of economic strategy.   The game-master sets the difficulty of the game, and the amount of random increases or decreases to the priorities,  costs, growth, etc. There are five clans each with a clan-master.  One or more players can divide up the roles of game-master and clan-masters.  Clans without a clan-master run with the preset settings for that clan.  The clan-masters can alter any of the settings and leave unchanged the rest of the clan settings for the robots which calculate the moves for each clan planet and ship.\n"
             + "\n"
-            + "You need to download the StarTrader19.64.jar file to a folder such as myGame where you can run it following the instructions near the end of this README.  Your virus protection will possibly say that this is a bad file, or a potentially bad file, or some similar warning.  You need to keep assuring it several times that you trust the file and wish to download and run the file.  The first tab labeled “story” is a copy of this README, click the next tab “Settings” to manage the settings.\n"
+            + "You need to download the StarTrader19.65.jar file to a folder such as myGame where you can run it following the instructions near the end of this README.  Your virus protection will possibly say that this is a bad file, or a potentially bad file, or some similar warning.  You need to keep assuring it several times that you trust the file and wish to download and run the file.  The first tab labeled “story” is a copy of this README, click the next tab “Settings” to manage the settings.\n"
             + "\n"
             + "The instructions about the functioning of the game are long and complicated because all of the action is done by robots.  To instruct the robots, you need to understand their activity and the kind of decisions they are making.  Clan-masters change the values about how robots make choices, but neither the game-master or the clan-masters change rules, they only change the values about how decisions are made by the robots.\n"
             + "\n"
@@ -7263,6 +7263,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
   synchronized void paintCurDisplay(Econ curEc) {
     EM.wasHere8 = "---ELc3--- StarTrder paintCurDisplay";
+    EM.mfShort=true;
     try {
       int numEcons = EM.econs.size();
       int rN = 999999;
@@ -7344,7 +7345,7 @@ public class StarTrader extends javax.swing.JFrame {
       int rNDAcc = EM.DTRADEACC;
       int rNDLost = EM.TradeDeadLostStrategicValue;
       int rNDRej = EM.TradeDeadRejectedStrategicValue;
-      int rNCrisis = EM.CATASTSCOST;
+      int rNCrisis = EM.CATASTCOST;
       int rNLstS1 = EM.TRADEOSOSR1;
       int rNDS1 = EM.DTRADEOSOSR1;
       int rNLstS2 = EM.TRADEOSOSR2;
@@ -7567,30 +7568,41 @@ public class StarTrader extends javax.swing.JFrame {
         int rnsos = EM.POSTSWAPRCSG;
         int rngro = EM.RAWYEARLYUNITGROWTH;
         int rnDep = EM.DEPRECIATION;
-        int rnBon = EM.BONUSGROWTHEFF;
+        int rnRep = EM.REPRECIATION;
+        int rnBon = EM.BONUSGROWTH;
         int rnLrcsg = EM.LIVERCSG;
         // int rNDepreciation = eM.RDEPRECIATIONP;// largest
         // int rNBONUSGROWTH = eM.BONUSGROWTH;
         rnsos = EM.STARTRCSG;
         ps = 0;// planets
         if ((tmp1 = eM.getCurCumPorsClanUnitSum(EM.STARTRCSG, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
-          disp1 += "Planets"
+          disp1 += "Planets"  //EM.NEWDEPRECIATION
+                   + " prevG " + eM.getSCurCumPorsClanAve(EM.PREVGROWTHS, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " newDep " + eM.getSCurCumPorsClanAve(EM.NEWDEPRECIATION, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " bal " + eM.getSCurCumPorsClanAve(EM.STARTRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " Trd+ " + eM.getSCurCumPorsClanAve(EM.TRADERCSGINCR, EM.ICUM, 1, ps, ps + 1, 0, 5)//EM.POSTSWAPRCSG
                    + " agro " + eM.getSCurCumPorsClanAve(rngro, EM.ICUM, 1, ps, ps + 1, 0, 5)
-                   + " depreciation " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " deprec " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " reprec " + eM.getSCurCumPorsClanAve(rnRep, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " bonus " + eM.getSCurCumPorsClanAve(rnBon, EM.ICUM, 1, ps, ps + 1, 0, 5)
-                   + " bgro " + eM.getSCurCumPorsClanAve(EM.GROWTHSEFF, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " swpdbal " + eM.getSCurCumPorsClanAve(EM.POSTSWAPRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " costs " + eM.getSCurCumPorsClanAve(EM.MTGCOSTS, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " lgro " + eM.getSCurCumPorsClanAve(EM.GROWTHSEFF, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " Lbal " + eM.getSCurCumPorsClanAve(rnLrcsg, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + newLine;
           ps = 1; // ships now
           disp1 += "Ships"
+                   + " prevG " + eM.getSCurCumPorsClanAve(EM.PREVGROWTHS, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " newDep " + eM.getSCurCumPorsClanAve(EM.NEWDEPRECIATION, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " bal " + eM.getSCurCumPorsClanAve(EM.STARTRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " Trd+ " + eM.getSCurCumPorsClanAve(EM.TRADERCSGINCR, EM.ICUM, 1, ps, ps + 1, 0, 5)//EM.POSTSWAPRCSG
                    + " agro " + eM.getSCurCumPorsClanAve(rngro, EM.ICUM, 1, ps, ps + 1, 0, 5)
-                   + " depreciation " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " deprec " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " reprec " + eM.getSCurCumPorsClanAve(rnRep, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " bonus " + eM.getSCurCumPorsClanAve(rnBon, EM.ICUM, 1, ps, ps + 1, 0, 5)
-                   + " bgro " + eM.getSCurCumPorsClanAve(EM.GROWTHSEFF, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " swpdbal " + eM.getSCurCumPorsClanAve(EM.POSTSWAPRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " costs " + eM.getSCurCumPorsClanAve(EM.MTGCOSTS, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " lgro " + eM.getSCurCumPorsClanAve(EM.GROWTHSEFF, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " Lbal " + eM.getSCurCumPorsClanAve(rnLrcsg, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + newLine;
         }
@@ -7797,6 +7809,7 @@ public class StarTrader extends javax.swing.JFrame {
 
         }
       }
+      EM.mfShort = false;
     }
     catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";

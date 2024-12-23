@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>trade</groupId>
     <artifactId>starTraderMaven</artifactId>
-    <version>19.64</version>
+    <version>19.65</version>
     <packaging>jar</packaging>
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -124,7 +124,6 @@
       </pluginRepository>
     </pluginRepositories>
     <name>StarTraderMaven</name>
-    <description>Change name of ordering score by clan and clan by store
-      lots of other AI development code</description>
+    <description>revise Catastrophy to run</description>
    
 </project>
