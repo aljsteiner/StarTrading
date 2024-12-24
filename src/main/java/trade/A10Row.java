@@ -195,8 +195,11 @@ public class A10Row extends A6Rowa {
    * @param val value to be store
    * @return add(row,sector,val)
    */
-  double add(int mm, double val) {
-    return this.add(mm/E.LSECS, mm % E.LSECS, val);
+  double dadd(int mm, double val) {
+    for (int secIx : E.ASECS) {
+      this.add(mm, secIx, val);
+    }
+    return this.get(mm, 0);
   }
 
   /**

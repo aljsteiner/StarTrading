@@ -1367,6 +1367,7 @@ class EM {
   }
 
   static boolean mfShort = false;
+  static boolean mfSS = false;
   static int mfb=3;
   static boolean test5 = false; // temp to test funcionss
 
@@ -1392,6 +1393,7 @@ class EM {
     NumberFormat dFrac = NumberFormat.getNumberInstance();
     NumberFormat whole = NumberFormat.getNumberInstance();
     NumberFormat exp = new DecimalFormat("0.00#E0#");
+    NumberFormat expS = new DecimalFormat("0.00E0#");
 
     if (mfShort || myWidth < 1190) { // 7 characters
       if (v == .0 || v == -0) {  // actual zero
@@ -1532,9 +1534,9 @@ class EM {
       }
       if ((v > -99999999999999. && v < 0.0 && tmp < .000000001 && tmp > E.PPZERO) || (v >= 0.0 && v < 999999999999999. && tmp < .000000001 && tmp > E.PPZERO)) {  //15 15 whole number with a remainder less than 9 digits after . more than 13 digits after . and less than a  number up to 12 digits, anything large goes to the exp format
         if (test5) {
-          System.err.printf("----MFT9a--- myWidth=" + myWidth + " v= %15.9e, %9.3e remainder %9.3e " + exp.format(v) + " \n", v, tmp, v, E.PPZERO);
+          System.err.printf("----MFT9a--- myWidth=" + myWidth + " v= %15.9e, %9.3e remainder %9.3e " + (mfSS ? expS.format(v) : exp.format(v)) + " \n", v, tmp, v, E.PPZERO);
         }
-        return exp.format(v);
+        return mfSS ? expS.format(v) : exp.format(v);
       }
 
       else if ((v > -999999999999. && v < 0.0 && (tmp < E.PPZERO)) || (v >= 0.0 && v < 9999999999999. && (tmp < E.PPZERO))) {  //12 13 whole number iwith a remainder smaller than 13 digits after . and less than a very large number, anything large goes to the e format
@@ -1555,7 +1557,7 @@ class EM {
       }
       else if ((v > -99999999. && v < -0.0) || (v >= 0.0 && v < 99999999.)) { // 8 8
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(5);
+        dFrac.setMaximumFractionDigits(mfSS ? 2 : 5);
         if (test5) {
           System.err.printf("----MFT9k--- v= %15.9e, " + dFrac.format(v) + " \n", v);
         }
@@ -1563,7 +1565,7 @@ class EM {
       }
       else if ((v > -999999999. && v < -0.0) || (v >= 0.0 && v < 999999999.)) { // 9 9
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(4);
+        dFrac.setMaximumFractionDigits(mfSS ? 1 : 4);
         if (test5) {
           System.err.printf("----MFT9d--- v= %15.8e, " + dFrac.format(v) + " \n", v);
         }
@@ -1571,7 +1573,7 @@ class EM {
       }
       else if ((v > -99999999999. && v < -0.0) || (v >= 0.0 && v < 99999999999.)) { //11 11
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(3);
+        dFrac.setMaximumFractionDigits(mfSS ? 1 : 3);
         if (test5) {
           System.err.printf("----MFT9e--- v= %10.5e, " + dFrac.format(v) + " \n", v);
         }
@@ -1604,14 +1606,14 @@ class EM {
     }
     else {
       if (test5) {
-        System.err.printf("----MFT9i--- v= %10.5e, " + exp.format(v) + " \n", v);
+        System.err.printf("----MFT9i--- v= %10.5e, " + (mfSS ? expS.format(v) : exp.format(v)) + " \n", v);
       }
-      return exp.format(v);
+      return mfSS ? expS.format(v) : exp.format(v);
     }
     if (test5) {
-      System.err.printf("----MFT9j--- v= %10.5e, " + exp.format(v) + " \n", v);
+      System.err.printf("----MFT9j--- v= %10.5e, " + (mfSS ? expS.format(v) : exp.format(v)) + " \n", v);
     }
-    return exp.format(v);
+    return mfSS ? expS.format(v) : exp.format(v);
 
   }
 
@@ -7149,40 +7151,40 @@ onceAgain:
    doRes(TRADESTRATGOAL, "Strat Goal", "Trade strategic goal last received/given goal", 1, 2, 0, LIST0 | CUR | CUM | BOTH | SKIPUNSET, 0, 0, 0L);
    doRes(TRADESTRATLASTGAVE, "trade Given%", "Percent strategic goods given per sum of initial rcsg units may be used for scoreing", 1, 2, 0, LIST15 | CURAVE | CUM | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(WTRADEDINCRMULT, "Trd%IncW", "% Years worth increase by total trade goods strategic worth this year/start year may be used in scoring ");
-    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST3 | LIST4 | LIST6 | LIST8 | LIST13 | LIST14 | CUMUNITS | BOTH, LIST23 | CURUNITS | BOTH, 0, 0);
-    doRes(INITRCSG, "init rcsg", "Initial rcsg Value ", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(STARTRCSG, "startRCSG", "Start year rcsg Value ", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
-    //  doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST9 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST3 | LIST4 | LIST6 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | CUMUNITS | BOTH | SKIPUNSET, LIST23 | CURUNITS | BOTH | SKIPUNSET, 0, 0);
+    doRes(INITRCSG, "init rcsg", "Initial rcsg Value ", 2, 2, 0, LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(STARTRCSG, "startRCSG", "Start year rcsg Value ", 2, 2, 0, LIST0 | LIST7 | LIST8 | LIST14 | LIST15 | LIST16 | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
+    // doRes(RCSG, "rcsg", " rcsg Value at year end rcsg", 2, 2, 0, LIST0 | LIST7 | LIST8 |  LIST9 | LIST14| LIST15 | LIST16  | CUMAVE| BOTH| SKIPUNSET, 0, 0, 0);
+    doRes(LIVERCSG, "Live RCSG", "Live rcsg Value including year end rcsg", 2, 2, 0, LIST7 | LIST8 | LIST9 | LIST14 | LIST15 | LIST16 | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0);
     /*
     doRes(INCRGROWRCSG, "incrGrowRCSG", "this years incr rcsg Value  after grow rcsg - before grow rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEARAVE | BOTH, 0, 0, 0);
     doRes(INCRRCSG, "%incrGrowrcsg", "this years incr rcsg Value  end year rcsg - start year rcsg", 2, 2, 0, ROWS1 | LIST0 | LIST7 | LIST8 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
      */
-    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH, 0, 0, 0);
-    doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH, 0, 0, 0);
+    doRes(HIGHRCSG, "high rcsg", "high rcsg count ", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEARAVE | THISYEARUNITS | BOTH | SKIPUNSET, 0, 0, 0);
+    doRes(LOWRCSG, "low rcsg", "low rcsg count", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(MAXRCSG, "max rcsg", "max rcsg Value");
     doRes(MINRCSG, "min rcsg", "min rcsg Value");
     doRes(WORTHIFRAC, "PercInitWorth ", "Percent increase of Final/Initial Worth Value including working, reserve: resource, staff, knowledge", 2, 2, 0, ROWS1 | LIST7 | LIST8 | LIST9 | ROWS3 | THISYEAR | SUM | SKIPUNSET, ROWS1 | LIST7 | LIST9 | LIST12 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, 0L, 0L);
     //doRes(CUMCATWORTH, "CumCatWorthInc", "cumulative worth increase this year created by cat//astrophies", 2, 2, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     // doRes(CATWORTHINCR, "CatWorthInc", "worth increase this year created by catastrophies", 1, 1, 0, ROWS1 | LIST0 | LIST1 | LIST2 | LIST7 | LIST8 | LIST9 | LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | THISYEAR | THISYEARAVE | BOTH | SKIPUNSET, LIST12 | LIST13 | LIST14 | LIST16 | LIST17 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
-    doRes(GROWTHS, "growths", "sum4 actual growth for this year", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
-    doRes(PREVGROWTHS, "prevgrowths", "sum4 prevgrowth actual for last year", 1, 1, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
+    doRes(GROWTHS, "growths", "sum4 actual growth for this year", 2, 3, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13 | SKIPUNSET, 0L, 0L, 0L);
+    doRes(PREVGROWTHS, "prevgrowths", "sum4 prevgrowth actual for last year", 1, 1, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13 | SKIPUNSET, 0L, 0L, 0L);
     /*
     doRes(GRADESUP, "gradesUp", "number of times some grades up done", 1, 1, 0, LIST1 | LIST5 | LIST6 | LIST7 | LIST8 | LIST9 | LIST19 | CURAVE | BOTH | LIST13, 0L, 0L, 0L);
     
     doRes(PREVGROWTHP, "%prevgrowth", "growth percent of year start balance at the start of this year", 2, 6, 2, ROWS1 | LIST8 | CURAVE | BOTH | LIST13 | CURAVE | BOTH, 0L, 0L, 0L);
 */
-    doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 1, 1, 2, ROWS1 | LIST8 | CUMAVE | BOTH, LIST13 | CURAVE | BOTH, 0L, 0L);
-    doRes(NEWDEPRECIATION, "NewDepreciation", "New depreciation this year", 1, 1, 2, LIST8 | CUMAVE | BOTH, LIST13 | CURAVE | BOTH, 0L, 0L);
-    doRes(RNEWDEPRECIATION, "R newDepreciation", "new Depreciation in R", 1, 1, 2, ROWS1 | LIST22 | CUMAVE | BOTH, 0L, 0L, 0L);
+    doRes(COSTWORTHDECR, "CstDcrWorth", "worth decrease after costs this year", 1, 1, 2, ROWS1 | LIST8 | CUMAVE | BOTH, LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(NEWDEPRECIATION, "NewDepreciation", "New depreciation this year", 1, 1, 2, LIST8 | CUMAVE | BOTH | SKIPUNSET, LIST13 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
+    doRes(RNEWDEPRECIATION, "R newDepreciation", "new Depreciation in R", 1, 1, 2, ROWS1 | LIST22 | CUMAVE | BOTH | SKIPUNSET, 0L, 0L, 0L);
     doRes(RNEWDEPRECIATION + 1, "C newDepreciation", "new Depreciation in C");
     doRes(RNEWDEPRECIATION + 2, "S newDepreciation", "new Depreciation in S");
     doRes(RNEWDEPRECIATION + 3, "G newDepreciation", "new Depreciation in G");
     doRes(DEPRECIATION, "Depreciation", "Cumulative depreciation this year", 1, 1, 0, LIST8 | CUMAVE | BOTH, LIST13 | CURAVE | BOTH, 0L, 0L);
-    doRes(NEWREPRECIATION, "NewRepreciation", "repreciation this year", 1, 1, 2, LIST9 | CUMAVE | BOTH, LIST14 | CURAVE | BOTH, 0L, 0L);
+    doRes(NEWREPRECIATION, "NewRepreciation", "repreciation this year", 1, 1, 2, LIST9 | CUMAVE | BOTH | SKIPUNSET, LIST14 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     doRes(REPRECIATION, "Repreciation", "Cumulative repreciation this year");
     doRes(NEWPRECIATION, "NewPreciation", "new Preciation = depreciation - repreciation this year");
-    doRes(PRECIATION, "Preciation", "Preciation = Cumulative depreciation - repreciation ");
+    doRes(PRECIATION, "Preciation", "Preciation = Cumulative depreciation - repreciation ", 1, 1, 2, LIST9 | CUMAVE | BOTH | SKIPUNSET, LIST14 | CURAVE | BOTH | SKIPUNSET, 0L, 0L);
     /*
     doRes(NEWDEPRECIATIONP, "%NewDepreciation", "%new depreciation of growth this year", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);
     doRes(DEPRECIATIONP, "%Depreciation", "%Cumulative depreciation of growth this year", 1, 1, 1, LIST8 | LIST13 | CURAVE | BOTH | SKIPUNSET | SKIPDUP, 0, 0, 0);

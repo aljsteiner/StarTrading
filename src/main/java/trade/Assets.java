@@ -4470,7 +4470,7 @@ public class Assets {
         ARow zeroVals = new ARow(ec);
         depreciation = bals.getRow(ABalRows.DEPRECIATIONIX + sIx);
         //SubAssets C,G have no Repreciations
-        repreciation = bals.getRow(ABalRows.NEWREPRECIATIONIX);
+        repreciation = bals.getRow(ABalRows.NEWREPRECIATIONIX + sIx);
         // growthsix includes the catstrophy benefits from last year
         if (sIx == 2) {
           aChar[sIx] = "s";  // sometimes got lost
@@ -4516,7 +4516,7 @@ public class Assets {
           double dSecDepreciation = depreciation.get(secIx);//newDepreciation already added
           double dDifDepreciation = dSecDepreciation - dUnitGrowth;//?? too big
           dSecDepreciation -= dDifDepreciation > 0.0 ? dDifDepreciation : 0.0;
-          dSecDepreciation = dSecDepreciation - bals.get(ABalRows.NEWREPRECIATIONIX, secIx);
+          dSecDepreciation = dSecDepreciation - bals.get(ABalRows.NEWREPRECIATIONIX + sIx, secIx);
           // ?? too small
           dSecDepreciation = dSecDepreciation < 0.0 ? 0.0 : dSecDepreciation;
           bals.set(ABalRows.DEPRECIATIONIX + sIx, secIx, dSecDepreciation);
@@ -9019,22 +9019,14 @@ public class Assets {
             catEffSGBen += bonusVal3;
           setStat(EM.NEWREPRECIATION, pors, clan, deteriorationReduce3 + deteriorationReduce2, 0);//
           setStat(EM.NEWREPRECIATION, pors, clan, deteriorationReduce1, 1);//
-          bals.set(ABalRows.NEWREPRECIATIONIX, deteriorationReduce1 + deteriorationReduce3 + deteriorationReduce2);
+          bals.set(ABalRows.NEWREPRECIATIONIX, r3, deteriorationReduce1);
+          bals.set(ABalRows.NEWREPRECIATIONIX + 2, s3, deteriorationReduce2);
+          bals.set(ABalRows.NEWREPRECIATIONIX, r4, deteriorationReduce3);
             catEffSDepreciationBen += deteriorationReduce1;
             //setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
             // setStat(eM.CRISISRESDEPRECIATIONBONUSPERCENT, pors, clan, nd1, 1);
 if (pors == E.P) {
-            double rcd5 = r.depreciation.get(r5);
-            // double rd5 = -rDepreciationReduce2;
-            //    rBal = r.balance.get(r5);
-            //if (-rDepreciationReduce2 > rcd5) {
-            // double rm = -rDepreciationReduce2 - rcd5;
-            //  setStat(EM.CRISISRESREDUCESURPLUSPERCENT, pors, clan, rm, 1);
-            // rd5 = rcd5;
-            // }
-            // double rd5 = -rDepreciationReduce2 > rcd5 ? rcd5*.99 : -rDepreciationReduce2;
-            // r.depreciation.add(r5, rd5);
-            //setStat("catNegDepreciation", pors, clan, rd5, 0);
+
           }
           else {  // ships
             manuals.add(bonusX2, bonusManuals1);  // Adds for sectorX bonusMan

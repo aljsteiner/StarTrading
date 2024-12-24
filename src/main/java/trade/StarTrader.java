@@ -7568,7 +7568,7 @@ public class StarTrader extends javax.swing.JFrame {
         int rnsos = EM.POSTSWAPRCSG;
         int rngro = EM.RAWYEARLYUNITGROWTH;
         int rnDep = EM.DEPRECIATION;
-        int rnRep = EM.REPRECIATION;
+        int rnRep = EM.NEWREPRECIATION;
         int rnBon = EM.BONUSGROWTH;
         int rnLrcsg = EM.LIVERCSG;
         // int rNDepreciation = eM.RDEPRECIATIONP;// largest
@@ -7583,7 +7583,7 @@ public class StarTrader extends javax.swing.JFrame {
                    + " Trd+ " + eM.getSCurCumPorsClanAve(EM.TRADERCSGINCR, EM.ICUM, 1, ps, ps + 1, 0, 5)//EM.POSTSWAPRCSG
                    + " agro " + eM.getSCurCumPorsClanAve(rngro, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " deprec " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
-                   + " reprec " + eM.getSCurCumPorsClanAve(rnRep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " reprec " + eM.getSCurCumPorsClanAve(rnRep + ps * 2, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " bonus " + eM.getSCurCumPorsClanAve(rnBon, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " swpdbal " + eM.getSCurCumPorsClanAve(EM.POSTSWAPRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " costs " + eM.getSCurCumPorsClanAve(EM.MTGCOSTS, EM.ICUM, 1, ps, ps + 1, 0, 5)
@@ -7598,7 +7598,7 @@ public class StarTrader extends javax.swing.JFrame {
                    + " Trd+ " + eM.getSCurCumPorsClanAve(EM.TRADERCSGINCR, EM.ICUM, 1, ps, ps + 1, 0, 5)//EM.POSTSWAPRCSG
                    + " agro " + eM.getSCurCumPorsClanAve(rngro, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " deprec " + eM.getSCurCumPorsClanAve(rnDep, EM.ICUM, 1, ps, ps + 1, 0, 5)
-                   + " reprec " + eM.getSCurCumPorsClanAve(rnRep, EM.ICUM, 1, ps, ps + 1, 0, 5)
+                   + " reprec " + eM.getSCurCumPorsClanAve(rnRep + ps * 2, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " bonus " + eM.getSCurCumPorsClanAve(rnBon, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " swpdbal " + eM.getSCurCumPorsClanAve(EM.POSTSWAPRCSG, EM.ICUM, 1, ps, ps + 1, 0, 5)
                    + " costs " + eM.getSCurCumPorsClanAve(EM.MTGCOSTS, EM.ICUM, 1, ps, ps + 1, 0, 5)

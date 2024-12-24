@@ -64,15 +64,15 @@ public class History {
   static final int aux2Info = 13;
   static final int aux3Info = 14;
   static final int aux4Info = 15;
-  
+
   static final int aux5Info = 16;
   static final int aux6Info = 17;
   // headers appear as the first row of a section
   static final int headers20 = 20;  // display header rows encounterd rows earlier
   static final int mostDl = 30;
-  static final int dl = E.debugLogsOut ? mostDl:1;
+  static final int dl = E.debugLogsOut ? mostDl : 1;
   static final int highestListable = dl;
- // static final int dl = mostDl;
+  // static final int dl = mostDl;
 
   NumberFormat dFrac = NumberFormat.getNumberInstance();
   NumberFormat dFrac5 = NumberFormat.getNumberInstance();
@@ -80,7 +80,6 @@ public class History {
   NumberFormat df5 = dFrac5;
   NumberFormat df = dFrac;
   NumberFormat exp = new DecimalFormat("0.######E0");
- 
 
   /**
    * Class that holds the history information for the hist logs * The History
@@ -162,27 +161,27 @@ public class History {
   public History(String apre, int alev, String... sss) {
     this.shist(apre, alev, sss);
   }
-  
-   String mf(double v){
+
+  String mf(double v) {
     return EM.mf(v);
-   }
-   
-   /**
+  }
+
+  /**
    * set title and text + string variables and a string if variables &lt 11
    *
    * @param aPre 2 char identifier of line family
-   * @param lev  level of the line, used to limit max line level to display
+   * @param lev level of the line, used to limit max line level to display
    * @param sss separate parameters and if length &lt 10 a longer string
    */
-   void History(String apre,int alev,String[] aaa){
-     this.shist(apre,alev,aaa);
-   }
+  void History(String apre, int alev, String[] aaa) {
+    this.shist(apre, alev, aaa);
+  }
 
   /**
    * set title and text + variables and a string if variables &lt 11
    *
    * @param aPre 2 char identifier of line family
-   * @param lev  level of the line, used to limit max line level to display
+   * @param lev level of the line, used to limit max line level to display
    * @param sss separate parameters and if length &lt 10 a longer string
    */
   public void shist(String apre, int alev, String[] sss) {
@@ -297,7 +296,7 @@ public class History {
     // use a previous constructor
     this.shist(ec.aPre, alev, sss);
   }
-  
+
   /**
    * a constructor that uses double values converted to strings for Ss
    *
@@ -309,7 +308,7 @@ public class History {
    */
   public History(String aPre, int alev, String atitle, double... ddd) {
     level = alev;
-    
+
     int columns = ddd.length;
     if (columns == 0 || ((alev > History.highestListable) && (alev != 20))) {
       title = "undefined";
@@ -319,6 +318,8 @@ public class History {
       pre = aPre;
       level = alev;
       title = atitle;
+      boolean tt = EM.mfSS;
+      EM.mfSS = true;
       for (int n = 0; n < columns; n++) {
         Ss[n] = mf(ddd[n]);
       }
@@ -326,6 +327,7 @@ public class History {
       for (int n = columns; n < 10; n++) {
         Ss[n] = "__";
       }
+      EM.mfSS = tt;
     }
 
   }
@@ -349,13 +351,16 @@ public class History {
     }
     else { // title then string segments
       String sss[] = new String[ddd.length + 1];
-     
+
       title = atitle;
       level = alev;
       pre = aPre;
+      boolean tt = EM.mfSS;
+      EM.mfSS = true;
       for (int m = 1; m < ddd.length + 1; m++) {
         Ss[m] = mf(ddd[m - 1]);
       }
+      EM.mfSS = tt;
     }
   }
 
@@ -372,12 +377,15 @@ public class History {
     level = lev;
     this.title = title;
     pre = p;
+    boolean tt = EM.mfSS;
+    EM.mfSS = true;
     for (int m = 0; m < 7; m++) {
       Ss[m] = mf(A.get(m));
     }
     Ss[7] = mf(A.min(0));
     Ss[8] = mf(A.sum());
     Ss[9] = mf(A.sum() / E.lsecs);
+    EM.mfSS = tt;
   }
 
   /**
@@ -417,12 +425,15 @@ public class History {
     level = lev;
     this.title = title;
     pre = p;
+    boolean tt = EM.mfSS;
+    EM.mfSS = true;
     for (int m = 0; m < 7; m++) {
       Ss[m] = mf(A.get(m));
     }
     Ss[7] = V7;
     Ss[8] = V8;
     Ss[9] = V9;
+    EM.mfSS = tt;
   }
 
   /**
@@ -441,12 +452,15 @@ public class History {
     this.title = title;
     pre = p;
 
+    boolean tt = EM.mfSS;
+    EM.mfSS = true;
     for (int m = 0; m < 7; m++) {
       Ss[m] = mf(A.get(m));
     }
     Ss[7] = mf(V7);
     Ss[8] = mf(V8);
     Ss[9] = mf(V9);
+    EM.mfSS = tt;
   }
 
   /**
@@ -460,12 +474,15 @@ public class History {
     level = lev;
     this.title = title;
 
+    boolean tt = EM.mfSS;
+    EM.mfSS = true;
     for (int m = 0; m < 7; m++) {
       Ss[m] = mf(A.get(m));
     }
     Ss[7] = mf(A.min(0));
     Ss[8] = mf(A.sum());
     Ss[9] = mf(A.sum() / E.lsecs);
+    EM.mfSS = tt;
   }
 
   /**
