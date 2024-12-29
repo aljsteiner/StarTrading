@@ -10861,14 +10861,15 @@ if (pors == E.P) {
           }
         }
         setStat(EM.BONUSGROWTH, 100. * bals.sum4(ABalRows.YEARLYBONUSSUMGROWTHVALIX));
+        /*
         String[] potentialGrowthStats = {"potentialResGrowthPercent", "potentialCargoGrowthPercent", "potentialStaffGrowthPercent", "potentialGuestGrowthPercent"};
         for (int sIx = 0; sIx < 4; sIx += 1) {
           double tt = calcPercent(eM.assetsUnitGrowth[sIx][pors], sys[sIx].rawUnitGrowth.sum());
           if (tt > 0.0) {
-            setStat(potentialGrowthStats[sIx], tt);
+           // setStat(potentialGrowthStats[sIx], tt);
           }
         }
-
+   */
         EM.isHere("--EYEYf--", ec, "end of live stats");
 // -----------ENDLIVE---ENDLIVE---ENDLIVE---------------------------------
       }

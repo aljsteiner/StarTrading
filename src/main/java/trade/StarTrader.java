@@ -214,10 +214,10 @@ public class StarTrader extends javax.swing.JFrame {
    */
 
   static final public String[] statsButtonsTips = {statsButton0Tip, statsButton1Tip, statsButton2Tip, statsButton3Tip, statsButton4Tip, statsButton5Tip, statsButton6Tip, statsButton7Tip, statsButton8Tip, statsButton9Tip, statsButton10Tip, statsButton11Tip, statsButton12Tip, statsButton13Tip, statsButton14Tip, statsButton15Tip, statsButton16Tip, statsButton17Tip, statsButton18Tip, statsButton19Tip, statsButton20Tip, statsButton21Tip, statsButton22Tip, statsButton23Tip, gameTextFieldText};
-  static final public String versionText = "19.65";
+  static final public String versionText = "19.66";
   static final public int ver58more = 0;
   static final public String storyText
-          = "         StarTrader       Version 19.65\n"
+          = "         StarTrader       Version 19.66\n"
             + "“Star Trader”; “Save the Planets”; “Trade, trade, trade”; This game is about finances and economics and economic survival strategies.  It starts with many separate economies of StarTrader ships and Planets each trying to survive.  The different planets and traders are part of one of five clans.  The initial setting declares that the clan with the most generosity wins.  The most generosity is the highest cumulative some of offering of resources, staff and knowledge manuals.  Of course this implies sufficient planets and ships to offer resources in trading.\n"
             + "\n"
             + "Each economy has 2 financial sectors that are so weak they need to trade resources to survive.  Each economy has 2 financial sector that are very strong generating resource and/or staff surpluses. When an economy does not have enough of any of the seven financial sectors to pay the costs of the next year, that economy dies.  With the initial settings, about 10% of economies die each year.  Economies survive by trading.  The producer economies (planets, cities, nations) survive by trading with (ships, starships, traders with wagons) for their survival resources.  The producers trade their surplus financial goods for survival financial goods.  The ships use resources to trade and resources to grow The travel and trading is all done by robots for each planet and ship in the game.  Players adjust the rules for the robots, trying to set the adjustments that will enable them to get higher scores each year.  There are about 30 game level settings, and another 30 settings for each clan.  The players need to study the reports to see if any settings they change help their score.\n"

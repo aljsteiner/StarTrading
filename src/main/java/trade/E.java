@@ -81,7 +81,7 @@ public class E {
   // static final boolean noAsserts = false; // false expect -ea in call
   static boolean ifassert = false; // preset for later test
   //Use preyears in heavy development, to skip the settings wait
-  static int PREYEARS = 9; // number of years run as part of run
+  static int PREYEARS = 11; // number of years run as part of run
   static final boolean debugfalse = false;
   // resetOut out = StarTraderOutput,err = StarTraderErrors
   //static final boolean resetOut = debugOutput;  //change out, err to

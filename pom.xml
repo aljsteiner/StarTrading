@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>trade</groupId>
     <artifactId>starTraderMaven</artifactId>
-    <version>19.65</version>
+    <version>19.66</version>
     <packaging>jar</packaging>
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -124,6 +124,6 @@
       </pluginRepository>
     </pluginRepositories>
     <name>StarTraderMaven</name>
-    <description>revise Catastrophy to run</description>
+    <description>raise ship trading frac</description>
    
 </project>

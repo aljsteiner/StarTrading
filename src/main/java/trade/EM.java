@@ -219,12 +219,15 @@ class EM {
   static volatile double[] gameShipFrac = {.70};  // 2.3 ships / econs .75 means 3ships/1 planet, .8 = 4ships/1planet
   static final double[][] mGameShipFrac = {{.25, 1.20}, {.25, 1.20}};
 // double[][] clanShipFrac = {{.70, .70, .70, .501, .6}, {.70, .70, .70, .501, .6}}; // .3->5. clan choice of clan ships / clan econs %ships of your clan
-  static volatile double[][] clanShipFrac = {{.4, .45, .46, .47, .5}};
+  static volatile double[][] clanShipFrac = {{.66, .65, .67, .67, .66}};
+  //static volatile double[][] clanShipFrac = {{.4, .45, .46, .47, .5}};
   // static volatile double[][] clanShipFrac = {{.50, .50, .57, .50, .50}};
   // static volatile double[][] clanShipFrac = {{.56, .55, .67, .57, .56}};
   static final double[][] mClanShipFrac = {{.20, .81}, {.20, .81}};
   // static volatile double[][] clanAllShipFrac = {{.44, .45, .46, .4, .42}}; // clan (ships/econs)
-  static volatile double[][] clanAllShipFrac = {{.54, .55, .56, .6, .52}}; // clan (ships/econs)
+ // static volatile double[][] clanAllShipFrac = {{.54, .55, .56, .6, .52}}; // clan (ships/econs)
+  static volatile double[][] clanAllShipFrac = {{.66, .65, .67, .67, .66}};
+  ; // clan (ships/econs)
   static final double[][] mClanAllShipFrac = {{.25, 1.20}, {.2, 1.20}};
   static volatile double econLimits1[] = {150.}; // start limiting econs
   static final double mEconLimits1[][] = {{100., 500.}, {200., 500.}};
@@ -2555,7 +2558,8 @@ class EM {
   // ships get much more to survive and grow with planets
   // the fracs get reduced as the trades continue
   static final double mTradeFrac[][] = {{.35, .65}, {.2, 0.5}};
-  static double[][] tradeFrac = {{.41, .41, .41, .41, .41}, {.22, .22, .22, .22, .22}, ssFrac[0]};
+  // static double[][] tradeFrac = {{.41, .41, .41, .41, .41}, {.22, .22, .22, .22, .22}, ssFrac[0]};
+  static double[][] tradeFrac = {{.41, .41, .41, .41, .41}, {.3, .3, .3, .3, .3}, ssFrac[0]};
   // termFrac = (goalTermBias )/(goalTermBias + barterStart - term)
   //    gtb=18 t=18  18/18 = 1;  t=9  18/(18 + 18-9=27) = .6666; t=`0 18/36 = .5
   // related to decrement per term
