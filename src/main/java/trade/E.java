@@ -130,7 +130,8 @@ public class E {
   static final boolean debugDidEconYearEnd = debugMaster; // StarTrader.doYear() doYearEdn
   static final boolean debugAssetsStats = debugMaster && outputFewer; // why stats aren't showing
   static final boolean debugStats = debugMaster && outputFewer; // why stats aren't showing
-  static final boolean debugStatsOut = debugOutput  ; // stats output
+  static final boolean debugStatsOut = debugOutput && outputFewer;
+  ; // stats output
   static final boolean debugScannerOut = debugOutput && outputFewer; // scanner output
   static final boolean debugMisc = debugMaster; // other debug tests
   static final boolean debugCanTrade = debugMaster; // planet can trade

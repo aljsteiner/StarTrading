@@ -3921,7 +3921,7 @@ onceAgain:
    * @return the best value for the that the setting +nudge should be set
    */
    double fFTransferFracSetCntDr(String aKey, Integer[] aVal, String what,  boolean setAll,boolean doSet,boolean pr){
-   return setCntDr(aKey, aVal, what,7, 6, E.AILimsC,  E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,  E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4.,setAll,doSet, pr, y);
+     return setCntDr(aKey, aVal, what, 8, 7, E.AILimsC, E.pNudge1, 0., E.AILims1, -1, 1., E.AILims1, -1, 1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1., E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4., setAll, doSet, pr, y);
 
   }
    String[] whatA = {"prevTradeFracA","prevTradeFracB"};
@@ -3980,8 +3980,9 @@ onceAgain:
   double tradeFracSetCntDr(String aKey, Integer[] aVal, String[] what,  boolean setAll,boolean doSet,boolean pr){
      int pValIx = E.getAIMuch(aKey.charAt(E.ppors)); //ix value in myAILim
     double x1M = E.AILims123[pValIx];
-    int pors = (int)x1M;
-   return setCntDr(aKey, aVal, what[pors], pors+1,pors+1, E.AILims1, E.pNudge0,0., E.AILims3, E.pPrevEScW,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, .3, 4., E.AILims3, E.pPrevEScW, 7000.,99999999999., E.AILims123, E.ppors, pors, pors,  E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
+    int pors = (int) x1M;
+    //do 2,1 for planets, 4,3 for ship with rest each
+    return setCntDr(aKey, aVal, what[pors], 2 * pors + 2, 2 * pors + 1, E.AILims1, E.pNudge0, 0., E.AILims3, E.pPrevEScW, 1., E.AILims1, -1, 1., E.AILimss[6], E.pLastScP, .3, 4., E.AILims3, E.pPrevEScW, 7000., 99999999999., E.AILims123, E.ppors, pors, pors, E.AILimss[6], -1, 4., 4., setAll, doSet, pr, y);
   }
     /**
    * define the set of setCntDr settings used to set another key which may be new, this is to define entries in a map
@@ -3997,13 +3998,14 @@ onceAgain:
    */
   void setCntAr(String aKey, Integer[] aVal, boolean setAll,boolean doSet,boolean pr) {
     boolean no = false, y = true;
-    //  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean setAll, boolean doSet,boolean printDeb, boolean p2)
-    //  pick the econ input values that produced winner
-    //  double tradeFracSetCntDr(String aKey, Integer[] aVal, String[] what,  boolean setAll,boolean doSet,boolean pr)
+
+    //do 2,1 for planets, 4,3 for ships
     tradeFracSetCntDr(aKey, aVal, whatA, setAll,doSet, pr);//aarn,arn =0 or 1dpending on pors value
-    setCntDr(aKey, aVal, "prevAIEScore", 3, 3,E.AILims3,E.pPrevEScW,0., E.AILims1, -1,1.,E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
-     setCntDr(aKey, aVal, "prevAIERScoreW", 5, 4,E.AILims2, E.pPrevERScW,0., E.AILims1, -1,1.,E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
-     fFTransferFracSetCntDr(aKey,  aVal, "prevFFTransferFrac", setAll,doSet, pr);//7,6, 
+
+    setCntDr(aKey, aVal, "prevAIERScoreW", 5, 4, E.AILims2, E.pPrevERScW, 0., E.AILims1, -1, 1., E.AILims1, -1, 1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1., E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4., setAll, doSet, pr, y);
+    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4., setAll, doSet, pr, y);
+    //8,7
+    fFTransferFracSetCntDr(aKey, aVal, "prevFFTransferFrac", setAll, doSet, pr);//8,7,
  //     setCntDr(aKey, aVal, "prevFFTransferFrac", 7, 6, E.AILimsC,  E.pNudge1,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,  E.AILimss[6], E.pLastScP, 4., 4., E.AILimss[6], E.pLastScP, 4., 4.,setAll,doSet, pr, y);
   //  setCntAr(aKey, aVal, "prevAIERScoreWA", 4, 4, E.AILims1, E.pPrevERScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 0.,setAll,doSet, pr, y);
  //  setCntAr(aKey, aVal, "prevAIERScoreWB", 5, 5, E.AILims1, E.pPrevERScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
@@ -4014,13 +4016,14 @@ onceAgain:
    // setCntDr(aKey, aVal, "prevTradeFracB", 2, 2, E.AILims1, E.pNudge0,0., E.AILims1, -1,1., E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,  E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
   //  setCntAr(aKey, aVal, "prevTradeFracB", 2, 2, E.AILims1, E.pNudge0, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 1., 1.,setAll,doSet, pr, y);
  //   setCntAr(aKey, aVal, "44&ProspMin", 3, 3, E.AILimss[4], E.pPrevProsM, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet,  pr, y);
-
+// setCntDr(aKey, aVal, "prevAIEScore", 3, 3,E.AILims3,E.pPrevEScW,0., E.AILims1, -1,1.,E.AILims1,-1,1., E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, E.ppors, 0., 1.,E.AILimss[6],-1, 4., 4., E.AILimss[6],-1, 4., 4.,setAll,doSet, pr, y);
    /// setCntAr(aKey, aVal, "prevAIEScore", 3, 3, E.AILims1, E.pPrevEScW, E.AILimss[6], E.pLastScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
    
-//    setCntAr(aKey, aVal, "prevAIEconRScore", 5, 4, E.AILimss[5], E.pPrevERScW, E.AILimss[6], E.pPrevScP, 4., 4., E.AILims123, -1, 4., 4.,setAll, doSet, pr, y);
    // setCntAr(aKey, aVal, "prevFFTransferFrac",5,4, E.AILimsC, E.pNudge1 , E.AILimss[6],E.pLastScP,4., 4.,setAll, doSet,pr, y);
    ///setCntAr(aKey, aVal, "FutFTFrac", 7, 6, E.AILims1, E.pNudge1, E.AILimss[6], E.pLastScP, 4., 4., setAll, doSet, pr, y);
-
+ //  double setCntAr(String aKey, Integer[] aVal, String what, int aarn, int arn, double[] myAILim, int pX1, double[] myAILim1, int lX1, double llX1, double luX1, double[] myAILim2, int lX2, double llX2, double luX2, boolean setAll, boolean doSet,boolean printDeb, boolean p2)
+    //  pick the econ input values that produced winner
+    //  double tradeFracSetCntDr(String aKey, Integer[] aVal, String[] what,  boolean setAll,boolean doSet,boolean pr)
     //   setCntAr(aKey, aVal, "23&prevAIScoreW", 2, 2, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 2., 3., E.AILims123, E.pPrevScP, 2., 3..,setAll, doSet, pr, no);
     //  setCntAr(aKey, aVal, "01&prevAIScoreW", 3, 3, E.AILims1, E.pLastEScW, E.AILims123, E.pPrevScP, 0., 1., E.AILims123, E.pPrevScP, 0., 3.,setAll., doSet, pr, no);
     //setCntAr(seeArrays,aKey, aVal, "ForwFundTransferFrac", 5, 5, E.AILimsC, E.pNudge1, E.AILims123, E.pPrevScP, 4., 4., E.AILims123, E.pPrevScP, 4., 4..,setAll, doSet, pr, no);
@@ -4544,10 +4547,12 @@ onceAgain:
            nzMax = 9;
            nzCnt=0;
             bCnt=0;bsum=0;bVal=0;bc=0;rCnt=0;
-           bStrt = mostIaN-rMax/2;
+          bStrt = mostIaN - rMax / 2;
+          assert fRange >= 0 : "fRange negative=" + fRange;
           for (ia = fRange; ia <= tRange && nzCnt < nzMax; ia++) {
             // see value Ix, entryCnt at that value, value at that value Ix
-            ix = ix -strtIas;
+            ix = ia - strtIas;
+            assert ix >= 0 : " ix negative=" + ix;
             if (drs[aarn][ia] > 0) {
               nzCnt++;
               if (doBest && ia > bStrt && rCnt < rMax ) {

@@ -1702,7 +1702,7 @@ public class Assets {
 
       // if (E.debugStatsOut && cntStatsPrints++ > E.ssMax) {
       if (E.debugStatsOut) {
-        cntStatsPrints = 0;
+        //  cntStatsPrints = 0;
         if (rn > 0) {
           long endSt = (new Date()).getTime();
           long moreTT = endSt - doYearTime;
@@ -1723,15 +1723,18 @@ public class Assets {
           long resICumIsset = resI[rn][ICUM][CCONTROLD][ISSET];
 
           long isset1 = (yrsIx - 1 + yrsIxj < resI[rN].length ? resI[rN][yrsIx - 1 + yrsIxj] != null ? resI[rN][yrsIx - 1 + yrsIxj][CCONTROLD][ISSET] : -1 : -2);
-          EM.mfShort = false;
-          //   if(E.debugStatsOut){
-          System.out.println("---SSTat--- " + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " " + name + "Y" + EM.year + " " + (EM.myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + EM.myAIlearnings.size()) + " age" + age + " Econ.age" + ec.age + ", pc=" + pors + ", " + clan + ", curSet=" + resIcur0Isset + ", cumISet=" + resICumIsset + " V=" + EM.mf(v) + " prevResVcum=" + EM.mf(prevResVCumC) + " nextResVcum=" + EM.mf(nextResVCumC) + "\n" + "+++SSTat+ resVcum=" + EM.mf(resVCumClan) + "::" + resVCumClan + " resIcum=" + resICumClan + ", cur0ClanV=" + mf(resVcur0Clan) + ", cur++Clan=" + mf(resVCurmClan));
+          boolean T = EM.mfShort;
+          boolean Q = EM.mfSS;
+          EM.mfShort = EM.mfSS = true;
+          if (E.debugStatsOut) {
+            System.out.println("---SSTat--- " + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + "S" + resIcur0Isset + resICumIsset + EM.mf("V", v) + EM.mf("PMV", prevResVCumC));
+            //" " + name + "Y" + EM.year + "K" + clan + "A" + age + + EM.mf("NM", nextResVCumC) + EM.mf(resVCumClan) + "::" + resVCumClan + " resIcum = " + resICumClan + " , cur0ClanV = " + mf(resVcur0Clan) + ", cur++Clan =" + mf(resVCurmClan));
           /*      System.out.println(
                       "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
 
               System.out.flush();
            */
-          // }
+          }
         }
       }
       //   } // end of lock on res..[rn]
