@@ -70,7 +70,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
-import static trade.EM.NEWREPRECIATION;
+import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
  *
@@ -1729,11 +1729,11 @@ public class Assets {
           if (E.debugStatsOut) {
             System.out.println("---SSTat--- " + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + "S" + resIcur0Isset + resICumIsset + EM.mf("V", v) + EM.mf("PMV", prevResVCumC));
             //" " + name + "Y" + EM.year + "K" + clan + "A" + age + + EM.mf("NM", nextResVCumC) + EM.mf(resVCumClan) + "::" + resVCumClan + " resIcum = " + resICumClan + " , cur0ClanV = " + mf(resVcur0Clan) + ", cur++Clan =" + mf(resVCurmClan));
-          /*      System.out.println(
+            /*      System.out.println(
                       "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
 
               System.out.flush();
-           */
+             */
           }
         }
       }
@@ -4303,20 +4303,27 @@ public class Assets {
         KnowledgeMaintMultiplier = makeZero(KnowledgeMaintMultiplier);
         maintEfficiency = makeZero(maintEfficiency);
         groEfficiency = makeZero(groEfficiency);
+        double dski = 0.;
+        double dskj = 0.;
+        double dmans = manuals.sum();
         aschar = aChar[sIx];
         splus = spluss[sIx];
         // one factor in efficiency, is a sectors importance to other sectors
         // use the grow Requirements table and Maint Requirements table to determin
         // sector importance.  Sum them in the following loops
-        for (int i = 0; i < E.lsecs; i++) {
-          for (int j = 0; j < E.lsecs; j++) {
-            GroReqSum.add(i, gReqs[pors][i][j + splus] * E.gReqEffMult * E.gReqMult[pors][0] * knowledge.get(j));
-            MaintReqSum.add(i, maintRequired[pors][i][j + splus] * E.mReqEffMult * E.mReqMult[pors][0] * knowledge.get(j));
+        //  for (int i = 0; i < E.lsecs; i++) {
+        //   for (int j = 0; j < E.lsecs; j++) {
+        for (int i : E.ASECS) {
+          for (int j : E.ASECS) {
+            dskj = Math.sqrt(knowledge.get(j));
+            GroReqSum.add(i, gReqs[pors][i][j + splus] * E.gReqEffMult * E.gReqMult[pors][0] * dskj);
+            MaintReqSum.add(i, maintRequired[pors][i][j + splus] * E.mReqEffMult * E.mReqMult[pors][0] * dskj);
           } // end go through j to get the sums
+          dski = Math.sqrt(knowledge.get(i));
           GroReqMultiplier.add(i, GroReqSum.get(i) * multiplierForEfficiencyFromRequirements);
           MaintReqMultiplier.add(i, MaintReqSum.get(i) * multiplierForEfficiencyFromRequirements);
-          KnowledgeGroMultiplier.add(i, Math.sqrt((GroReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : manuals.sum()) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
-          KnowledgeMaintMultiplier.add(i, Math.sqrt((MaintReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? manuals.sum() : manuals.sum()) * eM.manualEfficiencyMult[pors][0] + knowledge.get(i)) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
+          KnowledgeGroMultiplier.add(i, Math.sqrt((GroReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? dmans : dmans) * eM.manualEfficiencyMult[pors][0] + dski) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
+          KnowledgeMaintMultiplier.add(i, Math.sqrt((MaintReqMultiplier.get(i) + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (pors == E.S ? dmans : dmans) * eM.manualEfficiencyMult[pors][0] + dski) / eM.nominalKnowledgeForBonus[0]) + eM.additionToKnowledgeBiasSqrt[0]);
           // the higher difficulty the lower the efficiency
           // workEffBias lower if difficulty is higher
           // ydifficulty set in calcPriority called in aStartCashFlow before this
@@ -4331,8 +4338,7 @@ public class Assets {
           if (E.debugEfficiencyOut && sqrtv.isNaN()) {
             eM.printHere("----CEF----", ec, EM.wasHere6);
             ec.doubleTrouble(KnowledgeMaintMultiplier.values[i], "kMMultiplier");
-            ec.doubleTrouble(sqrtVal,
-                             "sqrtVal");
+            ec.doubleTrouble(sqrtVal, "sqrtVal");
           }
           maintEfficiency.add(i, sqrtVal);
           groEfficiency.add(i, Math.sqrt(eM.effBias[pors] + (1. - eM.effBias[pors]) * (ydifficulty.get(i) < PZERO ? KnowledgeGroMultiplier.get(i) * .05 : KnowledgeGroMultiplier.get(i)) / ydifficulty.get(i)));
@@ -4438,6 +4444,10 @@ public class Assets {
         double invUnitGrowth7 = 1. / dUnitGrowth7;// /by 0
         double dUnitGrowth = EM.assetsUnitGrowth[sIx][pors];
         double invUnitGrowth = 1. / dUnitGrowth;
+        double dSecDepreciation = 0.;
+        double dPrevGrowth = 0.;
+        double dLimDepreciation = 0.;
+        double dDifDepreciation = 0.;
         ARow rg1 = new ARow(ec);
         //ARow rg2 = new ARow(ec);
         ARow rg3 = new ARow(ec);
@@ -4492,9 +4502,8 @@ public class Assets {
           // use SubAsset.add and ABalRows
           depreciation.add(newDepreciation); // add subasset and ABalRows
 
-          double ds0depreciation = depreciation.get(0);
+          double ds0depreciation = depreciation.get(0);//after add
           EM.wasHere6 += "\n ds0CumulativeUnitDepreciation sum value" + EM.mf(ds0depreciation);
-          //s0SumUnitDepreciation = new + cum double sumed
           double ds0SumDepreciation = ds0newDepreciation + ds0depreciation;
           EM.wasHere6 += " sum new cums0SumUnitDepreciation=" + EM.mf(ds0SumDepreciation);
           //was add reflected in ABalRows by common references
@@ -4502,10 +4511,6 @@ public class Assets {
           boolean bb1 = dif1 > E.NNZERO && dif1 < E.PPZERO;
           //  boolean bb1 = s0SumUnitDepreciation == a0CumulativeUnitDepreciation; // direct sums match
           EM.wasHere6 += " dif1=" + EM.mf(dif1) + (bb1 ? " the A6Row.sum matcheas0SumUnitDepreciation new+cum" : " the A6Row.sum match failed s0SumUnitDepreciation new+cum");
-
-          if (sIx == 0) {// do stats only once per year resource only??
-
-          }
           // later    handle bonuses  didDepreciation = true;
         }// !didDepreciation
 
@@ -4516,8 +4521,10 @@ public class Assets {
         // calculate each sector raw unit growth
         for (int secIx : E.ASECS) { // each 7 sectors
           secCnt = (secIx == (E.LSECS - 1)) && sIx == 3 ? 1 : 0; // cnt for setStat
-          double dSecDepreciation = depreciation.get(secIx);//newDepreciation already added
-          double dDifDepreciation = dSecDepreciation - dUnitGrowth;//?? too big
+          dSecDepreciation = bals.get(ABalRows.DEPRECIATIONIX + sIx, secIx);//newDepreciation already added
+          dPrevGrowth = bals.getRow(ABalRows.PREVGROWTHSIX + sIx).get(secIx);
+          dLimDepreciation = dUnitGrowth > dPrevGrowth ? dUnitGrowth : dPrevGrowth;
+          dDifDepreciation = dSecDepreciation - dLimDepreciation;//?? too big
           dSecDepreciation -= dDifDepreciation > 0.0 ? dDifDepreciation : 0.0;
           dSecDepreciation = dSecDepreciation - bals.get(ABalRows.NEWREPRECIATIONIX + sIx, secIx);
           // ?? too small
@@ -9000,46 +9007,46 @@ public class Assets {
           s.repreciation.add(s1, deteriorationReduce1);
           // do costs and report
 
-            r.cost3((rc1 = balances.get(2, r1) * reduce1), r1, 0);  // apply costs to P and S
-            setStat(EM.CATASTCOST, pors, clan, rc1, 0);
-            s.cost3((sc2 = balances.get(4, s1) * reduce2), s1, 0);
+          r.cost3((rc1 = balances.get(2, r1) * reduce1), r1, 0);  // apply costs to P and S
+          setStat(EM.CATASTCOST, pors, clan, rc1, 0);
+          s.cost3((sc2 = balances.get(4, s1) * reduce2), s1, 0);
           setStat(EM.CATASTCOST, pors, clan, sc2, 0);
-            r.cost3((rc3 = balances.get(2, r2) * reduce3), r2, 0);
+          r.cost3((rc3 = balances.get(2, r2) * reduce3), r2, 0);
           setStat(EM.CATASTCOST, pors, clan, rc3, 1); //only 1 count
 
-            r.bonusYears.add(bonusX1, bonusYrs1);             // both P & S
-            r.bonusYears.add(bonusX2, bonusYrs2);
+          r.bonusYears.add(bonusX1, bonusYrs1);             // both P & S
+          r.bonusYears.add(bonusX2, bonusYrs2);
           setStat("catBonusY", pors, clan, bonusYrs1 + bonusYrs2, 0);
-            r.bonusUnitGrowth.add(bonusX1, bonusVal1);
-            r.bonusUnitGrowth.add(bonusX2, bonusVal2);
-            eM.printHere("----CATr2---", ec, "Catastrophy  rsector" + bonusX2 + "=" + EM.mf("b unit1", bonusVal2) + " sec" + bonusX1 + "=" + EM.mf("b unit2", bonusVal2));
+          r.bonusUnitGrowth.add(bonusX1, bonusVal1);
+          r.bonusUnitGrowth.add(bonusX2, bonusVal2);
+          eM.printHere("----CATr2---", ec, "Catastrophy  rsector" + bonusX2 + "=" + EM.mf("b unit1", bonusVal2) + " sec" + bonusX1 + "=" + EM.mf("b unit2", bonusVal2));
           setStat("catBonusVal", pors, clan, bonusVal1 + bonusVal2, 0);
-            s.bonusYears.add(bonusX3, bonusYrs3);
+          s.bonusYears.add(bonusX3, bonusYrs3);
           setStat("catBonusY", pors, clan, bonusYrs3, 1);
-            s.bonusUnitGrowth.add(bonusX3, bonusVal3);
+          s.bonusUnitGrowth.add(bonusX3, bonusVal3);
           setStat("catBonusVal", pors, clan, bonusVal3, 1);
-            catEffRGBen += bonusVal1 + bonusVal2;
-            catEffSGBen += bonusVal3;
+          catEffRGBen += bonusVal1 + bonusVal2;
+          catEffSGBen += bonusVal3;
           setStat(EM.NEWREPRECIATION, pors, clan, deteriorationReduce3 + deteriorationReduce2, 0);//
           setStat(EM.NEWREPRECIATION, pors, clan, deteriorationReduce1, 1);//
           bals.set(ABalRows.NEWREPRECIATIONIX, r3, deteriorationReduce1);
           bals.set(ABalRows.NEWREPRECIATIONIX + 2, s3, deteriorationReduce2);
           bals.set(ABalRows.NEWREPRECIATIONIX, r4, deteriorationReduce3);
-            catEffSDepreciationBen += deteriorationReduce1;
-            //setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
-            // setStat(eM.CRISISRESDEPRECIATIONBONUSPERCENT, pors, clan, nd1, 1);
-if (pors == E.P) {
+          catEffSDepreciationBen += deteriorationReduce1;
+          //setStat(eM.CRISISRESREDUCEPERCENT, pors, clan, rd1, 1);
+          // setStat(eM.CRISISRESDEPRECIATIONBONUSPERCENT, pors, clan, nd1, 1);
+          if (pors == E.P) {
 
           }
           else {  // ships
             manuals.add(bonusX2, bonusManuals1);  // Adds for sectorX bonusMan
             setStat("catBonusManuals", pors, clan, bonusManuals1, 0);
             newKnowledge.add(bonusX1, bonusNewKnowledge1);
-  setStat("catBonusNewKnowledge", pors, clan, bonusNewKnowledge1, 0);
+            setStat("catBonusNewKnowledge", pors, clan, bonusNewKnowledge1, 0);
             manuals.add(bonusX1, bonusManuals2);  // Adds into value of trades
             setStat("catBonusManuals", pors, clan, bonusManuals2, 1);
             newKnowledge.add(bonusX3, bonusNewKnowledge2);
-  setStat("catBonusNewKnowledge", pors, clan, bonusNewKnowledge2, 1);
+            setStat("catBonusNewKnowledge", pors, clan, bonusNewKnowledge2, 1);
             catEffManualsBen += bonusManuals1 + bonusManuals2;
             catEffKnowBen += bonusNewKnowledge1 + bonusNewKnowledge2;
             eM.printHere("----CATc3---", ec, "Catastrophy Ship sector" + bonusX2 + "=" + EM.mf("manuals", bonusManuals1) + " sec" + bonusX1 + "=" + EM.mf("manuals", bonusManuals2));
@@ -10857,7 +10864,7 @@ if (pors == E.P) {
         setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
         setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
         setStat("WORTH3YRTRADEINCR", pors, clan, worthIncrPercent, 1);
-*/
+         */
         if (E.debugEconCnt) {
           if (EM.econCnt != (EM.porsCnt[0] + EM.porsCnt[1])) {
             EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
@@ -10872,7 +10879,7 @@ if (pors == E.P) {
            // setStat(potentialGrowthStats[sIx], tt);
           }
         }
-   */
+         */
         EM.isHere("--EYEYf--", ec, "end of live stats");
 // -----------ENDLIVE---ENDLIVE---ENDLIVE---------------------------------
       }
