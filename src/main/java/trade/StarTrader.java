@@ -6251,13 +6251,13 @@ public class StarTrader extends javax.swing.JFrame {
       myW3 = Math.max(650, (myW2 = Math.max(600, (int) (myWidth * .99))) - 300);
       myW3 = Math.max(650, (myW2 = Math.max(600, (int) (myWidth * .97))) - 200);
       myH2 = Math.max(500, myHeight - 200);
-      E.sysmsg("resize1 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
+      System.err.println("-----SRSIZ---resize1 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
       if (screenHeight < 1080 || screenWidth < 1920) {
         myHeight = Math.max(840, Math.min((int) (screenHeight * .97), 1080));
         myH2 = Math.max(740, myHeight - 200);
         myWidth = Math.max(1600, Math.min((int) (screenWidth * .97), 1920));
         myW3 = Math.max(1500, (myW2 = Math.max(1550, (int) (myWidth * .97))) - 150);
-        E.sysmsg("resize2 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
+        System.err.println("-----SRSIZ2---resize2 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
         if (screenHeight < 650 || screenWidth < 1100) {
           // if(screenHeight < 2700 || screenWidth < 1200){
           myHeight = Math.max(500, Math.min((int) (screenHeight * .97), 1250));
@@ -6266,7 +6266,7 @@ public class StarTrader extends javax.swing.JFrame {
           myW3 = Math.max(450, (myW2 = Math.max(400, (int) (myWidth * .99))) - 300);
         }
       }
-      E.sysmsg("resiz3 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
+      System.err.println("-----SRSIZ3---resiz3 height=" + screenHeight + "->" + myHeight + ", " + myH2 + ", width=" + screenWidth + "=>" + myWidth + ", " + myW2 + ", " + myW3);
       this.setSize(myWidth, myHeight);
       controlPanels.setSize(myWidth, myHeight);
       EM.myWidth = myWidth;
@@ -8616,8 +8616,7 @@ public class StarTrader extends javax.swing.JFrame {
       }
 
       //temp
-      testing = true;
-
+      targ = 123;
       if (testing || (args.length > 0 && ((args[0].contains("test") || (args[0].contains("t15") || args[0].contains("t35") || args[0].contains("t63") || args[0].contains("t123")))))) {
         targ = args.length > 0 && args[0].contains("test") ? 2 : args.length > 0 && args[0].contains("t15") ? 15 : args.length > 0 && args[0].contains("t35") ? 35 : args.length > 0 && args[0].contains("t123") ? 123 : targ;
         main3();

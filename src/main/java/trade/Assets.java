@@ -4901,6 +4901,9 @@ public class Assets {
         hist.add(new History(aPre, 3, "grow " + aschar, growth));
         if (!sstaff) {  // resource and cargo
           balance.add(growth);  // ARow adds all sectors
+          for (int balIx : E.ASECS) {
+            balance.set(balIx, balance.get(balIx) > EM.maxResources ? EM.maxResources : balance.get(balIx));
+          }
           if (sIx == E.R) {
             r.worth.setAmultV(balance, eM.nominalWealthPerResource[pors]);
           }
@@ -4917,11 +4920,11 @@ public class Assets {
           moreK = makeZero(moreK);
           lessM = makeZero(lessM);
 
-          double orig1s, effctiveUpgradePower, yesSkipGrades, sUp, kIncr, mDecr;
+          double orig1s, effctiveUpgradePower, yesSkipGrades, sUp, kIncr, kMore, mDecr;
           int gradesUp;
           sumGradesUp = sIx == 0 ? 0 : sumGradesUp; // add all subassets
           for (int ix = 0; ix < E.lsecs; ix++) {;
-            for (int k = 14; k > 0; k--) {
+            for (int k = 14; k > 0; k--) { //gradesix][15] keeps growing to max
               assert grades[ix][k] >= 0.0 : "in doGrow negative grade[" + ix + "][" + k + "]=" + EM.mf(grades[ix][k]);
               if (E.debugNegGrowth && E.noAsserts) {
                 E.myTest(grades[ix][k] < NZERO, "doGrow a neg grade %7.3f=grades[%1.0f][%2.0f]  ", grades[ix][k], ix + 0., k + 0.);
@@ -4934,11 +4937,11 @@ public class Assets {
               // facultyEquiv
               double skipGradesValue = effctiveUpgradePower * E.staffPromotePerFaculty[k];
               // limit number of skippers
-              yesSkipGrades = Math.min(skipGradesValue, grades[ix][k]);
-              yesSkipGrades = Math.max(0., yesSkipGrades); // number to skip a grade
-              /**
-               * calculate if moving up 1,2 or 3 grades
-               */
+             // yesSkipGrades = Math.min(skipGradesValue, grades[ix][k]);
+              // yesSkipGrades = Math.max(0., yesSkipGrades); // number to skip a grade
+              yesSkipGrades = skipGradesValue > grades[ix][k] ? grades[ix][k] = grades[ix][k] > 0. ? grades[ix][k] : 0. : skipGradesValue;
+              /* calculate if moving up 1,2 or 3 grades */
+
               gradesUp = (int) Math.min(3., E.fractionStaffUpgrade[k] * effctiveUpgradePower * .5 * cRand(5 + 3 * k));
               gradesUp = (k + gradesUp) < E.LGRADES ? gradesUp : E.LGRADES - 1 - k;//only LGRADES in array
               sumGradesUp += gradesUp; // sum number of grades skipped some mult of 48??
@@ -4946,11 +4949,14 @@ public class Assets {
               if (gradesUp > 0) { // not no change
                 // add jumped staff to higher grades
                 double AMval = grades[ix][k + gradesUp] += yesSkipGrades;
+                //limit to maxGrade
+                grades[ix][k + gradesUp] = grades[ix][k + gradesUp] < EM.maxGrade ? grades[ix][k + gradesUp] : EM.maxGrade;
+
                 // remove jumped staff if any from grades[ix][k]
                 grades[ix][k] -= yesSkipGrades;
               }
               assert grades[ix][k] >= NZERO : "in doGrow negative grade[" + ix + "][" + k + "]=" + EM.mf(grades[ix][k]) + " gradesUp" + gradesUp + " yesSkipGrades" + EM.mf3(yesSkipGrades) + " grades[" + ix + "][" + k + gradesUp + "]=" + EM.mf(grades[ix][k + gradesUp]) + "\n";
-              E.myTest(grades[ix][k] < NZERO, "doGrow1 neg grade %7.3f=grades[%1.0f][%2.0f] %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k], ix + 0., k + 0., gradesUp + 0., yesSkipGrades, grades[ix][k + gradesUp], ix + 0., k + gradesUp + 0.);
+              //     E.myTest(grades[ix][k] < NZERO, "doGrow1 neg grade %7.3f=grades[%1.0f][%2.0f] %1.0f=gradesUp, %7.3f=yesSkipGrades, %7.3f=grades[%1.0f][%2.0f]", grades[ix][k], ix + 0., k + 0., gradesUp + 0., yesSkipGrades, grades[ix][k + gradesUp], ix + 0., k + gradesUp + 0.);
               /**
                * not kept constrain fraction of upgrades for Full Staff by the
                * fraction * in E.fractionStaffUpgrade[k] or if less than 1 allow
@@ -4979,11 +4985,14 @@ public class Assets {
             if (!reserve) { // skip knowledge for guests
               // now upgrade the knowledge for sector ix.
               kIncr = moreK.set(ix, knowledge.get(ix) + cRand(6 + ix) * s.researcherEquiv.get(ix) * eM.knowledgeGrowthPerResearcher[0] + knowledge.sum() * additionToKnowledgeBiasForSumKnowledge + (knowledge.get(ix) > eM.nominalKnowledgeForBonus[0] ? knowledge.get(ix) * eM.additionalKnowledgeGrowthForBonus[0] : 0.) * s.groEfficiency.get(ix));
-              newKnowledge.add(ix, kIncr);
+              kMore = newKnowledge.get(ix) + kIncr;
+              kMore = kMore < EM.maxKnowledge ? kMore : EM.maxKnowledge;
+              newKnowledge.set(ix, kMore);
               // now move manuals to commonKnowledge
               mDecr = lessM.set(ix, kIncr * eM.kLearnManuals[pors][0] * s.manualsToKnowledgeEquiv.get(ix));
               // limit mDecr to manuals balance
-              mDecr = lessM.set(ix, Math.min(manuals.get(ix), mDecr));
+              mDecr = mDecr > manuals.get(ix) ? manuals.get(ix) : mDecr;
+              // mDecr = lessM.set(ix, Math.min(manuals.get(ix), mDecr));
               commonKnowledge.add(ix, mDecr);
               manuals.add(ix, -mDecr);  // reduce manuals, move manuals to knowledge
             }
@@ -5522,7 +5531,7 @@ public class Assets {
             throw new MyErr(String.format(" " + aschar + sourceIx + " cost=" + EM.mf(cost) + " exceeds balance=" + EM.mf(balance.get(sourceIx)) + " remainder=" + EM.mf(cost - balance.get(sourceIx)) + ", i" + i + ", j" + j + ", m" + m + ", n" + n));
           }
 
-          if (!sstaff) {
+          if (!sstaff) { // resources
             if (E.debugDouble) {
               double v = doubleTrouble(
                       doubleTrouble(balance.get(sourceIx))
@@ -5551,7 +5560,8 @@ public class Assets {
             int gradeIxMax = E.LGRADES * 6;
             double lMult = 0.0;
             for (gradeIx = 0; gradeIx < gradeIxMax && (remMov > +0.0); gradeIx++) {
-              k = gradeIx % E.LGRADES;
+              k = gradeIx % E.LGRADES; // 0-> 15
+              k = E.LGRADES - 1 - k; // 15 -> 0
               if (grades[sourceIx][k] < NZERO) {
                 if (History.dl > 4) {
                   StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
@@ -5560,6 +5570,7 @@ public class Assets {
                 }
                 throw new MyErr(" grade lt zero " + aschar + sourceIx + "  grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " gradeIx=" + gradeIx + " avmov=" + EM.mf(avmov) + "gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevBal=" + EM.mf(prevbal) + ", term" + as.term + ", i" + as.i + ", j" + as.j + ", m" + as.m + ", n" + as.n);
               }
+              // otherwise subtract cost
               // increase gradeCost2 at the count moves up
               //gradeCost2 = gradeCost * grades[sourceIx][k]* (gradeIx+ gradeIxMax -10)/gradeIxMax;
               if (E.debugDouble) {
@@ -5589,7 +5600,6 @@ public class Assets {
               if (grades[sourceIx][k] - emov < NZERO) {
                 if (History.dl > 4) {
                   StackTraceElement a0 = Thread.currentThread().getStackTrace()[1];
-
                   hist.add(new History("cst1E", 7, "n" + n + ">>>> error", "neg grade", a0.getMethodName(), "at", a0.getFileName(), EM.mf(a0.getLineNumber()), "cost=" + EM.mf(cost), "bal " + aschar + sourceIx, "[" + k + "] - emov=" + EM.mf(grades[sourceIx][k] - emov)));
                 }
                 throw new MyErr(" cost1 grades neg2 grades[" + sourceIx + "][" + k + "]=" + EM.mf(grades[sourceIx][k]) + " - " + "emov=" + EM.mf(emov) + " =" + EM.mf(grades[sourceIx][k] - emov) + " gradeIx=" + gradeIx + " cost=" + EM.mf(cost) + " avmov=" + EM.mf(avmov) + "gradeCost=" + EM.mf(gradeCost) + " remMov=" + EM.mf(remMov) + " prevBal=" + EM.mf(prevbal) + ", term" + as.term + ", i" + as.i + ", j" + as.j + ", m" + as.m + ", n" + as.n);
@@ -5610,7 +5620,7 @@ public class Assets {
               }
 
               //    destination.sumGrades();
-            }
+            }//
             if (E.debugCosts && remMov > .0001 * prevbal) {
               throw new MyErr("cost1 " + aschar + sourceIx + " gradeIx=" + gradeIx + " excessive cost=" + EM.mf(cost) + " remainder=" + EM.mf(remMov) + " balance=" + EM.mf(balance.get(sourceIx)) + " prev balance=" + EM.mf(prevbal) + ", gradeCost" + EM.mf(gradeCost) + ", gradeCost2" + EM.mf(gradeCost2) + ", gradeCost3" + EM.mf(gradeCost3) + ", gradeCost4" + EM.mf(gradeCost4) + ", dmov" + EM.mf(dmov) + ", emov" + EM.mf(emov) + ", fgrad" + EM.mf(fgrad) + ", grem" + EM.mf(grem) + ", term" + as.term + ", i" + as.i + ", j" + as.j + ", m" + as.m + ", n" + as.n);
             }
@@ -11368,7 +11378,7 @@ public class Assets {
               EM.doMyErr("Counts error, econCnt=" + EM.econCnt + " -porsCnt0=" + EM.porsCnt[0] + " -porsCnt1=" + EM.porsCnt[1]);
             }
           }
-          EM.wasHere7 = "---ELa---Assets.10607 seek lock";
+          EM.wasHere6 = "---ELa---Assets.10607 seek lock";
           synchronized (A4Row.econLock) {
             EM.wasHere8 = "---ELa2--- Assets cnt dead has lock";
             EM.clanCnt[clan]--;
@@ -11560,8 +11570,7 @@ public class Assets {
         } // 
         if (E.debugAIOut || (aWaits++ % 5) == 0) {
           eM.printHere("----SAI2s----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " lastScore" + EM.mf(EM.myScore[clan]) + " allCnt" + EM.ars[1][EM.iaAllCnt] + "\n" + ":mC" + aVal[E.aValCnts] + "mY" + aVal[E.aValYear] + ":mA" + aVal[E.aValAge] + " scoreIx" + aVal[E.aValIxMyScore] + " Size=" + EM.myAIlearnings.size() + " mapYears" + EM.mapYears + " setCnt" + EM.setCnt + " aKey was=" + prevAKey + " is=" + aKey);
-          // eM.seeCntArrays(); //update the map arrays
-          //EM.seeArrays[0] = putValStr;
+
         }
       }// end if year
     } //saveAIKey
@@ -11670,7 +11679,7 @@ public class Assets {
           // if (E.debugAIOut || (++aWaits % 5) == 0) {
           if (E.debugAIOut) {
             String str = new String(EM.psClanChars[pors][clan]);
-            System.out.println("----SAI2----" + " " + name + " saveAI put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + " put key=" + str + " TreeMap size=" + EM.myAIlearnings.size());
+            System.out.println("----SAI2----" + " " + name + " saveAI put aType" + aType + " lastAIPos" + aiPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " prevScore" + EM.mf(EM.prevScore[clan]) + "\n" + " put key=" + str + " Map size=" + EM.myAIlearnings.size());
             //  aiERScore = aiEScore/EM.aiEScoreAve;
             System.out.println("----SAI3----" + " " + name + " saveAI aiEScore " + EM.mf(aiEScore) + " EM.aiEScoreAve" + EM.mf(EM.aiEScoreAve) + " aiERScore " + EM.mf(aiERScore));
           }
@@ -14728,12 +14737,14 @@ public class Assets {
     }
 
     /**
-     * do the growth of each of the subAssets
+     * do the growth of each of the subAssets Set Maxs: maxKnowledge,
+     * maxColonists, maxResources
      *
      * @param aPre the prefix of the hist entry for that growth
      */
     void doGrowth(String aPre
     ) {
+      //maxKnowledge, maxColonists, maxResources
       //   bals.getRow(GROWTHSEFFIX + RIX).set(r.growth);
       //  bals.getRow(GROWTHSEFFIX + CIX).set(c.growth);
       //  bals.getRow(GROWTHSEFFIX + SIX).set(s.growth);
