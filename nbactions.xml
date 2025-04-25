@@ -173,27 +173,6 @@
     </activatedProfiles>
   </action>
   <action>
-    <actionName>CUSTOM-t123</actionName>
-    <displayName>t123</displayName>
-    <packagings>
-      <packaging>jar</packaging>
-    </packagings>
-    <goals>
-      <goal>process-classes</goal>
-      <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
-    </goals>
-    <properties>
-      <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-      <exec.executable>java</exec.executable>
-      <exec.vmArgs>-ea -Xmx4g</exec.vmArgs>
-      <exec.appArgs>"t123"</exec.appArgs>
-      <exec.mainClass>trade.StarTrader</exec.mainClass>
-    </properties>
-    <activatedProfiles>
-      <activatedProfile>t123</activatedProfile>
-    </activatedProfiles>
-  </action>
-  <action>
     <actionName>CUSTOM-run5</actionName>
     <displayName>run5</displayName>
     <packagings>

@@ -21,22 +21,7 @@ package trade;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
-import static trade.StarTrader.fatalError;
-import static trade.StarTrader.mainStart;
-import static trade.StarTrader.startTime;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import trade.E;
-import trade.EM;
-import trade.Econ;
-import trade.MyErr;
-import trade.StarTrader;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -80,7 +65,9 @@ public class Econ {
   double xpos, ypos, zpos;
   double[] xyz = {xpos, ypos, zpos};
   double distanceMoved = 0;
-  double initDifficulty= .3;
+  double initDifficulty = EM.difficultyPercent[0];
+  //initDifficulty= .3;
+ //double initDifficulty= .3;
   // neighbors from
   //Neighbor[] neighbors = new Neighbor[20];
   protected int pors;
@@ -1133,7 +1120,7 @@ public class Econ {
       if (getDie()) {
         dage++;
         age = -1;
- EM.econCountsTest();
+        EM.econCountsTest();
       }// getDie
       EM.wasHere3 = "after as.getDie() " + name + "Y"+ EM.year + " yyyee3=" + yyyee3++;
       if (clearHist()) {
@@ -1856,7 +1843,17 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
     }
   } // Econ.decrEndYearCnt
 
-  long startYearEndWait = 0;
+  /**
+   * call to save the next mapfile entry history entry
+   *
+   */
+  void doYearEnd2() {
+    EM.econCountsTest();
+    as.doYearEnd2();
+
+  }
+
+     long startYearEndWait = 0;
   int startYearEndWaitCnt = 100;
   static int maxWaitCnt=10;
   long startThread = 0;
@@ -1866,7 +1863,6 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
    *
    */
   void doYearEnd() {
-
     if (!dead && !didYearEnd) {
      EM.econCountsTest();
 

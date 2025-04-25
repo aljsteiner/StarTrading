@@ -11871,6 +11871,7 @@ public class Assets {
           EM.myAIlearnings.put(aKey, aVal); // save last years values
           EM.setCnt++;
           eM.setCntDrs(aKey, aVal, pors, false, true, 10, true);  //doSet 1 for the new key in each ars
+          EM.myAIlearnings.put(aKey, aVal); // save last years aVal values
         } // 
         if (E.debugAIOut || (aWaits++ % 5) == 0) {
           eM.printHere("----SAI2s----", ec, " put aType" + aType + " prevAIPos" + prevAIPos + ":" + " prevAIScore" + EM.mf(prevAIScore) + " lastScore" + EM.mf(EM.myScore[clan]) + " allCnt" + EM.ars[1][EM.iaAllCnt] + "\n" + ":mC" + aVal[E.aValCnts] + "mY" + aVal[E.aValYear] + ":mA" + aVal[E.aValAge] + " scoreIx" + aVal[E.aValIxMyScore] + " Size=" + EM.myAIlearnings.size() + " mapYears" + EM.mapYears + " setCnt" + EM.setCnt + " aKey was=" + prevAKey + " is=" + aKey);

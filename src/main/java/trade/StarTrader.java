@@ -394,22 +394,24 @@ public class StarTrader extends javax.swing.JFrame {
   static final String sn8 = "Trading";
   static final int DOYEAREND = 9;
   static final String sn9 = "Doing year end";
-  static final int WAITING = 10;
-  static final String sn10 = "Waiting for action";
-  static final int SWAPS = 11;
-  static final String sn11 = "Swaping";
-  static final int ENDYR = 12;
-  static final String sn12 = "End of doYear";
-  static final int STATS = 13;
-  static final String sn13 = "Stats";
-  static final int STOPPED = 14;
-  static final String sn14 = "Stopped";
-  static final int RUNSDONE = 15;
-  static final String sn15 = "Runs Done";
-  static final int FATALERR = 16;
-  static final String sn16 = "Fatal Error";
+  static final int DOYEAREND2 = 10;
+  static final String sn10 = "Doing year end";
+  static final int WAITING = 11;
+  static final String sn11 = "Waiting for action";
+  static final int SWAPS = 12;
+  static final String sn12 = "Swaping";
+  static final int ENDYR = 13;
+  static final String sn13 = "End of doYear";
+  static final int STATS = 14;
+  static final String sn14 = "Stats";
+  static final int STOPPED = 15;
+  static final String sn15 = "Stopped";
+  static final int RUNSDONE = 16;
+  static final String sn16 = "Runs Done";
+  static final int FATALERR = 17;
+  static final String sn17 = "Fatal Error";
 
-  static final String[] stateStringNames = {sn0, sn1, sn2, sn3, sn4, sn5, sn6, sn7, sn8, sn9, sn10, sn11, sn12, sn13, sn14, sn15, sn16};
+  static final String[] stateStringNames = {sn0, sn1, sn2, sn3, sn4, sn5, sn6, sn7, sn8, sn9, sn10, sn11, sn12, sn13, sn14, sn15, sn16, sn17};
   static volatile int stateConst = CONSTRUCTING;  // constant set to stated
   static volatile int prevState = CONSTRUCTING;
   volatile Econ curEc = eM.curEcon;
@@ -6174,8 +6176,11 @@ public class StarTrader extends javax.swing.JFrame {
   public StarTrader() {
     try {
       System.err.println("------STi1---- entryCnt=" + cntInit);
+
       cntInit++;
-      starTrader2();
+      if (cntInit > 1) {
+        return; // do not start over
+      }      starTrader2();
       Thread.sleep(2000);
       //   runYears(1);
     }
@@ -7029,14 +7034,14 @@ public class StarTrader extends javax.swing.JFrame {
           EM.twh1 = new Date().getTime();
           setEconState(DOYEAREND);
           curEc.doYearEnd(); // finally Assets.CashFlow.yearEnd()
-          EM.wasHere = "after EM.curEcon.doYearEnd()";
+          EM.wasHere = "after EM.curEcon.doYearEnd2()";
           EM.twh1 = new Date().getTime();
           EM.econCountsTest();
           paintCurDisplay(eM.curEcon);
           //   paintEconEndYear(EM.curEcon);
 
           if (E.debugDidEconYearEnd) {
-            System.out.println("-----DYE------" + " after year end cnt=" + envsLoop2 + " of" + maxEcons + " " + EM.sinceRunYear() + " " + EM.curEconName + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
+            System.out.println("-----DYE------" + " after yearend2 cnt=" + envsLoop2 + " of" + maxEcons + " " + EM.sinceRunYear() + " " + EM.curEconName + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
           }
           EM.econCountsTest();
           String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[EM.curEcon.clan] + " " + EM.curEconName + " h="
@@ -7048,8 +7053,145 @@ public class StarTrader extends javax.swing.JFrame {
           namesList.add(envsLoop2, disp1);
           EM.econCountsTest();
         } // finish curEcon.yearEnd
+        /*========WAITING  DOYEAREND1================*/
+        if (E.debugThreads) {
+          System.out.println("-------EYw-----Waiting Ending year=" + EM.andET());
+        }
+        setEconState(WAITING);
+        EM.econCountsTest();
+        EM.curEcon.imWaiting(Econ.doEndYearCnt, 0, 4, "doYear ended yearEnds");
 
-        //wait for doEndYearCnt to zero, finish all yearEnd
+        /*=====Econ Yearend threads all finished =====*/
+        System.out.println("----EYT1-----" + EM.threadsStacks()); // record any endyear threads
+        EM.econCountsTest();
+        setEconState(ENDYR);
+        paintCurDisplay(eM.curEcon);
+        if (E.debugThreads) {
+          System.out.println("------EYg-----Ending year=" + EM.andET());
+        }
+
+        /*=== preset counts to zero, they will be recounted====*/
+        EM.econCnt = 0;
+        EM.planets.clear();
+        EM.ships.clear();
+        for (int m = 0; m < 2; m++) {
+          EM.porsCnt[m] = 0;
+          for (int n = 0; n < 5; n++) {
+            EM.clanCnt[n] = 0; // doing twice
+            EM.porsClanCnt[m][n] = 0;
+          }// n
+        }// m
+
+        // now set the counts and planets and ships
+        EM.wasHere5 = "---Ele---StarTrader 7079"
+                      + " seek econLock";
+        synchronized (A4Row.econLock) {
+          EM.wasHere8 = "---ELeb---StarTrader 7081 got econLock";
+          for (Econ t : EM.econs) {
+            if (!t.getDie()) {
+              EM.porsClanCnt[t.pors][t.clan]++;
+              EM.clanCnt[t.clan]++;
+              EM.porsCnt[t.pors]++;
+              EM.econCnt++;
+              //        EM.names2ec.put(t.name, t);
+              if (t.pors == P) {
+                EM.planets.add(t);
+              }
+              else {
+                EM.ships.add(t);
+              }
+            }
+          }
+        }
+
+        /*=====rebuild namesList including deads ======*/
+        namesList.clear();
+        // stateConst = ENDYR; already done
+        maxEcons = EM.econs.size();
+        for (envsLoop2 = 0; envsLoop2 < maxEcons && !EM.dfe(); ++envsLoop2) {
+          EM.setCurEcon(ec = curEc = EM.econs.get(envsLoop2));
+          //    System.out.printf(new Date().toString() + " in doYear at envsLoop2 econ.yearEnd() name=" + EM.curEcon.name);
+
+          String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[EM.curEcon.clan]
+                         + " " + EM.curEcon.name + " h=" + EM.curEcon.df(EM.curEcon.getHealth())
+                         + ", age=" + EM.curEcon.age
+                         + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
+          if (E.debugLiveOut) {
+            System.out.println("-----DYa5-----" + new Date().toString() + disp1);
+          }
+          namesList.add(envsLoop2, disp1);
+        } // finish curEcon.name list)
+
+        /*=======GETWINNER========*/
+        long[][][] resii1 = eM.resI[0];
+        long[][] resi2 = resii1[1];
+        long[] resi23 = resi2[2];
+        EM.wasHere = "before EM.doEndYear()";
+        eM.doEndYear1();// get the winner
+
+        /*=========DOYEAREND2==post history entry=============*/
+                // curStateName = "ecYrEnds";
+        EM.econCountsTest();
+        setEconState(DOYEAREND2);
+        // loop to end years
+        for (envsLoop2 = 0; envsLoop2 < maxEcons && !eM.dfe(); ++envsLoop2) {
+          EM.econCountsTest();
+          ec = curEc = EM.econs.get(envsLoop2);
+          EM.setCurEcon(ec);
+          paintCurDisplay(eM.curEcon);
+          EM.econCountsTest();
+//  EM.wasHere = "after startEconState ";
+          EM.twh1 = new Date().getTime();
+          EM.econCountsTest();
+          EM.wasHere = "after startEconState econCnt ";
+          EM.twh1 = new Date().getTime();
+          //    System.out.printf(new Date().toString() + " in doYear at envsLoop2 econ.yearEnd() name=" + EM.curEcon.name);
+          // now reset the log environ to this current econ
+          if (0 == envsLoop2 % 25) {
+            printMem3();
+          }
+          EM.wasHere = "after printMem3 ";
+          EM.twh1 = new Date().getTime();
+          EM.econCountsTest();
+          EM.wasHere = "after printMem3 econCnt ";
+          EM.twh1 = new Date().getTime();
+          clearHist(EM.logEnvirn[0]);
+          EM.wasHere = "after clearHist  ";
+          EM.twh1 = new Date().getTime();
+          EM.econCountsTest();
+          EM.wasHere = "after clearHist econCnt ";
+          EM.twh1 = new Date().getTime();
+          setLogEnvirn(0, EM.curEcon);  // set start1
+          EM.hists[0] = EM.logEnvirn[0].hist;
+          E.msgcnt = 0;
+          EM.wasHere = "after setLogEnvirn ";
+          EM.twh1 = new Date().getTime();
+
+          EM.econCountsTest();
+          EM.wasHere = "after setLogEnvirn econCnt)";
+          EM.twh1 = new Date().getTime();
+          setEconState(DOYEAREND2);
+          curEc.doYearEnd2(); // finally Assets.CashFlow.yearEnd()
+          EM.wasHere = "after EM.curEcon.doYearEnd2()";
+          EM.twh1 = new Date().getTime();
+          EM.econCountsTest();
+          paintCurDisplay(eM.curEcon);
+          //   paintEconEndYear(EM.curEcon);
+
+          if (E.debugDidEconYearEnd) {
+            System.out.println("-----DYE------" + " after yearend2 cnt=" + envsLoop2 + " of" + maxEcons + " " + EM.sinceRunYear() + " " + EM.curEconName + (EM.curEcon.getDie() ? " is dead" : " is alive ") + groupNames[EM.curEcon.clan] + " h=" + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.getAge() + ", w=" + EM.curEcon.df(EM.curEcon.getWorth()));
+          }
+          EM.econCountsTest();
+          String disp1 = (EM.curEcon.getDie() ? " is dead " : " is alive ") + groupNames[EM.curEcon.clan] + " " + EM.curEconName + " h="
+                         + EM.curEcon.df(EM.curEcon.getHealth()) + ", age=" + EM.curEcon.age
+                         + ", w=" + EM.curEcon.df(EM.curEcon.getWorth());
+          if (E.debugLiveOut) {
+            System.out.println("-----EYs----" + new Date().toString() + disp1);
+          }
+          namesList.add(envsLoop2, disp1);
+          EM.econCountsTest();
+        } // finish curEcon.yearEnd2        //wait for doEndYearCnt to zero, finish all yearEnd
+
         if (E.debugThreads) {
           System.out.println("-------EYw-----Waiting Ending year=" + EM.andET());
         }
@@ -7076,9 +7218,10 @@ public class StarTrader extends javax.swing.JFrame {
         }// m
 
         // now set the counts and planets and ships
-        EM.wasHere5 = "---Ele---StarTrader 6895 seek econLock";
+        EM.wasHere5 = "---Ele---StarTrader 7079"
+                      + " seek econLock";
         synchronized (A4Row.econLock) {
-          EM.wasHere8 = "---ELeb---StarTrader 6897 got econLock";
+          EM.wasHere8 = "---ELeb---StarTrader 7081 got econLock";
           for (Econ t : EM.econs) {
             if (!t.getDie()) {
               EM.porsClanCnt[t.pors][t.clan]++;
@@ -7112,13 +7255,13 @@ public class StarTrader extends javax.swing.JFrame {
           namesList.add(envsLoop2, disp1);
         } // finish curEcon.name list
 
-        long[][][] resii1 = eM.resI[0];
-        long[][] resi2 = resii1[1];
-        long[] resi23 = resi2[2];
-        EM.wasHere = "before EM.doEndYear()";
-        eM.doEndYear();
+    //    long[][][] resii1 = eM.resI[0];
+     //   long[][] resi2 = resii1[1];
+        //    long[] resi23 = resi2[2];
+        EM.wasHere = "before EM.doEndYear2()";
+        eM.doEndYear2();// get the winner
         paintCurDisplay(eM.curEcon);
-        EM.wasHere = "after EM.doEndYear()";
+        EM.wasHere = "after EM.doEndYear2()";
         long[][][] resii = eM.resI[0];
         long[][] resii2 = resii[1];
         long[] resi3 = resii2[2];
@@ -7262,7 +7405,7 @@ public class StarTrader extends javax.swing.JFrame {
    */
   synchronized void paintCurDisplay(Econ curEc) {
     EM.wasHere8 = "---ELc3--- StarTrder paintCurDisplay";
-    EM.mfShort=true;
+    EM.mfS=true;
     try {
       int numEcons = EM.econs.size();
       int rN = 999999;
@@ -7437,12 +7580,14 @@ public class StarTrader extends javax.swing.JFrame {
                 aType = E.getAIMuch(aKey.charAt(0));//((int) (aKey[0] - 'a');
                 aSize = aKey.length();
                 aMuch = E.getAIMuch(aKey.charAt(aSize - 1)); // muchness in this key
-                Integer aManys[] = EM.myAIlearnings.get(aKey);
-                if (aManys == null) {
+                Double aVal[] = EM.myAIlearnings.get(aKey);
+                if (aVal == null) {
                   aCnts = 1;
                 }
                 else {
-                  aCnts = aManys[0];
+                  Double aVala[] = {1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};//14
+                  aVal = aVala;
+                  aCnts = (int) (0. + aVal[E.aValCnts]);
                 }
                 aNums += aCnts; // sum of counts, should be double keys
                 aMuch = aMuch < 5 && aMuch > -1 ? aMuch : 5;
@@ -7653,7 +7798,7 @@ public class StarTrader extends javax.swing.JFrame {
         else if (false && (tmp1 = eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.S + 1, 0, 5)) > 0) {
           disp1 += "DiedRSOS3 " + tmp1 + " Planets " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.P, E.P + 1, 0, 5) + " Ships " + eM.getCurCumPorsClanUnitSum(rNDS3, EM.ICUM, E.S, E.S + 1, 0, 5) + newLine;
         }
-        disp1 += (EM.seeArrays[0].isEmpty() ? "" : "Map notes  " + EM.seeArrays[0] + "\n" + (EM.seeArrays[1].isEmpty() ? "" : EM.seeArrays[1] + "\n") + (EM.seeArrays[2].isEmpty() ? "" : EM.seeArrays[2] + "\n") + (EM.seeArrays[3].isEmpty() ? "" : EM.seeArrays[3] + "\n") + (EM.seeArrays[4].isEmpty() ? "" : EM.seeArrays[4] + "\n") + (EM.seeArrays[5].isEmpty() ? "" : EM.seeArrays[5] + "\n") + (EM.seeArrays[6].isEmpty() ? "" : EM.seeArrays[6] + "\n") + (EM.seeArrays[7].isEmpty() ? "" : EM.seeArrays[7] + "\n") + (EM.seeArrays[8].isEmpty() ? "" : EM.seeArrays[8] + "\n") + (EM.seeArrays[9].isEmpty() ? "" : EM.seeArrays[9] + "\n") + (EM.seeArrays[19].isEmpty() ? "" : EM.seeArrays[10] + "\n"));
+        disp1 += (EM.seeArrays[0].isEmpty() ? "" : "Map notes  " + EM.seeArrays[0] + "\n" + (EM.seeArrays[1].isEmpty() ? "" : EM.seeArrays[1] + "\n") + (EM.seeArrays[2].isEmpty() ? "" : EM.seeArrays[2] + "\n") + (EM.seeArrays[3].isEmpty() ? "" : EM.seeArrays[3] + "\n") + (EM.seeArrays[4].isEmpty() ? "" : EM.seeArrays[4] + "\n") + (EM.seeArrays[5].isEmpty() ? "" : EM.seeArrays[5] + "\n") + (EM.seeArrays[6].isEmpty() ? "" : EM.seeArrays[6] + "\n") + (EM.seeArrays[7].isEmpty() ? "" : EM.seeArrays[7] + "\n") + (EM.seeArrays[8].isEmpty() ? "" : EM.seeArrays[8] + "\n") + (EM.seeArrays[9].isEmpty() ? "" : EM.seeArrays[9] + "\n") + (EM.seeArrays[10].isEmpty() ? "" : EM.seeArrays[10] + "\n") + (EM.seeArrays[11].isEmpty() ? "" : EM.seeArrays[11] + "\n") + (EM.seeArrays[12].isEmpty() ? "" : EM.seeArrays[12] + "\n"));
         disp1 += "year" + eM.year + " Threads=" + Econ.getThreadCnt() + ":" + Thread.activeCount() + " " + EM.wasHere8 + " " + since() + " " + sinceRunYear() + "  " + newLine;
         // disp1 += "more " + EM.wasHere8 + EM.mem() + newLine;
         disp1 += "more2 " + EM.wasHere7 + EM.mem() + newLine;
@@ -7813,7 +7958,7 @@ public class StarTrader extends javax.swing.JFrame {
 
         }
       }
-      EM.mfShort = false;
+      EM.mfS = false;
     }
     catch (Exception | Error ex) {
       EM.firstStack = EM.secondStack + "";

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>trade</groupId>
     <artifactId>starTraderMaven</artifactId>
-    <version>19.66</version>
+    <version>19.67</version>
     <packaging>jar</packaging>
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -124,6 +124,13 @@
       </pluginRepository>
     </pluginRepositories>
     <name>StarTraderMaven</name>
-    <description>raise ship trading frac</description>
+    <description>move saving new entries in mapfile (history file) at the end2
+      for each year after the winner  clan has been calculated
+      The calculations after winner is selected are now calculations about the previous
+      year,  the values will be saved in the econ.doYearEnd2
+      EM.doEndYear2 will now write that set of entries to the mapfile
+
+      I am using Netbeans 19 because it enables selecting more options to run
+    </description>
    
 </project>

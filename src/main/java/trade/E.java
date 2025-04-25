@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This is an extension of the StarTrader main class. It contains data for
@@ -112,7 +111,7 @@ public class E {
   static final boolean debugChangeEconCnt = debugMaster; // do  changes of econCnt
   static final boolean debugNegGrowth = false; // just fix neg Growth made negCosts
   static final boolean debugEfficiency = debugMaster; // efficiency has double trouble
-  static final boolean debugEfficiencyOut = debugMaster && outputFewer; // efficiency has double trouble
+  static final boolean debugEfficiencyOut = debugMaster;// && outputFewer; // efficiency has double trouble
   static final boolean debugNegCosts = debugMaster; // checking for neg Costs
   static final boolean debugFutureFund = debugMaster; // checking for errors with future funds
   static final boolean debugNoTerm = debugMaster; // term undefined in assets, find whyu
@@ -192,8 +191,9 @@ public class E {
   static final int pRs = 9, pSs = 16, cW = 23, pW = 24, pKW = 25;
    */
   // aVal[] = <cnts><year><ixMyScore>
-  static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValPClan = 3, aValIxMyScore = 4, aValSize = 5;
- static final int startCStrt = 0;// beginning X
+  //..1, ..2, ..3 represent the associated arn number
+  static final int aValCnts = 0, aValSig0 = 5, aValSig4 = 6, aValSig1 = 11, aValSig5 = 12, aValSig2 = 7, aValSig6 = 8, aValSig3 = 9, aValSig7 = 10, aValYear = 1, aValAge = 2, aValPClan = 3, aValPors = 4, aValIxMyScore = 13, aValSize = 14;
+  static final int startCStrt = 0;// beginning X
   static final char startC = 'a';//97
   static final char startCnd = '~';//126
   static final int startL = startCnd-startC+1; // x0->29 = 29+1=30
@@ -295,30 +295,6 @@ public class E {
     assert aa > -1: "ERROR illegal input character int=" + ((int)aa);
     return -100;
   }
-  /**
-   * obsolete get char for the settings input This concentrates single number changes for
-   * values 40-60 The values <40 or >60 are divided by 3 to give a result of
-   * 0-49
-   *
-   * @param a100 the slider value for a given setting 0-100
-   * @return a * for illegal value, or the char for getAIResChar
-   */
-  static char getAISetCharNot(int a100) {
-    if (a100 < 0) {
-      return undefC;
-    }
-    if (a100 < 40) {  //0-39
-      return getAIResChar(a100 / 2); //0-19
-    }
-    if (a100 < 61) {  //40-61 =22;40=20,41=21,42=22,60=40,61=41
-      return getAIResChar(a100 - 40 + 20); //20-41
-    }
-    if (a100 < 101) { // 61=41; 62=41,63=42,64=42,71=46,91=56,99=60,100=60,101=61
-      return getAIResChar(((a100 - 61 + 82) / 2));//42--61 highest value
-    }
-    return undefC; // value too high
-  }
-
 
   /**
    * get the key char value at location bias
@@ -331,46 +307,23 @@ public class E {
     return getAIMuch(key.charAt(bias));
   }
 
-  /**
-   * obsolete   * get the settings index 0-99 from the character in the map key
-   *
-   * @param aa character from the map key
-   * @return
-   */
-  static int getAISetMuchNot(char aa) {
-    int ii = getAIMuch(aa);
-    if (ii < 0 && ii > -5) {
-      return ii;
-    }
-    else if (ii < -4 || ii > 76) {
-      return undefI;
-    }
-    else if (ii < 20) {
-      return ii + ii; //19=38
-    }
-    else if (ii < 41) {
-      return ii + 20;//20=40,21=41,31=51,40=60
-    }
-    else
-      return ii + ii - 82 + 61;//41=61,42=63,51=81,56=91,60=99,61=101
-  }
-  /**
-   * get the setting encoded in the key at position bias int
-   *
-   * @param key the key for the AI map
-   * @param the bias into the key
-   * @return return how much value of that character represents
-   *
-   */
-  static int getSettingsValueNot(String key, int bias) {
-    return getAISetMuchNot(key.charAt(bias + bValsStart));
-  }
-
 
   /* now define pointers into EM.myAIlearnings key arrays EM.psClanChars[ixPS][ixClan]
 
    */
-  static private int aiPcntr = 0;
+  static private int tcntr = 0;//type for ptype of record
+  static final int tAll = tcntr++; //tLive,tAct,tRej,tLost,tMiss,tdead,tDact,tDrej
+  static final int tLive = tcntr++;
+  static final int tAct = tcntr++;
+  static final int tRej = tcntr++;
+  static final int tLost = tcntr++;
+  static final int tMiss = tcntr++;
+  static final int tDead = tcntr++;
+  static final int tDact = tcntr++;
+  static final int tDrej = tcntr++;
+
+  static private int aiPcntr = -1;
+  static final int pNotNot = aiPcntr++; // Ignore this p value
   static final int ptype = aiPcntr++; // 0 type
    static final int ppors = aiPcntr++; // 1 pOrS
    static final int pclanpors = aiPcntr++; // clan*2+pors
@@ -452,13 +405,15 @@ public class E {
 
   // for use by Assets.putValueByte()
  
-  static final double[] AILims = {-20., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1,.3, 0.5, 1.,1.7,1.8,1.9,1.95, 2., 2.01,2.03,2.05,3.,4.,5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 150000000000000000000000000000000.};
+  static final double[] AILims = {-20., -10., -5.0, -2.0, -1.0, -0.7, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, .3, 0.5, 1., 1.7, 1.8, 1.9, 1.95, 2., 2.01, 2.03, 2.05, 3., 4., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 150000000000000000000000000000000.};//62
   static final int LAILims = AILims.length;
+
+   
   static final double[] AILims1 = {-20., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.06,
      0.1,0.21,0.22,0.23, 0.24,0.25,0.27,0.3,0.37,0.39,
     .4,.41,.42,.43,.45,.47,.5,.8,1., 1.3, 1.5, 1.7,1.8,1.9,1.95, 2., 2.01,2.03, 2.05,3., 4., 5., 10., 20., 50., 100., 200., 300.,
     400., 500., 600., 700., 800., 1000., 1300., 1700., 2000., 2300., 2700., 3000., 3500., 4000., 4750, 5500., 6000., 6500., 7000., 10000., 25000., 30000., 37000., 45000., 633000., 1300000., 7000000., 11000000., 15000000.,150000000.};
-  static final int LAILims1 = AILims1.length;// -13-3+6+10
+  static final int LAILims1 = AILims1.length;// 82-13-3+6+10
   static final double[] AILims2 = { -0.03, -.02, -0.01,.0027,.0028,.0029,.003,.0031,.0032,.0033,.0035,.004,.005,.007,.009, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 100000., 250000., 450000., 633000., 950000., 1200000., 1900000., 3500000., 7000000., 15000000., 30000000., 45000000., 65000000., 130000000., 720000000.,
     1500000000.,
     15000000000.,
@@ -482,17 +437,150 @@ public class E {
     150000000000000000000000000000.,
     1500000000000000000000000000000.,
     15000000000000000000000000000000.,
-    150000000000000000000000000000000.};// around .003 and very large
+    150000000000000000000000000000000.};//61 around .003 and very large
   static final int LAILims2 = AILims2.length;
-  static final double[] AILims3 = {-20., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300.,320.,340.,360.,370.,380.,390., 400.,420.,460.,480., 500., 600., 700., 800., 1000.,4000., 7000., 15000.,30000., 45000., 70000., 140000.,280000., 430000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 1500000000000000000.};
+  static final double[] AILims3 = {-20., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, 0.5,
+    0.9, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
+    3.2, 3.4, 4.0, 5., 10., 13., 14., 15., 16., 17., 18., 20., 22., 24., 26., 28., 30., 32., 33., 34., 40., 50.,
+    100., 200., 300., 320., 340., 360., 370., 380., 390., 400., 420., 460., 480., 500., 600., 700., 800., 1000., 4000., 7000., 15000., 30000., 45000., 70000., 140000., 280000., 430000., 633000., 1300000., 7000000., 15000000000000000000000000000000., 150000000000000000000000000000000.};//81
   static final int LAILims3 = AILims3.length;
-  static final double[] AILims4 = {-20., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, .3, .35,.4,.43,.47,0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 150000000000000000000000000000000.};
+  static final double[] AILims4 = {-20., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, .3, .35, .4, .43, .47, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 150000000000000000000000000000000.};//56
   static final int LAILims4 = AILims4.length;
-  static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12.,  14.,  16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 32., 34., 36., 38., 40., 41., 41.3,41,7,42.,42,3,42.5, 42.8,43.,43.5, 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99.,100.};
-  static final int LAILimsC = AILimsC.length;
+  static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12., 14., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 32., 34., 36., 38., 40., 41., 41.3, 41, 7, 42., 42, 3, 42.5, 42.8, 43., 43.5, 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99., 100.};//77
+  static final int LAILimsC = AILimsC.length;//5
   static final double[] AILims123 = {-5., -4., -3., -2., -1., 0., 1., 2., 3., 4., 5., 6., 7., 8., 9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.};//26
-  static final int LAILims123 = AILims123.length;
-   static final double AILimss[][]={ AILims,AILims1,AILims2, AILims3, AILims4,AILimsC ,AILims123};//7
+  static final int LAILims123 = AILims123.length;//6
+   static double AILimss[][] = {AILims, AILims1, AILims2, AILims3, AILims4, AILimsC, AILims123, {.1}, {.1}, {1.}, {1.}, {.1}, {.1}, {1.}, {1.}};//7+8
+  static final int firstMDiv = 7;
+/**
+   * test that the array lengths are not to large greater than keysXMax using
+   * assert
+   */
+  static void tstLimss() {
+    assert AILims.length < keysXMax : "Error  LAILims>= Max ix=" + LAILims + ",max=" + (keysXMax - 1);
+    assert AILims1.length < keysXMax : "Error  LAILims1 >= Max ix=" + LAILims1 + ",max=" + (keysXMax - 1);
+    assert AILims2.length < keysXMax : "Error  LAILims2 >= Max ix=" + LAILims2 + ",max=" + (keysXMax - 1);
+    assert AILims3.length < keysXMax : "Error  LAILims3 >= Max ix=" + LAILims3 + ",max=" + (keysXMax - 1);
+    assert AILims4.length < keysXMax : "Error  LAILims4 >= Max ix=" + LAILims4 + ",max=" + (keysXMax - 1);
+    assert AILimsC.length < keysXMax : "Error  LAILimsC>= Max ix=" + LAILimsC + ",max=" + (keysXMax - 1);
+    assert AILims123.length < keysXMax : "Error  LAILims123 >= Max ix=" + LAILims123 + ",max=" + (keysXMax - 1);
+  }
+  static int subFrac = 0;//.0001;
+  static int strtMax = 1;//1.5E30;
+  static int strtDecFrac = 2;// .40;
+  static int incFrac = 3;// 3.
+
+  // resMax=strtMax,( resMax= (resMax- resMax*subFrac)*(1/(keysXMax - zeroSub))*strtDecFrac)
+  static double[][] divAr = {{.0001, 1.5E10, .36, 3.}, {.0001, 1.5E10, .37, 3.}, {.0001, 1.5E30, .31, 3.2}, {.0001, 1.5E30, .30, 3.3}, {.0001, 1.5E30, .29, 3.4}};//
+  static String[] outLimsAr = {"", "", "", "", "", ""};
+
+  /**
+   * generate new AILims arrays based on parameters in the divAr array also post
+   * the values to a group of named out output lines Start with the highest
+   * value at the top of the array Reduce the value by fraction of the value
+   * then divide that by a value depending on the number of values in the array
+   * before zero, then multiply by the strtDecFrac, all those values in the
+   * divAr
+   *
+   * @param divAr reference to the array with parameters
+   * @param prevRes The next lower value
+   * @param iXdiv Which subarry of divAR to use and which array AILimss subarray
+   * gets values
+   * @param iXn unused which subElement of the subArray
+   * @return next Res entry
+   */
+  static double nextDiv(double[][] divAr, double prevRes, int iXdiv, int iXn) {
+    int AILimssIx = firstMDiv + iXdiv;
+    double resNext = prevRes > divAr[iXdiv][subFrac] ? (divAr[iXdiv][strtDecFrac] * prevRes) : prevRes > --divAr[iXdiv][subFrac] * 0.1 ? -50. * divAr[iXdiv][subFrac] : (prevRes * divAr[iXdiv][incFrac]);
+    AILimss[AILimssIx][iXn] = resNext;
+    return resNext;
+  }
+
+  /**
+   * fill out the auto create columns in AILimss starting at firstMDiv
+   *
+   * @param cnt the number of columns to fill
+   * @return
+   */
+  static String doAILimss(int cnt) {
+    //EM.test5 = true;
+   // EM.test1 = true;
+    double res = 0.;// nextDiv(divAR,prevRes,);
+    double prevRes = divAr[0][strtMax];
+    int lAILimss = AILimss.length;
+    int ldivAr = divAr.length;
+    boolean doComma = false;
+    String haveComma = "";
+    int colN = 0;// now print existing columns of AILimss
+    for (int xx = 0; xx < firstMDiv; xx++) {
+      System.out.print("----AILMss-- Col:" + xx + " ");
+      colN = 0;
+      for (int nn = 0; nn < AILimss[xx].length; nn++) {
+        if (++colN > 12) {
+          colN = 0;
+          haveComma = "\n---+++ ";//force a new line
+        }
+        System.out.print(EM.mf2(2, haveComma, AILimss[xx][nn]));
+        haveComma = ", ";
+      }
+      System.out.println(""); // end the line in out
+    }
+    //Now make and print the auto lines of AILimss
+    for (int ix = 0; ix < cnt && ix < ldivAr && ix < (lAILimss - firstMDiv); ix++) {
+      AILimss[ix + firstMDiv] = new double[keysXMax];// set new sub arrays
+      prevRes = divAr[ix][strtMax];
+      AILimss[ix + firstMDiv][keysXMax - 1] = prevRes;
+      for (int n = keysXMax - 2; n > -1; n--) {// fill the rest of this subArray
+        prevRes = nextDiv(divAr, prevRes, ix, n);
+      }
+      colN = 0;
+      haveComma = "";// now display the new subArray
+     // EM.test1 = true;
+      System.out.print("----AILMss-- Col:" + (ix + firstMDiv) + " ");
+      for (int nn = 0; nn < keysXMax; nn++) {
+        if (++colN > 12) {
+          colN = 0;
+          haveComma = "\n---+++ ";//force a new line
+        }
+        System.out.print(EM.mf2(2, haveComma, AILimss[ix + firstMDiv][nn]));
+        haveComma = ", ";
+      }
+      System.out.println(""); // end the subarray line in out
+    }
+    EM.test5 = false;
+    EM.test1 = false;
+    return EM.mf2(2, "prevRes", prevRes);
+  }
+  static int zeroSub2 = 0;//10;
+  static int strtMax2 = 1;//1.5E30;
+  static int strtDecFrac2 = 2;// .40;
+  static int subFrac2 = 3;// .04; (keysXMax - zeroCnt)=78
+  // resMax=strtMax,( resMax= (resMax- resMax*subFrac)*(1/(keysXMax - zeroSub))*strtDecFrac)
+  static double[][] divAr2 = {{10., 1.5E30, .37, .02}, {5., 1.5E30, .37, .005}, {10., 1.5E30, .37, .003}, {10., 1.5E30, .37, .002}, {10., 1.5E30, .37, .0015}};//
+  static String[] outLimsAr2 = {"", "", "", "", "", ""};
+
+  /**
+   * generate new AILims arrays based on parameters in the divAr array also post
+   * the values to a group of named out output lines Start with the highest
+   * value at the top of the array Reduce the value by fraction of the value
+   * then divide that by a value depending on the number of values in the array
+   * before zero, then multiply by the strtDecFrac, all those values in the
+   * divAr
+   *
+   * @param divAr reference to the array with parameters
+   * @param prevRes The next lower value
+   * @param iXdiv Which subarry of divAR to use and which array AILimss subarray
+   * gets values
+   * @param iXn which subElement of the subArray
+   * @return next Res entry
+   */
+  static double nextDiv2(double[][] divAr, double prevRes, int iXdiv, int iXn) {
+    int AILimssIx = firstMDiv + iXdiv;
+    double resNext = prevRes > 0.001 ? (divAr[iXdiv][strtDecFrac2] * (prevRes - (prevRes * divAr[iXdiv][subFrac2]) * (1 / (keysXMax - divAr[iXdiv][zeroSub2])))) : prevRes > -0.0001 ? -0.05 : ((1. / divAr[iXdiv][strtDecFrac2]) * (prevRes < -.0001 ? prevRes + prevRes * divAr[iXdiv][subFrac2] : -.05));
+    AILimss[AILimssIx][iXn] = resNext;
+    // outLimsAr[iXdiv] = EM.mf2(2, haveComma, resNext) + outLimsAr[iXdiv];//put in front of current text
+    return resNext;
+  }
 
 
   //static final int pPrevoPerW = ++aiPcntr;
