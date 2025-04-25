@@ -3712,6 +3712,10 @@ onceAgain:
       String mOut = mVer + " " + dateString + "\r\n";
 
       bMapFr = Files.newBufferedReader(MAPFILE, CHARSET);
+      if (bMapFr == null) {
+        System.err.println("----RMap0----mapFile not found");
+      }
+      else {
       Scanner s = new Scanner(bMapFr);
       System.err.println("----RMap1----locale " + s.locale());
       Locale locale = Locale.US;
@@ -3767,7 +3771,7 @@ onceAgain:
                   wname = s.useDelimiter("\\s").next(); //setCnt
                   setCnt = s.nextInt();  // number of sets done for this mapFile updated each run
                   lname = s.nextLine();
-                  System.out.println("----DRM----- version a line=" + cname + " version " + sname + " " + fname + mapYears + " setCnt" + setCnt + " :: " + lname);
+                  System.out.println("----DRM----- version  line cname=" + cname + " " + sname + " " + fname + mapYears + " setCnt" + setCnt + " :: " + lname);
 
                   if (myAIlearnings == null) {
                     if (E.debugAIOut) {
@@ -3796,15 +3800,13 @@ onceAgain:
                 myVal[E.aValPClan] = s.nextDouble();
                 myVal[E.aValPors] = s.nextDouble();//4
                 myVal[E.aValSig0] = s.nextDouble();
-                myVal[E.aValSig4] = s.nextDouble();//6
+                myVal[E.aValSig1] = s.nextDouble();//6
                 myVal[E.aValSig2] = s.nextDouble();
-                myVal[E.aValSig6] = s.nextDouble();
-                myVal[E.aValSig3] = s.nextDouble();//9
-                myVal[E.aValSig7] = s.nextDouble();
-                myVal[E.aValSig1] = s.nextDouble();//11
+                myVal[E.aValSig3] = s.nextDouble();
+                myVal[E.aValSig4] = s.nextDouble();//9
                 myVal[E.aValSig5] = s.nextDouble();
-                myVal[E.aValIxMyScore] = s.nextDouble();//13
-                myVal[E.aValPClan] = s.nextDouble();
+                myVal[E.aValSig6] = s.nextDouble();//11
+                myVal[E.aValSig7] = s.nextDouble();
                 myVal[E.aValIxMyScore] = s.nextDouble();
                 pors = (int) (myVal[E.aValPors] == 0. ? 0 : 1);
                 ;
@@ -3821,8 +3823,7 @@ onceAgain:
                 System.out.println("Unknow line cmd=" + cname + " :: line=" + lname);
 
             } // switch
-
-          } // end reading error try
+        }//reading error try
           catch (Exception | Error ex) {
             firstStack = secondStack + "";
             ex.printStackTrace(pw);
@@ -3830,14 +3831,12 @@ onceAgain:
             // newError = true;
             System.out.println("----DMap3----Igmore doReadMapFile Input error " + " " + " Caught Exception cause=" + ex.getCause() + " message=" + ex.getMessage() + " err string=" + ex.toString() + Thread.currentThread().getName() + " " + cname + " " + sname + " " + fname + " " + wname + "\n  key found? \"" + myKey + "\" " + " :: moreLine=" + s.nextLine() + andMore());
           }
-        } // while hasNext
-        if (bMapFr != null) {
-          bMapFr.close();
-        }
-        System.out.println("-----WMN---- finished doReadMapFile KEYs" + rtn + " mapYears" + mapYears);
-      } // end if(false)
+          } // while hasNext
+        } ///true
+        bMapFr.close();
+      } //mapFile ! null
+      System.out.println("-----WMN---- finished doReadMapFile KEYs" + rtn + " mapYears" + mapYears);
     }// end large try
-
     catch (Exception | Error ex) {
       firstStack = secondStack + "";
       ex.printStackTrace(pw);
@@ -3868,7 +3867,9 @@ onceAgain:
     String aKey = new String(psClanChars[0][0]);
     String bKey = " mty";
     int lKey = 0;
-    Double aVal[] = new Double[E.aValSize];
+    //Double aVal[] = new Double[E.aValSize];
+    Double aVala[] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};//14
+    aVal = aVala;
     entryCnt = 0;
     cntsCnt = 0;
     //   int lremove = 0;
@@ -3882,7 +3883,7 @@ onceAgain:
       System.err.println("---DWM2---did reopen create, truncate of mapfile  " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + mSize));
 
       /*     // rebuild the ars arrays and zero them
-      ars = new int[nars][]; // 0,1,2,3,4,5,6,7
+      ars = new int[nars][]; // 1,2,3,4,5,6,7,8
       for (ix = 0; ix < nars; ix++) {
         ars[ix] = new int[lenIa];
         for (int ix2 = 0; ix2 < lenIa; ix2++) {
@@ -3933,7 +3934,7 @@ onceAgain:
               else {
                 /* static final int aValCnts = 0, aValSig0 = 5, aValSig4 = 6, aValSig1 = 11, aValSig5 = 12, aValSig2 = 7, aValSig6 = 8, aValSig3 = 9, aValSig7 = 10, aValYear = 1, aValAge = 2, aValPClan = 3,aValPors=4, aValIxMyScore = 13, aValSize = 14;
                  */
-                ll = "KEY " + aKey + " " + mf2(aVal[E.aValCnts]) + " " + mf2(aVal[E.aValAge]) + " " + mf2(aVal[E.aValYear]) + " " + mf2(aVal[E.aValPClan]) + " " + mf2(aVal[E.aValPors]) + " " + mf2(aVal[E.aValSig0]) + " " + mf2(aVal[E.aValSig4]) + " " + mf2(aVal[E.aValSig2]) + " " + mf2(aVal[E.aValSig6]) + " " + mf2(aVal[E.aValSig3]) + " " + mf2(aVal[E.aValSig7]) + " " + mf2(aVal[E.aValSig1]) + " " + mf2(aVal[E.aValSig5]) + " " + mf2(aVal[E.aValIxMyScore]) + "\r\n";
+                ll = "KEY " + aKey + " " + mf2(aVal[E.aValCnts]) + " " + mf2(aVal[E.aValAge]) + " " + mf2(aVal[E.aValYear]) + " " + mf2(aVal[E.aValPClan]) + " " + mf2(aVal[E.aValPors]) + " " + mf2(aVal[E.aValSig0]) + " " + mf2(aVal[E.aValSig1]) + " " + mf2(aVal[E.aValSig2]) + " " + mf2(aVal[E.aValSig3]) + " " + mf2(aVal[E.aValSig4]) + " " + mf2(aVal[E.aValSig5]) + " " + mf2(aVal[E.aValSig6]) + " " + mf2(aVal[E.aValSig7]) + " " + mf2(aVal[E.aValIxMyScore]) + "\r\n";
                 bMapFw.write(ll, 0, ll.length());
                 // setCntAr(aKey, aVal,false, false, false);
               } // not remove
@@ -3954,6 +3955,10 @@ onceAgain:
         seeArrays[0] = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + whichClanPosByIncrScore[4] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[0];
         System.err.println("---DWM7---now write mapfile " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + "Y" + year + " lKey" + lKey + " key" + bKey + seeArrays[0]);
         if (entryCnt > 0) {
+          if (aVal == null) {
+            Double aValb[] = {1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};//14
+            aVal = aValb;
+          }
           int pValIx = E.getAIMuch(aKey.charAt(E.ppors)); //ix value in myAILim
           double x1M = E.AILims123[pValIx];
           int altpors = (int) x1M;
@@ -4019,7 +4024,7 @@ onceAgain:
 
     return setCntDr(aKey, aVal, whatB[pors], pors, 4, 2 + 4 * pors, 2 + 4 * pors, E.AILimsC, E.pNudge1, 1., E.AILims1, -1, 1., 1., 1., E.AILims1, -1, 1., 1., 1.,
                     E.AILimss[6], -1, 4., 4., E.AILims123, -1, 0., 1.,
-                    E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4., setAll, doSet, pr,bestCnt , 1);//P2,2, S6,6
+                    E.AILimss[6], -1, 4., 4., E.AILimss[6], -1, 4., 4., setAll, doSet, pr, bestCnt, 1);//P3,3, S7,8
 
   }
   String[] whatA = {"prevTradeFracP", "prevTradeFracS"};
@@ -4053,7 +4058,7 @@ onceAgain:
     //do arn1,arn2  1,1 for planets, 5,5 for ships each with no rest
     // the seeArrays P1,1.,S5,5 get half the calls of the other seeArrays
  //   setCntDr(aKey, aVal, "prevAIEconRelScore", pors, 4, pors, pors, E.AILims3, E.pPrevERScW, 1., E.AILims1, -1, 1., 1., .1, E.AILims1, -1, 1., 1., 1., E.AILimss[6], -1, .34, 4., E.AILims3, -1, .8, 9990000000000., E.AILims123, -1, 4., 4., E.AILims123, -1, 4., 4., setAll, doSet, pr,bestCnt, 2); //0,0, 4,4
-    return setCntDr(aKey, aVal, whatA[pors], pors, 4, 4 * pors + 1, 4 * pors + 1, E.AILims1, E.pNudge0, 1., E.AILims3, E.pPrevEScW, 1., (pors == 0 ? 340. : 340.), 2., E.AILims1, E.pNotNot, 1., 1., .001, E.AILimss[6], E.pNotNot, .3, 4., E.AILims3, -1, pors == 0 ? 340. : 340., 9990000000000., E.AILims123, E.pNotNot, pors, pors, E.AILimss[6], E.pNotNot, 4., 4., setAll, doSet, pr, bestCnt, 1);//P1,1 ,S5,5
+    return setCntDr(aKey, aVal, whatA[pors], pors, 4, 2 + 4 * pors, 2 + 4 * pors, E.AILims1, E.pNudge0, 1., E.AILims3, E.pPrevEScW, 1., (pors == 0 ? 340. : 340.), 2., E.AILims1, E.pNotNot, 1., 1., .001, E.AILimss[6], E.pNotNot, .3, 4., E.AILims3, -1, pors == 0 ? 340. : 340., 9990000000000., E.AILims123, E.pNotNot, pors, pors, E.AILimss[6], E.pNotNot, 4., 4., setAll, doSet, pr, bestCnt, 1);//P 2,2 ,S6,6
   }
 
   /**
@@ -4079,11 +4084,11 @@ onceAgain:
     int altpors = (int) x1M;
     //do 2,1 for planets, 4,3 for ships
 
-    setCntDr(aKey, aVal, "prevAIEconRelScore", pors, 4, 4 * pors, 4 * pors, E.AILims3, E.pPrevERScW, 1., E.AILims1, -1, 1., 1., .1, E.AILims1, -1, 1., 1., 1., E.AILimss[6], -1, .34, 4., E.AILims3, -1, .8, 9990000000000., E.AILims123, -1, 4., 4., E.AILims123, -1, 4., 4., setAll, doSet, pr, bestCnt, 2); //0,0, 4,4
+    setCntDr(aKey, aVal, "prevAIEconRelScore", pors, 4, 1 + 4 * pors, 1 + 4 * pors, E.AILims3, E.pPrevERScW, 1., E.AILims1, -1, 1., 1., .1, E.AILims1, -1, 1., 1., 1., E.AILimss[6], -1, .34, 4., E.AILims3, -1, .8, 9990000000000., E.AILims123, -1, 4., 4., E.AILims123, -1, 4., 4., setAll, doSet, pr, bestCnt    , 2); //1,1, 5,5
     //  setCntDr(aKey, aVal, "prevAIEconRelScore", pors, 4, pors, pors, E.AILims3, E.pPrevERScW, 1., E.AILims1, -1, 1., 1., .1, E.AILims1, -1, 1., 1., 1., E.AILimss[6], -1, .34, 4., E.AILims3, -1, .8, 9990000000000., E.AILims123, -1, 4., 4., E.AILims123, -1, 4., 4., setAll, doSet, pr, 2); //0,0,1,1
     //  setCntDr(aKey, aVal, "prevAIEconRelScore", pors, 4, pors, pors, E.AILims3, E.pPrevERScW, 1., E.AILims1, -1, 1., 1., .1, E.AILims1, -1, 1., 1., 1., E.AILimss[6], -1, .34, 4., E.AILims3, -1, .8, 9990000000000., E.AILims123, -1, 4., 4., E.AILims123, -1, 4., 4., setAll, doSet, pr, 2); //0,0,1,1
-    tradeFracSetCntDr(aKey, aVal, pors, setAll, doSet, bestCnt, pr);//aarn,arn =1.1 or 4,4 dpending on pors value
-    fFTransferFracSetCntDr(aKey, aVal, pors, setAll, doSet, bestCnt, pr);//16,15,18,17,
+    tradeFracSetCntDr(aKey, aVal, pors, setAll, doSet, bestCnt, pr);//aarn,arn =2,2 or 6,6 dpending on pors value
+    fFTransferFracSetCntDr(aKey, aVal, pors, setAll, doSet, bestCnt, pr);//3,3,7,8,
 
   }
   int setCntSee = 999; //force first print
@@ -4576,7 +4581,7 @@ onceAgain:
         Boolean doLims = (r0 && lim) || (!r0 && notLim);
         Boolean doNotLims = (!r0 && lim) || (r0 && notLim);
         int aSigs[] = {E.aValSig0, E.aValSig1, E.aValSig2, E.aValSig3, E.aValSig4, E.aValSig5, E.aValSig6, E.aValSig7};
-        valSig = ((arn >= 0 && arn < 8) ? aVal[aSigs[arn]] : 0.);
+        valSig = ((arn >= 1 && arn < 9) ? aVal[aSigs[arn - 1]] : 0.);
         vvIa1 = strtIas + vvIx1; // drs 1index
         vvIa1 = vvIa1 >= strtLow ? vvIa1 : strtLow; // protect index
         vvIaI = (int) (setAll ? aVal[E.aValCnts] + (doSet ? 1. : 0.) : (doSet ? 1. : 0.));//ars
