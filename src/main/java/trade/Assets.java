@@ -148,7 +148,7 @@ public class Assets {
   static final double bSmall = -.0999;// if setCntDr < bSmall treat as invalid
   double aiNudges[][] = {tradeFracNudge, ffTFracNudge};
   int ranInt = -7, rIn = -9;
-  int aiPos = -7, prevAIPos = -7, prevPrevAIPos = -7;
+  int aiPos = -9, prevAIPos = -8, prevPrevAIPos = -7;
   Boolean acct = false; // saveAI set this to the last year tradeAccepted
   Boolean y = true;
   // values without prefix prev are last years values
@@ -742,19 +742,23 @@ public class Assets {
     return score;
   }
 
+  /**
+   * now finish saving the AI entries Include the setting of WINNERYEARS
+   */
   void doYearEnd2() {
     saveAI();
-    // saveAI(dead ? gSwapW.sumTotWorth : fyW.sumTotWorth, dead); // save the AI live info
-//    saveAI(worth, dead);
     saveAIKey();
-  }
+     setStat(EM.WINNERYEARS, pors, clan,EM.whichScorePosByIncrClan[clan] == 4 ?
+ EM.myScore[clan] : 0.0, (int) (EM.whichScorePosByIncrClan[clan] == 4 ? 1
+                    : 0));
+     }
 
    /**
      * routine to set AI values in Assets for saveAIKey that is called next in
      * Assets.doYearEnd2() this runs after the first EM.doYearEnd defining winner
    * so that final values are prev like the were when the keys were saved at the
    * start of the next year     */
-  void saveAI() {//Assets.CashFlow
+  void saveAI() {//Assets
     double worth = sumTotWorth;
     //   double worth = dead ? gSwapW.sumTotWorth : fyW.sumTotWorth;
     prevPrevAIScoreI = prevAIScoreI;
@@ -763,9 +767,11 @@ public class Assets {
     prevPrevAIScore = prevAIScore;
     prevAIScore = EM.myScore[clan]; // start game value
     aiScore = EM.myScore[clan]; //
-    prevAIPos = (int) (dead ? 6 : EM.whichScorePosByIncrClan[clan]);
     prevPrevAIPos = prevAIPos;
-
+    prevAIPos = aiPos;
+    aiPos = EM.whichScorePosByIncrClan[clan];
+    prevAIPos = prevAIPos < 0 ? aiPos : prevAIPos;
+    prevPrevAIPos = prevPrevAIPos < 0 ? aiPos : prevPrevAIPos;
     aiProsM = rawProspects2.min(); // these are last values
     aiProsA = rawProspects2.ave();
     aiOffer = tradedOffers;
@@ -939,7 +945,7 @@ public class Assets {
       aiPos = EM.whichScorePosByIncrClan[clan]; // this last years position
       putValueChar(EM.psClanChars[pors][clan], E.ppors, pors, E.AILims123, "EconPors", y);
       putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos, E.AILims123, "lastaiPos", y);
-      putValueChar(EM.psClanChars[pors][clan], E.pclanpors, clan * 2 + pors, E.AILims123, "clan*2+pors", y);
+      putValueChar(EM.psClanChars[pors][clan], E.pClan, clan, E.AILims123, "clan", y);
       putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, nudge0s[pors], y);
       putValueChar(EM.psClanChars[pors][clan], E.pNudge1, ffTFracNudge[nudBoth], E.AILims1, nudge1s[pors], y);
       putValueChar(EM.psClanChars[pors][clan], E.pPrevProsM, prevAIProsM, E.AILims1, "prevProspects.min", ifPrint);
@@ -4567,8 +4573,8 @@ public class Assets {
 
       /**
        * calculate efficiency only for SubAsset resource and SubAsset Staff
-       * input percentDifficulty is EM.difficultyPercent[0] passed through Econ
-       * and Assets and CashFlow
+       * input percentDifficulty is EM.difficultyPercent[pors] passed through
+       * Econ       * and Assets and CashFlow
        *
        */
       protected void calcEfficiency() {  // Assets.CashFlow.SubAsset
@@ -8967,7 +8973,7 @@ public class Assets {
           //be sure these are set
           putValueChar(EM.psClanChars[pors][clan], E.ppors, pors, E.AILims123, "EconPors", y);
           putValueChar(EM.psClanChars[pors][clan], E.pLastScP, 4., E.AILims123, "lastaiPos", y);//force valid lim
-          putValueChar(EM.psClanChars[pors][clan], E.pclanpors, clan * 2 + pors, E.AILims123, "clan*2+pors", y);
+          putValueChar(EM.psClanChars[pors][clan], E.pClan, clan, E.AILims123, "clan*2+pors", y);
           // only help clan blue get smart start after at least 100 keys so
           // we want to separate planets and ships, but each Assets instance belongs to just one of them
           // charAt(1) E.ppors if set is 'f' or 'g'
@@ -10038,7 +10044,7 @@ public class Assets {
             setMax(EM.MaxStrategicReceivePercentStrategicOffer, calcPercent(strategicOffers, strategicRequests));
             setMin(EM.MinStrategicReceivePercentStrategicOffer, pors, clan, calcPercent(strategicOffers, strategicRequests), 1);
             setStat(EM.TRADELASTGAVE, pors, clan, offers, 1);
-            setStat(EM.TRADEALSOLASTGAVE, pors, clan, offers, 1);
+            //setStat(EM.TRADEALSOLASTGAVE, pors, clan, offers, 1);
             setStat(EM.TRADEFIRSTRECEIVE, calcPercent(btWrcsgSum, requestsFirst), 1);
             setStat(EM.TRADELASTRECEIVE, pors, clan, calcPercent(btWrcsgSum, requests), 1);
             setStat(EM.TRADERECEIVELASTPERCENTFIRST, pors, clan, requestsFirst > E.PZERO ? requests * 100. / requestsFirst : 0., 1);
@@ -10784,7 +10790,7 @@ public class Assets {
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
         setStat(EM.STARTWORTH, pors, clan, Math.sqrt(initialSumWorth), 1);
-        setStat(EM.WINNERYEARS, pors, clan, EM.whichScorePosByIncrClan[clan] == 4 ? 1. : 0., 1);
+        //    setStat(EM.WINNERYEARS, pors, clan, EM.whichScorePosByIncrClan[clan] == 4 ? 1. : 0., 1);
         setStat(EM.WORTHINCR, pors, clan, percentYearWorthIncr, 1);
         setStat(EM.KNOWLEDGEW, pors, clan, fyW.sumKnowledgeWorth, 1);
         setStat(EM.DEPRECIATION, pors, clan, bals.sum4(ABalRows.DEPRECIATIONIX), 1);
@@ -11797,7 +11803,7 @@ public class Assets {
      * @param score last score worth;
      *
      */
-    void saveAIKey(boolean acct, double worth, double offer, double prosM, double prosA, double score) {//Assets.CashFlow
+    void saveAIKeynot(boolean acct, double worth, double offer, double prosM, double prosA, double score) {//Assets.CashFlow
       // saveAIKey(acct, aiWorth, aiOffer, aiProsM, aiProsA, aiPos,prevAIPos, EM.myScore[clan]);
       aiOper[pors] = offers / worth;
 
@@ -11829,7 +11835,7 @@ public class Assets {
         aiPos = EM.whichScorePosByIncrClan[clan]; // last years position
         putValueChar(EM.psClanChars[pors][clan], E.ppors, pors, E.AILims123, "EconPors", y);
         putValueChar(EM.psClanChars[pors][clan], E.pLastScP, aiPos, E.AILims123, "lastaiPos", y);
-        putValueChar(EM.psClanChars[pors][clan], E.pclanpors, clan * 2 + pors, E.AILims123, "clan*2+pors", y);
+        putValueChar(EM.psClanChars[pors][clan], E.pClan, clan, E.AILims123, "clan", y);
         putValueChar(EM.psClanChars[pors][clan], E.pNudge0, tradeFracNudge[nudBoth], E.AILims1, nudge0s[pors], y);
         putValueChar(EM.psClanChars[pors][clan], E.pNudge1, ffTFracNudge[nudBoth], E.AILims1, nudge1s[pors], y);
         //  putValueChar(EM.psClanChars[pors][clan], E.pNudge0, sliderVala, E.AILimsC, "Nudged value0", y);
@@ -11893,9 +11899,11 @@ public class Assets {
       prevPrevAIScore = prevAIScore;
       prevAIScore = EM.myScore[clan]; // start game value
       //  aiScore = EM.myScore[clan]; //
-      prevAIPos = EM.whichScorePosByIncrClan[clan];
       prevPrevAIPos = prevAIPos;
-
+      prevAIPos = aiPos;
+      aiPos = EM.whichScorePosByIncrClan[clan];
+      prevAIPos = prevAIPos < 0 ? aiPos : prevAIPos;
+      prevPrevAIPos = prevPrevAIPos < 0 ? aiPos : prevPrevAIPos;
       aiProsM = rawProspects2.min(); // these are last values
       aiProsA = rawProspects2.ave();
       aiOffer = tradedOffers;
