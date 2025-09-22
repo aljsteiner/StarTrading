@@ -749,8 +749,7 @@ public class Assets {
     saveAI();
     saveAIKey();
      setStat(EM.WINNERYEARS, pors, clan,EM.whichScorePosByIncrClan[clan] == 4 ?
- EM.myScore[clan] : 0.0, (int) (EM.whichScorePosByIncrClan[clan] == 4 ? 1
-                    : 0));
+ EM.myScore[clan] : 0.0, (int) (EM.whichScorePosByIncrClan[clan] == 4 ? 1 : 0));
      }
 
    /**
@@ -1926,8 +1925,8 @@ public class Assets {
       int CCONTROLD = eM.CCONTROLD;
       // calculate the needed changes for ICUM  ICUR0  and possible ICURx
       double[] resVCum = eM.resV[rn][ICUM][pors]; //clan array object
-      double prevResVCumC = resVCum[clan] + 0.; // don't point into array
-      double nextResVCumC = resVCum[clan] + 0. + v; // don't point into array
+      double prevResVCumC = resVCum[clan] + 0.; // cur val for clan don't point into array
+      double nextResVCumC = resVCum[clan] + 0. + v; // val added   don't point into array
       // resVCumC += v; // doesn't change resVCum[clan]
       long[] resICum = resI[rn][ICUM][pors];
       //  long resICumP = resICum[clan] + 0;
@@ -2021,7 +2020,7 @@ public class Assets {
           boolean Q = EM.mfSS;
           EM.mfS = EM.mfSS = true;
           if (E.debugStatsOut) {
-            System.out.println("---SSTat--- " + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + "S" + resIcur0Isset + resICumIsset + EM.mf("V", v) + EM.mf("PMV", prevResVCumC));
+            System.out.println("---SSTat--- " + " " + name + "Y" + EM.year + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + " Set" + resIcur0Isset + resICumIsset + EM.mf(" V", v) + EM.mf(" PMV", prevResVCumC) + " CNT" + cnt);
             //" " + name + "Y" + EM.year + "K" + clan + "A" + age + + EM.mf("NM", nextResVCumC) + EM.mf(resVCumClan) + "::" + resVCumClan + " resIcum = " + resICumClan + " , cur0ClanV = " + mf(resVcur0Clan) + ", cur++Clan =" + mf(resVCurmClan));
             /*      System.out.println(
                       "EM.setStat " + Econ.nowName + " " + Econ.doEndYearCnt[0] + " since doYear" + EM.year + "=" + moreT + "=>" + moreTT + " " + resS[rN][0] + " rN" + rN + ", valid" + eM.valid + ", " + " resIcum=" + resICumClan + ", age" + age + ", curEcon.age" + eM.curEconAge + ", pors=" + pors + ", clan=" + clan + ", resIcur0Isset=" + resIcur0Isset + ", resICumIsset=" + resICumIsset + ", resVCur0Clan=" + mf(resVcur0Clan) + ", resVCurmClan=" + mf(resVCurmClan));
@@ -10401,8 +10400,8 @@ public class Assets {
         startYrSumKnowledgeWorth = syW.sumKnowledgeWorth;
         if (iyW == null) { //first year initial only
           iyW = new DoTotalWorths();
-          iyWTotWorth = iyW.getTotWorth();
-          initialSumWorth = sumTotWorth = iyW.getTotWorth();
+          initialSumWorth = sumTotWorth = iyWTotWorth = iyW.getTotWorth();
+          // initialSumWorth = sumTotWorth = iyW.getTotWorth();
           initialSumKnowledge = iyW.sumKnowledgeBal;
           startYrSumKnowledgeWorth = initialSumKnowledgeWorth = iyW.sumKnowledgeWorth;
         }
@@ -10789,7 +10788,7 @@ public class Assets {
 
         EM.wasHere = "CashFlow.yearEnd live before many setStat ccci=" + ++ccci;
         setStat(EM.LIVEWORTH, pors, clan, fyW.sumTotWorth, 1);
-        setStat(EM.STARTWORTH, pors, clan, Math.sqrt(initialSumWorth), 1);
+        setStat(EM.STARTWORTH, pors, clan, initialSumWorth, 1);
         //    setStat(EM.WINNERYEARS, pors, clan, EM.whichScorePosByIncrClan[clan] == 4 ? 1. : 0., 1);
         setStat(EM.WORTHINCR, pors, clan, percentYearWorthIncr, 1);
         setStat(EM.KNOWLEDGEW, pors, clan, fyW.sumKnowledgeWorth, 1);

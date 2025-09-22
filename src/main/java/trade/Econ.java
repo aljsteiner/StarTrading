@@ -65,12 +65,13 @@ public class Econ {
   double xpos, ypos, zpos;
   double[] xyz = {xpos, ypos, zpos};
   double distanceMoved = 0;
-  double initDifficulty = EM.difficultyPercent[0];
+  protected int pors = 0;
+  double initDifficulty = EM.difficultyPercent[pors];
   //initDifficulty= .3;
  //double initDifficulty= .3;
   // neighbors from
   //Neighbor[] neighbors = new Neighbor[20];
-  protected int pors;
+
   protected int year;  // EM.year of StarTrader
   protected int age = 0;   // age of this economy, first year is age 1 after aStartCashFlow
   int dage = 0;          // years dead
@@ -1850,7 +1851,6 @@ ex.printStackTrace(EM.pw);EM.secondStack=EM.sw.toString();
   void doYearEnd2() {
     EM.econCountsTest();
     as.doYearEnd2();
-
   }
 
      long startYearEndWait = 0;

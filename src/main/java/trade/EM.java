@@ -219,15 +219,15 @@ class EM {
   static volatile double[] gameShipFrac = {.70};  // 2.3 ships / econs .75 means 3ships/1 planet, .8 = 4ships/1planet
   static final double[][] mGameShipFrac = {{.25, 1.20}, {.25, 1.20}};
 // double[][] clanShipFrac = {{.70, .70, .70, .501, .6}, {.70, .70, .70, .501, .6}}; // .3->5. clan choice of clan ships / clan econs %ships of your clan
-  static volatile double[][] clanShipFrac = {{.66, .65, .67, .67, .66}};
+  static volatile double[][] clanShipFrac = {{.46, .46, .66, .46, .46}};// only use planet values
+  // static volatile double[][] clanShipFrac = {{.66, .66, .66, .66, .66}};
   //static volatile double[][] clanShipFrac = {{.4, .45, .46, .47, .5}};
   // static volatile double[][] clanShipFrac = {{.50, .50, .57, .50, .50}};
   // static volatile double[][] clanShipFrac = {{.56, .55, .67, .57, .56}};
   static final double[][] mClanShipFrac = {{.20, .81}, {.20, .81}};
   // static volatile double[][] clanAllShipFrac = {{.44, .45, .46, .4, .42}}; // clan (ships/econs)
   // static volatile double[][] clanAllShipFrac = {{.54, .55, .56, .6, .52}}; // clan (ships/econs)
-  static volatile double[][] clanAllShipFrac = {{.66, .65, .67, .67, .66}};
-  ; // clan (ships/econs)
+  static volatile double[][] clanAllShipFrac = {{.70, .70, .70, .70, .70}};// clan (ships/econs)
   static final double[][] mClanAllShipFrac = {{.25, 1.20}, {.2, 1.20}};
   static volatile double econLimits1[] = {150.}; // start limiting econs
   static final double mEconLimits1[][] = {{100., 500.}, {200., 500.}};
@@ -339,7 +339,7 @@ class EM {
   } //econCountsTest
   static double[][] wildCursCnt = {{7.}};
   static double[][] mWildCursCnt = {{3., 20.}};
-  static double[] difficultyPercent = {39.};
+  static double[] difficultyPercent = {39., 50.};
   static final double[][] mDifficultyPercent = {{0., 100.}, {0., 100.}};
   static double[][] balanceMult = {{1.3, 1.3}};
   static final double[][] mBalanceMult = {{.5, 15.5}, {.5, 15.5}};
@@ -523,7 +523,7 @@ class EM {
   static final double[][] mDifficultyByPriorityMult = {{1., 6.}, {1., 6.}}; //
   static volatile double[][] randFrac = {{0.5}, {0.4}};  // game risk
   static final double[][] mRandFrac = {{0.0, .9}, {0.0, .9}};  // range 0. - .9,.7
-  static volatile double[][] aicnt = {{30}};
+  static volatile double[][] aicnt = {{01}};
   static final double[][] maicnt = {{0.0, 99.}, {0.0, 99.}};  // range 0. - 99.
   static volatile double[][] clanRisk = {{.4, .4, .4, .4, .4}, {.4, .4, .4, .4, .4}};  //risk taken with assets
   static final double[][] mClanRisk = {{.0, .7}, {.0, .7}};
@@ -1275,14 +1275,11 @@ class EM {
   }
 
   //for Assets.AssetsYr.Trades
-  // [pors][clan] multiply strategic sums
-  //static NumberFormat dFrac = NumberFormat.getNumberInstance();
-  //static NumberFormat whole = NumberFormat.getNumberInstance();
   static private NumberFormat dFrac = NumberFormat.getNumberInstance();
   static private NumberFormat whole = NumberFormat.getNumberInstance();
   static private NumberFormat exp = new DecimalFormat("0.####E0");
 
-  static public int dfN = 2;
+  static public int dfN = 2; //default min fraction
   static boolean mfS = false;
   static boolean mfSS = false;
   static int mfb = 3;
@@ -1406,18 +1403,19 @@ class EM {
   static public String mf3(int fl, String desc, Double v) {
     int mfll = mfb;
     mfb = fl;
-    mfbb = mfb - 1 > 0 ? mfb - 1 : 0;
-    mfbbb = mfbb - 1 > 0 ? mfbb - 1 : 0;
-    mfbbbb = mfbbb - 1 > 0 ? mfbbb - 1 : 0;
+//    mfbb = (mfb - 1) > 0 ? mfb - 1 : 0;//fl>1.?fl-1
+    mfbbb = (mfbb - 1) > 0 ? mfbb - 1 : 0;//fl>2.?fl-2.
+    mfbbbb = (mfbbb - 1) > 0 ? mfbbb - 1 : 0;// fl>3?fl-3.
     boolean t = mfS;
     boolean tt = mfSS;
     mfS = true;
+    mfSS = true;
     String rt = desc + mf(v);
     mfS = t;
     mfSS = tt;
     mfb = mfll;
-    mfbb = mfb - 1 > 0 ? mfb - 1 : 0;
-    mfbbb = mfbb - 1 > 0 ? mfbb - 1 : 0;
+    mfbb = (mfb - 1) > 0 ? mfb - 1 : 0;
+    mfbbb = (mfbb - 1) > 0 ? mfbb - 1 : 0;
     return rt;
   }
 
@@ -1489,12 +1487,22 @@ class EM {
    *
    * @param v the input value
    * @return value as a string
+   * @note mfS make fraction small like most narrow window
+   * @note mfSS
+   * @note mfB requested max fraction
+   * @note mfBB mfb-1
+   * @note mfBBB mfb - 2
+   * @note test5 print warning messae
+   * @note test1 set mfb to max of 1
    */
   static public String mf(Double v) {
+    mfb = test1 && mfb > 1 ? 1 : mfb;// most frac
+    int mff = test1 && mfb > 1 ? 0 : mfb - 1;// least frac
+
     if (test5) {
       System.err.printf("----MFT1a---test5 enter mf  v= %2.5f, myWidth =" + myWidth + "\n", v);
     }
-    double tmp = v < 0.0 ? (-v % 1.0) : v % 1.0; // remainder from 1.0
+    double tmp = v < 0.0 ? (-v % 1.0) : v % 1.0; //abs frac remainder from 1.0
     if (v.isNaN()) {
       return "# " + v;
     }
@@ -1503,6 +1511,8 @@ class EM {
       return "?? " + v;
     }
     NumberFormat dFrac = NumberFormat.getNumberInstance();
+    dFrac.setMinimumFractionDigits(mff);
+    dFrac.setMaximumFractionDigits(mfb);
     NumberFormat whole = NumberFormat.getNumberInstance();
     NumberFormat exp = new DecimalFormat("0.00#E0#");//#means some more
     NumberFormat expS = new DecimalFormat("0.00E0#");
@@ -1510,56 +1520,41 @@ class EM {
 
     if (mfS || myWidth < 1190) { // 7 characters
       if (v == .0 || v == -0) {  // actual zero
-        dFrac.setMinimumFractionDigits(test1 ? 1 : 0);
-        dFrac.setMaximumFractionDigits(3);
-
         return dFrac.format(v);
-      }
+      }//end zero
       else if (true && (v > -9999. && v < 0.0 && (tmp < E.PPZERO)) || (v >= 0.0 && v < 9999. && (tmp < E.PPZERO))) {  //12 13  13 13 very close to zero remainder //very close to zero remainder
         if (test5) {
-          System.err.printf("----MFT1b--turn to integer- v= %1.3f\n", v);
+          System.err.printf("----MFT1b--turn v to integer- v= %1.3f\n", v);//warn was integerized
         }
-        dFrac.setMaximumFractionDigits(test1 ? 5 : 2);
-        dFrac.setMinimumFractionDigits(test1 ? 3 : 1);
-        return dFrac.format(v);
+        return dFrac.format(v); //return a small almost 0 number
       }
       else if ((v < 1.0 && v >= .001) || (v > -1.00 && v < -0.001)) { //4,5
-        dFrac.setMinimumFractionDigits(test1 ? 3 : 1);
-        //  dFrac.setMaximumFractionDigits(5);
-        dFrac.setMaximumFractionDigits(test1 ? 7 : mfSS ? mfb : mfS ? 6 : 7);
         if (test5 || test1) {
-          System.err.printf("----MFT1C-- small int %3d   v= %1.7f : %s\n", test1 ? 4 : mfSS ? mfb : mfS ? 2 : 3, v, dFrac.format(v));
-        }
+          System.err.printf("----MFT1C-- small int %3d   v= %1.7f or %s\n", mfb, v, dFrac.format(v)
+        );}
         return dFrac.format(v);
       }
       else if (!mfS && (v > -999. && v < -0.00) || (v >= -0.00 && v < 999.)) {
-        dFrac.setMinimumFractionDigits(test1 ? 3 : 1);
-        dFrac.setMaximumFractionDigits(test1 ? 5 : 4);
+        //not make small
+
         if (test5) {
           System.err.printf("----MFT1c--- v= %3.5f : %s\n", v, dFrac.format(v));
         }
         return dFrac.format(v);
       }
       else if ((v > -9999. && v < -0.0) || (v >= -0.00 && v < 9999.)) {
-        dFrac.setMinimumFractionDigits(test1 ? 2 : 1);
-        dFrac.setMaximumFractionDigits(test1 ? 5 : mfbbb);
         if (test5) {
           System.err.printf("----MFT1e--- v= %3.5f : %s\n", v, dFrac.format(v));
         }
         return dFrac.format(v);
       }
       else if ((v > -99999. && v < -0.0) || (v >= -0.00 && v < 99999.)) {
-        dFrac.setMinimumFractionDigits(test1 ? 3 : 1);
-        dFrac.setMaximumFractionDigits(test1 ? 3 : 1);
         if (test5) {
           System.err.printf("----MFT1f--- v= %3.5f : %s\n", v, dFrac.format(v));
         }
         return dFrac.format(v);
       }
       else if ((v > -999999. && v < -0.00) || (v >= -0.00 && v < 999999.)) {
-
-        dFrac.setMinimumFractionDigits(1);
-        dFrac.setMaximumFractionDigits(1);
         if (test5) {
           System.err.printf("----MFT1g--- v= %3.5f : %s\n", v, dFrac.format(v));
         }
@@ -1567,7 +1562,7 @@ class EM {
       }
 
       else if (v == .0 || v == -0) {  // actual zero
-        dFrac.setMinimumFractionDigits(1);
+        dFrac.setMinimumFractionDigits(0);
         dFrac.setMaximumFractionDigits(1);
         if (test5) {
           System.err.printf("----MFT1h--- v= %3.5f : %s\n", v, dFrac.format(v));
@@ -1593,22 +1588,19 @@ class EM {
       }
       else if ((v > -1.00 && v < -0.0) || (v < 1.0 && v >= 0.0)) {
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(5);
+        dFrac.setMaximumFractionDigits(1);
         return dFrac.format(v);
       }
       else if ((v > -9999. && v < 0.0) || (v > .001 && v < 99999.)) {
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(3);
         return dFrac.format(v);
       }
       else if ((v > -99999. && v < 0.0) || (v > .001 && v < 999999.)) {
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(2);
         return dFrac.format(v);
       }
       else if ((v > -999999. && v < 0.0) || (v > .001 && v < 9999999.)) {
         dFrac.setMinimumFractionDigits(0);
-        dFrac.setMaximumFractionDigits(1);
         return dFrac.format(v);
       }
       else if ((v > -9999999999. && v < 0.0) || (v > .001 && v < 99999999999.)) { //8 9
@@ -2291,7 +2283,7 @@ class EM {
     int pors = ec.getPors();
     int clan = ec.getClan();
     double hiLoMult = ec.getHiLoMult();
-    double difficulty = difficultyPercent[0];// ec.initDifficulty;
+    double difficulty = difficultyPercent[pors];// ec.initDifficulty;
     try {
       double vinit = 0., vlive = 0., vfrac = 0.;
       int aa, ab, ac, ac2;
@@ -3748,7 +3740,7 @@ onceAgain:
         String lname = "notNot";
         String wname = "notNot";
         if (true) {
-          s.useLocale(Locale.US);
+          s.useLocale(Locale.US);// read title line
 onceAgain:s.useDelimiter("\\s");
           while (s.hasNext()) {
             cname = "notNot";
@@ -3815,8 +3807,10 @@ onceAgain:s.useDelimiter("\\s");
                   if (E.debugScannerOut || rtn < 20 || (rtnc > 100)) {
                     System.out.println("-----WMK---- KEY" + rtn + "  =" + myKey + mf2("C", myVal[E.aValCnts]) + mf2("A", myVal[E.aValAge]) + mf2("Y", myVal[E.aValYear]) + " :K" + mf2("K", myVal[E.aValPClan]) + " :V" + mf2("V", myVal[E.aValIxMyScore]) + " :: " + lname);
                   }
-                  myAIlearnings.put(myKey, myVal);
+                  //     myAIlearnings.put(myKey, myVal);
+                  curEconName = "zero";
                   setCntDrs(myKey, myVal, pors, true, false, 0, false);  // don't count  set settingall of them
+                  myAIlearnings.put(myKey, myVal);//now save updated aVal
                   break;
                 default:
                   lname = s.nextLine();
@@ -4214,9 +4208,10 @@ onceAgain:s.useDelimiter("\\s");
     boolean isS = pors == 1 || pors == 2;// processing ships
 
     char ch0 = '&';  //character within the key
-    char ch1 = '*', ch2 = '*', ch3 = '*', ch4 = '*', cha = '*', chb = '*';
+    char ch1 = '*', ch2 = '*', ch3 = '*', ch4 = '*', cha = '*', chb = '*', chw = 'l';
     int myNa = 0; // the index in the drs
     int myNx = 0; // the index into the myAILim
+    int myWx = 0;
     int xN = 0; // also index into the myAILim
     int strtLow = strtIas + 1; //lowest ia value giving ix value> -1
     // String see = "", eee = "";
@@ -4234,10 +4229,13 @@ onceAgain:s.useDelimiter("\\s");
     int pPorsIx = E.getAIMuch(aKey.charAt(E.ppors)); //ix value in myAILim
     int altPors = (int) E.AILims123[pPorsIx];//pors
     boolean okPors = pors == 2 || (pors == 1 && altPors == 1) || (pors == 0 && altPors == 0);
-    int pWinnerIx = E.getAIMuch(aKey.charAt(E.pPrevScP)); //ix value in myAILim
-    int altWinner = (int) E.AILims123[pPorsIx];//winLeast
+    String okPorsS = (okPors ? "++pors" : "--pors");
+    int pWinnerIx = E.getAIMuch(chw = aKey.charAt(E.pLastScP)); //ix value in myAILim
+    int altWinner = (int) E.AILims123[pWinnerIx];//winLeast
     boolean okWin = winLeast <= altWinner;
-
+    String okWinS = (okWin ? "++win" : "--win");
+    String pPorsS = "  pors" + altPors + " Ppors" + pors + okPorsS;
+    String pWinS = " winLeast" + winLeast + " <= win" + altWinner + okWinS + " " + chw + pWinnerIx + altWinner;
     int pvIx1 = 0;// E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
     int vvIx1 = 0;// pvIx1 > 0 ? pvIx1 : 0;//not neg
     double x1Sig = 0;//mX1 == 0. ? 1. : hX1 + vvIx1 * mX1;// pX1 significance
@@ -4310,6 +4308,7 @@ onceAgain:s.useDelimiter("\\s");
     String t4 = l4 ? "4" : "";//trues
     String r1 = l1 ? "1" : "", r2 = l2 ? "2" : "", r3 = l3 ? "3" : "";
     String r4 = l4 ? "4" : "";//trues
+    String t5 = "5", t6 = "6", s5 = "5", s6 = "6";
     myNa = 0;
     myNx = 0;
     String myIx = " ???";
@@ -4334,7 +4333,7 @@ onceAgain:s.useDelimiter("\\s");
     String vvvMCS = mf3(2, "VIv", vvvMC);//vrs
     String vvaCS = "VIc" + vvaC;//ars straight cnt
     String vvaMS = "VIe" + vvaC;//ars straight cnt
-    String vvaLn = "VIn" + aVal[E.aValCnts];//;
+    String Vcnt = "Vcnt" + aVal[E.aValCnts];//;
 
     int lastIx = 0;//(mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
     int lastIa = 0;// (mostIaN + 5) > topIaN ? topIaN : mostIaN + 5;// highest drs[arn] index
@@ -4480,6 +4479,10 @@ onceAgain:s.useDelimiter("\\s");
       r3 = l3 ? "3" : "";
       r4 = l4 ? "4" : "";//trues
       t4 = l4 ? "4" : "";//trues
+      t5 = okWin ? "5" : "";
+      t6 = okPors ? "6" : "";
+      s5 = okWin ? "5" : "";
+      s6 = okPors ? "6" : "";
       myNa = 0;
       myNx = 0;
       myIx = " ???";
@@ -4516,67 +4519,65 @@ onceAgain:s.useDelimiter("\\s");
       vvvMCS = mf3(2, "vvvMC", vvvMC);//vrs
       vvaCS = "VIc" + vvaC;//ars straight cnt
       vvaMS = "VIe" + vvaC;//ars straight cnt
-      vvaLn = "VIn" + aVal[E.aValCnts];//;
+      Vcnt = "Vcnt" + aVal[E.aValCnts];//;
 
       lastIx = (mostIxN + 5) > topIxN ? topIxN : mostIxN + 5;
       lastIa = (mostIaN + 5) > topIaN ? topIaN : mostIaN + 5;// highest drs[arn] index
+      String doBestS = (doBest ? " ++doBest" : " --doBest");
+      String ret0 = " A" + arn + "L" + laiLim;
+      String retPX1 = " " + " pX1N:" + pX1 + ":" + ch0 + ":X" + vvIx1 + mf3(2, "M", mX1) + mf3(2, "V", myAILim[vvIx1]);
+      retVv = Vcnt + vvaCS + vvIaCS + vvvMCS + vvIx1V;
+      String retPXa = " " + " pXaN:" + pXa + ":" + cha + ":X" + vvIxa + mf3(2, "M", mXa) + vvIxaV;
+      String retPXb = " " + " pXbN:" + pXb + ":" + chb + ":X" + pValIxb + mf3(2, "M", mXb) + pValxxbV;
+      String retWhat = " " + what + (isP ? "P" : "S") + curEconName + "Y" + EM.year + ":" + limV;
 
-      if (true || E.DebugSetCntArOut) {
-        System.out.println("---SCNTD2---setCntDrCnt=" + setCntSee + " A" + arn + "Y" + year + "AG" + curEconAge + " lL" + laiLim + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + vvIx1 + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (drs == null ? " null drs" : drs.length < 5 ? " drs too Small" : drs[arn].length < lenIa ? " err drs too small Len=" + drs[arn].length : " drs ok len=" + drs[arn].length) + "\n" + limV + " ignores" + s1 + s2 + s3 + s4 + sa + sb + " true" + t1 + t2 + t3 + t4 + " key" + aKey + (setAll ? " ++setAll" : " --setAll") + (doSet ? " ++doSetl" : " --doSet") + (printDeb ? " ++printDeb" : " --printDeb") + (p3));
+      if (E.DebugSetCntArOut) {
+        System.out.println("---SCNTD2---setCntDrCnt=" + setCntSee + " A" + arn + "Y" + year + "AG" + curEconAge + " lL" + laiLim + " stEnter=" + st.cntInit + " EM entries=" + cntInit + " px1:" + vvIx1 + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (drs == null ? " null drs" : drs.length < 5 ? " drs too Small" : drs[arn].length < lenIa ? " err drs too small Len=" + drs[arn].length : " drs ok len=" + drs[arn].length) + "\n" + limV + notLimV + " ignores" + sa + sb + " true(1-6)" + t1 + t2 + t3 + t4 + t5 + t6 + " key" + aKey + (setAll ? " ++setAll" : " --setAll") + (doSet ? " ++doSetl" : " --doSet") + (printDeb ? " ++printDeb" : " --printDeb") + (p3));
       }
 
       assert vvIx1 >= 0 : "ERROR input vvIx1 illegal small =" + vvIx1V;
       assert vvIx1 < E.keysXMax : "Error vvIx1>= E.keysXMax vvIx1=" + vvIx1V + ",max=" + (E.keysXMax - 1);
 
-      String doBestS = (doBest ? " ++doBest" : " --doBest");
-      String ret0 = " A" + arn + "L" + laiLim;
-      String retPX1 = " " + " pX1N:" + pX1 + ":" + ch0 + ":X" + vvIx1 + mf3(2, "M", mX1) + mf3(2, "V", myAILim[vvIx1]);
-      retVv = vvaLn + vvaCS + vvIaCS + vvvMCS + vvIx1V;
-      String retPXa = " " + " pXaN:" + pXa + ":" + cha + ":X" + vvIxa + mf3(2, "M", mXa) + vvIxaV;
-      String retPXb = " " + " pXbN:" + pXb + ":" + chb + ":X" + pValIxb + mf3(2, "M", mXb) + pValxxbV;
-      String retWhat = " " + what + (isP ? "P" : "S") + "Y" + ":" + limV;
-
       String retLengths = " keysXMax" + E.keysXMax + " AIlims l=" + E.LAILims + " " + E.LAILims1 + " " + E.LAILims2 + " " + E.LAILims3 + " " + E.LAILims4 + " " + E.LAILimsC + " " + E.LAILims123;
       String retLimC = mf2(1, "limC", drs[arn][iaLimCnt]) + cLimAveV;
-      String retLimTests = l1V + "D" + ll1Valv + "<=" + " lx1N:" + lX1 + "C" + ch1 + ":X" + l1ValIx + "L" + ":V" + l1Valv + "<=" + lu1Valv + "::" + l2V + "D" + ll2Valv + "<=" + " lX2N:" + lX2 + "C" + ch2 + ":X" + l2ValIx + "L" + laiLim2 + ":V" + l2Valv + ":" + mf2(llX2) + "<=" + lu2Valv;
+      String retLimTests = " tests:" + l1V + "D" + ll1Valv + "<=" + " lx1N:" + lX1 + "C" + ch1 + ":X" + l1ValIx + "L" + ":V" + l1Valv + "<=" + lu1Valv + "::" + l2V + "D" + ll2Valv + "<=" + " lX2N:" + lX2 + "C" + ch2 + ":X" + l2ValIx + "L" + laiLim2 + ":V" + l2Valv + ":" + mf2(llX2) + "<=" + lu2Valv + " ignores:" + sa + sb + " true(1-6)" + t1 + t2 + t3 + t4 + t5 + t6 + pWinS + pPorsS;
       String retFlags = " Y" + year + "AG" + curEconAge + " stE" + st.cntInit + " EME" + cntInit + (printDeb ? " ++printDeb" : " --printDeb") + (p3) + " aKey=" + aKey;
       if (pr1 || true) {
-        System.out.println("---DCNTA3---setCntDrCnt=" + setCntSee + " " + curEconName + ret0 + doBestS + retWhat + retPX1 + "\n--++" + retVv + retPXa + "\n--++" + retPXb + x1Sig + "\n--++" + retCall + retVv + "\n--++" + retLimC + retLimTests + "\n--++" + retFlags);
+        System.out.println("---DCNTA3---setCntDrCnt=" + setCntSee + " " + curEconName + ret0 + doBestS + retWhat + retPX1 + "\n--1++" + retVv + retPXa + "\n--2++" + retPXb + x1Sig + "\n--3++" + retCall + retVv + "\n--4++" + retLimC + retLimTests + "\n--5++" + retFlags);
       }
 
-      /*  ---------------------------------
-      int pValIx = E.getAIMuch(ch0 = aKey.charAt(pX1)); //ix value in myAILim
-    int l1ValIx = E.getAIMuch(ch1 = aKey.charAt(lX1)); // ix lim1 in myAILim1
-    double l1Vald = myAILim1[l1ValIx]; // double value of lim1
-       */
+      //int aSigs[] = {E.aValSig0, E.aValSig1, E.aValSig2, E.aValSig3, E.aValSig4, E.aValSig5, E.aValSig6, E.aValSig7} //do once in E
+      boolean r0 = true;
+      //updat aVal for sigs
+      valSig = ((arn1 >= 1 && arn1 < 9) ? (aVal[E.aSigs[arn - 1]] += (r0 ? x1Sig : 0.)) : 0.);
+      vvIa1 = strtIas + vvIx1; // drs 1index
+      vvIa1 = vvIa1 >= strtLow ? vvIa1 : strtLow; // protect index
+      vvIaI = (int) (setAll ? aVal[E.aValCnts] + (doSet ? 1. : 0.) : (doSet ? 1. : 0.));//ars
+      vvIaD = (setAll ? valSig + (doSet ? x1Sig : 0.) : (doSet ? x1Sig : 0.));//drs sigcount
+      vvIaC = x1Sig * vvIaD;//drs signifigance
+      vvIaM = myAILim[vvIx1] * vvIaD;//vrs mult
+      vvvMC = myAILim[vvIx1] * vvIaC;//not vrs
+      vvaC = vvIaI;// for ars[][] cnt straight
+      vvaM = vvIaI;// for vrs[][] cnt straight mult
+      vvIaIS = mf3(2, "vvIaI", vvIaC);//ars
+      vvIaCS = mf3(2, "vvIaC", vvIaC);//drs
+      vvIaMS = mf3(2, "vvIaM", vvIaM);//vrs
+      vvvMCS = mf3(2, "vvvMC", vvvMC);//vrs
+      vvaCS = "VIc" + vvaC;//ars straight cnt
+      vvaMS = "VIe" + vvaC;//ars straight cnt
+      Vcnt = "Vcnt" + aVal[E.aValCnts];//;
       int rndMax = arn1 == arn2 ? 1 : 2;// only first rnd if matched arn1 and arn2
 
       /*=============== loop for 1 0r 2 rounds===============-*/
       for (int rnd = 0; rnd < rndMax; rnd++) {
         // next process counts for what passes all limits
-        boolean r0 = rnd == 0;
+        r0 = rnd == 0;
         arn = r0 ? arn1 : arn2;
         //      if (true) {
         Boolean doLims = (r0 && lim) || (!r0 && notLim);
         Boolean doNotLims = (!r0 && lim) || (r0 && notLim);
-        int aSigs[] = {E.aValSig0, E.aValSig1, E.aValSig2, E.aValSig3, E.aValSig4, E.aValSig5, E.aValSig6, E.aValSig7};
-        valSig = ((arn >= 1 && arn < 9) ? aVal[aSigs[arn - 1]] : 0.);
-        vvIa1 = strtIas + vvIx1; // drs 1index
-        vvIa1 = vvIa1 >= strtLow ? vvIa1 : strtLow; // protect index
-        vvIaI = (int) (setAll ? aVal[E.aValCnts] + (doSet ? 1. : 0.) : (doSet ? 1. : 0.));//ars
-        vvIaD = (setAll ? valSig + (doSet ? x1Sig : 0.) : (doSet ? x1Sig : 0.));//drs sigcount
-        vvIaC = x1Sig * vvIaD;//drs signifigance
-        vvIaM = myAILim[vvIx1] * vvIaD;//vrs mult
-        vvvMC = myAILim[vvIx1] * vvIaC;//not vrs
-        vvaC = vvIaI;// for ars[][] cnt straight
-        vvaM = vvIaI;// for vrs[][] cnt straight mult
-        vvIaIS = mf3(2, "vvIaI", vvIaC);//ars
-        vvIaCS = mf3(2, "vvIaC", vvIaC);//drs
-        vvIaMS = mf3(2, "vvIaM", vvIaM);//vrs
-        vvvMCS = mf3(2, "vvvMC", vvvMC);//vrs
-        vvaCS = "VIc" + vvaC;//ars straight cnt
-        vvaMS = "VIe" + vvaC;//ars straight cnt
-        vvaLn = "VIn" + aVal[E.aValCnts];//;
+
+
 
         cLim = 0;
         cAll = drs[arn][iaAltCnt] += vvIaD; //sig almost lims but not
@@ -4659,10 +4660,10 @@ onceAgain:s.useDelimiter("\\s");
           if (bestCnt > 1 && ars[arn][iaLimCnt] > 0) {
             firstIxN = (int) drs[arn][firstIa] - strtIas;  //index to myAILim
             topIxN = (int) drs[arn][topIa] - strtIas;
-            mostIxN = (int) drs[arn][mostIa] - strtIas;
+            mostIxN = (int) drs[arn][mostIa] - strtIas;// cnt of the most significant value
             firstIaN = (int) drs[arn][firstIa];//index into (int)drs[x][]
             topIaN = (int) drs[arn][topIa]; //index into (int)drs[x][]
-            mostIaN = (int) drs[arn][mostIa];
+            mostIaN = (int) drs[arn][mostIa];// most significan value
             /*
          firstvN = (int) vrs[arn][firstIa];//index into (int)drs[x][]
          topvN = (int) vrs[arn][topIa]; //index into (int)drs[x][]
@@ -4711,10 +4712,9 @@ onceAgain:s.useDelimiter("\\s");
             for (rCnt = 0; rCnt < rMax && nzCnt < nzMax; rCnt++) {
               // list most and then later nodes
               ia = mostIaN + rCnt;
-              ix = ia - strtIas;
+              ix = ia - strtIas;// reduce ars index to count of values array
               if (((ia) <= topIaN) && nzCnt < nzMax && ia > strtLow && drs[arn][ia] > 0) {
                 nzCnt++;
-
                 urCnt = rCnt;
                 if (bc < bmax && rCnt < lrCnt + 10) {//allow up to 10 more than lower
                   bc++;
@@ -4729,7 +4729,7 @@ onceAgain:s.useDelimiter("\\s");
                     vSum += vrs[arn][ia];// mult
                     vAve = dCnt > 0 ? vSum / dCnt : -9999.;
                     // tttt = (doComma ? "; " : " ") + "Nx" + (ix) + "C" + ars[arn][ia]+ (nzCnt > 4 ? "" :  mf3(1, "sC", drs[arn][ia]) + mf3(1, "sV", bCnt > 0 ? bsum / bCnt : 0.0) + mf3(1, "vV", vAve)) + mf3(1, "V", bCnt > 0 ? bVal / bCnt : 0.0);
-                    tttt = (doComma ? "; " : " ") + "Nx" + (ix) + "C" + ars[arn][ia] + (nzCnt > 4 ? "" : bMulS + mf3(1, "sC", drs[arn][ia]) + bValS + mf3(1, "AV", vAve));
+                    tttt = (doComma ? "; " : " ") + "Nx" + (ix) + "C" + ars[arn][ia] + (nzCnt > 2 ? "" : bMulS + mf3(1, "sC", drs[arn][ia]));// + bValS + mf3(1, "AV", vAve));
                     if (rCnt == 0) {
                       sMostXA = tttt;
                     }
@@ -4762,7 +4762,7 @@ onceAgain:s.useDelimiter("\\s");
                     vSum += vrs[arn][ia];// mult
                     vAve = dCnt > 0 ? vSum / dCnt : -9999.;
                     // tttt = (doComma ? "; " : " ") + "Nx" + (ix) + "C" + ars[arn][ia]+ (nzCnt > 4 ? "" :  mf3(1, "sC", drs[arn][ia]) + mf3(1, "sV", bCnt > 0 ? bsum / bCnt : 0.0) + mf3(1, "vV", vAve)) + mf3(1, "V", bCnt > 0 ? bVal / bCnt : 0.0);
-                    tttt = (doComma ? "; " : " ") + "Nx" + (ix) + "C" + ars[arn][ia] + (nzCnt > 4 ? "" : bMulS + mf3(1, "sC", drs[arn][ia]) + bValS + mf3(1, "AV", vAve));
+                    tttt = (doComma ? "; " : " ") + "Nx" + (ix) + "C" + ars[arn][ia] + (nzCnt > 2 ? "" : bMulS + mf3(1, "sC", drs[arn][ia]));// + bValS + mf3(1, "AV", vAve));
                     doComma = true;
                     if (nzCnt < 9) {
                       sPreXA = tttt + sPreXA;
@@ -4789,7 +4789,7 @@ onceAgain:s.useDelimiter("\\s");
             else {
               String bestbb = mf2(2, "V", vAve); //string list return possible best value
               retBesta = " BestX " + bestbb + "f" + fRange + "t" + tRange; //string shorter number
-              bestVal = vAve;//  always leave vAve
+              bestVal = r0 ? vAve : bestVal;//  always leave vAve
             }
 
             ret0 = (r0 ? "" : " REST ") + " A" + arn + "L" + laiLim;
@@ -4809,7 +4809,7 @@ onceAgain:s.useDelimiter("\\s");
       }//rnd
       //    seeArrays[arn] = ret + retLimCnts + retBestb;
 
-      seeArrays[0] = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + whichClanPosByIncrScore[4] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[0];
+      seeArrays[0] = " doWriteMapfile Keys" + entryCnt + " #Counts" + cntsCnt + " removed" + rKeysIx + " wnr:" + clanScoreS;
 
     }// try
     catch (Exception | Error ex) {
@@ -5020,7 +5020,7 @@ onceAgain:s.useDelimiter("\\s");
       int lRes = res.length; // use length given
       int ix = 0, ixa = 0, vv = 0;
       if (E.debugAIOut) {
-        System.out.println("------BIC2-----EM.buildAICvals " + curEconName + "Y" + year + " key.len" + lRes + ":" + E.bValsStart + ":" + vvAx + " pClan" + (ixPS * 5 + ixClan)
+        System.out.println("------BIC2-----EM.buildAICvals " + curEconName + "Y" + year + " key.len" + lRes + ":" + E.bValsStart + ":" + vvAx + " pPors5Clan" + (ixPS * 5 + ixClan)
                            + " aiNudges[].length =" + 2);
       }
       //res = new byte[lRes];// set Res to a new right length
@@ -5581,11 +5581,11 @@ onceAgain:s.useDelimiter("\\s");
     doVal("Min Econs by Year", minEconsMult, mMinEconsMult, " increase min econs for each year, also affect minEcons");
     doVal("tradeAddlSVFrac", offerAddlFrac, mOfferAddlFrac, "increase the process excessOffers in a barter");
 
-    doAIVal(0, "tradeFraction", tradeFrac, mTradeFrac, "Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
+    doAIVal(0, "tradeFraction", tradeFrac, mTradeFrac, "clan Increase the desired trade profit (received/given) in a trade, this may reduce the number of successful trades");
     //   doVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
     // doVal("HiLoFactorDif",);
-    doAIVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "adjust growth goals while trading, increases the level of requests to meet goals");
-    doVal("healthGoal", goalHealth, mRegGoals, "set normal, non-emergency health goal, may increase health and reduce costs");
+    doAIVal("tradeGrowthGoal", tradeGrowth, mAllGoals, "clan adjust growth goals while trading, increases the level of requests to meet goals");
+    doVal("healthGoal", goalHealth, mRegGoals, "clan set normal, non-emergency health goal, may increase health and reduce costs");
     doVal("emergHealthGoal", emergHealth, mAllGoals, "set emergency health goals for when economies are weak more might help or might may make them worse");
     doVal("favr", fav0, mfavs, "increase how much your clan favors clan red by giving a better barter discount, this increases the amount you help clan red ");
     doVal("favo", fav1, mfavs, "increase how much your clan favors clan orange by giving  clan orange a better barter discount");
@@ -5968,18 +5968,17 @@ onceAgain:s.useDelimiter("\\s");
   static int e4 = -1;
   static final int SCORE = ++e4;
   static final int SCORE2 = ++e4;
+  static final int WINNERYEARS = ++e4;
   static final int STARTWORTH = ++e4;
   static final int LIVEWORTH = ++e4;
-
+  static final int DIED = ++e4;
   static final int RELSCORE = ++e4;
-  static final int WINNERYEARS = ++e4;
   static final int ESCORE = ++e4; // for econ score
   static final int RELESCORE = ++e4; // for econ score
   static final int TRADELASTGAVE = ++e4;
   static final int TRADEALSOLASTGAVE = ++e4;
   static final int NEWDEPRECIATION = ++e4; // ADDED THIS YEAR
-  static final int DEPRECIATION = e4 += 4; // CUMULATIVE DEPRECIATION
-  static final int DIED = ++e4;
+  static final int DEPRECIATION = e4 += 4; // CUMULATIVE DEPRECIATIO
   static final int DIEDPERCENT = ++e4;
   static final int RCSGWORTH = ++e4; //
   static final int KNOWLEDGEW = ++e4; //
@@ -6498,21 +6497,21 @@ onceAgain:s.useDelimiter("\\s");
   void defRes() {
 
     doRes(SCORE, "Score", "Winner must have a score sufficiently larger than any other clan and after sufficient years have passed.  Winner has the highest score the result of combining the different scores set by several value entries which increase the score, Winner is dynamic and can change as individual clan settings are changed and changed results occur", 3, 4, 3, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | SUM, 0, 0, 0);
-    doRes(SCORE2, "myScore", "Score values for each clan", 1, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | THISYEARAVE | BOTH, 0, 0, 0);
-    doRes(ESCORE, "EScore", "Econ Score for each econ in each clan divided by cumaverage ESCORE ", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CURAVE | CUMAVE | BOTH, 0, 0, 0);
+    doRes(SCORE2, "myScore", "Score values for each clan", 1, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUR | CURUNITS | CUM | CUMUNITS | BOTH, 0, 0, 0);
+    doRes(ESCORE, "EScore", "Econ Score for each econ in each clan divided by cumaverage ESCORE ", 2, 1, 2, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUR | CUM | BOTH, 0, 0, 0);
     doRes(RELESCORE, "RelEScore", "Econ Score/aiEScoreAve for each econ in each clan");
-    doRes(RELSCORE, "Rel Score", "Relative score toward winning", 2, 1, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEARAVE | THISYEAR | BOTH, 0, 0, 0);
-    doRes(WINNERYEARS, "Winner Years", "Number of years this Economy has been a winner", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | THISYEAR | THISYEARAVE | CUM | BOTH, 0, 0, 0);
-    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUMUNITS | CUM | BOTH, LIST1 | CUR | BOTH, 0, 0);
-    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 1, 1, 0, LIST6 | LIST7 | LIST8 | CUM | BOTH | SKIPUNSET, LIST1 | CUR | BOTH | SKIPUNSET, 0, 0);
+    doRes(RELSCORE, "Rel Score", "Relative score toward winning", 2, 1, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUR | CUR | BOTH, 0, 0, 0);
+    doRes(WINNERYEARS, "Winner Years", "Number of years this Economy has been a winner", 2, 2, 0, LIST0 | LIST1 | LIST2 | LIST3 | LIST4 | LIST7 | LIST8 | LIST9 | LISTAGES | CUR | CURUNITS | BOTH, 0, 0, 0);
+    doRes(LIVEWORTH, "Live Worth", "Live Worth Value including year end working, reserve: resource, staff, knowledge", 2, 2, 0, LIST0 | LIST6 | LIST7 | LIST8 | CUR | CUM | CURUNITS | CUMUNITS | BOTH, 0, 0, 0);
+    doRes(STARTWORTH, "Starting Worth", "Starting Worth Value including working, reserve: resource, staff, knowledge", 1, 1, 0, LIST6 | LIST7 | LIST8 | CUR | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(WORTHINCR, "YrIncWorth", "worth increase this year", 2, 2, 0, 0, LIST6 | LIST7 | LIST8 | CUMAVE | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds", 2, 2, 0, LIST0 | LIST7 | LIST8 | CUMUNITS | BOTH | SKIPUNSET, LIST6 | LIST7 | LIST8 | CUMAVE | CURAVE | BOTH | SKIPUNSET, 0, 0);
-    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | CUMUNITS | BOTH | SKIPUNSET, LIST23 | CURUNITS | BOTH | SKIPUNSET, 0, 0);
+    doRes(BOTHCREATE, "bothCreations", "new Econs ceated from  game funds and future funds", 2, 2, 0, LIST0 | LIST7 | LIST8 | CURUNITS | BOTH | SKIPUNSET, LIST6 | LIST7 | LIST8 | CUMAVE | CURAVE | BOTH | SKIPUNSET, 0, 0);
+    doRes(DIED, "DIED", "planets or ships died this year", 2, 2, 3, LIST0 | LIST3 | LIST4 | LIST6 | LIST8 | LIST9 | LIST13 | LIST14 | LIST15 | LIST16 | CURUNITS | CUMUNITS | BOTH | SKIPUNSET, 0, 0, 0);
     doRes(DIEDPERCENT, "DIED %", "Percent planets or ships died", 2, 2, 3, LIST0 | LIST2 | LIST3 | LIST4 | LIST6 | THISYEARAVE | BOTH, ROWS2 | LIST3 | LIST4 | LIST5 | LIST10 | LIST11 | CUMAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(RCSGWORTH, "RCSGWorth", "worth of RCSG ", 1, 2, 0, 0, LIST0 | LIST16 | CUMAVE | CURAVE | BOTH | SKIPUNSET, 0, 0);
     doRes(KNOWLEDGEW, "Knowledge Worth", "worth of knowledge ", 1, 2, 0, 0, LIST0 | LIST16 | CUMAVE | CURAVE | BOTH | SKIPUNSET, 0, 0);
 
-    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST8 | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
+    doRes(TRADELASTGAVE, "TradeGiven", "strategic worth of trade goods given ", 2, 3, 0, LIST0 | LIST8 | CUR | CUM | BOTH | SKIPUNSET, 0, 0, 0L);
     doRes(TRADEALSOLASTGAVE, "AlsoTrdGiven", "Also strategic worth of trade goods given ");
 
     doRes(TRADELASTDIVRCSG, "Given last/Worth", "Percent goods given per sum final trade offer over sum Worth", 1, 2, 1, LIST8 | CUMAVE | BOTH | SKIPUNSET, 0, 0, 0L);
@@ -7192,7 +7191,7 @@ onceAgain:s.useDelimiter("\\s");
     doRes("WTRADERCDPERCENT", "received/init worth", "Percent my clan received/initial worth");
     doRes("WTRADERECEIVED", "received worth", "received canonical worth");
     doRes("WOTRADEGAVFRAC", "other gave/initial worth", "other received canonical worth/initial");
-    doRes("WOTRADEGAVE", "other gave worth", "Percent worthAtSOS/initial worth");
+    doRes("f", "other gave worth", "Percent worthAtSOS/initial worth");
     doRes("TRADEDRCDF5", "W rcd fav5", "Percent Worth received when trade at fav5/initial worth");
     doRes("TRADEDRCDF4", " W rcd fav4", "Percent Worth received when trade at fav4/initial worth");
     doRes("TRADEDRCDF3", "W rcd fav3", "Percent Worth received when trade at fav3/initial worth");
@@ -7974,7 +7973,7 @@ onceAgain:s.useDelimiter("\\s");
     System.err.println("---EDWMa---doEndYear of mapfile  year" + year + " " + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()));
     doResSpecial();
     System.err.println("---EDWMb---doEndYear of mapfile  year" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIa ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
-    doWriteMapfile();
+    //   doWriteMapfile();
     System.err.println("---EDWMc---doEndYear of mapfile  Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIa ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
     getWinner();
     /*//now update ai yearly arrays
@@ -8320,9 +8319,8 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   }
 
   /**
-   * do end of year processing, determine if values need to be divided by power
-   * of 10 and then shown in the display of the result process the score
-   * processor getWinner() before the rest of doEndYear Process AI values
+   * do end of year processing, now doWriteMapfile after winner is found, and
+   * Assets write each mapFile entry
    *
    * @return
    */
@@ -8331,7 +8329,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
     doResSpecial();
     System.err.println("---EDWMb---doEndYear of mapfile  year" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIa ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
     doWriteMapfile();
-    System.err.println("---EDWMc---doEndYear of mapfile  Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIa ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
+    System.err.println("---EDWMc---doEndYear did mapfile  Y" + year + " stEnter=" + st.cntInit + " EM entries=" + cntInit + (myAIlearnings == null ? " myAIlearnings is null" : " myAIlearnings size=" + myAIlearnings.size()) + (ars == null ? " null ars" : ars.length < 5 ? " ars too Small" : ars[1].length < lenIa ? " err ars Len=" + ars[1].length : " ars ok len=" + ars[1].length));
     didEndYear2++;
 
     return rende4 - cnt; // number of slots left
@@ -9453,7 +9451,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
         for (int mm = 1; mm < 11; mm++) {
           table.setValueAt("0.0", row, mm);
         }
-        row++;
+        row++; // increment the row in the able
         didUnset = true;
       } // or set row values to ---
       else if (myCumUnset || myUnset || unset) {
@@ -9619,7 +9617,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
               }
             }
           }
-        }
+        }// if cur ave
         // now average for years found
         sum = didCnt > 0 ? sum / didCnt : sum;
         ops = "CURAVE";
@@ -9704,12 +9702,12 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
             sum = sum / Math.pow(10., doPower);
             powers = " *10**" + doPower + " ";
           }
-          // return sum > 0 ? sum : -7788.66; // sum or cnts 0
+          // return sum > 0 ? sum : -.0000003; // sum or cnts 0
           return sum;
         }
 
       }
-      return -93456789.;  // if a strange option
+      return -.0000001;  // if a strange option
     }
     catch (Exception ex) {
       newError = true;
@@ -10323,10 +10321,11 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
   static double winDif[][] = {{6.000}};  //set by doVal "years to win"
   static double mwinDif[][] = {{2.2, 40.0}, {2.2, 40.0}};
   static double curDif = 0.0;
+  static String clanScoreS = "01234"; // clan numbers in order of Score size
 
   /**
-   * Calculate a winner, calc a new score using values from stats. each year
-   * myScore is preset to 4000 to allow negative additions to score use the use
+   * Calculate a winner, calc a new score using values from stats. at end1 of
+   * each year   * myScore is preset to 4000 to allow negative additions to score use the use
    * the cumulative trade val given by clan times wGiven use the current worth
    * by clan times wLiveWorthScore use the cumulative number deaths by clan
    * times iNumberDied use the cumulative number created by clan times
@@ -10336,12 +10335,12 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
    * @return ordinal of winner clan with highest score
    */
   int getWinner() {
-    // initialize curDif,difMult if year < 2
-    curDif = year < 2 ? winDif[0][0] : curDif;
-    difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;
+    // initialize to 0.0  curDif,difMult if year < 2
+    curDif = year < 2 ? winDif[0][0] : curDif;// else keep curDif
+    difMult = year < 2 ? 1.0 / winDif[0][0] : difMult;// else keep difMult
     for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
-      whichClanPosByIncrScore[ixClan] = ixClan;
-      whichScorePosByIncrClan[ixClan] = ixClan;
+      whichClanPosByIncrScore[ixClan] = ixClan; // lowest to highest clan :lowest to highest score
+      whichScorePosByIncrClan[ixClan] = ixClan; // lowest to highest score : lowest to highest clan
       myScore[ixClan] = 4000.;  // allow negatives to reduce it
       myScorePorSClan[0][ixClan] = myScorePorSClan[1][ixClan] = 2000.;
     }
@@ -10362,17 +10361,22 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
       resI[SCORE][ICUR0][CCONTROLD][ISSET] = 1;
       resI[SCORE2][ICUR0][CCONTROLD][ISSET] = 1;
       myScoreSum = 0.0;
-      //set the resV and resI for score to new values from above
+      //set the resV and resI for score to new values from above\;
       for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
         myScoreSum += myScore[ixClan];
         resV[SCORE][ICUR0][0][ixClan] = myScore[ixClan];
         resV[SCORE][ICUR0][1][ixClan] = myScore[ixClan];
+        resV[SCORE2][ICUM][0][ixClan] += myScorePorSClan[0][ixClan];
+        resV[SCORE2][ICUM][1][ixClan] += myScorePorSClan[1][ixClan];
         resI[SCORE][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
         resI[SCORE][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
-        resV[SCORE2][ICUR0][0][ixClan] = myScore[ixClan];
-        resV[SCORE2][ICUR0][1][ixClan] = myScore[ixClan];
-        resI[SCORE2][ICUR0][0][ixClan] = resI[LIVEWORTH][ICUR0][0][ixClan];
-        resI[SCORE2][ICUR0][1][ixClan] = resI[LIVEWORTH][ICUR0][1][ixClan];
+        resI[SCORE][ICUM][0][ixClan] += resI[LIVEWORTH][ICUR0][0][ixClan] + resI[LIVEWORTH][ICUR0][1][ixClan];
+        resI[SCORE][ICUM][1][ixClan] += resI[LIVEWORTH][ICUR0][0][ixClan] + resI[LIVEWORTH][ICUR0][1][ixClan];
+        resI[SCORE2][ICUM][0][ixClan] += resI[LIVEWORTH][ICUR0][0][ixClan];
+        resI[SCORE2][ICUM][1][ixClan] += resI[LIVEWORTH][ICUR0][1][ixClan];
+        resV[SCORE2][ICUR0][0][ixClan] += myScorePorSClan[0][ixClan];
+        resV[SCORE2][ICUR0][1][ixClan] += myScorePorSClan[1][ixClan];
+
       }
       aiEScoreAve = getCurCumPorsClanAve(ESCORE, ICUM, 1, E.P, E.S + 1, 0, E.LCLANS);
       double myScoreAve = myScoreSum * E.invL2secs; //  inv 14
@@ -10440,7 +10444,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
 
       double dif = 0.0, wDif = 0.0;
       // dif = max - myScore.ave
-      // wDif = dif/myScore.av - curDif
+      // wDif = dif/myScore.ave - curDif
       // isWinner if wDif > 0.0 that is max  is enough greater than ave
       int prevWinner = winner;
       boolean badbad = winner < 0 || winner > 4; // set legal winner
@@ -10449,16 +10453,16 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
       if (wDif > 0.0) {  // wDif is frac (max-ave)/ave - curDif
         isWinner = true;
       }
-      else {  // wDif < 0.0 reduce curDif
+      else {  // wDif < 0.0 reduce curDif the amount the myScore[winner] must exceed myScore.ave
         // reduce curDif the amt needed max >= ave
         curDif += (wDif * difMult);
         // reduce curDif each year but don't go negative
         // redices amt max/ave >  curDif
         curDif -= (curDif - curDif * difMult) > 0.0 ? curDif * difMult : 0.0;
       }
-
-      System.out.println("-----WNRa----getWinner " + (isWinner ? "++isWinner" : "--isWinner") + " posClan"
-                         + whichClanPosByIncrScore[0] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[4] + ":" + whichScorePosByIncrClan[0] + whichScorePosByIncrClan[1] + whichScorePosByIncrClan[2] + whichScorePosByIncrClan[3] + whichScorePosByIncrClan[4] + "::" + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + resS[SCORE][0] + " =" + mf(resV[SCORE][ICUR0][0][0]) + " , " + mf(resV[SCORE][ICUR0][0][1]) + " , " + mf(resV[SCORE][ICUR0][0][2]) + "," + mf(resV[SCORE][ICUR0][0][3]) + "," + mf(resV[SCORE][ICUR0][0][4]) + " : " + mf(resV[SCORE][ICUR0][1][0]) + " , " + mf(resV[SCORE][ICUR0][1][1]) + " , " + mf(resV[SCORE][ICUR0][1][2]) + "," + mf(resV[SCORE][ICUR0][1][3]) + "," + mf(resV[SCORE][ICUR0][1][4]) + ", winner=" + winner + (badbad ? " --winner=" + prevWinner : ""));
+      clanScoreS = " " + whichScorePosByIncrClan[0] + whichScorePosByIncrClan[1] + whichScorePosByIncrClan[2] + whichScorePosByIncrClan[3] + whichScorePosByIncrClan[4];
+      System.out.println("-----WNRa----getWinner " + (isWinner ? "++isWinner" : "--isWinner") + " Clans"
+                         + whichClanPosByIncrScore[0] + whichClanPosByIncrScore[1] + whichClanPosByIncrScore[2] + whichClanPosByIncrScore[3] + whichClanPosByIncrScore[4] + " :scores" + clanScoreS + "::" + " myScores" + mf(myScore[0]) + ", " + mf(myScore[1]) + " , " + mf(myScore[2]) + ", " + mf(myScore[3]) + ", " + mf(myScore[4]) + "\n--++" + resS[SCORE][0] + "[0]" + mf(resV[SCORE][ICUR0][0][0]) + "; " + mf(resV[SCORE][ICUR0][0][1]) + "; " + mf(resV[SCORE][ICUR0][0][2]) + ";" + mf(resV[SCORE][ICUR0][0][3]) + ";" + mf(resV[SCORE][ICUR0][0][4]) + "\n--++[1]: " + mf(resV[SCORE][ICUR0][1][0]) + "; " + mf(resV[SCORE][ICUR0][1][1]) + "; " + mf(resV[SCORE][ICUR0][1][2]) + ";" + mf(resV[SCORE][ICUR0][1][3]) + "; " + mf(resV[SCORE][ICUR0][1][4]) + "; winner=" + winner + (badbad ? " --winner=" + prevWinner : ""));
 
       return winner;
     }
@@ -10484,7 +10488,8 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
    * score a doRes into myScore and set winner
    *
    * @param dRn count of the stats
-   * @param mult pointer to multiplier entry, neg mult, neg to score
+   * @param mult pointer to multiplier entry, neg mult, neg to score use
+   * mult[0][0]
    * @param cumCur ICUM or ICUR0
    * @param isN isV =0,isI=1,isScoreAve = 2
    * @return 0-4 number of winner
@@ -10498,14 +10503,15 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
      */
     double inScore[] = {0., 0., 0., 0., 0.};
     int winner = -1;
-    double mm = mult[0][0];  // bottom value of limits
-    double min = -9999999999.E+20; //reduce to mins
+    double mm = mult[0][0];  // useful value of limits
+    double min = 0.0; //-9999999999.E+20; 
     double max = -min; // increase to max
     double max1 = max - 1.;// an almost max amount
     int ii = 0;
     int ixPS = 0, ixClan = 0;
-    for (ixPS = 0; ixPS < 2; ixPS++) {
-      for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+
+    for (ixClan = 0; ixClan < E.LCLANS; ixClan++) {
+      for (ixPS = 0; ixPS < 2; ixPS++) {
         // initialize with planet values for each clan
         if (isN == isI) {
           myScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
@@ -10522,9 +10528,18 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
           myScorePorSClan[ixPS][ixClan] += (resV[dRn][cumCur][ixPS][ixClan]) * mm / ii;
         }
       }
+      // than find the min value of all clans
+      if (inScore[ixClan] < min) {
+        min = inScore[ixClan];  // update min for all clanSums
+      }
+      // find the max value of all clans
+      if (inScore[ixClan] > max) {
+        max1 = max; // update the previous max
+        max = inScore[ixClan];  // update max for all clanSums
+      }
     }
 
-    if (false) {// old process
+    if (false) {// old process using the one above
       if (ixPS == 0) {
         // initialize with planet values for each clan
         if (isN == isI) {
@@ -10538,7 +10553,7 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
           inScore[ixClan] = mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
         }
       }
-      else { // Than add ship values per clan
+      else {  // ixPS != 0
         if (isN == isI) {
           inScore[ixClan] += resI[dRn][cumCur][ixPS][ixClan] * mm;
         }
@@ -10546,9 +10561,10 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
           inScore[ixClan] += resV[dRn][cumCur][ixPS][ixClan] * mm;
         }
         else {
-          ii = (int) resI[dRn][cumCur][ixPS][ixClan];
+          ii = (int) resI[dRn][cumCur][ixPS][ixClan]; //count
           inScore[ixClan] += mm * (ii == 0 ? 1. : resV[dRn][cumCur][ixPS][ixClan] / ii);
         }
+
         // than find the min value of all clans
         if (inScore[ixClan] < min) {
           min = inScore[ixClan];  // update min for all clanSums
@@ -10557,8 +10573,9 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
         if (inScore[ixClan] > max) {
           max1 = max; // update the previous max
           max = inScore[ixClan];  // update max for all clanSums
-        }
       }
+      }
+    }// end old process
 
       double smax = -9999999999.E+10;// ?? reset max
       // increase myScore for each clan by clanSum/min
@@ -10577,7 +10594,8 @@ static volatile double psClanPrevWorth[][] = {{0.,0.,0.,0.,0.},{0.,0.,0.,0.,0.}}
         }
       }
       System.out.println("scoreVals " + resS[dRn][0] + ", mult=" + mm + ", inScore=" + mf(inScore[0]) + " , " + mf(inScore[1]) + " , " + mf(inScore[2]) + "," + mf(inScore[3]) + "," + mf(inScore[4]) + ", myScore=" + mf(myScore[0]) + " , " + mf(myScore[1]) + " , " + mf(myScore[2]) + "," + mf(myScore[3]) + "," + mf(myScore[4]) + ", winner=" + winner);
-    }// end old process
+
+
     double tMax = min;
     winner = -1;
     for (ixClan = 0; ixClan < 5; ixClan++) {

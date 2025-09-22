@@ -129,8 +129,7 @@ public class E {
   static final boolean debugDidEconYearEnd = debugMaster; // StarTrader.doYear() doYearEdn
   static final boolean debugAssetsStats = debugMaster && outputFewer; // why stats aren't showing
   static final boolean debugStats = debugMaster && outputFewer; // why stats aren't showing
-  static final boolean debugStatsOut = debugOutput && outputFewer;
-  ; // stats output
+  static final boolean debugStatsOut = debugOutput;//debugOutput && outputFewer
   static final boolean debugScannerOut = debugOutput && outputFewer; // scanner output
   static final boolean debugMisc = debugMaster; // other debug tests
   static final boolean debugCanTrade = debugMaster; // planet can trade
@@ -145,7 +144,7 @@ public class E {
   static final boolean DEBUGCALCGROWTH = outputFewer && debugMaster;
   static final boolean tradeInitOut = debugOutput;
   static final boolean DEBUGASSETSOUT = debugMaster;
-  static final boolean DebugSetCntArOut = debugOutput;
+  static final boolean DebugSetCntArOut = false;//debugOutput;
   static final boolean debugPutValue = debugMaster; //test putValue processing
   static final boolean debugPutValue1 = outputFewer; //test putValue processing
   static final boolean debugPutValue2 = outputFewer; //test putValue processing
@@ -192,7 +191,8 @@ public class E {
    */
   // aVal[] = <cnts><year><ixMyScore>
   //..1, ..2, ..3 represent the associated arn number
-  static final int aValCnts = 0, aValSig0 = 5, aValSig4 = 6, aValSig1 = 11, aValSig5 = 12, aValSig2 = 7, aValSig6 = 8, aValSig3 = 9, aValSig7 = 10, aValYear = 1, aValAge = 2, aValPClan = 3, aValPors = 4, aValIxMyScore = 13, aValSize = 14;
+  static final int aValCnts = 0, aValYear = 1, aValAge = 2, aValPClan = 3, aValPors = 4, aValSig0 = 5, aValSig1 = 6, aValSig2 = 7, aValSig3 = 8, aValSig4 = 9, aValSig5 = 10, aValSig6 = 11, aValSig7 = 12, aValIxMyScore = 13, aValSize = 14;
+  static final int aSigs[] = {aValSig0, aValSig1, aValSig2, aValSig3, aValSig4, aValSig5, aValSig6, aValSig7};
   static final int startCStrt = 0;// beginning X
   static final char startC = 'a';//97
   static final char startCnd = '~';//126
@@ -323,23 +323,37 @@ public class E {
   static final int tDrej = tcntr++;
 
   static private int aiPcntr = -1;
-  static final int pNotNot = aiPcntr++; // Ignore this p value
+  static final int pNotNot = aiPcntr++; // -1 Ignore this p value
+  static long mmask = 1;
+  static final long mtype = mmask;
   static final int ptype = aiPcntr++; // 0 type
-   static final int ppors = aiPcntr++; // 1 pOrS
-   static final int pclanpors = aiPcntr++; // clan*2+pors
-   static final int pLastScP = aiPcntr++; // 3  Last score position
-   static final int pPrevScP = aiPcntr++; // 4 Prev score position
+   static final int ppors = aiPcntr++; // 1 porS
+  static final long mpors = mmask << 1;// 2;
+  static final int pClan = aiPcntr++; //2 clan
+  static final long mClan = mmask << 1;// 4
+  static final int pLastScP = aiPcntr++; // 3  Last score position
+  static final int pPrevScP = aiPcntr++; // 4 Prev score position
+  static final long mPrevScP = mmask << 1;// 10O
   static final int pPrevProsM = aiPcntr++; //5 rawProspects2 min
+  static final long mPrevProsM = mmask << 1;// 40O
   static final int pNudge0 = aiPcntr++; // 6 the nudge0
+  static final long mNudge0 = mmask << 1;// 100O
   static final int pNudge1 = aiPcntr++; // 7 the nudge1
+  static final long mNudge1 = mmask << 1;// 200O
   static final int pPrevEScW = aiPcntr++; // 8 prev econ score worth
+  static final long mPrevEScW = mmask << 1;// 400O
   static final int pPrevERScW = aiPcntr++; // 9 prev econ Rscore worth
+  static final long mPrevERScW = mmask << 1;//1000O
   static final int pPrevEScI = aiPcntr++; // 10 prev econ score Inc
-   static final int pPrevOW = aiPcntr++; // 11 prev Offer worth
-   static final int pPrevOI = aiPcntr++; // 12 prev Offer Inc
-   static final int pPrevoPerW = ++aiPcntr; // 13 prev oPerW
-   static final int pPrevScW = aiPcntr++; // 14 prev score Worth
-    static final int pLastERScW = aiPcntr++; // 15 last ai ER score worth
+  static final long mPrevEScI = mmask << 1;// 2000O
+  static final int pPrevOW = aiPcntr++; // 11 prev Offer worth
+  static final long mPrevOW = mmask << 1;// 4000O
+  static final int pPrevoPerW = ++aiPcntr; // 13 prev oPerW
+  static final long mPrevoPerW = mmask << 1;// 10000O
+  static final int pPrevScW = aiPcntr++; // 14 prev score Worth
+  static final long mPrevScW = mmask << 1;// 20000O
+  static final int pLastERScW = aiPcntr++; // 15 last ai ER score worth
+  static final long mLastERScW = mmask << 1;// 40000O
   // static final int pPrevScI = aiPcntr++; // 15 prev score Inc
     // static final int pScW = aiPcntr++; // 13 last score Worth
  // static final int pPrevResil = aiPcntr++; // last resilience worth
@@ -447,7 +461,8 @@ public class E {
   static final double[] AILims4 = {-20., -10., -5.0, -2.0, -1, 0, -0.5, -0.2, -0.1, -0.01, 0.0, 0.01, 0.05, 0.1, .3, .35, .4, .43, .47, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 300., 1000., 7000., 45000., 633000., 1300000., 7000000., 15000000., 65000000., 130000000., 720000000., 1500000000., 15000000000., 150000000000., 1500000000000., 15000000000000., 150000000000000., 1500000000000000., 15000000000000000., 150000000000000000., 1500000000000000000., 150000000000000000000., 1500000000000000000000., 150000000000000000000000., 15000000000000000000000000., 15000000000000000000000000000., 15000000000000000000000000000000., 150000000000000000000000000000000.};//56
   static final int LAILims4 = AILims4.length;
   static final double[] AILimsC = {00., 02., 04., 06., 08., 10., 12., 14., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 32., 34., 36., 38., 40., 41., 41.3, 41, 7, 42., 42, 3, 42.5, 42.8, 43., 43.5, 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54., 55., 56., 57., 58., 59., 60., 62., 64., 66., 68., 70., 72., 74., 76., 78., 80., 82., 84., 86., 88., 90., 92., 94., 96., 98., 99., 100.};//77
-  static final int LAILimsC = AILimsC.length;//5
+  static final int LAILimsC = AILimsC.length;//
+  //                                             a    b   c     d    e   f   g    h   i    j   k   l    m  n   o   p   q    r    s    t    u    v   w    x  //y   z
   static final double[] AILims123 = {-5., -4., -3., -2., -1., 0., 1., 2., 3., 4., 5., 6., 7., 8., 9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.};//26
   static final int LAILims123 = AILims123.length;//6
    static double AILimss[][] = {AILims, AILims1, AILims2, AILims3, AILims4, AILimsC, AILims123, {.1}, {.1}, {1.}, {1.}, {.1}, {.1}, {1.}, {1.}};//7+8

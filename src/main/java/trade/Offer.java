@@ -533,6 +533,15 @@ public class Offer {
   }
 
   /**
+   * get only the strategic sum of the goods received by the other economy
+   *
+   * @return
+   */
+  double getOReceipts() {
+    return receipts[oIx];
+  }
+
+  /**
    * set the strategic sum of goods sent
    *
    * @param s
