@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>trade</groupId>
     <artifactId>starTraderMaven</artifactId>
-    <version>19.69</version>
+    <version>19.70</version>
     <packaging>jar</packaging>
     <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -130,6 +130,7 @@
       I am using Netbeans 19 because it enables selecting more options to run
       Somewhere after this the Java JDK no longer work with this version of Netbeans
       and the distributed Java jre no longer runs the newer Java's
+      This is hopefuly synchonized with remote gethub
     </description>
    
 </project>
